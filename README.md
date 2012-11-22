@@ -1,6 +1,12 @@
 EXFE.COM 前端架构
 =================
 
+## git:
+  * git@dlol.us:exfelight.git
+  * branches:
+    - master
+    - release
+
 ## PageList `pagelist.html`:
   * home.html           - index     首页
   * gather.html         - Gather    Cross 创建页面
