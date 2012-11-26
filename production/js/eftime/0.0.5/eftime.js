@@ -363,7 +363,7 @@ define('eftime', function (require, exports, module) {
       , day = new Date()
       , ds = '';
     if (opf) {
-      ds = day.getFullYear() + '-' + repeat0(day.getMonth() + 1) + '-' + repeat0(day.getDate());
+      ds = day.getFullYear() + '-' + lead0(day.getMonth() + 1) + '-' + lead0(day.getDate());
     } else {
       var begin_at = et.begin_at
         , date = begin_at.date
@@ -372,9 +372,9 @@ define('eftime', function (require, exports, module) {
         , s = '';
 
       if (date) {
-        s += date;
+        s += date.replace(/-/g, '/');
       } else {
-        s += day.getFullYear() + '/' + repeat0(day.getMonth() + 1) + '/' + repeat0(day.getDate());
+        s += day.getFullYear() + '/' + lead0(day.getMonth() + 1) + '/' + lead0(day.getDate());
       }
 
       s += (time ? ' ' : '') + time;
@@ -383,12 +383,30 @@ define('eftime', function (require, exports, module) {
         s += ' UTC+0000'
       }
       day = new Date(s);
-      ds = day.getFullYear() + '-' + repeat0(day.getMonth() + 1) + '-' + repeat0(day.getDate());
-      ds += (time ? ' ' + repeat0(day.getHours()) + ':' + repeat0(day.getMinutes()) + ':' + repeat0(day.getSeconds()) : '');
+      ds = day.getFullYear() + '-' + lead0(day.getMonth() + 1) + '-' + lead0(day.getDate());
+      ds += (time ? ' ' + lead0(day.getHours()) + ':' + lead0(day.getMinutes()) + ':' + lead0(day.getSeconds()) : '');
     }
     return {
         day: day
       , text: ds
+    };
+  };
+
+  efTime.create = function () {
+    return {
+        begin_at: {
+            date_word: ''
+          , date: ''
+          , time_word: ''
+          , time: ''
+          , timezone: ''
+          , id: 0
+          , type: 'EFTime'
+        }
+      , origin: ''
+      , outputformat: 1
+      , id: 0
+      , type: 'CrossTime'
     };
   };
 
@@ -408,8 +426,14 @@ define('eftime', function (require, exports, module) {
   }
 
   // 补0
-  function repeat0(n) {
+  function lead0(n) {
     return n < 10 ? '0' + n : n;
   }
+  efTime.lead0 = lead0;
+
+  function h12(h) {
+    return h % 12 || 12;
+  }
+  efTime.h12 = h12;
 
 });

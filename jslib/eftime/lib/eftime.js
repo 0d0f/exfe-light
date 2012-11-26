@@ -372,7 +372,7 @@ define('eftime', function (require, exports, module) {
         , s = '';
 
       if (date) {
-        s += date;
+        s += date.replace(/-/g, '/');
       } else {
         s += day.getFullYear() + '/' + lead0(day.getMonth() + 1) + '/' + lead0(day.getDate());
       }
@@ -389,6 +389,24 @@ define('eftime', function (require, exports, module) {
     return {
         day: day
       , text: ds
+    };
+  };
+
+  efTime.create = function () {
+    return {
+        begin_at: {
+            date_word: ''
+          , date: ''
+          , time_word: ''
+          , time: ''
+          , timezone: ''
+          , id: 0
+          , type: 'EFTime'
+        }
+      , origin: ''
+      , outputformat: 1
+      , id: 0
+      , type: 'CrossTime'
     };
   };
 
@@ -411,5 +429,11 @@ define('eftime', function (require, exports, module) {
   function lead0(n) {
     return n < 10 ? '0' + n : n;
   }
+  efTime.lead0 = lead0;
+
+  function h12(h) {
+    return h % 12 || 12;
+  }
+  efTime.h12 = h12;
 
 });
