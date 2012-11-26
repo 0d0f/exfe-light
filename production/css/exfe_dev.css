@@ -10718,9 +10718,7 @@ body {
 
 .date-panel .date-calendar {
   position: relative;
-  max-height: 135px;
   margin-bottom: 15px;
-  overflow: hidden;
   background: #fafafa;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
@@ -10746,10 +10744,10 @@ body {
   line-height: 15px;
 }
 
-.date-panel .full-month {
+.date-panel .year {
   position: absolute;
-  bottom: 3px;
-  z-index: 2;
+  top: 15px;
+  z-index: 1;
   width: 100%;
   font-size: 55px;
   font-weight: bold;
@@ -10758,10 +10756,28 @@ body {
   text-align: center;
 }
 
+.date-panel .full-month {
+  position: absolute;
+  bottom: 3px;
+  z-index: 1;
+  width: 100%;
+  font-size: 55px;
+  font-weight: bold;
+  line-height: 1;
+  color: rgba(127, 127, 127, 0.33);
+  text-align: center;
+}
+
+.date-panel .table-wrapper {
+  max-height: 120px;
+  overflow-y: scroll;
+}
+
 .date-panel #date-table {
   position: relative;
   z-index: 1;
   margin: 0;
+  cursor: pointer;
   -webkit-border-top-right-radius: 0;
           border-top-right-radius: 0;
   -webkit-border-top-left-radius: 0;
@@ -10848,7 +10864,6 @@ body {
 .date-panel .date-timeline {
   position: relative;
   z-index: 2;
-  width: 130px;
   margin-top: -15px;
   margin-left: 15px;
   -webkit-box-shadow: -1px 0 2px rgba(0, 0, 0, 0.26);
@@ -10866,11 +10881,219 @@ body {
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.26);
 }
 
-.date-panel .date-timeline .times {
-  height: 190px;
-  padding-left: 5px;
+.date-panel .date-timeline .fuzzy-time {
+  position: absolute;
+  right: -70px;
+  width: 70px;
+  text-align: center;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates {
   margin: 0;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates > li {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="all-day"] {
+  color: #191919;
+  text-shadow: 0 -1px 1px #ffffff;
+  background-color: #FAFAFA;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="dawn"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #49DEFF;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="breakfast"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #3AF4FF;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="morning"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #77F8FF;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="brunch"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #B6FFFF;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="lunch"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #FFF9CA;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="noon"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #FEEAA8;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="afternoon"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #FFDBA4;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="tea-break"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #FFCA9F;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="off-work"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #E7A1C6;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="dinner"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #9378CD;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="evening"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #5A62D3;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="night"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #3F50B7;
+}
+
+.date-panel .date-timeline .fuzzy-time .time-cates [data-cate="late-night"] {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  background-color: #2C398B;
+}
+
+.date-panel .date-timeline .times-wrapper {
+  height: 210px;
+  overflow-x: hidden;
   overflow-y: scroll;
+}
+
+.date-panel .date-timeline .times {
+  position: relative;
+  width: 124px;
+  padding: 5px 3px 0;
+  cursor: pointer;
+}
+
+.date-panel .date-timeline .times .time-item {
+  position: relative;
+  height: 4px;
+  letter-spacing: 0;
+}
+
+.date-panel .date-timeline .times .time-item time {
+  position: absolute;
+  top: -5px;
+  left: 31px;
+  display: none;
+  height: 14px;
+  font-size: 14px;
+  line-height: 14px;
+  color: rgba(58, 110, 165, 0.66);
+  text-align: center;
+}
+
+.date-panel .date-timeline .times .time-item time:before {
+  position: absolute;
+  top: 6.5px;
+  left: -31px;
+  display: none;
+  width: 28px;
+  border-top: 1px dashed #3A6EA5;
+  content: '';
+}
+
+.date-panel .date-timeline .times .time-item time:after {
+  position: absolute;
+  top: 6.5px;
+  right: -31px;
+  display: none;
+  width: 28px;
+  border-top: 1px dashed #3A6EA5;
+  content: '';
+}
+
+.date-panel .date-timeline .times .time-item:hover time {
+  display: inline-block;
+  width: 62px;
+}
+
+.date-panel .date-timeline .times .time-item:hover time:before {
+  display: block;
+}
+
+.date-panel .date-timeline .times .time-item:hover time:after {
+  display: block;
+}
+
+.date-panel .date-timeline .times .time-label time {
+  left: 0;
+  display: inline-block;
+  width: 30px;
+  font-size: 9px;
+  color: #333333;
+  text-align: left;
+}
+
+.date-panel .date-timeline .times .time-label:hover time:before {
+  display: none;
+}
+
+.date-panel .date-timeline .times .time-label:hover time:after {
+  left: 30px;
+  width: 94px;
+  border-top: 1px dashed #ccc;
+}
+
+.date-panel .date-timeline .times .selected:before {
+  position: absolute;
+  top: 1.5px;
+  width: 100%;
+  border-top: 1px solid #3A6EA5;
+  content: '';
+}
+
+.date-panel .date-timeline .times .selected:after {
+  position: absolute;
+  top: -1.5px;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  background-color: #3a6ea5;
+  background-image: -moz-linear-gradient(276deg, #dbeaf9, #3a6ea5);
+  background-image: -webkit-linear-gradient(276deg, #dbeaf9, #3a6ea5);
+  background-image: -o-linear-gradient(276deg, #dbeaf9, #3a6ea5);
+  background-image: linear-gradient(276deg, #dbeaf9, #3a6ea5);
+  background-repeat: repeat-x;
+  border: 1px solid #3A6EA5;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  content: '';
+}
+
+.date-panel .date-timeline .times .time-label.selected:before {
+  left: 30px;
+  width: 94px;
 }
 
 .map-panel {

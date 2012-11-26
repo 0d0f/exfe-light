@@ -27,8 +27,6 @@
     position: relative;
     background: #fafafa;
     margin-bottom: 15px;
-    max-height: 135px;
-    overflow: hidden;
     .border-radius(3px);
     .box-shadow(inset 0 0 4px rgba(0, 0, 0, .35));
   }
@@ -48,10 +46,22 @@
     }
   }
 
+  .year {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 15px;
+    font-size: 55px;
+    font-weight: bold;
+    line-height: 1;
+    color: rgba(127, 127, 127, .33);
+    text-align: center;
+  }
+
   .full-month {
     width: 100%;
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     bottom: 3px;
     font-size: 55px;
     font-weight: bold;
@@ -60,10 +70,16 @@
     text-align: center;
   }
 
+  .table-wrapper {
+    max-height: 120px;
+    overflow-y: scroll;
+  }
+
   #date-table {
     position: relative;
     z-index: 1;
     margin: 0;
+    cursor: pointer;
     .border-top-left-radius(0);
     .border-top-right-radius(0);
 
@@ -146,7 +162,6 @@
 
   .date-timeline {
     position: relative;
-    width: 130px;
     z-index: 2;
     margin-top: -15px;
     margin-left: 15px;
@@ -160,11 +175,212 @@
       .box-shadow(0 1px 2px rgba(0, 0, 0, 0.26));
     }
 
-    .times {
-      height: 190px;
-      margin: 0;
-      padding-left: 5px;
+    .fuzzy-time {
+      position: absolute;
+      width: 70px;
+      right: -70px;
+      text-align: center;
+
+      .time-cates {
+        margin: 0;
+        > li {
+          font-size: 13px;
+          line-height: 18px;
+        }
+
+        [data-cate="all-day"] {
+          color: #191919;
+          background-color: #FAFAFA;
+          text-shadow: 0 -1px 1px #fff;
+        }
+        [data-cate="dawn"] {
+          color: #ffffff;
+          background-color: #49DEFF;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="breakfast"] {
+          color: #ffffff;
+          background-color: #3AF4FF;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="morning"] {
+          color: #ffffff;
+          background-color: #77F8FF;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="brunch"] {
+          color: #ffffff;
+          background-color: #B6FFFF;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="lunch"] {
+          color: #ffffff;
+          background-color: #FFF9CA;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="noon"] {
+          color: #ffffff;
+          background-color: #FEEAA8;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="afternoon"] {
+          color: #ffffff;
+          background-color: #FFDBA4;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="tea-break"] {
+          color: #ffffff;
+          background-color: #FFCA9F;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="off-work"] {
+          color: #ffffff;
+          background-color: #E7A1C6;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="dinner"] {
+          color: #ffffff;
+          background-color: #9378CD;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="evening"] {
+          color: #ffffff;
+          background-color: #5A62D3;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="night"] {
+          color: #ffffff;
+          background-color: #3F50B7;
+          text-shadow: 0 0px 4px rgba(0, 0, 0, .75);
+        }
+        [data-cate="late-night"] {
+          color: #ffffff;
+          background-color: #2C398B;
+          text-shadow :0 0px 4px rgba(0, 0, 0, .75);
+        }
+      }
+    }
+
+    .times-wrapper {
+      // height: 190px;
+      height: 210px;
+      overflow-x: hidden;
       overflow-y: scroll;
+    }
+
+    .times {
+      @h:     4px;
+      @lh:    14px;
+      @d:     (@lh - @h) / 2px;
+      width: 124px;
+      padding: @d 3px 0;
+      position: relative;
+      cursor: pointer;
+
+      .time-item {
+        position: relative;
+        height: @h;
+        letter-spacing: 0;
+
+        time {
+          display: none;
+          position: absolute;
+          top: -@d;
+          left: 31px;
+          height: @lh;
+          font-size: @lh;
+          line-height: @lh;
+          color: rgba(58, 110, 165, .66);
+          text-align: center;
+          &:before {
+            display: none;
+            position: absolute;
+            content: '';
+            top: (@lh - 1) / 2;
+            left: -31px;
+            width: 28px;
+            border-top: 1px dashed #3A6EA5;
+          }
+
+          &:after {
+            display: none;
+            position: absolute;
+            content: '';
+            top: (@lh - 1) / 2;
+            right: -31px;
+            width: 28px;
+            border-top: 1px dashed #3A6EA5;
+          }
+        }
+
+        &:hover {
+          time {
+            display: inline-block;
+            width: 62px;
+
+            &:before {
+              display: block;
+            }
+            &:after {
+              display: block;
+            }
+          }
+        }
+      }
+
+      .time-label {
+
+        time {
+          left: 0;
+          display: inline-block;
+          width: 30px;
+          font-size: 9px;
+          color: #333333;
+          text-align: left;
+        }
+
+        &:hover {
+          time {
+            &:before {
+              display: none;
+            }
+
+            &:after {
+              left: 30px;
+              width: 94px;
+              border-top: 1px dashed #ccc;
+            }
+          }
+        }
+      }
+
+      .selected {
+        &:before {
+          position: absolute;
+          content: '';
+          top: (@h - 1) / 2px;
+          width: 100%;
+          border-top: 1px solid #3A6EA5;
+        }
+
+        &:after {
+          position: absolute;
+          content: '';
+          top: -(7 - @h) / 2px;
+          right: 0;
+          width: 5px;
+          height: 5px;
+          border: 1px solid #3A6EA5;
+          .border-radius(5px);
+          #gradient > .directional(#DBEAF9, #3A6EA5, 276deg);
+        }
+      }
+      .time-label.selected {
+        &:before {
+          left: 30px;
+          width: 94px;
+        }
+      }
     }
   }
 
