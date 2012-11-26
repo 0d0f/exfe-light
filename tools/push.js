@@ -8,8 +8,7 @@ var jshintrc = JSON.parse(Fs.readFileSync(__dirname + '/jshintrc', 'utf8').repla
 var jsp = require("uglify-js").parser;
 var pro = require("uglify-js").uglify;
 
-//var jsdist = Path.resolve(__dirname, '../js');
-var jsdist = Path.resolve(__dirname, '../../static/js');
+var jsdist = Path.resolve(__dirname, '../production/js');
 var jslib = Path.resolve(__dirname, '../jslib');
 
 
