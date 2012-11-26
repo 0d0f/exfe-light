@@ -1432,7 +1432,7 @@ define(function (require, exports, module) {
                       if (oldEditing === 'date-panel' || oldEditing === 'time') {
                           //ChangeTime($('.cross-date .edit').val());
                           Cross.time.begin_at.timezone = ExfeUtilities.getTimezone();
-                          ChangeTime(value);
+                          //ChangeTime(value);
                           AutoSaveCross();
                       }
                       if (dp) {
@@ -1917,6 +1917,7 @@ define(function (require, exports, module) {
               strRelTime = 'Today';
             }
           //} else if (!bdate && btime) {
+            //strAbsTime = btime;
           }
 
         } else {
