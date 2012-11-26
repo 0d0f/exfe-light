@@ -106,7 +106,6 @@ define('datepanel', function (require, exports, module) {
       }
 
     , keydown: function (e) {
-        e.preventDefault();
         var self = this;
         // escape
         if (27 === e.keyCode) {
