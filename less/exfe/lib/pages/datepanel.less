@@ -190,7 +190,7 @@
 
         [data-cate="all-day"] {
           color: #191919;
-          background-color: #FAFAFA;
+          background-color: #e6e6e6;
           text-shadow: 0 -1px 1px #fff;
         }
         [data-cate="dawn"] {
@@ -338,15 +338,10 @@
           font-size: 9px;
           color: #333333;
           text-align: left;
-          &:before {
-            display: none;
-          }
 
           &:after {
-            display: block;
             left: 30px;
             width: 94px;
-            border-top: 1px dashed #ccc;
           }
         }
 
@@ -356,6 +351,13 @@
               border-top: 1px dashed #3A6EA5;
             }
           }
+        }
+      }
+
+      .time-dashed {
+        time:after {
+          display: block;
+          border-top: 1px dashed #ccc;
         }
       }
 

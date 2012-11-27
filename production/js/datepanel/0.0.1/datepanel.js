@@ -90,9 +90,18 @@ define('datepanel', function (require, exports, module) {
         this.dateInput = new DateInput(this, '#date-string', this.date);
         this.calendarTable = new CalendarTable(this, '.date-calendar', this.date);
         this.timeline = new Timeline(this, '.date-timeline');
+        this.selectDefault();
         this.listen();
 
         this.emit('change', { date: this.eftime.origin || this.date.text }, true);
+      }
+
+    , selectDefault: function () {
+        if (!this.originEftime.outputformat) {
+          this.calendarTable.setCursorClass();
+          this.calendarTable.select();
+          this.timeline.select(this.eftime);
+        }
       }
 
     , listen: function () {
@@ -130,6 +139,7 @@ define('datepanel', function (require, exports, module) {
         $.extend(true, this.eftime, eftime);
         this.date = efTime.toDate(eftime);
         this.calendarTable.refresh(this.date);
+        this.timeline.refresh(this.eftime);
       }
 
     , change: function (dobj, init) {
@@ -144,7 +154,7 @@ define('datepanel', function (require, exports, module) {
           d.setMinutes(ts[1] || 0);
           d.setSeconds(ts[2] || 0);
           dobj.date = d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate();
-          dobj.time = d.getUTCHours() + ':' + d.getUTCMinutes() + ':' + d.getUTCSeconds();
+          dobj.time = dobj.time ? (d.getUTCHours() + ':' + d.getUTCMinutes() + ':' + d.getUTCSeconds()) : '';
           dobj.timezone = getTimezone();
           $.extend(true, this.eftime, {
               begin_at: dobj
@@ -186,6 +196,7 @@ define('datepanel', function (require, exports, module) {
         }
         this.dateInput.$element.focusend();
         this.calendarTable.scrollTop(132);
+        this.timeline.scrollTop(140);
       }
 
     , destory: function () {
@@ -731,8 +742,31 @@ define('datepanel', function (require, exports, module) {
 
   Timeline.prototype = {
 
-      getSelectedTime: function () {
+      refresh: function (eftime) {
+        this.removeSelected();
+        this.select(eftime);
+      }
+
+    , select: function (eftime) {
+        if (0 === eftime.outputformat) {
+          if (eftime.begin_at.time) {
+            var d = efTime.toDate(eftime).day;
+            var n = Math.round(d.getMinutes() / 15) * 15;
+            this.selectedTime = lead0(d.getHours()) + ':' + (lead0(d.getMinutes()));
+            this.$select = this.$timesWrapper
+              .find('[data-time="' + this.selectedTime + '"]').addClass('selected');
+
+            this.scrollTop(this.$select.position().top - 5);
+          }
+        }
+      }
+
+    , getSelectedTime: function () {
         return this.selectedTime || '';
+      }
+
+    , scrollTop: function (steps) {
+        this.$timesWrapper.scrollTop(steps);
       }
 
     , listen: function () {
@@ -801,6 +835,13 @@ define('datepanel', function (require, exports, module) {
         this.component.emit('change', { time: this.selectedTime = t });
       }
 
+    , removeSelected: function () {
+        if (this.$select) {
+          this.$select.removeClass('selected');
+          this.$select = null;
+        }
+      }
+
     , generateHTML: function () {
         var l = 97, i = 0
           , html = '', s = ''
@@ -817,14 +858,14 @@ define('datepanel', function (require, exports, module) {
           }
           s = this.divTmp;
           html += s
-              .replace('{{class}}', isLabel ? ' time-label' : '')
+              .replace('{{class}}', isLabel ? (' time-label' + (i % 24 === 0 ? ' time-dashed' : '')) : '')
               .replace('{{dt}}', lead0(h) + ':' + lead0(m))
               .replace('{{t}}',
                   (isLabel ? (h === 0 ? '0' : h12(h))
                     : ((h === 0 ? '0' : h12(h)) + ':' + lead0(m))
                   )
                   + ' '
-                  + (h < 12 ? 'AM' : 'PM')
+                  + ((h < 12 || h === 24) ? 'AM' : 'PM')
                       );
         }
         this.$element.find('.times').html(html);

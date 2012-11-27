@@ -10900,7 +10900,7 @@ body {
 .date-panel .date-timeline .fuzzy-time .time-cates [data-cate="all-day"] {
   color: #191919;
   text-shadow: 0 -1px 1px #ffffff;
-  background-color: #FAFAFA;
+  background-color: #e6e6e6;
 }
 
 .date-panel .date-timeline .fuzzy-time .time-cates [data-cate="dawn"] {
@@ -11055,19 +11055,18 @@ body {
   text-align: left;
 }
 
-.date-panel .date-timeline .times .time-label time:before {
-  display: none;
-}
-
 .date-panel .date-timeline .times .time-label time:after {
   left: 30px;
-  display: block;
   width: 94px;
-  border-top: 1px dashed #ccc;
 }
 
 .date-panel .date-timeline .times .time-label:hover time:after {
   border-top: 1px dashed #3A6EA5;
+}
+
+.date-panel .date-timeline .times .time-dashed time:after {
+  display: block;
+  border-top: 1px dashed #ccc;
 }
 
 .date-panel .date-timeline .times .selected:before {
