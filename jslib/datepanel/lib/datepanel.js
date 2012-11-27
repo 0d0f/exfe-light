@@ -752,6 +752,7 @@ define('datepanel', function (require, exports, module) {
           if (eftime.begin_at.time) {
             var d = efTime.toDate(eftime).day;
             var n = Math.round(d.getMinutes() / 15) * 15;
+            d.setMinutes(n);
             this.selectedTime = lead0(d.getHours()) + ':' + (lead0(d.getMinutes()));
             this.$select = this.$timesWrapper
               .find('[data-time="' + this.selectedTime + '"]').addClass('selected');
