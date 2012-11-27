@@ -143,13 +143,13 @@ define('datepanel', function (require, exports, module) {
       }
 
     , change: function (dobj, init) {
-        dobj.date || (dobj.date = this.calendarTable.getSelectedDate());
-        dobj.time || (dobj.time = this.timeline.getSelectedTime());
         var origin = dobj.date;
-        var d = efTime.parseISO8601(origin);
-        var ts = dobj.time.split(':');
-        origin = $.trim(origin + ' ' + dobj.time);
         if (!init) {
+          dobj.date = this.calendarTable.getSelectedDate();
+          dobj.time = this.timeline.getSelectedTime();
+          var d = efTime.parseISO8601(dobj.date);
+          var ts = dobj.time.split(':');
+          origin = $.trim(dobj.date + ' ' + dobj.time);
           d.setHours(ts[0] || 0);
           d.setMinutes(ts[1] || 0);
           d.setSeconds(ts[2] || 0);
