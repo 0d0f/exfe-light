@@ -783,7 +783,7 @@ define('datepanel', function (require, exports, module) {
         var type = e.type
           , isMouseLeave = 'mouseleave' === type;
 
-        this.$fuzzyTime.toggleClass('hide', isMouseLeave);
+        //this.$fuzzyTime.toggleClass('hide', isMouseLeave);
       }
 
     , itemHover: function (e) {
@@ -824,7 +824,7 @@ define('datepanel', function (require, exports, module) {
 
           var top = e.pageY - this.$timesWrapper.offset().top - 5;
           var l = this.$times.not('.hide').length;
-          this.$fuzzyTime.css('top', top - (l + 1) / 2 * 18 + 'px');
+          //this.$fuzzyTime.css('top', top - (l + 1) / 2 * 18 + 'px');
         }
       }
 
