@@ -11004,6 +11004,7 @@ body {
   position: absolute;
   top: -5px;
   left: 31px;
+  z-index: 0;
   display: none;
   height: 14px;
   font-size: 14px;
@@ -11054,19 +11055,25 @@ body {
   text-align: left;
 }
 
-.date-panel .date-timeline .times .time-label:hover time:before {
+.date-panel .date-timeline .times .time-label time:before {
   display: none;
 }
 
-.date-panel .date-timeline .times .time-label:hover time:after {
+.date-panel .date-timeline .times .time-label time:after {
   left: 30px;
+  display: block;
   width: 94px;
   border-top: 1px dashed #ccc;
+}
+
+.date-panel .date-timeline .times .time-label:hover time:after {
+  border-top: 1px dashed #3A6EA5;
 }
 
 .date-panel .date-timeline .times .selected:before {
   position: absolute;
   top: 1.5px;
+  z-index: 1;
   width: 100%;
   border-top: 1px solid #3A6EA5;
   content: '';
@@ -11076,6 +11083,7 @@ body {
   position: absolute;
   top: -1.5px;
   right: 0;
+  z-index: 1;
   width: 5px;
   height: 5px;
   background-color: #3a6ea5;
