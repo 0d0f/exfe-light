@@ -10758,7 +10758,7 @@ body {
 
 .date-panel .full-month {
   position: absolute;
-  bottom: 3px;
+  bottom: 5px;
   z-index: 1;
   width: 100%;
   font-size: 55px;
