@@ -285,6 +285,7 @@
         time {
           display: none;
           position: absolute;
+          z-index: 0;
           top: -@d;
           left: 31px;
           height: @lh;
@@ -337,18 +338,22 @@
           font-size: 9px;
           color: #333333;
           text-align: left;
+          &:before {
+            display: none;
+          }
+
+          &:after {
+            display: block;
+            left: 30px;
+            width: 94px;
+            border-top: 1px dashed #ccc;
+          }
         }
 
         &:hover {
           time {
-            &:before {
-              display: none;
-            }
-
             &:after {
-              left: 30px;
-              width: 94px;
-              border-top: 1px dashed #ccc;
+              border-top: 1px dashed #3A6EA5;
             }
           }
         }
@@ -358,6 +363,7 @@
         &:before {
           position: absolute;
           content: '';
+          z-index: 1;
           top: (@h - 1) / 2px;
           width: 100%;
           border-top: 1px solid #3A6EA5;
@@ -366,6 +372,7 @@
         &:after {
           position: absolute;
           content: '';
+          z-index: 1;
           top: -(7 - @h) / 2px;
           right: 0;
           width: 5px;
