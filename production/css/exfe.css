@@ -10771,6 +10771,11 @@ body {
 .date-panel .table-wrapper {
   max-height: 120px;
   overflow-y: scroll;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+       -o-user-select: none;
+          user-select: none;
 }
 
 .date-panel #date-table {
