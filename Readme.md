@@ -33,6 +33,8 @@ EXFE.COM 前端架构
   * Less
   * Jade
   * bootstrap
+    * http://twitter.github.com/bootstrap/
+    * http://ajkochanowicz.github.com/Kickstrap/
   * HTML5 + CSS3
     - Modernizr
     - http://modernizr.com/

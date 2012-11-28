@@ -1,2 +1,5 @@
 .DS_Store
 .*.swp
+less/1b.less
+less/themes
+*.bk*
