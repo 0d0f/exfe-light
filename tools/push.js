@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var Fs = require('fs');
 var Path = require('path');
 var Util = require('util');
