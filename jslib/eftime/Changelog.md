@@ -1,3 +1,6 @@
+* v0.0.6 2012-11-28T17:31:06 UTC+0800
+  * [*] `day` => `date`
+
 * v0.0.5 2012-11-21T15:24:29 UTC+0800
   * added convert efTime object to date object
   * added months monthsShort
