@@ -1787,8 +1787,8 @@ define('xdialog', function (require, exports, module) {
 
   };
 
-  // oauth Verification
-  dialogs.verification_oauth = {
+  // twitter Verification
+  dialogs.verification_twitter = {
 
     options: {
 
@@ -1822,12 +1822,6 @@ define('xdialog', function (require, exports, module) {
             , function (data) {
                 window.location.href = data.url;
               }
-            , function (data) {
-                var code = data && data.meta && data.meta.code;
-                if (code === 400) {
-                  that.hide();
-                }
-              }
           );
           e.preventDefault();
           return false;
@@ -1853,10 +1847,10 @@ define('xdialog', function (require, exports, module) {
           + '<div>Identity to verify:</div>'
           + '<div class="pull-right user-identity">'
             + '<img class="avatar" src="" alt="" width="40" height="40">'
-            + '<i class="provider"></i>'
+            + '<i class="provider icon16-identity-twitter"></i>'
           + '</div>'
           + '<div class="box identity"></div>'
-          + '<p class="xalert-twitter hide">You will be directed to Twitter website to authenticate. Don’t forget to follow @<span class="x-sign">EXFE</span> so we could send you invitation PRIVATELY through Direct Message.</p>'
+          + '<p>You will be directed to Twitter website to authenticate. Don’t forget to follow @<span class="x-sign">EXFE</span> so we could send you invitation PRIVATELY through Direct Message.</p>'
           + '<p>We hate spam, will NEVER disappoint your trust.</p>',
 
         footer: ''
@@ -1884,9 +1878,8 @@ define('xdialog', function (require, exports, module) {
         this.$('.xbtn-verify').data('identity_id', identity.id);
         this.$('.identity').text(Util.printExtUserName(identity));
         this.$('.avatar').attr('src', identity.avatar_filename);
-        this.$('i.provider').addClass('icon16-identity-' + identity.provider);
-        this.$('.xalert-' + identity.provider).removeClass('hide');
       }
+
     }
 
   };
