@@ -68,8 +68,8 @@ define('xidentity', function (require) {
       keyCode = e.keyCode;
       switch(keyCode) {
         case 9: // tab
-          this.tab();
           //e.preventDefault();
+          this.tab();
           break;
         //case 13: // enter
         //case 27: // escape
@@ -153,13 +153,9 @@ define('xidentity', function (require) {
         }
 
         if ((res = Util.parseId(q)).provider) {
-          var external_username = res.external_identity;
-          if (res.provider === 'twitter') {
-            external_username = res.external_username;
-          }
           var identity = {
-            provider: res.provider,
-            external_username: external_username
+              provider: res.provider
+            , external_username: res.external_username
           };
 
           that.timer = setTimeout(function () {
@@ -188,6 +184,7 @@ define('xidentity', function (require) {
                 , function (data) {
                   if (e === that.target.val()) {
                     options.useCache && (that.cache[e] = data);
+                    data.identity || (data.identity = identity);
                     that.emit('autocomplete:finish', data);
                   }
                 }
