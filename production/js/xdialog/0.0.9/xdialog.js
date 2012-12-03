@@ -314,18 +314,13 @@ define('xdialog', function (require, exports, module) {
             return;
           }
 
-          // 非 normal email
-          if (od.provider !== 'email') {
-            od.external_identity = od.external_username;
-          }
-
           if (t === 'd01' || t === 'd02') {
 
             Api.request('signin'
               , {
                 type: 'POST',
                 data: {
-                  external_username: od.external_identity,
+                  external_username: od.external_username,
                   provider: od.provider,
                   password: od.password,
                   name: od.name || '',
@@ -345,8 +340,8 @@ define('xdialog', function (require, exports, module) {
                 delete App.request.session.browsing_user;
 
                 Store.set('authorization', data);
-                // 最后登陆的 external_identity
-                Store.set('last_external_username', od.external_identity);
+                // 最后登陆的 external_username
+                Store.set('last_external_username', Util.printExtUserName(od));
 
                 that.hide();
                 if (t === 'd01' || t === 'd02') {
@@ -395,8 +390,7 @@ define('xdialog', function (require, exports, module) {
               + '<div class="pull-left authorize">Authenticate with:</div>'
               + '<div class="pull-left oauth">'
                 + '<a href="#" class="oauth-twitter" data-oauth="twitter">twitter</a>'
-                // NOTE: 临时设置间距
-                + '<a href="#" class="oauth-facebook" data-oauth="facebook" style="margin-left: 26px;">facebook</a>'
+                + '<a href="#" class="oauth-facebook" data-oauth="facebook">facebook</a>'
               + '</div>'
             + '</div>'
             + '<div class="orspliter">or</div>'
@@ -1145,7 +1139,7 @@ define('xdialog', function (require, exports, module) {
           else if (flag === 'SIGN_UP') {
 
             var provider = od.provider
-              , external_username = od.external_username || od.external_identity || ''
+              , external_username = od.external_username || ''
               , user = Store.get('user');
 
             // 如果该身份已经添加过，则不再重复添加
@@ -1199,7 +1193,7 @@ define('xdialog', function (require, exports, module) {
             addIdentity(external_username, provider, that);
           }
           else if (flag === 'AUTHENTICATE') {
-            that.$('.oauth > a').eq(0).trigger('click');
+            that.$('.oauth > a[data-oauth="' + od.provider + '"]').trigger('click');
           }
         },
         'click .xbtn-verify': function (e) {
@@ -1218,7 +1212,7 @@ define('xdialog', function (require, exports, module) {
           }
 
           var provider = od.provider
-            , external_username = od.external_username || od.external_identity || ''
+            , external_username = od.external_username || ''
             , user = Store.get('user');
 
           // 如果该身份已经添加过，则不再重复添加
@@ -1350,6 +1344,7 @@ define('xdialog', function (require, exports, module) {
               + '<div class="pull-left authorize">Authenticate with:</div>'
               + '<div class="pull-left oauth">'
                 + '<a href="#" class="oauth-twitter" data-oauth="twitter">twitter</a>'
+                + '<a href="#" class="oauth-facebook" data-oauth="facebook">facebook</a>'
               + '</div>'
             + '</div>'
             + '<div class="orspliter">or</div>'
@@ -1416,7 +1411,7 @@ define('xdialog', function (require, exports, module) {
       Bus.off('widget-dialog-identification-auto');
       Bus.on('widget-dialog-identification-auto', function (data) {
         if (data) {
-          if (data.identity) {
+          if (data.identity && data.identity.avatar_filename) {
             that._identity = data.identity;
             that.$('.user-identity').removeClass('hide')
               .find('img').attr('src', data.identity.avatar_filename)
@@ -2887,7 +2882,7 @@ define('xdialog', function (require, exports, module) {
           $identityLabel.removeClass('label-error');
           $identityLabelSpan.text('');
 
-          if (data.identity) {
+          if (data.identity && data.identity.avatar_filename) {
             that._identity = data.identity;
             that.$('.user-identity').removeClass('hide')
               .find('img').attr('src', data.identity.avatar_filename)

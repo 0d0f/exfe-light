@@ -1,3 +1,14 @@
+* v0.0.9 2012-12-03T15:15:01 UTC+0800
+  - API Changes
+    * `verification_twitter` changed to `verification_oauth`
+
+* v0.0.8 2012-11-30T14:36:26 UTC+0800
+  - API Changes
+    * removed `identity.external_identity`
+
+  - New Features
+    * `Add/Remove Facebook Identity`
+
 * v0.0.7 2012-11-22T19:09:16 UTC+0800
   * `Welcome` Facebook 身份判断
 
