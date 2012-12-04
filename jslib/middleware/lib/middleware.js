@@ -124,11 +124,9 @@ define('middleware', function (require, exports, module) {
   middleware.fixedFaceBookURL = function (req, res, next) {
     if (window.location.hash === '#_=_') {
       window.location.hash = '';
-      // Mozilla triggered twice, firefox-v18.0
-      if ($.browser.mozilla) {
-        return;
-      }
       req.updateUrl();
+      // Mozilla triggered twice, firefox-v18.0
+      if ($.browser.mozilla) { return; }
     }
     next();
   };
