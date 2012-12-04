@@ -1,4 +1,8 @@
-* V0.0.6 2012-10-24T17:54:20 UTC+0800
+* v0.0.7 2012-12-04T16:48:12 UTC+0800
+  * Fixed Bugs
+    - setTimeout, set delay magic-number
+
+* v0.0.6 2012-10-24T17:54:20 UTC+0800
   * fixed OAuth 用户设置密码时，弹出框 bug
 
 * v0.0.5 2012-09-25T01:50:45
