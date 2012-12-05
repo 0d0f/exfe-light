@@ -4,12 +4,73 @@ define(function (require, exports, module) {
 
     var config = require('config');
 
+    var Store  = require('store');
+
     var home = function() {
         // default home page
     };
 
-    var cross = function() {
-        // please download EXFE app to view the cross
+    var showAppInStore = function() {
+        window.location = 'itms://itunes.apple.com/us/app/facebook/id514026604';
+    };
+
+    var launchApp = function(args) {
+        window.location = 'exfe://crosses/' + args;
+    };
+
+    var tryLaunchApp = function(args) {
+        launchApp(args);
+        var tridAt = +new Date;
+        // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
+        setTimeout(function() {
+            // To avoid failing on return to MobileSafari, ensure freshness!
+            if (+new Date - tridAt < 2000) {
+                showAppInStore();
+            }
+        }, 500);
+    };
+
+    var cross = function(token) {
+        $('#app-main').html(
+            '<div>'
+          +     '<div id="cross_title"></div>'
+          +     '<div id="cross_desc"></div>'
+          + '<div>'
+        );
+        $.ajax({
+            type    : 'post',
+            url     : config.api_url + '/Crosses/GetCrossByInvitationToken',
+            data    : {invitation_token : token},
+            success : function(data) {
+                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                    $('#cross_title').html(data.response.cross.title);
+                    $('#cross_desc').html(data.response.cross.description);
+                    var args  = '?read_only='        + data.response.read_only
+                              + '&action='           + data.response.action
+                              + '&invitation_token=' + token;
+                    if (typeof data.response.cross_access_token !== 'undefined') {
+                        args += '&cross_access_token=' + data.response.cross_access_token;
+                        var cats = Store.get('cats');
+                        if (!cats) {
+                            cats = {};
+                        }
+                        cats[token] = data.response.cross_access_token;
+                        Store.set('cats', cats);
+                    }
+                    if (typeof data.authorization !== 'undefined') {
+                        args += '&token' + data.response.authorization.token;
+                        Store.set('authorization', data.response.authorization);
+                    }
+                    tryLaunchApp(args);
+                    return;
+                }
+                // 处理失败
+            },
+            error   : function() {
+                // token 无效
+                console.log(data);
+            }
+        });
     };
 
     var inputPassword = function(token) {
@@ -31,8 +92,10 @@ define(function (require, exports, module) {
                             if (data.response.authorization) {
                                 console.log(data.response.authorization);
                                 alert('Done');
+                                return;
                             }
                         }
+                        // 处理失败
                     },
                     error   : function() {
                         // token 无效
@@ -79,10 +142,12 @@ define(function (require, exports, module) {
     }
     hash = hash.split('/');
     for (var i = 0; i < hash.length; i++) {
-        if (hash[i].match(/token=.*/)) {
-            resolvetoken(hash[i].replace(/token=(.*)/, '$1', hash[i]));
-        } else if (hash[i].match(/!token=.*/)) {
-            cross();
+        if (hash[i].match(/\/token=.*/)) {
+            resolvetoken(hash[i].replace(/\/token=(.*)/, '$1', hash[i]));
+        } else if (hash[i].match(/\!token=.*/)) {
+            cross(hash[i].replace(/\!token=(.*)/, '$1', hash[i]));
+        } else {
+            // 404
         }
     }
 
