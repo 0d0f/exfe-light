@@ -1,3 +1,11 @@
+* v0.0.12 2012-12-04T22:56:08 UTC+0800
+  - New Features
+    * `Ignore` Button
+
+* v0.0.11 2012-11-30T15:02:18 UTC+0800
+  - New Features
+    * `sort identities`
+
 * v0.0.10 2012-11-20T16:48:50 UTC+0800
   * `Upcoming` Cross 时间正序
 

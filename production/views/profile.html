@@ -13,7 +13,7 @@
               <h3 class="pull-left" data-link="nota"></h3>
               <div class="xbtn changepassword" data-link="nota" data-widget="dialog"><i class="icon14-lock"></i><span></span></div>
             </div>
-            <ul class="unstyled identity-list"></ul>
+            <ul class="unstyled identity-list" data-draggable="true"></ul>
 
           </div>
           <button id="app-profile-addidentity" class="pull-right xbtn xbtn-addidentity hide" data-widget="dialog" data-dialog-type="addidentity">Add Identity…</button>
@@ -75,7 +75,7 @@
           <span class="xlabel">
             <i class="icon16-warning"></i>
             <span>Authorization failed.</span>
-            <button class="xbtn xbtn-reauthorize" data-widget="dialog" data-dialog-type="verification_twitter" data-link="nota">Re-Authorize</button>
+            <button class="xbtn xbtn-reauthorize" data-widget="dialog" data-dialog-type="verification_oauth" data-link="nota">Re-Authorize</button>
           </span>
           {{/ifOauthVerifying}}
           {{#ifVerifying provider status}}
@@ -159,7 +159,8 @@
               <a href="/#!{{crossItem "id"}}" data-identity-id="{{crossItem "identityid"}}" data-name="{{crossItem "name"}}" data-exfeeid="{{crossItem "exfeeid"}}" data-invitationid="{{crossItem "invitationid"}}" data-id="{{crossItem "id"}}" data-link>
                 <h5>{{crossItem "title"}}</h5>
                 <div>{{printTime2 "time"}}{{#ifPlace}} <span class="gray">at</span> {{crossItem "place"}}{{/ifPlace}} <span class="gray">by</span> {{by_identity.name}}</div>
-                <div class="xbtn xbtn-accept" data-link="nota">I'm in</div>
+                <i class="icon14-clear xbtn-ignore" data-action="IGNORED" data-link="nota" title="Ignore">Ignore</i>
+                <div class="xbtn xbtn-accept" data-action="ACCEPTED" data-link="nota">I'm in</div>
               </a>
             </div>
             {{/crosses}}

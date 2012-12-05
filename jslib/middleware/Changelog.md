@@ -1,3 +1,7 @@
+* v0.0.9 2012-12-04T12:53:10 UTC+0800
+  - Fixed Bugs
+    * Mozilla Firefox-v18.0 `facebook redirect` triggered twice bug.
+
 * v0.0.8 2012-11-08T14:49:09 UTC+0800
   * 修复 添加 Twitter Oauth 时，取消无法跳回到 Profile 时的bug
 

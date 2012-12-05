@@ -1,3 +1,7 @@
+* v0.0.6 2012-12-04T12:57:05 UTC+0800
+  - Fixed BUgs
+    * `Facebook redirect`, Mozilla Firefox triggered twice bug.
+
 * v0.0.5 2012-11-09T17:33:53 UTC+0800
   * 添加 `app.widgetCaches = {}`
 
