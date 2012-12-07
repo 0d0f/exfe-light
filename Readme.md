@@ -51,6 +51,7 @@ EXFE.COM 前端架构
   * https://github.com/styleguide
   * http://tomdoc.org/
   * http://rng.io/
+  * task-based https://github.com/gruntjs/grunt
 
 ## Node.js & Packages
   - npm install -gd less
@@ -58,5 +59,6 @@ EXFE.COM 前端架构
   - npm install -gd h5bp
   - npm install -gd dox
   - npm install -gd uglify-js
+  - npm install -gd grunt
 
 [id]: https://github.com/cfddream/odof
