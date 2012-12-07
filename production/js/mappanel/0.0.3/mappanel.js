@@ -169,11 +169,9 @@ define('mappanel', function (require, exports, module) {
           , $placesList = placesList.$element
           , placeInput = this.placeInput
           , s = placesList.status
-          , t;
         if (s) {
           // firefox hack
-          t = setTimeout(function () {
-            clearTimeout(t);
+          setTimeout(function () {
             $placesList.focus();
           }, 0);
         //} else {
@@ -182,22 +180,21 @@ define('mappanel', function (require, exports, module) {
       }
 
     , placesListTab: function () {
-        var $placeText = this.placeInput.$element
+        var $placeText = this.placeInput.$element;
         // firefox hack
-        , t = setTimeout(function () {
-          clearTimeout(t);
+        setTimeout(function () {
           $placeText.focusend();
         }, 0);
       }
 
     , change: function (place, searchable) {
-        searchable = !!searchable
         var placeData = this.place
           , oldTitle = placeData.title;
         placeData.title = place.title;
         placeData.description = place.description;
         placeData.lat = place.lat || '';
         placeData.lng = place.lng || '';
+        searchable = !!searchable
         if (searchable) {
           if (oldTitle !== place.title) {
             this.xmap.textSearch(place.title);
@@ -571,12 +568,14 @@ define('mappanel', function (require, exports, module) {
             }
             break;
           case 38: // up
+            e.stopPropagation();
             e.preventDefault();
             self.scroll(-1);
             self.prev();
             component.emit('enter-marker', self.curr);
             break;
           case 40: // down
+            e.stopPropagation();
             e.preventDefault();
             self.scroll(1);
             self.next();
@@ -587,7 +586,8 @@ define('mappanel', function (require, exports, module) {
 
     , keypress: function (e) {
         if (this.suppressKeyPressRepeat) {
-          return;
+          // must be return `false`, Mozila Firefox
+          return false;
         }
         this.keyHandler(e);
       }
@@ -837,7 +837,7 @@ define('mappanel', function (require, exports, module) {
     , clearMarkers: function () {
         var markers = this.markers
           , marker;
-        while (marker = markers.shift()) {
+        while ((marker = markers.shift())) {
           marker.setMap(null);
           marker = null;
         }
@@ -890,6 +890,7 @@ define('mappanel', function (require, exports, module) {
       }
 
     , zoom: function (n) {
+        if (!this.isGo) { return; }
         this.sizeStatus = n;
         var width = $win.width()
           , height = $win.height()
@@ -906,11 +907,10 @@ define('mappanel', function (require, exports, module) {
             top: height * (1 - a) / 2 + sT
           , left: width * (1 - a) / 2 + sL
         });
-        self._map.setOptions(this.enableOptions);
         GMaps.event.trigger(self._map, 'resize');
         // 返回到中心点
-        //self._map.panTo(self.hasLatLng ? self._placeMarker.getPosition() : self._userMarker.getPosition());
-        self._map.setCenter(self.hasLatLng ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+        self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+        self._map.setOptions(this.enableOptions);
       }
 
       // marker index
