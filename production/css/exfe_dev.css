@@ -11206,27 +11206,26 @@ body {
 .map-panel .map-place .places-list li.place-item {
   height: 36px;
   padding-left: 5px;
-}
+  /*
+        .rank {
+          display: inline-block;
+          margin-top: 8px;
+          width: 20px;
+          height: 20px;
+          background-color: #b2b2b2;
+          font-size: 12px;
+          color: #ffffff;
+          font-weight: bold;
+          text-align: center;
+          .border-radius(5px);
+          .pull-left();
+        }
+        */
 
-.map-panel .map-place .places-list li.place-item .rank {
-  display: inline-block;
-  float: left;
-  width: 20px;
-  height: 20px;
-  margin-top: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #ffffff;
-  text-align: center;
-  background-color: #b2b2b2;
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
 }
 
 .map-panel .map-place .places-list li.place-item address {
   margin-bottom: 0;
-  margin-left: 25px;
   overflow: hidden;
   white-space: nowrap;
 }
