@@ -376,7 +376,6 @@ define('mappanel', function (require, exports, module) {
   var PlacesList = function (component, selector) {
     this.template = ''
               + '<li class="place-item" data-latitude="{{lat}}" data-longitude="{{lng}}">'
-                + '<div class="rank">{{i}}</div>'
                 + '<address><div class="title">{{title}}</div><div class="description">{{address}}</div></address>'
               + '</li>'
     this.component = component
@@ -420,8 +419,7 @@ define('mappanel', function (require, exports, module) {
         if (this.status) {
           R.each(places, function (v, i) {
             li = template;
-            html += li.replace('{{i}}', i + 1)
-              .replace('{{title}}', v.name)
+            html += li.replace('{{title}}', v.name)
               .replace('{{address}}', v.formatted_address)
               .replace('{{lat}}', v.geometry.location.Ya)
               .replace('{{lng}}', v.geometry.location.Za);
