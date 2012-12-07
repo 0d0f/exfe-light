@@ -391,7 +391,7 @@ define('mappanel', function (require, exports, module) {
     this.viewportIndex = 0;
     this.scrollIndexs = [0, 11]
     this.scrollNum = 1;
-    this.itemPX = 36;
+    this.itemPX = 40;
 
     this.listen();
   };
