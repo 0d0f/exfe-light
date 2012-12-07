@@ -673,6 +673,8 @@ define('mappanel', function (require, exports, module) {
           };
 
           this.enableOptions = {
+              //zoom: this.zoomNum
+            //, panControl: true
               panControl: true
             , panControlOptions: {
                 position: GMaps.ControlPosition.RIGHT_TOP
@@ -895,6 +897,7 @@ define('mappanel', function (require, exports, module) {
         var width = $win.width()
           , height = $win.height()
           , GMaps = this.GMaps
+          , markers = this.markers
           , a = this.a
           , component = this.component
           , self = this
@@ -909,8 +912,11 @@ define('mappanel', function (require, exports, module) {
         });
         GMaps.event.trigger(self._map, 'resize');
         // 返回到中心点
+        (!self._placeMarker && markers.length) && (self._placeMarker = markers[0]);
         self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
-        self._map.setOptions(this.enableOptions);
+        setTimeout(function () {
+          self._map.setOptions(self.enableOptions);
+        }, 0);
       }
 
       // marker index
