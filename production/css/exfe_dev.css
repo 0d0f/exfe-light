@@ -11106,9 +11106,10 @@ body {
 }
 
 .map-panel {
-  max-width: 550px;
   min-width: 360px;
   min-height: 120px;
+  /*max-width: 550px;*/
+
   background-color: #f6f6f6;
   background-image: -moz-linear-gradient(top, #fcfcfc, #eeeeee);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fcfcfc), to(#eeeeee));
