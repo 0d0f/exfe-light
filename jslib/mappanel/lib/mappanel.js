@@ -411,7 +411,8 @@ define('mappanel', function (require, exports, module) {
           .on('keyup.mappanel', selector, $proxy(this.keyup, this))
           .on('keydown.mappanel', selector, $proxy(this.keydown, this))
           .on('focus.mappanel', selector, $proxy(this.focus, this))
-          .on('click.mappanel', selector + ' > li', $proxy(this.click, this));
+          .on('click.mappanel', selector + ' > li', $proxy(this.click, this))
+          .on('mouseenter.mappanel', selector + ' > li', $proxy(this.mouseenter, this));
       }
 
     , update: function (places) {
@@ -438,14 +439,21 @@ define('mappanel', function (require, exports, module) {
         this.removeCurrStyle('hover');
       }
 
-    , selectItem: function (i) {
+    , mouseenter: function (e) {
+        var $item = $(e.currentTarget)
+          , i = $item.index();
+        this.selectItem(i, true);
+        this.component.emit('enter-marker', i);
+      }
+
+    , selectItem: function (i, scrollable) {
         if (0 === this.len) {
           this.$items = this.$element.find(' > li');
           this.len = this.$items.length;
         }
         this.removeCurrStyle('hover');
         this.curr = i;
-        this.$element.scrollTop(Math.floor(i / this.viewportRows) * this.itemPX * this.viewportRows);
+        !scrollable && this.$element.scrollTop(Math.floor(i / this.viewportRows) * this.itemPX * this.viewportRows);
         this.addCurrStyle('hover');
       }
 
@@ -453,7 +461,7 @@ define('mappanel', function (require, exports, module) {
         this.$items = this.$element.find(' > li');
         this.len = this.$items.length;
         this.addCurrStyle('hover');
-        this.component.emit('enter-marker', 0);
+        this.component.emit('enter-marker', this.curr);
       }
 
     , addCurrStyle: function (c) {
@@ -656,15 +664,38 @@ define('mappanel', function (require, exports, module) {
 
           this.createIcons();
 
+          this.disableOptions = {
+              panControl: false
+            , zoomControl: false
+            , scaleControl: false
+            , mapTypeControl: false
+            , overviewMapControl: false
+          };
+
+          this.enableOptions = {
+              panControl: true
+            , panControlOptions: {
+                position: GMaps.ControlPosition.RIGHT_TOP
+              }
+            , zoomControl: true
+            , zoomControlOptions: {
+                position: GMaps.ControlPosition.RIGHT_TOP
+              }
+            , scaleControl: true
+            , scaleControlOptions: {
+                position: GMaps.ControlPosition.RIGHT_TOP
+              }
+          };
+
           this._map = new GMaps.Map(this.$element[0]
             , {
                 zoom: this.zoomNum
               , center: this._center
               , MapTypeId: GMaps.MapTypeId.ROADMAP
-              , zoomControl: false
-              , mapTypeControl: false
             }
           );
+
+          this._map.setOptions(this.disableOptions);
 
           this._overlay = new GMaps.OverlayView();
           this._overlay.draw = function () {};
@@ -785,7 +816,7 @@ define('mappanel', function (require, exports, module) {
 
     , createIcons: function () {
         var GMaps = this.GMaps
-          , url = 'http://master.exfe.me/static/img/icons.png'
+          , url = Config.site_url + '/static/img/icons.png'
           , gSize = GMaps.Size
           , gPoint = GMaps.Point;
         // blue-icon 26 * 36
@@ -862,6 +893,7 @@ define('mappanel', function (require, exports, module) {
         this.sizeStatus = n;
         var width = $win.width()
           , height = $win.height()
+          , GMaps = this.GMaps
           , a = this.a
           , component = this.component
           , self = this
@@ -874,7 +906,8 @@ define('mappanel', function (require, exports, module) {
             top: height * (1 - a) / 2 + sT
           , left: width * (1 - a) / 2 + sL
         });
-        google.maps.event.trigger(self._map, 'resize');
+        self._map.setOptions(this.enableOptions);
+        GMaps.event.trigger(self._map, 'resize');
         // 返回到中心点
         //self._map.panTo(self.hasLatLng ? self._placeMarker.getPosition() : self._userMarker.getPosition());
         self._map.setCenter(self.hasLatLng ? self._placeMarker.getPosition() : self._userMarker.getPosition());
