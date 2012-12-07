@@ -18,3 +18,6 @@
 [html5please]: http://html5please.com/
 [platformhtml5]: http://platform.html5.org
 [ex5-compat-table]: http://kangax.github.com/es5-compat-table
+
+### Tmp:
+  * http://codepen.io/soulwire/full/kqHxB
