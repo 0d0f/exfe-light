@@ -15,8 +15,6 @@ define(function (require, exports, module) {
     };
 
     var launchApp = function(args) {
-        alert('exfe://crosses/' + args);
-        return;
         window.location = 'exfe://crosses/' + args;
     };
 
@@ -58,7 +56,6 @@ define(function (require, exports, module) {
                         }
                         cats[token] = data.response.cross_access_token;
                         Store.set('cats', cats);
-                        alert(cats);
                     }
                     if (typeof data.authorization !== 'undefined') {
                         args += '&token' + data.response.authorization.token;
@@ -153,5 +150,27 @@ define(function (require, exports, module) {
             // 404
         }
     }
+
+    window.DoFullScreen = function ()  {
+
+    var isInFullScreen = (document.fullScreenElement && document.fullScreenElement !==     null) ||    // alternative standard method
+            (document.mozFullScreen || document.webkitIsFullScreen);
+
+    var docElm = document.documentElement;
+    if (!isInFullScreen) {
+
+        if (docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        }
+        else if (docElm.mozRequestFullScreen) {
+            docElm.mozRequestFullScreen();
+            alert("Mozilla entering fullscreen!");
+        }
+        else if (docElm.webkitRequestFullScreen) {
+            docElm.webkitRequestFullScreen();
+            alert("Webkit entering fullscreen!");
+        }
+    }
+}
 
 });
