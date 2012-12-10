@@ -58,7 +58,7 @@ EXFE.COM 前端架构
   - npm install -gd connect
   - npm install -gd h5bp
   - npm install -gd dox
-  - npm install -gd uglify-js
+  - npm install -gd uglify-js@1
   - npm install -gd grunt
 
 [id]: https://github.com/cfddream/odof
