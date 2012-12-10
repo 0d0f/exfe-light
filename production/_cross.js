@@ -1916,8 +1916,9 @@ define(function (require, exports, module) {
             if (strRelTime === 'Seconds ago') {
               strRelTime = 'Today';
             }
-          //} else if (!bdate && btime) {
-            //strAbsTime = btime;
+          } else if (!bdate && btime) {
+            strAbsTime = '';
+            strRelTime = btime;
           }
 
         } else {
