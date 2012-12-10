@@ -117,30 +117,23 @@ define('mappanel', function (require, exports, module) {
       }
 
     , keydown: function (e) {
-        var self = this
-          , altKey = e.altKey
-          , ctrlKey = e.ctrlKey
-          , shiftKey = e.shiftKey
-          , metaKey = e.metaKey
-          , kc = e.keyCode;
-        //if (93 === kc || 224 === kc) { kc = 91; }
+        var self = this;
         // escape
-        if (27 === kc) {
+        if (27 === e.keyCode) {
           self.revert();
         }
-        // ctrl/command + enter
-        else if (13 === kc && (!(altKey | shiftKey) & (ctrlKey | metaKey))) {
+        else if (e.ctrlKey && 13 === e.keyCode) {
           self.emit('update-place', self.place);
           self.save();
         }
         // big map
-        else if (ctrlKey && 187 === kc) {
+        else if (e.ctrlKey && 187 === e.keyCode) {
           self.emit('zoomup-map', 0);
         }
         // small map
-        //else if (ctrlKey && 189 === kc) {
+        else if (e.ctrlKey && 189 === e.keyCode) {
           //self.emit('zoomdown-map', 1);
-        //}
+        }
       }
 
     , zoomUpMap: function (n) {
@@ -153,7 +146,6 @@ define('mappanel', function (require, exports, module) {
 
     , clickPlaceItem: function (i) {
         this.placesList.setPlace();
-        this.element.focus();
       }
 
     , enterPlaceItem: function (i) {

@@ -1,3 +1,7 @@
+* v0.0.3 2012-12-10T14:53:12 UTC+0800
+  - New Features
+    * Supported `command + enter`
+
 * v0.0.2 2012-11-28T14:58:02 UTC+0800
   * [+] fuzzy time
 
