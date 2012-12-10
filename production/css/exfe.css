@@ -11140,6 +11140,10 @@ body {
   min-height: 120px;
 }
 
+.map-panel .map-box img {
+  max-width: none;
+}
+
 .map-panel .map-place {
   position: absolute;
   top: 20px;
