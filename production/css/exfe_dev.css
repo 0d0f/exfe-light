@@ -7471,7 +7471,8 @@ body {
 }
 
 .modal-unsubscribe .modal-main {
-  min-height: 150px;
+  height: 100px;
+  min-height: auto;
 }
 
 html,
