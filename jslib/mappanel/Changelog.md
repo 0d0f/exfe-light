@@ -1,6 +1,9 @@
-* v0.0.4 2012-12-05T14:22:43 UTC+0800
+* v0.0.4 2012-12-11T12:43:09 UTC+0800
   - New Features
     * Supported `command + enter`
+
+  - Fixed Bugs
+    * filter `place.description` last `\r\n`
 
 * v0.0.3 2012-12-05T14:22:43 UTC+0800
   - New Features

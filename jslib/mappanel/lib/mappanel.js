@@ -197,7 +197,8 @@ define('mappanel', function (require, exports, module) {
 
     , change: function (place, searchable) {
         var placeData = this.place
-          , oldTitle = placeData.title;
+          , oldTitle = placeData.title
+          , oldDesc = placeData.description;
         placeData.title = place.title;
         placeData.description = place.description;
         placeData.lat = place.lat || '';
@@ -210,7 +211,9 @@ define('mappanel', function (require, exports, module) {
         } else {
           this.placeInput.change(printPlace(place.title, place.description));
         }
-        this.emit('update-place', placeData);
+        if (oldTitle !== place.title || oldDesc !== place.description) {
+          this.emit('update-place', placeData);
+        }
       }
 
     , revert: function (e) {
@@ -938,7 +941,7 @@ define('mappanel', function (require, exports, module) {
     placeString || (placeString = '');
     var ps = placeString.split(SPLITTER)
       , title = ps.length ? $.trim(ps.shift()) : ''
-      , description = $.trim(ps.join(CR));
+      , description = $.trim(ps.join(CR)).replace(SPLITTER, '');
 
     return {
         title: title
