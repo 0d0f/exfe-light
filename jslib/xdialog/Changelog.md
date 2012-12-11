@@ -1,3 +1,7 @@
+* v0.1.9 2012-12-11T15:01:47 UTC+0800
+  - New Features
+    * `Unsubscribe` dialog
+
 * v0.0.9 2012-12-03T15:15:01 UTC+0800
   - API Changes
     * `verification_twitter` changed to `verification_oauth`
