@@ -11,7 +11,8 @@ define('mappanel', function (require, exports, module) {
     , SPLITTER = /[\r\n]+/g
     , CR = '\r'
     , geolocation = window.navigator.geolocation
-    , $win = $(window);
+    , $win = $(window)
+    , isIE = $.browser.msie;
 
   var Panel = require('panel');
 
@@ -337,8 +338,8 @@ define('mappanel', function (require, exports, module) {
 
     , keyup: function (e) {
         switch (e.keyCode) {
-          case 40: // down arrow
-          case 38: // up arrow
+          case 40: // down
+          case 38: // up
           case 16: // shift
           case 17: // ctrl
           case 18: // alt
@@ -363,6 +364,17 @@ define('mappanel', function (require, exports, module) {
             e.preventDefault();
             component.emit('placeinput-tab');
             break;
+          case 40: // down
+            // if the cursor in the last, tab to PlacesList
+            var v = this.$element.val()
+              , l = v.length
+              , ele = this.$element[0]
+              , end = selectionEnd(ele);
+            if (l === end) {
+              e.preventDefault();
+              component.emit('placeinput-tab');
+            }
+            break;
         }
       }
 
@@ -374,7 +386,7 @@ define('mappanel', function (require, exports, module) {
       }
 
     , keydown: function (e) {
-        this.suppressKeyPressRepeat = !!~R.indexOf([9], e.keyCode);
+        this.suppressKeyPressRepeat = !!~R.indexOf([9, 40], e.keyCode);
         this.keyHandler(e);
       }
 
@@ -673,14 +685,6 @@ define('mappanel', function (require, exports, module) {
 
           this.createIcons();
 
-          this.disableOptions = {
-              panControl: false
-            , zoomControl: false
-            , scaleControl: false
-            , mapTypeControl: false
-            , overviewMapControl: false
-          };
-
           this.enableOptions = {
               //zoom: this.zoomNum
             //, panControl: true
@@ -702,11 +706,10 @@ define('mappanel', function (require, exports, module) {
             , {
                 zoom: this.zoomNum
               , center: this._center
+              , disableDefaultUI: true
               , MapTypeId: GMaps.MapTypeId.ROADMAP
             }
           );
-
-          this._map.setOptions(this.disableOptions);
 
           this._overlay = new GMaps.OverlayView();
           this._overlay.draw = function () {};
@@ -952,6 +955,20 @@ define('mappanel', function (require, exports, module) {
   var printPlace = function (title, description) {
     return title + (description ? CR + description.replace(SPLITTER, CR) : '');
   };
+
+  // get Textarea selectionEnd
+  var selectionEnd = function (inputor) {
+    return isIE ? getIESelectionEnd(inputor) : inputor.selectionEnd;
+  }
+
+  var getIESelectionEnd = function (inputor) {
+    var r = document.selection.createRange()
+      , re = inputor.createTextRange()
+      , rc = re.duplicate();
+    re.moveToBookmark(r.getBookmark());
+    rc.setEndPoint('EndToStart', re);
+    return rc.text.length + r.text.length;
+  }
 
   return MapPanel;
 });
