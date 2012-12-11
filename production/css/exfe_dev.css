@@ -7470,6 +7470,10 @@ body {
   line-height: 28px;
 }
 
+.modal-unsubscribe .modal-main {
+  min-height: 150px;
+}
+
 html,
 body {
   height: 100%;
