@@ -7470,6 +7470,11 @@ body {
   line-height: 28px;
 }
 
+.modal-unsubscribe .modal-main {
+  min-height: auto;
+  padding-bottom: 19px;
+}
+
 html,
 body {
   height: 100%;

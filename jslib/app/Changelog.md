@@ -1,3 +1,7 @@
+* v0.1.6 2012-12-11T15:01:47 UTC+0800
+  - New Features
+    * `Unsubscribe` dialog
+
 * v0.0.6 2012-12-04T12:57:05 UTC+0800
   - Fixed BUgs
     * `Facebook redirect`, Mozilla Firefox triggered twice bug.
