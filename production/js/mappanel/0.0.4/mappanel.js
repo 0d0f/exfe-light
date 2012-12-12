@@ -29,6 +29,7 @@ define('mappanel', function (require, exports, module) {
                 + '<div class="map-place">'
                   + '<div class="place-editor">'
                     + '<i class="pointer icon24-enter place-submit"></i>'
+                    + '<div class="place-filter"></div>'
                     + '<textarea class="normal" name="place-text" id="place-text" placeholder="Enter place here."></textarea>'
                   + '</div>'
                   + '<div class="map-places hide">'
