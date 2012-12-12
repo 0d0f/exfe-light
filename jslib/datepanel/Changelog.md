@@ -1,3 +1,7 @@
+* v0.0.4 2012-12-12T12:51:15 UTC+0800
+  - Fixed Bugs:
+    * if clicked td-date, if eftime.begin_at.time === '', eftime.begin_at.date = dateStr
+
 * v0.0.3 2012-12-10T17:25:09 UTC+0800
   - New Features
     * Supported `command + enter`
