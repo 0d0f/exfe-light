@@ -375,6 +375,11 @@ table {
 
 html, body {
   height: 100%;
+  width: 100%;
+}
+
+body {
+    #gradient > .vertical(#88A9CB, #1C2732);
 }
 
 // Gradients
@@ -397,13 +402,258 @@ html, body {
 
 #app-main {
     height: 100%;
-    #gradient > .vertical(#476584, #ADCCED);
+
 }
 
 .top-banner {
-    height: 80px;
-    background-color: #000000;
-    opacity:0.6;
+    width: 100%;
+    height: 50px;
+    background: url("/static/img/homebar_bg@2x.png");
     font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: white;
+}
+
+.top-banner .center {
+    position: relative;
+    width: 320px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.top-banner .welcome {
+    position: relative;
+    margin-left: 20px;
+    line-height: 50px;
+    float: left;
+}
+
+.top-banner .exfe-logo {
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+.dialog-box {
+    width: 320px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 200px rgba(36,67,99,0.5);
+}
+
+.big-x {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 182px;
+    height: 100%;
+}
+
+.big-x .img {
+    position: absolute;
+    top: 50%;
+    margin-top: -91px;
+}
+
+.actions {
+    position: absolute;
+    left: 20px;
+    width: 280px;
+}
+
+.get-button {
+    width: 100%;
+    height: 45px;
+}
+
+.get-button button {
+    width: 100%;
+    height: 45px;
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#cccccc), to(#fafafa));
+    background-image: -moz-linear-gradient(90deg, #cccccc 0%, #fafafa 100%);
+    border-radius: 3px;
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.35);
+    font: bold 20px/44px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    color: #333;
+    text-shadow: 0 1px 1px #ffffff;
+    text-align: center;
+
+}
+
+.get-button button .exfe {
+    color: #3A6EA5;
+}
+
+.exfe {
+    text-shadow: 0 1px 1px #60ADFF;
+}
+
+.get-button button .free {
+    font-style: italic;
+}
+
+.get-button .redirecting {
+    position: absolute;
+    text-align: center;
+    line-height: 16px;
+    font-size: 14px;
+    width: 280px;
+    height: 16px;
+    top: 29px;
+    color: #7F7F7F;
+}
+
+.web-version {
+    text-align: center;
+    margin-top: 5px;
+    line-height: 16px;
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #7F7F7F;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.base-info {
+    color: #FFFFFF;
+    width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+    line-height: 22px;
+    font-size: 16px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.base-info .by {
+    font-weight: bold;
+}
+
+.cross {
+    width: 300px;
+    color: #CCCCCC;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    background-color: rgba(0, 0, 0, 0.08);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.cross .title {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 10px;
+    font-size: 20px;
+    line-height: 26px;
+}
+
+.cross .time {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.cross .place {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.verify-actions {
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+    width: 280px;
+}
+
+.identity {
+    background-color: rgba(0, 0, 0, 0.08);
+    width: 100%;
+    height: 40px;
+}
+
+.identity .provider {
+    position: relative;
+    display: block;
+    float: left;
+    margin-left: 7px;
+    margin-top: 11px;
+}
+
+.identity .avatar {
+    position: relative;
+    display: block;
+    float: left;
+}
+
+.identity .name {
+    position: relative;
+    display: block;
+    float: left;
+    font-size: 18px;
+    line-height: 40px;
+    margin-left: 7px;
+}
+
+#password {
+    width: 280px;
+    height: 41px;
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.90);
+    border-radius: 4px;
+    border-color: rgba(0, 0, 0, 0.41);
+    border-width: 1px;
+    padding: 0px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
+    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
+    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
+    line-height: 41px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.error-info {
+    font-size: 14px;
+    line-height: 17px;
+    height: 17px;
+    color: #FFFFFF;
+    text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
+}
+
+.done-info .status {
+    padding-top: 12px;
+    font-size: 20px;
+    line-height: 26px;
+    height: 26px;
+    color: #FFFFFF;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+.done-info .error {
+    text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
+}
+
+.done-info .redirect {
+    padding-top: 3px;
+    font-size: 14px;
+    line-height: 18px;
+    height: 18px;
+    color: #CCCCCC;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+.space {
+    height: 80px;
 }
