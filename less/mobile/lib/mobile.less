@@ -479,7 +479,7 @@ body {
     color: #333;
     text-shadow: 0 1px 1px #ffffff;
     text-align: center;
-
+    display: none;
 }
 
 .get-button button .exfe {
@@ -488,6 +488,10 @@ body {
 
 .exfe {
     text-shadow: 0 1px 1px #60ADFF;
+}
+
+button .exfe {
+    text-shadow: none;
 }
 
 .get-button button .free {
@@ -632,6 +636,10 @@ body {
     text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
 }
 
+.done-info {
+    display: none;
+}
+
 .done-info .status {
     padding-top: 12px;
     font-size: 20px;
@@ -642,11 +650,16 @@ body {
     display: block;
 }
 
-.done-info .error {
+.actions .error-info {
+    font-size: 20px;
+    line-height: 26px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #FFFFFF;
     text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
 }
 
-.done-info .redirect {
+.done-info .redirecting {
     padding-top: 3px;
     font-size: 14px;
     line-height: 18px;

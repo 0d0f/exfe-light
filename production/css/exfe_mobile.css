@@ -470,6 +470,7 @@ body {
 }
 
 .get-button button {
+  display: none;
   width: 100%;
   height: 45px;
   font: bold 20px/44px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
@@ -490,6 +491,10 @@ body {
   text-shadow: 0 1px 1px #60ADFF;
 }
 
+button .exfe {
+  text-shadow: none;
+}
+
 .get-button button .free {
   font-style: italic;
 }
@@ -501,8 +506,9 @@ body {
   height: 16px;
   font-size: 14px;
   line-height: 16px;
-  color: #7F7F7F;
+  color: #CCC;
   text-align: center;
+  opacity: 0.5;
 }
 
 .web-version {
@@ -511,8 +517,9 @@ body {
   margin-left: auto;
   font-size: 14px;
   line-height: 16px;
-  color: #7F7F7F;
+  color: #CCC;
   text-align: center;
+  opacity: 0.5;
 }
 
 .underline {
@@ -630,6 +637,10 @@ body {
   text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
 }
 
+.done-info {
+  display: none;
+}
+
 .done-info .status {
   display: block;
   height: 26px;
@@ -640,17 +651,22 @@ body {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
-.done-info .error {
+.actions .error-info {
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 20px;
+  line-height: 26px;
+  color: #FFFFFF;
   text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
 }
 
-.done-info .redirect {
+.done-info .redirecting {
   display: block;
   height: 18px;
   padding-top: 3px;
   font-size: 14px;
   line-height: 18px;
-  color: #CCCCCC;
+  color: #CCC;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
