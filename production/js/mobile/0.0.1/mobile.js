@@ -2,6 +2,8 @@ define(function (require, exports, module) {
 
     require('zepto');
 
+    require('moment');
+
     var config = require('config');
 
     var Store  = require('store');
@@ -40,6 +42,7 @@ define(function (require, exports, module) {
             } else {
                 clearTimeout(rdTime);
                 tryLaunchApp(args);
+                $('.actions .error-info').hide();
             }
         }, 1000);
     };
@@ -143,7 +146,7 @@ define(function (require, exports, module) {
             success : function(data) {
                 if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
                     $('.cross .title').html(data.response.cross.title);
-                    $('.cross .time').html(data.response.cross.time.origin);
+                    $('.cross .time').html(renderCrossTime(data.response.cross.time));
                     $('.cross .place').html(data.response.cross.place.title);
                     var user_id = 0;
                     if (data.response.authorization) {
@@ -179,13 +182,89 @@ define(function (require, exports, module) {
                     return;
                 }
                 // 处理失败
-                home();
+                home(true);
             },
             error   : function() {
                 // token 无效
-                home();
+                home(true);
             }
         });
+    };
+
+    var renderCrossTime = function(crossTime) {
+        function trim(string) {
+            return string ? string.replace(/^\s+|\s+$/g, '') : '';
+        }
+        function escape(html, encode) {
+            return html
+                  .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/'/g, '&#39;');
+        }
+        function getTimezone() {
+            // W3C : 'Fri Jul 06 2012 12:28:23 GMT+0800 (CST)'
+            // IE  : 'Fri Jul 6 12:28:23 UTC+0800 2012'
+            var rawTimeStr  = Date().toString(),
+                numTimezone = rawTimeStr.replace(/^.+([+-]\d{2})(\d{2}).+$/i, '$1:$2'),
+                strTimezone = rawTimeStr.replace(/^.*\(([a-z]*)\).*$/i, '$1');
+                strTimezone = strTimezone === 'UTC' || strTimezone === 'GMT' ? '' : strTimezone;
+            return numTimezone + (strTimezone === rawTimeStr ? '' : (' ' + strTimezone));
+        }
+        function getTimezoneOffset(timezone) {
+            if ((timezone = trim(timezone))) {
+                var arrTimezone = timezone.split(':');
+                if (arrTimezone.length === 2) {
+                    var intHour = parseInt(arrTimezone[0], 10) * 60 * 60,
+                        intMin  = parseInt(arrTimezone[1], 10) * 60;
+                    return intHour + (intHour > 0 ? intMin : -intMin);
+                }
+            }
+            return null;
+        }
+        var efTime = require('eftime');
+        var crossOffset = getTimezoneOffset(crossTime.begin_at.timezone),
+            timeOffset  = getTimezoneOffset(getTimezone()),
+            timevalid   = crossOffset === timeOffset && require('config').timevalid,
+            strAbsTime  = '', strRelTime = '', format = 'YYYY-MM-DD',
+            placeholder = '';
+        if (crossTime.origin) {
+            var bdate = crossTime.begin_at.date
+              , btime = crossTime.begin_at.time
+              , bzone = crossTime.begin_at.timezone;
+            if (crossTime.outputformat) {
+                strAbsTime = placeholder;
+                strRelTime = escape(crossTime.origin);
+          } else if (bdate && btime) {
+            var now = new Date()
+              , matches = bdate.match(/^\d\d\d\d/m);
+            var objMon = moment((moment.utc(
+                crossTime.begin_at.date + ' '
+              + crossTime.begin_at.time, format + ' HH:mm:ss'
+            ).unix()   + (timevalid ? 0 : (crossOffset - timeOffset))) * 1000);
+            strAbsTime = objMon.format('h:mmA on ddd, MMM D' + (matches && matches[0] == now.getFullYear() ? '' : ' YYYY'))
+                        + (timevalid ? '' : (' ' + crossTime.begin_at.timezone));;
+            strRelTime = efTime.timeAgo(bdate + ' ' + btime + ' Z', undefined, 'X');
+          } else if (bdate && !btime) {
+            var now = new Date()
+              , matches = bdate.match(/^\d\d\d\d/m);
+            strAbsTime = moment(bdate).format('On ddd, MMM D' + (matches && matches[0] == now.getFullYear() ? '' : ' YYYY'))
+                        + (timevalid ? '' : (' ' + Cross.time.begin_at.timezone));;
+            now = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            strRelTime = efTime.timeAgo(bdate + ' ' + bzone[0] + bzone[1] + bzone[2]  + bzone[4] + bzone[5], +now);
+            if (strRelTime === 'Seconds ago') {
+              strRelTime = 'Today';
+            }
+          } else if (!bdate && btime) {
+            strAbsTime = '';
+            strRelTime = btime;
+          }
+        } else {
+            strAbsTime = placeholder;
+            strRelTime = 'Sometime';
+        }
+        return strAbsTime ? strAbsTime : escape(crossTime.origin);
     };
 
     var inputPassword = function(result, token) {
@@ -205,7 +284,7 @@ define(function (require, exports, module) {
           +             '<span class="name">Steve Exfer</span>'
           +         '</div>'
           +         '<div>'
-          +             '<input type="text" id="password" placeholder="Set EXFE Password" />'
+          +             '<input type="password" id="password" placeholder="Set EXFE Password" />'
           +         '<div>'
           +         '<div class="error-info"></div>'
           +         '<div class="done-info">'
@@ -233,11 +312,11 @@ define(function (require, exports, module) {
                     return;
                 }
                 // error getting user informations
-                home();
+                home(true);
             },
             error   : function() {
                 // error getting user informations
-                home();
+                home(true);
             }
         });
         $('#password').bind('keydown', function(event) {
@@ -321,11 +400,11 @@ define(function (require, exports, module) {
                     }
                 }
                 // error getting identity informations
-                home();
+                home(true);
             },
             error   : function() {
                 // error getting identity informations
-                home();
+                home(true);
             }
         });
     };
@@ -339,20 +418,19 @@ define(function (require, exports, module) {
                 if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
                     switch (data.response.action) {
                         case 'VERIFIED':
+                            verification(data.response);
                             return;
                         case 'INPUT_NEW_PASSWORD':
-//                            inputPassword(data.response, token);
-                            verification(data.response);
-
+                            inputPassword(data.response, token);
                             return;
                     }
                 }
                 // token 无效
-                home();
+                home(true);
             },
             error   : function() {
                 // token 无效
-                home();
+                home(true);
             }
         });
     };
@@ -369,7 +447,7 @@ define(function (require, exports, module) {
                 return;
             } else {
                 // 404
-                home();
+                home(true);
                 return;
             }
         }
