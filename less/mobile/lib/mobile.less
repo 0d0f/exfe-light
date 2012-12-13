@@ -368,6 +368,10 @@ textarea {
  * Remove most spacing between table cells.
  */
 
+
+@iconSpritePath:          "/static/img/icons.png";
+
+
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -557,6 +561,8 @@ button .exfe {
     padding-top: 10px;
     font-size: 20px;
     line-height: 26px;
+    max-height: 52px;
+    overflow: hidden;
 }
 
 .cross .time {
@@ -564,6 +570,8 @@ button .exfe {
     margin-right: 10px;
     font-size: 14px;
     line-height: 20px;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .cross .place {
@@ -572,6 +580,8 @@ button .exfe {
     padding-bottom: 10px;
     font-size: 14px;
     line-height: 20px;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .verify-actions {
@@ -622,7 +632,7 @@ button .exfe {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
     -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(255,255,255,0.5);
-    line-height: 41px;
+    // line-height: 41px;
     font-size: 18px;
     color: #333;
     text-align: center;
@@ -672,3 +682,29 @@ button .exfe {
 .space {
     height: 80px;
 }
+
+.eye {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  vertical-align: text-top;
+  background-image: ~'url("@{iconSpritePath}")';
+  background-repeat: no-repeat;
+  float: right;
+  position: relative;
+  top: -53+10+(41-18)/2px;
+  right: 5px;
+}
+
+.icon16-pass-show                 { background-position: 5  * -16px -26px }
+.icon16-pass-hide                 { background-position: 6  * -16px -26px }
+
+.loading {
+    float: right;
+    position: relative;
+    top: -53+10+(41-18)/2px;
+    right: 8px;
+    display: none;
+}
+
