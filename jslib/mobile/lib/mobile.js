@@ -282,11 +282,13 @@ define(function (require, exports, module) {
           +     '<div class="verify-actions">'
           +         '<div class="identity">'
           +             '<img class="avatar" width="40" height="40" src="" />'
-          +             '<span class="name">Steve Exfer</span>'
+          +             '<span class="name"></span>'
           +         '</div>'
           +         '<div>'
           +             '<input type="password" id="password" placeholder="Set EXFE Password" />'
-          +         '<div>'
+          +             '<i class="eye icon16-pass-show"></i>'
+          +             '<img width="18" height="18" class="loading" src="/static/img/loading.gif" />'
+          +         '</div>'
           +         '<div class="error-info"></div>'
           +         '<div class="done-info">'
           +             '<span class="status">Password set successfully.</span>'
@@ -299,9 +301,16 @@ define(function (require, exports, module) {
           +         '</div>'
           +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +     '</div>'
-          + '<div>'
+          + '</div>'
         );
         setBtnPos(true);
+        $('.eye').click(function(e){
+          var $input = $(this).prev();
+          $input.prop('type', function (i, val) {
+            return val === 'password' ? 'text' : 'password';
+          });
+          $(this).toggleClass('icon16-pass-hide icon16-pass-show');
+        });
         $.ajax({
             type    : 'post',
             url     : config.api_url + '/Users/' + result.user_id + '?token=' + result.token,
@@ -322,6 +331,8 @@ define(function (require, exports, module) {
         });
         $('#password').bind('keydown', function(event) {
             if (event.which === 13) {
+                $('.loading').show();
+                $('.eye').hide();
                 var password = $('#password').val();
                 if (password.length >= 4) {
                     $.ajax({
@@ -329,6 +340,8 @@ define(function (require, exports, module) {
                         url     : config.api_url + '/Users/ResetPassword',
                         data    : {token : token, password : password},
                         success : function(data) {
+                            $('.loading').hide();
+                            $('.eye').show();
                             if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
                                 if (data.response.authorization) {
                                     $('.done-info').show();
@@ -339,11 +352,15 @@ define(function (require, exports, module) {
                             $('.error-info').html('Failed to set password. Please try later.').show();
                         },
                         error   : function() {
+                            $('.loading').hide();
+                            $('.eye').show();
                             $('.error-info').html('Failed to set password. Please try later.').show();
                         }
                     });
                 } else {
                     $('.error-info').html('Password must be longer than four!').show();
+                    $('.loading').hide();
+                    $('.eye').show();
                 }
             } else {
                 $('.error-info').hide();
