@@ -25,12 +25,16 @@ define(function (require, exports, module) {
         $('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
         $('.actions').css('top', (height - 86 - (banner ? 50 : 0)) + 'px');
         $('.big-x').css('height', (height - 86 - (banner ? 50 : 0)) + 'px');
-        $('.redirecting').unbind('click').bind('click', function() {
-            //
-        });
-        $('.web-version').unbind('click').bind('click', function() {
-            //
-        });
+        if (navigator.userAgent.match(/iPad/)) {
+            $('.redirecting').unbind('click').bind('click', function() {
+                location.href = '/?ipad' + location.hash;
+            });
+            $('.web-version').unbind('click').bind('click', function() {
+                location.href = '/?ipad' + location.hash;
+            }).show();
+        } else {
+            $('.web-version').hide();
+        }
         $('.get-button button').unbind('click').bind('click', showAppInStore);
     };
 
