@@ -1,3 +1,7 @@
+* v0.1.9 2012-12-11T15:03:05 UTC+0800
+  - Added
+    * `Unsubscribe` dialog
+
 * v0.0.9 2012-12-05T11:47:04 UTC+0800
   - Changes
     * 如果 Cross 邀请 Token 返回 403, 显示无权限页面

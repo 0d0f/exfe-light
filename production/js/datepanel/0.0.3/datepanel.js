@@ -136,7 +136,7 @@ define('datepanel', function (require, exports, module) {
       }
 
     , refreshFromDI: function (eftime) {
-        var eftime = this.eftime = eftime;
+        $.extend(true, this.eftime, eftime)
         this.dateObj = efTime.toDate(eftime);
         this.calendarTable.refresh(this.dateObj.date);
         this.timeline.refresh(eftime);
@@ -144,13 +144,14 @@ define('datepanel', function (require, exports, module) {
 
     , refreshFromCT: function (dateStr) {
         var eftime = this.eftime
-          , date = this.dateObj.date;
-        dateStr = dateStr.split('-');
-        date.setFullYear(dateStr[0]);
-        date.setMonth(dateStr[1] - 1);
-        date.setDate(dateStr[2]);
-        dateStr = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getDate();
-        eftime.begin_at.date = dateStr;
+          , date = this.dateObj.date
+          , dateStrUTC = ''
+          , dateArrays = dateStr.split('-');
+        date.setFullYear(dateArrays[0]);
+        date.setMonth(dateArrays[1] - 1);
+        date.setDate(dateArrays[2]);
+        dateStrUTC = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+        eftime.begin_at.date = dateStrUTC;
         if (eftime.outputformat) {
           eftime.outputformat = 0;
           eftime.origin = dateStr;
@@ -331,6 +332,7 @@ define('datepanel', function (require, exports, module) {
         var self = this
           , component = this.component
           , kc = e.keyCode;
+
         switch (kc) {
           case 9: // tab
             e.preventDefault();
@@ -419,21 +421,22 @@ define('datepanel', function (require, exports, module) {
   CalendarTable.prototype = {
 
       initCalendar: function (date) {
-        var self = this
+        var n = this.vpRows
           , y = date.getFullYear()
           , m = date.getMonth()
-          , d = date.getDate()
+          , h = this.vpHeight
           , dt = date.getDay()
-          , date = new Date(y, m, d - dt - 21);
+          , date = new Date(y, m, date.getDate() - dt - 21);
 
         this.startDate = dateFormat(date);
         this.nextPend(date);
         this.nextPend(date);
         this.nextPend(date);
         this.endDate = dateFormat(date);
-        this.coords = [dt, 3];
+        this.coords = [dt, n];
         this.$trs = this.$tbody.find('tr');
-        this.$tableWrapper.scrollTop(0);
+        this.scrollTop(h * n);
+        this.updateYearMonth(y, months[m]);
       }
 
     , refresh: function (date) {
@@ -487,23 +490,27 @@ define('datepanel', function (require, exports, module) {
         e.preventDefault();
         var $tableWrapper = this.$tableWrapper
           , t = $tableWrapper.scrollTop();
-        if (t == 0) {
+        if (t === 0) {
           this.pageUp(this.coords);
           $tableWrapper.scrollTop(132);
           this.$year.addClass('hide');
           this.$fullMonth.addClass('hide');
         }
-        else if (t == 277) { // 9 * 44 + 120
+        else if (t === 277) { // 9 * 44 + 120
           this.pageDown(this.coords);
           this.$year.addClass('hide');
           this.$fullMonth.addClass('hide');
         } else {
           if (this.$cursor) {
             var d = toDate(this.$cursor.data('date'));
-            this.$year.removeClass('hide').html(d.getFullYear());
-            this.$fullMonth.removeClass('hide').html(months[d.getMonth()]);
+            this.updateYearMonth(d.getFullYear(), months[d.getMonth()]);
           }
         }
+      }
+
+    , updateYearMonth: function (y, m) {
+          this.$year.removeClass('hide').html(y);
+          this.$fullMonth.removeClass('hide').html(m);
       }
 
     , tdClick: function (e) {

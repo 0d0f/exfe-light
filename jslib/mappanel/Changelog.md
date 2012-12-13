@@ -1,6 +1,10 @@
-* v0.0.4 2012-12-05T14:22:43 UTC+0800
+* v0.0.4 2012-12-11T21:42:49 UTC+0800
   - New Features
     * Supported `command + enter`
+    * Supported `down` switched to placelist, the cursor in string last.
+
+  - Fixed Bugs
+    * filter `place.description` last `\r\n`
 
 * v0.0.3 2012-12-05T14:22:43 UTC+0800
   - New Features
