@@ -159,31 +159,27 @@ define(function (require, exports, module) {
                     } else if (data.response.browsing_identity.connected_user_id) {
                         user_id = data.response.browsing_identity.connected_user_id;
                     }
-                    if (typeof data.authorization !== 'undefined') {
-                        args += '&token' + data.response.authorization.token;
-                        Store.set('authorization', data.response.authorization);
-                    }
                     if (typeof data.response.cross_access_token !== 'undefined') {
-                        args += '&cross_access_token=' + data.response.cross_access_token;
                         cats[token] = data.response.cross_access_token;
                         Store.set('cats', cats);
                     }
-                    if (user_id > 0) {
-                        for (var i in data.response.cross.exfee.invitations) {
-                            if (data.response.cross.exfee.invitations[i].identity.connected_user_id === user_id) {
-                                $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name);
-                                $('.base-info .by').show();
-                                var args = '?user_id='    + user_id
-                                         + '&token='      + data.response.authorization.token
-                                         + '&identity_id' + data.response.cross.exfee.invitations[i].identity.id
-                                         + '&cross_id='   + data.response.cross.id;
-                                redirecting(args);
-                                return;
-                            }
+                    for (var i in data.response.cross.exfee.invitations) {
+                        if (user_id
+                         && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
+                            $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name).show();
+                            break;
                         }
+                        $('.base-info .by').hide();
                     }
-                    $('.base-info .by').hide();
-                    return;
+                    if (typeof data.response.authorization !== 'undefined') {
+                        Store.set('authorization', data.response.authorization);
+                        var args = data.response.cross.id
+                                 + '?user_id='     + user_id
+                                 + '&token='       + data.response.authorization.token
+                                 + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
+                        redirecting(args);
+                        return;
+                    }
                 }
                 // 处理失败
                 home(true);
