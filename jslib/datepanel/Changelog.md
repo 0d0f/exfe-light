@@ -1,3 +1,7 @@
+* v0.1.0 2012-12-13T14:13:19 UTC+0800
+  - API Changes
+    * `timeline` refactor
+
 * v0.0.4 2012-12-12T12:51:15 UTC+0800
   - Fixed Bugs:
     * if clicked td-date, if eftime.begin_at.time === '', eftime.begin_at.date = dateStr
