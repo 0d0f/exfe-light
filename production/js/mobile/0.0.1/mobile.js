@@ -39,6 +39,7 @@ define(function (require, exports, module) {
     };
 
     var redirecting = function(args) {
+        $('.redirecting').show();
         rdTime = setInterval(function() {
             var sec = ~~$('.redirecting .sec').html() - 1;
             if (sec >= 0) {
@@ -81,7 +82,7 @@ define(function (require, exports, module) {
     };
 
     var launchApp = function(args) {
-        window.location = 'exfex://crosses/' + (args ? args : '');
+        window.location = 'exfe://crosses/' + (args ? args : '');
     };
 
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
@@ -158,32 +159,30 @@ define(function (require, exports, module) {
                     } else if (data.response.browsing_identity.connected_user_id) {
                         user_id = data.response.browsing_identity.connected_user_id;
                     }
-                    if (user_id === 0) {
-                        $('.base-info .by').hide();
-                    } else {
-                        for (var i in data.response.cross.exfee.invitations) {
-                            if (data.response.cross.exfee.invitations[i].identity.connected_user_id === user_id) {
-                                $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name);
-                                $('.base-info .by').show();
-                                break;
-                            }
-                            $('.base-info .by').hide();
-                        }
+                    if (typeof data.authorization !== 'undefined') {
+                        args += '&token' + data.response.authorization.token;
+                        Store.set('authorization', data.response.authorization);
                     }
-                    var args  = '?user_id='            + user_id
-                              + '&read_only='          + data.response.read_only
-                              + (data.response.action  ? ('&action=' + data.response.action) : '')
-                              + '&invitation_token='   + token;
                     if (typeof data.response.cross_access_token !== 'undefined') {
                         args += '&cross_access_token=' + data.response.cross_access_token;
                         cats[token] = data.response.cross_access_token;
                         Store.set('cats', cats);
                     }
-                    if (typeof data.authorization !== 'undefined') {
-                        args += '&token' + data.response.authorization.token;
-                        Store.set('authorization', data.response.authorization);
+                    if (user_id > 0) {
+                        for (var i in data.response.cross.exfee.invitations) {
+                            if (data.response.cross.exfee.invitations[i].identity.connected_user_id === user_id) {
+                                $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name);
+                                $('.base-info .by').show();
+                                var args = '?user_id='    + user_id
+                                         + '&token='      + data.response.authorization.token
+                                         + '&identity_id' + data.response.cross.exfee.invitations[i].identity.id
+                                         + '&cross_id='   + data.response.cross.id;
+                                redirecting(args);
+                                return;
+                            }
+                        }
                     }
-                    redirecting(args);
+                    $('.base-info .by').hide();
                     return;
                 }
                 // 处理失败
