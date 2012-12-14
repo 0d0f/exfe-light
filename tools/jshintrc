@@ -3,7 +3,7 @@
 {
     // Settings
     "passfail"      : false,  // Stop on first error.                                                                                                       报错即停止
-    "maxerr"        : 100,    // Maximum error before stopping.                                                                                             设定错误阀值
+    "maxerr"        : 1000,    // Maximum error before stopping.                                                                                             设定错误阀值
 
 
     // Predefined globals whom JSHint will ignore.
@@ -22,13 +22,16 @@
     "predef"        : [  // Custom globals.
       "$",
       "define",
+      "exports",
+      "module",
       "Modernizr",
       // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Functions#escape_and_unescape_functions
       "escape",
-      "unescape"
+      "unescape",
         //"exampleVar",
         //"anotherCoolGlobal",
         //"iLoveDouglas"
+      "Cross"
     ],
 
 
@@ -39,7 +42,7 @@
 
     // EcmaScript 5.
     "es5"           : true,   // Allow EcmaScript 5 syntax.
-    "strict"        : false,  // Require `use strict` pragma  in every file.
+    "strict"        : true,  // Require `use strict` pragma  in every file.
     "globalstrict"  : false,  // Allow global "use strict" (also enables 'strict').
 
 
@@ -79,5 +82,6 @@
     "sub"           : false,  // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
     "trailing"      : false,  // Prohibit trailing whitespaces.
     "white"         : false,  // Check against strict whitespace and indentation rules.                                                                     空白
-    "indent"        : 2
+    "indent"        : 2,
+    "unused"        : true
 }
