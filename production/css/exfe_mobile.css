@@ -502,6 +502,7 @@ button .exfe {
 .get-button .redirecting {
   position: absolute;
   top: 29px;
+  display: none;
   width: 280px;
   height: 16px;
   font-size: 14px;
