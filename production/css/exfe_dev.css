@@ -10890,6 +10890,7 @@ body {
 
 .date-panel .date-timeline .fuzzy-time {
   position: absolute;
+  top: 0;
   right: -70px;
   width: 70px;
   text-align: center;
