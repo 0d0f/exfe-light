@@ -263,43 +263,48 @@
       }
     }
 
+    @h: 1px;
+    @lh: 15px;
+    @dh: (@lh - @h) / 2px;
     .times-wrapper {
       // height: 190px;
       height: 210px;
       overflow-x: hidden;
       overflow-y: scroll;
+      cursor: pointer;
+      position: relative;
+      background: transparent;
+      /*background: rgba(233, 0, 0, .3);*/
     }
 
     .times {
-      @h:     4px;
-      @lh:    14px;
-      @d:     (@lh - @h) / 2px;
-      width: 124px;
-      padding: @d 3px 0;
       position: relative;
+      width: 124px;
       cursor: pointer;
+      margin-top: @dh;
+      z-index: -1;
 
       .time-item {
-        position: relative;
+        position: absolute;
+        left: 0;
+        /*z-index: 1;*/
+        font-size: 14px;
+        line-height: @lh;
+        width: 100%;
         height: @h;
-        letter-spacing: 0;
 
         time {
           display: none;
-          position: absolute;
-          z-index: 0;
-          top: -@d;
-          left: 31px;
-          height: @lh;
-          font-size: @lh;
-          line-height: @lh;
+          position: relative;
+          top: -@dh;
+          z-index: 2;
           color: rgba(58, 110, 165, .66);
-          text-align: center;
+
           &:before {
             display: none;
             position: absolute;
             content: '';
-            top: (@lh - 1) / 2;
+            top: @dh;
             left: -31px;
             width: 28px;
             border-top: 1px dashed #3A6EA5;
@@ -309,46 +314,51 @@
             display: none;
             position: absolute;
             content: '';
-            top: (@lh - 1) / 2;
+            top: @dh;
             right: -31px;
             width: 28px;
             border-top: 1px dashed #3A6EA5;
           }
+
         }
+      }
 
-        &:hover {
-          time {
-            display: inline-block;
-            width: 62px;
+      .time-hover {
+        time {
+          display: block;
+          width: 62px;
+          left: 31px;
+          text-align: center;
 
-            &:before {
-              display: block;
-            }
-            &:after {
-              display: block;
-            }
+          &:before {
+            display: block;
+          }
+          &:after {
+            display: block;
           }
         }
       }
 
       .time-label {
-
         time {
-          left: 0;
-          display: inline-block;
+          display: block;
           width: 30px;
           font-size: 9px;
           color: #333333;
           text-align: left;
 
           &:after {
+            display: block;
             left: 30px;
             width: 94px;
+            border-top: 1px dashed #ccc;
           }
         }
 
-        &:hover {
+        &.time-hover {
           time {
+          width: 30px;
+          left: 0;
             &:after {
               border-top: 1px dashed #3A6EA5;
             }
@@ -356,19 +366,12 @@
         }
       }
 
-      .time-dashed {
-        time:after {
-          display: block;
-          border-top: 1px dashed #ccc;
-        }
-      }
-
       .selected {
         &:before {
           position: absolute;
           content: '';
-          z-index: 1;
-          top: (@h - 1) / 2px;
+          top: 0;
+          z-index: 3;
           width: 100%;
           border-top: 1px solid #3A6EA5;
         }
@@ -376,8 +379,8 @@
         &:after {
           position: absolute;
           content: '';
-          z-index: 1;
           top: -(7 - @h) / 2px;
+          z-index: 3;
           right: 0;
           width: 5px;
           height: 5px;
@@ -386,13 +389,32 @@
           #gradient > .directional(#DBEAF9, #3A6EA5, 276deg);
         }
       }
+
       .time-label.selected {
         &:before {
-          left: 30px;
+          left: 31px;
           width: 94px;
         }
       }
+
+      #tlPosition {
+        .core (@index) {
+          .topX (@index) when (@index > 0) {
+            (~".time-label:nth-child(@{index})") {
+              top: (@index - 1) * 5 * 12px;
+            }
+            .topX(@index - 1);
+          }
+          .topX (0) {}
+
+          .topX (@index);
+        }
+      }
+
+      #tlPosition > .core(10);
+
     }
+
   }
 
 }

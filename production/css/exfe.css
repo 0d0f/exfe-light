@@ -10990,40 +10990,42 @@ body {
 }
 
 .date-panel .date-timeline .times-wrapper {
+  position: relative;
   height: 210px;
   overflow-x: hidden;
   overflow-y: scroll;
+  cursor: pointer;
+  background: transparent;
 }
 
 .date-panel .date-timeline .times {
   position: relative;
+  z-index: -1;
   width: 124px;
-  padding: 5px 3px 0;
+  margin-top: 7px;
   cursor: pointer;
 }
 
 .date-panel .date-timeline .times .time-item {
-  position: relative;
-  height: 4px;
-  letter-spacing: 0;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  font-size: 14px;
+  line-height: 15px;
 }
 
 .date-panel .date-timeline .times .time-item time {
-  position: absolute;
-  top: -5px;
-  left: 31px;
-  z-index: 0;
+  position: relative;
+  top: -7px;
+  z-index: 2;
   display: none;
-  height: 14px;
-  font-size: 14px;
-  line-height: 14px;
   color: rgba(58, 110, 165, 0.66);
-  text-align: center;
 }
 
 .date-panel .date-timeline .times .time-item time:before {
   position: absolute;
-  top: 6.5px;
+  top: 7px;
   left: -31px;
   display: none;
   width: 28px;
@@ -11033,7 +11035,7 @@ body {
 
 .date-panel .date-timeline .times .time-item time:after {
   position: absolute;
-  top: 6.5px;
+  top: 7px;
   right: -31px;
   display: none;
   width: 28px;
@@ -11041,22 +11043,23 @@ body {
   content: '';
 }
 
-.date-panel .date-timeline .times .time-item:hover time {
-  display: inline-block;
+.date-panel .date-timeline .times .time-hover time {
+  left: 31px;
+  display: block;
   width: 62px;
+  text-align: center;
 }
 
-.date-panel .date-timeline .times .time-item:hover time:before {
+.date-panel .date-timeline .times .time-hover time:before {
   display: block;
 }
 
-.date-panel .date-timeline .times .time-item:hover time:after {
+.date-panel .date-timeline .times .time-hover time:after {
   display: block;
 }
 
 .date-panel .date-timeline .times .time-label time {
-  left: 0;
-  display: inline-block;
+  display: block;
   width: 30px;
   font-size: 9px;
   color: #333333;
@@ -11065,22 +11068,24 @@ body {
 
 .date-panel .date-timeline .times .time-label time:after {
   left: 30px;
-  width: 94px;
-}
-
-.date-panel .date-timeline .times .time-label:hover time:after {
-  border-top: 1px dashed #3A6EA5;
-}
-
-.date-panel .date-timeline .times .time-dashed time:after {
   display: block;
+  width: 94px;
   border-top: 1px dashed #ccc;
+}
+
+.date-panel .date-timeline .times .time-label.time-hover time {
+  left: 0;
+  width: 30px;
+}
+
+.date-panel .date-timeline .times .time-label.time-hover time:after {
+  border-top: 1px dashed #3A6EA5;
 }
 
 .date-panel .date-timeline .times .selected:before {
   position: absolute;
-  top: 1.5px;
-  z-index: 1;
+  top: 0;
+  z-index: 3;
   width: 100%;
   border-top: 1px solid #3A6EA5;
   content: '';
@@ -11088,9 +11093,9 @@ body {
 
 .date-panel .date-timeline .times .selected:after {
   position: absolute;
-  top: -1.5px;
+  top: -3px;
   right: 0;
-  z-index: 1;
+  z-index: 3;
   width: 5px;
   height: 5px;
   background-color: #3a6ea5;
@@ -11107,8 +11112,48 @@ body {
 }
 
 .date-panel .date-timeline .times .time-label.selected:before {
-  left: 30px;
+  left: 31px;
   width: 94px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(10) {
+  top: 540px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(9) {
+  top: 480px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(8) {
+  top: 420px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(7) {
+  top: 360px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(6) {
+  top: 300px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(5) {
+  top: 240px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(4) {
+  top: 180px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(3) {
+  top: 120px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(2) {
+  top: 60px;
+}
+
+.date-panel .date-timeline .times .time-label:nth-child(1) {
+  top: 0;
 }
 
 .map-panel {
