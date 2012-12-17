@@ -5,27 +5,24 @@
 define('datepanel', function (require/*, exports, module*/) {
   "use strict";
 
-  var R = require('rex')
-    , $ = require('jquery')
-    , $proxy = $.proxy
-    , Api = require('api');
-
-  var efTime = require('eftime')
-    , locale = efTime.locales[efTime.locale]
+  var $ = require('jquery')
+    , ET = require('eftime')
+    , locale = ET.locales[ET.locale]
     , monthsShort = locale.monthsShort
-    , months = locale.months
-    , lead0 = efTime.lead0
-    , h12 = efTime.h12;
-
-  var Panel = require('panel');
+    , createET = ET.create
+    , toDate = ET.toDate
+    , lead0 = ET.lead0
+    , Util = require('util')
+    , trim = Util.trim
+    , Api = require('api')
+    , R = require('rex');
 
   /**
-   * Date Panel.
+   * DatePanel
    */
-  var DatePanel = Panel.extend({
+  var DatePanel = require('panel').extend({
 
       options: {
-
           template: ''
             + '<div class="panel date-panel" tabindex="-1" data-widget="panel" id="date-panel" editarea="date-panel">'
               + '<div class="panel-body">'
@@ -43,7 +40,7 @@ define('datepanel', function (require/*, exports, module*/) {
 
                 + '<div class="pull-right date-timeline">'
                    //+ ' <div class="gathering">Gathering day</div> '
-                   + ' <div class="fuzzy-time">'
+                   + ' <div class="fuzzy-time hide">'
                    + '   <ul class="unstyled time-cates">'
                    + '     <li data-cate="all-day">All-day</li>'
                    + '     <li class="hide" data-time="00:01" data-cate="late-night">Late-night</li>'
@@ -75,7 +72,6 @@ define('datepanel', function (require/*, exports, module*/) {
 
         // eftime object
         , eftime: null
-
       }
 
     , init: function () {
@@ -83,143 +79,55 @@ define('datepanel', function (require/*, exports, module*/) {
 
         this.render();
 
-        // save origin eftime data
+        // saved origin eftime.
         this.originEftime = options.eftime;
+
+        // referrer Cross.time.
         this.eftime = Cross.time;
-        this.dateObj = efTime.toDate(this.eftime);
+
+        this.dateObj = toDate(this.eftime);
         delete options.eftime;
+
+        // get locale timezone.
+        this.timezone = getTimezone();
 
         this.dateInput = new DateInput(this, '#date-string');
         this.calendarTable = new CalendarTable(this, '.date-calendar');
         this.timeline = new Timeline(this, '.date-timeline');
 
-        this.originEftime.begin_at.timezone
-          = this.eftime.begin_at.timezone
-          = this.dateInput.timezone;
-
         this.listen();
-
-        // init
-        this.initBuild();
       }
 
-    , initBuild: function () {
+    , initComponents: function () {
         var eftime = this.eftime
           , date = this.dateObj.date;
-        this.dateInput.change(eftime.origin || date.text);
         this.calendarTable.refresh(date);
-        this.timeline.refresh(eftime);
-        this.selectDefault();
-      }
-
-    , selectDefault: function () {
         if (!this.originEftime.outputformat) {
-          this.calendarTable.setCursorClass();
-          this.calendarTable.select(true);
-          this.timeline.select(this.eftime);
+          this.calendarTable.addCursorStyle();
+          this.calendarTable.select();
         }
+        this.timeline.refresh(this.eftime);
+        this.dateInput.change(eftime.origin || date.text);
+        this.dateInput.$element.focus();
       }
 
     , listen: function () {
-        this.element.on('keydown.datepanel', $proxy(this.keydown, this));
-
-        this.on('dateinput-tab', this.dateInputTab);
-        this.on('calendartable-tab', this.calendarTableTab);
-        this.on('refresh-calendar', this.refreshCalendar);
+        this.element.on('keydown.datepanel', proxy(this.keydown, this));
+        // save
         this.on('save', this.save);
-
-        this.on('refresh-from-dateinput', this.refreshFromDI);
-        this.on('refresh-from-calendartable', this.refreshFromCT);
-        this.on('refresh-from-timeline', this.refreshFromTL);
-        this.on('change', this.change);
+        // tab move to calendarTable
+        this.on('tmt-ct', this.tmtCT);
+        // tab move to dateInput
+        this.on('tmt-di', this.tmtDI);
+        // refresh from dateInput
+        this.on('rf-di', this.rfDI);
+        // refresh from timeline
+        this.on('rf-tl', this.rfTL);
+        // refresh from calendarTable
+        this.on('rf-ct', this.rfCT);
       }
 
-    , refreshFromDI: function (eftime) {
-        $.extend(true, this.eftime, eftime)
-        this.dateObj = efTime.toDate(eftime);
-        this.calendarTable.refresh(this.dateObj.date);
-        this.timeline.refresh(eftime);
-      }
-
-    , refreshFromCT: function (dateStr) {
-        var eftime = this.eftime
-          , date = this.dateObj.date
-          , dateStrUTC = ''
-          , dateArrays = dateStr.split('-');
-        date.setFullYear(dateArrays[0]);
-        date.setMonth(dateArrays[1] - 1);
-        date.setDate(dateArrays[2]);
-        dateStrUTC = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
-        eftime.begin_at.date = dateStrUTC;
-        if (eftime.outputformat) {
-          eftime.outputformat = 0;
-          eftime.origin = dateStr;
-        }
-        else {
-          var t = '';
-          if (eftime.begin_at.time) {
-            t = lead0(date.getHours()) + ':' + lead0(date.getMinutes());
-          } else {
-            t = eftime.begin_at.time_word;
-            eftime.begin_at.date = dateStr;
-          }
-          if (t) {
-            t = dateStr + ' ' + t;
-          } else {
-            t = dateStr;
-          }
-          eftime.origin = t;
-        }
-        this.dateInput.change(eftime.origin);
-      }
-
-    , refreshFromTL: function (time, time_word) {
-        var eftime = this.eftime
-          , date = this.dateObj.date
-          , t = '';
-        eftime.begin_at.time = '';
-        if (time) {
-          var times = time.split(':');
-          date.setHours(times[0] || 0);
-          date.setMinutes(times[1] || 0);
-          date.setSeconds(times[2] || 0);
-          eftime.begin_at.time = date.getUTCHours()
-            + ':' + date.getMinutes()
-            + ':' + date.getSeconds();
-        }
-        eftime.begin_at.time_word = time_word;
-        t = time || time_word;
-        if (eftime.outputformat) {
-          eftime.outputformat = 0;
-          eftime.origin = t;
-        }
-        else {
-          if (eftime.begin_at.date) {
-            t = dateFormat(date) + ' ' + t;
-          }
-          eftime.origin = t;
-        }
-        this.dateInput.change(eftime.origin);
-      }
-
-    , keydown: function (e) {
-        var self = this
-          , altKey = e.altKey
-          , ctrlKey = e.ctrlKey
-          , shiftKey = e.shiftKey
-          , metaKey = e.metaKey
-          , kc = e.keyCode;
-        // escape
-        if (27 === kc) {
-          self.revert();
-          self.emit('save');
-        }
-        else if (13 === kc && (!(altKey | shiftKey) & (ctrlKey | metaKey))) {
-          self.emit && self.emit('save');
-        }
-      }
-
-    , save: function () {
+    , save: function (/*eft*/) {
         $('body').trigger('click');
       }
 
@@ -227,42 +135,115 @@ define('datepanel', function (require/*, exports, module*/) {
         $.extend(true, this.eftime, this.originEftime);
       }
 
-    , refreshCalendar: function (eftime) {
-        $.extend(true, this.eftime, eftime);
-        this.date = efTime.toDate(eftime);
-        this.calendarTable.refresh(this.date);
-        this.timeline.refresh(this.eftime);
+    , tmtCT: function () {
+        var $e = this.calendarTable.$element;
+        setTimeout(function () { $e.focus(); }, 0);
       }
 
-    , dateInputTab: function () {
-        var calendarTable = this.calendarTable;
-        setTimeout(function () {
-          calendarTable.$element.focus();
-        }, 0);
+    , tmtDI: function () {
+        var $e = this.dateInput.$element;
+        setTimeout(function () { $e.focus(); }, 0);
       }
 
-    , calendarTableTab: function () {
-        var dateInput = this.dateInput
-          , calendarTable = this.calendarTable;
-        setTimeout(function () {
-          dateInput.$element.focus();
-        }, 0);
+    , rfDI: function (eft) {
+        $.extend(true, this.eftime, eft);
+        this.dateObj = toDate(eft);
+        this.calendarTable.refresh(this.dateObj.date);
+        this.timeline.select(eft);
+      }
+
+      //            time, time_word
+    , rfTL: function (t, tw) {
+        var eftime = this.eftime
+          , date = this.dateObj.date
+          , s = '' , ts;
+        eftime.begin_at.time = '';
+        if (t) {
+          ts = t.split(':');
+          date.setHours(ts[0] || 0);
+          date.setMinutes(ts[1] || 0);
+          date.setSeconds(ts[2] || 0);
+          eftime.begin_at.time = date.getUTCHours()
+            + ':' + date.getMinutes()
+            + ':' + date.getSeconds();
+        }
+        eftime.begin_at.time_word = tw;
+        s = t || tw;
+        if (eftime.outputformat) {
+          eftime.outputformat = 0;
+          eftime.origin = s;
+        }
+        else {
+          if (eftime.begin_at.date) {
+            s = dateFormat(date) + ' ' + s;
+          }
+          eftime.origin = s;
+        }
+        this.dateInput.change(eftime.origin);
+      }
+
+    , rfCT: function (ds) {
+        var ef = this.eftime
+          , date = this.dateObj.date
+          , dsUTC = ''
+          , dsArray = ds.split('-');
+        date.setFullYear(dsArray[0]);
+        date.setMonth(dsArray[1] - 1);
+        date.setDate(dsArray[2]);
+        dsUTC = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+        ef.begin_at.date = dsUTC;
+        if (ef.outputformat) {
+          ef.outputformat = 0;
+          ef.origin = ds;
+        }
+        else {
+          var t = '';
+          if (ef.begin_at.time) {
+            t = lead0(date.getHours()) + ':' + lead0(date.getMinutes());
+          }
+          else {
+            t = ef.begin_at.time_word;
+            ef.begin_at.date = ds;
+          }
+          if (t) {
+            t = ds + ' ' + t;
+          } else {
+            t = ds;
+          }
+          ef.origin = t;
+        }
+        this.dateInput.change(ef.origin);
+      }
+
+    , keydown: function (e) {
+        var self = this
+            , altKey = e.altKey
+            , ctrlKey = e.ctrlKey
+            , shiftKey = e.shiftKey
+            , metaKey = e.metaKey
+            , kc = e.keyCode;
+          // escape
+          if (27 === kc) {
+            self.revert();
+            self.emit('save');
+          }
+          else if (13 === kc && (!(altKey | shiftKey) & (ctrlKey | metaKey))) {
+            self.emit && self.emit('save');
+          }
       }
 
     , showAfter: function () {
         var srcNode = this.srcNode;
         if (srcNode) {
-          var offset = srcNode.offset();
-          var width = this.element.outerWidth();
-          this.element
-            .css({
-                left: offset.left - width - 15
-              , top: offset.top
-            });
+          var offset = srcNode.offset()
+            , element = this.element
+            , width = element.outerWidth();
+          element.css({
+              left: offset.left - width - 15
+            , top: offset.top
+          });
         }
-        this.dateInput.$element.focusend();
-        this.calendarTable.scrollTop(132);
-        this.timeline.select(this.eftime);
+        this.initComponents();
       }
 
     , destory: function () {
@@ -279,52 +260,25 @@ define('datepanel', function (require/*, exports, module*/) {
    */
   var DateInput = function (component, selector) {
     this.component = component;
-    this.$container = this.component.element;
+    this.$container = component.element;
+    this.tz = component.timezone;
     this.selector = selector;
-    this.$element = this.component.$(selector);
-    this.befer = null;
-    this.timezone = getTimezone();
+    this.$element = component.$(selector);
+
     this.listen();
   };
 
   DateInput.prototype = {
 
-      change: function (s) {
-        this.$element.val(s);
-      }
-
-    , listen: function () {
+      listen: function () {
         var $container = this.$container
           , selector = this.selector;
+
         $container
-          //.on('blur.datepanel', selector, $.proxy(this.blur, this))
-          .on('keypress.datepanel', selector, $.proxy(this.keypress, this))
-          .on('keyup.datepanel', selector, $.proxy(this.keyup, this))
-          .on('keydown.datepanel', selector, $.proxy(this.keydown, this))
-          //.on('focus.datepanel', selector, $.proxy(this.focus, this));
-      }
-
-    //, blur: function (e) {}
-
-    //, focus: function (e) {}
-
-    , keyup: function (e) {
-        switch (e.keyCode) {
-          case  9: // tab
-          case 13: // enter
-          case 16: // shift
-          case 17: // ctrl
-          case 18: // alt
-          case 27: // escape
-          case 38: // up arrow
-          case 40: // down arrow
-            break;
-
-          default:
-            this.lookup();
-        }
-        e.stopPropagation();
-        e.preventDefault();
+          // blur focus
+          .on('keydown.datepanel', selector, proxy(this.keydown, this))
+          .on('keypress.datepanel', selector, proxy(this.keypress, this))
+          .on('keyup.datepanel', selector, proxy(this.keyup, this));
       }
 
     , keyHandler: function (e) {
@@ -334,13 +288,19 @@ define('datepanel', function (require/*, exports, module*/) {
         switch (kc) {
           case 9: // tab
             e.preventDefault();
-            component.emit('dateinput-tab');
+            // ct: calendarTable
+            component.emit('tmt-ct');
             break;
-          case 13: // enter
+          case 13:
             e.preventDefault();
             component.emit('save');
             break;
         }
+      }
+
+    , keydown: function (e) {
+        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13], e.keyCode);
+        this.keyHandler(e);
       }
 
     , keypress: function (e) {
@@ -350,20 +310,36 @@ define('datepanel', function (require/*, exports, module*/) {
         this.keyHandler(e);
       }
 
-    , keydown: function (e) {
-        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13], e.keyCode);
-        this.keyHandler(e);
+    , keyup: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        switch (e.keyCode) {
+          case  9: // tab
+          case 13: // enter
+          case 16: // shift
+          case 17: // ctrl
+          case 18: // alt
+          case 27: // escape
+          case 38: // up
+          case 40: // down
+            break;
+          default:
+            this.lookup();
+        }
       }
 
-    , lookup: function (e) {
+    , lookup: function (/* e */) {
         var self = this
           , component = self.component
-          , str = $.trim(self.$element.val());
+          , s = trim(self.$element.val());
 
-        self.befer && self.befer.abort();
-        if ('' === str) {
-          var ef = efTime.create();
-          component.emit('refresh-from-dateinput', ef);
+        if (self.befer) {
+          self.befer.abort();
+          delete self.befer;
+        }
+
+        if ('' === s) {
+          component.emit('rf-di', createET());
           return;
         }
 
@@ -371,16 +347,19 @@ define('datepanel', function (require/*, exports, module*/) {
           , {
                 type: 'POST'
               , data: {
-                    time_string: str
-                  , timezone: self.timezone
+                    time_string: s
+                  , timezone: self.tz
                 }
             }
           , function (data) {
-              component.emit('refresh-from-dateinput', data.cross_time);
+              component.emit('rf-di', data.cross_time);
             }
         );
       }
 
+    , change: function (s) {
+        this.$element.val(s);
+      }
   };
 
 
@@ -389,154 +368,178 @@ define('datepanel', function (require/*, exports, module*/) {
    */
   var CalendarTable = function (component, selector) {
     this.component = component;
-    this.$container = this.component.element;
+    this.$container = component.element;
     this.selector = selector;
-    this.$element = this.component.$(selector);
-    //this.date = date;
+    this.$element = component.$(selector);
     this.today = new Date();
     this.todayString = dateFormat(this.today);
 
-    // Viewport
-    //            [x, y]
-    this.coords = [0, 0]
-    this.vpRows = 3;
-    this.vpHeight = 44;
+    // ViewPort
+    // coords: [0, 0]
+    this.cx = 0;
+    this.cy = 0;
+    // rows
+    this.vpr = 3;
+    // height of the row
+    this.vph = 44;
     this.len = 0;
-    this.$cursor = null;
 
     // Elements
-    this.divTemp = '<div class="tw"><span class="m hide">{{m}}</span><span class="d">{{d}}</span></div>';
-    this.$tableWrapper = this.$element.find('.table-wrapper');
-    this.$table = this.$tableWrapper.find('table');
-    this.$tbody = this.$table.find('tbody');
-    this.$trs = null;
-    this.$year = this.$element.find('.year');
-    this.$fullMonth = this.$element.find('.full-month');
+    this.divTmp = '<div class="tw"><span class="m hide">{{m}}</span><span class="d">{{d}}</span></div>';
+    this.$y = this.$element.find('.year');
+    this.$m = this.$element.find('.full-month');
+    this.$tw = this.$element.find('.table-wrapper');
+    this.$tb = this.$tw.find('tbody');
 
+    this.inited = true;
+    this.enable = false;
     this.listen();
   };
 
   CalendarTable.prototype = {
 
-      initCalendar: function (date) {
-        var n = this.vpRows
+      init: function (date) {
+        var r = this.vpr
+          , h = this.vph
           , y = date.getFullYear()
           , m = date.getMonth()
-          , h = this.vpHeight
-          , dt = date.getDay()
-          , date = new Date(y, m, date.getDate() - dt - 21);
+          , d = date.getDate()
+          , dt = date.getDay();
+
+        date = new Date(y, m, d - dt - 21);
 
         this.startDate = dateFormat(date);
-        this.nextPend(date);
-        this.nextPend(date);
-        this.nextPend(date);
+        this.genNext(date);
+        this.genNext(date);
+        this.genNext(date);
         this.endDate = dateFormat(date);
-        this.coords = [dt, n];
-        this.$trs = this.$tbody.find('tr');
-        this.scrollTop(h * n);
-        this.updateYearMonth(y, months[m]);
+        this.cx = dt;
+        this.cy = r;
+        this.scrollTop(r * h);
+        this.$trs = this.$tb.find('tr');
+        if (this.inited) {
+          this.st = this.$tw.prop('scrollHeight') - this.$tw.outerHeight();
+          this.inited = false;
+        }
       }
 
     , refresh: function (date) {
+        this.$trs = this.$cursor = null;
+        this.selectedDate = '';
         this.len = 0;
-        this.$tbody.empty();
-        this.$str = this.$select = this.$cursor = null;
-        this.initCalendar(date);
+        this.$tb.empty();
+        this.init(date);
       }
 
     , getSelectedDate: function () {
         return this.selectedDate || this.todayString;
       }
 
-    , setCursorClass: function () {
-        this.$cursor = this.$trs
-          .eq(this.coords[1])
-          .find('td')
-          .eq(this.coords[0])
-          .addClass('hover');
-      }
-
-    , removeCursorClass: function () {
-        if (this.$cursor) {
-          this.$cursor.removeClass('hover');
-        }
-      }
-
-    , scrollTop: function (steps) {
-        this.$tableWrapper.scrollTop(steps);
-      }
-
     , listen: function () {
         var $container = this.$container
           , selector = this.selector
-          , $tableWrapper = this.$tableWrapper;
 
         $container
-          .on('blur.datepanel', selector, $proxy(this.blur, this))
-          .on('keypress.datepanel', selector, $proxy(this.keypress, this))
-          .on('keyup.datepanel', selector, $proxy(this.keyup, this))
-          .on('keydown.datepanel', selector, $proxy(this.keydown, this))
-          .on('focus.datepanel', selector, $proxy(this.focus, this))
-          .on('mouseenter.datepanel', selector + ' td', $proxy(this.tdMouseenter, this))
-          .on('click.datepanel', selector + ' td', $proxy(this.tdClick, this))
+          .on('blur.datepanel', selector, proxy(this.blur, this))
+          .on('focus.datepanel', selector, proxy(this.focus, this))
+          .on('keydown.datepanel', selector, proxy(this.keydown, this))
+          .on('keypress.datepanel', selector, proxy(this.keypress, this))
+          .on('keyup.datepanel', selector, proxy(this.keyup, this))
+          .on('click.datepanel', selector + ' td', proxy(this.clickDate, this))
+          .on('mouseenter.datepanel', selector + ' td', proxy(this.mouseenterDate, this))
 
-          $tableWrapper.on('scroll.datepanel', $proxy(this.scroll, this));
+        this.$tw.on('scroll.datepanel', proxy(this.scroll, this));
       }
 
     , scroll: function (e) {
+        if (this.enable) { true; }
         e.stopPropagation();
         e.preventDefault();
-        var $tableWrapper = this.$tableWrapper
-          , t = $tableWrapper.scrollTop();
-        if (t === 0) {
-          this.pageUp(this.coords);
-          $tableWrapper.scrollTop(132);
-          this.$year.addClass('hide');
-          this.$fullMonth.addClass('hide');
+        var $tw = this.$tw
+          , t = $tw.scrollTop();
+
+        if (0 === t) {
+          this.mpageUp();
+          this.$tw.scrollTop(this.vph * this.vpr);
         }
-        else if (t === 277) { // 9 * 44 + 120
-          this.pageDown(this.coords);
-          this.$year.addClass('hide');
-          this.$fullMonth.addClass('hide');
-        } else {
-          if (this.$cursor) {
-            var d = toDate(this.$cursor.data('date'));
-            this.updateYearMonth(d.getFullYear(), months[d.getMonth()]);
-          }
+        else if (this.st === t) {
+          this.mpageDown();
+          this.$tw.scrollTop(this.vph * this.vpr);
         }
       }
 
-    , updateYearMonth: function (y, m) {
-          this.$year.removeClass('hide').html(y);
-          this.$fullMonth.removeClass('hide').html(m);
+    , delCursorStyle: function () {
+        if (this.$cursor) { this.$cursor.removeClass('hover'); }
       }
 
-    , tdClick: function (e) {
-        e.preventDefault();
-        this.moveSpacing();
+    , addCursorStyle: function () {
+        this.$cursor = this.$trs
+          .eq(this.cy)
+          .find('td')
+          .eq(this.cx)
+          .addClass('hover');
       }
 
-    , tdMouseenter: function (e) {
-        e.preventDefault();
-        this.removeCursorClass();
-        var $td = $(e.currentTarget)
-          , $tr = $td.parent();
-        this.coords[0] = $td.index();
-        this.coords[1] = $tr.index();
-        this.setCursorClass();
+    , blur: function () { this.delCursorStyle(); }
+
+    , focus: function () { this.addCursorStyle(); }
+
+    , scrollTop: function (s) { this.$tw.scrollTop(s); }
+
+    , keyHandler: function (e) {
+        var self = this
+          , component = this.component
+          , kc = e.keyCode;
+        switch (kc) {
+          case 9: // tab
+            e.preventDefault();
+            component.emit('tmt-di');
+            break;
+          case 37: // left
+            e.preventDefault();
+            self.move('left');
+            break;
+          case 38: // top
+            e.preventDefault();
+            self.move('top');
+            break;
+          case 39: // right
+            e.preventDefault();
+            self.move('right');
+            break;
+          case 40: // down
+            e.preventDefault();
+            self.move('down');
+            break;
+          case 33: // page up:    mac fn + ↑
+            e.preventDefault();
+            self.move('pageUp');
+            break;
+          case 34: // page down:  mac fn + ↓
+            e.preventDefault();
+            self.move('pageDown');
+            break;
+          case 13: // enter
+            e.preventDefault();
+            break;
+          case 32: // spacing
+            e.preventDefault();
+            self.spacing();
+            break;
+          case 35: // end:        mac fn + →
+          case 36: // home:       mac fn + ←
+            break;
+        }
       }
 
-    , blur: function (e) {
-        this.removeCursorClass();
-      }
-
-    , focus: function (e) {
-        this.setCursorClass();
+    , keydown: function (e) {
+        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13, 32, 33, 34, 35, 36, 37, 38, 39, 40], e.keyCode);
+        this.keyHandler(e);
       }
 
     , keypress: function (e) {
         if (this.suppressKeyPressRepeat) {
-          return;
+          return false;
         }
         this.keyHandler(e);
       }
@@ -546,238 +549,180 @@ define('datepanel', function (require/*, exports, module*/) {
         e.preventDefault();
       }
 
-    , keydown: function (e) {
-        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13, 32, 33, 34, 35, 36, 37, 38, 39, 40], e.keyCode);
-        this.keyHandler(e);
+    , clickDate: function (e) {
+        e.preventDefault();
+        this.spacing();
       }
 
-    , keyHandler: function (e) {
-        var self = this
-          , component = this.component
-          , coords = this.coords
-          , kc = e.keyCode;
-        switch (kc) {
-          case 9: // tab
-            e.preventDefault();
-            component.emit('calendartable-tab');
-            break;
-          case 37: // left
-            e.preventDefault();
-            self.moveWrapper(coords, 'moveLeft');
-            break;
-          case 38: // top
-            e.preventDefault();
-            self.moveWrapper(coords, 'moveTop');
-            break;
-          case 39: // right
-            e.preventDefault();
-            self.moveWrapper(coords, 'moveRight');
-            break;
-          case 40: // down
-            e.preventDefault();
-            self.moveWrapper(coords, 'moveDown');
-            break;
-          case 33: // page up:    mac fn + ↑
-            e.preventDefault();
-            self.moveWrapper(coords, 'pageUp');
-            break;
-          case 34: // page down:  mac fn + ↓
-            e.preventDefault();
-            self.moveWrapper(coords, 'pageDown');
-            break;
-          case 13: // enter
-            e.preventDefault();
-            break;
-          case 32: // spacing
-            e.preventDefault();
-            self.moveSpacing();
-            break;
-          case 35: // end:        mac fn + →
-          case 36: // home:       mac fn + ←
-            break;
-        }
-      }
-
-    , moveSpacing: function () {
+    , spacing: function () {
         if (this.selectedDate) {
-          this.$trs
-            .find('td[data-date="' + this.selectedDate + '"]')
+          this.$tb.find('td[data-date="' + this.selectedDate + '"]')
             .removeClass('selected');
         }
         this.select();
       }
 
-    , select: function (init) {
+    , select: function () {
         var date = this.selectedDate = this.$cursor.data('date');
         this.$cursor.addClass('selected');
-        if (!init) {
-          this.component.emit('refresh-from-calendartable', date);
+        this.component.emit('rf-ct', date);
+      }
+
+    , mouseenterDate: function (e) {
+        e.preventDefault();
+        this.delCursorStyle();
+        var $td = $(e.currentTarget)
+          , $tr = $td.parent();
+        this.cx = $td.index();
+        this.cy = $tr.index();
+        this.addCursorStyle();
+      }
+
+    , move: function (type) {
+        this.enable = true;
+        this.delCursorStyle();
+        this['m' + type]();
+        this.addCursorStyle();
+        this.enable = false;
+      }
+
+      // move to left
+    , mleft: function () {
+        if (0 === this.cx--) {
+          this.cx = 6;
+          this.mtop();
         }
       }
 
+      // move to top
+    , mtop: function () {
+        if (0 === this.cy--) {
+          this.delTail3();
+
+          var d = datefun(this.startDate, -21);
+          this.startDate = dateFormat(d);
+          this.genPrev(d);
+          this.$trs = this.$tb.find('tr');
+          this.cy = 2;
+          this.$tw.scrollTop(this.vph * this.cy);
+        }
+        var t = this.$tw.scrollTop();
+        t = Math.round(t / this.vph) * this.vph;
+        if (this.cy * this.vph < t) {
+          this.$tw.scrollTop(t -= this.vph);
+        }
+      }
+
+      // move to right
+    , mright: function () {
+        if (6 === this.cx++) {
+          this.cx = 0;
+          this.mdown();
+        }
+      }
+
+      // move to down
+    , mdown: function () {
+        if (this.len === ++this.cy) {
+          this.delHead3();
+
+          var d = datefun(this.endDate, 0);
+          this.genNext(d);
+          this.endDate = dateFormat(d);
+          this.$trs = this.$tb.find('tr');
+          this.cy = 7; // this.len - 2
+          this.$tw.scrollTop(this.vph * 5);
+        }
+        var t = this.$tw.scrollTop();
+        t = Math.round(t / this.vph) * this.vph;
+        if (this.cy * this.vph > t + this.vph * (this.vpr - 1)) {
+          this.$tw.scrollTop(t += this.vph);
+        }
+      }
+
+    , mpageUp: function () {
+        this.delTail3();
+
+        var d = datefun(this.startDate, -21);
+        this.startDate = dateFormat(d);
+        this.genPrev(d);
+        this.$trs = this.$tb.find('tr');
+      }
+
+    , mpageDown: function () {
+        this.delHead3();
+
+        var d = datefun(this.endDate, 0);
+        this.genNext(d);
+        this.$trs = this.$tb.find('tr');
+        this.endDate = dateFormat(d);
+      }
+
+      //                    start date
     , generateHTML: function (startDate) {
-        var vr = this.vpRows
-          , todayString = this.todayString
-          , selectedDate = this.selectedDate
-          , divTemp = this.divTemp
+        var r = this.vpr
+          , ts = this.todayString
+          , sd = this.selectedDate
+          , divTmp = this.divTmp
+          , tb = ''
           , i = 0
-          , tbody = '';
+          , day;
 
-        this.len += vr;
+        this.len += r;
 
-        for (; i < vr; ++i) {
-          var j = 0
-            , tr = '<tr>'
-            , td = ''
-            , fs
-            , isToday
-            , isSelected
-            , cls;
+        for (; i < r; ++i) {
+          var j = 0, tr = '<tr>', td = ''
+            , fs, isToday, isSelected, cls;
 
           for (; j < 7; ++j) {
             cls = '';
             fs = dateFormat(startDate);
 
-            isToday = fs === todayString;
-            isSelected = fs === selectedDate;
+            isToday = fs === ts;
+            isSelected = fs === sd;
 
-            isToday && (cls += 'today');
-            isSelected && (cls += (cls.length ? ' ' : '') + 'selected');
+            if (isToday) { cls = 'today' }
+            if (isSelected) { cls += (cls.length ? ' ' : '') + 'selected'; }
 
-            td += '<td data-date="' + fs + '"' + (cls ? (' class="' + cls + '"') : '') + '>';
-
-            var div = divTemp
-              , day = startDate.getDate();
-            td += div
+            td += '<td data-date="' + fs + '"' + (cls.length ? ' class="' + cls + '"' : '') + '>';
+            day = startDate.getDate();
+            td += divTmp
                     .replace('{{m}}', monthsShort[startDate.getMonth()])
-                    .replace('{{d}}', isToday ? 'Today' : day);
-
+                    .replace('{{d}}', isToday ? 'Today': day);
             td += '</td>';
             startDate.setDate(day + 1);
           }
 
           tr += td + '</tr>';
-
-          tbody += tr;
+          tb += tr;
         }
-
-        return tbody;
+        return tb;
       }
 
-    , prevPend: function (date) {
-        this.$tbody
-          .prepend(this.generateHTML(date));
+    , genPrev: function (date) {
+        this.$tb.prepend(this.generateHTML(date));
       }
 
-    , nextPend: function (date) {
-        this.$tbody
-          .append(this.generateHTML(date));
+    , genNext: function (date) {
+        this.$tb.append(this.generateHTML(date));
       }
 
-    , delFirst: function () {
-        var first = this.$trs.first();
-        this.startDate = first.find('td').data('date');
+      // delete head 3 tr
+    , delHead3: function () {
+        this.startDate = this.$trs.eq(0).find('td').eq(0).data('date');
         this.$trs.eq(0).remove();
         this.$trs.eq(1).remove();
         this.$trs.eq(2).remove();
         this.len -= 3;
       }
 
-    , delLast: function () {
-        var last = this.$trs.eq(this.len - 3);
-        this.endDate = last.find('td').data('date');
-        this.$trs.eq(this.len - 1).remove();
-        this.$trs.eq(this.len - 2).remove();
-        last.remove();
-        this.len -= 3;
+      // delete tail 3 tr
+    , delTail3: function () {
+        this.endDate = this.$trs.eq(this.len - 3).find('td').eq(0).data('date');
+        this.$trs.eq(--this.len).remove();
+        this.$trs.eq(--this.len).remove();
+        this.$trs.eq(--this.len).remove();
       }
-
-    , moveWrapper: function (coords, type) {
-        this.removeCursorClass();
-        this[type](coords);
-        this.setCursorClass();
-      }
-
-    , moveLeft: function (coords) {
-        if (0 === coords[0]--) {
-          coords[0] = 6;
-          this.moveTop(coords);
-        }
-      }
-
-    , moveTop: function (coords) {
-        if (0 === coords[1]--) {
-          this.delLast();
-
-          var d = toDate(this.startDate, -21);
-          this.startDate = dateFormat(d);
-          this.prevPend(d);
-          this.$trs = this.$tbody.find('tr');
-          coords[1] = 2;
-          this.$tableWrapper.scrollTop(this.vpHeight * coords[1]);
-        }
-        var t = this.$tableWrapper.scrollTop();
-        if (coords[1] * this.vpHeight < t) {
-          this.$tableWrapper.scrollTop(t -= this.vpHeight);
-        }
-      }
-
-    , moveRight: function (coords) {
-        if (6 === coords[0]++) {
-          coords[0] = 0;
-          this.moveDown(coords);
-        }
-      }
-
-    , moveDown: function (coords) {
-        if (this.len === ++coords[1]) {
-          this.delFirst();
-
-          var d = toDate(this.endDate, 0);
-          this.nextPend(d);
-          this.endDate = dateFormat(d);
-          this.$trs = this.$tbody.find('tr');
-          coords[1] = this.len - 2;
-          this.$tableWrapper.scrollTop(this.vpHeight * 5);
-        }
-        var t = this.$tableWrapper.scrollTop();
-        if (coords[1] * this.vpHeight > t + this.vpHeight * (this.vpRows - 1)) {
-          this.$tableWrapper.scrollTop(t += this.vpHeight);
-        }
-      }
-
-    , pageUp: function (coords) {
-        if (coords[1] <= this.vpRows) {
-          this.delLast();
-
-          var d = toDate(this.startDate, -21);
-          this.startDate = dateFormat(d);
-          this.prevPend(d);
-          this.$trs = this.$tbody.find('tr');
-          coords[1] += this.vpRows;
-        } else {
-          var t = this.$tableWrapper.scrollTop();
-          this.$tableWrapper.scrollTop(t -= this.vpHeight * this.vpRows);
-        }
-        coords[1] -= this.vpRows;
-      }
-
-    , pageDown: function (coords) {
-        if (coords[1] >= this.len - this.vpRows) {
-          this.delFirst();
-
-          var d = toDate(this.endDate, 0);
-          this.nextPend(d);
-          this.endDate = dateFormat(d);
-          this.$trs = this.$tbody.find('tr');
-          coords[1] -= this.vpRows;
-          this.$tableWrapper.scrollTop(this.vpHeight * 3);
-        }
-        coords[1] += this.vpRows;
-        var t = this.$tableWrapper.scrollTop();
-        this.$tableWrapper.scrollTop(t += this.vpHeight * this.vpRows);
-      }
-
   };
 
 
@@ -786,247 +731,269 @@ define('datepanel', function (require/*, exports, module*/) {
    */
   var Timeline = function (component, selector) {
     this.component = component;
-    this.$container = this.component.element;
+    this.$container = component.element;
     this.selector = selector;
-    this.$element = this.component.$(selector);
+    this.$element = component.$(selector);
+
+    // Elements
     this.divTmp = '<div class="time-item{{class}}" data-time="{{dt}}"><time>{{t}}</time></div>';
-    this.$fuzzyTime = this.$element.find('.fuzzy-time');
-    this.$timesWrapper = this.$element.find('.times-wrapper');
-    this.$timesContainer = this.$timesWrapper.find('.times');
+    this.$tw = this.$element.find('.times-wrapper');
+    this.$tc = this.$element.find('.times');
+    this.$ft = this.$element.find('.fuzzy-time');
+    this.$ts = this.$ft.find('.time-cates > li[data-time]');
+    this.ts = R.map(this.$ts, function (e) {
+      return $(e).data('time');
+    });
 
-    this.isMouseEnter = false;
-    //this.offsetX = 0;
-    //this.offsetY = 0;
-    this.mX = 0;
-    this.mY = 0;
-    this.n = 0;
+    // mouse point(x, y)
+    this.x = 0;
+    this.y = 0;
+    this.px = 0;
+    this.py = 0;
+    // lables length
+    this.l = 9;
+    // head
+    this.hh = 7;
+    // tail
+    this.th = 7;
 
-    this._b = 7;
-    this._e = 7;
+    // hour, minutes
+    this.dh = 0;
+    this.dm = 0;
 
-    this._l = 9;
+    // true: on scroll, not trigger after functions
+    this.status = false;
+    // $cursor show/hide
+    this.isHide = true;
 
-    this.generateHTML();
-    this.selectedTime = '';
-    var times = this.times = [];
-    this.$times = this.$element
-      .find('ul.time-cates [data-time]')
-      .each(function (i, v) {
-        times.push($(v).data('time'));
-      });
-    this.len = this.$times.length;
     this.listen();
   };
 
   Timeline.prototype = {
 
-      refresh: function (eftime) {
+      //              eftime
+      select: function (eft) {
+        this.enable = true;
         this.removeSelected();
-        this.select(eftime);
-      }
-
-    , select: function (eftime) {
-        if (eftime && 0 === eftime.outputformat) {
-          if (eftime.begin_at.time) {
-            var d = efTime.toDate(eftime).date;
-            var n = Math.round(d.getMinutes() / 15) * 15;
+        if (eft
+            && 0 === eft.outputformat
+            && eft.begin_at.time) {
+          var d = toDate(eft).date
+            , h = d.getHours()
+            , m = d.getMinutes()
+            , n = Math.round(h / 15) * 15
+            , t;
             d.setMinutes(n);
-            this.selectedTime = lead0(d.getHours()) + ':' + (lead0(d.getMinutes()));
-            this.$selected = this.$timesWrapper
-              .find('[data-time="' + this.selectedTime + '"]').addClass('selected');
+            this.selectedTime = lead0(h) + ':' + lead0(m);
+            this.$selected = this.$tc
+              .find('[data-time="' + this.selectedTime + '"]').eq(0);
 
-            if (!this.$selected.size()) {
-              this.$selected = this.createTimeItem(d.getHours(), d.getMinutes(), (d.getHours() + Math.round(d.getMinutes() / 60)) * 5 * 12 / 3, ' selected');
-            }
-
-            this.scrollTop(this.$selected.position().top);
-          } else {
-            this.scrollTop(180);
+          if (0 === this.$selected.length) {
+            this.$selected = this.createNormalItem(h, m, (h + n / 60) * this.h * (60 / 15));
           }
-        } else {
-          this.scrollTop(180);
+          this.$selected.removeClass('time-hover');
+          this.$selected.addClass('selected')
+
+          t = parseInt(this.$selected.css('top'), 10);
+
+          // moved to middle position
+          this.$tw.scrollTop(Math.max(0, t - this.vph / 2));
         }
+        else {
+          this.$tw.scrollTop(180);
+        }
+        this.enable = false;
       }
 
-    , getSelectedTime: function () {
-        return this.selectedTime;
-      }
-
-    , getRealHeight: function () {
-        this.realHeight = this.$timesWrapper.prop('scrollHeight');
-      }
-
-    , scrollTop: function (steps) {
-        this.$timesWrapper.scrollTop(steps);
+    , refresh: function (eft) {
+        this.generateHTML();
+        // real-height
+        this.rh = this.$tw.prop('scrollHeight');
+        // item height
+        this.h = Math.floor((this.rh - this.hh - this.th) / (this.l - 1) / 12);
+        // time / height
+        this.a = Math.round(60 / 4 / this.h);
+        var offset = this.$tw.offset();
+        this.ox = offset.left;
+        this.oy = offset.top;
+        this.st = this.$tw.scrollTop();
+        // ViewPort Height
+        this.vph = this.$tw.innerHeight();
+        this.select(eft);
       }
 
     , listen: function () {
         var $container = this.$container
           , selector = this.selector;
         $container
-          .on('click.datepanel', selector + ' .time-cates li[data-cate]', $proxy(this.cateClick, this))
-          .on('mouseleave.datepanel', selector, $proxy(this._mouseleave, this))
-          .on('mouseenter.datepanel, mousemove.datepanel', selector + ' .times-wrapper', $proxy(this._mousemove, this))
-          .on('click.datepanel', selector + ' .times-wrapper', $proxy(this._click, this))
+          .on('mouseleave.datepanel', selector, proxy(this.mouseleave, this))
+          .on('mouseenter.datepanel', selector + ' .times-wrapper', proxy(this.meTW, this))
+          .on('mousemove.datepanel', selector + ' .times-wrapper', proxy(this.mousemove, this))
+          .on('mouseleave.datepanel', selector + ' .times-wrapper', proxy(this.mlTW, this))
+          .on('click.datepanel', selector + ' .times-wrapper', proxy(this.clickTW, this))
+          .on('click.datepanel', selector + ' .time-cates li[data-cate]', proxy(this.clickCT, this))
 
-        this.$timesWrapper.on('scroll.datepanel', $proxy(this._scrollTop, this))
+        this.$tw.on('scroll.datepanel', proxy(this.scrollTop, this));
       }
 
-    , _click: function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        this.$selected && this.$selected.removeClass('selected');
-        this.$selected = this.$item.addClass('selected');
-        this.component.emit('refresh-from-timeline', this.selectedTime = this.$item.data('time'), '');
-      }
-
-    , _scrollTop: function (e) {
-        e.pageX = this.pX || 0;
-        e.pageY = this.pY || 0;
-        this._mousemove(e);
-      }
-
-    , _mouseleave: function (e) {
-        if (e) {
-          e.stopPropagation();
-          e.preventDefault();
-        }
-        var $od = this.$item;
-        if ($od && $od.size()) {
-            $od.removeClass('time-hover');
-            if (!$od.hasClass('time-label')
-              && !$od.hasClass('selected')) {
-              $od.remove();
-            }
-        }
-        this.$fuzzyTime.addClass('hide');
-        delete this.$item;
-      }
-
-    , _mousemove: function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        if (!this.realHeight) {
-          this.getRealHeight();
-          this.offset = this.$timesWrapper.offset();
-          this._h = Math.floor((this.realHeight - this._b - this._e) / (this._l - 1) / 12);
-          this._a = Math.round(15 / this._h);
-        }
-
-        var scrollTop = this.$timesWrapper.scrollTop();
-        this.pX = e.pageX;
-        this.pY = e.pageY;
-        this.mX = this.pX - this.offset.left;
-        // 7 === padding-top
-        this.mY = this.pY - this.offset.top + scrollTop - 7;
-        if (this.mY < 0) {
-          this.mY = 0;
-        } else if (this.mY > (this._l - 1) * this._h * 12) {
-          this.mY = (this._l - 1) * this._h * 12;
-        }
-        this.genHoverItem();
-
-        this.$fuzzyTime.removeClass('hide');
-        this.showFuzzyTime(e);
-    }
-
-    , cateClick: function (e) {
-        var $cate = $(e.currentTarget);
-        this.removeSelected();
-        this.component.emit('refresh-from-timeline', '', $cate.text());
-      }
-
-      // h: hours, m: minutes, t: top, c: css-class
-    , createTimeItem: function (h, m, t, c, isLabel) {
-        var s = this.divTmp
-          , hm = lead0(h) + ':' + lead0(m)
-          , h = h === 24 ? 0 : h
-          , $d = $(s.replace('{{class}}', c)
-                    .replace('{{dt}}', hm)
-                    .replace('{{t}}', (isLabel ? (h === 12 ?  h  : h % 12) : h + ':' + lead0(m)) + ' ' + (h < 12 ? 'AM' : 'PM'))
-                  )
-                  .css('top', t);
-
-        this.$timesContainer.append($d);
-        return $d;
-      }
-
-    , genHoverItem: function () {
-        var $tp = this.$timesWrapper.find('.times')
-          , rh = Math.round(this.mY / this._h) * this._h
-          , t = rh * this._a
-          , h = Math.floor(t / 60).toFixed(0)
-          , m = t % 60
-          , hm = lead0(h) + ':' + lead0(m)
-          , $d;
-        this._dh = h;
-        this._dm = m;
-
-        this._mouseleave();
-
-        if (($d = $tp.find('[data-time="' + hm + '"]')).size()) {
-          this.$item = $d.addClass('time-hover');
-        } else {
-          this.$item = this.createTimeItem(h, m, rh, ' time-hover');
-        }
-      }
-
-    , showFuzzyTime: function (e) {
-        var index = 0
-          , $timesWrapper = this.$timesWrapper
-          , times = this.times
-          , t
-          , d0 = new Date(2012, 12, 21, this._dh, this._dm)
-          , d1;
-
-        R.find(times, function (v, i) {
-          t = v.split(':');
-          d1 = new Date(2012, 12, 21, t[0], t[1]);
-          if (d0 < d1) {
-            index = i;
-            return true;
-          }
-        });
-
-        index || (index = 1);
-        (+this._dh === 24) && (index = 14);
-        index -= 1;
-        this.$times
-          .addClass('hide')
-          .eq(index)
-          .removeClass('hide');
-
-        if (+this._dh >= 5 && this._dh < 22) {
-          this.$times.eq(index - 1).removeClass('hide');
-          this.$times.eq(index + 1).removeClass('hide');
-        }
-
-        var top = e.pageY - $timesWrapper.offset().top - 7;
-        var l = this.$times.not('.hide').length;
-        this.$fuzzyTime.css('top', top - (l + 1) / 2 * 18 + 'px');
-      }
-
-    , itemClick: function (e) {
-        this.$selected && this.$selected.removeClass('selected');
-        var $item = $(e.currentTarget)
-          , t = $item.data('time');
-        this.$selected = $item.addClass('selected');
-        this.component.emit('refresh-from-timeline', this.selectedTime = t, '');
+    , scrollTop: function (e) {
+        if (this.isHide) { this.$cursor.removeClass('hide'); this.isHide = false; }
+        if (this.enable) { return; }
+        e.pageX = this.px;
+        e.pageY = this.py;
+        this.st = this.$tw.scrollTop();
+        this.mousemove(e);
       }
 
     , removeSelected: function () {
         if (this.$selected) {
-          this.$selected.removeClass('selected');
-          this.$selected = null;
           this.selectedTime = '';
+          this.$selected.removeClass('selected');
+          delete this.$selected;
         }
       }
 
+    , mouseleave: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.$ft.addClass('hide');
+      }
+
+    , mousemove: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var y = this.y;
+        this.px = e.pageX;
+        this.py = e.pageY;
+        this.x = this.px - this.ox;
+        this.y = this.py - this.oy + this.st - this.hh;
+        // steps 3hours & 60 / 15
+        this.y = Math.max(0, Math.min(this.y, (this.l - 1) * this.h * 3 * 4));
+
+        if (y === this.y) { return; }
+        this.hoverItem();
+
+        this.showFuzzyTime(e.pageY);
+      }
+
+    , clickCT: function (e) {
+        e.preventDefault();
+        this.removeSelected();
+        this.component.emit('rf-tl', '', $(e.currentTarget).text());
+      }
+
+    , showFuzzyTime: function (y) {
+        var n = 0
+          , ts = this.ts
+          , t
+          , d0 = new Date(2012, 12, 21, this.dh, this.dm)
+          , d1, dt, l;
+        R.find(ts, function (v, i) {
+          t = v.split(':');
+          d1 = new Date(2012, 12, 21, t[0], t[1]);
+          if (d0 < d1) {
+            n = i;
+            return true;
+          }
+        });
+
+        if (0 === n) { n = 1; }
+        if (24 === this.dh) { n = 14; }
+        --n;
+        this.$ts.not('.hide').addClass('hide');
+        this.$ts.eq(n).removeClass('hide');
+
+        // from 5:00 to 22:00
+        if (5 <= this.dh && this.dh < 22) {
+          this.$ts.eq(n - 1).removeClass('hide');
+          this.$ts.eq(n + 1).removeClass('hide');
+        }
+        dt = y - this.oy - this.th;
+        l = this.$ts.not('.hide').length;
+        this.$ft.stop(true, true).animate({'top': dt - (l + 1) / 2 * 18}, 233);
+      }
+
+    , meTW: function () {
+      this.$cursor.removeClass('hide');
+      this.$ft.removeClass('hide');
+    }
+
+    , mlTW: function (e) {
+        var $c = this.$cursor;
+        if (e) { e.preventDefault(); }
+        if (!$c.hasClass('time-label') && !$c.hasClass('selected')) {
+          $c.addClass('hide');
+        }
+      }
+
+    , clickTW: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var $c = this.$cursor
+          , t = $c.attr('data-time')
+          , ts = t.split(':')
+          , isLabel = 0 === +ts[0] % 3 && 0 === +ts[1]
+          , $s = this.$selected;
+        $c.addClass('hide');
+        if ($s) {
+          $s.removeClass('selected');
+          if (t === $s.attr('date-time')) { return; }
+          if (!$s.hasClass('time-label')) {
+            $s.remove();
+            delete this.$selected;
+          }
+        }
+        if (isLabel) {
+          this.$selected = this.$tc.find('[data-time="' + t + '"]').eq(0);
+        } else {
+          this.$selected = $c.clone().removeClass('hide time-hover');
+          $c.before(this.$selected);
+        }
+        this.$selected.addClass('selected');
+        this.component.emit('rf-tl', this.selectedTime = this.$selected.data('time'), '');
+      }
+
+    , hoverItem: function () {
+        var t = Math.round(this.y / this.h) * this.h
+          , ms = t * this.a
+          , h = +Math.floor(ms / 60).toFixed(0)
+          , m = ms % 60
+          , hm = lead0(h) + ':' + lead0(m);
+
+        this.dh = h;
+        this.dm = m;
+
+        this.$cursor
+          .css('top', t)
+          .attr('data-time', hm)
+          .find('time').text((12 === h ? h : h % 12) + ':' + lead0(m) + ' ' + (h < 12 ? 'A' : 'P') + 'M');
+      }
+
+      //                      class, hours, minutes, top, isLabel
+    , createNormalItem: function (h, m, t) {
+        var $d = $(this.divTmp
+          .replace('{{class}}', ' time-hover')
+          .replace('{{dt}}', lead0(h) + ':' + lead0(m))
+          .replace('{{t}}', h + ':' + lead0(m) + ' ' + (h < 12 ? 'A' : 'P') + 'M'));
+        $d.css('top', t);
+        this.$tc.append($d);
+        return $d;
+      }
+
+      //                      class, hours, minutes, top, isLabel
+    , createLabelItem: function (h, m, t) {
+        var $d = $(this.divTmp
+          .replace('{{class}}', ' time-label')
+          .replace('{{dt}}', lead0(h) + ':' + lead0(m))
+          .replace('{{t}}', (12 === h ? h : h % 12) + ' ' + (h < 12 ? 'A' : 'P') + 'M'));
+        $d.css('top', t);
+        this.$tc.append($d);
+        return $d;
+      }
+
     , generateHTML: function () {
-        var divTmp = this.divTmp
-          , s = ''
+        var l = this.l
           , i = 0
-          , l = this._l
           , step = 60 * 3
           , d = new Date(2012, 12, 21, 21, 0)
           , h = 0, m = 0;
@@ -1035,29 +1002,33 @@ define('datepanel', function (require/*, exports, module*/) {
           d.setMinutes(d.getMinutes() + step);
           h = d.getHours();
           m = d.getMinutes();
-          s = divTmp;
-          if (i === 8) {
+          if (8 === i) {
             h = 24;
           }
-
-          this.createTimeItem(h, m, 60 * i, ' time-label', true);
+          this.createLabelItem(h, m, 60 * i);
         }
+
+        this.$cursor = this.createNormalItem(0, 0, 0)
+          .addClass('hide');
       }
 
   };
 
 
-  /** * DataController */
-  //var DataController = function (component) {};
-
-
   // Helper:
+  var proxy = function (f, c) {
+    if (!f) { return; }
+    return function cb(e) {
+      return f.call(c, e);
+    };
+  };
+
   var dateFormat = function (date) {
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
   };
 
-  var toDate = function (ds, i) {
-    i || (i = 0);
+  var datefun = function (ds, i) {
+    if (!i) { i = 0; }
     ds = ds.split('-');
     return new Date(ds[0], +ds[1] - 1, +ds[2] + i);
   };
@@ -1065,9 +1036,9 @@ define('datepanel', function (require/*, exports, module*/) {
   // get time zone
   var getTimezone = function () {
     var s = (new Date()).toString()
-      , tz = s.replace(/^.*([\+\-]\d\d):?(\d\d).*$/, '$1:$2')
-      , ts = s.replace(/^.*\(([a-z]*)\).*$/i, '$1');
-    ts = (ts === 'UTC' || ts === 'GMT') ? '' : ts;
+      , tz = s.replace(/^(?:[\w\W]+([\+\-]\d\d):?(\d\d)[\w\W]+)$/, '$1:$2')
+      , ts = s.replace(/^(?:[\w\W]+\(([a-z]+)\)[\w\W]*)$/i, '$1');
+    if (ts === 'UTC' || ts === 'GMT') { ts = ''; }
     return tz + (ts ? (' ' + ts) : '');
   };
 
