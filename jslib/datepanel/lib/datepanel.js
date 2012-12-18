@@ -6,8 +6,10 @@ define('datepanel', function (require/*, exports, module*/) {
   "use strict";
 
   var $ = require('jquery')
+    , isIE = $.browser.msie
     , ET = require('eftime')
     , locale = ET.locales[ET.locale]
+    , months = locale.monthsShort
     , monthsShort = locale.monthsShort
     , createET = ET.create
     , toDate = ET.toDate
@@ -102,13 +104,13 @@ define('datepanel', function (require/*, exports, module*/) {
         var eftime = this.eftime
           , date = this.dateObj.date;
         this.calendarTable.refresh(date);
-        if (!this.originEftime.outputformat) {
+        if (0 === this.originEftime.outputformat) {
           this.calendarTable.addCursorStyle();
           this.calendarTable.select();
         }
         this.timeline.refresh(this.eftime);
         this.dateInput.change(eftime.origin || date.text);
-        this.dateInput.$element.focus();
+        this.dateInput.$element.focusend();
       }
 
     , listen: function () {
@@ -149,6 +151,10 @@ define('datepanel', function (require/*, exports, module*/) {
         $.extend(true, this.eftime, eft);
         this.dateObj = toDate(eft);
         this.calendarTable.refresh(this.dateObj.date);
+        if (0 === this.eftime.outputformat) {
+          this.calendarTable.addCursorStyle();
+          this.calendarTable.select(true);
+        }
         this.timeline.select(eft);
       }
 
@@ -295,11 +301,23 @@ define('datepanel', function (require/*, exports, module*/) {
             e.preventDefault();
             component.emit('save');
             break;
+          case 40: // down
+            // if the cursor in the last, tab to PlacesList
+            var v = this.$element.val()
+              , l = v.length
+              , ele = this.$element[0]
+              , end = selectionEnd(ele);
+            if (l === end) {
+              e.preventDefault();
+              // ct: calendarTable
+              component.emit('tmt-ct');
+            }
+            break;
         }
       }
 
     , keydown: function (e) {
-        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13], e.keyCode);
+        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13, 40], e.keyCode);
         this.keyHandler(e);
       }
 
@@ -320,7 +338,9 @@ define('datepanel', function (require/*, exports, module*/) {
           case 17: // ctrl
           case 18: // alt
           case 27: // escape
+          case 37: // left
           case 38: // up
+          case 39: // right
           case 40: // down
             break;
           default:
@@ -456,16 +476,24 @@ define('datepanel', function (require/*, exports, module*/) {
         e.stopPropagation();
         e.preventDefault();
         var $tw = this.$tw
-          , t = $tw.scrollTop();
+          , t = $tw.scrollTop()
+          , b = false
+          , $y = this.$y
+          , $m = this.$m;
 
-        if (0 === t) {
-          this.mpageUp();
+        if (0 === t || this.st === t) {
+          this.enable = true;
+          this[0 === t ? 'mpageUp' : 'mpageDown']();
           this.$tw.scrollTop(this.vph * this.vpr);
+          b = true;
         }
-        else if (this.st === t) {
-          this.mpageDown();
-          this.$tw.scrollTop(this.vph * this.vpr);
+        if (this.$cursor) {
+          var d = datefun(this.$cursor.data('date'));
+          $y.text(d.getFullYear());
+          $m.text(months[d.getMonth()]);
         }
+        $y.toggleClass('hide', b);
+        $m.toggleClass('hide', b);
       }
 
     , delCursorStyle: function () {
@@ -562,10 +590,12 @@ define('datepanel', function (require/*, exports, module*/) {
         this.select();
       }
 
-    , select: function () {
+    , select: function (enable) {
         var date = this.selectedDate = this.$cursor.data('date');
         this.$cursor.addClass('selected');
-        this.component.emit('rf-ct', date);
+        if (!enable) {
+          this.component.emit('rf-ct', date);
+        }
       }
 
     , mouseenterDate: function (e) {
@@ -1041,6 +1071,20 @@ define('datepanel', function (require/*, exports, module*/) {
     if (ts === 'UTC' || ts === 'GMT') { ts = ''; }
     return tz + (ts ? (' ' + ts) : '');
   };
+
+  // get Textarea selectionEnd
+  var selectionEnd = function (inputor) {
+    return isIE ? getIESelectionEnd(inputor) : inputor.selectionEnd;
+  }
+
+  var getIESelectionEnd = function (inputor) {
+    var r = document.selection.createRange()
+      , re = inputor.createTextRange()
+      , rc = re.duplicate();
+    re.moveToBookmark(r.getBookmark());
+    rc.setEndPoint('EndToStart', re);
+    return rc.text.length + r.text.length;
+  }
 
   return DatePanel;
 });
