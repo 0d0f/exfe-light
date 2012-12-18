@@ -604,6 +604,9 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , select: function (enable) {
+        if (this.selectedDate) {
+          this.$trs.find('td.selected').removeClass('selected');
+        }
         var date = this.selectedDate = this.$cursor.data('date');
         this.$cursor.addClass('selected');
         this.updateYearMonth();
