@@ -487,13 +487,17 @@ define('datepanel', function (require/*, exports, module*/) {
           this.$tw.scrollTop(this.vph * this.vpr);
           b = true;
         }
-        if (this.$cursor) {
-          var d = datefun(this.$cursor.data('date'));
-          $y.text(d.getFullYear());
-          $m.text(months[d.getMonth()]);
-        }
+        this.updateYearMonth();
         $y.toggleClass('hide', b);
         $m.toggleClass('hide', b);
+      }
+
+    , updateYearMonth: function () {
+        if (this.$cursor) {
+          var d = datefun(this.$cursor.data('date'));
+          this.$y.text(d.getFullYear());
+          this.$m.text(months[d.getMonth()]);
+        }
       }
 
     , delCursorStyle: function () {
@@ -593,6 +597,7 @@ define('datepanel', function (require/*, exports, module*/) {
     , select: function (enable) {
         var date = this.selectedDate = this.$cursor.data('date');
         this.$cursor.addClass('selected');
+        this.updateYearMonth();
         if (!enable) {
           this.component.emit('rf-ct', date);
         }
