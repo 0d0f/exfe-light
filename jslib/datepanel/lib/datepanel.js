@@ -322,9 +322,11 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , keypress: function (e) {
-        if (this.suppressKeyPressRepeat === false) {
-          this.keyHandler(e);
+        if (this.suppressKeyPressRepeat) {
+          // return false, /* Firefox 会禁用按键；webkit 则不会。wtf? */
+          return;
         }
+        this.keyHandler(e);
       }
 
     , keyup: function (e) {
