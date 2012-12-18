@@ -1,3 +1,7 @@
+* v0.0.13 2012-12-04T22:56:08 UTC+0800
+  - Changes
+    * not filter youself updated
+
 * v0.0.12 2012-12-04T22:56:08 UTC+0800
   - New Features
     * `Ignore` Button
