@@ -825,7 +825,7 @@ define('datepanel', function (require/*, exports, module*/) {
               .find('[data-time="' + this.selectedTime + '"]').eq(0);
 
           if (0 === this.$selected.length) {
-            this.$selected = this.createNormalItem(h, m, (h + n / 60) * this.h * (60 / 15));
+            this.$selected = this.createNormalItem(h, m, Math.floor((h + m / 60) * this.h * (60 / 15)));
           }
           this.$selected.removeClass('time-hover');
           this.$selected.addClass('selected')
