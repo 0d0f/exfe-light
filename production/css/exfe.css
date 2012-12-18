@@ -11004,6 +11004,7 @@ body {
 .date-panel .date-timeline .times-wrapper {
   position: relative;
   height: 210px;
+  padding-left: 3px;
   overflow-x: hidden;
   overflow-y: scroll;
   cursor: pointer;
@@ -11013,7 +11014,7 @@ body {
 .date-panel .date-timeline .times {
   position: relative;
   z-index: -1;
-  width: 124px;
+  width: 121px;
   margin-top: 7px;
   cursor: pointer;
 }
