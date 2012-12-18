@@ -10895,6 +10895,9 @@ body {
   right: -70px;
   width: 70px;
   text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .date-panel .date-timeline .fuzzy-time .time-cates {
@@ -10908,7 +10911,7 @@ body {
 
 .date-panel .date-timeline .fuzzy-time .time-cates [data-cate="all-day"] {
   color: #191919;
-  text-shadow: 0 -1px 1px #ffffff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   background-color: #e6e6e6;
 }
 
