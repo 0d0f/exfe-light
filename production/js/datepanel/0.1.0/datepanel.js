@@ -322,10 +322,9 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , keypress: function (e) {
-        if (this.suppressKeyPressRepeat) {
-          return false;
+        if (this.suppressKeyPressRepeat === false) {
+          this.keyHandler(e);
         }
-        this.keyHandler(e);
       }
 
     , keyup: function (e) {
