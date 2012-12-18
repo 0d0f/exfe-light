@@ -9,7 +9,7 @@ define('datepanel', function (require/*, exports, module*/) {
     , isIE = $.browser.msie
     , ET = require('eftime')
     , locale = ET.locales[ET.locale]
-    , months = locale.monthsShort
+    , months = locale.months
     , monthsShort = locale.monthsShort
     , createET = ET.create
     , toDate = ET.toDate
@@ -446,7 +446,7 @@ define('datepanel', function (require/*, exports, module*/) {
 
     , refresh: function (date) {
         this.$trs = this.$cursor = null;
-        this.selectedDate = '';
+        //this.selectedDate = '';
         this.len = 0;
         this.$tb.empty();
         this.init(date);
@@ -559,6 +559,14 @@ define('datepanel', function (require/*, exports, module*/) {
             e.preventDefault();
             self.spacing();
             break;
+          case 68: // d
+            e.preventDefault();
+            self.refresh(datefun(self.getSelectedDate()));
+            break;
+          case 84: // t
+            e.preventDefault();
+            self.refresh(self.today);
+            break;
           case 35: // end:        mac fn + →
           case 36: // home:       mac fn + ←
             break;
@@ -566,7 +574,7 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , keydown: function (e) {
-        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13, 32, 33, 34, 35, 36, 37, 38, 39, 40], e.keyCode);
+        this.suppressKeyPressRepeat = !!~R.indexOf([9, 13, 32, 33, 34, 35, 36, 37, 38, 39, 40, 68, 84], e.keyCode);
         this.keyHandler(e);
       }
 
