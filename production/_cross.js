@@ -306,7 +306,7 @@ ExfeeWidget = {
     showAll : function(skipMe, fadeUnconfirmed) {
         var intAccepted = 0,
             intTotal    = 0,
-            order       = ['ACCEPTED', 'INTERESTED', 'NORESPONSE', 'DECLINED'];
+            order       = ['ACCEPTED', 'INTERESTED', 'NORESPONSE', 'DECLINED', 'IGNORED'];
         $('#' + this.dom_id + ' .thumbnails').html('');
         for (var j = 0; j < order.length; j++) {
             for (var i = 0; i < Exfee.invitations.length; i++) {
@@ -910,7 +910,8 @@ define('exfeepanel', function (require, exports, module) {
         arrRsvp    : {NORESPONSE : ['Pending'],
                       ACCEPTED   : ['Accepted'],
                       INTERESTED : ['Interested'],
-                      DECLINED   : ['Unavailable']},
+                      DECLINED   : ['Unavailable'],
+                      IGNORED    : ['Pending']},
 
         invitation : {},
 
@@ -1051,6 +1052,7 @@ define('exfeepanel', function (require, exports, module) {
                     objSetTo.toggleClass('icon-rsvp-noresponse',    true);
                     break;
                 case 'NORESPONSE':
+                case 'IGNORED':
                 default:
                     next_rsvp = 'ACCEPTED';
                     objSetTo.toggleClass('icon-rsvp-accepted-blue', true);
@@ -2033,7 +2035,7 @@ define(function (require, exports, module) {
             var by_identity = myInvitation.by_identity
                             ? myInvitation.by_identity : curIdentity,
                 byMe        = myInvitation.identity.id === by_identity.id;
-            if (myInvitation.rsvp_status === 'NORESPONSE' || buttons) {
+            if (myInvitation.rsvp_status === 'NORESPONSE' || myInvitation.rsvp_status === 'IGNORED' || buttons) {
                 if (byMe) {
                     $('.cross-rsvp .edit .by').hide();
                 } else {
