@@ -138,11 +138,9 @@ define(function (require, exports, module) {
         if (!cats) {
             cats = {};
         }
-        var submitData = {};
+        var submitData = {invitation_token   : token};
         if (cats[token]) {
             submitData = {cross_access_token : cats[token]};
-        } else {
-            submitData = {invitation_token   : token};
         }
         $.ajax({
             type    : 'post',
@@ -470,4 +468,5 @@ define(function (require, exports, module) {
         }
     }
     home();
+
 });
