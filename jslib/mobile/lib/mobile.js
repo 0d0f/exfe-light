@@ -82,7 +82,7 @@ define(function (require, exports, module) {
     };
 
     var launchApp = function(args) {
-        window.location = 'exfex://crosses/' + (args ? args : '');
+        window.location = 'exfe://crosses/' + (args ? args : '');
     };
 
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
