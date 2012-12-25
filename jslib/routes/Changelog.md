@@ -1,3 +1,7 @@
+* v0.1.10 2012-12-25T18:01:07 UTC+0800
+  - Changes
+    * submit cross-access-token and invitation-token together
+
 * v0.1.9 2012-12-11T15:03:05 UTC+0800
   - Added
     * `Unsubscribe` dialog
