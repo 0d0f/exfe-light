@@ -140,7 +140,7 @@ define(function (require, exports, module) {
         }
         var submitData = {invitation_token   : token};
         if (cats[token]) {
-            submitData = {cross_access_token : cats[token]};
+            submitData['cross_access_token'] = cats[token];
         }
         $.ajax({
             type    : 'post',

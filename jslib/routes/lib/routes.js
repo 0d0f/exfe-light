@@ -554,11 +554,9 @@ define('routes', function (require, exports, module) {
       cat = cats[ctoken];
     }
 
+    data = { invitation_token: ctoken };
     if (cat) {
-      data = { cross_access_token: cat };
-    }
-    else {
-      data = { invitation_token: ctoken };
+      data['cross_access_token'] = cat;
     }
 
     Api.request('getCrossByInvitationToken',
