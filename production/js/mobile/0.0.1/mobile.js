@@ -450,20 +450,37 @@ define(function (require, exports, module) {
         });
     };
 
-    var hash = document.location.hash.replace(/^#/, '');
-    if (hash) {
-        hash = hash.split('/');
-        for (var i = 0; i < hash.length; i++) {
-            if (hash[i].match(/^token=.*/)) {
-                resolvetoken(hash[i].replace(/^token=(.*)/, '$1', hash[i]));
+    if (sms_token) {
+        switch (sms_token.action) {
+            case 'VERIFIED':
+                verification(sms_token);
                 return;
-            } else if (hash[i].match(/^\!token=.*/)) {
-                cross(hash[i].replace(/^\!token=(.*)/, '$1', hash[i]));
+            case 'INPUT_NEW_PASSWORD':
+                inputPassword(sms_token, sms_token.origin_token);
                 return;
-            } else {
-                // 404
-                home(true);
-                return;
+        }
+        home(true);
+        return;
+    } else if (sms_token === false) {
+        // token 无效
+        home(true);
+        return;
+    } else {
+        var hash = document.location.hash.replace(/^#/, '');
+        if (hash) {
+            hash = hash.split('/');
+            for (var i = 0; i < hash.length; i++) {
+                if (hash[i].match(/^token=.*/)) {
+                    resolvetoken(hash[i].replace(/^token=(.*)/, '$1', hash[i]));
+                    return;
+                } else if (hash[i].match(/^\!token=.*/)) {
+                    cross(hash[i].replace(/^\!token=(.*)/, '$1', hash[i]));
+                    return;
+                } else {
+                    // 404
+                    home(true);
+                    return;
+                }
             }
         }
     }
