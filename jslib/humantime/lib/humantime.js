@@ -506,7 +506,7 @@ HumanTime.printEFTime = function (eft, type, funs) {
       if (ba.timezone) {
         tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
         if (tz !== getTimezone(now)) {
-          output.content += ' ' + ba.timezone;
+          output.content += ' (' + ba.timezone + ')';
         }
       }
     }
