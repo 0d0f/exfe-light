@@ -502,12 +502,12 @@ HumanTime.printEFTime = function (eft, type, funs) {
       } else if (ba.date_word || ba.time_word) {
         output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
       }
-    }
 
-    if (ba.timezone) {
-      tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
-      if (tz !== getTimezone(now)) {
-        output.content += ' ' + ba.timezone;
+      if (ba.timezone) {
+        tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
+        if (tz !== getTimezone(now)) {
+          output.content += ' (' + ba.timezone + ')';
+        }
       }
     }
   }
