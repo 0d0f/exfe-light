@@ -41,6 +41,10 @@ function main(args, argv) {
         dist = Path.join(newpath, module + '.js');
         mindist = Path.join(newpath, module + '.min.js');
 
+        if (package.module) {
+          source = package.module.header + source;
+          source += package.module.footer;
+        }
         Fs.writeFileSync(dist, source, 'utf8');
         Fs.writeFileSync(mindist, compress(source), 'utf8');
       } else {
