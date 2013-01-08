@@ -459,9 +459,11 @@ HumanTime.printEFTime = function (eft, type, funs) {
     origin = eft.origin
       .replace(/^['"‘’“”“”‚„]+/, '')
       .replace(/['"‘’“”“”‚„]+$/, '');
-    output.content = origin;
-    if (!isX) {
+    if (isX) {
       output.title = origin;
+    }
+    else {
+      output.content = origin;
       if (ba.date) {
         eft.outputformat = 0;
         t = HumanTime.toLocaleDate(eft);
