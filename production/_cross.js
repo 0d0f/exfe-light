@@ -1892,38 +1892,9 @@ define(function (require, exports, module) {
             placeholder = Cross.id ? '&nbsp;' : 'Click here to set time.',
             showGray    = false;
         if (Cross.time.origin) {
-            var bdate = Cross.time.begin_at.date
-              , btime = Cross.time.begin_at.time
-              , bzone = Cross.time.begin_at.timezone;
-            if (Cross.time.outputformat) {
-                strAbsTime = placeholder;
-                strRelTime = ExfeUtilities.escape(Cross.time.origin);
-                showGray   = true;
-          } else if (bdate && btime) {
-            var now = new Date()
-              , matches = bdate.match(/^\d\d\d\d/m);
-            var objMon = moment((moment.utc(
-                Cross.time.begin_at.date + ' '
-              + Cross.time.begin_at.time, format + ' HH:mm:ss'
-            ).unix()   + (timevalid ? 0 : (crossOffset - timeOffset))) * 1000);
-            strAbsTime = objMon.format('h:mmA on ddd, MMM D' + (matches && matches[0] == now.getFullYear() ? '' : ' YYYY'))
-                        + (timevalid ? '' : (' ' + Cross.time.begin_at.timezone));;
-            strRelTime = efTime.timeAgo(bdate + ' ' + btime + ' Z', undefined, 'X');
-          } else if (bdate && !btime) {
-            var now = new Date()
-              , matches = bdate.match(/^\d\d\d\d/m);
-            strAbsTime = moment(bdate).format('On ddd, MMM D' + (matches && matches[0] == now.getFullYear() ? '' : ' YYYY'))
-                        + (timevalid ? '' : (' ' + Cross.time.begin_at.timezone));;
-            now = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            strRelTime = efTime.timeAgo(bdate + ' ' + bzone[0] + bzone[1] + bzone[2]  + bzone[4] + bzone[5], +now);
-            if (strRelTime === 'Seconds ago') {
-              strRelTime = 'Today';
-            }
-          } else if (!bdate && btime) {
-            strAbsTime = '';
-            strRelTime = btime;
-          }
-
+          var t = HumanTime.printEFTime(Cross.time, 'X');
+          strAbsTime = t.content;
+          strRelTime = t.title;
         } else {
             strAbsTime = placeholder;
             strRelTime = 'Sometime';
@@ -2008,7 +1979,7 @@ define(function (require, exports, module) {
                        +       '<span class="author"><strong>' + message.by_identity.name + '</strong>:&nbsp;</span>'
                        +          ExfeUtilities.escape(message.content).replace(/\r\n|\n\r|\r|\n/g, '<br>')
                        +       '<span class="pull-right date">'
-                       +         '<time data-iso8601-time="' + efTime.printISO8601(message.created_at) + '"></time>'
+                       +         '<time data-iso-time="' + HumanTime.toISO(message.created_at) + '"></time>'
                        +       '</span>'
                        +     '</p>'
                        +   '</div>'
@@ -2018,9 +1989,9 @@ define(function (require, exports, module) {
 
 
     var ShowMessageTime = function() {
-        $('[data-iso8601-time]').each(function() {
+        $('time[data-iso-time]').each(function() {
             var that = $(this);
-            that.html(efTime.timeAgo(that.data('iso8601-time')));
+            that.text(HumanTime(that.data('iso-time')));
         });
     };
 
@@ -2309,7 +2280,7 @@ define(function (require, exports, module) {
     window.Store = require('store');
     window.Api   = require('api');
 
-    var efTime = require('eftime');
+    var HumanTime = require('humantime');
 
     // init participated identity
     window.curIdentity = null;
