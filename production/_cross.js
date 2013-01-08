@@ -1323,6 +1323,7 @@ define(function (require, exports, module) {
                     data      : JSON.stringify(post)
                 },
                 function(data) {
+                    lastConvUpdate = data.post.created_at;
                     $('.cross-opts .saving').hide();
                     ShowMessage(data.post);
                     bus.emit('app:cross:edited');
@@ -1955,26 +1956,21 @@ define(function (require, exports, module) {
     };
 
 
+    var lastConvUpdate = '';
+
     var ShowTimeline = function(timeline) {
-        if (readOnly) {
-            $('#conversation-form').hide();
-        } else {
-            $('#conversation-form span.avatar img').attr(
-                'src', curIdentity.avatar_filename
-            );
-            $('#conversation-form').show();
-        }
-        $('.conversation-timeline').html('');
-        $('.cross-conversation').slideDown(233);
         Timeline = timeline;
         for (var i = Timeline.length - 1; i >= 0; i--) {
+            if (!i) {
+                lastConvUpdate = Timeline[i].created_at;
+            }
             ShowMessage(Timeline[i]);
         }
     };
 
 
     var ShowMessage = function(message) {
-          var strMessage = '<div class="avatar-comment">'
+        var strMessage = '<div class="avatar-comment">'
                        +   '<span class="pull-left avatar">'
                        +     '<img alt="" src="' + message.by_identity.avatar_filename + '" width="40" height="40" />'
                        +   '</span>'
@@ -2108,14 +2104,35 @@ define(function (require, exports, module) {
     };
 
 
-    var GetTimeline = function() {
+    var ConvTimer = null;
+
+    var RawGetTimeline = function() {
+        var args = {resources : {exfee_id : Exfee.id}};
+        if (lastConvUpdate) {
+            args['params'] = {updated_at : lastConvUpdate};
+        }
+        console.log('fetched');
         Api.request(
-            'conversation',
-            {resources : {exfee_id : Exfee.id}},
+            'conversation', args,
             function(data) {
                 ShowTimeline(data.conversation);
             }
         );
+    };
+
+    var GetTimeline = function() {
+        if (readOnly) {
+            $('#conversation-form').hide();
+        } else {
+            $('#conversation-form span.avatar img').attr(
+                'src', curIdentity.avatar_filename
+            );
+            $('#conversation-form').show();
+        }
+        $('.conversation-timeline').html('');
+        $('.cross-conversation').slideDown(233);
+        RawGetTimeline();
+        ConvTimer = setInterval(RawGetTimeline, 3000);//233 * 1000
     };
 
 
