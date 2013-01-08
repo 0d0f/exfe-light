@@ -158,7 +158,7 @@
             <div class="cross-box">
               <a href="/#!{{crossItem "id"}}" data-identity-id="{{crossItem "identityid"}}" data-name="{{crossItem "name"}}" data-exfeeid="{{crossItem "exfeeid"}}" data-invitationid="{{crossItem "invitationid"}}" data-id="{{crossItem "id"}}" data-link>
                 <h5>{{crossItem "title"}}</h5>
-                <div>{{printTime2 "time"}}{{#ifPlace}} <span class="gray">at</span> {{crossItem "place"}}{{/ifPlace}} <span class="gray">by</span> {{by_identity.name}}</div>
+                <div>{{printTime "time"}}{{#ifPlace}} <span class="gray">at</span> {{crossItem "place"}}{{/ifPlace}} <span class="gray">by</span> {{by_identity.name}}</div>
                 <i class="icon14-clear xbtn-ignore" data-action="IGNORED" data-link="nota" title="Ignore">Ignore</i>
                 <div class="xbtn xbtn-accept" data-action="ACCEPTED" data-link="nota">I'm in</div>
               </a>
@@ -177,7 +177,7 @@
                 <h5>{{title}}</h5>
 
                 {{#if updated.time}}
-                <div><i class="icon-time"></i> {{printTime5 time}}</div>
+                <div><i class="icon-time"></i> {{printTime2 time}}</div>
                 {{/if}}
 
                 {{#if updated.place}}
