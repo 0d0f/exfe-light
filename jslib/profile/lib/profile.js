@@ -61,8 +61,7 @@ define(function (require, exports, module) {
     return t.content || 'Sometime';
   });
 
-  Handlebars.registerHelper('printTime2', function (time, options) {
-    time  = Handlebars.helpers['crossItem'].call(this, time, options);
+  Handlebars.registerHelper('printTime2', function (time) {
     var t = HumanTime.printEFTime(time);
     return t.content || 'To be decided';
   });
