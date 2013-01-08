@@ -7,13 +7,13 @@ define('datepanel', function (require/*, exports, module*/) {
 
   var $ = require('jquery')
     , isIE = $.browser.msie
-    , ET = require('eftime')
-    , locale = ET.locales[ET.locale]
+    , HT = require('humantime')
+    , locale = HT.locales[HT.locale]
     , months = locale.months
     , monthsShort = locale.monthsShort
-    , createET = ET.create
-    , toDate = ET.toDate
-    , lead0 = ET.lead0
+    , createET = HT.createEFTime
+    , toDate = HT.toLocaleDate
+    , lead0 = HT.lead0
     , Util = require('util')
     , trim = Util.trim
     , Api = require('api')
@@ -169,9 +169,9 @@ define('datepanel', function (require/*, exports, module*/) {
           date.setHours(ts[0] || 0);
           date.setMinutes(ts[1] || 0);
           date.setSeconds(ts[2] || 0);
-          eftime.begin_at.time = date.getUTCHours()
-            + ':' + date.getMinutes()
-            + ':' + date.getSeconds();
+          eftime.begin_at.time = lead0(date.getUTCHours())
+            + ':' + lead0(date.getMinutes())
+            + ':' + lead0(date.getSeconds());
         }
         eftime.begin_at.time_word = tw;
         s = t || tw;
@@ -196,7 +196,7 @@ define('datepanel', function (require/*, exports, module*/) {
         date.setFullYear(dsArray[0]);
         date.setMonth(dsArray[1] - 1);
         date.setDate(dsArray[2]);
-        dsUTC = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+        dsUTC = date.getUTCFullYear() + '-' + lead0(date.getUTCMonth() + 1) + '-' + lead0(date.getUTCDate());
         ef.begin_at.date = dsUTC;
         if (ef.outputformat) {
           ef.outputformat = 0;
@@ -1071,7 +1071,7 @@ define('datepanel', function (require/*, exports, module*/) {
   };
 
   var dateFormat = function (date) {
-    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    return date.getFullYear() + '-' + lead0(date.getMonth() + 1) + '-' + lead0(date.getDate());
   };
 
   var datefun = function (ds, i) {

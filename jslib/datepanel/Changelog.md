@@ -1,3 +1,7 @@
+* v0.1.1 2013-01-08T10:51:17 UTC+0800
+  - Changes
+    * used new `humantime` library
+
 * v0.1.0 2012-12-13T14:13:19 UTC+0800
   - API Changes
     * `timeline` refactor
