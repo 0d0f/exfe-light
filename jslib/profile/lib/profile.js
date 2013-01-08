@@ -83,6 +83,12 @@ define(function (require, exports, module) {
     return t.content || 'Sometime';
   });
 
+  Handlebars.registerHelper('printTime4', function (time) {
+    time = Handlebars.helpers['crossItem'].call(this, time);
+    var t = HumanTime.printEFTime(time);
+    return t.content || 'Sometime';
+  });
+
   Handlebars.registerHelper('rsvpAction', function (identities, identity_id) {
     var rsvp = {
       'ACCEPTED': 'Accepted',
