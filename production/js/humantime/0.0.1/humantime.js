@@ -460,10 +460,8 @@ HumanTime.printEFTime = function (eft, type, funs) {
     origin = eft.origin
       .replace(/^['"‘’“”“”‚„]+/, '')
       .replace(/['"‘’“”“”‚„]+$/, '');
-    if (isX) {
-      output.content = origin;
-    }
-    else {
+    output.content = origin;
+    if (!isX) {
       output.title = origin;
       if (ba.date) {
         eft.outputformat = 0;
