@@ -433,8 +433,8 @@ var FUNS = {
     }
 
   , time: function (h, m) {
-      var s = h + ':' + m;
-      if (s === h + ':0') { s = h; }
+      var _h = h > 12 ? h - 12 : h;
+      var s = _h + ':' + lead0(m);
       s += h >= 12 ? 'PM' : 'AM';
       return s;
     }
@@ -476,7 +476,7 @@ HumanTime.printEFTime = function (eft, type, funs) {
     if (!funs) {
       funs = FUNS;
     }
-    if (ba.date || ba.time) {
+    if (ba && (ba.date || ba.time)) {
       t = HumanTime.toLocaleDate(eft);
       d = t.date;
 
@@ -493,6 +493,10 @@ HumanTime.printEFTime = function (eft, type, funs) {
             + funs.time(d.getHours(), d.getMinutes())
           + (ba.date_word ? ', ' : '')
           + ba.date_word;
+      }
+
+      if (d.getFullYear() !== now.getFullYear()) {
+        output.content +=  ' ' + d.getFullYear();
       }
     } else if (ba.date_word || ba.time_word) {
       output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
