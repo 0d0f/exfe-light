@@ -71,7 +71,7 @@ define(function (require, exports, module) {
   });
 
   // Updates print time
-  Handlebars.registerHelper('printTime3', function (time, options) {
+  Handlebars.registerHelper('printTime3', function (time) {
     var b = time.begin_at;
 
     // 没有 date & 没有 date_word 显示空
