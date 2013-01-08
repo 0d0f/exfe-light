@@ -477,30 +477,32 @@ HumanTime.printEFTime = function (eft, type, funs) {
     if (!funs) {
       funs = FUNS;
     }
-    if (ba && (ba.date || ba.time)) {
-      t = HumanTime.toLocaleDate(eft);
-      d = t.date;
+    if (ba) {
+      if (ba.date || ba.time) {
+        t = HumanTime.toLocaleDate(eft);
+        d = t.date;
 
-      if (ba.date) {
-        output.title = HumanTime(t.date, now, 'X');
-        output.content = ba.time_word
-          + (ba.time_word && ba.time ? ' ' : '') + (ba.time ? funs.time(d.getHours(), d.getMinutes()) : '') + (ba.time || ba.time_word ? (ba.time ? ' ' : ', ') : '')
-          + funs.date(d.getFullYear(), d.getMonth(), d.getDate(), d.getDay())
-          + (ba.date_word ? ' ' : '')
-          + ba.date_word;
-      }
-      else if (ba.time) {
-        output.content = output.title = ba.time_word + (ba.time_word ? ' ' : '')
-            + funs.time(d.getHours(), d.getMinutes())
-          + (ba.date_word ? ', ' : '')
-          + ba.date_word;
-      }
+        if (ba.date) {
+          output.title = HumanTime(t.date, now, 'X');
+          output.content = ba.time_word
+            + (ba.time_word && ba.time ? ' ' : '') + (ba.time ? funs.time(d.getHours(), d.getMinutes()) : '') + (ba.time || ba.time_word ? (ba.time ? ' ' : ', ') : '')
+            + funs.date(d.getFullYear(), d.getMonth(), d.getDate(), d.getDay())
+            + (ba.date_word ? ' ' : '')
+            + ba.date_word;
+        }
+        else if (ba.time) {
+          output.content = output.title = ba.time_word + (ba.time_word ? ' ' : '')
+              + funs.time(d.getHours(), d.getMinutes())
+            + (ba.date_word ? ', ' : '')
+            + ba.date_word;
+        }
 
-      if (d.getFullYear() !== now.getFullYear()) {
-        output.content +=  ' ' + d.getFullYear();
+        if (d.getFullYear() !== now.getFullYear()) {
+          output.content +=  ' ' + d.getFullYear();
+        }
+      } else if (ba.date_word || ba.time_word) {
+        output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
       }
-    } else if (ba.date_word || ba.time_word) {
-      output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
     }
 
     if (ba.timezone) {
