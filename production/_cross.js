@@ -1891,7 +1891,7 @@ define(function (require, exports, module) {
             placeholder = Cross.id ? '&nbsp;' : 'Click here to set time.',
             showGray    = false;
         if (Cross.time.origin) {
-          var t = HumanTime.printEFTime(Cross.time);
+          var t = HumanTime.printEFTime(Cross.time, 'X');
           strAbsTime = t.content;
           strRelTime = t.title;
         } else {
