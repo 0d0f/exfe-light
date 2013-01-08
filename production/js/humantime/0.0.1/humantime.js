@@ -36,12 +36,12 @@ var EN = {
     }
 
   , '0': function (date) {
-      var s = '';
-      if ('years' in date) {
-        s = '{{years}} years';
+      var s = '', y = date['years'], m = date['months'];
+      if (y) {
+        s = '{{years}} year' + (y === 1 ? '' : 's');
       }
-      if ('months' in date) {
-        s += (s ? ' ' : '') + '{{months}} months';
+      if (m) {
+        s += (s ? ' ' : '') + '{{months}} month' + (m === 1 ? '' : 's');
       }
       return s + ' ago';
     }
@@ -73,7 +73,7 @@ var EN = {
     }
 
   , '4': function () {
-      return 'An hours ago';
+      return 'An hour ago';
     }
 
   , '5': function (date, type) {
@@ -123,12 +123,12 @@ var EN = {
     }
 
   , '13': function (date) {
-      var s = '';
-      if ('years' in date) {
-        s = '{{years}} years';
+      var s = '', y = date['years'], m = date['months'];
+      if (y) {
+        s = '{{years}} year' + (y === 1 ? '' : 's');
       }
-      if ('months' in date) {
-        s += (s ? ' ' : '') + '{{months}} months';
+      if (m) {
+        s += (s ? ' ' : '') + '{{months}} month' + (m === 1 ? '' : 's');
       }
       return 'In ' + s;
     }
@@ -434,7 +434,8 @@ var FUNS = {
     }
 
   , time: function (h, m) {
-      var s = h + ':' + m;
+      var _h = h > 12 ? h - 12 : h;
+      var s = _h + ':' + lead0(m);
       s += h >= 12 ? 'PM' : 'AM';
       return s;
     }
@@ -460,10 +461,10 @@ HumanTime.printEFTime = function (eft, type, funs) {
       .replace(/^['"‘’“”“”‚„]+/, '')
       .replace(/['"‘’“”“”‚„]+$/, '');
     if (isX) {
-      output.content = origin;
+      output.title = origin;
     }
     else {
-      output.title = origin;
+      output.content = origin;
       if (ba.date) {
         eft.outputformat = 0;
         t = HumanTime.toLocaleDate(eft);
@@ -476,32 +477,38 @@ HumanTime.printEFTime = function (eft, type, funs) {
     if (!funs) {
       funs = FUNS;
     }
-    if (ba.date || ba.time) {
-      t = HumanTime.toLocaleDate(eft);
-      d = t.date;
+    if (ba) {
+      if (ba.date || ba.time) {
+        t = HumanTime.toLocaleDate(eft);
+        d = t.date;
 
-      if (ba.date) {
-        output.title = HumanTime(t.date, now, 'X');
-        output.content = ba.time_word
-          + (ba.time_word && ba.time ? ' ' : '') + (ba.time ? funs.time(d.getHours(), d.getMinutes()) : '') + (ba.time || ba.time_word ? (ba.time ? ' ' : ', ') : '')
-          + funs.date(d.getFullYear(), d.getMonth(), d.getDate(), d.getDay())
-          + (ba.date_word ? ' ' : '')
-          + ba.date_word;
-      }
-      else if (ba.time) {
-        output.content = output.title = ba.time_word + (ba.time_word ? ' ' : '')
-            + funs.time(d.getHours(), d.getMinutes())
-          + (ba.date_word ? ', ' : '')
-          + ba.date_word;
-      }
-    } else if (ba.date_word || ba.time_word) {
-      output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
-    }
+        if (ba.date) {
+          output.title = HumanTime(t.date, now, 'X');
+          output.content = ba.time_word
+            + (ba.time_word && ba.time ? ' ' : '') + (ba.time ? funs.time(d.getHours(), d.getMinutes()) : '') + (ba.time || ba.time_word ? (ba.time ? ' ' : ', ') : '')
+            + funs.date(d.getFullYear(), d.getMonth(), d.getDate(), d.getDay())
+            + (ba.date_word ? ' ' : '')
+            + ba.date_word;
+        }
+        else if (ba.time) {
+          output.content = output.title = ba.time_word + (ba.time_word ? ' ' : '')
+              + funs.time(d.getHours(), d.getMinutes())
+            + (ba.date_word ? ', ' : '')
+            + ba.date_word;
+        }
 
-    if (ba.timezone) {
-      tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
-      if (tz !== getTimezone(now)) {
-        output.content += ' ' + ba.timezone;
+        if (d.getFullYear() !== now.getFullYear()) {
+          output.content +=  ' ' + d.getFullYear();
+        }
+      } else if (ba.date_word || ba.time_word) {
+        output.content = output.title = ba.time_word + (ba.time_word ? ', ' : '') + ba.date_word;
+      }
+
+      if (ba.timezone) {
+        tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
+        if (tz !== getTimezone(now)) {
+          output.content += ' (' + ba.timezone + ')';
+        }
       }
     }
   }
