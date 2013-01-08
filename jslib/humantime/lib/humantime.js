@@ -35,12 +35,12 @@ var EN = {
     }
 
   , '0': function (date) {
-      var s = '';
-      if ('years' in date) {
-        s = '{{years}} years';
+      var s = '', y = date['years'], m = date['months'];
+      if (y) {
+        s = '{{years}} year' + (y === 1 ? '' : 's');
       }
-      if ('months' in date) {
-        s += (s ? ' ' : '') + '{{months}} months';
+      if (m) {
+        s += (s ? ' ' : '') + '{{months}} month' + (m === 1 ? '' : 's');
       }
       return s + ' ago';
     }
@@ -72,7 +72,7 @@ var EN = {
     }
 
   , '4': function () {
-      return 'An hours ago';
+      return 'An hour ago';
     }
 
   , '5': function (date, type) {
@@ -122,12 +122,12 @@ var EN = {
     }
 
   , '13': function (date) {
-      var s = '';
-      if ('years' in date) {
-        s = '{{years}} years';
+      var s = '', y = date['years'], m = date['months'];
+      if (y) {
+        s = '{{years}} year' + (y === 1 ? '' : 's');
       }
-      if ('months' in date) {
-        s += (s ? ' ' : '') + '{{months}} months';
+      if (m) {
+        s += (s ? ' ' : '') + '{{months}} month' + (m === 1 ? '' : 's');
       }
       return 'In ' + s;
     }
