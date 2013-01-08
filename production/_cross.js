@@ -2111,7 +2111,6 @@ define(function (require, exports, module) {
         if (lastConvUpdate) {
             args['params'] = {updated_at : lastConvUpdate};
         }
-        console.log('fetched');
         Api.request(
             'conversation', args,
             function(data) {
@@ -2132,7 +2131,7 @@ define(function (require, exports, module) {
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
         RawGetTimeline();
-        ConvTimer = setInterval(RawGetTimeline, 3000);//233 * 1000
+        ConvTimer = setInterval(RawGetTimeline, 233 * 1000);
     };
 
 
