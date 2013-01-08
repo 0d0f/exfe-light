@@ -5,6 +5,7 @@ define(function (require, exports, module) {
   var Dialog = require('dialog');
   var Dialogs = require('xdialog').dialogs;
   var Handlebars = require('handlebars');
+  var HumanTime = require('humantime');
   var R = require('rex');
   var Util = require('util');
   var Bus = require('bus');
@@ -56,142 +57,21 @@ define(function (require, exports, module) {
 
   // 日期输出
   Handlebars.registerHelper('printTime', function (time) {
-    // 终端时区
-    var c = Moment();
-    var cz = c.format('Z');
-    var b = time.begin_at;
-
-    // Cross 时区
-    var tz = (b.timezone && /(^[\+\-]\d\d:\d\d)/.exec(b.timezone)[1]) || '';
-    // 创建一个 moment date-object
-    var s = '', sf = '';
-    if (b.date) {
-      s += b.date;
-      sf += 'YYYY-MM-DD';
-    }
-
-    if (b.time) {
-      s += ' ' + b.time;
-      sf += ' HH:mm:ss';
-    }
-
-    if ((b.date || b.time) && tz) {
-      s += ' +0000';
-      sf += ' ZZ'
-    }
-
-    var d = Moment(s, sf);
-
-    var s = '', f, tt;
-
-    // 比对时区
-    var czEtz = cz === tz;
-
-    // 直接输出 origin 时间
-    if (time.outputformat) {
-      s = time.origin;
-      if (!czEtz) {
-        s += ' ' + tz;
-      }
-      return s || 'Sometime';
-    } else {
-
-      if (b.time_word) {
-        s += b.time_word + ' (at) ';
-      }
-
-      if (b.time) {
-        s += d.format('HH:mm:ss');
-      }
-
-      if (!czEtz && tz) {
-        s += ' (' + tz + ') ';
-      }
-
-      if (b.date_word) {
-        s += b.date_word + ' (on) ';
-      }
-
-      if (b.date) {
-        s += ' ' + d.format('YYYY-MM-DD');
-      }
-
-      if (d && d.year() !== 1900 && d.year() !== c.year()) {
-        s += ' ' + d.year();
-      }
-    }
-
-    return s || (sf ? d.format(sf) : 'Sometime');
+    var t = HumanTime.printEFTime(time);
+    return t.content || 'Sometime';
   });
 
-  // Invitations print time
-  Handlebars.registerHelper('printTime2', function (time, options) {
-    time  = Handlebars.helpers['crossItem'].call(this, time, options);
-    return Handlebars.helpers['printTime4'].call(this, time);
-  });
-
-  Handlebars.registerHelper('printTime5', function (time) {
-    var s = Handlebars.helpers['printTime4'].call(this, time);
-    return s || 'To be decided';
+  Handlebars.registerHelper('printTime2', function (time) {
+    var t = HumanTime.printEFTime(time);
+    return t.content || 'To be decided';
   });
 
   Handlebars.registerHelper('printPlace', function (place) {
     return place || 'To be decided';
   });
 
-  Handlebars.registerHelper('printTime4', function (time) {
-    // 终端时区
-    var c = Moment();
-    var cz = c.format('Z');
-    var b = time.begin_at;
-
-    var tz = (b.timezone && /(^[\+\-]\d\d:\d\d)/.exec(b.timezone)[1]) || '';
-    var s = '', f = '';
-
-    // 比对时区
-    var czEtz = cz === tz;
-
-    if (time.outputformat) {
-      s = time.origin;
-      if (!czEtz) {
-        s += ' ' + tz;
-      }
-      return s;
-    } else {
-      // Cross 时区
-      // 创建一个 moment date-object
-      var s = '', sf = '';
-      if (b.date) {
-        s += b.date;
-        sf += 'YYYY-MM-DD';
-      }
-
-      if (b.time) {
-        s += ' ' + b.time;
-        sf += ' HH:mm:ss';
-      }
-
-      if (tz) {
-        s += ' +0000';
-        sf += ' ZZ'
-      }
-
-      var d = Moment(s, sf);
-
-      if (b.time) {
-        f += 'hA ';
-      }
-      if (b.date) {
-        f += 'ddd MMM D';
-      }
-
-      return f ? d.format(f) : 'Sometime';
-    }
-  });
-
   // Updates print time
   Handlebars.registerHelper('printTime3', function (time, options) {
-    //time  = Handlebars.helpers['crossItem'].call(this, time, options);
     var b = time.begin_at;
 
     // 没有 date & 没有 date_word 显示空
@@ -199,27 +79,8 @@ define(function (require, exports, module) {
       return b.date_word || '';
     }
 
-    // Cross 时区
-    var tz = (b.timezone && /(^[\+\-]\d\d:\d\d)/.exec(b.timezone)[1]) || '';
-    // 创建一个 moment date-object
-    var s = '', sf = '';
-    if (b.date) {
-      s += b.date;
-      sf += 'YYYY-MM-DD';
-    }
-
-    if (b.time) {
-      s += ' ' + b.time;
-      sf += ' HH:mm:ss';
-    }
-
-    if (tz) {
-      s += ' +0000';
-      sf += ' ZZ'
-    }
-
-    var d = Moment(s, sf);
-    return sf ? d.fromNow() : 'Sometime';
+    var t = HumanTime.printEFTime(time);
+    return t.content || 'Sometime';
   });
 
   Handlebars.registerHelper('rsvpAction', function (identities, identity_id) {
