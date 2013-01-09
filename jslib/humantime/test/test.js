@@ -157,12 +157,12 @@ define(function (require) {
       expect(s).to.equal('1.5 hours ago');
     });
 
-    it('Token 4, An hours ago', function () {
+    it('Token 4, An hour ago', function () {
       var now = new Date(), t;
       t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getMilliseconds())
       t.setMinutes(t.getMinutes() - 77);
       var s = humantime(t, now);
-      expect(s).to.equal('An hours ago');
+      expect(s).to.equal('An hour ago');
       //console.log(s, (+t - +now) / 60000);
     });
 
@@ -268,12 +268,12 @@ define(function (require) {
       expect(s).to.equal('Wed. in 7 days');
     });
 
-    it('Token 13, In 1 years', function () {
+    it('Token 13, In 1 year', function () {
       var now = new Date(2013, 1, 6, 9, 45), t;
       t = new Date(now.getFullYear() + 1, now.getMonth(), 6, 9, 45, now.getMilliseconds())
       //console.log(now, t);
       var s = humantime(t, now);
-      expect(s).to.equal('In 1 years');
+      expect(s).to.equal('In 1 year');
     });
 
     it('Token 13, In 2 years', function () {
@@ -310,7 +310,7 @@ define(function (require) {
       };
       var a = printEFTime(eft);
       expect(a.title).to.equal(eft.origin);
-      expect(a.content).to.equal('');
+      expect(a.content).to.equal(eft.origin);
     });
 
     it('Origin, `date` + `time`', function () {
@@ -410,6 +410,51 @@ define(function (require) {
       var a = printEFTime(eft);
       //console.log(a);
       //expect(a.title).to.equal(a.content);
+    });
+
+    it('`date` = 2013-x-xx', function () {
+      var eft = {
+          begin_at: {
+              date_word: ''
+            , date: '2012-1-12'
+            , time_word: ''
+            , time: ''
+            , timezone: ''
+            , id: 0
+            , type: 'EFTime'
+          }
+        , origin: 'origin Datetime'
+        , outputformat: 0
+        , id: 0
+        , type: 'CrossTime'
+      };
+      var now = new Date();
+      eft.begin_at.date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1);
+      var a = printEFTime(eft);
+      expect(a.title).to.equal('Yesterday');
+    });
+
+    it('`date` = 2013-x-xx, `time` = 8:2:3', function () {
+      var eft = {
+          begin_at: {
+              date_word: ''
+            , date: '2013-1-12'
+            , time_word: ''
+            , time: '8:3:2'
+            , timezone: ''
+            , id: 0
+            , type: 'EFTime'
+          }
+        , origin: 'origin Datetime'
+        , outputformat: 0
+        , id: 0
+        , type: 'CrossTime'
+      };
+      var now = new Date();
+      eft.begin_at.date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1);
+      console.dir(eft);
+      var a = printEFTime(eft);
+      console.log(a);
     });
 
   });

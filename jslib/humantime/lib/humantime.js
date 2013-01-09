@@ -16,7 +16,8 @@
 // Set the placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 var PLACEHOLDER = /(?:\{\{|%\{)(\w*?)(?:\}\}?)/gm;
 
-var ISO8601_DATE = 'YYYY-MM-DD';
+var ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/
+  , ISO8601_TIME = /^\d{2}:\d{2}:\d{2}$/;
 
 var N2 = 0.2
   , N9 = 0.9999
@@ -35,7 +36,7 @@ var EN = {
     }
 
   , '0': function (date) {
-      var s = '', y = date['years'], m = date['months'];
+      var s = '', y = date.years, m = date.months;
       if (y) {
         s = '{{years}} year' + (y === 1 ? '' : 's');
       }
@@ -122,7 +123,7 @@ var EN = {
     }
 
   , '13': function (date) {
-      var s = '', y = date['years'], m = date['months'];
+      var s = '', y = date.years, m = date.months;
       if (y) {
         s = '{{years}} year' + (y === 1 ? '' : 's');
       }
@@ -389,13 +390,13 @@ HumanTime.toLocaleDate = function (eft) {
       , s = '';
 
     if (bd) {
-      s = bd;
+      s = formatDate(bd);
     } else {
       s = today
     }
 
     if (bt) {
-      s += 'T' + bt;
+      s += 'T' + formatTime(bt);
     } else {
       isToday = s === today;
       reTime = !isToday;
@@ -459,10 +460,9 @@ HumanTime.printEFTime = function (eft, type, funs) {
     origin = eft.origin
       .replace(/^['"‘’“”“”‚„]+/, '')
       .replace(/['"‘’“”“”‚„]+$/, '');
-    if (isX) {
-      output.title = origin;
-    }
-    else {
+
+    output.title = origin;
+    if (!isX) {
       output.content = origin;
       if (ba.date) {
         eft.outputformat = 0;
@@ -555,7 +555,32 @@ var lead0 = HumanTime.lead0 = function (n, p) {
     return n;
   }
 
-//, formatDate = HumanTime.formatDate = function (d, t) { }
+, formatDate = HumanTime.formatDate = function (d) {
+    var s;
+    if (ISO8601_DATE.test(d)) {
+      s = d;
+    } else {
+      s = d.split('-');
+      s[1] = lead0(s[1]);
+      s[2] = lead0(s[2]);
+      s = s.join('-');
+    }
+    return s;
+  }
+
+, formatTime = HumanTime.formatTime = function (t) {
+    var s;
+    if (ISO8601_TIME.test(t)) {
+      s = t;
+    } else {
+      s = t.split(':');
+      s[0] = lead0(s[0]);
+      s[1] = lead0(s[1]);
+      s[2] = lead0(s[2]);
+      s = s.join(':');
+    }
+    return s;
+  }
 
 , _replace = function (mess, data) {
     var ms = mess.match(PLACEHOLDER)
