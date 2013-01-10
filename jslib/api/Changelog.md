@@ -1,3 +1,7 @@
+* v0.0.5 2013-01-10T13:44:28 UTC+0800
+  - Changes
+    * 调整内部 `_ajax` 方法
+
 * v0.0.4 2012-11-30T14:58:32 UTC+0800
   - New Features
     * `Sort Identities`
