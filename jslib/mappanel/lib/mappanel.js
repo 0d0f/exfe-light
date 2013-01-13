@@ -6,6 +6,7 @@ define('mappanel', function (require, exports, module) {
 
   var $ = require('jquery')
     , R = require('rex')
+    , lead0 = require('humantime').lead0
     , Config = require('config')
     , $proxy = $.proxy
     , SPLITTER = /[\r\n]+/g
@@ -26,6 +27,8 @@ define('mappanel', function (require, exports, module) {
             + '<div class="panel-body">'
               + '<div class="map-container">'
                 + '<div class="map-box" id="gmap"></div>'
+                + '<div class="map-mask"></div>'
+                + '<div class="map-resize"><span class="expand">Expand</span><span class="compact">Compact</span><span class="rb"></span><span class="lt"></span></div>'
                 + '<div class="map-place">'
                   + '<div class="place-editor">'
                     + '<i class="pointer icon24-enter place-submit"></i>'
@@ -73,11 +76,13 @@ define('mappanel', function (require, exports, module) {
         this.placesList = new PlacesList(this, '.places-list');
         this.xmap = new XMap(this, '#gmap');
         this.listen();
+
+        this.$resize = this.element.find('.map-resize');
+        this.$mask = this.element.find('.map-mask');
       }
 
     , listen: function () {
-        var self = this
-          , place = this.place;
+        var self = this;
 
         // `this.update` init config
         this.on('update-place', this.update);
@@ -102,15 +107,26 @@ define('mappanel', function (require, exports, module) {
         this.on('click-placeitem', this.clickPlaceItem);
 
         // zoom map
-        this.on('zoomup-map', this.zoomUpMap);
-        this.on('zoomdown-map', this.zoomDownMap);
+        this.on('zoom-map', this.zoomMap);
 
         this.element.on('click.mappanel', '.place-submit', function (e) {
           // NOTE: 先用老事件触发保存
+          Cross.place = self.place;
           $('body').click();
         });
 
         this.element.on('keydown.mappanel', $proxy(this.keydown, this));
+
+        this.element.on('click.mappanel', '.map-mask', function (e) {
+          e.preventDefault();
+          self.emit('zoom-map', false);
+        });
+
+        this.element.on('click.mappanel', '.map-resize', function (e) {
+          e.preventDefault();
+          var rc = $(this).hasClass('map-rc');
+          self.emit('zoom-map', rc);
+        });
       }
 
     , save: function () {
@@ -145,16 +161,12 @@ define('mappanel', function (require, exports, module) {
         //}
       }
 
-    , zoomUpMap: function (n) {
+    , zoomMap: function (n) {
         this.xmap.zoom(n);
       }
 
-    , zoomDownMap: function (n) {
-        this.xmap.zoom(n);
-      }
-
-    , clickPlaceItem: function (i) {
-        this.placesList.setPlace();
+    , clickPlaceItem: function (place) {
+        this.emit('change-place', place, false);
         this.element.focus();
       }
 
@@ -167,7 +179,7 @@ define('mappanel', function (require, exports, module) {
       }
 
     , clearMarker: function (i) {
-        this.xmap.saveMarker(i);
+        this.xmap.saveMarker(i || 0);
       }
 
     , searchCompleted: function (places) {
@@ -200,20 +212,26 @@ define('mappanel', function (require, exports, module) {
     , change: function (place, searchable) {
         var placeData = this.place
           , oldTitle = placeData.title
-          , oldDesc = placeData.description;
+          , oldDesc = placeData.description
+          , oldLat = placeData.lat
+          , oldLng = placeData.lng;
         placeData.title = place.title;
         placeData.description = place.description;
         placeData.lat = place.lat || '';
         placeData.lng = place.lng || '';
-        searchable = !!searchable
+        searchable = !!searchable && place.title;
+        var d = new Date();
+        placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
+          + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
+          + ' +0000';
         if (searchable) {
-          if (oldTitle !== place.title) {
+          if (oldTitle !== place.title && place.description === '') {
             this.xmap.textSearch(place.title);
           }
         } else {
           this.placeInput.change(printPlace(place.title, place.description));
         }
-        if (oldTitle !== place.title || oldDesc !== place.description) {
+        if (oldTitle !== place.title || oldDesc !== place.description || oldLat !== place.lat || oldLng !== place.lng) {
           this.emit('update-place', placeData);
         }
       }
@@ -228,7 +246,7 @@ define('mappanel', function (require, exports, module) {
           , title = place.title
           , description = place.description
           // 只要 `title` 和 `description` 都没有就显示 `Enter place here.`
-          , sc = !title && !description
+          //, sc = !title && !description
           , hasLatLng = place.lat && place.lng
           , userGeo, placeGeo;
 
@@ -237,9 +255,9 @@ define('mappanel', function (require, exports, module) {
         // first focus Container
         this.element.focus();
 
-        if (sc) {
+        //if (sc) {
           this.placeInput.$element.focusend();
-        }
+        //}
 
         if (hasLatLng) {
           placeGeo = { coords: { latitude: place.lat, longitude: place.lng, title: place.title } };
@@ -277,7 +295,7 @@ define('mappanel', function (require, exports, module) {
           var offset = srcNode.offset()
             , width = this.element.outerWidth();
           this.element
-            .css({ left: offset.left - width - 15 , top: offset.top });
+            .css({ left: this.oleft = offset.left - width - 15 , top: this.otop = offset.top });
         }
         this.showPlace();
       }
@@ -303,7 +321,12 @@ define('mappanel', function (require, exports, module) {
 
   PlaceInput.prototype = {
 
-      change: function (s) {
+      getPlace: function () {
+        var value = this.$element.val();
+        return parsePlace(value);
+      }
+
+    , change: function (s) {
         this.$element.val(s);
       }
 
@@ -319,10 +342,8 @@ define('mappanel', function (require, exports, module) {
       }
 
     , lookup: function () {
-        var value = this.$element.val()
-          , place = parsePlace(value);
-
-        this.component.emit('change-place', place, true);
+        var place = this.getPlace();
+        place.title && this.component.emit('change-place', place, true);
       }
 
     //, click: function (e)  {}
@@ -451,6 +472,8 @@ define('mappanel', function (require, exports, module) {
 
           this.$element.html(html);
         }
+        this.$items = this.$element.find(' > li');
+        this.len = this.$items.length;
         this.$element.parent().toggleClass('hide', !this.status);
       }
 
@@ -638,12 +661,15 @@ define('mappanel', function (require, exports, module) {
     // google.maps
     this.GMaps = null;
 
-    // map size: 0/1 <--> big/small
-    this.sizeStatus = 1;
+    // map size: false/true <--> big/small
+    this.sizeStatus = true;
     this.zoomNum = 16;
 
     // 地图放大，窗口可视区域的 80%
     this.a = .8;
+
+    this.owidth = this.$element.width();
+    this.oheight = this.$element.height();
 
     // callback id
     this.cbid = 0;
@@ -699,16 +725,19 @@ define('mappanel', function (require, exports, module) {
               }
             , scaleControl: true
             , scaleControlOptions: {
-                position: GMaps.ControlPosition.RIGHT_TOP
+                position: GMaps.ControlPosition.LEFT_BOTTOM
               }
           };
 
           this._map = new GMaps.Map(this.$element[0]
-            , {
+            , this.defaultOptions = {
                 zoom: this.zoomNum
               , center: this._center
               , disableDefaultUI: true
               , MapTypeId: GMaps.MapTypeId.ROADMAP
+              , panControl: false
+              , zoomControl: false
+              , scaleControl: false
             }
           );
 
@@ -740,11 +769,19 @@ define('mappanel', function (require, exports, module) {
           //google.maps.event.addListener(this._map, 'bounds_changed', function () { console.dir(this.getBounds()); });
 
           var self = this;
-          google.maps.event.addListener(this._map, 'click', function () {
-            if (self.sizeStatus) {
-              self.zoom(0);
-            }
-          });
+          google.maps.event.addListener(this._map, 'click', function (dl) {
+            var place = component.placeInput.getPlace()
+              , latLng = dl.latLng;
+            component.placesList.clear();
+            self.clearMarkers();
+            place.lat = '' + latLng.Ya;
+            place.lng = '' + latLng.Za;
+            self.createMarkers([
+              place
+            ], true);
+            google.maps.event.trigger(self.markers[0], 'mouseover');
+            component.emit('change-place', place, false);
+          }, false);
         } catch (e) {
           this.isGo = false;
         }
@@ -859,11 +896,13 @@ define('mappanel', function (require, exports, module) {
         this.curr = 0;
       }
 
-    , createMarkers: function (places) {
+    , createMarkers: function (places, able) {
         var self = this
+          , enable = !able
           , component = this.component
           , GMaps = this.GMaps
           , bounds = new GMaps.LatLngBounds()
+          , LatLng = this.GMaps.LatLng
           , markers = this.markers
           , map = this._map
           , ricon = this.ricon
@@ -871,8 +910,9 @@ define('mappanel', function (require, exports, module) {
           , marker
           , location
           , i = 0;
+
         for (; place = places[i]; ++i) {
-          location = place.geometry.location;
+          location = place.lat ? new LatLng(place.lat, place.lng) : place.geometry.location;
           marker = new GMaps.Marker({
               map: map
             , icon: ricon
@@ -881,11 +921,20 @@ define('mappanel', function (require, exports, module) {
             , zIndex: 0
           });
 
+          marker._place = {
+              title: place.title || place.name
+            , description: place.description || place.formatted_address
+            , lat: '' + location.Ya
+            , lng: '' + location.Za
+          };
+
           // events
           // click
           GMaps.event.addListener(marker, 'click', function () {
             var i = self.indexOf(markers, this);
-            component.emit('click-placeitem', i);
+            component.emit('clear-marker', i);
+            component.placesList.clear();
+            component.emit('click-placeitem', this._place);
           }, false);
 
           // mouseover
@@ -899,37 +948,61 @@ define('mappanel', function (require, exports, module) {
           //GMaps.event.addListener(marker, 'mouseout', function () { });
 
           markers.push(marker);
-          bounds.extend(location);
+          enable && bounds.extend(location);
         }
-        map.fitBounds(bounds);
+        enable && map.fitBounds(bounds);
       }
 
     , zoom: function (n) {
         if (!this.isGo) { return; }
         this.sizeStatus = n;
-        var width = $win.width()
-          , height = $win.height()
+        var component = this.component
           , GMaps = this.GMaps
           , markers = this.markers
-          , a = this.a
-          , component = this.component
-          , self = this
-          , sT = $win.scrollTop()
-          , sL = $win.scrollLeft();
-        width *= a;
-        height *= a;
-        self.resize(width, height);
-        component.element.css({
-            top: height * (1 - a) / 2 + sT
-          , left: width * (1 - a) / 2 + sL
-        });
+          , self = this;
+
+
+        component.$resize.toggleClass('map-rc');
+        component.$mask.toggleClass('hide', !n);
+
+        if (n) {
+          component.element.css({
+              top: component.otop
+            , left: component.oleft
+          });
+          self.$element
+            .width(self.owidth)
+            .height(self.oheight);
+
+          setTimeout(function () {
+            self._map.setOptions(self.defaultOptions);
+            self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+            self.panToRight();
+          }, 0);
+        }
+        else {
+          var width = $win.width()
+            , height = $win.height()
+            , a = this.a
+            , sT = $win.scrollTop()
+            , sL = $win.scrollLeft();
+          width *= a;
+          height *= a;
+          self.resize(width, height);
+          component.element.css({
+              top: height * (1 - a) / 2 + sT
+            , left: width * (1 - a) / 2 + sL
+          });
+          setTimeout(function () {
+            self._map.setOptions(self.enableOptions);
+          }, 0);
+        }
         GMaps.event.trigger(self._map, 'resize');
         // 返回到中心点
         (!self._placeMarker && markers.length) && (self._placeMarker = markers[0]);
         self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
-        setTimeout(function () {
-          self._map.setOptions(self.enableOptions);
-        }, 0);
+
+        component.placeInput.$element.focusend();
       }
 
       // marker index
