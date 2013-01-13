@@ -1,6 +1,6 @@
 .map-panel {
   min-width: 360px;
-  min-height: 120px;
+  min-height: 135px;
   /*max-width: 550px;*/
   #gradient > .vertical(#fcfcfc, #eee);
 
@@ -10,11 +10,83 @@
 
   .map-box {
     min-width: 360px;
-    min-height: 120px;
+    min-height: 135px;
+    /*
+    -webkit-transition-delay: 0s;
+    -webkit-transition-duration: 0.233s;
+    -webkit-transition-property: width, height, left, top;
+    -webkit-transition-timing-function: ease;
+    */
 
     // reset for Google Map image
     img {
       max-width: none;
+    }
+  }
+
+  .map-mask {
+    position: absolute;
+    top: 0;
+    min-width: 360px;
+    min-height: 135px;
+    cursor: nwse-resize;
+    background: transparent;
+  }
+
+  .map-resize {
+    position: absolute;
+    right: 3px;
+    bottom: 18px;
+    line-height: 14px;
+    font-size: 10px;
+    color: #4C4C4C;
+    background: rgba(230, 230, 230, .88);
+    cursor: pointer;
+
+    .expand, .compact {
+      margin-right: 2px;
+    }
+
+    .rb {
+      position: relative;
+      left: -1px;
+      display: inline-block;
+      #arrow > .rb(7px, #B2B2B2);
+    }
+    .rb:before {
+      content: '';
+      position: absolute;
+      top: -1.5px;
+      left: -8.5px;
+      z-index: -1;
+      #arrow > .rb(9px, #D5D5D5);
+    }
+    .lt {
+      position: relative;
+      left: -1px;
+      display: none;
+      #arrow > .lt(7px, #B2B2B2);
+    }
+    .lt:before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: -0.5px;
+      z-index: -1;
+      #arrow > .lt(9px, #D5D5D5);
+    }
+
+    .compact, .lt {
+      display: none;
+    }
+
+    &.map-rc {
+      .expand, .rb {
+        display: none;
+      }
+      .compact, .lt {
+        display: inline-block;
+      }
     }
   }
 
