@@ -40,7 +40,7 @@ define('datepanel', function (require/*, exports, module*/) {
                   + '</div>'
                 + '</div>'
 
-                + '<div class="pull-right date-timeline">'
+                + '<div class="pull-right date-timeline hide">'
                    //+ ' <div class="gathering">Gathering day</div> '
                    + ' <div class="fuzzy-time hide">'
                    + '   <ul class="unstyled time-cates">'
@@ -111,6 +111,10 @@ define('datepanel', function (require/*, exports, module*/) {
         this.timeline.refresh(this.eftime);
         this.dateInput.change(eftime.origin || date.text);
         this.dateInput.$element.focusend();
+
+        if (this.eftime.begin_at.time) {
+          this.showTL();
+        }
       }
 
     , listen: function () {
@@ -127,6 +131,8 @@ define('datepanel', function (require/*, exports, module*/) {
         this.on('rf-tl', this.rfTL);
         // refresh from calendarTable
         this.on('rf-ct', this.rfCT);
+
+        this.on('show-tl', this.showTL);
       }
 
     , save: function (/*eft*/) {
@@ -219,6 +225,10 @@ define('datepanel', function (require/*, exports, module*/) {
           ef.origin = t;
         }
         this.dateInput.change(ef.origin);
+      }
+
+    , showTL: function () {
+        this.timeline.$element.removeClass('hide');
       }
 
     , keydown: function (e) {
@@ -593,6 +603,7 @@ define('datepanel', function (require/*, exports, module*/) {
     , clickDate: function (e) {
         e.preventDefault();
         this.spacing();
+        this.component.emit('show-tl');
       }
 
     , spacing: function () {
@@ -855,17 +866,21 @@ define('datepanel', function (require/*, exports, module*/) {
     , refresh: function (eft) {
         this.generateHTML();
         // real-height
-        this.rh = this.$tw.prop('scrollHeight');
+        var c = this.$element.clone().attr('id', '__tmp__').css({visibility: 'hidden', display: 'block', position: 'absolute'});
+        this.$element.parent().append(c);
+        //this.rh = this.$tw.prop('scrollHeight');
+        this.rh = c.find('.times-wrapper').prop('scrollHeight');
         // item height
         this.h = Math.floor((this.rh - this.hh - this.th) / (this.l - 1) / 12);
         // time / height
         this.a = Math.round(60 / 4 / this.h);
-        var offset = this.$tw.offset();
+        var offset = c.offset();
         this.ox = offset.left;
         this.oy = offset.top;
-        this.st = this.$tw.scrollTop();
+        this.st = c.scrollTop();
         // ViewPort Height
-        this.vph = this.$tw.innerHeight();
+        this.vph = c.innerHeight();
+        c.remove();
         this.select(eft);
       }
 

@@ -1,3 +1,7 @@
+* v0.1.2 2013-01-13T16:55:15 UTC+0800
+  - Changes
+    * Normal hidden `timeline`
+
 * v0.1.1 2013-01-08T10:51:17 UTC+0800
   - Changes
     * used new `humantime` library
