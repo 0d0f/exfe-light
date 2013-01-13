@@ -29,7 +29,10 @@ define('datepanel', function (require/*, exports, module*/) {
             + '<div class="panel date-panel" tabindex="-1" data-widget="panel" id="date-panel" editarea="date-panel">'
               + '<div class="panel-body">'
                 + '<div class="pull-left date-container">'
-                  + '<input type="text" name="date-string" id="date-string" autocomplete="off" />'
+                  + '<div class="date-input">'
+                    + '<input type="text" name="date-string" id="date-string" autocomplete="off" />'
+                    + '<i class="pointer icon-enter place-submit"></i>'
+                  + '</div>'
                   + '<div class="date-calendar" tabindex="-1">'
                     + '<ul class="unstyled clearfix" id="date-head"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ul>'
                     + '<div class="year"></div>'
@@ -118,6 +121,7 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , listen: function () {
+        this.element.on('click.datepanel', '.place-submit', proxy(this.save, this));
         this.element.on('keydown.datepanel', proxy(this.keydown, this));
         // save
         this.on('save', this.save);
@@ -253,10 +257,11 @@ define('datepanel', function (require/*, exports, module*/) {
         if (srcNode) {
           var offset = srcNode.offset()
             , element = this.element
-            , width = element.outerWidth();
+            , width = element.outerWidth()
+            , height = srcNode.outerHeight();
           element.css({
-              left: offset.left - width - 15
-            , top: offset.top
+              left: offset.left - width + 175 - 15
+            , top: offset.top + height + 7
           });
         }
         this.initComponents();
