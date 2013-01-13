@@ -26,12 +26,12 @@ define('mappanel', function (require, exports, module) {
             //<div class="panel-header"></div>
             + '<div class="panel-body">'
               + '<div class="map-container">'
-                + '<div class="map-box" id="gmap"></div>'
+                + '<div class="gmap-wrap"><div class="map-box" id="gmap"></div></div>'
                 + '<div class="map-mask"></div>'
                 + '<div class="map-resize"><span class="expand">Expand</span><span class="compact">Compact</span><span class="rb"></span><span class="lt"></span></div>'
                 + '<div class="map-place">'
                   + '<div class="place-editor">'
-                    + '<i class="pointer icon24-enter place-submit"></i>'
+                    + '<i class="pointer icon-enter place-submit"></i>'
                     + '<div class="place-filter"></div>'
                     + '<textarea class="normal" name="place-text" id="place-text" placeholder="Enter place here."></textarea>'
                   + '</div>'
@@ -153,7 +153,7 @@ define('mappanel', function (require, exports, module) {
         }
         // big map
         else if (ctrlKey && 187 === kc) {
-          self.emit('zoomup-map', 0);
+          self.emit('zoom-map', 0);
         }
         // small map
         //else if (ctrlKey && 189 === kc) {
@@ -657,6 +657,7 @@ define('mappanel', function (require, exports, module) {
     this.component = component;
     this.selector = selector;
     this.$element = this.component.$(selector);
+    this.$wrap = this.$element.parent();
 
     // google.maps
     this.GMaps = null;
@@ -768,20 +769,44 @@ define('mappanel', function (require, exports, module) {
 
           //google.maps.event.addListener(this._map, 'bounds_changed', function () { console.dir(this.getBounds()); });
 
-          var self = this;
-          google.maps.event.addListener(this._map, 'click', function (dl) {
-            var place = component.placeInput.getPlace()
-              , latLng = dl.latLng;
-            component.placesList.clear();
-            self.clearMarkers();
-            place.lat = '' + latLng.Ya;
-            place.lng = '' + latLng.Za;
-            self.createMarkers([
-              place
-            ], true);
-            google.maps.event.trigger(self.markers[0], 'mouseover');
-            component.emit('change-place', place, false);
-          }, false);
+          var self = this, geocoder = new GMaps.Geocoder(), cb;
+          GMaps.event.addListener(this._map, 'mousedown', function (dl) {
+            clearTimeout(self._timer);
+            self._timer = setTimeout(function () {
+              var place = component.placeInput.getPlace()
+                , latLng = dl.latLng;
+              component.placesList.clear();
+              self.clearMarkers();
+              place.lat = '' + latLng.Ya;
+              place.lng = '' + latLng.Za;
+              self.createMarkers([
+                place
+              ], true);
+              GMaps.event.trigger(self.markers[0], 'mouseover');
+              if (!place.title && !place.description) {
+                cb = function (results, status) {
+                  if (self._timer
+                      && cb.id === self.cbid
+                      && status === google.maps.GeocoderStatus.OK
+                      && results.length) {
+                    self.cbid = 0;
+                    place.title = 'Right there on map';
+                    place.description = results[0].formatted_address;
+                    component.emit('change-place', place, false);
+                  }
+                };
+                cb.id = ++self.cbid;
+                geocoder.geocode({latLng: new GMaps.LatLng(place.lat, place.lng)}, cb);
+              } else {
+                component.emit('change-place', place, false);
+              }
+            }, 610);
+          });
+          GMaps.event.addListener(this._map, 'center_changed', function () {
+            clearTimeout(self._timer);
+          });
+          //google.maps.event.addListener(this._map, 'click', function (dl) {
+            //}, false);
         } catch (e) {
           this.isGo = false;
         }
@@ -961,7 +986,7 @@ define('mappanel', function (require, exports, module) {
           , markers = this.markers
           , self = this;
 
-
+        this.$wrap.toggleClass('gmap-big', !n);
         component.$resize.toggleClass('map-rc');
         component.$mask.toggleClass('hide', !n);
 
