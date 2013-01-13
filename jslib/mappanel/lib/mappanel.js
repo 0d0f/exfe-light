@@ -152,13 +152,13 @@ define('mappanel', function (require, exports, module) {
           self.save();
         }
         // big map
-        else if (ctrlKey && 187 === kc) {
+        else if (187 === kc && ctrlKey) {
           self.emit('zoom-map', 0);
         }
         // small map
-        //else if (ctrlKey && 189 === kc) {
-          //self.emit('zoomdown-map', 1);
-        //}
+        else if (189 === kc && ctrlKey) {
+          self.emit('zoom-map', 1);
+        }
       }
 
     , zoomMap: function (n) {
