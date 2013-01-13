@@ -643,9 +643,12 @@ define('mappanel', function (require, exports, module) {
       }
 
     , click: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
         this.curr = $(e.currentTarget).index();
         this.setPlace();
-        this.component.save();
+        this.component.xmap.panToRight();
+        //this.component.save();
       }
   };
 
@@ -783,7 +786,7 @@ define('mappanel', function (require, exports, module) {
                 place
               ], true);
               GMaps.event.trigger(self.markers[0], 'mouseover');
-              if (!place.title && !place.description) {
+              if ((!place.title && !place.description) || (place.title === 'Right there on map')) {
                 cb = function (results, status) {
                   if (self._timer
                       && cb.id === self.cbid
