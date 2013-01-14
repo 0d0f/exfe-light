@@ -438,7 +438,10 @@ define(function (require, exports, module) {
           var crosses = data.crosses;
           var updates;
 
-          if (0 === crosses.length) { return; }
+          if (0 === crosses.length) {
+            $('.siderbar.updates').addClass('no-updates');
+            return;
+          }
 
           updates = R.filter(crosses, function (v, i) {
             var up = v.updated, b = false;
