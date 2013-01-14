@@ -9955,18 +9955,38 @@ body {
   display: table-cell;
 }
 
+.gatherax-box {
+  height: 54px;
+  margin-bottom: 5px;
+  margin-left: -9.5px;
+  font-size: 14px;
+  line-height: 54px;
+  background: #EEF6FF;
+}
+
+.gatherax-box a {
+  display: block;
+  color: #4c4c4c;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .crosses {
   font-size: 12px;
   line-height: 18px;
 }
 
 .crosses .cross-type {
-  width: 330px;
-  margin: 10px 0;
+  margin: 10px 0 10px -9.5px;
   color: #7f7f7f;
   text-align: right;
   cursor: pointer;
-  border-bottom: 1px solid #d5d5d5;
+  background: #F3F3F3;
+}
+
+.crosses .cross-type:first-child {
+  margin-top: 15px;
 }
 
 .crosses .rb {
@@ -9993,22 +10013,6 @@ body {
   clear: right;
 }
 
-.crosses .gatherax-box {
-  margin-left: -9.5px;
-  font-size: 14px;
-}
-
-.crosses .gatherax-box a {
-  display: block;
-  padding: 8px 11px;
-  margin: 10px 0;
-  color: #4c4c4c;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  border: 1px dashed #d5d5d5;
-}
-
 .crosses .more {
   text-align: right;
 }
@@ -10021,6 +10025,7 @@ body {
 }
 
 .crosses .cross-box {
+  position: relative;
   margin-left: -9.5px;
 }
 
@@ -10037,6 +10042,30 @@ body {
   background: rgba(0, 0, 0, 0.05);
   /*.box-shadow(0 1px 1px #fff);*/
 
+}
+
+.crosses .cross-box:before {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(230, 230, 230, 0);
+  background-image: -moz-linear-gradient(left, rgba(163, 163, 163, 0.5), rgba(230, 230, 230, 0));
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(rgba(163, 163, 163, 0.5)), to(rgba(230, 230, 230, 0)));
+  background-image: -webkit-linear-gradient(left, rgba(163, 163, 163, 0.5), rgba(230, 230, 230, 0));
+  background-image: -o-linear-gradient(left, rgba(163, 163, 163, 0.5), rgba(230, 230, 230, 0));
+  background-image: linear-gradient(to right, rgba(163, 163, 163, 0.5), rgba(230, 230, 230, 0));
+  background-repeat: repeat-x;
+  content: '';
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80a3a3a3', endColorstr='#00e6e6e6', GradientType=1);
+  -webkit-box-shadow: 0 1px 1px #ffffff;
+     -moz-box-shadow: 0 1px 1px #ffffff;
+          box-shadow: 0 1px 1px #ffffff;
+}
+
+.crosses .cross-box:last-child:before {
+  opacity: 0;
+  filter: alpha(opacity=0);
 }
 
 .siderbar {
@@ -10212,6 +10241,18 @@ body {
 .updates .cross-box:last-child > a {
   /*border-bottom: 1px dashed rgba(0, 0, 0, 0);*/
 
+}
+
+.updates .cross-tip {
+  display: none;
+  padding: 10px 0;
+  line-height: 18px;
+  color: #7f7f7f;
+  text-align: center;
+}
+
+.no-updates .cross-tip {
+  display: block;
 }
 
 .ios-app {
