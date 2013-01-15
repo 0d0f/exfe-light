@@ -1344,6 +1344,7 @@ define(function (require, exports, module) {
             window.location = '/';
         });
         $('#cross-form-gather').bind('click', function() {
+            $('body').click();
             if (curIdentity) {
                 if (!$(this).hasClass('disabled')) {
                     $(this).toggleClass('disabled', true);
