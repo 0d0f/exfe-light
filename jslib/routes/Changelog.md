@@ -1,3 +1,7 @@
+* v0.1.11 2013-01-15T17:18:50 UTC+0800
+  - Changes
+    * Upgraded `home.js`-v0.0.3
+
 * v0.1.10 2012-12-25T18:01:07 UTC+0800
   - Changes
     * submit cross-access-token and invitation-token together

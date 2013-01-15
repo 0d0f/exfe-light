@@ -34,7 +34,7 @@ define('routes', function (require, exports, module) {
       $img.load(function () {
 
         $.ajax({ dataType: 'script', cache: true,
-          url: "/static/js/home/0.0.2/home.js?t=" + req.app.set('timestamp')
+          url: "/static/js/home/0.0.3/home.js?t=" + req.app.set('timestamp')
         });
       });
     });
