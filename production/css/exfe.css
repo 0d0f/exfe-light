@@ -7539,6 +7539,7 @@ body {
 
 .x-home .triangle {
   position: relative;
+  top: -35px;
   height: 35px;
   cursor: pointer;
   visibility: visible;
@@ -7546,88 +7547,9 @@ body {
 
 .x-home .triangle #triangle {
   position: relative;
-  top: -35px;
   margin: 0 auto;
   opacity: 0.3;
   filter: alpha(opacity=30);
-}
-
-.x-home .triangle .start {
-  position: relative;
-  z-index: 2;
-  margin: -40px auto 0;
-  font-size: 18px;
-  line-height: 35px;
-  color: #435F77;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
-}
-
-@-webkit-keyframes fio {
-  0% {
-    opacity: .3;
-  }
-  50% {
-    opacity: .75;
-  }
-  100% {
-    opacity: .3;
-  }
-}
-
-@-moz-keyframes fio {
-  0% {
-    opacity: .3;
-  }
-  50% {
-    opacity: .75;
-  }
-  100% {
-    opacity: .3;
-  }
-}
-
-@-o-keyframes fio {
-  0% {
-    opacity: .3;
-  }
-  50% {
-    opacity: .75;
-  }
-  100% {
-    opacity: .3;
-  }
-}
-
-@-ms-keyframes fio {
-  0% {
-    opacity: .3;
-  }
-  50% {
-    opacity: .75;
-  }
-  100% {
-    opacity: .3;
-  }
-}
-
-@keyframes fio {
-  0% {
-    opacity: .3;
-  }
-  50% {
-    opacity: .75;
-  }
-  100% {
-    opacity: .3;
-  }
-}
-
-.x-home .trifio {
-  -webkit-animation: fio 500ms ease-in-out forwards;
-     -moz-animation: fio 500ms ease-in-out forwards;
-      -ms-animation: fio 500ms ease-in-out forwards;
-       -o-animation: fio 500ms ease-in-out forwards;
-          animation: fio 500ms ease-in-out forwards;
 }
 
 .x-home .page-header {
@@ -8211,22 +8133,25 @@ body {
 
 }
 
-.x-home .gather-wrapper {
+.x-home .gatherax {
+  position: relative;
+  z-index: 2;
   display: block;
-  width: 142px;
-  height: 34px;
-  padding: 19px 23px;
-  margin: 0 auto;
+  margin: -40px auto 0;
+  font-size: 18px;
+  line-height: 35px;
+  color: #435F77;
   text-decoration: none;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
   cursor: pointer;
 }
 
-.x-home .xbtn-gatherax {
+.x-home .xbtn-start {
   width: 140px;
   height: 32px;
   padding: 0;
   font-size: 20px;
-  font-style: italic;
+  font-style: italic !important;
   font-weight: 300;
   line-height: 1;
   color: #99aec5;
@@ -8242,11 +8167,79 @@ body {
           box-shadow: 0 12px 20px rgba(0, 0, 0, 0.09), 0 -10px 20px rgba(255, 255, 255, 0.35), 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 0 rgba(0, -1, 0, 0.1);
 }
 
-.x-home .gather-wrapper:hover .xbtn-gatherax {
-  background-color: #ffffff;
+@-webkit-keyframes fio {
+  0% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    background-color: #FFFFFF;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 }
 
-.x-home .gather-wrapper:active .xbtn-gatherax {
+@-o-keyframes fio {
+  0% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    background-color: #FFFFFF;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@-moz-keyframes fio {
+  0% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    background-color: #FFFFFF;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@-ms-keyframes fio {
+  0% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    background-color: #FFFFFF;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@keyframes  {
+  0% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    background-color: #FFFFFF;
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.x-home .trifio {
+  -webkit-animation: fio 4181ms infinite ease-in;
+     -moz-animation: fio 2333ms infinite ease-in;
+      -ms-animation: fio 2333ms infinite ease-in;
+       -o-animation: fio 2333ms infinite ease-in;
+          animation: fio 2333ms infinite ease-in;
+}
+
+.x-home .xbtn-start-hover {
+  background-color: rgba(255, 255, 255, 0.88);
+}
+
+.x-home .start-wrapper:active .xbtn-start {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
