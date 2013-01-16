@@ -1177,6 +1177,11 @@ define('exfeepanel', function (require, exports, module) {
             $('.exfee_pop_up').on('click', 'span.avatar > img', function (e) {
               window.open($(this).attr('src').replace(/\/(80_80)_/, '/original_'));
             })
+            .on('mouseleave', function (e) {
+                $(this).hide(144, function () {
+                  ExfeePanel.hidePanel();
+                });
+            });
         },
 
 
