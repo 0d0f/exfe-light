@@ -31,7 +31,7 @@ define('mappanel', function (require, exports, module) {
                 + '<div class="map-resize"><span class="expand">Expand</span><span class="compact">Compact</span><span class="rb"></span><span class="lt"></span></div>'
                 + '<div class="map-place">'
                   + '<div class="place-editor">'
-                    + '<i class="pointer icon-enter place-submit"></i>'
+                    + '<i class="pointer icon-enter-blue place-submit"></i>'
                     + '<div class="place-filter"></div>'
                     + '<textarea class="normal" name="place-text" id="place-text" placeholder="Enter place here."></textarea>'
                   + '</div>'
