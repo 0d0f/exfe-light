@@ -1943,16 +1943,11 @@ define(function (require, exports, module) {
                 break;
             }
         }
-        if (Cross.widget[i].image) {
-            $('.x-gather').toggleClass('no-bg', false);
-            $('.cross-background').css(
-                'background-image',
-                'url(/static/img/xbg/' + Cross.widget[i].image + ')'
-            );
-        } else {
-            $('.x-gather').toggleClass('no-bg', true);
-            $('.cross-background').css('background-image', '');
-        }
+        $('.x-gather').toggleClass('no-bg', false);
+        $('.cross-background').css(
+            'background-image',
+            'url(/static/img/xbg/' + (Cross.widget[i].image ? Cross.widget[i].image : 'default.jpg') + ')'
+        );
     };
 
 
