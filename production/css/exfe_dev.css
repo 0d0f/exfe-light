@@ -8678,15 +8678,6 @@ body {
   background: rgba(255, 255, 255, 0.25);
 }
 
-.cross-container .cross-title .editing:focus,
-.cross-container .cross-description .editing:focus,
-.cross-container .cross-date .editing:focus,
-.cross-container .cross-place .editing:focus {
-  -webkit-box-shadow: none;
-     -moz-box-shadow: none;
-          box-shadow: none;
-}
-
 .xbtn-more,
 .xbtn-less {
   position: absolute;
