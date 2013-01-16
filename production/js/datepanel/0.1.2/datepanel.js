@@ -31,7 +31,7 @@ define('datepanel', function (require/*, exports, module*/) {
                 + '<div class="pull-left date-container">'
                   + '<div class="date-input">'
                     + '<input type="text" name="date-string" id="date-string" autocomplete="off" />'
-                    + '<i class="pointer icon-enter place-submit"></i>'
+                    + '<i class="pointer icon-enter-blue place-submit"></i>'
                   + '</div>'
                   + '<div class="date-calendar" tabindex="-1">'
                     + '<ul class="unstyled clearfix" id="date-head"><li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li></ul>'

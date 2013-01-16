@@ -1098,7 +1098,6 @@ input[type="color"],
 .uneditable-input {
   background-color: #ffffff;
   border: 1px solid #d5d5d5;
-  border-color: #3A6EA5;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1124,14 +1123,14 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
-  border-color: rgba(82, 168, 236, 0.8);
+  border-color: #3a6ea5;
   outline: 0;
   outline: thin dotted \9;
   /* IE6-9 */
 
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #3a6ea5;
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #3a6ea5;
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #3a6ea5;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
 }
 
 input[type="radio"],
@@ -4911,10 +4910,6 @@ img:-moz-broken {
   padding: 3px 4px;
   margin-bottom: 0;
   font-size: 16px;
-  border: 1px solid #d5d5d5;
-  -webkit-border-radius: 0;
-     -moz-border-radius: 0;
-          border-radius: 0;
 }
 
 .modal-form input[type="text"]:-moz-placeholder,
@@ -5278,7 +5273,7 @@ img:-moz-broken {
 
 .icon-enter {
   width: 15px;
-  background-position: -264px 0;
+  background-position: -279px 0;
 }
 
 .icon-hot-tag {
@@ -5997,6 +5992,29 @@ img:-moz-broken {
 .disabled {
   opacity: 0.5;
   filter: alpha(opacity=50);
+}
+
+[class^="xbtn-"],
+[class*=" xbtn-"] {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+       -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+          transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+[class^="xbtn-"]:focus,
+[class*=" xbtn-"]:focus {
+  border: 1px solid #3a6ea5;
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(55, 132, 213, 0.5);
 }
 
 .xalert-error {
@@ -8447,10 +8465,7 @@ body {
   min-height: 70px;
   padding: 4px;
   background: rgba(255, 255, 255, 0.25);
-  border: 1px dashed #d5d5d5;
-  -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
+  border: 1px solid #d5d5d5;
 }
 
 .cross-description p {
@@ -8661,7 +8676,6 @@ body {
 .cross-container .cross-date .editing,
 .cross-container .cross-place .editing {
   background: rgba(255, 255, 255, 0.25);
-  border: 1px dashed #D5D5D5;
 }
 
 .cross-container .cross-title .editing:focus,
@@ -9089,6 +9103,15 @@ body {
   padding-right: 19px;
   margin-bottom: 0;
   background-color: transparent;
+  border: 1px dashed #3a6ea5;
+  opacity: 0.33;
+  filter: alpha(opacity=33);
+}
+
+.invite-form input[type="text"]:focus {
+  border-style: solid;
+  opacity: 1;
+  filter: alpha(opacity=100);
 }
 
 .invite-form i {
@@ -9719,7 +9742,6 @@ body {
   margin-bottom: 0;
   margin-left: -3px;
   color: #191919;
-  border: 1px solid #e6e6e6;
   -webkit-border-radius: 0;
      -moz-border-radius: 0;
           border-radius: 0;
@@ -10764,7 +10786,7 @@ body {
   width: 310px;
 }
 
-.date-panel .date-input .icon-enter {
+.date-panel .date-input .icon-enter-blue {
   position: absolute;
   right: 3px;
   bottom: 18px;
@@ -10774,7 +10796,6 @@ body {
   width: 300px;
   margin: 0 0 15px 0;
   background: #fefefe;
-  border: 1px dashed #80addf;
   -webkit-border-radius: 0;
      -moz-border-radius: 0;
           border-radius: 0;
@@ -10782,7 +10803,6 @@ body {
 
 .date-panel #date-string:focus {
   background: #ffffff;
-  border: 1px solid rgba(90, 151, 214, 0.64);
   -webkit-box-shadow: 0 0 5px rgba(0, 133, 242, 0.35);
      -moz-box-shadow: 0 0 5px rgba(0, 133, 242, 0.35);
           box-shadow: 0 0 5px rgba(0, 133, 242, 0.35);
