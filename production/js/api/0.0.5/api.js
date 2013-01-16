@@ -210,9 +210,8 @@ define('api', function (require) {
 
     _extend(o, options);
 
-    // return jqXHR
-    dfd = $.ajax(o);
-    dfd.then(
+    dfd = $.ajax(o)
+      .then(
           // done filter
           function (data) {
             var code = data && data.meta && data.meta.code;

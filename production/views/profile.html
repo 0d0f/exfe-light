@@ -31,6 +31,10 @@
 
         <div class="row">
           <div class="gr-a">
+            <div class="gatherax-box">
+              <a href="/#gather" data-link><i class="icon16-invitation"></i> <span>Gather a <em class="x">·X·</em></span></a>
+            </div>
+
             <div class="crosses"></div>
 
           </div>
@@ -41,8 +45,9 @@
               <h3><i class="icon16-invitation"></i>Invitations</h3>
             </div>
 
-            <div class="siderbar updates hide">
+            <div class="siderbar updates">
               <h3><i class="icon16-updates"></i>Recent updates</h3>
+              <div class="cross-tip">No recent updates.</div>
             </div>
 
             <!--
@@ -104,7 +109,7 @@
         </script>
         <script id="jst-crosses-container" type="text/x-handlebars-template">
         <div class="clearfix crosses-container">
-          <div class="pull-right cross-type">
+          <div class="cross-type">
             <span>{{cate_date}}</span>
             <span class="arrow rb"></span>
           </div>
@@ -113,19 +118,6 @@
             {{> jst-cross-box}}
             {{/crosses}}
           </div>
-
-          {{#if hasGatherAX}}
-          <div class="gatherax-box">
-            <a href="/#gather" data-link>
-              {{#if totalCrosses}}
-              <i class="icon16-invitation"></i>
-              {{else}}
-              <span class="message">Oh~ Nothing upcoming. <em class="x-sign">EXFE</em> your friends, </span>
-              {{/if}}
-              <span>Gather a <em class="x">·X·</em></span>
-            </a>
-          </div>
-          {{/if}}
 
           {{#if hasMore}}
           <div class="more" data-cate="{{cate}}">

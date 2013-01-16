@@ -1344,6 +1344,7 @@ define(function (require, exports, module) {
             window.location = '/';
         });
         $('#cross-form-gather').bind('click', function() {
+            $('body').click();
             if (curIdentity) {
                 if (!$(this).hasClass('disabled')) {
                     $(this).toggleClass('disabled', true);
@@ -1463,24 +1464,19 @@ define(function (require, exports, module) {
             ],
             place : [
                 function() {
+                  $('.cross-place').removeAttr('editable');
                   var $mp = $('#map-panel');
                   if ($mp.size()) {
                     var cid = $mp.data('widget-id');
                     var mp = App.widgetCaches[cid];
+                    if (oldEditing === 'map-panel') {
+                      Cross.place = mp.place;
+                      AutoSaveCross();
+                    }
                     if (mp) {
                       mp.hide();
                     }
-                    AutoSaveCross();
                   }
-                  $('.cross-place').removeAttr('editable');
-                  /*
-                  if (placepanel) {
-                      $('.cross-place').removeAttr('editable');
-                      AutoSaveCross();
-                      placepanel.hide();
-                      placepanel = null;
-                    }
-                  */
                 },
                 function() {
                     var $dp = $('#map-panel');
@@ -1488,8 +1484,6 @@ define(function (require, exports, module) {
                       return;
                     }
                     var MapPanel = require('mappanel');
-                    //Cross.place.title = 'Yerba Buena Gardens';
-                    //Cross.place.description = 'Near 47 Howard Street, San Francisco, CA 94103';
                     var mappanel = new MapPanel({
                         options: {
                             parentNode: $('#app-tmp')
@@ -1497,38 +1491,13 @@ define(function (require, exports, module) {
                           , place: Cross.place
                         }
                       , update: function (place) {
-                          Cross.place = place;
-                          ShowPlace();
-                          ShowGoogleMap();
+                          //Cross.place = place;
+                          ShowPlace(place);
+                          ShowGoogleMap(place);
                         }
                     });
                     mappanel.show();
                     $('.cross-place').attr('editable', true);
-                    /*
-                    if (!placepanel) {
-                      $('.cross-place').attr('editable', true);
-                      var offset = $('div.cross-place').offset();
-                      placepanel = new PlacePanel({
-                        options: {
-                          events: {
-                            'keyup textarea': function (e) {
-                              ChangePlace($(e.currentTarget).val());
-                            },
-                            'keypress textarea': function (e) {
-                              ChangePlace($(e.currentTarget).val());
-                            }
-                          }
-                        }
-                      });
-                      $('div.placepanel').attr('editarea', 'placepanel').css({
-                        left: offset.left - 320 - 15,
-                        top: offset.top
-                      })
-                      .find('textarea')
-                        .val((Cross.place.title ? Cross.place.title : '') + (Cross.place.description ? ('\n' + Cross.place.description) : ''))
-                        .focusend();
-                    }
-                    */
                 }
             ],
             rsvp : [
@@ -1779,7 +1748,7 @@ define(function (require, exports, module) {
 
     var ChangePlace = function(place) {
         Cross.place = ExfeUtilities.parsePlacestring(place);
-        ShowPlace();
+        ShowPlace(Cross.place);
     };
 
 
@@ -1905,17 +1874,17 @@ define(function (require, exports, module) {
     };
 
 
-    var ShowPlace = function() {
+    var ShowPlace = function(place) {
         $('.cross-dp.cross-place > h2').html(
-            Cross.place.title
-          ? ExfeUtilities.escape(Cross.place.title)
+            place.title
+          ? ExfeUtilities.escape(place.title)
           : 'Somewhere'
         );
         $('.cross-dp.cross-place > address').toggleClass('more', true)
         $('.cross-dp.cross-place .xbtn-more').toggleClass('xbtn-less', false);
-        if (Cross.place.description) {
+        if (place.description) {
             $('.cross-dp.cross-place > address').html(
-                ExfeUtilities.escape(Cross.place.description).replace(/\r\n|\r|\n/g, '<br>')
+                ExfeUtilities.escape(place.description).replace(/\r\n|\r|\n/g, '<br>')
             ).toggleClass('gray', false);
         } else {
             $('.cross-dp.cross-place > address').html(
@@ -2059,14 +2028,14 @@ define(function (require, exports, module) {
         $('.cross-rsvp .edit').hide();
     };
 
-    var ShowGoogleMap = function () {
+    var ShowGoogleMap = function (place) {
         $('.cross-map').empty();
-        var hasLL = Cross.place.lat.length && Cross.place.lng.length;
+        var hasLL = place.lat.length && place.lng.length;
         function getMap(position) {
           var coords = position.coords;
           map_dom = map_dom.replace(/\{\{lat\}\}/ig, coords.latitude)
             .replace(/\{\{lng\}\}/ig, coords.longitude)
-            .replace(/\{\{title\}\}/ig, encodeURIComponent(Cross.place.title));
+            .replace(/\{\{title\}\}/ig, encodeURIComponent(place.title));
           $('.cross-map').append(map_dom);
         }
 
@@ -2079,8 +2048,8 @@ define(function (require, exports, module) {
         if (hasLL) {
           getMap({
             coords: {
-              latitude: Cross.place.lat,
-              longitude: Cross.place.lng
+              latitude: place.lat,
+              longitude: place.lng
             }
           });
         //} else if (navigator.geolocation) {
@@ -2091,11 +2060,11 @@ define(function (require, exports, module) {
     var ShowCross = function() {
         ShowTitle();
         ShowDescription();
-        ShowPlace();
+        ShowPlace(Cross.place);
         ShowExfee();
         ShowBackground();
         ShowRsvp();
-        ShowGoogleMap();
+        ShowGoogleMap(Cross.place);
     };
 
 
@@ -2240,7 +2209,11 @@ define(function (require, exports, module) {
                         + Cross.time.begin_at.date + ', '
                         + Cross.time.begin_at.time,
             place       : {title       : Cross.place.title,
-                           description : Cross.place.description},
+                           description : Cross.place.description,
+                           lat         : Cross.place.lat,
+                           lng         : Cross.place.lng,
+                           updated_at  : Cross.place.updated_at
+                          },
             background  : Cross.widget[0].image
         });
     };

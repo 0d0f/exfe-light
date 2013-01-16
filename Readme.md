@@ -29,6 +29,8 @@ EXFE.COM 前端架构
   * img                 - 图片文件夹
 
 ## 开发工具
+  * JavaScript
+    - Strict Model
   * Node.js
   * Less
   * Jade

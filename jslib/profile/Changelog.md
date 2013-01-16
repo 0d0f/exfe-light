@@ -1,3 +1,7 @@
+* v0.1.1 2013-01-14T14:13:42 UTC+0800
+  - Changes
+    * tweaks gather-a-x button
+
 * v0.1.0 2013-01-08T10:50:06 UTC+0800
   - Changes
     * used new `humantime` library
