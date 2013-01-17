@@ -9,7 +9,7 @@ define(function (require) {
 
     '<div class="newbie nbg-1">'
       + '<div class="newbie-close"><i class="icon14-clear"></i></div>'
-      + '<p>Here list your identities. Identity is your online representative, i.e. email, <span class="strike">mobile number</span> and account from Twitter, <span class="strike">Facebook, Google, etc.</span> (soon to support) You can gather with different group of people as different identity, or use them as alternative way of notification.</p>'
+      + '<p>Here list your identities. Identity is your online representative, i.e. email, <span class="strike">mobile number</span> and account from Twitter, Facebook, <span class="strike">Google, etc.</span> (soon to support) You can gather with different group of people as different identity, or use them as alternative way of notification.</p>'
       + '<p class="toggle hide">Please set up following items for easier use of <span class="x-sign">EXFE</span>:</p>'
       + '<ul class="toggle hide">'
         + '<li>Set an <span class="x-sign">EXFE</span> password for security.</li>'
