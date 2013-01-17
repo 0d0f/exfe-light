@@ -1,3 +1,7 @@
+* v0.0.7 2013-01-17T12:58:18 UTC+0800
+  - Bugs Fixed
+    * reject data
+
 * v0.0.6 2013-01-13T22:26:42 UTC+0800
   - Fix Bugs
     * `_ajax` must be return jqXHR.
