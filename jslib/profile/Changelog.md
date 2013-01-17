@@ -1,3 +1,7 @@
+* v0.1.2 2013-01-17T21:31:59 UTC+0800
+  - Changes
+    * `purpose` replaced `intent`
+
 * v0.1.1 2013-01-14T14:13:42 UTC+0800
   - Changes
     * tweaks gather-a-x button

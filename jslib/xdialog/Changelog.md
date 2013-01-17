@@ -1,4 +1,8 @@
 * v0.1.9 2012-12-11T15:01:47 UTC+0800
+  - Changes
+    * `purpose` replaced `intent`
+
+* v0.1.9 2012-12-11T15:01:47 UTC+0800
   - New Features
     * `Unsubscribe` dialog
 
