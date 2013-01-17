@@ -527,7 +527,7 @@ define(function (require, exports, module) {
       s.id = 'js-newbieguide';
       s.type = 'text/javascript';
       s.async = true;
-      s.src = '/static/js/newbieguide/0.0.2/newbieguide.min.js?t=' + Config.timestamp;
+      s.src = '/static/js/newbieguide/0.0.3/newbieguide.min.js?t=' + Config.timestamp;
       $(s).attr('data-exists', $ss.attr('data-exists'));
       $ss.remove();
       var body = document.body;
