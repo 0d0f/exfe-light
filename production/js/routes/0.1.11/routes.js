@@ -838,9 +838,8 @@ define('routes', function (require, exports, module) {
         }
         // 继续使用本地缓存
       , function (data) {
-          if (data
-              && data.meta
-              && data.meta.code === 401) {
+          var code = data && data.meta && data.meta.code;
+          if (401 === code) {
             Store.remove('user');
             Store.remove('authorization');
             delete session.user;

@@ -301,7 +301,13 @@
       margin-bottom: 0;
       padding-right: 19px;
       background-color: transparent;
-      //.border-radius(0);
+      border: 1px dashed @inputFocusBorder;
+      .opacity(33);
+
+      &:focus {
+        border-style: solid;
+        .opacity(100);
+      }
     }
 
     i {

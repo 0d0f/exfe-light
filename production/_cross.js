@@ -249,7 +249,6 @@ ExfeeWidget = {
         this.dom_id   = dom_id;
         this.editable = editable;
         this.callback = callback;
-        $('#' + this.dom_id + ' .invite-form').css('visibility', 'hidden');
         $('#' + this.dom_id + ' .total').css('visibility',       'hidden');
         $('#' + this.dom_id + ' .avatar .rb').hide();
         $('#' + this.dom_id).bind(
@@ -260,13 +259,11 @@ ExfeeWidget = {
                         $('#' + dom_id + ' .total').css('visibility', 'visible');
                         $('#' + dom_id + ' .avatar .rb').show();
                         if (!readOnly) {
-                            $('#' + dom_id + ' .invite-form').css('visibility', 'visible');
                         }
                         break;
                     case 'mouseleave':
                         if (!ExfeeWidget.focus[dom_id + '-input']
                          && $('#' + dom_id + ' .exfee-input').val() === '') {
-                            $('#' + dom_id + ' .invite-form').css('visibility', 'hidden');
                             $('#' + dom_id + ' .total').css('visibility',       'hidden');
                             $('#' + dom_id + ' .avatar .rb').hide();
                             ExfeeWidget.showLimitWarning(false);
@@ -280,20 +277,9 @@ ExfeeWidget = {
         $('#' + this.dom_id + ' .pointer').bind('click', function() {
             ExfeeWidget.checkInput($('#' + dom_id + ' .input-xlarge'), true);
         });
-        $('#' + this.dom_id + ' .thumbnails > li.identity > .avatar').live(
-            'mouseenter mouseleave mousedown',
-            function(event) {
-                switch (event.type) {
-                    case 'mouseenter':
-                        ExfeeWidget.showTip(this.parentNode);
-                        break;
-                    case 'mouseleave':
-                        ExfeePanel.hideTip();
-                        break;
-                    case 'mousedown':
-                        ExfeeWidget.showPanel(this.parentNode);
-                }
-            }
+        $(document).on('mousedown', '#' + this.dom_id + ' .thumbnails > li.identity > .avatar', function (e) {
+            ExfeeWidget.showPanel(this.parentNode);
+          }
         );
         this.complete_timer = setInterval(
            "ExfeeWidget.checkInput($('#" + this.dom_id + " .input-xlarge'))",
@@ -1191,6 +1177,11 @@ define('exfeepanel', function (require, exports, module) {
             $('.exfee_pop_up').on('click', 'span.avatar > img', function (e) {
               window.open($(this).attr('src').replace(/\/(80_80)_/, '/original_'));
             })
+            .on('mouseleave', function (e) {
+                $(this).hide(144, function () {
+                  ExfeePanel.hidePanel();
+                });
+            });
         },
 
 
@@ -1519,7 +1510,6 @@ define(function (require, exports, module) {
             exfee : [
                 function() {
                     if (!$('#cross-exfee .exfee-input').val()) {
-                        $('#cross-exfee .invite-form').css('visibility', 'hidden');
                         $('#cross-exfee .total').css('visibility',       'hidden');
                         $('#cross-exfee .thumbnails .avatar .rb').hide();
                     }

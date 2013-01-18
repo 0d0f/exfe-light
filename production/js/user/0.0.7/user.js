@@ -86,7 +86,6 @@ define('user', function (require, exports, module) {
 
           Bus.emit('app:user:signin:after', user);
         }
-      , function (err) {}
     );
   }
 
