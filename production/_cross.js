@@ -1323,7 +1323,7 @@ define(function (require, exports, module) {
                     data      : JSON.stringify(post)
                 },
                 function(data) {
-                    lastConvUpdate = data.post.created_at;
+                    lastConvUpdate = data.post.updated_at;
                     $('.cross-opts .saving').hide();
                     ShowMessage(data.post);
                     bus.emit('app:cross:edited');
