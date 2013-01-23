@@ -180,11 +180,37 @@ define('api', function (require) {
       delete options.params;
       delete options.resources;
 
-      return _ajax(options, done, fail);
+      return _ajax(options, doneCallback(done, fail), fail);
     }
   }
 
   // helper
+
+  function doneCallback(done, fail) {
+    return function cb() {
+      var args = _slice(arguments), data = args[0];
+      // status-code 200 success
+      if (data && data.meta.code === 200) {
+        args[0] = data.response;
+
+        if (done) {
+          done.apply(this, args);
+        }
+
+      } else {
+        if (fail) {
+          fail.apply(this, args);
+        }
+      }
+      return this;
+    }
+  }
+
+  var __slice = Array.prototype.slice;
+
+  function _slice(args) {
+    return __slice.call(args, 0);
+  }
 
   function _extend(r, s) {
     var k;
@@ -213,7 +239,12 @@ define('api', function (require) {
     _extend(o, options);
 
     // return jqXHR
-    dfd = $.ajax(o);
+    dfd = $.ajax(o)
+      // done callback
+      .done(done)
+      // fail callback
+      .fail(fail);
+    /*
     dfd.then(
           // done filter
           function (data) {
@@ -225,16 +256,12 @@ define('api', function (require) {
               return $.Deferred().reject(data);
             }
           }
-        /* Response Fail.
-        , function (data) {
-            return {
-            }
-          }
-        */
+        //, function (data) { return { } }
       )
       .done(done)
       .fail(fail)
       .always(function () { dfd.abort(); dfd = null; });
+    */
 
     return dfd;
   }
