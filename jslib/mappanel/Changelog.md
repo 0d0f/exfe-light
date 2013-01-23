@@ -1,3 +1,8 @@
+* v0.0.6 2013-01-24T02:03:17 UTC+0800
+  - New Features
+    * added `external_id` `provider`
+    * used `google.load` `Google Map`
+
 * v0.0.4 2012-12-11T21:42:49 UTC+0800
   - New Features
     * Supported `command + enter`
