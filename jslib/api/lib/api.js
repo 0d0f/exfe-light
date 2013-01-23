@@ -199,6 +199,8 @@ define('api', function (require) {
   var defaultOptions = {
     type: 'GET',
     dataType: 'JSON',
+    timeout: 2333,
+    cache: false,
     // cors: Cross Origin Resource Share
     xhrFields: { withCredentials: true }
   };
@@ -231,7 +233,8 @@ define('api', function (require) {
         */
       )
       .done(done)
-      .fail(fail);
+      .fail(fail)
+      .always(function () { dfd.abort(); dfd = null; });
 
     return dfd;
   }
