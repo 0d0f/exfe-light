@@ -210,13 +210,9 @@ HumanTime.diff = function (distanceTime) {
   // m <= -1440
   else if (m < -1439) {
     output.token = 1;
-    if (m > -2880) {
-      days = -_days;
-    } else {
-      //days = floor(-m / 1440 + N9);
-      //days = floor((-m - 1) / 1440 + 1);
-      days = floor((-m + 1439) / 1440);
-    }
+    //days = floor(-m / 1440 + N9);
+    //days = floor((-m - 1) / 1440 + 1);
+    days = -_days < 3 ? -_days : floor((-m + 1439) / 1440);
   }
 
   // m <= -108
@@ -287,12 +283,7 @@ HumanTime.diff = function (distanceTime) {
   // 2880 m <= x <= 43199 m
   else if (m < 43200) {
     output.token = 12;
-    if (m < 2880) {
-      days = _days;
-    } else {
-      //days = floor(m / 1440 + N9);
-      days = floor((m + 1439) / 1440);
-    }
+    days = _days < 3 ? _days : floor((m + 1439) / 1440);
     day = t.getDay();
   }
 
