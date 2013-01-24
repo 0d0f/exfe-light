@@ -83,7 +83,7 @@ define(function (require) {
       eft.begin_at.time = lead0(now2.getHours()) + ':' + lead0(now2.getMinutes()) + ':' + lead0(now2.getSeconds());
       var t = humantime.toLocaleDate(eft);
       var s = humantime(t.date, new Date());
-      expect(s).to.equal('Yesterday');
+      expect(s).to.equal('Today');
       //console.log(s);
     });
 
@@ -338,7 +338,7 @@ define(function (require) {
       //console.log(now, now2);
       var a = printEFTime(eft);
       expect(a.title).to.equal(eft.origin);
-      expect(a.content).to.equal('Two days ago');
+      expect(a.content).to.equal('Yesterday');
     });
 
     it('`date`', function () {
@@ -453,6 +453,27 @@ define(function (require) {
       var now = new Date();
       eft.begin_at.date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1);
       console.dir(eft);
+      var a = printEFTime(eft);
+      console.log(a);
+    });
+
+    it('`date` = 2013-01-25, `time` = 14:40:00', function () {
+      var eft = {
+          begin_at: {
+              date_word: ''
+            , date: '2013-01-25'
+            , time_word: ''
+            , time: '14:40:00'
+            , timezone: '+08:00'
+            , id: 0
+            , type: 'EFTime'
+          }
+        , origin: 'origin Datetime'
+        , outputformat: 0
+        , id: 0
+        , type: 'CrossTime'
+      };
+      var now = new Date();
       var a = printEFTime(eft);
       console.log(a);
     });
