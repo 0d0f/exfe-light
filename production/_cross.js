@@ -1551,6 +1551,7 @@ define(function (require, exports, module) {
                 editMethod[i][~~(i === Editing)]();
             }
         }
+        return false;
     };
 
 
