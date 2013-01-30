@@ -11510,3 +11510,170 @@ body {
      -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
           box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
 }
+
+.mnemosyne {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), url("/img/bg_pattern.png") #000000;
+  background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), url("/img/bg_pattern.png") #000000;
+}
+
+.mnemosyne .gallery-wrap {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 28px;
+  padding-bottom: 40px;
+  overflow-x: scroll;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 800px;
+     -moz-perspective: 800px;
+      -ms-perspective: 800px;
+       -o-perspective: 800px;
+          perspective: 800px;
+  -webkit-perspective-origin: 50% 50%;
+}
+
+.mnemosyne .gallery {
+  -webkit-transition: all 233ms ease-out;
+     -moz-transition: all 233ms ease-out;
+       -o-transition: all 233ms ease-out;
+          transition: all 233ms ease-out;
+  -webkit-transform-style: preserve-3d;
+     -moz-transform-style: preserve-3d;
+      -ms-transform-style: preserve-3d;
+       -o-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+}
+
+.mnemosyne .gallery .photos-list {
+  width: 100%;
+  height: 100%;
+}
+
+.mnemosyne .photo {
+  position: absolute;
+  cursor: pointer;
+  -webkit-transform-style: preserve-3d;
+     -moz-transform-style: preserve-3d;
+      -ms-transform-style: preserve-3d;
+       -o-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+}
+
+.mnemosyne .photo .img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+     -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+          box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+  -webkit-transition: all 0.15s ease-in-out 0;
+     -moz-transition: all 0.15s ease-in-out 0;
+       -o-transition: all 0.15s ease-in-out 0;
+          transition: all 0.15s ease-in-out 0;
+}
+
+.mnemosyne .photo .img-wrap:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: none;
+  background: rgba(255, 255, 255, 0.05);
+  content: '';
+}
+
+.mnemosyne .photo .img-wrap img {
+  position: relative;
+  top: 0;
+  left: 0;
+  max-width: none;
+  max-height: none;
+}
+
+.mnemosyne .photo .photo-meta {
+  display: none;
+  width: 100%;
+  height: 24px;
+  padding: 3px 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 24px;
+  color: #808080;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 3s ease-in-out 0;
+     -moz-transition: opacity 3s ease-in-out 0;
+       -o-transition: opacity 3s ease-in-out 0;
+          transition: opacity 3s ease-in-out 0;
+}
+
+.mnemosyne .photo .avatar {
+  width: 24px;
+  height: 24px;
+  margin: 0 4px 0 3px;
+  background: #555;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.mnemosyne .photo .title {
+  -webkit-flex: 1;
+     -moz-flex: 1;
+      -ms-flex: 1;
+       -o-flex: 1;
+          flex: 1;
+}
+
+.mnemosyne .photo .date {
+  margin-right: 4px;
+  text-align: right;
+}
+
+.mnemosyne .photo .place {
+  width: 24px;
+  height: 24px;
+  margin-right: 3px;
+  background: #555;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.mnemosyne .photo-hover:hover {
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-transform: scale(1.01);
+     -moz-transform: scale(1.01);
+      -ms-transform: scale(1.01);
+       -o-transform: scale(1.01);
+          transform: scale(1.01);
+  -webkit-box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+     -moz-box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+.mnemosyne .photo-hover:hover .img-wrap:before {
+  display: block;
+  -webkit-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+     -moz-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+.mnemosyne .photo-hover:hover .photo-meta {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
