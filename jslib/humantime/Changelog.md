@@ -1,3 +1,7 @@
+* v0.0.5 2013-01-24T19:13:13 UTC+0800
+  * Bugs Fix
+    * 相对 days token-12
+
 * v0.0.4 2013-01-23T15:33:28 UTC+0800
   - Bugs Fix
     * must `'undefined' !== typeof day`
