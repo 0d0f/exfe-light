@@ -91,7 +91,7 @@ define(function (require, exports, module) {
         if (tridAt) {
             if (now - lastBreathe > 1500 && Math.abs(tridAt - lastBreathe) < 1500) {
                 clearTimeout(tryTimer);
-                $('.get-button button').html('Open <span class="exfe">EXFE</span> app');
+                $('.get-button button').html('Launch <span class="exfe">EXFE</span> app');
                 $('.get-button button').unbind('click').bind('click', launchApp);
             // To avoid failing on return to MobileSafari, ensure freshness!
             } else if (now - tridAt < 2000) {
