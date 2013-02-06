@@ -1,3 +1,7 @@
+* v0.1.10 2013-02-06T15:01:47 UTC+0800
+  - Changes
+    * `gathering` replaced `hanging out`
+
 * v0.1.9 2012-12-11T15:01:47 UTC+0800
   - Changes
     * `purpose` replaced `intent`

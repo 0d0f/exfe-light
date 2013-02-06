@@ -501,7 +501,11 @@ define('mnemosyne', function (require) {
         var $this = $(this),
             transform = '';
         $(this).toggleClass('photo-hover', e.type === 'mouseenter');
-      })
+      });
+
+    _$root.on('scroll.mnemosyne', '.gallery', function () {
+
+    });
 
     _this.on('resize.mnemosyne', function (w, h) {
       _slideshow.resize(w, h);
@@ -513,7 +517,7 @@ define('mnemosyne', function (require) {
 
     _this.on('scroll.mnemosyne', function (w, l, t) {
       _this.scroll(w, l, t);
-    });
+    });kkkk
 
     $(window).on('debouncedresize.mnemosyne', function () {
     // $(window).on('throttledresize', function () {
