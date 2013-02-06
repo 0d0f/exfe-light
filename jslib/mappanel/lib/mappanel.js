@@ -5,7 +5,6 @@
 define('mappanel', function (require, exports, module) {
 
   var $ = require('jquery')
-    , MAP_KEY = require('config').MAP_KEY
     , R = require('rex')
     , lead0 = require('humantime').lead0
     , Config = require('config')
@@ -14,8 +13,7 @@ define('mappanel', function (require, exports, module) {
     , CR = '\r'
     , geolocation = window.navigator.geolocation
     , $win = $(window)
-    , isIE = $.browser.msie
-    , isMapLoaded = false;
+    , isIE = $.browser.msie;
 
   var Panel = require('panel');
 
@@ -221,8 +219,6 @@ define('mappanel', function (require, exports, module) {
         placeData.description = place.description;
         placeData.lat = place.lat || '';
         placeData.lng = place.lng || '';
-        placeData.external_id = place.external_id;
-        placeData.provider = place.provider;
         searchable = !!searchable && place.title;
         var d = new Date();
         placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
@@ -294,24 +290,14 @@ define('mappanel', function (require, exports, module) {
       }
 
     , showAfter: function () {
-        var self = this,
-            srcNode = self.srcNode;
+        var srcNode = this.srcNode;
         if (srcNode) {
           var offset = srcNode.offset()
             , width = this.element.outerWidth();
           this.element
             .css({ left: this.oleft = offset.left - width - 15 , top: this.otop = offset.top });
         }
-
-        if (isMapLoaded) {
-          self.showPlace();
-        } else {
-          loadMap(function () {
-            isMapLoaded = true;
-            self && self.showPlace && self.showPlace();
-          });
-        }
-
+        this.showPlace();
       }
 
     , destory: function () {
@@ -434,7 +420,7 @@ define('mappanel', function (require, exports, module) {
    */
   var PlacesList = function (component, selector) {
     this.template = ''
-              + '<li class="place-item" data-latitude="{{lat}}" data-longitude="{{lng}}" data-external-id="{{external_id}}">'
+              + '<li class="place-item" data-latitude="{{lat}}" data-longitude="{{lng}}">'
                 + '<address><div class="title">{{title}}</div><div class="description">{{address}}</div></address>'
               + '</li>'
     this.component = component
@@ -481,8 +467,7 @@ define('mappanel', function (require, exports, module) {
             html += li.replace('{{title}}', v.name)
               .replace('{{address}}', v.formatted_address)
               .replace('{{lat}}', v.geometry.location.Ya)
-              .replace('{{lng}}', v.geometry.location.Za)
-              .replace('{{external_id}}', v.id);
+              .replace('{{lng}}', v.geometry.location.Za);
           });
 
           this.$element.html(html);
@@ -552,8 +537,6 @@ define('mappanel', function (require, exports, module) {
             , description: $li.find('div.description').text()
             , lat: String($li.data('latitude'))
             , lng: String($li.data('longitude'))
-            , external_id: $li.data('external-id')
-            , provider: 'google'
           };
         component.emit('clear-marker', this.curr);
         component.emit('change-place', place, false);
@@ -812,8 +795,6 @@ define('mappanel', function (require, exports, module) {
                     self.cbid = 0;
                     place.title = 'Right there on map';
                     place.description = results[0].formatted_address;
-                    place.provider = ''; // exfe
-                    place.external_id = '';
                     component.emit('change-place', place, false);
                   }
                 };
@@ -969,12 +950,10 @@ define('mappanel', function (require, exports, module) {
           });
 
           marker._place = {
-              title       : place.title || place.name
-            , description : place.description || place.formatted_address
-            , lat         : '' + location.Ya
-            , lng         : '' + location.Za
-            , external_id : place.id || ''
-            , provider    : 'google'
+              title: place.title || place.name
+            , description: place.description || place.formatted_address
+            , lat: '' + location.Ya
+            , lng: '' + location.Za
           };
 
           // events
@@ -1092,20 +1071,6 @@ define('mappanel', function (require, exports, module) {
     rc.setEndPoint('EndToStart', re);
     return rc.text.length + r.text.length;
   }
-
-  var loadMap = function (cb) {
-      if (window.google && window.google.maps) { return; }
-      window._loadMaps = function () {};
-      $('[src^="https://www.google.com"]').remove();
-      var b = document.getElementsByTagName('body')[0], g = document.createElement('script');
-      window._gmap = function () { delete window._gmap; };
-      window._loadMaps = function () {
-        window.google.load('maps', '3', { other_params: 'key=' + MAP_KEY + '&sensor=false&libraries=places', callback: function () {cb()} });
-      }
-      g.async = 'async';
-      g.src = 'https://www.google.com/jsapi?callback=_loadMaps';
-      b.appendChild(g);
-  };
 
   return MapPanel;
 });

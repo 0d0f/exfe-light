@@ -1,7 +1,3 @@
-* v0.0.8 2013-01-24T02:01:20 UTC+0800
-  - Changes
-    * refactor `_ajax`
-
 * v0.0.7 2013-01-17T12:58:18 UTC+0800
   - Bugs Fixed
     * reject data

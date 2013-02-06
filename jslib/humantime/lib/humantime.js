@@ -21,8 +21,7 @@ var ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 var N2 = 0.2
   , N9 = 0.9999
-  , N6 = 6e4
-  , D = 8.64e7;
+  , N6 = 6e4;
 
 var DATEOUTPUTFORMATS = [];
 
@@ -184,8 +183,7 @@ HumanTime.diff = function (distanceTime) {
     , m = floor(ms / N6)
     , days, months, years, hours, minutes, day
     , output = { date: {} }
-    , date = output.date
-    , _days = distanceTime.days;
+    , date = output.date;
 
   date.isToday = distanceTime.isToday
 
@@ -211,8 +209,8 @@ HumanTime.diff = function (distanceTime) {
   else if (m < -1439) {
     output.token = 1;
     //days = floor(-m / 1440 + N9);
+    days = floor((-m + 1439) / 1440);
     //days = floor((-m - 1) / 1440 + 1);
-    days = -_days < 3 ? -_days : floor((-m + 1439) / 1440);
   }
 
   // m <= -108
@@ -281,9 +279,10 @@ HumanTime.diff = function (distanceTime) {
   //}
 
   // 2880 m <= x <= 43199 m
-  else if (m < 43200) {
+  else if (m < 42300) {
     output.token = 12;
-    days = _days < 3 ? _days : floor((m + 1439) / 1440);
+    //days = floor(m / 1440 + N9);
+    days = floor((m + 1439) / 1440);
     day = t.getDay();
   }
 
@@ -309,7 +308,7 @@ HumanTime.diff = function (distanceTime) {
 
   if (minutes) { date.minutes = minutes; }
 
-  if ('undefined' !== typeof day) { date.day = day; }
+  if (day) { date.day = day; }
 
   return output;
 };
@@ -339,13 +338,6 @@ HumanTime.distanceOfTime = function (t, s) {
     s.setMilliseconds(0);
   }
 
-  var ty = t.getFullYear(),
-      tm = t.getMonth(),
-      td = t.getDate(),
-      sy = s.getFullYear(),
-      sm = s.getMonth(),
-      sd = s.getDate();
-
   return {
       // target datetime
       target: t
@@ -354,11 +346,9 @@ HumanTime.distanceOfTime = function (t, s) {
       // millseconds
     , distance: +t - +s
 
-    , days: (+new Date(ty, tm, td) - +new Date(sy, sm, sd)) / D
-
-    , isToday: (ty === sy)
-        && (tm === sm)
-        && (td === sd)
+    , isToday: (t.getFullYear() === s.getFullYear())
+        && (t.getMonth() === s.getMonth())
+        && (t.getDate() === s.getDate())
     };
 };
 
