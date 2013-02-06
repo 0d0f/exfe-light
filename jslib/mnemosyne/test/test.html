@@ -1,8 +1,11 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Mocha</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
     <link rel="stylesheet" href="../../../production/css/exfe.min.css" />
+    <link rel="stylesheet" href="mm.css" />
     <script src="../../../production/js/common/0.0.3/common.js"></script>
     <script src="../../../production/js/class/0.0.1/class.js"></script>
     <script src="../../../production/js/emitter/0.0.2/emitter.js"></script>
@@ -18,6 +21,7 @@
     <script src="jquery.debouncedresize.js"></script>
     <script src="jquery.throttledresize.js"></script>
     <style>
+    /*
       #retypeset {
         color: red;
       }
@@ -59,16 +63,17 @@
         ransition: all 233ms ease-out;
         //-webkit-transform: translate3d(0, 0, 610px);
       }
+      */
     </style>
   </head>
   <body>
     <section class="mnemosyne">
-      <div class="gallery-wrap">
-        <div class="gallery">
+      <div class="gallery">
+        <div class="photos-wrap">
           <div class="photos-list"></div>
         </div>
       </div>
-      <div id="slideshow" class="slideshow hide">
+      <div class="slideshow">
         <div class="photos-list"></div>
         <div class="actions">
           <button id="btn-esc">Esc</button>

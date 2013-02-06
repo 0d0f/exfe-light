@@ -11522,32 +11522,54 @@ body {
 
 .mnemosyne .gallery-wrap {
   position: absolute;
-  top: 60px;
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  padding-top: 28px;
+  padding-top: 88px;
   padding-bottom: 40px;
   overflow-x: scroll;
+  -webkit-transform: translateZ(0);
+     -moz-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+       -o-transform: translateZ(0);
+          transform: translateZ(0);
   -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+      -ms-backface-visibility: hidden;
+          backface-visibility: hidden;
   -webkit-perspective: 800px;
      -moz-perspective: 800px;
       -ms-perspective: 800px;
        -o-perspective: 800px;
           perspective: 800px;
   -webkit-perspective-origin: 50% 50%;
-}
-
-.mnemosyne .gallery {
-  -webkit-transition: all 233ms ease-out;
-     -moz-transition: all 233ms ease-out;
-       -o-transition: all 233ms ease-out;
-          transition: all 233ms ease-out;
+     -moz-perspective-origin: 50% 50%;
+      -ms-perspective-origin: 50% 50%;
+  -0-perspective-origin: 50% 50%;
+  perspective-origin: 50% 50%;
+  -0-backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
      -moz-transform-style: preserve-3d;
       -ms-transform-style: preserve-3d;
        -o-transform-style: preserve-3d;
           transform-style: preserve-3d;
+}
+
+.mnemosyne .gallery {
+  /*
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    */
+
+  position: relative;
+  -webkit-transition: all 233ms ease-out;
+     -moz-transition: all 233ms ease-out;
+       -o-transition: all 233ms ease-out;
+          transition: all 233ms ease-out;
 }
 
 .mnemosyne .gallery .photos-list {
@@ -11567,6 +11589,8 @@ body {
 
 .mnemosyne .photo .img-wrap {
   position: relative;
+  display: block;
+  margin: 0;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.05);
   -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
@@ -11626,6 +11650,7 @@ body {
 }
 
 .mnemosyne .photo .title {
+  -webkit-box-flex: 1;
   -webkit-flex: 1;
      -moz-flex: 1;
       -ms-flex: 1;
@@ -11669,6 +11694,7 @@ body {
 }
 
 .mnemosyne .photo-hover:hover .photo-meta {
+  display: -webkit-box;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
