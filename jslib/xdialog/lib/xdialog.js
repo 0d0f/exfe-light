@@ -72,6 +72,7 @@ define('xdialog', function (require, exports, module) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+          this._oauth_ = null;
         }
         this.destory();
 
@@ -637,6 +638,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function (e) {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         // jquery.Event
         // TODO: 临时处理 , 首页 登录窗口
@@ -853,7 +855,7 @@ define('xdialog', function (require, exports, module) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 
@@ -1329,6 +1331,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         this.destory();
       },
@@ -1689,6 +1692,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
+          this.befer = null;
         }
         this.destory();
       },
@@ -1869,6 +1873,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function (e) {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         this.destory();
       },
@@ -1923,7 +1928,7 @@ define('xdialog', function (require, exports, module) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 
@@ -2300,6 +2305,7 @@ define('xdialog', function (require, exports, module) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+	  this._oauth_ = null;
         }
         this.destory();
       },
@@ -2796,7 +2802,7 @@ define('xdialog', function (require, exports, module) {
       },
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 

@@ -517,7 +517,7 @@ define('mnemosyne', function (require) {
 
     _this.on('scroll.mnemosyne', function (w, l, t) {
       _this.scroll(w, l, t);
-    });kkkk
+    });
 
     $(window).on('debouncedresize.mnemosyne', function () {
     // $(window).on('throttledresize', function () {
