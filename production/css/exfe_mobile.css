@@ -464,12 +464,18 @@ body {
   width: 280px;
 }
 
-.get-button {
+.get-button,
+.set-button {
   width: 100%;
   height: 45px;
 }
 
-.get-button button {
+.set-button {
+  margin-top: 10px;
+}
+
+.get-button button,
+.set-button button {
   display: none;
   width: 100%;
   height: 45px;
@@ -481,6 +487,14 @@ body {
   background-image: -moz-linear-gradient(90deg, #cccccc 0%, #fafafa 100%);
   border-radius: 3px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+}
+
+.set-button button {
+  display: block;
+}
+
+.set-button button.disabled {
+  opacity: 0.33;
 }
 
 .get-button button .exfe {
