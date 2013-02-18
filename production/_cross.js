@@ -1054,7 +1054,7 @@ define('exfeepanel', function (require, exports, module) {
                     'icon10-plus-' + i, this.invitation.mates === i
                 );
             }
-            $('.exfee_pop_up .rsvp-info .by .name').html(by_identity.name);
+            $('.exfee_pop_up .rsvp-info .by .name').html(by_identity ? by_identity.name : '');
             $('.exfee_pop_up .invited .mates-num').html('+' + this.invitation.mates);
             $('.exfee_pop_up .mates-edit .num').html(this.invitation.mates);
             if (by_identity && this.invitation.identity.id !== by_identity.id && this.editing === 'rsvp') {
