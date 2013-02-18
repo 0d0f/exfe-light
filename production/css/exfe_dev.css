@@ -9634,10 +9634,6 @@ body {
   right: 4px;
 }
 
-.x-profile {
-  margin-bottom: 50px;
-}
-
 .x-profile .gr-a {
   width: 493px;
   padding-left: 40px;
@@ -11702,4 +11698,8 @@ body {
   display: flex;
   opacity: 1;
   filter: alpha(opacity=100);
+}
+
+#app-main {
+  margin-bottom: 100px;
 }
