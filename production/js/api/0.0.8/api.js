@@ -206,32 +206,37 @@ define('api', function (require) {
   };
 
   function _ajax(options, done, fail) {
-    var o = {}, dfd;
+    var o = {}, dfd, promise, jqXHR;
 
     _extend(o, defaultOptions);
 
     _extend(o, options);
 
-    // return jqXHR
-    dfd = $.ajax(o);
-    dfd.then(
-          // done filter
-          function (data) {
-            var code = data && data.meta && data.meta.code;
-            if (200 === code) {
-              return data.response;
-            }
-            else {
-              return $.Deferred().reject(data);
-            }
-          }
-        //, function (data) { return { } }
-      )
+    dfd = $.Deferred();
+    promise = dfd.promise();
+
+    jqXHR = $.ajax(o)
+      .done(function (data, statusText, jqXHR) {
+        var code = data && data.meta && data.meta.code;
+        if (200 === code) {
+          dfd.resolve(data.response, statusText, jqXHR);
+        }
+        else {
+          dfd.reject(data, statusText, jqXHR);
+        }
+      });
+
+    promise.jqXHR = jqXHR;
+    promise.abort = function (statusText) { jqXHR.abort(statusText); jqXHR = dfd = promise = null; };
+    promise
       .done(done)
       .fail(fail)
-      .always(function () { dfd.abort(); dfd = null; });
+      .always(function () {
+        if (jqXHR) { jqXHR.abort(); }
+        jqXHR = dfd = promise = null;
+      });
 
-    return dfd;
+    return promise;
   }
 
   return Api;
