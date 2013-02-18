@@ -72,6 +72,7 @@ define('xdialog', function (require, exports, module) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+          this._oauth_ = null;
         }
         this.destory();
 
@@ -590,7 +591,7 @@ define('xdialog', function (require, exports, module) {
         body: ''
           + '<div class="shadow title"></div>'
           + '<div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div>'
-          + '<p class="center">A utility for hanging out with friends.</p>'
+          + '<p class="center">A utility for gathering with friends.</p>'
           + '<div class="modal-content">'
             + '<p>We save you from calling up every one RSVP, losing in endless emails and messages off the point.</p>'
             + '<p><span class="x">·X·</span> (cross) is a gathering of people, for any purpose. When you get an idea to call up friends to do something together, just <span class="oblique">Gather a <span class="x">·X·</span></span>.</p>'
@@ -637,6 +638,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function (e) {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         // jquery.Event
         // TODO: 临时处理 , 首页 登录窗口
@@ -853,7 +855,7 @@ define('xdialog', function (require, exports, module) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 
@@ -1329,6 +1331,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         this.destory();
       },
@@ -1689,6 +1692,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
+          this.befer = null;
         }
         this.destory();
       },
@@ -1869,6 +1873,7 @@ define('xdialog', function (require, exports, module) {
       onHideAfter: function (e) {
         if (this.befer) {
           this.befer.abort();
+	  this.befer = null;
         }
         this.destory();
       },
@@ -1923,7 +1928,7 @@ define('xdialog', function (require, exports, module) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 
@@ -2300,6 +2305,7 @@ define('xdialog', function (require, exports, module) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+	  this._oauth_ = null;
         }
         this.destory();
       },
@@ -2796,7 +2802,7 @@ define('xdialog', function (require, exports, module) {
       },
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 

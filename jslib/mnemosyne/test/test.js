@@ -3,10 +3,13 @@ define(function (require) {
   var data = JSON.parse(photos);
   var View = require('mnemosyne');
   var view = new View($('.mnemosyne'));
+
+  // view.typesetting.typeset(data.response.photos.length);÷
+
   var slideshow = view.slideshow;
   //console.dir(data.response.photos);
   view.render(data.response.photos);
-  //view.update();
+  view.update();
   $(window).trigger('throttledresize');
 
   $('#retypeset').click(function () {
@@ -20,7 +23,7 @@ define(function (require) {
   });
 
   $('#btn-esc').click(function () {
-    console.log('prev photo');
+    console.log('esc photo');
     slideshow.exit();
   });
 
@@ -37,12 +40,12 @@ define(function (require) {
   });
 
   $('#btn-play').click(function () {
-    console.log('next photo');
+    console.log('play photo');
     slideshow.play();
   });
 
   $('#btn-pause').click(function () {
-    console.log('next photo');
-    slideshow.stop();
+    console.log('stop photo');
+    slideshow.exit();
   });
 });
