@@ -191,8 +191,8 @@ define(function (require, exports, module) {
 
     var renderCrossTime = function(crossTime) {
         var humantime = require('humantime');
-        humantime.printEFTime(crossTime, 'X');
-        return humantime.content;
+        var dspTime   = humantime.printEFTime(crossTime, 'X');
+        return dspTime.content;
     };
 
     var inputPassword = function(result, token) {
@@ -217,6 +217,9 @@ define(function (require, exports, module) {
           +             '<img width="18" height="18" class="loading" src="/static/img/loading.gif" />'
           +         '</div>'
           +         '<div class="error-info"></div>'
+          +         '<div class="set-button">'
+          +             '<button>Done</button>'
+          +         '</div>'
           +         '<div class="done-info">'
           +             '<span class="status">Password set successfully.</span>'
           +             '<span class="redirecting">Redirecting to app in <span class="sec">5</span>s.</span>'
@@ -258,41 +261,61 @@ define(function (require, exports, module) {
         });
         $('#password').bind('keydown', function(event) {
             if (event.which === 13) {
-                $('.loading').show();
-                $('.eye').hide();
-                var password = $('#password').val();
-                if (password.length >= 4) {
-                    $.ajax({
-                        type    : 'post',
-                        url     : config.api_url + '/Users/ResetPassword',
-                        data    : {token : token, password : password},
-                        success : function(data) {
-                            $('.loading').hide();
-                            $('.eye').show();
-                            if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
-                                if (data.response.authorization) {
-                                    $('.done-info').show();
-                                    redirecting('?user_id=' + data.response.authorization.user_id + '&token=' + data.response.authorization.token);
-                                    return;
-                                }
-                            }
-                            $('.error-info').html('Failed to set password. Please try later.').show();
-                        },
-                        error   : function() {
-                            $('.loading').hide();
-                            $('.eye').show();
-                            $('.error-info').html('Failed to set password. Please try later.').show();
-                        }
-                    });
-                } else {
-                    $('.error-info').html('Password must be longer than four!').show();
-                    $('.loading').hide();
-                    $('.eye').show();
-                }
+                submitPassword(token);
             } else {
-                $('.error-info').hide();
+                $('.error-info').html('');
             }
         });
+        $('.set-button button').bind('click', function() {
+            submitPassword(token);
+        });
+    };
+
+    var submitPassword = function(token) {
+        $('.loading').show();
+        $('.eye').hide();
+        var password = $('#password').val();
+        if (password.length >= 4) {
+         // $('#password').prop('disabled', true);
+            $('.set-button button').prop('disabled', true);
+            $('.set-button button').toggleClass('disabled', true);
+            $.ajax({
+                type    : 'post',
+                url     : config.api_url + '/Users/ResetPassword',
+                data    : {token : token, password : password},
+                success : function(data) {
+                    $('.loading').hide();
+                    $('.eye').show();
+                    if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                        if (data.response.authorization) {
+                            $('.error-info').hide();
+                            $('.set-button').hide();
+                            $('.done-info').show();
+                            redirecting('?user_id=' + data.response.authorization.user_id + '&token=' + data.response.authorization.token);
+                            return;
+                        }
+                    }
+                    $('.loading').hide();
+                    $('.eye').show();
+                    $('.error-info').html('Failed to set password. Please try later.').show();
+                 // $('#password').prop('disabled', false);
+                    $('.set-button button').prop('disabled', false);
+                    $('.set-button button').toggleClass('disabled', false);
+                },
+                error   : function() {
+                    $('.loading').hide();
+                    $('.eye').show();
+                    $('.error-info').html('Failed to set password. Please try later.').show();
+                 // $('#password').prop('disabled', false);
+                    $('.set-button button').prop('disabled', false);
+                    $('.set-button button').toggleClass('disabled', false);
+                }
+            });
+        } else {
+            $('.error-info').html('Password must be longer than four!').show();
+            $('.loading').hide();
+            $('.eye').show();
+        }
     };
 
     var verification = function(result) {
