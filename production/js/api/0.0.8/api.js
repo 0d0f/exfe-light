@@ -225,14 +225,16 @@ define('api', function (require) {
       });
 
     promise.jqXHR = jqXHR;
-    promise.abort = function (statusText) { jqXHR.abort(statusText); jqXHR = dfd = promise = null; };
+    promise.abort = function (statusText) { 
+      if (jqXHR) {
+        jqXHR.abort(statusText);
+        jqXHR = dfd = promise = null;
+      }
+    };
     promise
       .done(done)
       .fail(fail)
-      .always(function () {
-        if (jqXHR) { jqXHR.abort(); }
-        jqXHR = dfd = promise = null;
-      });
+      .always(function () { jqXHR = dfd = promise = null; });
 
     return promise;
   }
