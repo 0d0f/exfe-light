@@ -458,7 +458,7 @@ define('mnemosyne', function (require) {
       e.preventDefault();
       var $photo = $(this);
 
-      alert(1)
+      alert(2)
       if (!_this.resizestatus) {
         _this.resizestatus = true;
         $WIN.trigger('debouncedresize.mnemosyne');
