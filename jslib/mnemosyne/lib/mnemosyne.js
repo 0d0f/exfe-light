@@ -7,7 +7,8 @@ define('mnemosyne', function (require) {
       $proxy = $.proxy,
       $WIN = $(window),
       $DOC = $(document),
-      getComputedStyle = function (elem, property) { window.getComputedStyle(elem, null).getPropertyValue(property); };
+      getComputedStyle = function (elem, property) { window.getComputedStyle(elem, null).getPropertyValue(property); },
+      isTouch = 'ontouchstart' in document.documentElement;
 
   var max = Math.max,
       min = Math.min,
@@ -456,10 +457,14 @@ define('mnemosyne', function (require) {
     // Gallery Photo clicked
     _$root.on('click.mnemosyne', photo_selector, function (e) {
       e.preventDefault();
-      e.stopPropagation();
-      var $photo = $(this);
+      // if (isTouch) return;
+      var $photo = $(this), t = $photo.data('event');
 
-      alert(2)
+      if (t) {
+        $photo.removeData('event')
+        return;
+      }
+
       if (!_this.resizestatus) {
         _this.resizestatus = true;
         $WIN.trigger('debouncedresize.mnemosyne');
@@ -470,11 +475,10 @@ define('mnemosyne', function (require) {
     })
       .on('hover.mnemosyne', photo_selector, function (e) {
         e.preventDefault();
-        e.stopPropagation();
-        alert(1)
         var $photo = $(this), xy = $photo.attr('data-xy').split(','),
             isMouseEnter = e.type === 'mouseenter',
             transform = 'translate3d(' + xy[0] + 'px, ' + xy[1] + 'px, 0px)' + (isMouseEnter ? ' scale(1.01)' : '');
+        $photo.data('event', e.type);
         getComputedStyle(this, 'webkitTransform');
         $photo.css('-webkit-transform', transform);
         $photo.toggleClass('photo-hover', isMouseEnter);
