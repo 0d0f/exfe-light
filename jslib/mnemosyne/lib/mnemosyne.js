@@ -454,8 +454,9 @@ define('mnemosyne', function (require) {
         photo_selector = '.gallery .photos-list .photo';
 
     // Gallery Photo clicked
-    _$root.on('click.mnemosyne', '.gallery .photos-list .photo', function (e) {
+    _$root.on('click.mnemosyne', photo_selector, function (e) {
       e.preventDefault();
+      e.stopPropagation();
       var $photo = $(this);
 
       alert(2)
@@ -467,8 +468,9 @@ define('mnemosyne', function (require) {
       // $photo.trigger('mouseleave.mnemosyne');
       // _this.emit('photo-show', $photo);
     })
-      .on('hover.mnemosyne', '.gallery .photos-list .photo', function (e) {
+      .on('hover.mnemosyne', photo_selector, function (e) {
         e.preventDefault();
+        e.stopPropagation();
         alert(1)
         var $photo = $(this), xy = $photo.attr('data-xy').split(','),
             isMouseEnter = e.type === 'mouseenter',
