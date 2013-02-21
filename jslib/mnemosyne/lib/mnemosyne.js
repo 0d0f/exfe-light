@@ -458,6 +458,7 @@ define('mnemosyne', function (require) {
       e.preventDefault();
       var $photo = $(this);
 
+      alert(1)
       if (!_this.resizestatus) {
         _this.resizestatus = true;
         $WIN.trigger('debouncedresize.mnemosyne');
@@ -468,6 +469,7 @@ define('mnemosyne', function (require) {
     })
       .on('hover.mnemosyne', photo_selector, function (e) {
         e.preventDefault();
+        alert(1)
         var $photo = $(this), xy = $photo.attr('data-xy').split(','),
             isMouseEnter = e.type === 'mouseenter',
             transform = 'translate3d(' + xy[0] + 'px, ' + xy[1] + 'px, 0px)' + (isMouseEnter ? ' scale(1.01)' : '');
