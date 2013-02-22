@@ -566,7 +566,7 @@ ExfeeWidget = {
             objIdentity.external_username = string.replace(/@facebook$/ig, '');
             objIdentity.name              = objIdentity.external_username;
             objIdentity.provider          = 'facebook';
-        } else if (/^\+[0-9]{5,15}$/.test(string)) {
+        } else if ((phone = string.replace(/\-|\(|\)|\ /g, '')) && /^\+[0-9]{5,15}$/.test(phone)) {
             objIdentity.external_id       = string;
             objIdentity.external_username = string;
             objIdentity.name              = string.replace(/^\+.*(.{4})$/, '$1');
@@ -589,6 +589,11 @@ ExfeeWidget = {
         switch (identity ? identity.provider : '') {
             case 'email':
             case 'phone':
+                if (/^\+1.{10}$/.test(identity.external_id)) {
+                    return identity.external_id.replace(/^(\+1)(.{3})(.{3})(.{4})$/, '$1 ($2) $3-$4');
+                } else if (/^\+86.{11}$/.test(identity.external_id)) {
+                    return identity.external_id.replace(/^(\+86)(.{3})(.{4})(.{4})$/, '$1 $2 $3 $4');
+                }
                 return identity.external_id;
             case 'twitter':
                 return '@' + identity.external_username + (shortStyle ? '' : '@twitter');
