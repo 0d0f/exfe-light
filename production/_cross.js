@@ -566,6 +566,11 @@ ExfeeWidget = {
             objIdentity.external_username = string.replace(/@facebook$/ig, '');
             objIdentity.name              = objIdentity.external_username;
             objIdentity.provider          = 'facebook';
+        } else if (/^\+[0-9]{5,15}$/.test(string)) {
+            objIdentity.external_id       = string;
+            objIdentity.external_username = string;
+            objIdentity.name              = string.replace(/\+/, '');
+            objIdentity.provider          = 'phone';
         } else {
             return null;
         }
@@ -583,6 +588,7 @@ ExfeeWidget = {
     displayIdentity : function(identity, shortStyle) {
         switch (identity ? identity.provider : '') {
             case 'email':
+            case 'phone':
                 return identity.external_id;
             case 'twitter':
                 return '@' + identity.external_username + (shortStyle ? '' : '@twitter');
