@@ -15,11 +15,11 @@ html, body {
 }
 
 .gallery {
-	-webkit-perspective: 1800px;
-	-moz-perspective: 1800px;
-	-ms-perspective: 1800px;
-	-o-perspective: 1800px;
-	perspective: 1800px;
+	-webkit-perspective: 1800;
+	-moz-perspective: 1800;
+	-ms-perspective: 1800;
+	-o-perspective: 1800;
+	perspective: 1800;
 
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
@@ -38,6 +38,8 @@ html, body {
   -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
+
+	-webkit-backface-visibility: hidden;
 
 	position: absolute;
   top: 0;
@@ -68,11 +70,11 @@ html, body {
 	-o-transform: translateZ(0px);
 	transform: translateZ(0px);
 
-	-webkit-transition: -webkit-transform .5s ease-in-out;
-	-moz-transition: -webkit-transform .5s ease-in-out;
-	-ms-transition: -webkit-transform .5s ease-in-out;
-	-o-transition: -webkit-transform .5s ease-in-out;
-	transition: -webkit-transform .5s ease-in-out;
+	-webkit-transition: -webkit-transform .5s ease-in-out 0;
+	-moz-transition: -moz-transform .5s ease-in-out 0;
+	-ms-transition: -ms-transform .5s ease-in-out 0;
+	-o-transition: -o-transform .5s ease-in-out 0;
+	transition: transform .5s ease-in-out 0;
 
 	position: relative;
 	height: 100%;
@@ -114,28 +116,37 @@ html, body {
   -ms-transform-style: preserve-3d;
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
+
+	background: rgba(255, 255, 255, .05);
+	box-shadow: 0 0 1px 1px rgba(255, 255, 255, .12) inset;
+	-webkit-transition: all .3s ease-in-out 0;
+	-moz-transition: all .3s ease-in-out 0;
 	/*background: blue;*/
 
 	/*-webkit-transition: -webkit-transform 144ms ease-in-out;*/
 }
 
 .photo-trans {
-	-webkit-transition: all .15s ease-in-out;
-	-moz-transition: all .15s ease-in-out;
+	-webkit-transition: all .15s ease-in-out 0;
+	-moz-transition: all .15s ease-in-out 0;
 }
 
 .photo-meta {
+  display: -webkit-box; // safari
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
 	position: relative;
   width: 100%;
-  height: 30px;
+  height: 0;
   font-size: 13px;
   line-height: 30px;
-  padding: 3px 0;
   color: #808080;
-  display: none;
   opacity: 0;
-  -webkit-transition: opacity .15s ease-in-out;
-  -moz-transition: opacity .15s ease-in-out;
+  -webkit-transition: height .3s ease-in-out 0, opacity .3s ease-in-out 0;
+  -moz-transition: height .3s ease-in-out 0, opacity .3s ease-in-out 0;
   overflow: hidden;
 }
 
@@ -172,12 +183,11 @@ html, body {
 .figure {
 	position: relative;
   display: block;
+	width: 100%;
 	margin: 0;
 	background: rgba(255, 255, 255, .05);
 	overflow: hidden;
-  -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .12) inset;
 	-webkit-transition: all .15s ease-in-out;
-  -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, .12) inset;
 	-moz-transition: all .15s ease-in-out;
 }
 
@@ -193,34 +203,17 @@ html, body {
   z-index: 2;
 }
 
-.photo-scale {
-	width: 100%;
-	height: 100%;
-	-webkit-transform: scale(1);
-	-webkit-transition: all .15s ease-in-out;
-	-moz-transform: scale(1);
-	-moz-transition: all .15s ease-in-out;
-}
-.photo-hover .photo-scale {
+.photo-hover {
 	background: rgba(255, 255, 255, .9);
   -webkit-box-shadow: 0 1px 12px rgba(0, 0, 0, .4);
-	-webkit-transform: scale(1.01);
   -moz-box-shadow: 0 1px 12px rgba(0, 0, 0, .4);
-	-moz-transform: scale(1.01);
+	box-shadow: 0px 1px 12px rgba(0, 0, 0, .4);
 }
 
 .photo-hover .photo-meta {
-  display: -webkit-box; // safari
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flex;
-  display: -o-flex;
-  display: flex;
+	height: 30px;
+  padding: 3px 0;
   opacity: 1;
-}
-
-.photo-hover figure {
- 	-webkit-box-shadow: 0 0 0 1px rgba(255,255,255,0.12) inset, 0 1px 0 rgba(255,255,255,0.2) inset;
 }
 
 .photo-hover figure:before {
@@ -231,7 +224,12 @@ html, body {
 	left: 0;
 	bottom: 0;
 	background: rgba(255, 255, 255, .05);
+	box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, .12) inset;
 	z-index: 2;
+}
+
+.photo-hover figure img {
+ 	-webkit-box-shadow: 0 0 0 1px rgba(255, 255, 255, .12) inset, 0 1px 0 rgba(255, 255, 255, .2) inset;
 }
 
 .slideshow {
