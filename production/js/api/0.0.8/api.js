@@ -81,8 +81,6 @@ define('api', function (require) {
     avatarUpdate: '/Avatar/update',
 
     // Cross Token
-    // ep:
-    //  http -f post api.local.exfe.com/v2/crosses/GetCrossByInvitationToken?token="249ceff8cbdc3fd20ce95ea391739b59" invitation_token="d8983af0ff726256851e0a4e5c41d6db"
     getCrossByInvitationToken: '/Crosses/getCrossByInvitationToken',
 
     // Resolve Token
@@ -227,14 +225,16 @@ define('api', function (require) {
       });
 
     promise.jqXHR = jqXHR;
-    promise.abort = function (statusText) { jqXHR.abort(statusText); jqXHR = dfd = promise = null; };
+    promise.abort = function (statusText) { 
+      if (jqXHR) {
+        jqXHR.abort(statusText);
+        jqXHR = dfd = promise = null;
+      }
+    };
     promise
       .done(done)
       .fail(fail)
-      .always(function () {
-        if (jqXHR) { jqXHR.abort(); }
-        jqXHR = dfd = promise = null;
-      });
+      .always(function () { jqXHR = dfd = promise = null; });
 
     return promise;
   }

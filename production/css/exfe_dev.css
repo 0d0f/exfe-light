@@ -9634,10 +9634,6 @@ body {
   right: 4px;
 }
 
-.x-profile {
-  margin-bottom: 50px;
-}
-
 .x-profile .gr-a {
   width: 493px;
   padding-left: 40px;
@@ -11509,4 +11505,8 @@ body {
   -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
      -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
           box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+#app-main {
+  margin-bottom: 100px;
 }

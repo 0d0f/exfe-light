@@ -81,8 +81,6 @@ define('api', function (require) {
     avatarUpdate: '/Avatar/update',
 
     // Cross Token
-    // ep:
-    //  http -f post api.local.exfe.com/v2/crosses/GetCrossByInvitationToken?token="249ceff8cbdc3fd20ce95ea391739b59" invitation_token="d8983af0ff726256851e0a4e5c41d6db"
     getCrossByInvitationToken: '/Crosses/getCrossByInvitationToken',
 
     // Resolve Token
@@ -199,41 +197,46 @@ define('api', function (require) {
   var defaultOptions = {
     type: 'GET',
     dataType: 'JSON',
+    timeout: 3777,
+    cache: false,
     // cors: Cross Origin Resource Share
     xhrFields: { withCredentials: true }
   };
 
   function _ajax(options, done, fail) {
-    var o = {}, dfd;
+    var o = {}, dfd, promise, jqXHR;
 
     _extend(o, defaultOptions);
 
     _extend(o, options);
 
-    // return jqXHR
-    dfd = $.ajax(o);
-    dfd.then(
-          // done filter
-          function (data) {
-            var code = data && data.meta && data.meta.code;
-            if (200 === code) {
-              return data.response;
-            }
-            else {
-              return $.Deferred().reject(data);
-            }
-          }
-        /* Response Fail.
-        , function (data) {
-            return {
-            }
-          }
-        */
-      )
-      .done(done)
-      .fail(fail);
+    dfd = $.Deferred();
+    promise = dfd.promise();
 
-    return dfd;
+    jqXHR = $.ajax(o)
+      .done(function (data, statusText, jqXHR) {
+        var code = data && data.meta && data.meta.code;
+        if (200 === code) {
+          dfd.resolve(data.response, statusText, jqXHR);
+        }
+        else {
+          dfd.reject(data, statusText, jqXHR);
+        }
+      });
+
+    promise.jqXHR = jqXHR;
+    promise.abort = function (statusText) { 
+      if (jqXHR) {
+        jqXHR.abort(statusText);
+        jqXHR = dfd = promise = null;
+      }
+    };
+    promise
+      .done(done)
+      .fail(fail)
+      .always(function () { jqXHR = dfd = promise = null; });
+
+    return promise;
   }
 
   return Api;
