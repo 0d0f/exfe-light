@@ -569,7 +569,7 @@ ExfeeWidget = {
         } else if (/^\+[0-9]{5,15}$/.test(string)) {
             objIdentity.external_id       = string;
             objIdentity.external_username = string;
-            objIdentity.name              = string.replace(/\+/, '');
+            objIdentity.name              = string.replace(/^\+.*(.{4})$/, '$1');
             objIdentity.provider          = 'phone';
         } else {
             return null;
@@ -782,7 +782,7 @@ ExfeeWidget = {
         ).toggleClass(
             'icon16-exfee-plus',     !bolCorrect
         );
-        this.checkComplete(objInput, strTail.replace(/^@/, ''));
+        this.checkComplete(objInput, strTail.replace(/^@|^\+/, ''));
     },
 
 
