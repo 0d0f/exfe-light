@@ -1923,18 +1923,19 @@ define(function (require, exports, module) {
 
     var lastConvUpdate = '';
 
-    var ShowTimeline = function(timeline) {
+    var ShowTimeline = function(timeline, notification) {
         Timeline = timeline;
         for (var i = Timeline.length - 1; i >= 0; i--) {
             if (!i) {
                 lastConvUpdate = Timeline[i].created_at;
             }
-            ShowMessage(Timeline[i]);
+            ShowMessage(Timeline[i], notification);
         }
     };
 
 
-    var ShowMessage = function(message) {
+    var ShowMessage = function(message, notification) {
+        var txtMessage = ExfeUtilities.escape(message.content).replace(/\r\n|\n\r|\r|\n/g, "\n");
         var strMessage = '<div class="avatar-comment">'
                        +   '<span class="pull-left avatar">'
                        +     '<img alt="" src="' + message.by_identity.avatar_filename + '" width="40" height="40" />'
@@ -1950,6 +1951,15 @@ define(function (require, exports, module) {
                        +   '</div>'
                        + '</div>';
         $('.conversation-timeline').prepend(strMessage);
+        if (notification && window.webkitNotifications) {
+            if (window.webkitNotifications.checkPermission() === 0) {
+                // 0 is PERMISSION_ALLOWED
+                window.webkitNotifications.createNotification(
+                    null, 'EXFE - ' + Cross.title,
+                    message.by_identity.name + ': ' + txtMessage
+                ).show();
+            }
+        }
     };
 
 
@@ -2071,7 +2081,7 @@ define(function (require, exports, module) {
 
     var ConvTimer = null;
 
-    var RawGetTimeline = function() {
+    var RawGetTimeline = function(notification) {
         var args = {resources : {exfee_id : Exfee.id}};
         if (lastConvUpdate) {
             args['params'] = {updated_at : lastConvUpdate};
@@ -2079,10 +2089,14 @@ define(function (require, exports, module) {
         Api.request(
             'conversation', args,
             function(data) {
-                ShowTimeline(data.conversation);
+                ShowTimeline(data.conversation, notification);
             }
         );
     };
+
+    var RtGetTimeline = function() {
+        RawGetTimeline(true);
+    }
 
     var GetTimeline = function() {
         if (readOnly) {
@@ -2096,7 +2110,7 @@ define(function (require, exports, module) {
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
         RawGetTimeline();
-        ConvTimer = setInterval(RawGetTimeline, 233 * 1000);
+        ConvTimer = setInterval(RtGetTimeline, 233 * 1000);
     };
 
 
@@ -2213,8 +2227,7 @@ define(function (require, exports, module) {
                            description : Cross.place.description,
                            lat         : Cross.place.lat,
                            lng         : Cross.place.lng,
-                           updated_at  : Cross.place.updated_at
-                          },
+                           updated_at  : Cross.place.updated_at},
             background  : Cross.widget[0].image
         });
     };
@@ -2248,6 +2261,11 @@ define(function (require, exports, module) {
     // init api
     window.Store = require('store');
     window.Api   = require('api');
+
+    // init notification
+    if (window.webkitNotifications) {
+        window.webkitNotifications.requestPermission();
+    }
 
     var HumanTime = require('humantime');
 
