@@ -272,6 +272,7 @@ define(function (require, exports, module) {
     };
 
     var submitPassword = function(token) {
+            console.log(token);
         $('.loading').show();
         $('.eye').hide();
         var password = $('#password').val();
