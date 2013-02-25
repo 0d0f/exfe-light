@@ -163,6 +163,30 @@ ExfeeCache = {
                 || matchString(key, identity.name);
         };
         var arrCatched = [];
+        if (/^[0-9]{5,15}$/.test(key)) {
+            var name = key.replace(/^\+.*(.{4})$/, '$1');
+            var id   = '';
+            if (key.length === 11) {
+                id   = '+86' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    type              : 'identity'
+                });
+            }
+            id   = '+1' + key;
+            arrCatched.push({
+                id                : 0,
+                name              : name,
+                external_id       : id,
+                external_username : id,
+                provider          : 'phone',
+                type              : 'identity'
+            });
+        }
         key = key.toLowerCase();
         for (var i = 0; i < this.identities.length; i++) {
             if (matchIdentity(key, this.identities[i])
