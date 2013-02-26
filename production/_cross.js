@@ -2288,7 +2288,7 @@ define(function (require, exports, module) {
 
     // init notification
     if (window.webkitNotifications) {
-        window.webkitNotifications.requestPermission();
+        window.webkitNotifications.requestPermission(function() {});
     }
 
     var HumanTime = require('humantime');
