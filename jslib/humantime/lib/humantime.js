@@ -517,7 +517,8 @@ HumanTime.printEFTime = function (eft, type, funs) {
         tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
         ctz = getTimezone(now);
         if (tz !== ctz) {
-          output.content += ' (' + ctz + ')';
+          var abbr = getTimezoneAbbreviation(now);
+          output.content += ' (' + ctz + (abbr && (' ' + abbr)) + ')';
         }
       }
     }
@@ -528,18 +529,25 @@ HumanTime.printEFTime = function (eft, type, funs) {
 
 // get locale timezone
 var getTimezone = HumanTime.getTimezone = function (date) {
-  var offset, h, m, a, abbr;
+  var offset, h, m, a;
   if (!date) { date = new Date(); }
   offset = date.getTimezoneOffset();
-  // http://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html
-  // http://yuilibrary.com/yui/docs/api/files/date_js_date-format.js.html#l124
-  // abbreviation
-  abbr = date.toString().replace(/^.*:\d\d( GMT[+-]\d+)? \(?([A-Za-z ]+)\)?\d*$/, "$2").replace(/[a-z ]/g, "");
   a = offset <= 0 ? '+' : '-';
   offset = Math.abs(offset);
   h = floor(offset / 60);
   m = offset - h * 60;
-  return a + lead0(h) + ':' + lead0(m) + (3 === abbr.length ? ' ' + abbr : '');
+  return a + lead0(h) + ':' + lead0(m);
+};
+
+// get timezone abbreviation
+var getTimezoneAbbreviation = function (date) {
+  var abbr;
+  if (!date) { date = new Date(); }
+  // http://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html
+  // http://yuilibrary.com/yui/docs/api/files/date_js_date-format.js.html#l124
+  // abbreviation
+  abbr = date.toString().replace(/^.*:\d\d( GMT[+-]\d+)? \(?([A-Za-z ]+)\)?\d*$/, "$2").replace(/[a-z ]/g, "");
+  return 3 === abbr.length ? abbr : '';
 };
 
 HumanTime.createEFTime = function () {
