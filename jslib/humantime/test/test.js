@@ -498,5 +498,26 @@ define(function (require) {
       var a = printEFTime(eft);
       console.log(a);
     });
+
+    it('`date` = 2013-03-01, `time` = 18:00:00', function () {
+      var eft = {
+          begin_at: {
+            date_word: "", 
+            date: "2013-03-01",
+            time_word: "",
+            time: "18:00:00",
+            timezone: "+08:00 CST",
+            id: 0,
+            type: "EFTime"
+          },
+          id: 0,
+          origin: "2013-03-01 13:00",
+          outputformat: 0,
+          type: "CrossTime"
+        };
+      var now = new Date();
+      var a = printEFTime(eft);
+      console.log(a);
+    });
   });
 });
