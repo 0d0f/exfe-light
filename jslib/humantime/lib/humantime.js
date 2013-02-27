@@ -21,7 +21,8 @@ var ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 var N2 = 0.2
   , N9 = 0.9999
-  , N6 = 6e4;
+  , N6 = 6e4
+  , D = 8.64e7;
 
 var DATEOUTPUTFORMATS = [];
 
@@ -183,7 +184,8 @@ HumanTime.diff = function (distanceTime) {
     , m = floor(ms / N6)
     , days, months, years, hours, minutes, day
     , output = { date: {} }
-    , date = output.date;
+    , date = output.date
+    , _days = distanceTime.days;
 
   date.isToday = distanceTime.isToday
 
@@ -209,8 +211,8 @@ HumanTime.diff = function (distanceTime) {
   else if (m < -1439) {
     output.token = 1;
     //days = floor(-m / 1440 + N9);
-    days = floor((-m + 1439) / 1440);
     //days = floor((-m - 1) / 1440 + 1);
+    days = -_days < 3 ? -_days : floor((-m + 1439) / 1440);
   }
 
   // m <= -108
@@ -279,10 +281,9 @@ HumanTime.diff = function (distanceTime) {
   //}
 
   // 2880 m <= x <= 43199 m
-  else if (m < 42300) {
+  else if (m < 43200) {
     output.token = 12;
-    //days = floor(m / 1440 + N9);
-    days = floor((m + 1439) / 1440);
+    days = _days < 3 ? _days : floor((m + 1439) / 1440);
     day = t.getDay();
   }
 
@@ -308,7 +309,7 @@ HumanTime.diff = function (distanceTime) {
 
   if (minutes) { date.minutes = minutes; }
 
-  if (day) { date.day = day; }
+  if ('undefined' !== typeof day) { date.day = day; }
 
   return output;
 };
@@ -338,6 +339,13 @@ HumanTime.distanceOfTime = function (t, s) {
     s.setMilliseconds(0);
   }
 
+  var ty = t.getFullYear(),
+      tm = t.getMonth(),
+      td = t.getDate(),
+      sy = s.getFullYear(),
+      sm = s.getMonth(),
+      sd = s.getDate();
+
   return {
       // target datetime
       target: t
@@ -346,9 +354,11 @@ HumanTime.distanceOfTime = function (t, s) {
       // millseconds
     , distance: +t - +s
 
-    , isToday: (t.getFullYear() === s.getFullYear())
-        && (t.getMonth() === s.getMonth())
-        && (t.getDate() === s.getDate())
+    , days: (+new Date(ty, tm, td) - +new Date(sy, sm, sd)) / D
+
+    , isToday: (ty === sy)
+        && (tm === sm)
+        && (td === sd)
     };
 };
 
@@ -446,18 +456,15 @@ var FUNS = {
 
 // EFTime display
 HumanTime.printEFTime = function (eft, type, funs) {
-  var opt = eft.outputformat
-    , ba = eft.begin_at
-    , isX = 'X' === type
-    , output = {
-        title: ''
-      , content: ''
-      }
-    , origin
-    , t
-    , d
-    , now = new Date()
-    , tz;
+  var opt = eft.outputformat,
+      ba = eft.begin_at,
+      isX = 'X' === type,
+      output = {
+        title: '',
+        content: ''
+      },
+      now = new Date(),
+      origin, t, d, tz, ctz;
 
   if (opt) {
     origin = eft.origin
@@ -508,8 +515,9 @@ HumanTime.printEFTime = function (eft, type, funs) {
 
       if (ba.timezone) {
         tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
-        if (tz !== getTimezone(now)) {
-          output.content += ' (' + ba.timezone + ')';
+        ctz = getTimezone(now);
+        if (tz !== ctz) {
+          output.content += ' (' + ctz + ')';
         }
       }
     }
@@ -520,14 +528,18 @@ HumanTime.printEFTime = function (eft, type, funs) {
 
 // get locale timezone
 var getTimezone = HumanTime.getTimezone = function (date) {
-  var offset, h, m, a;
+  var offset, h, m, a, abbr;
   if (!date) { date = new Date(); }
   offset = date.getTimezoneOffset();
+  // http://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html
+  // http://yuilibrary.com/yui/docs/api/files/date_js_date-format.js.html#l124
+  // abbreviation
+  abbr = date.toString().replace(/^.*:\d\d( GMT[+-]\d+)? \(?([A-Za-z ]+)\)?\d*$/, "$2").replace(/[a-z ]/g, "");
   a = offset <= 0 ? '+' : '-';
   offset = Math.abs(offset);
   h = floor(offset / 60);
   m = offset - h * 60;
-  return a + lead0(h) + ':' + lead0(m);
+  return a + lead0(h) + ':' + lead0(m) + (3 === abbr.length ? ' ' + abbr : '');
 };
 
 HumanTime.createEFTime = function () {
