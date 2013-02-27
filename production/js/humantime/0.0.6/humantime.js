@@ -1,3 +1,4 @@
+define('humantime', function (require, exports, module) {
 /**
  * Humantime.js
  * Relative/absolute time.
@@ -627,3 +628,6 @@ var lead0 = HumanTime.lead0 = function (n, p) {
 , floor = function (n) {
     return n - n % 1;
   };
+
+return HumanTime;
+});
