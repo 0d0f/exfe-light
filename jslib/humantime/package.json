@@ -1,10 +1,10 @@
 {
   "name": "humantime",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Human Time: relative or absolute time.",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-01-24T19:13:57 UTC+0800",
+  "date": "2013-02-27T14:55:02 UTC+0800",
   "module": {
     "header": "define('humantime', function (require, exports, module) {\n",
     "footer": "\nreturn HumanTime;\n});"

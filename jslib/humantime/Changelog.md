@@ -1,3 +1,9 @@
+* v0.0.6 2013-02-27T14:54:41 UTC+0800
+  - Changes
+    * getTimezone, get abbreviation
+  - Bugs Fix
+    * EFTime display, timezone bug
+
 * v0.0.5 2013-01-24T19:13:13 UTC+0800
   * Bugs Fix
     * 相对 days token-12

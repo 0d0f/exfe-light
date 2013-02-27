@@ -456,18 +456,15 @@ var FUNS = {
 
 // EFTime display
 HumanTime.printEFTime = function (eft, type, funs) {
-  var opt = eft.outputformat
-    , ba = eft.begin_at
-    , isX = 'X' === type
-    , output = {
-        title: ''
-      , content: ''
-      }
-    , origin
-    , t
-    , d
-    , now = new Date()
-    , tz;
+  var opt = eft.outputformat,
+      ba = eft.begin_at,
+      isX = 'X' === type,
+      output = {
+        title: '',
+        content: ''
+      },
+      now = new Date(),
+      origin, t, d, tz, ctz;
 
   if (opt) {
     origin = eft.origin
@@ -518,8 +515,9 @@ HumanTime.printEFTime = function (eft, type, funs) {
 
       if (ba.timezone) {
         tz = ba.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, '$1');
-        if (tz !== getTimezone(now)) {
-          output.content += ' (' + ba.timezone + ')';
+        ctz = getTimezone(now);
+        if (tz !== ctz) {
+          output.content += ' (' + ctz + ')';
         }
       }
     }
@@ -530,14 +528,18 @@ HumanTime.printEFTime = function (eft, type, funs) {
 
 // get locale timezone
 var getTimezone = HumanTime.getTimezone = function (date) {
-  var offset, h, m, a;
+  var offset, h, m, a, abbr;
   if (!date) { date = new Date(); }
   offset = date.getTimezoneOffset();
+  // http://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html
+  // http://yuilibrary.com/yui/docs/api/files/date_js_date-format.js.html#l124
+  // abbreviation
+  abbr = date.toString().replace(/^.*:\d\d( GMT[+-]\d+)? \(?([A-Za-z ]+)\)?\d*$/, "$2").replace(/[a-z ]/g, "");
   a = offset <= 0 ? '+' : '-';
   offset = Math.abs(offset);
   h = floor(offset / 60);
   m = offset - h * 60;
-  return a + lead0(h) + ':' + lead0(m);
+  return a + lead0(h) + ':' + lead0(m) + (3 === abbr.length ? ' ' + abbr : '');
 };
 
 HumanTime.createEFTime = function () {
