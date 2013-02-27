@@ -14,6 +14,10 @@ define(function (require, exports, module) {
 
     var lastBreathe = +new Date;
 
+    var trim = function(string) {
+        return string ? string.replace(/^\s+|\s+$/g, '') : '';
+    };
+
     var setBtnPos = function(banner) {
         var height = window.innerHeight;
         if (height > 460) {
@@ -23,7 +27,7 @@ define(function (require, exports, module) {
         }
         $('html').css('min-height', height + 'px');
         $('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
-        $('.actions').css('top', (height - 86 - (banner ? 50 : 0)) + 'px');
+        $('.actions').css('top',  (height - 86 - (banner ? 50 : 0)) + 'px');
         $('.big-x').css('height', (height - 86 - (banner ? 50 : 0)) + 'px');
         if (navigator.userAgent.match(/iPad/)) {
             $('.redirecting').unbind('click').bind('click', function() {
@@ -209,7 +213,7 @@ define(function (require, exports, module) {
           +     '<div class="verify-actions">'
           +         '<div class="identity">'
           +             '<img class="avatar" width="40" height="40" src="" />'
-          +             '<span class="name"></span>'
+          +             '<input type="text" class="name" id="name" placeholder="Set EXFE User Name" />'
           +         '</div>'
           +         '<div>'
           +             '<input type="password" id="password" placeholder="Set EXFE Password" />'
@@ -248,7 +252,7 @@ define(function (require, exports, module) {
             success : function(data) {
                 if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
                     $('.identity .avatar').attr('src', data.response.user.avatar_filename);
-                    $('.identity .name').html(data.response.user.name);
+                    $('.identity .name').val(data.response.user.name);
                     return;
                 }
                 // error getting user informations
@@ -272,9 +276,9 @@ define(function (require, exports, module) {
     };
 
     var submitPassword = function(token) {
-            console.log(token);
         $('.loading').show();
         $('.eye').hide();
+        var name     = trim($('#name').val());
         var password = $('#password').val();
         if (password.length >= 4) {
          // $('#password').prop('disabled', true);
@@ -283,7 +287,9 @@ define(function (require, exports, module) {
             $.ajax({
                 type    : 'post',
                 url     : config.api_url + '/Users/ResetPassword',
-                data    : {token : token, password : password},
+                data    : {token    : token,
+                           name     : name,
+                           password : password},
                 success : function(data) {
                     $('.loading').hide();
                     $('.eye').show();
