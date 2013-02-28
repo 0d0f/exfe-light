@@ -4,13 +4,20 @@ define(function (require) {
   var View = require('mnemosyne');
   var view = new View($('.mnemosyne'));
 
-  // view.typesetting.typeset(data.response.photos.length);÷
-
   var slideshow = view.slideshow;
   //console.dir(data.response.photos);
   view.render(data.response.photos);
   view.update();
   $(window).trigger('throttledresize');
+  view.lazyLoad();
+  // view.typesetting.typeset(data.response.photos.length);÷
+  $('.mnemosyne').animate({
+    opacity: 1
+  }, 1000, function () {
+    //$('.mnemosyne .gallery').scrollLeft(24);
+    $('.mnemosyne .gallery').trigger('scroll');
+  });
+
 
   $('#retypeset').click(function () {
     view.reTypeset();
