@@ -1,3 +1,7 @@
+* v0.1.3 2013-02-28T13:06:21 UTC+0800
+  - Changes
+    * added `flickr` `instagram` `dropbox` providers
+
 * v0.1.2 2013-01-17T21:31:59 UTC+0800
   - Changes
     * `purpose` replaced `intent`

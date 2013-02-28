@@ -1,4 +1,6 @@
 define(function (require, exports, module) {
+  "use strict";
+
   var $ = require('jquery');
   var Store = require('store');
   var Config = require('config');
@@ -123,11 +125,9 @@ define(function (require, exports, module) {
     return Handlebars.helpers['if'].call(this, title.length, options);
   });
 
-  Handlebars.registerHelper('ifOauthVerifying', function (provider, status, options) {
-    var context_t = provider === 'twitter' && status === 'VERIFYING';
-    var context_f = provider === 'facebook' && status === 'VERIFYING';
-    var context = context_t || context_f;
-    return Handlebars.helpers['if'].call(this, context, options, options);
+  Handlebars.registerHelper('ifOauthVerifying', function (status, options) {
+    var context = status === 'VERIFYING';
+    return Handlebars.helpers['if'].call(this, context, options);
   });
 
   Handlebars.registerHelper('makeDefault', function (def, status, options) {
@@ -181,9 +181,10 @@ define(function (require, exports, module) {
         ++total_connected;
       }
 
-      if (v.provider === 'email' || v.provider === 'twitter' || v.provider === 'facebook') {
+      console.log(v.provider);
+      //if (v.provider === 'email' || v.provider === 'twitter' || v.provider === 'facebook') {
         return true;
-      }
+      //}
     });
 
     // 必须至少一个 `CONNECTED` identity 才能添加身份
@@ -608,7 +609,7 @@ define(function (require, exports, module) {
       , status = $li.data('status')
       , editable = $li.data('editable');
 
-    if ('twitter facebook google'.indexOf(provider) !== -1) {
+    if ('twitter facebook google flickr instagram dropbox'.indexOf(provider) !== -1) {
       $li.find('.isOAuth').removeClass('hide');
     } else if (editable) {
       var value = $.trim(that.text());
