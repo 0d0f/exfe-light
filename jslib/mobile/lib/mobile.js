@@ -136,7 +136,7 @@ define(function (require, exports, module) {
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
-          +         '<div class="inviter">invited by <span class="inviter_highlight">Steve</span></div>'
+          +         '<div class="inviter"><span class="inviter_highlight">Steve</span> invites you</div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
@@ -160,24 +160,7 @@ define(function (require, exports, module) {
           +                 '</tr>'
           +             '</table>'
           +         '</div>'
-          +         '<div class="exfee">'
-          +             '<table>'
-          +                 '<tr>'
-          +                     '<td><div class="portrait me"></div><div class="portrait_myrsvp"></div><div class="myname">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"><div class="portrait_mate">+1</div></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                 '</tr>'
-          +                 '<tr>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
-          +                 '</tr>'
-          +             '</table>'
-          +         '</div>'
+          +         '<div class="exfee"><table><tr></tr></table></div>'
           +     '</div>'
           + '</div>'
           + '<footer>'
@@ -238,6 +221,7 @@ define(function (require, exports, module) {
                     // render place
                     $('.place_area .place_major').html(escape(data.response.cross.place.title));
                     $('.place_area .place_minor').html(escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>'));
+                    $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false)');
                     // render background
                     var background = 'default.jpg';
                     for (var i = 0; i < data.response.cross.widget.length; i++) {
@@ -262,13 +246,90 @@ define(function (require, exports, module) {
                         Store.set('cats', cats);
                     }
                     // render exfee
-                    for (var i in data.response.cross.exfee.invitations) {
+                    $('.inviter').hide();
+                    var idMyInv = -1;
+                    var stype   = '';
+                    for (i in data.response.cross.exfee.invitations) {
                         if (user_id
                          && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
-                            $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name).show();
+                            idMyInv = i;
+                            $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].by_identity.name));
+                            $('.inviter').show();
+                            switch (data.response.cross.exfee.invitations[i].rsvp_status) {
+                                case 'ACCEPTED':
+                                    stype = 'accepted';
+                                    break;
+                                case 'DECLINED':
+                                    stype = 'declined';
+                                    break;
+                                default:
+                                    stype = 'pending';
+                            }
+                            $('.exfee table tbody tr').first().append(
+                                '<td>'
+                              +     '<div class="portrait me" style="background: url('
+                              +         data.response.cross.exfee.invitations[i].identity.avatar_filename
+                              +         '); background-size: 50px 50px;">'
+                              +         (data.response.cross.exfee.invitations[i].mates
+                                      ? ('<div class="portrait_mate">+'
+                                      + data.response.cross.exfee.invitations[i].mates
+                                      + '</div>') : '')
+                              +     '</div>'
+                              +     '<div class="portrait_rsvp_me ' + stype + '">'
+                              +     '</div>'
+                              +     '<div class="name_me">'
+                              +         escape(data.response.cross.exfee.invitations[i].identity.name)
+                              +     '</div>'
+                              + '</td>'
+                            );
                             break;
                         }
-                        $('.base-info .by').hide();
+                    }
+                    var orderRsvp = ['ACCEPTED', 'INTERESTED', 'NORESPONSE', 'IGNORED', 'DECLINED'];
+                    var domTr     = null;
+                    for (i in orderRsvp) {
+                        for (var j in data.response.cross.exfee.invitations) {
+                            if (data.response.cross.exfee.invitations[j].rsvp_status !== orderRsvp[i]) {
+                                //////////////////continue;
+                            }
+                            switch (data.response.cross.exfee.invitations[j].rsvp_status) {
+                                case 'ACCEPTED':
+                                    stype = 'accepted';
+                                    break;
+                                case 'DECLINED':
+                                    stype = 'declined';
+                                    break;
+                                default:
+                                    stype = 'pending';
+                            }
+                            domTr = $('.exfee table tbody tr').last();
+                            if (domTr.children().length === 5) {
+                                $('.exfee table tbody').append('<tr></tr>');
+                            }
+                            domTr = $('.exfee table tbody tr').last();
+                            domTr.append(
+                                '<td>'
+                              +     '<div class="portrait" style="background: url('
+                              +         data.response.cross.exfee.invitations[j].identity.avatar_filename
+                              +         '); background-size: 50px 50px;">'
+                              +         (data.response.cross.exfee.invitations[j].mates
+                                       ? ('<div class="portrait_mate">+'
+                                       + data.response.cross.exfee.invitations[j].mates
+                                       + '</div>') : '')
+                              +     '</div>'
+                              +     '<div class="portrait_rsvp ' + stype + '">'
+                              +     '</div>'
+                              +     '<div class="name">'
+                              +         escape(data.response.cross.exfee.invitations[j].identity.name)
+                              +     '</div>'
+                              + '</td>'
+                            );
+                        }
+                    }
+                    domTr = $('.exfee table tr').last();
+                    count = 5 - domTr.children().length;
+                    for (i = 0; i < count; i++) {
+                        domTr.append('<td></td>');
                     }
                     // redirecting
                     var args = null;
