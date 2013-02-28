@@ -136,7 +136,7 @@ define(function (require, exports, module) {
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
-          +         '<div class="inviter"><span class="inviter_highlight">Steve</span> invites you</div>'
+          +         '<div class="inviter"><span class="inviter_highlight"></span> invites you</div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
@@ -171,21 +171,6 @@ define(function (require, exports, module) {
           +     '</div>'
           + '</footer>'
 
-          //   '<div class="top-banner">'
-          // +     '<div class="center">'
-          // +         '<div class="welcome">Welcome to <span class="exfe">EXFE</span></div>'
-          // +         '<div class="exfe-logo">'
-          // +             '<img src="/static/img/exfe.png" width="30" height="30" />'
-          // +         '</div>'
-          // +     '</div>'
-          // + '</div>'
-          // + '<div class="dialog-box">'
-          // +     '<div class="base-info"><span class="by"></span> sends you an invitation, engage in easily with <span class="exfe">EXFE</span> app.</div>'
-          // +     '<div class="cross">'
-          // +         '<div class="title"></div>'
-          // +         '<div class="time"></div>'
-          // +         '<div class="place"></div>'
-          // +     '</div>'
           // +     '<div class="actions">'
           // +         '<div class="get-button">'
           // +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
@@ -193,7 +178,6 @@ define(function (require, exports, module) {
           // +         '</div>'
           // +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           // +     '</div>'
-          // + '</div>'
         );
         setBtnPos(true);
         var cats = Store.get('cats');
