@@ -368,14 +368,16 @@ textarea {
  * Remove most spacing between table cells.
  */
 
-
-@iconSpritePath:          "/static/img/icons.png";
-
-
 table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+/* ==========================================================================
+   EXFE App
+   ========================================================================== */
+
+@iconSpritePath:          "/static/img/icons.png";
 
 html, body {
   height: 100%;
@@ -383,7 +385,18 @@ html, body {
 }
 
 body {
+    font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+body.home, body.verify {
     #gradient > .vertical(#88A9CB, #1C2732);
+}
+
+body.x {
+    background: url(/static/img/pattern.png) #eee;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-transform: translateZ(0);
 }
 
 // Gradients
@@ -483,7 +496,7 @@ body {
     background-image: -moz-linear-gradient(90deg, #cccccc 0%, #fafafa 100%);
     border-radius: 3px;
     box-shadow: 0px 1px 1px rgba(0,0,0,0.35);
-    font: bold 20px/44px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    font: bold 20px/44px;
     color: #333;
     text-shadow: 0 1px 1px #ffffff;
     text-align: center;
@@ -718,8 +731,13 @@ button .exfe {
   right: 5px;
 }
 
-.icon16-pass-show                 { background-position: 5  * -16px -26px }
-.icon16-pass-hide                 { background-position: 6  * -16px -26px }
+.icon16-pass-show {
+    background-position: 5  * -16px -26px;
+}
+
+.icon16-pass-hide {
+    background-position: 6  * -16px -26px;
+}
 
 .loading {
     float: right;
@@ -729,3 +747,361 @@ button .exfe {
     display: none;
 }
 
+// cross {
+
+.redirecting {
+    width: 100%;
+    height: 20px;
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: #ccc;
+    text-align: center;
+    line-height: 20px;
+    font-size: 11px;
+    font-weight: lighter;
+    z-index: 10;
+}
+
+
+.exfe_blue2 {
+    color: #3784d5;
+}
+
+.exfe_blue3 {
+    color: #60adff;
+}
+
+.content {
+    width: 320px;
+    margin: 0 auto;
+    background-color: #fafafa;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+footer {
+    -webkit-box-flex: 1;
+    position: relative;
+    margin-bottom: 0;
+    width: 100%;
+    min-height: 100px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    background: url(/static/img/pattern.png) #4f565d;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-transform: translateZ(0);
+}
+
+.footer-wrap {
+    -webkit-box-flex: 1;
+    position: relative;
+    width: 320px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.footer_frame {
+    position: absolute;
+    margin: 0 auto;
+    width: 290px;
+    min-height: 100px;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    padding: 0 15px;
+}
+
+.title_area {
+    height:100px;
+    width: 100%;
+    background-size: 100% auto;
+    position: relative;
+    color: white;
+}
+
+.title_overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.title_text {
+    position: absolute;
+    width: 290px;
+    top: 30px;
+    text-align: center;
+    z-index: 1;
+    color: white;
+    font-size: 20px;
+    margin-right: 15px;
+    margin-left: 15px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    font: 500 20px/24px "HelveticaNeue-Medium";
+}
+
+.inviter {
+    height: 21px;
+    color: white;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    z-index: 2;
+    font-size: 14px;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    line-height: 21px;
+    background: url(/static/img/ribbon.png) 100%;
+    background-size: auto 30px;
+    padding: 0 20px 0 15px;
+    font-weight: lighter;
+    text-shadow: 0 0 3px white;
+    background-size: auto 21px;
+}
+
+.inviter span {
+    font-weight: bold;
+}
+
+.inf_area {
+    width: 29 0px;
+    height: 100%;
+    background-color: #fafafa;
+    padding: 15px;
+    padding-top: 8px;
+}
+
+.description {
+    width: 290px;
+    color: #333;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.exfee {
+    margin-top: 16px;
+        -webkit-transform: translateZ(0);
+}
+
+.exfee td {
+    width: 50px;
+    height: 60px;
+    border-collapse: collapse;
+    padding: 4px;
+    position: relative;
+
+}
+
+.exfee .portrait {
+    width: 50px;
+    height: 50px;
+    background-color: #c3c7d1;
+    border-radius: 3px;
+    box-shadow:
+                inset 0 0px 0px 1px rgba(0,0,0,0.18),
+                inset 0 1px 0px 1px rgba(255,255,255,0.2),
+                inset 0 -2px 1px rgba(0,0,0,0.1),
+                inset 0 0px 0px 2px rgba(255,255,255,0.2),
+                0 1px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+}
+
+.exfee .me {
+    border-radius: 50px;
+}
+
+.portrait_myrsvp {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    right: -1px;
+    bottom: 15px;
+    background: url(/static/img/myrsvp_accpted.png) no-repeat;
+    background-size: 26px;
+}
+
+.portrait_rsvp {
+    height: 5px;
+    width: 5px;
+    background-color: #548bea;
+    border: 1px solid white;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    position: absolute;
+    top: 54px;
+}
+
+.myname {
+    width: 50px;
+    height: 16px;
+    font-size: 12px;
+    color: #333;
+    position: absolute;
+    top: 50px;
+    text-align: center;
+}
+
+.exfee .name {
+    width: 44px;
+    height: 16px;
+    font-size: 11px;
+    color: #333;
+    position: absolute;
+    margin-left: 9px;
+    top: 51px;
+
+}
+
+.exfee table {
+    width: 298px;
+    border-collapse: collapse;
+    left: -4px;
+    position: relative;
+}
+
+.portrait_mate {
+    height: 11px;
+    width: 16px;
+    background-color: rgba(50, 50, 50, 0.75);
+    position: absolute;
+    right: 0;
+    border-radius: 0 3px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 9px;
+    text-align: center;
+}
+
+.portrait_mate::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: -1px;
+    bottom: -1px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 0 4px;
+
+}
+
+.time_area, .place_area {
+    width: 290px;
+    margin-top: 16px;
+}
+
+.time_major, .place_major {
+    color: #3a6ea5;
+    font: 500 21px/24px "HelveticaNeue-Medium";
+}
+
+.time_minor, .place_minor {
+    font-size: 14px;
+    color: #333;
+    margin-top: 2px;
+    line-height: 16px;
+}
+
+.map {
+    height: 100px;
+    width: 290px;
+    margin-top: 16px;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px 1px rgba(0, 0, 0, 0.15);
+    background-image: url(map.png);
+    background-size: 200%;
+}
+
+
+.rsvp_toolbar {
+    width: 286px;
+    height: 50px;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px white, 0 1px 7px rgba(0, 0, 0, 0.8);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.499, rgba(255, 255, 255, 0)), color-stop(0.5, rgba(255, 255, 255, 0.05)), to(rgba(255, 255, 255, 0.1))), -webkit-gradient(linear, left bottom, left top, from(#000000), to(#7f7f7f));
+    background-image: -moz-linear-gradient(90deg, rgba(255, 255, 255, 0) 49.9%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.1) 100%), -moz-linear-gradient(90deg, #000000 0%, #8e8e8e 100%);
+    position: relative;
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -webkit-transform-origin: 10px 50px;
+    z-index: 10;
+}
+
+.rsvp_toolbar_off {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    -webkit-transform: scale(0.1) translate(0px,100px) rotate(-10deg);
+}
+
+.rsvp_toolbar table {
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.rsvp_toolbar td {
+    width: 98px;
+    height: 15px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    padding-top: 32px;
+    background: no-repeat 50% 5px;
+    background-size: 26px;
+}
+
+.rsvp_toolbar td:active {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.rsvp_toolbar .tri {
+    height: 16px;
+    width: 24px;
+    background: url(/static/img/tri.png) no-repeat;
+    position: absolute;
+    top: 100%;
+    left: 12px;
+    background-size: 24px;
+}
+
+.rsvp_toolbar td:nth-child(n+1) {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.rsvp_toolbar .accepted {
+    background-image: url(/static/img/accepted.png);
+}
+
+.rsvp_toolbar .unavailable {
+    background-image: url(/static/img/unavailable.png);
+}
+
+.rsvp_toolbar .pending {
+    background-image: url(/static/img/pending.png);
+}
+
+.btn_w {
+    width: 290px;
+    height: 44px;
+    margin-top: 30px;
+    border-radius: 3px;
+    border-style: none;
+    font: 500 16px "HelveticaNeue-Medium";
+    -moz-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    background-image: -moz-linear-gradient(90deg, rgba(238, 238, 238, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(238, 238, 238, 0.9)), to(rgba(255, 255, 255, 0.9)));
+    color: #333;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5),;
+}
+
+// cross }

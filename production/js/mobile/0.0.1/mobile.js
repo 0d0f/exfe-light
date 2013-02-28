@@ -56,7 +56,15 @@ define(function (require, exports, module) {
         }, 1000);
     };
 
+    var styleBody = function(page) {
+        var pages = ['home', 'x', 'verify'];
+        for (var i in pages) {
+            $('body').toggleClass(pages[i], pages[i] === page);
+        }
+    };
+
     var home = function(showerror) {
+        styleBody('home');
         $('#app-main').html(
             '<div class="dialog-box">'
           +     '<div class="big-x">'
@@ -82,11 +90,12 @@ define(function (require, exports, module) {
     };
 
     var showAppInStore = function() {
-        window.location = 'itms://itunes.apple.com/us/app/facebook/id514026604';
+        window.location = 'itms://itunes.apple.com/us/app/exfe/id514026604';
     };
 
     var launchApp = function(args) {
-        window.location = 'exfe://crosses/' + (args ? args : '');
+        // @todo ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // window.location = 'exfe://crosses/' + (args ? args : '');
     };
 
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
@@ -111,31 +120,97 @@ define(function (require, exports, module) {
         launchApp(args);
     };
 
+    var escape = function(html, encode) {
+        return html
+              .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
+    };
+
     var cross = function(token) {
+        styleBody('x');
         $('#app-main').html(
-            '<div class="top-banner">'
-          +     '<div class="center">'
-          +         '<div class="welcome">Welcome to <span class="exfe">EXFE</span></div>'
-          +         '<div class="exfe-logo">'
-          +             '<img src="/static/img/exfe.png" width="30" height="30" />'
+            '<div class="redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in 3s.</div>'
+          + '<div class="content">'
+          +     '<div class="title_area">'
+          +         '<div class="title_text"></div>'
+          +         '<div class="inviter">invited by <span class="inviter_highlight">Steve</span></div>'
+          +         '<div class="title_overlay"></div>'
+          +     '</div>'
+          +     '<div class="inf_area">'
+          +         '<div class="description"></div>'
+          +         '<div class="time_area">'
+          +             '<div class="time_major"></div>'
+          +             '<div class="time_minor"></div>'
+          +         '</div>'
+          +         '<div class="place_area">'
+          +             '<div class="place_major"></div>'
+          +             '<div class="place_minor"></div>'
+          +             '<div class="map"></div>'
+          +         '</div>'
+          +         '<div class="rsvp_toolbar">'
+          +             '<div class="tri"></div>'
+          +             '<table>'
+          +                 '<tr>'
+          +                     '<td class="accepted">I\'m in</td>'
+          +                     '<td class="unavailable">Unavailable</td>'
+          +                     '<td class="pending">Pending</td>'
+          +                 '</tr>'
+          +             '</table>'
+          +         '</div>'
+          +         '<div class="exfee">'
+          +             '<table>'
+          +                 '<tr>'
+          +                     '<td><div class="portrait me"></div><div class="portrait_myrsvp"></div><div class="myname">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"><div class="portrait_mate">+1</div></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                 '</tr>'
+          +                 '<tr>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                     '<td><div class="portrait"></div><div class="portrait_rsvp"></div><div class="name">Dzinlife</div></td>'
+          +                 '</tr>'
+          +             '</table>'
           +         '</div>'
           +     '</div>'
           + '</div>'
-          + '<div class="dialog-box">'
-          +     '<div class="base-info"><span class="by"></span> sends you an invitation, engage in easily with <span class="exfe">EXFE</span> app.</div>'
-          +     '<div class="cross">'
-          +         '<div class="title"></div>'
-          +         '<div class="time"></div>'
-          +         '<div class="place"></div>'
-          +     '</div>'
-          +     '<div class="actions">'
-          +         '<div class="get-button">'
-          +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
-          +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
+          + '<footer>'
+          +     '<div class="footer-wrap">'
+          +         '<div class="footer_frame">'
+          +             '<button class="btn_w">Get <span class="exfe_blue2">EXFE</span> app free</button>'
           +         '</div>'
-          +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +     '</div>'
-          + '</div>'
+          + '</footer>'
+
+          //   '<div class="top-banner">'
+          // +     '<div class="center">'
+          // +         '<div class="welcome">Welcome to <span class="exfe">EXFE</span></div>'
+          // +         '<div class="exfe-logo">'
+          // +             '<img src="/static/img/exfe.png" width="30" height="30" />'
+          // +         '</div>'
+          // +     '</div>'
+          // + '</div>'
+          // + '<div class="dialog-box">'
+          // +     '<div class="base-info"><span class="by"></span> sends you an invitation, engage in easily with <span class="exfe">EXFE</span> app.</div>'
+          // +     '<div class="cross">'
+          // +         '<div class="title"></div>'
+          // +         '<div class="time"></div>'
+          // +         '<div class="place"></div>'
+          // +     '</div>'
+          // +     '<div class="actions">'
+          // +         '<div class="get-button">'
+          // +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
+          // +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
+          // +         '</div>'
+          // +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
+          // +     '</div>'
+          // + '</div>'
         );
         setBtnPos(true);
         var cats = Store.get('cats');
@@ -152,9 +227,30 @@ define(function (require, exports, module) {
             data    : submitData,
             success : function(data) {
                 if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
-                    $('.cross .title').html(data.response.cross.title);
-                    $('.cross .time').html(renderCrossTime(data.response.cross.time));
-                    $('.cross .place').html(data.response.cross.place.title);
+                    // render title
+                    $('.title_area  .title_text').html(escape(data.response.cross.title));
+                    // render description
+                    $('.inf_area   .description').html(escape(data.response.cross.description));
+                    // render time
+                    var time = renderCrossTime(data.response.cross.time);
+                    $('.time_area   .time_major').html(escape(time.title));
+                    $('.time_area   .time_minor').html(escape(time.content));
+                    // render place
+                    $('.place_area .place_major').html(escape(data.response.cross.place.title));
+                    $('.place_area .place_minor').html(escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>'));
+                    // render background
+                    var background = 'default.jpg';
+                    for (var i = 0; i < data.response.cross.widget.length; i++) {
+                        if (data.response.cross.widget[i].type === 'Background') {
+                            background = data.response.cross.widget[i].image;
+                            break;
+                        }
+                    }
+                    $('.title_area').css(
+                        'background',
+                        'url(/static/img/xbg/' + background + ') no-repeat 50% 50%'
+                    );
+
                     var user_id = 0;
                     if (data.response.authorization) {
                         user_id = data.response.authorization.user_id;
@@ -173,15 +269,16 @@ define(function (require, exports, module) {
                         }
                         $('.base-info .by').hide();
                     }
+                    var args = null;
                     if (typeof data.response.authorization !== 'undefined') {
                         Store.set('authorization', data.response.authorization);
-                        var args = data.response.cross.id
-                                 + '?user_id='     + user_id
-                                 + '&token='       + data.response.authorization.token
-                                 + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
-                        redirecting(args);
-                        return;
+                        args = data.response.cross.id
+                             + '?user_id='     + user_id
+                             + '&token='       + data.response.authorization.token
+                             + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
                     }
+                    redirecting(args);
+                    return;
                 }
                 // 处理失败
                 home(true);
@@ -196,10 +293,11 @@ define(function (require, exports, module) {
     var renderCrossTime = function(crossTime) {
         var humantime = require('humantime');
         var dspTime   = humantime.printEFTime(crossTime, 'X');
-        return dspTime.content;
+        return dspTime;
     };
 
     var inputPassword = function(result, token) {
+        styleBody('verify');
         $('#app-main').html(
             '<div class="top-banner">'
           +     '<div class="center">'
@@ -326,6 +424,7 @@ define(function (require, exports, module) {
     };
 
     var verification = function(result) {
+        styleBody('verify');
         $('#app-main').html(
               '<div class="top-banner">'
           +     '<div class="center">'
