@@ -900,7 +900,6 @@ footer {
   width: 50px;
   height: 50px;
   overflow: hidden;
-  background-color: #c3c7d1;
   border-radius: 3px;
   box-shadow: inset 0 0 0px 1px rgba(0, 0, 0, 0.18), inset 0 1px 0px 1px rgba(255, 255, 255, 0.2), inset 0 -2px 1px rgba(0, 0, 0, 0.1), inset 0 0px 0px 2px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.15);
 }
@@ -909,14 +908,25 @@ footer {
   border-radius: 50px;
 }
 
-.portrait_myrsvp {
+.portrait_rsvp_me {
   position: absolute;
   right: -1px;
   bottom: 15px;
   width: 26px;
   height: 26px;
-  background: url(/static/img/myrsvp_accpted.png) no-repeat;
   background-size: 26px;
+}
+
+.portrait_rsvp_me.accepted {
+  background: url(/static/img/myrsvp_accpted.png) no-repeat;
+}
+
+.portrait_rsvp_me.pending {
+  background: url(/static/img/myrsvp_pending.png) no-repeat;
+}
+
+.portrait_rsvp_me.declined {
+  background: url(/static/img/myrsvp_unavailable.png) no-repeat;
 }
 
 .portrait_rsvp {
@@ -924,13 +934,24 @@ footer {
   top: 54px;
   width: 5px;
   height: 5px;
-  background-color: #548bea;
   border: 1px solid white;
   border-radius: 6px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
 
-.myname {
+.portrait_rsvp.accepted {
+  background-color: #548bea;
+}
+
+.portrait_rsvp.pending {
+  background-color: #bbbbbb;
+}
+
+.portrait_rsvp.declined {
+  background-color: #e52e53;
+}
+
+.exfee .name_me {
   position: absolute;
   top: 50px;
   width: 50px;
@@ -1005,8 +1026,7 @@ footer {
   width: 290px;
   height: 100px;
   margin-top: 16px;
-  background-image: url(map.png);
-  background-size: 200%;
+  background-size: 100%;
   border-radius: 6px;
   box-shadow: inset 0 1px 2px 1px rgba(0, 0, 0, 0.15);
 }
