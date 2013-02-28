@@ -2,6 +2,8 @@
  * A collection of helpers for Handlebars.js
  */
 define(function (require) {
+  "use strict";
+
   var R = require('rex');
   var Handlebars = require('handlebars');
 
@@ -30,7 +32,7 @@ define(function (require) {
 
   // Check identity's provider is an OAuth identity.
   Handlebars.registerHelper('isOAuthIdentity', function (provider, options) {
-    var context = -1 !== 'twitter facebook google'.indexOf(provider);
+    var context = -1 !== 'twitter facebook google flickr instagram dropbox'.indexOf(provider);
     return Handlebars.helpers['if'].call(this, context, options);
   });
 
