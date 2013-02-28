@@ -1,3 +1,7 @@
+* v0.0.7 2013-02-28T17:15:51 UTC+0800
+  - Bugs Fix
+    * used google-map-v3 LatLng#lat(), LatLng#lng()
+
 * v0.0.6 2013-01-24T02:03:17 UTC+0800
   - New Features
     * added `external_id` `provider`
