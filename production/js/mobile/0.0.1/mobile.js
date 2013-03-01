@@ -136,7 +136,7 @@ define(function (require, exports, module) {
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
-          +         '<div class="inviter"><span class="inviter_highlight">Steve</span> invites you</div>'
+          +         '<div class="inviter"><span class="inviter_highlight"></span> invites you</div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
@@ -171,21 +171,6 @@ define(function (require, exports, module) {
           +     '</div>'
           + '</footer>'
 
-          //   '<div class="top-banner">'
-          // +     '<div class="center">'
-          // +         '<div class="welcome">Welcome to <span class="exfe">EXFE</span></div>'
-          // +         '<div class="exfe-logo">'
-          // +             '<img src="/static/img/exfe.png" width="30" height="30" />'
-          // +         '</div>'
-          // +     '</div>'
-          // + '</div>'
-          // + '<div class="dialog-box">'
-          // +     '<div class="base-info"><span class="by"></span> sends you an invitation, engage in easily with <span class="exfe">EXFE</span> app.</div>'
-          // +     '<div class="cross">'
-          // +         '<div class="title"></div>'
-          // +         '<div class="time"></div>'
-          // +         '<div class="place"></div>'
-          // +     '</div>'
           // +     '<div class="actions">'
           // +         '<div class="get-button">'
           // +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
@@ -193,7 +178,6 @@ define(function (require, exports, module) {
           // +         '</div>'
           // +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           // +     '</div>'
-          // + '</div>'
         );
         setBtnPos(true);
         var cats = Store.get('cats');
@@ -213,15 +197,40 @@ define(function (require, exports, module) {
                     // render title
                     $('.title_area  .title_text').html(escape(data.response.cross.title));
                     // render description
-                    $('.inf_area   .description').html(escape(data.response.cross.description));
+                    $('.inf_area   .description').html(escape(data.response.cross.description).replace(/\r\n|\r|\n/g, '<br>'));
                     // render time
-                    var time = renderCrossTime(data.response.cross.time);
-                    $('.time_area   .time_major').html(escape(time.title));
-                    $('.time_area   .time_minor').html(escape(time.content));
+                    var timeTitle   = 'Sometime';
+                    var timeContent = 'To be decided';
+                    if (data.response.cross.time
+                     && data.response.cross.time.begin_at
+                     && data.response.cross.time.begin_at.origin
+                     && data.response.cross.time.begin_at.timezone) {
+                        var time    = renderCrossTime(data.response.cross.time);
+                        timeTitle   = escape(time.title);
+                        timeContent = escape(time.content);
+                    }
+                    $('.time_area   .time_major').html(timeTitle);
+                    $('.time_area   .time_minor').html(timeContent);
                     // render place
-                    $('.place_area .place_major').html(escape(data.response.cross.place.title));
-                    $('.place_area .place_minor').html(escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>'));
-                    $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false)');
+                    var placeTitle  = 'Somewhere';
+                    var placeDesc   = 'To be decided';
+                    if (data.response.cross.place) {
+                        if (data.response.cross.place.title) {
+                            placeTitle = escape(data.response.cross.place.title);
+                            placeDesc  = escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>');
+                        }
+                    }
+                    $('.place_area .place_major').html(placeTitle);
+                    $('.place_area .place_minor').html(placeDesc);
+                    if (data.response.cross.place.lat
+                     && data.response.cross.place.lng) {
+                        var scale = typeof window.devicePixelRatio !== 'undefined'
+                             && window.devicePixelRatio <= 2
+                              ? window.devicePixelRatio  : 1;
+                        $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false&scale=' + scale + ')');
+                    } else {
+                        $('.place_area .map').hide();
+                    }
                     // render background
                     var background = 'default.jpg';
                     for (var i = 0; i < data.response.cross.widget.length; i++) {
