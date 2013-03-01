@@ -299,7 +299,7 @@ define(function (require, exports, module) {
                     for (i in orderRsvp) {
                         for (var j in data.response.cross.exfee.invitations) {
                             if (data.response.cross.exfee.invitations[j].rsvp_status !== orderRsvp[i]) {
-                                //////////////////continue;
+                                continue;
                             }
                             switch (data.response.cross.exfee.invitations[j].rsvp_status) {
                                 case 'ACCEPTED':
