@@ -43,6 +43,8 @@ define(function (require, exports, module) {
     };
 
     var redirecting = function(args) {
+      ///////////////////////////////////////////////
+      return;
         $('.redirecting').show();
         rdTime = setInterval(function() {
             var sec = ~~$('.redirecting .sec').html() - 1;
@@ -94,8 +96,7 @@ define(function (require, exports, module) {
     };
 
     var launchApp = function(args) {
-        // @todo ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        // window.location = 'exfe://crosses/' + (args ? args : '');
+        window.location = 'exfe://crosses/' + (args ? args : '');
     };
 
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
@@ -132,7 +133,7 @@ define(function (require, exports, module) {
     var cross = function(token) {
         styleBody('x');
         $('#app-main').html(
-            '<div class="redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in 3s.</div>'
+            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in 3s.</div>'
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
@@ -279,13 +280,13 @@ define(function (require, exports, module) {
                               +     '<div class="portrait me" style="background: url('
                               +         data.response.cross.exfee.invitations[i].identity.avatar_filename
                               +         '); background-size: 50px 50px;">'
-                              +         (data.response.cross.exfee.invitations[i].mates
-                                      ? ('<div class="portrait_mate">+'
-                                      + data.response.cross.exfee.invitations[i].mates
-                                      + '</div>') : '')
                               +     '</div>'
                               +     '<div class="portrait_rsvp_me ' + stype + '">'
                               +     '</div>'
+                              +     (data.response.cross.exfee.invitations[i].mates
+                                  ? ('<div class="portrait_mymate">+'
+                                  + data.response.cross.exfee.invitations[i].mates
+                                  + '</div>') : '')
                               +     '<div class="name_me">'
                               +         escape(data.response.cross.exfee.invitations[i].identity.name)
                               +     '</div>'
@@ -298,8 +299,9 @@ define(function (require, exports, module) {
                     var domTr     = null;
                     for (i in orderRsvp) {
                         for (var j in data.response.cross.exfee.invitations) {
-                            if (data.response.cross.exfee.invitations[j].rsvp_status !== orderRsvp[i]) {
-                                //////////////////continue;
+                            if (data.response.cross.exfee.invitations[j].rsvp_status !== orderRsvp[i]
+                             || idMyInv == j) {
+                                continue;
                             }
                             switch (data.response.cross.exfee.invitations[j].rsvp_status) {
                                 case 'ACCEPTED':
@@ -580,6 +582,12 @@ define(function (require, exports, module) {
             }
         });
     };
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 0);
+    });
 
     if (sms_token) {
         switch (sms_token.action) {
