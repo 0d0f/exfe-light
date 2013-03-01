@@ -197,15 +197,40 @@ define(function (require, exports, module) {
                     // render title
                     $('.title_area  .title_text').html(escape(data.response.cross.title));
                     // render description
-                    $('.inf_area   .description').html(escape(data.response.cross.description));
+                    $('.inf_area   .description').html(escape(data.response.cross.description).replace(/\r\n|\r|\n/g, '<br>'));
                     // render time
-                    var time = renderCrossTime(data.response.cross.time);
-                    $('.time_area   .time_major').html(escape(time.title));
-                    $('.time_area   .time_minor').html(escape(time.content));
+                    var timeTitle   = 'Sometime';
+                    var timeContent = 'To be decided';
+                    if (data.response.cross.time
+                     && data.response.cross.time.begin_at
+                     && data.response.cross.time.begin_at.origin
+                     && data.response.cross.time.begin_at.timezone) {
+                        var time    = renderCrossTime(data.response.cross.time);
+                        timeTitle   = escape(time.title);
+                        timeContent = escape(time.content);
+                    }
+                    $('.time_area   .time_major').html(timeTitle);
+                    $('.time_area   .time_minor').html(timeContent);
                     // render place
-                    $('.place_area .place_major').html(escape(data.response.cross.place.title));
-                    $('.place_area .place_minor').html(escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>'));
-                    $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false)');
+                    var placeTitle  = 'Somewhere';
+                    var placeDesc   = 'To be decided';
+                    if (data.response.cross.place) {
+                        if (data.response.cross.place.title) {
+                            placeTitle = escape(data.response.cross.place.title);
+                            placeDesc  = escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>');
+                        }
+                    }
+                    $('.place_area .place_major').html(placeTitle);
+                    $('.place_area .place_minor').html(placeDesc);
+                    if (data.response.cross.place.lat
+                     && data.response.cross.place.lng) {
+                        var scale = typeof window.devicePixelRatio !== 'undefined'
+                             && window.devicePixelRatio <= 2
+                              ? window.devicePixelRatio  : 1;
+                        $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false&scale=' + scale + ')');
+                    } else {
+                        $('.place_area .map').hide();
+                    }
                     // render background
                     var background = 'default.jpg';
                     for (var i = 0; i < data.response.cross.widget.length; i++) {
