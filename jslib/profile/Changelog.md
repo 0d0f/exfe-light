@@ -1,3 +1,7 @@
+* v0.1.4 2013-03-02T15:07:56 UTC+0800
+  - Changes
+    * "use strict";
+
 * v0.1.3 2013-02-28T13:06:21 UTC+0800
   - Changes
     * added `flickr` `instagram` `dropbox` providers
