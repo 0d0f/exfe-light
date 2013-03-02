@@ -43,6 +43,8 @@ define(function (require, exports, module) {
     };
 
     var redirecting = function(args) {
+      ///////////////////////////////////////////////
+      return;
         $('.redirecting').show();
         rdTime = setInterval(function() {
             var sec = ~~$('.redirecting .sec').html() - 1;
@@ -56,7 +58,15 @@ define(function (require, exports, module) {
         }, 1000);
     };
 
+    var styleBody = function(page) {
+        var pages = ['home', 'x', 'verify'];
+        for (var i in pages) {
+            $('body').toggleClass(pages[i], pages[i] === page);
+        }
+    };
+
     var home = function(showerror) {
+        styleBody('home');
         $('#app-main').html(
             '<div class="dialog-box">'
           +     '<div class="big-x">'
@@ -82,7 +92,7 @@ define(function (require, exports, module) {
     };
 
     var showAppInStore = function() {
-        window.location = 'itms://itunes.apple.com/us/app/facebook/id514026604';
+        window.location = 'itms://itunes.apple.com/us/app/exfe/id514026604';
     };
 
     var launchApp = function(args) {
@@ -111,31 +121,64 @@ define(function (require, exports, module) {
         launchApp(args);
     };
 
+    var escape = function(html, encode) {
+        return html
+              .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
+    };
+
     var cross = function(token) {
+        styleBody('x');
         $('#app-main').html(
-            '<div class="top-banner">'
-          +     '<div class="center">'
-          +         '<div class="welcome">Welcome to <span class="exfe">EXFE</span></div>'
-          +         '<div class="exfe-logo">'
-          +             '<img src="/static/img/exfe.png" width="30" height="30" />'
+            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in 3s.</div>'
+          + '<div class="content">'
+          +     '<div class="title_area">'
+          +         '<div class="title_text"></div>'
+          +         '<div class="inviter"><span class="inviter_highlight"></span> invites you</div>'
+          +         '<div class="title_overlay"></div>'
+          +     '</div>'
+          +     '<div class="inf_area">'
+          +         '<div class="description"></div>'
+          +         '<div class="time_area">'
+          +             '<div class="time_major"></div>'
+          +             '<div class="time_minor"></div>'
           +         '</div>'
+          +         '<div class="place_area">'
+          +             '<div class="place_major"></div>'
+          +             '<div class="place_minor"></div>'
+          +             '<div class="map"></div>'
+          +         '</div>'
+          +         '<div class="rsvp_toolbar">'
+          +             '<div class="tri"></div>'
+          +             '<table>'
+          +                 '<tr>'
+          +                     '<td class="accepted">I\'m in</td>'
+          +                     '<td class="unavailable">Unavailable</td>'
+          +                     '<td class="pending">Pending</td>'
+          +                 '</tr>'
+          +             '</table>'
+          +         '</div>'
+          +         '<div class="exfee"><table><tr></tr></table></div>'
           +     '</div>'
           + '</div>'
-          + '<div class="dialog-box">'
-          +     '<div class="base-info"><span class="by"></span> sends you an invitation, engage in easily with <span class="exfe">EXFE</span> app.</div>'
-          +     '<div class="cross">'
-          +         '<div class="title"></div>'
-          +         '<div class="time"></div>'
-          +         '<div class="place"></div>'
-          +     '</div>'
-          +     '<div class="actions">'
-          +         '<div class="get-button">'
-          +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
-          +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
+          + '<footer>'
+          +     '<div class="footer-wrap">'
+          +         '<div class="footer_frame">'
+          +             '<button class="btn_w">Get <span class="exfe_blue2">EXFE</span> app free</button>'
           +         '</div>'
-          +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +     '</div>'
-          + '</div>'
+          + '</footer>'
+
+          // +     '<div class="actions">'
+          // +         '<div class="get-button">'
+          // +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
+          // +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
+          // +         '</div>'
+          // +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
+          // +     '</div>'
         );
         setBtnPos(true);
         var cats = Store.get('cats');
@@ -152,9 +195,56 @@ define(function (require, exports, module) {
             data    : submitData,
             success : function(data) {
                 if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
-                    $('.cross .title').html(data.response.cross.title);
-                    $('.cross .time').html(renderCrossTime(data.response.cross.time));
-                    $('.cross .place').html(data.response.cross.place.title);
+                    // render title
+                    $('.title_area  .title_text').html(escape(data.response.cross.title));
+                    // render description
+                    $('.inf_area   .description').html(escape(data.response.cross.description).replace(/\r\n|\r|\n/g, '<br>'));
+                    // render time
+                    var timeTitle   = 'Sometime';
+                    var timeContent = 'To be decided';
+                    if (data.response.cross.time
+                     && data.response.cross.time.begin_at
+                     && data.response.cross.time.begin_at.origin
+                     && data.response.cross.time.begin_at.timezone) {
+                        var time    = renderCrossTime(data.response.cross.time);
+                        timeTitle   = escape(time.title);
+                        timeContent = escape(time.content);
+                    }
+                    $('.time_area   .time_major').html(timeTitle);
+                    $('.time_area   .time_minor').html(timeContent);
+                    // render place
+                    var placeTitle  = 'Somewhere';
+                    var placeDesc   = 'To be decided';
+                    if (data.response.cross.place) {
+                        if (data.response.cross.place.title) {
+                            placeTitle = escape(data.response.cross.place.title);
+                            placeDesc  = escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>');
+                        }
+                    }
+                    $('.place_area .place_major').html(placeTitle);
+                    $('.place_area .place_minor').html(placeDesc);
+                    if (data.response.cross.place.lat
+                     && data.response.cross.place.lng) {
+                        var scale = typeof window.devicePixelRatio !== 'undefined'
+                             && window.devicePixelRatio <= 2
+                              ? window.devicePixelRatio  : 1;
+                        $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false&scale=' + scale + ')');
+                    } else {
+                        $('.place_area .map').hide();
+                    }
+                    // render background
+                    var background = 'default.jpg';
+                    for (var i = 0; i < data.response.cross.widget.length; i++) {
+                        if (data.response.cross.widget[i].type === 'Background') {
+                            background = data.response.cross.widget[i].image;
+                            break;
+                        }
+                    }
+                    $('.title_area').css(
+                        'background',
+                        'url(/static/img/xbg/' + background + ') no-repeat 50% 50%'
+                    );
+                    // get user_id
                     var user_id = 0;
                     if (data.response.authorization) {
                         user_id = data.response.authorization.user_id;
@@ -165,23 +255,104 @@ define(function (require, exports, module) {
                         cats[token] = data.response.cross_access_token;
                         Store.set('cats', cats);
                     }
-                    for (var i in data.response.cross.exfee.invitations) {
+                    // render exfee
+                    $('.inviter').hide();
+                    var idMyInv = -1;
+                    var stype   = '';
+                    for (i in data.response.cross.exfee.invitations) {
                         if (user_id
                          && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
-                            $('.base-info .by').html(data.response.cross.exfee.invitations[i].by_identity.name).show();
+                            idMyInv = i;
+                            $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].by_identity.name));
+                            $('.inviter').show();
+                            switch (data.response.cross.exfee.invitations[i].rsvp_status) {
+                                case 'ACCEPTED':
+                                    stype = 'accepted';
+                                    break;
+                                case 'DECLINED':
+                                    stype = 'declined';
+                                    break;
+                                default:
+                                    stype = 'pending';
+                            }
+                            $('.exfee table tbody tr').first().append(
+                                '<td>'
+                              +     '<div class="portrait me" style="background: url('
+                              +         data.response.cross.exfee.invitations[i].identity.avatar_filename
+                              +         '); background-size: 50px 50px;">'
+                              +     '</div>'
+                              +     '<div class="portrait_rsvp_me ' + stype + '">'
+                              +     '</div>'
+                              +     (data.response.cross.exfee.invitations[i].mates
+                                  ? ('<div class="portrait_mymate">+'
+                                  + data.response.cross.exfee.invitations[i].mates
+                                  + '</div>') : '')
+                              +     '<div class="name_me">'
+                              +         escape(data.response.cross.exfee.invitations[i].identity.name)
+                              +     '</div>'
+                              + '</td>'
+                            );
                             break;
                         }
-                        $('.base-info .by').hide();
                     }
+                    var orderRsvp = ['ACCEPTED', 'INTERESTED', 'NORESPONSE', 'IGNORED', 'DECLINED'];
+                    var domTr     = null;
+                    for (i in orderRsvp) {
+                        for (var j in data.response.cross.exfee.invitations) {
+                            if (data.response.cross.exfee.invitations[j].rsvp_status !== orderRsvp[i]
+                             || idMyInv == j) {
+                                continue;
+                            }
+                            switch (data.response.cross.exfee.invitations[j].rsvp_status) {
+                                case 'ACCEPTED':
+                                    stype = 'accepted';
+                                    break;
+                                case 'DECLINED':
+                                    stype = 'declined';
+                                    break;
+                                default:
+                                    stype = 'pending';
+                            }
+                            domTr = $('.exfee table tbody tr').last();
+                            if (domTr.children().length === 5) {
+                                $('.exfee table tbody').append('<tr></tr>');
+                            }
+                            domTr = $('.exfee table tbody tr').last();
+                            domTr.append(
+                                '<td>'
+                              +     '<div class="portrait" style="background: url('
+                              +         data.response.cross.exfee.invitations[j].identity.avatar_filename
+                              +         '); background-size: 50px 50px;">'
+                              +         (data.response.cross.exfee.invitations[j].mates
+                                       ? ('<div class="portrait_mate">+'
+                                       + data.response.cross.exfee.invitations[j].mates
+                                       + '</div>') : '')
+                              +     '</div>'
+                              +     '<div class="portrait_rsvp ' + stype + '">'
+                              +     '</div>'
+                              +     '<div class="name">'
+                              +         escape(data.response.cross.exfee.invitations[j].identity.name)
+                              +     '</div>'
+                              + '</td>'
+                            );
+                        }
+                    }
+                    domTr = $('.exfee table tr').last();
+                    count = 5 - domTr.children().length;
+                    for (i = 0; i < count; i++) {
+                        domTr.append('<td></td>');
+                    }
+                    // redirecting
+                    var args = null;
                     if (typeof data.response.authorization !== 'undefined') {
                         Store.set('authorization', data.response.authorization);
-                        var args = data.response.cross.id
-                                 + '?user_id='     + user_id
-                                 + '&token='       + data.response.authorization.token
-                                 + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
-                        redirecting(args);
-                        return;
+                        args = data.response.cross.id
+                             + '?user_id='     + user_id
+                             + '&token='       + data.response.authorization.token
+                             + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
                     }
+                    redirecting(args);
+                    return;
                 }
                 // 处理失败
                 home(true);
@@ -196,10 +367,11 @@ define(function (require, exports, module) {
     var renderCrossTime = function(crossTime) {
         var humantime = require('humantime');
         var dspTime   = humantime.printEFTime(crossTime, 'X');
-        return dspTime.content;
+        return dspTime;
     };
 
     var inputPassword = function(result, token) {
+        styleBody('verify');
         $('#app-main').html(
             '<div class="top-banner">'
           +     '<div class="center">'
@@ -326,6 +498,7 @@ define(function (require, exports, module) {
     };
 
     var verification = function(result) {
+        styleBody('verify');
         $('#app-main').html(
               '<div class="top-banner">'
           +     '<div class="center">'
@@ -409,6 +582,12 @@ define(function (require, exports, module) {
             }
         });
     };
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 0);
+    });
 
     if (sms_token) {
         switch (sms_token.action) {

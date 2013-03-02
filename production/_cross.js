@@ -2149,6 +2149,11 @@ define(function (require, exports, module) {
         Exfee             = objCross.exfee;
         readOnly          = read_only;
         savedCross        = summaryCross();
+        if (typeof Cross.time          !== 'undefined'
+         && typeof Cross.time.begin_at !== 'undefined'
+         && !Cross.time.begin_at.timezone) {
+            Cross.time.begin_at.timezone = ExfeUtilities.getTimezone();
+        }
         $('.cross-date  .edit').val(Cross.time.origin);
         $('.cross-place .edit').val(
             Cross.place.title + (Cross.place.description ? ('\n' + Cross.place.description) : '')
