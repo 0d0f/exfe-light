@@ -143,7 +143,7 @@ define(function (require, exports, module) {
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
-          +         '<div class="inviter"><span class="inviter_highlight"></span> invites you</div>'
+          +         '<div class="inviter"><div class="ribbon"></div><span class="inviter_highlight"></span> invites you</div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
@@ -174,7 +174,7 @@ define(function (require, exports, module) {
           +         '<div class="footer_frame">'
           +             '<div class="actions" id="cross_actions">'
           +                 '<div class="get-button">'
-          +                     '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
+          +                     '<button class="btn_w">Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
           +                 '</div>'
           +                 '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +             '</div>'
@@ -237,17 +237,20 @@ define(function (require, exports, module) {
                         var time    = renderCrossTime(data.response.cross.time);
                         timeTitle   = escape(time.title);
                         timeContent = escape(time.content);
+                    } else {
+                        $('.time_area .time_minor').toggleClass('time_tobe', true);
                     }
                     $('.time_area   .time_major').html(timeTitle);
                     $('.time_area   .time_minor').html(timeContent);
                     // render place
                     var placeTitle  = 'Somewhere';
                     var placeDesc   = 'To be decided';
-                    if (data.response.cross.place) {
-                        if (data.response.cross.place.title) {
-                            placeTitle = escape(data.response.cross.place.title);
-                            placeDesc  = escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>');
-                        }
+                    if (data.response.cross.place
+                     && data.response.cross.place.title) {
+                        placeTitle = escape(data.response.cross.place.title);
+                        placeDesc  = escape(data.response.cross.place.description).replace(/\r\n|\r|\n/g, '<br>');
+                    } else {
+                        $('.place_area .place_minor').toggleClass('place_tobe', true);
                     }
                     $('.place_area .place_major').html(placeTitle);
                     $('.place_area .place_minor').html(placeDesc);
