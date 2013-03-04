@@ -377,6 +377,21 @@ table {
    EXFE App
    ========================================================================== */
 
+.size(@height, @width) {
+  width: @width;
+  height: @height;
+}
+
+.rotate(@degrees) {
+  -webkit-transform: rotate(@degrees);
+     -moz-transform: rotate(@degrees);
+      -ms-transform: rotate(@degrees);
+       -o-transform: rotate(@degrees);
+          transform: rotate(@degrees);
+}
+
+@import "../../exfe/lib/angle.less";
+
 @iconSpritePath:          "/static/img/icons.png";
 
 html, body {
@@ -880,6 +895,12 @@ footer {
     color: #333;
     font-size: 14px;
     line-height: 17px;
+    position: relative;
+    overflow: hidden;
+}
+
+.description.limit {
+    height: 70px;
 }
 
 .exfee {
@@ -1092,7 +1113,7 @@ footer {
 }
 
 .rsvp_toolbar td {
-    width: 98px;
+    width: 140px;
     height: 15px;
     font-size: 12px;
     color: white;
@@ -1132,6 +1153,27 @@ footer {
     background-image: url(/static/img/pending.png);
 }
 
+.footer_frame .actions {
+    top: 25px;
+}
+
+// .get-button {
+//     display: none;
+// }
+
+.footer_frame .get-button {
+    height: auto;
+}
+
+.footer_frame .get-button button {
+    margin-bottom: 5px;
+}
+
+.footer_frame .web-version {
+    margin-top: 0;
+    line-height: 16px;
+}
+
 .btn_w {
     width: 290px;
     height: 44px;
@@ -1145,7 +1187,23 @@ footer {
     background-image: -moz-linear-gradient(90deg, rgba(238, 238, 238, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
     background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(238, 238, 238, 0.9)), to(rgba(255, 255, 255, 0.9)));
     color: #333;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.5),;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.rb {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    #arrow > .rb(7px, #b2b2b2);
+}
+
+.lt {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    #arrow > .lt(7px, #b2b2b2);
 }
 
 // cross }

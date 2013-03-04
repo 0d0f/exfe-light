@@ -12,13 +12,19 @@ define(function (require, exports, module) {
 
     var tridAt = 0;
 
-    var lastBreathe = +new Date;
+    var my_invitation = null;
+
+    var my_exfee_id   = 0;
+
+    var my_token      = '';
+
+    var lastBreathe   = +new Date;
 
     var trim = function(string) {
         return string ? string.replace(/^\s+|\s+$/g, '') : '';
     };
 
-    var setBtnPos = function(banner) {
+    var setBtnPos = function(banner, cross) {
         var height = window.innerHeight;
         if (height > 460) {
             height = 460;
@@ -27,7 +33,9 @@ define(function (require, exports, module) {
         }
         $('html').css('min-height', height + 'px');
         $('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
-        $('.actions').css('top',  (height - 86 - (banner ? 50 : 0)) + 'px');
+        if (!cross) {
+            $('.actions').css('top',  (height - 86 - (banner ? 50 : 0)) + 'px');
+        }
         $('.big-x').css('height', (height - 86 - (banner ? 50 : 0)) + 'px');
         if (navigator.userAgent.match(/iPad/)) {
             $('.redirecting').unbind('click').bind('click', function() {
@@ -43,8 +51,6 @@ define(function (require, exports, module) {
     };
 
     var redirecting = function(args) {
-      ///////////////////////////////////////////////
-      return;
         $('.redirecting').show();
         rdTime = setInterval(function() {
             var sec = ~~$('.redirecting .sec').html() - 1;
@@ -130,10 +136,10 @@ define(function (require, exports, module) {
               .replace(/'/g, '&#39;');
     };
 
-    var cross = function(token) {
+    var cross = function(token, cross_id) {
         styleBody('x');
         $('#app-main').html(
-            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in 3s.</div>'
+            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in <span class="sec">5</span>s.</div>'
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
@@ -141,7 +147,7 @@ define(function (require, exports, module) {
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
-          +         '<div class="description"></div>'
+          +         '<div class="description"><div class="xbtn-more"><span class="rb"></span><span class="lt"></span></div></div>'
           +         '<div class="time_area">'
           +             '<div class="time_major"></div>'
           +             '<div class="time_minor"></div>'
@@ -155,9 +161,8 @@ define(function (require, exports, module) {
           +             '<div class="tri"></div>'
           +             '<table>'
           +                 '<tr>'
-          +                     '<td class="accepted">I\'m in</td>'
-          +                     '<td class="unavailable">Unavailable</td>'
-          +                     '<td class="pending">Pending</td>'
+          +                     '<td class="rsvp accepted">I\'m in</td>'
+          +                     '<td class="rsvp unavailable">Unavailable</td>'
           +                 '</tr>'
           +             '</table>'
           +         '</div>'
@@ -167,28 +172,33 @@ define(function (require, exports, module) {
           + '<footer>'
           +     '<div class="footer-wrap">'
           +         '<div class="footer_frame">'
-          +             '<button class="btn_w">Get <span class="exfe_blue2">EXFE</span> app free</button>'
+          +             '<div class="actions" id="cross_actions">'
+          +                 '<div class="get-button">'
+          +                     '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
+          +                 '</div>'
+          +                 '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
+          +             '</div>'
           +         '</div>'
           +     '</div>'
           + '</footer>'
-
-          // +     '<div class="actions">'
-          // +         '<div class="get-button">'
-          // +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
-          // +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
-          // +         '</div>'
-          // +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
-          // +     '</div>'
         );
-        setBtnPos(true);
+        setBtnPos(true, true);
         var cats = Store.get('cats');
         if (!cats) {
             cats = {};
         }
         var submitData = {invitation_token   : token};
         if (cats[token]) {
-            submitData['cross_access_token'] = cats[token];
+            my_token   = submitData['cross_access_token'] = cats[token];
+        } else if (cross_id) {
+            submitData['cross_id'] = cross_id;
         }
+        $('.rsvp.accepted').bind('click',    function() {
+            rsvp('ACCEPTED');
+        });
+        $('.rsvp.unavailable').bind('click', function() {
+            rsvp('DECLINED');
+        });
         $.ajax({
             type    : 'post',
             url     : config.api_url + '/Crosses/GetCrossByInvitationToken',
@@ -198,7 +208,25 @@ define(function (require, exports, module) {
                     // render title
                     $('.title_area  .title_text').html(escape(data.response.cross.title));
                     // render description
-                    $('.inf_area   .description').html(escape(data.response.cross.description).replace(/\r\n|\r|\n/g, '<br>'));
+                    $('.inf_area   .description').prepend(escape(data.response.cross.description).replace(/\r\n|\r|\n/g, '<br>'));
+                    if ($('.inf_area .description').height() > 130) {
+                        $('.inf_area .description .xbtn-more').show();
+                        $('.inf_area .description .xbtn-more .rb').show();
+                        $('.inf_area .description .xbtn-more .lt').hide();
+                        $('.inf_area .description').toggleClass('limit', true).on('click', function() {
+                            if ($('.inf_area .description').hasClass('limit')) {
+                                $('.inf_area .description').toggleClass('limit', false);
+                                $('.inf_area .description .xbtn-more .rb').hide();
+                                $('.inf_area .description .xbtn-more .lt').show();
+                            } else {
+                                $('.inf_area .description').toggleClass('limit', true);
+                                $('.inf_area .description .xbtn-more .rb').show();
+                                $('.inf_area .description .xbtn-more .lt').hide();
+                            }
+                        });
+                    } else {
+                        $('.inf_area .description .xbtn-more').hide();
+                    }
                     // render time
                     var timeTitle   = 'Sometime';
                     var timeContent = 'To be decided';
@@ -254,17 +282,20 @@ define(function (require, exports, module) {
                     if (typeof data.response.cross_access_token !== 'undefined') {
                         cats[token] = data.response.cross_access_token;
                         Store.set('cats', cats);
+                        my_token    = data.response.cross_access_token;
                     }
                     // render exfee
                     $('.inviter').hide();
                     var idMyInv = -1;
                     var stype   = '';
+                    my_exfee_id = data.response.cross.exfee.id;
                     for (i in data.response.cross.exfee.invitations) {
                         if (user_id
                          && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
                             idMyInv = i;
-                            $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].by_identity.name));
+                            $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].invited_by.name));
                             $('.inviter').show();
+                            my_invitation = data.response.cross.exfee.invitations[i];
                             switch (data.response.cross.exfee.invitations[i].rsvp_status) {
                                 case 'ACCEPTED':
                                     stype = 'accepted';
@@ -337,8 +368,8 @@ define(function (require, exports, module) {
                             );
                         }
                     }
-                    domTr = $('.exfee table tr').last();
-                    count = 5 - domTr.children().length;
+                    domTr  = $('.exfee table tr').last();
+                    count  = 5 - domTr.children().length;
                     for (i = 0; i < count; i++) {
                         domTr.append('<td></td>');
                     }
@@ -350,6 +381,18 @@ define(function (require, exports, module) {
                              + '?user_id='     + user_id
                              + '&token='       + data.response.authorization.token
                              + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
+                        my_token = data.response.authorization.token;
+                    }
+                    if (my_token) {
+                        $('.rsvp_toolbar').show();
+                        $('.portrait.me').on('click', function() {
+                            $('.rsvp_toolbar').toggleClass(
+                                'rsvp_toolbar_off',
+                                !$('.rsvp_toolbar').hasClass('rsvp_toolbar_off')
+                            );
+                        });
+                    } else {
+                        $('.rsvp_toolbar').hide();
                     }
                     redirecting(args);
                     return;
@@ -411,11 +454,11 @@ define(function (require, exports, module) {
         );
         setBtnPos(true);
         $('.eye').click(function(e){
-          var $input = $(this).prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $(this).toggleClass('icon16-pass-hide icon16-pass-show');
+            var $input = $(this).prev();
+            $input.prop('type', function (i, val) {
+                return val === 'password' ? 'text' : 'password';
+            });
+            $(this).toggleClass('icon16-pass-hide icon16-pass-show');
         });
         $.ajax({
             type    : 'post',
@@ -495,6 +538,41 @@ define(function (require, exports, module) {
             $('.loading').hide();
             $('.eye').show();
         }
+    };
+
+    var rsvp = function(rsvp) {
+        var submitData = [{
+            rsvp_status    : rsvp,
+            identity_id    : my_invitation.identity.id,
+            by_identity_id : my_invitation.identity.id
+        }];
+        $('.rsvp_toolbar').addClass('rsvp_toolbar_off');
+        switch (rsvp) {
+            case 'ACCEPTED':
+                $('.portrait_rsvp_me').toggleClass('accepted', true);
+                $('.portrait_rsvp_me').toggleClass('declined', false);
+                $('.portrait_rsvp_me').toggleClass('pending',  false);
+                break;
+            case 'DECLINED':
+                $('.portrait_rsvp_me').toggleClass('accepted', false);
+                $('.portrait_rsvp_me').toggleClass('declined', true);
+                $('.portrait_rsvp_me').toggleClass('pending',  false);
+                break;
+            default:
+                $('.portrait_rsvp_me').toggleClass('accepted', false);
+                $('.portrait_rsvp_me').toggleClass('declined', false);
+                $('.portrait_rsvp_me').toggleClass('pending',  true);
+        }
+        $.ajax({
+            type    : 'post',
+            url     : config.api_url + '/Exfee/' + my_exfee_id + '/Rsvp?token=' + my_token,
+            data    : {rsvp : JSON.stringify(submitData)},
+            success : function(data) {
+            },
+            error   : function() {
+                alert('RSVP failed!');
+            }
+        });
     };
 
     var verification = function(result) {
@@ -614,6 +692,11 @@ define(function (require, exports, module) {
                     return;
                 } else if (hash[i].match(/^\!token=.*/)) {
                     cross(hash[i].replace(/^\!token=(.*)/, '$1', hash[i]));
+                    return;
+                } else if (hash[i].match(/^\![0-9]{1,}/)
+                        && typeof hash[i + 1] !== 'undefined'
+                        && hash[i + 1].match(/^.{4}/)) {
+                    cross(hash[i + 1], hash[i]);
                     return;
                 } else {
                     // 404
