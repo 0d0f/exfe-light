@@ -24,28 +24,29 @@
     <script src="jquery.throttledresize.js"></script>
   </head>
   <body>
-    <section class="mnemosyne">
-      <div class="gallery">
-        <div class="photos-wrap">
-          <div class="photos-list"></div>
+    <div class="mnemosyne-wrap">
+      <section class="mnemosyne">
+        <div class="gallery">
+          <div class="photos-wrap">
+            <div class="photos-list"></div>
+          </div>
         </div>
-      </div>
-      <div class="slideshow">
-        <div class="photos-list"></div>
-        <div class="actions">
-          <button id="btn-esc">Esc</button>
-          <button id="btn-prev">Prev</button>
-          <button id="btn-next">Next</button>
-          <button id="btn-play">Play</button>
-          <button id="btn-pause">Pause</button>
-          <button id="btn-retypeset">重新排版</button>
-          <button id="btn-addphotos">添加图片</button>
+        <div class="slideshow">
+          <div class="photos-overlay"></div>
+          <div class="actions">
+            <button id="btn-esc">Esc</button>
+            <button id="btn-prev">Prev</button>
+            <button id="btn-next">Next</button>
+            <button id="btn-play">Play</button>
+            <button id="btn-pause">Pause</button>
+            <button id="btn-retypeset">重新排版</button>
+            <button id="btn-addphotos">添加图片</button>
+          </div>
         </div>
-      </div>
-    </section>
-
+      </section>
+    </div>
+    <!--<script src="data.js"></script>-->
+    <script src="photos.js"></script>
+    <script src="test.js"></script>
   </body>
-  <!--<script src="data.js"></script>-->
-  <script src="photos.js"></script>
-  <script src="test.js"></script>
 </html>

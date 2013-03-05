@@ -10,13 +10,19 @@ define(function (require) {
   view.update();
   $(window).trigger('throttledresize');
   view.lazyLoad();
+  view.doscroll();
+  view.startShow();
   // view.typesetting.typeset(data.response.photos.length);÷
+  /*
   $('.mnemosyne').animate({
     opacity: 1
   }, 1000, function () {
     //$('.mnemosyne .gallery').scrollLeft(24);
-    $('.mnemosyne .gallery').trigger('scroll');
+    setTimeout(function () {
+      $('.mnemosyne .gallery').trigger('scroll');
+    }, 2000);
   });
+  */
 
 
   $('#retypeset').click(function () {
