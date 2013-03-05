@@ -55,7 +55,7 @@ define(function (require) {
 
 
   // phone-cross-token - `/#!233/8964`
-  app.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/(accept|mute)?\/?$/, routes.refreshAuthUser, routes.crossPhoneToken);
+  app.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})(?:\/(accept|mute))?\/?$/, routes.refreshAuthUser, routes.crossPhoneToken);
   // cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8`
   app.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})$/, routes.refreshAuthUser, routes.crossToken);
   // email-cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8/accept`
