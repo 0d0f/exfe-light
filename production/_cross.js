@@ -165,9 +165,10 @@ ExfeeCache = {
         var arrCatched = [];
         var phone      = key.replace(/\-|\(|\)|\ /g, '');
         if (/^\+?[0-9]{5,15}$/.test(phone)) {
-            var name = key.replace(/^.*(.{3})$/, '$1');
+            var name = phone.replace(/^.*(.{3})$/, '$1');
             var id   = '';
             if (/^\+.*$/.test(phone)) {
+                id   = phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -178,7 +179,7 @@ ExfeeCache = {
                     type              : 'identity'
                 });
             } else if (/^.{11}$/.test(phone)) {
-                id   = '+86' + key;
+                id   = '+86' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -188,7 +189,7 @@ ExfeeCache = {
                     avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                     type              : 'identity'
                 });
-                id   = '+1' + key;
+                id   = '+1' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -199,7 +200,7 @@ ExfeeCache = {
                     type              : 'identity'
                 });
             } else if (/^86.{11}$/.test(phone)) {
-                id   = '+' + key;
+                id   = '+' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -210,7 +211,7 @@ ExfeeCache = {
                     type              : 'identity'
                 });
             } else if (/^1.{4,}$/.test(phone)) {
-                id   = '+' + key;
+                id   = '+' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -220,7 +221,7 @@ ExfeeCache = {
                     avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                     type              : 'identity'
                 });
-                id   = '+1' + key;
+                id   = '+1' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
@@ -231,7 +232,7 @@ ExfeeCache = {
                     type              : 'identity'
                 });
             } else {
-                id = '+1' + key;
+                id = '+1' + phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
