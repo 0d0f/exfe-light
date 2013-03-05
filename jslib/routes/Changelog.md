@@ -1,3 +1,7 @@
+* v0.1.12 2013-03-05T21:03:30 UTC+0800
+  - New Features
+    * added `phone cross token`
+
 * v0.1.11 2013-01-15T17:18:50 UTC+0800
   - Changes
     * Upgraded `home.js`-v0.0.3
