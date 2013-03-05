@@ -796,10 +796,10 @@ define(function (require, exports, module) {
     $(this).parent().fadeOut();
   });
 
-  var Uploader = null;
-  var uploadSettings;
+  var Uploader = null,
+      uploaderTarget = null,
+      uploadSettings;
   // 头像上传控件
-  var uploader = null;
   // uploader
   $BODY.on('click.data-link', '.user-avatar .avatar, .identity-list > li > .avatar', function (e) {
     var $e = $(this),

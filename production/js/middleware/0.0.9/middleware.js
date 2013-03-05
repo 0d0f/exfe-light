@@ -1,8 +1,9 @@
 define('middleware', function (require, exports, module) {
-  var Api = require('api')
-    , Bus = require('bus')
-    , Store = require('store')
-    , $ = require('jquery');
+  "use strict";
+
+  var Bus = require('bus'),
+      Store = require('store'),
+      $ = require('jquery');
 
   var middleware = module.exports = {};
 
@@ -88,7 +89,7 @@ define('middleware', function (require, exports, module) {
 
 
   // errorHandler
-  middleware.errorHandler = function (req, res, next) {
+  middleware.errorHandler = function (req, res) {
     var url = /^\/404/;
     if (url.exec(window.location.pathname)) {
       Bus.emit('app:page:home', false, true);
@@ -128,6 +129,15 @@ define('middleware', function (require, exports, module) {
       // Mozilla triggered twice, firefox-v18.0
       if ($.browser.mozilla) { return; }
     }
+    next();
+  };
+
+
+  // ?ipad
+  middleware.checkSearch = function (req, res, next) {
+    var qs = req.querystring,
+        isiPad = /ipad/.test(qs);
+    $(document.body).attr('data-ipad', isiPad);
     next();
   };
 
