@@ -377,6 +377,21 @@ table {
    EXFE App
    ========================================================================== */
 
+.size(@height, @width) {
+  width: @width;
+  height: @height;
+}
+
+.rotate(@degrees) {
+  -webkit-transform: rotate(@degrees);
+     -moz-transform: rotate(@degrees);
+      -ms-transform: rotate(@degrees);
+       -o-transform: rotate(@degrees);
+          transform: rotate(@degrees);
+}
+
+@import "../../exfe/lib/angle.less";
+
 @iconSpritePath:          "/static/img/icons.png";
 
 html, body {
@@ -478,6 +493,10 @@ body.x {
     width: 280px;
 }
 
+.x .actions {
+    left: 16px;
+}
+
 .get-button, .set-button {
     width: 100%;
     height: 45px;
@@ -488,17 +507,25 @@ body.x {
 }
 
 .get-button button, .set-button button {
-    width: 100%;
-    height: 45px;
-    background-image: -webkit-gradient(linear, left bottom, left top, from(#cccccc), to(#fafafa));
-    background-image: -moz-linear-gradient(90deg, #cccccc 0%, #fafafa 100%);
+    width: 290px;
+    height: 44px;
+    margin: 0 auto;
+    // margin-top: 30px;
     border-radius: 3px;
-    box-shadow: 0px 1px 1px rgba(0,0,0,0.35);
-    font: bold 20px/44px;
+    border-style: none;
+    font: 500 16px "HelveticaNeue-Medium";
+    -moz-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    background-image: -moz-linear-gradient(90deg, rgba(238, 238, 238, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(238, 238, 238, 0.9)), to(rgba(255, 255, 255, 0.9)));
     color: #333;
-    text-shadow: 0 1px 1px #ffffff;
-    text-align: center;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
     display: none;
+}
+
+.x .get-button button, .x .set-button button {
+    width: 290px;
 }
 
 .set-button button {
@@ -777,7 +804,7 @@ button .exfe {
     margin: 0 auto;
     background-color: #fafafa;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    // overflow: hidden;
     position: relative;
 }
 
@@ -841,7 +868,7 @@ footer {
     margin-right: 15px;
     margin-left: 15px;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-    font: 500 20px/24px "HelveticaNeue-Medium";
+    font: 500 21px/25px "HelveticaNeue-Medium";
 }
 
 .inviter {
@@ -863,6 +890,17 @@ footer {
     background-size: auto 21px;
 }
 
+.ribbon {
+    background: url(/static/img/ribbon_fold.png) no-repeat;
+    background-size: 4px 22px;
+    position: absolute;
+    width: 4px;
+    height: 22px;
+    left: -4px;
+    top: 0px;
+
+}
+
 .inviter span {
     font-weight: bold;
 }
@@ -880,6 +918,12 @@ footer {
     color: #333;
     font-size: 14px;
     line-height: 17px;
+    position: relative;
+    overflow: hidden;
+}
+
+.description.limit {
+    height: 70px;
 }
 
 .exfee {
@@ -947,15 +991,15 @@ footer {
 }
 
 .portrait_rsvp.accepted {
-    background-color: #548bea;
+    background-color: #3A6EA5;
 }
 
 .portrait_rsvp.pending {
-    background-color: #bbbbbb;
+    background-color: #ffffff;
 }
 
 .portrait_rsvp.declined {
-    background-color: #e52e53;
+    background-color: #bbbbbb;
 }
 
 .exfee .name_me {
@@ -1043,14 +1087,18 @@ footer {
 
 .time_major, .place_major {
     color: #3a6ea5;
-    font: 500 21px/24px "HelveticaNeue-Medium";
+    font: 500 21px/25px "HelveticaNeue-Medium";
 }
 
 .time_minor, .place_minor {
     font-size: 14px;
     color: #333;
     margin-top: 2px;
-    line-height: 16px;
+    line-height: 17px;
+}
+
+.time_tobe, .place_tobe {
+    color: #A3A3A3;
 }
 
 .map {
@@ -1092,7 +1140,7 @@ footer {
 }
 
 .rsvp_toolbar td {
-    width: 98px;
+    width: 140px;
     height: 15px;
     font-size: 12px;
     color: white;
@@ -1132,20 +1180,41 @@ footer {
     background-image: url(/static/img/pending.png);
 }
 
-.btn_w {
-    width: 290px;
-    height: 44px;
-    margin-top: 30px;
-    border-radius: 3px;
-    border-style: none;
-    font: 500 16px "HelveticaNeue-Medium";
-    -moz-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
-    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
-    background-image: -moz-linear-gradient(90deg, rgba(238, 238, 238, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(238, 238, 238, 0.9)), to(rgba(255, 255, 255, 0.9)));
-    color: #333;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.5),;
+.footer_frame .actions {
+    top: 25px;
+}
+
+// .get-button {
+//     display: none;
+// }
+
+.footer_frame .get-button {
+    height: auto;
+}
+
+.footer_frame .get-button button {
+    margin-bottom: 5px;
+}
+
+.footer_frame .web-version {
+    margin-top: 0;
+    line-height: 16px;
+}
+
+.rb {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    #arrow > .rb(7px, #b2b2b2);
+}
+
+.lt {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    #arrow > .lt(7px, #b2b2b2);
 }
 
 // cross }
