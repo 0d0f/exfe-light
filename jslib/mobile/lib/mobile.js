@@ -143,7 +143,7 @@ define(function (require, exports, module) {
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_text"></div>'
-          +         '<div class="inviter"><div class="ribbon"></div><span class="inviter_highlight"></span> invites you</div>'
+          +         '<div class="inviter"><div class="ribbon"></div><div class="textoverflow"><span class="inviter_highlight"></span> invites you</div></div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
           +     '<div class="inf_area">'
@@ -291,11 +291,13 @@ define(function (require, exports, module) {
                     $('.inviter').hide();
                     var idMyInv = -1;
                     var stype   = '';
+                    var myIdId  = 0;
                     my_exfee_id = data.response.cross.exfee.id;
                     for (i in data.response.cross.exfee.invitations) {
                         if (user_id
                          && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
                             idMyInv = i;
+                            myIdId  = data.response.cross.exfee.invitations[i].identity.id;
                             $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].invited_by.name));
                             $('.inviter').show();
                             my_invitation = data.response.cross.exfee.invitations[i];
@@ -383,7 +385,7 @@ define(function (require, exports, module) {
                         args = data.response.cross.id
                              + '?user_id='     + user_id
                              + '&token='       + data.response.authorization.token
-                             + '&identity_id=' + data.response.cross.exfee.invitations[i].identity.id;
+                             + '&identity_id=' + myIdId;
                         my_token = data.response.authorization.token;
                     }
                     if (my_token) {
@@ -699,7 +701,7 @@ define(function (require, exports, module) {
                 } else if (hash[i].match(/^\![0-9]{1,}/)
                         && typeof hash[i + 1] !== 'undefined'
                         && hash[i + 1].match(/^.{4}/)) {
-                    cross(hash[i + 1], hash[i]);
+                    cross(hash[i + 1], hash[i].replace(/^\!(.*)/, '$1', hash[i]));
                     return;
                 } else {
                     // 404

@@ -873,6 +873,13 @@ footer {
   background-size: auto 21px;
 }
 
+.textoverflow {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .ribbon {
   position: absolute;
   top: 0;
