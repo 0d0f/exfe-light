@@ -163,29 +163,86 @@ ExfeeCache = {
                 || matchString(key, identity.name);
         };
         var arrCatched = [];
-        if (/^[0-9]{5,15}$/.test(key)) {
-            var name = key.replace(/^\+.*(.{4})$/, '$1');
+        var phone      = key.replace(/\-|\(|\)|\ /g, '');
+        if (/^\+?[0-9]{5,15}$/.test(phone)) {
+            var name = phone.replace(/^.*(.{3})$/, '$1');
             var id   = '';
-            if (key.length === 11) {
-                id   = '+86' + key;
+            if (/^\+.*$/.test(phone)) {
+                id   = phone;
                 arrCatched.push({
                     id                : 0,
                     name              : name,
                     external_id       : id,
                     external_username : id,
                     provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^.{11}$/.test(phone)) {
+                id   = '+86' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+                id   = '+1' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^86.{11}$/.test(phone)) {
+                id   = '+' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^1.{4,}$/.test(phone)) {
+                id   = '+' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+                id   = '+1' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else {
+                id = '+1' + phone;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                     type              : 'identity'
                 });
             }
-            id   = '+1' + key;
-            arrCatched.push({
-                id                : 0,
-                name              : name,
-                external_id       : id,
-                external_username : id,
-                provider          : 'phone',
-                type              : 'identity'
-            });
         }
         key = key.toLowerCase();
         for (var i = 0; i < this.identities.length; i++) {
@@ -567,6 +624,7 @@ ExfeeWidget = {
             provider          : '',
             type              : 'identity'
         }
+        var phone   = '';
         if (/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/.test(string)) {
             var iLt = string.indexOf('<'),
                 iGt = string.indexOf('>');
@@ -591,9 +649,9 @@ ExfeeWidget = {
             objIdentity.name              = objIdentity.external_username;
             objIdentity.provider          = 'facebook';
         } else if ((phone = string.replace(/\-|\(|\)|\ /g, '')) && /^\+[0-9]{5,15}$/.test(phone)) {
-            objIdentity.external_id       = string;
-            objIdentity.external_username = string;
-            objIdentity.name              = string.replace(/^\+.*(.{4})$/, '$1');
+            objIdentity.external_id       = phone;
+            objIdentity.external_username = phone;
+            objIdentity.name              = phone.replace(/^.*(.{3})$/, '$1');
             objIdentity.provider          = 'phone';
         } else {
             return null;
@@ -645,6 +703,7 @@ ExfeeWidget = {
 
 
     showCompleteItems : function(objInput, key, identities) {
+        key = key.replace(/^\+/, '');
         var highlight = function(string) {
             var objRe = new RegExp('(' + key + ')');
             return string ? string.replace(objRe, '<span class="highlight">$1</span>') : '';
@@ -811,7 +870,7 @@ ExfeeWidget = {
         ).toggleClass(
             'icon16-exfee-plus',     !bolCorrect
         );
-        this.checkComplete(objInput, strTail.replace(/^@|^\+/, ''));
+        this.checkComplete(objInput, strTail.replace(/^@/, ''));
     },
 
 
@@ -825,9 +884,11 @@ ExfeeWidget = {
         var identity = ExfeeCache.fetchIdentity(this.complete_exfee[index]);
         if (identity) {
             this.complete_exfee.splice(index, 1);
-            this.addExfee(identity);
             ExfeeCache.cacheIdentities(identity);
+        } else {
+            identity = ExfeUtilities.clone(this.complete_exfee[index]);
         }
+        this.addExfee(identity);
     },
 
 
