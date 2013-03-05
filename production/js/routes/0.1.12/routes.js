@@ -530,7 +530,7 @@ define('routes', function (require, exports, module) {
   };
 
 
-  var _crosstoken = function (res, req, next, params, data, cats, accept, mute) {
+  var _crosstoken = function (res, req, next, params, data, cats, ctoken, accept, mute) {
     Api.request('getCrossByInvitationToken',
       {
         type: 'POST',
@@ -658,7 +658,7 @@ define('routes', function (require, exports, module) {
       data['cross_access_token'] = cat;
     }
 
-    _crosstoken(res, req, next, params, data, cats);
+    _crosstoken(res, req, next, params, data, cats, ctoken, accept, mute);
   };
 
   routes.crossPhoneToken = function (req, res, next) {
@@ -691,7 +691,7 @@ define('routes', function (require, exports, module) {
       data['cross_access_token'] = cat;
     }
 
-    _crosstoken(res, req, next, params, data, cats);
+    _crosstoken(res, req, next, params, data, cats, ctoken, accept, mute);
   };
 
 
