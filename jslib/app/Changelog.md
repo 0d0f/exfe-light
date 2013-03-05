@@ -1,3 +1,7 @@
+* v0.2.6 2013-03-05T14:11:38 UTC+0800
+  - New Features
+    * parsed `/?ipad`
+
 * v0.1.6 2012-12-11T15:01:47 UTC+0800
   - New Features
     * `Unsubscribe` dialog
