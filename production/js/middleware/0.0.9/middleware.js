@@ -1,9 +1,9 @@
 define('middleware', function (require, exports, module) {
   "use strict";
 
-  var Bus = require('bus'),
-      Store = require('store'),
-      $ = require('jquery');
+  var Bus = require('bus')
+    , Store = require('store')
+    , $ = require('jquery');
 
   var middleware = module.exports = {};
 
@@ -129,15 +129,6 @@ define('middleware', function (require, exports, module) {
       // Mozilla triggered twice, firefox-v18.0
       if ($.browser.mozilla) { return; }
     }
-    next();
-  };
-
-
-  // ?ipad
-  middleware.checkSearch = function (req, res, next) {
-    var qs = req.querystring,
-        isiPad = /ipad/.test(qs);
-    $(document.body).attr('data-ipad', isiPad);
     next();
   };
 

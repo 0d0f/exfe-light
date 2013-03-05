@@ -1,6 +1,7 @@
 define('middleware', function (require, exports, module) {
-  var Api = require('api')
-    , Bus = require('bus')
+  "use strict";
+
+  var Bus = require('bus')
     , Store = require('store')
     , $ = require('jquery');
 
@@ -88,7 +89,7 @@ define('middleware', function (require, exports, module) {
 
 
   // errorHandler
-  middleware.errorHandler = function (req, res, next) {
+  middleware.errorHandler = function (req, res) {
     var url = /^\/404/;
     if (url.exec(window.location.pathname)) {
       Bus.emit('app:page:home', false, true);
