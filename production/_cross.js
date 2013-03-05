@@ -163,10 +163,21 @@ ExfeeCache = {
                 || matchString(key, identity.name);
         };
         var arrCatched = [];
-        if (/^[0-9]{5,15}$/.test(key)) {
+        var phone      = key.replace(/\-|\(|\)|\ /g, '');
+        if (/^\+?[0-9]{5,15}$/.test(phone)) {
             var name = key.replace(/^.*(.{3})$/, '$1');
             var id   = '';
-            if (key.length === 11) {
+            if (/^\+.*$/.test(phone)) {
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^.{11}$/.test(phone)) {
                 id   = '+86' + key;
                 arrCatched.push({
                     id                : 0,
@@ -177,17 +188,60 @@ ExfeeCache = {
                     avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                     type              : 'identity'
                 });
+                id   = '+1' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^86.{11}$/.test(phone)) {
+                id   = '+' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else if (/^1.{4,}$/.test(phone)) {
+                id   = '+' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+                id   = '+1' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
+            } else {
+                id = '+1' + key;
+                arrCatched.push({
+                    id                : 0,
+                    name              : name,
+                    external_id       : id,
+                    external_username : id,
+                    provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                    type              : 'identity'
+                });
             }
-            id   = '+1' + key;
-            arrCatched.push({
-                id                : 0,
-                name              : name,
-                external_id       : id,
-                external_username : id,
-                provider          : 'phone',
-                avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                type              : 'identity'
-            });
         }
         key = key.toLowerCase();
         for (var i = 0; i < this.identities.length; i++) {
@@ -648,6 +702,7 @@ ExfeeWidget = {
 
 
     showCompleteItems : function(objInput, key, identities) {
+        key = key.replace(/^\+/, '');
         var highlight = function(string) {
             var objRe = new RegExp('(' + key + ')');
             return string ? string.replace(objRe, '<span class="highlight">$1</span>') : '';
@@ -814,7 +869,7 @@ ExfeeWidget = {
         ).toggleClass(
             'icon16-exfee-plus',     !bolCorrect
         );
-        this.checkComplete(objInput, strTail.replace(/^@|^\+/, ''));
+        this.checkComplete(objInput, strTail.replace(/^@/, ''));
     },
 
 
