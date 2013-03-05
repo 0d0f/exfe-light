@@ -1,12 +1,14 @@
 define('mnemosyne', function (require) {
-  'use strict';
+  "use strict";
 
-  var Emitter = require('emitter');
-  var $ = require('jquery');
-  var Handlebars = require('handlebars');
-  var $proxy = $.proxy;
-  var $WIN = $(window);
-  var $DOC = $(document);
+  var Emitter = require('emitter'),
+      Handlebars = require('handlebars'),
+      $ = require('jquery'),
+      $proxy = $.proxy,
+      $WIN = $(window),
+      $DOC = $(document),
+      getComputedStyle = function (elem, property) { window.getComputedStyle(elem, null).getPropertyValue(property); },
+      isTouch = 'ontouchstart' in document.documentElement;
 
   var max = Math.max,
       min = Math.min,
@@ -16,20 +18,22 @@ define('mnemosyne', function (require) {
   //---------------------------------------------------------------
   // grouping number
   var G_N = 0;
-  var RECT_TEMPLATE = '<div class="photo photo-trans" data-id="{{id}}" data-thumbnail="{{image.thumbnail.url}}" data-thumbnail-width="{{image.thumbnail.width}}" data-thumbnail-height="{{image.thumbnail.height}}" data-fullsize="{{image.fullsize.url}}" data-fullsize-height="{{image.fullsize.height}}" data-fullsize-width="{{image.fullsize.width}}">'
-        + '<div class="photo-scale">'
-          + '<figure class="figure">'
-            + '<img src="{{image.thumbnail.url}}" />'
-          + '</figure>'
+  var RECT_TEMPLATE = ''//'<div class="photo-wrap">'
+          + '<div class="photo photo-trans" data-id="{{id}}" data-thumbnail="{{image.thumbnail.url}}" data-thumbnail-width="{{image.thumbnail.width}}" data-thumbnail-height="{{image.thumbnail.height}}" data-fullsize="{{image.fullsize.url}}" data-fullsize-height="{{image.fullsize.height}}" data-fullsize-width="{{image.fullsize.width}}">'
+            + '<figure class="figure">'
+              //+ '<img class="pic" src="{{image.thumbnail.url}}" />'
+            + '</figure>'
+            + '<div class="photo-mask"></div>'
+            + '<div class="photo-like hide"></div>'
+            + '<div class="photo-meta">'
+              + '<div class="avatar"></div>'
+              + '<div class="title">Why moving elements with translate() is better than pos:abs top/left</div>'
+              + '<time class="date">2012.12.12 13:09</time>'
+              + '<div class="place"></div>'
+            + '</div>'
+          //+ '</div>'
+        + '</div>';
 
-          + '<div class="photo-meta">'
-            + '<div class="avatar"></div>'
-            + '<div class="title">Why moving elements with translate() is better than pos:abs top/left</div>'
-            + '<time class="date">2012.12.12 13:09</time>'
-            + '<div class="place"></div>'
-          + '</div>'
-        + '</div>'
-    + '</div>';
   var OPTIONS = {
     top: 0,
     left: 0,
@@ -42,7 +46,7 @@ define('mnemosyne', function (require) {
     [
       {
         "type": "G",
-        "name": 1,
+        "name": "1",
         "aspect_ratio": 0,
         "cells":[
           { "type": "Rect", "x": 0, "y": 0, "width": 1, "height": 1, "margin": { "top": 6, "right": 6, "bottom": 6, "left": 6 } }
@@ -109,8 +113,7 @@ define('mnemosyne', function (require) {
     ]
   ];
 
-  var _extend = function (t, s) {
-    var k;
+  var _extend = function (t, s, k) {
     for (k in s) {
       if (!t.hasOwnProperty(k)) {
         t[k] = s[k];
@@ -124,71 +127,34 @@ define('mnemosyne', function (require) {
    * @return 1 <= i <= n
    */
   var _random = function (n) {
-    return mfloor(n * mrandom()) + 1;
-  };
-
-  var _baseScale = function (h0, d) {
-    return {
-      height: h0,
-      width: h0 * d
-    };
+    return parseInt(n * mrandom()) + 1;
   };
 
   /*
-  var _baseScale = function (w0, h0, d0, d1, w1, h1) {
-    if (d0 < d1) {
-      w1 = w0;
-      h1 = w1 / d1;
-    } else if (d0 > d1) {
-      h1 = h0;
-      w1 = h1 * d1;
-    } else {
-      w1 = w0;
-      h1 = h0;
-      //w1 = h1 = max(w0, h0);
-    }
-    return {
-      width: w1,
-      height: h1
-    };
+   * @return {Array} [width, height]
+   */
+  var _baseScale = function (h0, d) {
+    return [h0 * d, h0];
   };
-  */
 
   var _autoScale = function (w0, h0, w1, h1) {
-    var r = w1 / h1,
-        rw = w1 / w0,
-        rh = h1 / h0;
+    var r = w1 / h1, rw = w1 / w0, rh = h1 / h0, w1 = w0, h1 = h0;
     if (rw < rh) {
-      w1 = w0;
       h1 = w1 / r;
     } else if (rw > rh) {
-      h1 = h0;
       w1 = h1 * r;
-    } else {
-      w1 = w0;
-      h1 = h0;
     }
-    return {
-      width: w1,
-      height: h1
-    };
+    return [w1, h1];
   };
 
   var _largeScale = function (w0, h0, w1, h1) {
-    var r = w1 / h1,
-        rw = w1 / w0,
-        rh = h1 / h0;
+    var r = w1 / h1, rw = w1 / w0, rh = h1 / h0, w1 = min(w0, w1), h1 = min(h0, h1);
     if (rw < rh) {
-      h1 = min(h1, h0);
       w1 = h1 * r;
     } else {
-      w1 = min(w1, w0);
       h1 = w1 / r;
     }
-    return {
-      width: w1,
-      height: h1
-    };
+    return [w1, h1];
   };
 
   var MNEMOSYNE = {};
@@ -201,12 +167,14 @@ define('mnemosyne', function (require) {
     this.outerHTML = tmpl(data);
   };
 
+  /**
+   * Cell Factory
+   */
   var cellFactory = function (t, data) {
     return new MNEMOSYNE[t](data);
   };
 
   /**
-   *
    *    {
    *      "id": int,
    *      "type": "G",
@@ -228,20 +196,15 @@ define('mnemosyne', function (require) {
    * Grouping Class
    */
   var G = MNEMOSYNE.G = function (photos, layout) {
-    this.photos = photos;
-    this.layout = layout;
-
-    this.init();
+    this.init(photos, layout);
   };
 
-  G.prototype.init = function () {
-    var ps = this.photos,
-        layout = this.layout,
-        i = 0,
+  G.prototype.init = function (photos, layout) {
+    var i = 0,
         p, b, cell,
         tmpl;
     !this.html && (this.html = '');
-    for (; p = ps[i]; i++) {
+    for (; p = photos[i]; i++) {
       b = layout[i];
       cell = cellFactory(b.type, p);
       this.html += cell.outerHTML;
@@ -258,20 +221,16 @@ define('mnemosyne', function (require) {
    */
   var Typesetting = function () {};
 
-  Typesetting.prototype.boxes = undefined;
-
-  Typesetting.prototype.typeset = function (length) {
-    var pl = length,
-        layouts = LAYOUTS.slice(0),
+  Typesetting.prototype.typeset = function (len) {
+    var layouts = LAYOUTS.slice(0),
         l = layouts.length,
         r, lts, lt, gs, g;
 
     lts = this.layouts = [];
 
-    while (pl) {
-      r = _random(l);
-      (r > pl) && (r = _random(pl));
-      pl -= r;
+    while (len) {
+      r = _random(len < l ? len : l);
+      len -= r;
 
       gs = layouts[r - 1];
       g = gs[_random(gs.length) - 1]
@@ -350,7 +309,7 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.addPhotos = function (photos) {
-    var $r = this.$glist,
+    var $g = this.$glist,
         layouts = this.layouts,
         l = photos.length,
         newLayouts = this.typeset(l),
@@ -361,7 +320,7 @@ define('mnemosyne', function (require) {
     while ((layout = newLayouts[i++])) {
       cells = layout.cells;
       g = new G(photos.slice(j, j += cells.length), cells);
-      $r.append(g.getContext());
+      $g.append(g.getContext());
     }
 
     !layouts && (this.layouts = []);
@@ -379,7 +338,7 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.addPaddingRight = function (top, left) {
-    var $gl = this.$glist, $pr = this.$glist.find('.photos-padding-right');
+    var $gl = this.$glist, $pr = $gl.find('.photos-padding-right');
     if (!$pr.size()) {
       $pr = $('<div class="photos-padding-right"></div>')
         .css({width: this.paddingRight});
@@ -392,32 +351,37 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.update = function () {
+    //console.profile();
     var $glist = this.$glist,
+        //$pws = $glist.find('.photo-wrap').slice(this.i, this.n),
         $ps = $glist.find('.photo').slice(this.i, this.n),
         _gvw = this.gvw,
         _gvh = this.gvh,
         _gid = this.gid,
-        _gr = _gvw / _gvh,
+        // _gr = _gvw / _gvh,
         offsetTop = this.offsetTop,
         offsetLeft = this.offsetLeft,
-        layouts = this.layouts.slice(gid),
+        layouts = this.layouts.slice(_gid),
         index = 0,
         layout, gid, aspect_ratio, cells, cl, cell, gvw, gvh, j,
-        $p, $fg, $img, sw, sh, st, sl, iw, ih, wh, margin, mt, mr, mb, ml;
+        $pw, $p, sw, sh, st, sl, iw, ih, wh, margin, mt, mr, mb, ml;
+
     while ((layout = layouts.shift())) {
       gid = layout.id;
+      aspect_ratio = layout.aspect_ratio;
       cells = layout.cells;
       cl = cells.length;
-      aspect_ratio = layout.aspect_ratio;
 
       if (aspect_ratio) {
         wh = _baseScale(_gvh, aspect_ratio);
-        gvw = wh.width;
-        gvh = wh.height;
+        gvw = wh[0];
+        gvh = wh[1];
       }
 
       for (j = 0; j < cl; j++) {
         cell = cells[j];
+        //$pw = $pws.eq(index);
+        //$p = $pw.find('.photo');
         $p = $ps.eq(index);
         iw = +$p.data('thumbnail-width');
         ih = +$p.data('thumbnail-height');
@@ -425,8 +389,8 @@ define('mnemosyne', function (require) {
         if (1 === cl) {
           aspect_ratio = iw / ih;
           wh = _baseScale(_gvh, aspect_ratio);
-          gvw = wh.width;
-          gvh = wh.height;
+          gvw = wh[0];
+          gvh = wh[1];
         }
 
         margin = cell.margin;
@@ -438,92 +402,163 @@ define('mnemosyne', function (require) {
         sh = cell.height * gvh - mt - mb;
         sw = cell.width * gvw - ml - mr;
         st = offsetTop + cell.y * gvh + mt;
+        st += (_gvh - gvh) / 2;
         sl = offsetLeft + cell.x * gvw + ml;
 
-        $p
-          .attr('data-gid', gid)
-          .css({
-            width: sw,
-            // height: sh,
-            // top: (_gvh - gvh) / 2 + st,
-            //top: aspect_ratio > 1 ? (_gvh - gvh) / 2 + st : st,
-            // left: sl
-            '-webkit-transform': 'translate3d(' + sl + 'px,' + ((_gvh - gvh) / 2 + st) + 'px, 0px)',
-            '-moz-transform': 'translate3d(' + sl + 'px,' + ((_gvh - gvh) / 2 + st) + 'px, 0px)'
-            //'-webkit-transform': 'translate(' + sl + 'px,' + st + 'px)'
-          });
-        $fg = $p
-          .find('.figure')
-          .css({
-            width: '100%',
-            height: sh
-          });
+        // photo-wrap div
+        //this.updatePhotoWrap($pw, gid, sw, sh, sl, st);
+        this.updatePhotoWrap($p, gid, sw, sh, sl, st);
+
+        // photo div
+        //this.updatePhoto($p, sw, sh);
+
+        // figure wrapper
+        //this.updateFigure($p.find('.figure'));
+
         wh = _autoScale(sw, sh, iw, ih);
-        iw = wh.width;
-        ih = wh.height;
-        $img = $fg
-          .find('img')
-          .css({
-            width: iw,
-            height: ih,
-            top: (sh - ih) / 2,
-            left: (sw - iw) / 2
-          });
+        iw = wh[0];
+        ih = wh[1];
+
+        // img
+        //this.updateImg($p.find('.figure img'), iw, ih, (sw - iw) / 2, (sh - ih) / 2);
+        this.updateImg($p.find('.figure'), iw, ih, (sw - iw) / 2, (sh - ih) / 2);
 
         index++;
       } 
 
       offsetLeft += gvw;
     }
+    //console.profileEnd();
 
     this.addPaddingRight(0, offsetLeft);
   };
 
-  View.prototype.listen = function () {
-    var _this = this,
-        _$root = _this.$root,
-        _slideshow = _this.slideshow;
+  View.prototype.updatePhotoWrap = function ($photoWrap, gid, w, h, l, t) {
+    $photoWrap
+      .attr({
+        'data-gid': gid,
+        'data-xy': l + ',' + t
+      })
+      .css({
+        width: w,
+        height: h,
+        '-webkit-transform': 'translate3d(' + l + 'px,' + t + 'px, 0px)',
+        '-moz-transform': 'translate3d(' + l + 'px,' + t + 'px, 0px)',
+        'transform': 'translate3d(' + l + 'px,' + t + 'px, 0px)'
+      });
+  };
 
-    _$root.on('click.mnemosyne', '.gallery .photos-list .photo', $proxy(function (e) {
+  View.prototype.updatePhoto = function ($photo, w, h) {
+    $photo
+      .css({
+        width: w,
+        height: h
+      });
+  };
+
+  View.prototype.updateFigure = function ($figure, sh) {
+    $figure
+      .css({
+        height: sh
+      });
+  };
+
+  View.prototype.updateImg = function ($fg, w, h, l, t) {
+    var $img = $fg.find('img');
+    if (0 === $img.length) {
+      $fg
+        .attr({
+          'data-width': w,
+          'data-height': h,
+          'data-left': l,
+          'data-top':  t
+        });
+    } else {
+      $img
+        .css({
+          width: w,
+          height: h,
+          left: l,
+          top:  t
+        });
+    }
+  };
+
+  View.prototype.listen = function () {
+    var _this = this, _$root = this.$root, _slideshow = this.slideshow,
+        //pw_selector = '.gallery .photos-list .photo-wrap';
+        pw_selector = '.gallery .photos-list .photo';
+
+    // Gallery Photo clicked
+    _$root.on('click.mnemosyne', pw_selector, function (e) {
       e.preventDefault();
-      var _this = this,
-          $photo = $(e.currentTarget);
+      // if (isTouch) return;
+      var $pw = $(this), t = $pw.data('event');
+
+      if (isTouch && t) {
+        $pw.removeData('event')
+        return;
+      }
 
       if (!_this.resizestatus) {
-        this.resizestatus = true;
-        $(window).trigger('debouncedresize.mnemosyne');
+        _this.resizestatus = true;
+        $WIN.trigger('debouncedresize.mnemosyne');
       }
-      _this.$gwrap.addClass('photos-show');
-      _this.emit('photo-show', $photo);
-    }, _this))
-      .on('hover.mnemosyne', '.gallery .photos-list .photo', function (e) {
+      $pw.trigger('mouseleave.mnemosyne');
+      _this.emit('photo-show', $pw);
+      if (!_this.$gwrap.hasClass('pw-init')) {
+        _this.$gwrap.addClass('pw-init');
+      }
+      _this.$gwrap.addClass('pw-sw');
+    })
+      .on('hover.mnemosyne', pw_selector, function (e) {
         e.preventDefault();
-        var $this = $(this),
-            transform = '';
-        $(this).toggleClass('photo-hover', e.type === 'mouseenter');
+        /*
+        var $pw = $(this), xy = $pw.attr('data-xy').split(','),
+            isMouseEnter = e.type === 'mouseenter';
+            transform = 'translate3d(' + xy[0] + 'px, ' + xy[1] + 'px, 0px)' + (isMouseEnter ? ' scale(1.01)' : '');
+        $pw.data('event', e.type);
+        if (isMouseEnter) {
+          $pw.data('offset', $pw.offset());
+        }
+        $pw.find('.photo').toggleClass('photo-hover', isMouseEnter);
+        */
+        var $p = $(this), xy = $p.attr('data-xy').split(','),
+            isMouseEnter = e.type === 'mouseenter',
+            transform = 'translate3d(' + xy[0] + 'px, ' + xy[1] + 'px, 0px)' + (isMouseEnter ? ' scale(1.01)' : '');
+        $p.data('event', e.type);
+        if (isMouseEnter) {
+          $p.data('offset', $p.offset());
+        }
+        $p.css({
+          '-webkit-transform': transform,
+          '-moz-transform': transform,
+          '-ms-transform': transform,
+          '-o-transform': transform,
+          'transform': transform
+        }).toggleClass('photo-hover', isMouseEnter);
       });
 
-    _$root.on('scroll.mnemosyne', '.gallery', function () {
-
-    });
-
-    _this.on('resize.mnemosyne', function (w, h) {
+    _this.on('resize', function (w, h) {
       _slideshow.resize(w, h);
     });
 
-    _this.on('photo-show', function ($photo) {
-      this.slideshow.show($photo);
+    _this.on('photo-show', function ($pw) {
+      this.slideshow.show($pw);
     });
 
-    _this.on('scroll.mnemosyne', function (w, l, t) {
+    _this.on('scroll', function (w, l, t) {
       _this.scroll(w, l, t);
-    });kkkk
+    });
 
-    $(window).on('debouncedresize.mnemosyne', function () {
-    // $(window).on('throttledresize', function () {
+    $WIN.on('debouncedresize.mnemosyne', function () {
+    // $(window).on('throttledresize.mnemosyne', function () {
       _this.getViewport();
       _this.getGallery();
-      _this.emit('resize.mnemosyne', _this.vw, _this.vh);
+      _this.emit('resize', _this.vw, _this.vh);
+      var sl = _this.$gallery.scrollLeft();
+      _this.$gallery.trigger('scroll');
+      //$('.mnemosyne .gallery').scrollLeft(24);
       _this.update();
     });
   };
@@ -532,14 +567,83 @@ define('mnemosyne', function (require) {
     var a = isNotFirst ? 1800 / (1800 + 377) : 1,
         p = $item.position();
     this.$gallery.stop(true, true).animate({
-      scrollLeft: (p.left + 24 - (this.vw - $item.width()) / 2 * a) / a
-    }, 233);
-    //this.$gallery.scrollLeft((p.left + 24 - (this.vw - $item.width()) / 2 * a) / a);
-    //this.$gallery.scrollLeft((p.left + 24) * a - (this.vw - $item.width()) / 2);
+      scrollLeft: (p.left + 24 - (this.vw - $item.find('.photo').width()) / 2 * a) / a
+    }, 377);
+  };
+
+  var inViewport = function (top, right, bottom, left, vh, vw) {
+    return (
+        (top >= 0 && top <= vh)
+        ||
+        (bottom >= 0 && bottom <= vh)
+      )
+      && (
+        (left >= 0 && left <= vw)
+        ||
+        (right >= 0 && right <= vw)
+      );
+  };
+
+  var i = 0;
+  var checkInViewport = function (e) {
+    var r = e.getBoundingClientRect(),
+        top = r.top, right = r.right, bottom = r.bottom, left = r.left,
+        vh = window.innerHeight || document.documentElement.clientHeight,
+        vw = window.innerWidth || document.documentElement.clientWidth;
+
+    return inViewport(top, right, bottom, left, vh, vw);
+  };
+
+  View.prototype.doscroll = function () {
+    this.$gallery.trigger('scroll.mnemosyne');
+  };
+
+  View.prototype.startShow = function () {
+    var _this = this;
+    //this.$gwrap.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function (e) {
+      //_this.$root.removeClass('animate');
+      //_this.$gwrap.addClass('photos-init');
+      //_this.$gwrap.removeClass('animate');
+      //alert(_this.$gwrap.attr('class'));
+    //});
+    this.$root.addClass('animate');
+  };
+
+  View.prototype.lazyLoad = function () {
+    var _this = this, caches;
+    (!this.caches) && (this.caches = []);
+    caches = this.caches;
+    this.$gallery.on('scroll.mnemosyne', function () {
+      var $ps = _this.$glist.find('.photo').not('.photo-lazy, .photo-loaded');
+      if (0 === $ps.length) return;
+      $ps.each(function () {
+        var $p, lig, url, $fg, $img;
+        if (checkInViewport(this)) {
+          $p = $(this);
+          $p.addClass('photo-lazy');
+          url = $p.data('thumbnail'); 
+          lig = new LoadImage(url, function (img) {
+            $p
+              .removeClass('photo-lazy')
+              .addClass('photo-loaded');
+            $fg = $p.find('.figure');
+            $img = $(img).addClass('pic').css($fg.data());
+            $fg.append($img);
+            $img.addClass('animate');
+            $ps.not($p);
+          }, function () {
+            $p.removeClass('photo-lazy');
+          });
+        }
+      });
+    });
   };
 
   View.prototype.destory = function () {};
 
+  /**
+   * Load Image
+   */
   var LoadImage = function (url, loadcb, errorcb) {
     this.url = url;
     this.img = document.createElement('img');
@@ -554,7 +658,7 @@ define('mnemosyne', function (require) {
       lcb(img);
       _this.abort();
     };
-    //img.onerror = function () {};
+    img.onerror = function () {};
     img.src = url;
   }
 
@@ -568,7 +672,7 @@ define('mnemosyne', function (require) {
     this.$root = $elem;
     this.selector = selector;
     this.$slideshow = this.$root.find('.slideshow');
-    this.$list = this.$slideshow.find('.photos-list');
+    this.$list = this.$slideshow.find('.photos-overlay');
 
     this.max_limited = 3;
     this.n = 0;
@@ -583,111 +687,160 @@ define('mnemosyne', function (require) {
 
   SlideShow.prototype.listen = function () {};
 
-  SlideShow.prototype.update = function () {}
-
-  SlideShow.prototype.clone = function ($photo) {
+  SlideShow.prototype.clone = function (_$pw) {
     var _this = this,
         isNotFirst = _this.$curr && this.$curr.length,
         $gallery = this.$root.find('.gallery'),
-        $clone = $photo.clone().removeClass('photo-trans'),
-        //offset = $photo.offset(),
-        offset = $photo.offset(),
-        ow = $photo.data('thumbnail-width'),
-        oh = $photo.data('thumbnail-height');
+        offset = _$pw.data('offset'),
+        $pw = _$pw.clone(),
+        //$p = $pw.find('.photo'),
+        ow = $pw.data('thumbnail-width'),
+        oh = $pw.data('thumbnail-height');
 
-    _this.$list.append($clone);
-    _this.$curr = $photo;
+    _this.$pw = $pw;
+    _this.$list.append($pw);
+    _this.$curr = _$pw;
 
     //http://timtaubert.de/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/
-    $clone.css({
-      '-webkit-transition': isNotFirst ? '' : 'all .5s ease-in-out',
-      '-webkit-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-      '-moz-transition': isNotFirst ? '' : 'all .5s ease-in-out',
-      '-moz-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)'
-    });
-    _this.update($clone, ow, oh);
-    _this._c.emit('scroll.mnemosyne', $photo, isNotFirst);
+    _this.isNotFirst = isNotFirst;
+    if (isNotFirst) {
+      $pw.css({
+        'display': 'none',
+        //'opacity': '1',
+        //'-webkit-transition': '-webkit-transform .5s ease-in-out 0'
+      });
+    } else {
+      $pw.css({
+        opacity: 1,
+        //'-webkit-transition': '-webkit-transform 1.5s ease-in-out',
+        '-webkit-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
+        //'-moz-transition': '-moz-transform 1.5s ease-in-out',
+        '-moz-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
+        //'-o-transition': '-o-transform 1.5s ease-in-out',
+        '-o-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
+        //'-ms-transition': '-ms-transform 1.5s ease-in-out',
+        '-ms-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
+        //'transition': 'transform 1.5s ease-in-out',
+        'transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)'
+      });
+    }
+
+    _this.update($pw, ow, oh);
+    //_this._c.emit('scroll', _$pw, isNotFirst);
   };
 
-SlideShow.prototype.show = function ($photo) {
-  $photo.trigger('mouseleave.mnemosyne');
-  this.$slideshow.addClass('slideshow-show');
-  this.clone($photo);
-};
+  SlideShow.prototype.show = function ($pw) {
+    this.$slideshow.addClass('animate');
+    this.clone($pw);
+  };
 
-SlideShow.prototype.effect = function () {
-  var $ps = this.$list.children(),
-      l = $ps.length;
+  SlideShow.prototype.getStatus = function () {
+    return this.$slideshow.hasClass('animate');
+  };
 
-  $ps.eq(l - 2).fadeOut(233, function () {
-    $ps.slice(0, l - 1).remove();
-  });
-  $ps.eq(l - 1).fadeIn(233);
-};
+  SlideShow.prototype.effect = function () {
+    var $ps = this.$list.children(),
+        l = $ps.length,
+        prev = $ps.eq(l - 2),
+        curr = $ps.eq(l - 1);
+
+    prev.css('-webkit-transition', 'none');
+    curr.css('-webkit-transition', 'none');
+    curr.fadeIn({
+      queue: false,
+      duration: 377,
+      step: function (now) {
+        prev.css('opacity', 1 - now);
+      },
+      complete: function () {
+        prev.hide();
+        $ps.slice(0, l - 2).hide().remove();
+      }
+    });
+  };
 
   SlideShow.prototype.move = function () {};
 
-  SlideShow.prototype.resize = function (w, h, sl, st) {
+  SlideShow.prototype.resize = function (w, h) {
     this.vw = w;
     this.vh = h;
-    this.sl = sl;
-    this.st = st;
+
+    if (this.getStatus()) {
+      var $pw = this.$pw,
+          $p = $pw.find('.photo'),
+          ow = $p.data('thumbnail-width'),
+          oh = $p.data('thumbnail-height');
+      $pw.css('-webkit-transition', 'none');
+      this.update($pw, ow, oh);
+    }
   };
 
   SlideShow.prototype.update = function ($item, iw, ih) {
-    var sw = this.vw,
-        sh = this.vh,
-        wh = _largeScale(this.vw, this.vh, iw, ih),
-        $img = $item.find('.figure img');
-    iw = wh.width;
-    ih = wh.height;
+    var vw = this.vw,
+        vh = this.vh,
+        wh = _largeScale(vw, vh, iw, ih),
+        //$p = $item.find('.photo'),
+        $p = $item,
+        $fg = $item.find('.figure'),
+        $img = $fg.find('img'),
+        r;
+    iw = wh[0];
+    ih = wh[1];
 
-    window.getComputedStyle($item[0]).height;
-    $item
-      .css({
-      width: iw,
-      height: ih,
-      '-webkit-transform': 'translate3d(' + (this.vw - iw) / 2 + 'px,' + (this.vh - ih) / 2 + 'px, 0px)',
-      '-moz-transform': 'translate3d(' + (this.vw - iw) / 2 + 'px,' + (this.vh - ih) / 2 + 'px, 0px)'
-    });
-    var $fg = $item.find('.figure')
-    window.getComputedStyle($fg[0]).width;
-      $fg.css({
-        'height': ih
-      });
-    $img.css({
-      '-webkit-transition': 'all .5s ease-in-out',
-      '-moz-transition': 'all .5s ease-in-out',
-      top: 0,
-      left: 0
-    });
-    window.getComputedStyle($img[0]).height;
-    $img.css({
-      '-webkit-transition': 'all .5s ease-in-out',
-      '-moz-transition': 'all .5s ease-in-out',
-      'width': iw,
+    /*
+    $fg.css({
       'height': ih
     });
+    */
+
+    $img.css({
+        top: 0,
+        left: 0,
+    });
+    getComputedStyle($img[0], 'height');
+    $img.css({
+        //top: 0,
+        //left: 0,
+        width: iw,
+        height: ih
+      });
+
+    /*
+    getComputedStyle($p[0], 'width');
+    $p.css({
+        width: iw,
+        height: ih
+      });
+    */
+
+    r = $item[0].getBoundingClientRect();
+    //console.dir(r);
+    //console.log((vw - iw) / 2, (vh - ih) / 2);
+    getComputedStyle($item[0], 'width');
+    console.log(iw, ih);
+    $item.css({
+        '-webkit-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0px)',
+        '-moz-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0px)',
+        '-ms-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0px)',
+        '-o-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0px)',
+        'transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0px)',
+        width: iw,
+        height: ih
+      });
   };
 
   SlideShow.prototype.prev = function () {
-    var $prev = this.$curr.prev();
-    if ($prev.length) {
-      this.$curr = $prev;
-    } else {
-      this.$curr = this.$curr.parent().children().last();
-    }
+    //var $prev = this.$curr.prev('.photo-wrap');
+    //this.$curr = $prev.length ? $prev : this.$curr.parent().find('.photo-wrap').last();
+    var $prev = this.$curr.prev('.photo');
+    this.$curr = $prev.length ? $prev : this.$curr.parent().find('.photo').last();
     this.clone(this.$curr);
     this.effect();
   };
 
   SlideShow.prototype.next = function () {
-    var $next = this.$curr.next();
-    if ($next.length) {
-      this.$curr = $next;
-    } else {
-      this.$curr = this.$curr.parent().children().first();
-    }
+    var $next = this.$curr.next('.photo');
+    this.$curr = $next.length ? $next : this.$curr.parent().find('.photo').first();
     this.clone(this.$curr);
     this.effect();
   };
@@ -722,9 +875,9 @@ SlideShow.prototype.effect = function () {
   SlideShow.prototype.download = function () {};
 
   SlideShow.prototype.exit = function () {
+    this.$root.find('.photos-wrap').removeClass('pw-sw');
+    this.$slideshow.removeClass('animate');
     this.stop();
-    this.$root.find('.photos-wrap').removeClass('photos-show');
-    this.$slideshow.removeClass('slideshow-show');
     this.$list.empty();
     this.$curr = undefined;
   };
@@ -791,8 +944,7 @@ SlideShow.prototype.effect = function () {
       }
     });
 
-
-
-
   return Mnemosyne;
 });
+
+

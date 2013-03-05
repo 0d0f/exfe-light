@@ -4,6 +4,8 @@
     <title>Mocha</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link rel="stylesheet" href="../../../production/css/exfe.min.css" />
     <link rel="stylesheet" href="mm.css" />
     <script src="../../../production/js/common/0.0.3/common.js"></script>
@@ -20,75 +22,31 @@
     <script src="../../../tools/mocha/mocha.js"></script>
     <script src="jquery.debouncedresize.js"></script>
     <script src="jquery.throttledresize.js"></script>
-    <style>
-    /*
-      #retypeset {
-        color: red;
-      }
-
-      .mnemosyne {
-        background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), url(../../../production/img/bg_pattern.png) #000000;
-        background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), url(../../../production/img/bg_pattern.png) #000000;
-      }
-
-      #slideshow {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(144, 144, 144, .5);
-        -webkit-perspective: 800px;
-      }
-
-      #slideshow .actions {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        z-index: 99;
-      }
-
-      .photos-show .gallery-wrap {
-        overflow-x: scroll;
-      }
-
-      .photos-show .gallery {
-        -webkit-transform: translate3d(0, 0, -610px);
-      }
-
-      .slideshow .photo {
-        -webkit-transition: all 233ms ease-out;
-        -moz-transition: all 233ms ease-out;
-        -o-transition: all 233ms ease-out;
-        ransition: all 233ms ease-out;
-        //-webkit-transform: translate3d(0, 0, 610px);
-      }
-      */
-    </style>
   </head>
   <body>
-    <section class="mnemosyne">
-      <div class="gallery">
-        <div class="photos-wrap">
-          <div class="photos-list"></div>
+    <div class="mnemosyne-wrap">
+      <section class="mnemosyne">
+        <div class="gallery">
+          <div class="photos-wrap">
+            <div class="photos-list"></div>
+          </div>
         </div>
-      </div>
-      <div class="slideshow">
-        <div class="photos-list"></div>
-        <div class="actions">
-          <button id="btn-esc">Esc</button>
-          <button id="btn-prev">Prev</button>
-          <button id="btn-next">Next</button>
-          <button id="btn-play">Play</button>
-          <button id="btn-pause">Pause</button>
-          <button id="btn-retypeset">重新排版</button>
-          <button id="btn-addphotos">添加图片</button>
+        <div class="slideshow">
+          <div class="photos-overlay"></div>
+          <div class="actions">
+            <button id="btn-esc">Esc</button>
+            <button id="btn-prev">Prev</button>
+            <button id="btn-next">Next</button>
+            <button id="btn-play">Play</button>
+            <button id="btn-pause">Pause</button>
+            <button id="btn-retypeset">重新排版</button>
+            <button id="btn-addphotos">添加图片</button>
+          </div>
         </div>
-      </div>
-    </section>
-
+      </section>
+    </div>
+    <!--<script src="data.js"></script>-->
+    <script src="photos.js"></script>
+    <script src="test.js"></script>
   </body>
-  <!--<script src="data.js"></script>-->
-  <script src="photos.js"></script>
-  <script src="test.js"></script>
 </html>
