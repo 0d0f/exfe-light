@@ -164,7 +164,7 @@ ExfeeCache = {
         };
         var arrCatched = [];
         if (/^[0-9]{5,15}$/.test(key)) {
-            var name = key.replace(/^\+.*(.{4})$/, '$1');
+            var name = key.replace(/^.*(.{3})$/, '$1');
             var id   = '';
             if (key.length === 11) {
                 id   = '+86' + key;
@@ -174,6 +174,7 @@ ExfeeCache = {
                     external_id       : id,
                     external_username : id,
                     provider          : 'phone',
+                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                     type              : 'identity'
                 });
             }
@@ -184,6 +185,7 @@ ExfeeCache = {
                 external_id       : id,
                 external_username : id,
                 provider          : 'phone',
+                avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
                 type              : 'identity'
             });
         }
@@ -567,6 +569,7 @@ ExfeeWidget = {
             provider          : '',
             type              : 'identity'
         }
+        var phone   = '';
         if (/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/.test(string)) {
             var iLt = string.indexOf('<'),
                 iGt = string.indexOf('>');
@@ -591,9 +594,9 @@ ExfeeWidget = {
             objIdentity.name              = objIdentity.external_username;
             objIdentity.provider          = 'facebook';
         } else if ((phone = string.replace(/\-|\(|\)|\ /g, '')) && /^\+[0-9]{5,15}$/.test(phone)) {
-            objIdentity.external_id       = string;
-            objIdentity.external_username = string;
-            objIdentity.name              = string.replace(/^\+.*(.{4})$/, '$1');
+            objIdentity.external_id       = phone;
+            objIdentity.external_username = phone;
+            objIdentity.name              = phone.replace(/^.*(.{3})$/, '$1');
             objIdentity.provider          = 'phone';
         } else {
             return null;
@@ -825,9 +828,11 @@ ExfeeWidget = {
         var identity = ExfeeCache.fetchIdentity(this.complete_exfee[index]);
         if (identity) {
             this.complete_exfee.splice(index, 1);
-            this.addExfee(identity);
             ExfeeCache.cacheIdentities(identity);
+        } else {
+            identity = ExfeUtilities.clone(this.complete_exfee[index]);
         }
+        this.addExfee(identity);
     },
 
 
