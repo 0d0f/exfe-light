@@ -511,6 +511,11 @@ body.x {
           box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+.x .get-button button,
+.x .set-button button {
+  width: 290px;
+}
+
 .set-button button {
   display: block;
 }
@@ -962,7 +967,7 @@ footer {
 }
 
 .portrait_rsvp.accepted {
-  background-color: #548bea;
+  background-color: #3A6EA5;
 }
 
 .portrait_rsvp.pending {
