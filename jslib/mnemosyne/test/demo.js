@@ -5,7 +5,7 @@ define(function (require) {
   var view = new ViewWidget($('.mnem-wrapper'));
   var slideshow = view.slideshow;
 
-  view.render(data.response.photos);
+  view.render(data.response.photos.slice(0, 30));
   view.update();
   $(window).trigger('throttledresize');
   view.lazyLoad();
