@@ -422,7 +422,6 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.updateFigure = function ($f, gid, w, h, l, t) {
-    console.log(2);
     $f
       .attr({
         'data-gid': gid
@@ -506,7 +505,6 @@ define('mnemosyne', function (require) {
         touchStartTime = +new Date();
         touch = e.originalEvent;
         startX = touch.changedTouches[0].pageX;
-        console.log('start');
         return false;
       })
         .on('touchmove.mnemosyne', '.slideshow .photo', function (e) {
@@ -542,18 +540,15 @@ define('mnemosyne', function (require) {
               _slideshow.next();
             }
           }
-          console.log('move', touch.pageX - startX);
           touchStartFlag = false;
           touch = null;
           startX = 0;
-          console.log('end');
           return false;
         })
     }
 
     _$root.on('keypress.mnemosyne', '.slideshow', function (e) {
       e.preventDefault();
-      console.log(233);
     });
 
     _this.on('resize', function (w, h) {
