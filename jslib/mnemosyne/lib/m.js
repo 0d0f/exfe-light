@@ -966,7 +966,7 @@ define('mnemosyne', function (require) {
     this.$slideshow.removeClass('animate');
     this.stop();
     this.$list.empty();
-    this.$curr = undefined;
+    this.$curr = this.$c = undefined;
   };
 
   return View;
