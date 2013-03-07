@@ -518,7 +518,7 @@ define('mnemosyne', function (require) {
       var touchStartFlag = false, startX = 0, touch,
           swipeThreshold = 50, swipeTimeThreshold = 377,
           touchStartTime, touchEndTime,
-          tap_max_touchtime = 250, tap_max_distance = 10;
+          tap_max_touchtime = 250, tap_max_distance = 10, tapE = null;
 
       _$root.on('touchstart.mnemosyne', figure_selector, function (e) {
         if (touchStartFlag) return true;
@@ -526,6 +526,7 @@ define('mnemosyne', function (require) {
         touchStartTime = +new Date();
         touch = e.originalEvent;
         startX = touch.changedTouches[0].pageX;
+        tapE = this;
       })
         .on('touchend.mnemosyne', figure_selector, function (e) {
           touchStartFlag = false;
@@ -533,14 +534,16 @@ define('mnemosyne', function (require) {
 
           touchEndTime = +new Date();
 
-          if (touchEndTime - touchStartTime <= tap_max_touchtime) {
-            if (Math.abs(touch.pageX - startX) <= tap_max_distance) {
-              e.preventDefault();
-              $(this).trigger('click.mnemosyne');
-              touchStartFlag = false;
-              touch = null;
-              startX = 0;
-              return false;
+          if (tapE === this) {
+            if (touchEndTime - touchStartTime <= tap_max_touchtime) {
+              if (Math.abs(touch.pageX - startX) <= tap_max_distance) {
+                e.preventDefault();
+                $(this).trigger('click.mnemosyne');
+                touchStartFlag = false;
+                touch = null;
+                startX = 0;
+                return false;
+              }
             }
           }
           touchStartFlag = false;
