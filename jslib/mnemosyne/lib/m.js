@@ -8,7 +8,8 @@ define('mnemosyne', function (require) {
       $WIN = $(window),
       $DOC = $(document),
       getComputedStyle = function (elem, property) { window.getComputedStyle(elem, null).getPropertyValue(property); },
-      isTouch = 'ontouchstart' in document.documentElement;
+      isTouch = 'ontouchstart' in document.documentElement,
+      transitionEnds = 'webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd transitionend';
 
   var max = Math.max,
       min = Math.min,
@@ -19,7 +20,7 @@ define('mnemosyne', function (require) {
   // grouping number
   var G_N = 0;
   var RECT_TEMPLATE = ''
-          + '<figure class="css3d figure" data-id="{{id}}" data-thumbnail="{{image.thumbnail.url}}" data-thumbnail-width="{{image.thumbnail.width}}" data-thumbnail-height="{{image.thumbnail.height}}" data-fullsize="{{image.fullsize.url}}" data-fullsize-height="{{image.fullsize.height}}" data-fullsize-width="{{image.fullsize.width}}">'
+          + '<figure class="figure surface pe no-select" data-id="{{id}}" data-thumbnail="{{image.thumbnail.url}}" data-thumbnail-width="{{image.thumbnail.width}}" data-thumbnail-height="{{image.thumbnail.height}}" data-fullsize="{{image.fullsize.url}}" data-fullsize-height="{{image.fullsize.height}}" data-fullsize-width="{{image.fullsize.width}}">'
               //+ '<img class="pic" src="{{image.thumbnail.url}}" />'
             + '<div class="photo">'
               + '<div class="photo-mask"></div>'
@@ -457,15 +458,33 @@ define('mnemosyne', function (require) {
         //pw_selector = '.gallery .photos-list .photo-wrap';
         figure_selector = '.gallery .figure';
 
+    _$root.on('keydown.mnemosyne', '.slideshow', function (e) {
+      var k = e.keyCode;
+      if ('38 39 40 37 27'.search(k) !== -1) {
+        e.preventDefault();
+        switch (k) {
+          case 38:
+          case 37:
+            _slideshow.prev();
+            break;
+          case 40:
+          case 39:
+            _slideshow.next();
+            break;
+          case 27:
+            _slideshow.exit();
+        }
+      }
+    });
+
     // Gallery Photo clicked
-    _$root.on('click.mnemosyne', figure_selector, function (e) {
+    _$root.on('click.mnemosyne touchend.mnemosyne', figure_selector, function (e) {
       e.preventDefault();
       // if (isTouch) return;
-      var $f = $(this), t = $f.data('event');
+      var $f = $(this);
 
-      if (isTouch && t) {
-        $f.removeData('event')
-        return;
+      if (isTouch) {
+        $f.data('offset', $f.offset());
       }
 
       if (!_this.resizestatus) {
@@ -473,7 +492,8 @@ define('mnemosyne', function (require) {
         $WIN.trigger('debouncedresize.mnemosyne');
       }
       $f.trigger('mouseleave.mnemosyne');
-      _this.$gallery.addClass('gsw');
+      //_this.$gallery.addClass('gsw');
+      _this.emit('mm-hide');
       _this.emit('slideshow', $f);
     })
       .on('hover.mnemosyne', figure_selector, function (e) {
@@ -547,12 +567,11 @@ define('mnemosyne', function (require) {
         })
     }
 
-    _$root.on('keypress.mnemosyne', '.slideshow', function (e) {
-      e.preventDefault();
-    });
-
     _this.on('resize', function (w, h) {
       _slideshow.resize(w, h);
+      if (_slideshow.$slideshow.hasClass('animate')) {
+        $(window).scrollLeft(0);
+      }
     });
 
     _this.on('slideshow', function ($f) {
@@ -561,6 +580,10 @@ define('mnemosyne', function (require) {
 
     _this.on('scroll', function (w, l, t) {
       _this.scroll(w, l, t);
+    });
+
+    _this.on('mm-hide', function (w, l, t) {
+      _this.$gallery.addClass('mm-hide');
     });
 
     $WIN.on('debouncedresize.mnemosyne', function () {
@@ -609,7 +632,7 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.startShow = function () {
-    this.$mnemosyne.addClass('animate');
+    this.$mnemosyne.addClass('animate').focus();
   };
 
   View.prototype.lazyLoad = function () {
@@ -695,103 +718,34 @@ define('mnemosyne', function (require) {
 
   SlideShow.prototype.listen = function () {};
 
-  /*
-  SlideShow.prototype.clone = function (_$fw) {
-    var _this = this,
-        isNotFirst = _this.$curr && this.$curr.length,
-        $gallery = this.$root.find('.gallery'),
-        offset = _$fw.data('offset'),
-        $f = _$fw.clone(),
-        //ow = $f.data('thumbnail-width'),
-        //oh = $f.data('thumbnail-height');
-        ow = $f.width(),
-        oh = $f.height();
-
-    _this.$f = $f;
-    _this.$list.append($f);
-    _this.$curr = _$fw;
-
-    //http://timtaubert.de/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/
-    _this.isNotFirst = isNotFirst;
-    if (isNotFirst) {
-      $f.css({
-        'display': 'none',
-      });
-    } else {
-      $f.css({
-        '-webkit-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-moz-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-ms-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-o-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        'transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)'
-      });
-    }
-
-    _this.update($f, ow, oh);
-    //_this._c.emit('scroll', _$fw, isNotFirst);
-  };
-  */
-
- /*
-  var clone0 = function ($f, $root) {
-    var $p = $('<div class="figure"/>'),
-        offset = $f.data('offset'),
-        $m = $f.find('.pic').clone().removeClass('animate');
-    $p.css({
-        opacity: 1,
-        'width': $f.width(),
-        'height': $f.height(),
-        '-webkit-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-moz-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-ms-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        '-o-transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)',
-        'transform': 'translate3d(' + offset.left + 'px, ' + offset.top + 'px, 0px)'
-    });
-    $p.append($m);
-    $root.append($p);
-    return $p;
-  };
-
-  var update0 = function (self, $c, $f) {
-    var vw = self.vw,
-        vh = self.vh,
-        w = $f.width(),
-        h = $f.width(),
-        ow = $f.data('thumbnail-width'),
-        oh = $f.data('thumbnail-height'),
-        wh = _largeScale(vw, vh, ow, oh),
-        iw = wh[0], ih = wh[1],
-        sw = iw / w, sh = ih /h;
-
-    getComputedStyle($c[0], 'height');
-    $c.css({
-      //opacity: 0,
-      '-webkit-transform': 'translate3d(' + (vw - w * sw) / 2 + 'px, ' + (vh - h * sh) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-moz-transform': 'translate3d(' + (vw - w * sw) / 2 + 'px, ' + (vh - h * sh) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-ms-transform': 'translate3d(' + (vw - w * sw) / 2 + 'px, ' + (vh - h * sh) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-o-transform': 'translate3d(' + (vw - w * sw) / 2 + 'px, ' + (vh - h * sh) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      'transform': 'translate3d(' + (vw - w * sw) / 2 + 'px, ' + (vh - h * sh) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')'
-    });
-  };
-  */
-
   var clone0 = function (self, $f, $root) {
     var vw = self.vw,
         vh = self.vh,
-        $m = $('<img class="photo"/>').prop('src', $f.attr('data-thumbnail')),
-        ow = $f.data('thumbnail-width'),
-        oh = $f.data('thumbnail-height'),
+        $m = $('<img class="photo preserve3d no-select"/>').prop('src', $f.attr('data-thumbnail')),
+        ow = $f.data('fullsize-width'),
+        oh = $f.data('fullsize-height'),
+        fs = $f.data('fullsize'),
         wh = _largeScale(vw, vh, ow, oh),
         iw = wh[0], ih = wh[1],
-        sw = iw / ow, sh = ih / oh;
+        sw = iw / ow, sh = ih / oh,
+        l = (vw -iw) / 2, t = (vh - ih) / 2,
+        imgload = new LoadImage(fs, function (img) {
+          $m.prop('src', fs);
+          fs = $m = undefined;
+        });
 
-    $m.css({
-      '-webkit-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-moz-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-ms-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-o-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      'transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')'
-    });
+    $m
+      .data('img-load', imgload)
+      .attr('data-ltwh', l + ',' + t + ',' + sw + ',' + sh)
+      .css({
+       'width': ow,
+        'height': oh,
+        '-webkit-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-moz-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-ms-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-o-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        'transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')'
+      });
     $root.append($m);
     return $m;
   };
@@ -800,20 +754,27 @@ define('mnemosyne', function (require) {
     var whlt = $f.attr('data-whlt').split(','),
         w = +whlt[0], h = +whlt[1], l = +whlt[2], t = +whlt[3],
         offset = $f.data('offset'),
-        ow = $f.data('thumbnail-width'),
-        oh = $f.data('thumbnail-height'),
-        $m = $('<img class="photo"/>').prop('src', $f.attr('data-thumbnail')),
-        sw = w / ow, sh = h / oh;
+        ow = $f.data('fullsize-width'),
+        oh = $f.data('fullsize-height'),
+        fs = $f.data('fullsize'),
+        $m = $('<img class="photo preserve3d no-select"/>').prop('src', $f.attr('data-thumbnail')),
+        sw = w / ow, sh = h / oh,
+        imgload = new LoadImage(fs, function (img) {
+          $m.prop('src', fs);
+          fs = $m = undefined;
+        });
 
-    $m.css({
+    $m
+      .data('img-load', imgload)
+      .css({
         'width': ow,
         'height': oh,
         'opacity': 0,
-        '-webkit-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-        '-moz-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-        '-ms-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-        '-o-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-        'transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0px) scale(' + sw + ', ' + sh + ')'
+        '-webkit-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-moz-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-ms-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-o-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        'transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
     });
     $root.append($m);
     return $m;
@@ -823,21 +784,23 @@ define('mnemosyne', function (require) {
     var vw = self.vw,
         vh = self.vh,
         whlt = $f.attr('data-whlt').split(','),
-        w = +whlt[0], h = +whlt[1], l = +whlt[2], t = +whlt[3],
-        ow = $f.data('thumbnail-width'),
-        oh = $f.data('thumbnail-height'),
+        ow = $f.data('fullsize-width'),
+        oh = $f.data('fullsize-height'),
         wh = _largeScale(vw, vh, ow, oh),
         iw = wh[0], ih = wh[1],
-        sw = iw / ow, sh = ih / oh;
+        sw = iw / ow, sh = ih / oh,
+        l = (vw - iw) / 2, t = (vh - ih) / 2;
     getComputedStyle($c[0], 'height');
-    $c.css({
-      'opacity': 1,
-      '-webkit-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-moz-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-ms-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      '-o-transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')',
-      'transform': 'translate3d(' + (vw - iw) / 2 + 'px, ' + (vh - ih) / 2 + 'px, 0px) scale(' + sw + ', ' + sh + ')'
-    });
+    $c
+      .attr('data-ltwh', l + ',' + t + ',' + sw + ',' + sh)
+      .css({
+        'opacity': 1,
+        '-webkit-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-moz-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-ms-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        '-o-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')',
+        'transform': 'translate3d(' + l + 'px, ' + t + 'px, 0px) scale(' + sw + ', ' + sh + ')'
+      });
   };
   
   SlideShow.prototype.clone = function ($f) {
@@ -849,13 +812,14 @@ define('mnemosyne', function (require) {
       $c = clone1($f, this.$list);
       update1(this, $c, $f);
     }
-    this._c.emit('scroll', $f, isNotFirst);
+    //this._c.emit('scroll', $f, isNotFirst);
+    this._c.emit('mm-hide');
     this.$c = $c;
     this.$curr = $f;
   };
 
   SlideShow.prototype.show = function ($f) {
-    this.$slideshow.addClass('animate');
+    this.$slideshow.css('opacity', 1).addClass('animate').focus();
     this.clone($f);
   };
 
@@ -863,25 +827,60 @@ define('mnemosyne', function (require) {
     return this.$slideshow.hasClass('animate');
   };
 
-  SlideShow.prototype.effect = function () {
+  SlideShow.prototype.effect = function (a) {
     var $ps = this.$list.children(),
         l = $ps.length,
-        prev = $ps.eq(l - 2),
-        curr = $ps.eq(l - 1);
+        $prev = $ps.eq(l - 2),
+        $curr = $ps.eq(l - 1),
+        pwhlt = $prev.attr('data-ltwh').split(','),
+        cwhlt = $curr.attr('data-ltwh').split(','),
+        psl = pwhlt[0], csl, pel, pst =pwhlt[1], cel = cwhlt[0], cst = cwhlt[1], csw = cwhlt[2], csh = cwhlt[3], psw = pwhlt[2], psh = pwhlt[3];
 
-    /*
-    curr.fadeIn({
-      queue: false,
-      duration: 377,
-      step: function (now) {
-        prev.css('opacity', 1 - now);
-      },
-      complete: function () {
-        prev.hide();
-        $ps.slice(0, l - 2).hide().remove();
-      }
+    if (a === 0) {
+      csl = +cel - 50;
+      pel = +psl + 50;
+    } else {
+      csl = +cel + 50;
+      pel = +psl - 50;
+    }
+    $prev.addClass('no-trans');
+    $curr.addClass('no-trans');
+    $curr.css({
+        'opacity': 0,
+        '-webkit-transform': 'translate3d(' + csl + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-moz-transform': 'translate3d(' + csl + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-ms-transform': 'translate3d(' + csl + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-o-transform': 'translate3d(' + csl + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        'transform': 'translate3d(' + csl + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')'
     });
-    */
+    $prev.removeClass('no-trans');
+    $curr.removeClass('no-trans');
+    getComputedStyle($curr[0], 'height');
+    $prev.on(transitionEnds, function () {
+      var $s = $ps.slice(0, l - 2).hide();
+      $s.each(function () {
+        var imgload = $(this).data('img-load');
+        imgload && imgload.abort();
+        $(this).remove();
+      });
+    });
+    $curr.css({
+        'opacity': 1,
+        '-webkit-transform': 'translate3d(' + cel + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-moz-transform': 'translate3d(' + cel + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-ms-transform': 'translate3d(' + cel + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        '-o-transform': 'translate3d(' + cel + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')',
+        'transform': 'translate3d(' + cel + 'px, ' + cst + 'px, 0px) scale(' + csw + ', ' + csh + ')'
+    });
+    getComputedStyle($prev[0], 'height');
+    $prev.css({
+        'opacity': 0,
+        '-webkit-transform': 'translate3d(' + pel + 'px, ' + pst + 'px, 0px) scale(' + psw + ', ' + psh + ')',
+        '-moz-transform': 'translate3d(' + pel + 'px, ' + pst + 'px, 0px) scale(' + psw + ', ' + psh + ')',
+        '-ms-transform': 'translate3d(' + pel + 'px, ' + pst + 'px, 0px) scale(' + psw + ', ' + psh + ')',
+        '-o-transform': 'translate3d(' + pel + 'px, ' + pst + 'px, 0px) scale(' + psw + ', ' + psh + ')',
+        'transform': 'translate3d(' + pel + 'px, ' + pst + 'px, 0px) scale(' + psw + ', ' + psh + ')'
+    });
   };
 
   SlideShow.prototype.move = function () {};
@@ -894,27 +893,25 @@ define('mnemosyne', function (require) {
       var $c = this.$c,
           ow = $c.width(),
           oh = $c.height();
-      $c.css({
-        '-webkit-transition': 'none',
-        '-moz-transition': 'none',
-        '-ms-transition': 'none',
-        '-o-transition': 'none',
-        'transition': 'none'
-      });
+      $c.addClass('no-trans');
       this.update($c, ow, oh);
     }
   };
 
-  SlideShow.prototype.update = function ($c, iw, ih) {
+  SlideShow.prototype.update = function ($c, ow, oh) {
     var vw = this.vw,
-        vh = this.vh;
+        vh = this.vh,
+        wh = _largeScale(vw, vh, ow, oh),
+        iw = wh[0], ih = wh[1],
+        sw = iw / ow, sh = ih / oh,
+        l = (vw - iw) / 2, t = (vh - ih) / 2;
 
     $c.css({
-        '-webkit-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0)',
-        '-moz-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0)',
-        '-ms-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0)',
-        '-o-transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0)',
-        'transform': 'translate3d(' + (vw - iw) / 2 + 'px,' + (vh - ih) / 2 + 'px, 0)',
+        '-webkit-transform': 'translate3d(' + l + 'px,' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-moz-transform': 'translate3d(' + l + 'px,' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-ms-transform': 'translate3d(' + l + 'px,' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-o-transform': 'translate3d(' + l + 'px,' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        'transform': 'translate3d(' + l + 'px,' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
       });
   };
 
@@ -922,14 +919,14 @@ define('mnemosyne', function (require) {
     var $prev = this.$curr.prev('.figure');
     this.$curr = $prev.length ? $prev : this.$curr.parent().find('.figure').last();
     this.clone(this.$curr);
-    this.effect();
+    this.effect(0);
   };
 
   SlideShow.prototype.next = function () {
     var $next = this.$curr.next('.figure');
     this.$curr = $next.length ? $next : this.$curr.parent().find('.figure').first();
     this.clone(this.$curr);
-    this.effect();
+    this.effect(1);
   };
 
   SlideShow.prototype.animate = function () {
@@ -962,11 +959,13 @@ define('mnemosyne', function (require) {
   SlideShow.prototype.download = function () {};
 
   SlideShow.prototype.exit = function () {
-    this.$root.find('.gallery').removeClass('gsw');
-    this.$slideshow.removeClass('animate');
+    //this.$root.find('.gallery').removeClass('gsw');
+    this.$root.find('.gallery').removeClass('mm-hide');
+    this.$slideshow.css('opacity', 0).removeClass('animate');
     this.stop();
     this.$list.empty();
     this.$curr = this.$c = undefined;
+    this.$root.focus();
   };
 
   return View;

@@ -23,29 +23,29 @@ define(function (require) {
   });
 
   $('#btn-esc').click(function () {
-    console.log('esc photo');
+    // console.log('esc photo');
     slideshow.exit();
   });
 
   $('#btn-prev').click(function () {
-    console.log('prev photo');
+    // console.log('prev photo');
     slideshow.stop();
     slideshow.prev();
   });
 
   $('#btn-next').click(function () {
-    console.log('next photo');
+    // console.log('next photo');
     slideshow.stop();
     slideshow.next();
   });
 
   $('#btn-play').click(function () {
-    console.log('play photo');
+    // console.log('play photo');
     slideshow.play();
   });
 
   $('#btn-pause').click(function () {
-    console.log('stop photo');
+    // console.log('stop photo');
     slideshow.exit();
   });
 });

@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <link rel="stylesheet" href="../../../production/css/exfe.min.css" />
-    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="demo1.css" />
     <script src="../../../production/js/common/0.0.3/common.js"></script>
     <script src="../../../production/js/class/0.0.1/class.js"></script>
     <script src="../../../production/js/emitter/0.0.2/emitter.js"></script>
@@ -24,13 +24,13 @@
     <script src="jquery.throttledresize.js"></script>
   </head>
   <body class="start-mnem">
-    <div class="widget mnem-wrapper preserve3d">
-      <section class="mnemosyne transform-style00 preserve3d">
+    <div class="widget mnem-wrapper preserve3d no-select" tabindex="-1">
+      <section class="mnemosyne preserve3d">
         <div class="gallery-wrapper preserve3d">
-          <div class="gallery"></div>
+          <div class="gallery preserve3d"></div>
         </div>
-        <div class="slideshow preserve3d user-select pe">
-          <div class="photos"></div>
+        <div class="slideshow preserve3d pe" tabindex="-1">
+          <div class="photos preserve3d"></div>
           <div class="actions">
             <button id="btn-esc">Esc</button>
             <button id="btn-prev">Prev</button>
