@@ -478,7 +478,7 @@ define('mnemosyne', function (require) {
     });
 
     // Gallery Photo clicked
-    _$root.on('click.mnemosyne tap.mnemosyne', figure_selector, function (e) {
+    _$root.on('click.mnemosyne', figure_selector, function (e) {
       e.preventDefault();
       // if (isTouch) return;
       var $f = $(this);
@@ -517,7 +517,36 @@ define('mnemosyne', function (require) {
     if (isTouch) {
       var touchStartFlag = false, startX = 0, touch,
           swipeThreshold = 50, swipeTimeThreshold = 377,
-          touchStartTime, touchEndTime;
+          touchStartTime, touchEndTime,
+          tap_max_touchtime = 250, tap_max_distance = 10;
+
+      _$root.on('touchstart.mnemosyne', figure_selector, function (e) {
+        if (touchStartFlag) return true;
+        touchStartFlag = true;
+        touchStartTime = +new Date();
+        touch = e.originalEvent;
+        startX = touch.changedTouches[0].pageX;
+      })
+        .on('touchend.mnemosyne', figure_selector, function (e) {
+          touchStartFlag = false;
+          touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+
+          touchEndTime = +new Date();
+
+          if (touchEndTime - touchStartTime <= tap_max_touchtime) {
+            if (touch.pageX - startX <= tap_max_distance) {
+              e.preventDefault();
+              $(this).trigger('click.mnemosyne');
+              touchStartFlag = false;
+              touch = null;
+              startX = 0;
+              return false;
+            }
+          }
+          touchStartFlag = false;
+          touch = null;
+          startX = 0;
+        });
       _$root.on('touchstart.mnemosyne', '.slideshow .photo', function (e) {
         e.preventDefault();
         if (touchStartFlag) return true;
