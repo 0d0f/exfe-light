@@ -99,7 +99,34 @@ define('api', function (require) {
     recognize: '/time/recognize',
 
     // sort identities
-    sortIdentities: '/Users/:user_id/sortIdentities'
+    sortIdentities: '/Users/:user_id/sortIdentities',
+
+
+    // PhotoX {
+
+    // Get PhotoX
+    photox_getPhotoX: '/photox/:photox_id',
+
+    // Get albums
+    photox_getAlbums: '/photox/GetSourceAlbums',
+
+    // Get source photos
+    photox_getSourcePhotos: '/photox/GetSourcePhotos',
+
+    // Get photo
+    photox_getPhoto: '/photox/GetPhoto',
+
+    // Add
+    photox_add: '/photox/:photox_id/Add',
+
+    // Get likes
+    photox_getLikes: '/photox/:photox_id/GetLikes',
+
+    // Like
+    photox_like: '/photox/Like'
+
+    // PhotoX }
+
   };
 
   // Not Use Token
@@ -225,7 +252,7 @@ define('api', function (require) {
       });
 
     promise.jqXHR = jqXHR;
-    promise.abort = function (statusText) { 
+    promise.abort = function (statusText) {
       if (jqXHR) {
         jqXHR.abort(statusText);
         jqXHR = dfd = promise = null;
