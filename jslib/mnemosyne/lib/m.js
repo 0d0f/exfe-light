@@ -478,7 +478,7 @@ define('mnemosyne', function (require) {
     });
 
     // Gallery Photo clicked
-    _$root.on('click.mnemosyne touchend.mnemosyne', figure_selector, function (e) {
+    _$root.on('click.mnemosyne tap.mnemosyne', figure_selector, function (e) {
       e.preventDefault();
       // if (isTouch) return;
       var $f = $(this);
