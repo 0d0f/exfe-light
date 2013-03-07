@@ -534,7 +534,7 @@ define('mnemosyne', function (require) {
           touchEndTime = +new Date();
 
           if (touchEndTime - touchStartTime <= tap_max_touchtime) {
-            if (touch.pageX - startX <= tap_max_distance) {
+            if (Math.abs(touch.pageX - startX) <= tap_max_distance) {
               e.preventDefault();
               $(this).trigger('click.mnemosyne');
               touchStartFlag = false;
@@ -583,7 +583,7 @@ define('mnemosyne', function (require) {
           touchEndTime = +new Date();
 
           if (touchEndTime - touchStartTime <= swipeTimeThreshold) {
-            if (touch.pageX - startX > swipeThreshold) {
+            if (touch.pageX - startX >= swipeThreshold) {
               _slideshow.prev();
             } else if (touch.pageX - startX < -swipeThreshold) {
               _slideshow.next();
