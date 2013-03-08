@@ -419,6 +419,22 @@ html, body {
   transform-origin: 0 0;
 }
 
+.slideshow .prev-photo {
+  position: absolute;
+  display: block;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.slideshow .next-photo {
+  position: absolute;
+  display: block;
+  height: 100%;
+  top: 0;
+  right: 0;
+}
+
 .slideshow .no-trans {
   -webkit-transition: none;
   -moz-transition: none;
