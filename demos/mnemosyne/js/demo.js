@@ -9,6 +9,7 @@ define(function (require) {
   view.update();
   $(window).trigger('throttledresize');
   view.lazyLoad();
+  view.doscroll();
   view.startShow();
   view.doscroll();
 
