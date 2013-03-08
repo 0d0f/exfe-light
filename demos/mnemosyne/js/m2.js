@@ -632,8 +632,7 @@ define('mnemosyne', function (require) {
   View.prototype.scroll = function ($item, isNotFirst) {
     var a = isNotFirst ? 1800 / (1800 + 377) : 1,
         p = $item.position();
-    //this.$galleryWrapper.stop(true, true).animate({
-    $(window).stop(true, true).animate({
+    this.$galleryWrapper.stop(true, true).animate({
       scrollLeft: (p.left + 24 - (this.vw - $item.find('.photo').width()) / 2 * a) / a
     }, 400);
   };
@@ -662,8 +661,7 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.doscroll = function () {
-    //this.$galleryWrapper.trigger('scroll.mnemosyne');
-    $(window).trigger('scroll.mnemosyne');
+    this.$galleryWrapper.trigger('scroll.mnemosyne');
   };
 
   View.prototype.startShow = function () {
@@ -674,8 +672,7 @@ define('mnemosyne', function (require) {
     var _this = this, caches;
     (!this.caches) && (this.caches = []);
     caches = this.caches;
-    //this.$galleryWrapper.on('scroll.mnemosyne', function () {
-    $(window).on('scroll.mnemosyne', function () {
+    this.$galleryWrapper.on('scroll.mnemosyne', function () {
       var $fs = _this.$gallery.find('.figure').not('.photo-lazy, .photo-loaded');
       if (0 === $fs.length) return;
       $fs.each(function () {
