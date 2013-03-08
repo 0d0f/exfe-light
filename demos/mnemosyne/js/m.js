@@ -249,7 +249,7 @@ define('mnemosyne', function (require) {
   var View = function ($elem, settings) {
     Emitter.call(this);
 
-    this.$root = $elem;
+    this.$root = $elem.parent();
     this.$mnemosyne = $elem.find('.mnemosyne');
     this.$galleryWrapper = this.$mnemosyne.find('.gallery-wrapper');
     this.$gallery = this.$mnemosyne.find('.gallery');
@@ -491,6 +491,7 @@ define('mnemosyne', function (require) {
         _this.resizestatus = true;
         $WIN.trigger('debouncedresize.mnemosyne');
       }
+      $('body').addClass('noscroll');
       $f.trigger('mouseleave.mnemosyne');
       //_this.$gallery.addClass('gsw');
       _this.emit('mm-hide');
@@ -800,17 +801,27 @@ define('mnemosyne', function (require) {
           fs = $m = undefined;
         });
 
+    //console.log($f[0].getBoundingClientRect())
+    //console.log(offset)
+    var r = $f[0].getBoundingClientRect();
+    l = r.left; t = r.top;
     $m
       .data('img-load', imgload)
       .css({
         'width': ow,
         'height': oh,
         'opacity': 0,
-        '-webkit-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        /*'-webkit-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
         '-moz-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
         '-ms-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
         '-o-transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
         'transform': 'translate3d(' + (offset.left + l) + 'px, ' + (offset.top + t) + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        */
+        '-webkit-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-moz-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-ms-transform': 'translate3d(' + t + 'px, ' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        '-o-transform': 'translate3d(' + l + 'px, ' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
+        'transform': 'translate3d(' + l + 'px, ' + t + 'px, 0) scale(' + sw + ', ' + sh + ')',
     });
     $root.append($m);
     return $m;
@@ -996,6 +1007,7 @@ define('mnemosyne', function (require) {
 
   SlideShow.prototype.exit = function () {
     //this.$root.find('.gallery').removeClass('gsw');
+    $('body').removeClass('noscroll');
     this.$root.find('.gallery').removeClass('mm-hide');
     this.$slideshow.css('opacity', 0).removeClass('animate');
     this.stop();
