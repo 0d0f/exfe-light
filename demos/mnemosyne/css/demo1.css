@@ -90,8 +90,8 @@ html, body {
   position: relative;
   width: 100%;
   height: 100%;
-  background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), url(../../../production/img/bg_pattern.png) #000000;
-  background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), url(../../../production/img/bg_pattern.png) #000000;
+  background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), url(../img/bg_pattern.png) #000000;
+  background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), url(../img/bg_pattern.png) #000000;
   opacity: 0;
 
   -webkit-perspective: 300;
