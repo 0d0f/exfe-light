@@ -1,3 +1,7 @@
+* v0.2.7 2013-03-10T00:44:26 UTC+0800
+  - Changes
+    * url 后面以 '/' 结尾
+
 * v0.2.6 2013-03-05T14:11:38 UTC+0800
   - New Features
     * parsed `/?ipad`
