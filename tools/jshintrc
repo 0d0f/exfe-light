@@ -25,7 +25,7 @@
       "Modernizr",
       // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Functions#escape_and_unescape_functions
       "escape",
-      "unescape"
+      "unescape",
         //"exampleVar",
         //"anotherCoolGlobal",
         //"iLoveDouglas"
