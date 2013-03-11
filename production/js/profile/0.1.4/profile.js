@@ -797,6 +797,7 @@ define(function (require, exports, module) {
   });
 
   var Uploader = null,
+      uploader = null,
       uploaderTarget = null,
       uploadSettings;
   // 头像上传控件
