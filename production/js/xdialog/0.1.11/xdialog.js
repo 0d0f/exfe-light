@@ -1152,7 +1152,7 @@ define('xdialog', function (require, exports) {
               return;
             }
 
-            function addIdentity(external_username, provider, that) {
+            var addIdentity = function (external_username, provider, that) {
               var authorization = Store.get('authorization')
                 , token = authorization.token;
               var defer = Api.request('addIdentity',
@@ -1957,7 +1957,7 @@ define('xdialog', function (require, exports) {
             , token = this._token
             , signed = this.signed;
           if (this._setup) {
-            function _setPassword(signed, token, user, stpwd, xbtn, that) {
+            var _setPassword = function (signed, token, user, stpwd, xbtn, that) {
               var befer = Api.request('setPassword'
                 , {
                   type: 'POST',
@@ -2008,7 +2008,7 @@ define('xdialog', function (require, exports) {
             _setPassword(signed, token, user, stpwd, xbtn, that);
           }
           else {
-            function _resetPassword(signed, token, user, stpwd, that) {
+            var _resetPassword = function (signed, token, user, stpwd, that) {
               var befer = Api.request('resetPassword',
                 {
                   type: 'POST',
