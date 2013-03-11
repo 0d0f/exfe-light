@@ -2417,7 +2417,7 @@ define(function (require, exports, module) {
         }
     });
     // init event: signin
-    bus.on('xapp:usersignin', function() {
+    bus.on('app:user:signin:after', function() {
         if (window.Cross && !window.Cross.id) {
             // get current user
             var Signin  = Store.get('authorization');
