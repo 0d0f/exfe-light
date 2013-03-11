@@ -387,6 +387,11 @@ define(function (require, exports, module) {
                              + '&token='       + data.response.authorization.token
                              + '&identity_id=' + myIdId;
                         my_token = data.response.authorization.token;
+                    } else if (my_token) {
+                        args = data.response.cross.id
+                             + '?user_id='     + user_id
+                             + '&token='       + my_token
+                             + '&identity_id=' + myIdId;
                     }
                     if (my_token) {
                         $('.rsvp_toolbar').show();
