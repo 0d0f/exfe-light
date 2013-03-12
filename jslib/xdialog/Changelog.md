@@ -1,6 +1,7 @@
 * v0.1.11 2013-03-12T00:54:43 UTC+0800
   - Changes
     * `Rome` replaced `Sandbox`
+    * `period` replaced `stage`
 
 * v0.1.10 2013-02-06T15:01:47 UTC+0800
   - Changes
