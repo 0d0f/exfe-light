@@ -64,6 +64,11 @@ define(function (require, exports, module) {
         }, 1000);
     };
 
+    var disRedirecting = function() {
+        $('.redirecting').hide();
+        $('footer').hide();
+    };
+
     var styleBody = function(page) {
         var pages = ['home', 'x', 'verify'];
         for (var i in pages) {
@@ -277,10 +282,16 @@ define(function (require, exports, module) {
                     );
                     // get user_id
                     var user_id = 0;
+                    var myIdId  = 0;
                     if (data.response.authorization) {
                         user_id = data.response.authorization.user_id;
-                    } else if (data.response.browsing_identity.connected_user_id) {
+                        if (data.response.browsing_identity) {
+                            myIdId  = data.response.browsing_identity.id;
+                        }
+                    } else if (data.response.browsing_identity
+                            && data.response.browsing_identity.connected_user_id > 0) {
                         user_id = data.response.browsing_identity.connected_user_id;
+                        myIdId  = data.response.browsing_identity.id;
                     }
                     if (typeof data.response.cross_access_token !== 'undefined') {
                         cats[token] = data.response.cross_access_token;
@@ -291,11 +302,10 @@ define(function (require, exports, module) {
                     $('.inviter').hide();
                     var idMyInv = -1;
                     var stype   = '';
-                    var myIdId  = 0;
                     my_exfee_id = data.response.cross.exfee.id;
                     for (i in data.response.cross.exfee.invitations) {
-                        if (user_id
-                         && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id) {
+                        if ((user_id && user_id === data.response.cross.exfee.invitations[i].identity.connected_user_id)
+                         || myIdId  === data.response.cross.exfee.invitations[i].identity.id) {
                             idMyInv = i;
                             myIdId  = data.response.cross.exfee.invitations[i].identity.id;
                             $('.inviter .inviter_highlight').html(escape(data.response.cross.exfee.invitations[i].invited_by.name));
@@ -380,18 +390,26 @@ define(function (require, exports, module) {
                     }
                     // redirecting
                     var args = null;
-                    if (typeof data.response.authorization !== 'undefined') {
-                        Store.set('authorization', data.response.authorization);
-                        args = data.response.cross.id
-                             + '?user_id='     + user_id
-                             + '&token='       + data.response.authorization.token
-                             + '&identity_id=' + myIdId;
-                        my_token = data.response.authorization.token;
-                    } else if (my_token) {
-                        args = data.response.cross.id
-                             + '?user_id='     + user_id
-                             + '&token='       + my_token
-                             + '&identity_id=' + myIdId;
+                    if (user_id) {
+                        if (typeof data.response.authorization !== 'undefined') {
+                            Store.set('authorization', data.response.authorization);
+                            args = data.response.cross.id
+                                 + '?user_id='     + user_id
+                                 + '&token='       + data.response.authorization.token
+                                 + '&identity_id=' + myIdId;
+                            my_token = data.response.authorization.token;
+                        } else {
+                            var authorization = Store.get('authorization');
+                            if (authorization
+                             && typeof authorization.user_id !== 'undefined'
+                             && authorization.user_id === user_id) {
+                                args = data.response.cross.id
+                                     + '?user_id='     + user_id
+                                     + '&token='       + authorization.token
+                                     + '&identity_id=' + myIdId;
+                            }
+                            my_token = authorization.my_token;
+                        }
                     }
                     if (my_token) {
                         $('.rsvp_toolbar').show();
@@ -404,7 +422,11 @@ define(function (require, exports, module) {
                     } else {
                         $('.rsvp_toolbar').hide();
                     }
-                    redirecting(args);
+                    if (args) {
+                        redirecting(args);
+                    } else {
+                        disRedirecting();
+                    }
                     return;
                 }
                 // 处理失败
