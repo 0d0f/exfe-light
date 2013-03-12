@@ -144,7 +144,8 @@ define(function (require, exports, module) {
   });
 
   Handlebars.registerHelper('editable', function (provider, status, options) {
-    return (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'CONNECTED';
+    var context = (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'CONNECTED';
+    return Handlebars.helpers['if'].call(this, context, options);
   });
 
   // 用户信息,包括多身份信息
