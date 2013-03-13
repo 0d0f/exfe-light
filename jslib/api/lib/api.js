@@ -21,7 +21,7 @@ define('api', function (require) {
     // -------------- Must Use Token ---------------------- //
     getUser: '/Users/:user_id',
 
-    signout: '',
+    signout: '/Users/signout/:user_id', // @todo
 
     updateUser: '/Users/update',
 
