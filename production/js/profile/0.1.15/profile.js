@@ -125,7 +125,7 @@ define(function (require, exports, module) {
   });
 
   Handlebars.registerHelper('ifVerifying', function (provider, status, options) {
-    var context = provider === 'email' && status === 'VERIFYING';
+    var context = (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'CONNECTED';
     return Handlebars.helpers['if'].call(this, context, options);
   });
 
@@ -614,7 +614,6 @@ define(function (require, exports, module) {
         $(this).hide().prev().text(value).show();
         $(this).remove();
 
-
         if (!value || value === oldValue) return;
         var authorization = Store.get('authorization')
           , token = authorization.token;
@@ -995,6 +994,19 @@ define(function (require, exports, module) {
     _deleteIdentity(identity_id);
 
     return false;
+  });
+
+  var PhotoXPanel = null;
+  $BODY.on('click.open-photox', '.open-photox', function () {
+    if (!PhotoXPanel) {
+      PhotoXPanel = require('photox');
+    }
+    (new PhotoXPanel({
+      options: {
+        parentNode: $('#app-tmp'),
+        srcNode: $('.open-photox')
+      }
+    })).show();
   });
 
 });

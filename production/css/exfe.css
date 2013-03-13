@@ -4224,6 +4224,32 @@ input[type="submit"].btn.btn-mini {
   background-color: #000000 \9;
 }
 
+.breadcrumb {
+  padding: 8px 15px;
+  margin: 0 0 20px;
+  list-style: none;
+  background-color: #f5f5f5;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.breadcrumb li {
+  display: inline-block;
+  *display: inline;
+  text-shadow: 0 1px 0 #ffffff;
+  *zoom: 1;
+}
+
+.breadcrumb .divider {
+  padding: 0 5px;
+  color: #ccc;
+}
+
+.breadcrumb .active {
+  color: #999999;
+}
+
 .modal-open .modal .dropdown-menu {
   z-index: 2050;
 }
@@ -4357,6 +4383,69 @@ input[type="submit"].btn.btn-mini {
 /*@import "tooltip.less";*/
 
 /*@import "popovers.less";*/
+
+.thumbnails {
+  margin-left: 0;
+  list-style: none;
+  *zoom: 1;
+}
+
+.thumbnails:before,
+.thumbnails:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.thumbnails:after {
+  clear: both;
+}
+
+.row-fluid .thumbnails {
+  margin-left: 0;
+}
+
+.thumbnails > li {
+  float: left;
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+
+.thumbnail {
+  display: block;
+  padding: 4px;
+  line-height: 20px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+  -webkit-transition: all 0.2s ease-in-out;
+     -moz-transition: all 0.2s ease-in-out;
+       -o-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+a.thumbnail:hover {
+  border-color: #0088cc;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+     -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+          box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+}
+
+.thumbnail > img {
+  display: block;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.thumbnail .caption {
+  padding: 9px;
+  color: #555555;
+}
 
 .pull-right {
   float: right;
@@ -5504,6 +5593,19 @@ img:-moz-broken {
   background-position: -224px -54px;
 }
 
+[class^="ix-"],
+[class*=" ix-"] {
+  display: inline-block;
+  *margin-right: .3em;
+  vertical-align: text-top;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+.ix-facebook {
+  background-image: url("/static/img/facebook.png");
+}
+
 .navbar .dropdown-menu:before {
   display: none;
   border: none;
@@ -6479,6 +6581,17 @@ img:-moz-broken {
      -moz-box-shadow: 0 1px 4px rgba(0, 31, 64, 0.25);
           box-shadow: 0 1px 4px rgba(0, 31, 64, 0.25);
 }
+
+/*
+.panel:before {
+	position: absolute;
+	content: '';
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: -1em;
+}
+*/
 
 .panel:focus {
   outline: none;

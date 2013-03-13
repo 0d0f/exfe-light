@@ -1718,10 +1718,10 @@ define(function (require, exports, module) {
 
 
     var fixTime = function() {
-       var d = new Date(),
-          strDate = HumanTime.formatDate(
-            d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-          );
+        var d = new Date(),
+            strDate = HumanTime.formatDate(
+              d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+            );
         Cross.time  = {
             begin_at : {
                 date_word : '', date : strDate,
