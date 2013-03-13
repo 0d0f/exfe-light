@@ -899,7 +899,7 @@ define('routes', function (require, exports, module) {
 
     function done(user, res) {
       var external_username = Util.printExtUserName(user.identities[0]);
-      res.redirect('/#' + external_username.replace(/\ /, ''));
+      res.redirect('/#' + external_username.replace(/ /g, ''));
     }
 
     if (user) {
