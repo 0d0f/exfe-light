@@ -9,7 +9,8 @@ define('mnemosyne', function (require) {
       $DOC = $(document),
       getComputedStyle = function (elem, property) { window.getComputedStyle(elem, null).getPropertyValue(property); },
       isTouch = 'ontouchstart' in document.documentElement,
-      transitionEnds = 'webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd transitionend';
+      transitionEnds = 'webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd animationend',
+      animationEnds = 'webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd transitionend';
 
   var max = Math.max,
       min = Math.min,
@@ -660,7 +661,7 @@ define('mnemosyne', function (require) {
   };
 
   View.prototype.doscroll = function () {
-    this.$galleryWrapper.trigger('scroll.mnemosyne');
+    this.$galleryWrapper.scrollLeft(0)
   };
 
   View.prototype.startShow = function () {
@@ -796,6 +797,7 @@ define('mnemosyne', function (require) {
           fs = $m = undefined;
         });
 
+    console.log(offset, $f.position())
     $m
       .data('img-load', imgload)
       .css({

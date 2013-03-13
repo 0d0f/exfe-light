@@ -1,7 +1,9 @@
-define('panel', function(require, exports, module) {
+define('panel', function(require) {
+  "use strict";
 
-  var $ = require('jquery');
-  var Widget = require('widget');
+  var $ = require('jquery'),
+      proxy = $.proxy,
+      Widget = require('widget');
 
   /*
    * HTML
@@ -17,42 +19,42 @@ define('panel', function(require, exports, module) {
       options: {
 
           // keyboard
-          keyboard: true
+        keyboard: true,
 
           // 开/关 模态窗口
-        , backdrop: false
+        backdrop: false,
 
-        , template: '<div class="panel" tabindex="-1" role="panel"><div class="panel-header"></div><div class="panel-body"></div><div class="panel-footer"></div></div>'
+        template: '<div class="panel" tabindex="-1" role="panel"><div class="panel-header"></div><div class="panel-body"></div><div class="panel-footer"></div></div>',
 
-        , parentNode: null
+        parentNode: null,
 
-        , srcNode: null
+        srcNode: null,
 
-        , events: null
-      }
+        events: null
+      },
 
-    , init: function () {
+      init: function () {
         this.render();
-      }
+      },
 
-    , render: function () {
+      render: function () {
         var options = this.options;
         this.parentNode = options.parentNode;
         this.srcNode = options.srcNode;
         delete options.parentNode;
         delete options.srcNode;
 
-        this.on('escape', $.proxy(this.hide, this));
+        this.on('escape', proxy(this.hide, this));
 
-        this.on('showBefore', $.proxy(this.showBefore, this));
-        this.on('showAfter', $.proxy(this.showAfter, this));
+        this.on('showBefore', proxy(this.showBefore, this));
+        this.on('showAfter', proxy(this.showAfter, this));
 
-        this.element.on('destory.widget', $.proxy(this.destory, this));
+        this.element.on('destory.widget', proxy(this.destory, this));
 
         return this;
-      }
+      },
 
-    , escapable: function () {
+      escapable: function () {
         var self = this;
         $(document).on('keydown.panel', function (e) {
           if (27 !== e.which) {
@@ -60,9 +62,9 @@ define('panel', function(require, exports, module) {
           }
           self.emit('escape');
         });
-      }
+      },
 
-    , show: function () {
+      show: function () {
 
 
         this.emit('showBefore');
@@ -71,14 +73,12 @@ define('panel', function(require, exports, module) {
 
         this.element.appendTo(this.parentNode);
 
-        //this.element.css({ });
-
         this.emit('showAfter');
 
         return this;
-      }
+      },
 
-    , hide: function (ms) {
+      hide: function (ms) {
         var self = this;
         $(document).off('keydown.panel');
 
@@ -104,20 +104,19 @@ define('panel', function(require, exports, module) {
         }
 
         return this;
-      }
+      },
 
-    , effect: function (type) {
+      effect: function (type) {
         this._effect = type;
         this.element.addClass(type);
         return this;
-      }
+      },
 
-    , _destory: function () {
+      _destory: function () {
         this.undelegateEvents();
         Widget.superclass.destory.call(this);
       }
-  });
-
+    });
 
   return Panel;
 });

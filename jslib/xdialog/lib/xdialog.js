@@ -2315,7 +2315,6 @@ define('xdialog', function (require, exports) {
                 var code = data.meta.code;
                 if (code === 200) {
                   window.location.href = data.response.redirect;
-                } else {
                 }
               }
             });

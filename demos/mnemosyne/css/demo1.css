@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  -webkit-overflow-scrolling: touch;
+  /*-webkit-overflow-scrolling: touch;*/
 }
 
 @-webkit-keyframes mmfadeIn {
@@ -85,6 +85,8 @@ html, body {
   -ms-perspective: 0;
   -o-perspective: 0;
   perspective: 0;
+
+  visibility: visible;
 }
 
 .mnemosyne:focus {
@@ -133,7 +135,6 @@ html, body {
   padding-bottom: 40px;
   /*overflow-x: scroll; */ /* overflow 影响 3d */
   opacity: 0;
-
   -webkit-perspective-origin: 50% 50%;
   -moz-perspective-origin: 50% 50%;
   -ms-perspective-origin: 50% 50%;
@@ -163,6 +164,7 @@ html, body {
 }
 
 .mnemosyne .gallery {
+  visibility: visible;
   height: 100%;
   opacity: 1;
   padding-left: 24px;
