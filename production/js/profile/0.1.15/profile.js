@@ -130,7 +130,7 @@ define(function (require, exports, module) {
   });
 
   Handlebars.registerHelper('atName', function (identity) {
-    return Util.printExtUserName(identity);
+    return Util.printExtUserName(identity, true);
   });
 
   Handlebars.registerHelper('editable', function (provider, status, options) {
