@@ -8544,10 +8544,6 @@ body {
   overflow: hidden;
 }
 
-.cross-date input {
-  width: 270px;
-}
-
 .cross-place {
   position: relative;
 }
