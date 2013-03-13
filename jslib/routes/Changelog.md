@@ -1,3 +1,7 @@
+* v0.2.12 2013-03-05T21:03:30 UTC+0800
+  - New Features
+    * `phone` identity profile url
+
 * v0.1.12 2013-03-05T21:03:30 UTC+0800
   - New Features
     * added `phone cross token`
