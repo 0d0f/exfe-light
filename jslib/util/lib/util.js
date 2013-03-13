@@ -1,8 +1,9 @@
-define('util', function (require, exports, module) {
-  var trimLeft = /^\s+/
-    , trimRight = /\s+$/
-    , zh_CN = /[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g
-    , trim = String.prototype.trim;
+define('util', function () {
+  "use strict";
+  var trimLeft = /^\s+/,
+      trimRight = /\s+$/,
+      zh_CN = /[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g,
+      trim = String.prototype.trim;
 
   var Util = {
 
@@ -49,7 +50,7 @@ define('util', function (require, exports, module) {
         return s === null ?
           '' :
           s.toString().replace(trimLeft, '').replace(trimRight, '');
-    },
+      },
 
     // 解析 用户身份
     parseId: function () {
@@ -84,8 +85,8 @@ define('util', function (require, exports, module) {
 
         // enormal
         } else if (enormal.test(strid)) {
-          var iLt = strid.indexOf('<')
-            , iGt = strid.indexOf('>');
+          var iLt = strid.indexOf('<');
+              //iGt = strid.indexOf('>');
           res.name = Util.cut30length(strid.substring(0, iLt).replace(/^"|^'|"$|'$/g, ''));
           //res.external_identity = strid.substring(++iLt, iGt);
           res.external_username = res.name
@@ -104,8 +105,8 @@ define('util', function (require, exports, module) {
     tokenRegExp: /token=([a-zA-Z0-9]{32})/,
 
     printExtUserName: function (identity) {
-      var username = identity.external_username
-        , provider = identity.provider;
+      var username = identity.external_username,
+          provider = identity.provider;
 
       switch (provider) {
         case 'twitter':
@@ -114,6 +115,14 @@ define('util', function (require, exports, module) {
 
         case 'facebook':
           username += '@facebook';
+          break;
+
+        case 'phone':
+          if (/^\+1.{10}$/.test(username)) {
+            username = username.replace(/^(\+1)(.{3})(.{3})(.{4})$/, '$1 ($2) $3-$4');
+          } else if (/^\+86.{11}$/.test(username)) {
+            username = username.replace(/^(\+86)(.{3})(.{4})(.{4})$/, '$1 $2 $3 $4');
+          }
           break;
       }
 
