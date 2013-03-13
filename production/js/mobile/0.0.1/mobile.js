@@ -2,8 +2,6 @@ define(function (require, exports, module) {
 
     require('zepto');
 
-    require('moment');
-
     var config = require('config');
 
     var Store  = require('store');

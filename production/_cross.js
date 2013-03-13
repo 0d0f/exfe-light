@@ -47,57 +47,6 @@ ExfeUtilities = {
     },
 
 
-    parseTimestring : function(strTime) {
-        var sptTime = strTime ? strTime.split(/[^0-9a-zA-Z]+/) : [],
-            arrTime = [],
-            fmtFrom = 'YYYY MM DD hh mm a ZZ',
-            rawTime = null,
-            efeTime = {
-                begin_at : {
-                    date_word : '', date : '',
-                    time_word : '', time : '',
-                    timezone  : Cross.id ? Cross.time.begin_at.timezone : this.getTimezone(),
-                    id : 0, type : 'EFTime'
-                },
-                origin : strTime, outputformat : 1, id : 0, type : 'CrossTime'
-            },
-            db      = function (num) {
-                return num < 10 ? ('0' + num.toString()) : num.toString();
-            };
-        for (var i = 0; i < sptTime.length; i++) {
-            if (sptTime[i]) {
-                arrTime.push(sptTime[i]);
-            }
-        }
-        switch (arrTime.length) {
-            case 0:
-            case 1:
-            case 2:
-                break;
-            case 3:
-                efeTime.begin_at.date = arrTime[0] + '-' + arrTime[1] + '-' + arrTime[2];
-                efeTime.outputformat  = 0;
-                break;
-            case 4:
-            case 5:
-                arrTime.push(parseInt(arrTime[3], 10) === 12 ? 'pm' : 'am');
-            default:
-                if (rawTime = moment(arrTime.join(' ') + ' ' + efeTime.begin_at.timezone, fmtFrom)) {
-                    var objTime = rawTime.toDate();
-                    efeTime.begin_at.date =    objTime.getUTCFullYear()   + '-'
-                                          + db(objTime.getUTCMonth() + 1) + '-'
-                                          + db(objTime.getUTCDate());
-                    efeTime.begin_at.time = db(objTime.getUTCHours())     + ':'
-                                          + db(objTime.getUTCMinutes())   + ':'
-                                          + db(objTime.getUTCSeconds());
-                    efeTime.outputformat  = 0;
-                }
-                break;
-        }
-        return efeTime;
-    },
-
-
     parsePlacestring : function(strPlace) {
         var rawPlace = strPlace ? strPlace.split(/\r\n|\r|\n/g) : [],
             arrPlace = [];
@@ -1521,9 +1470,7 @@ define(function (require, exports, module) {
                       var dp = App.widgetCaches[cid];
                       var value = $.trim($('#date-string').data('date'));
                       if (oldEditing === 'date-panel' || oldEditing === 'time') {
-                          //ChangeTime($('.cross-date .edit').val());
                           //Cross.time.begin_at.timezone = ExfeUtilities.getTimezone();
-                          //ChangeTime(value);
                           AutoSaveCross();
                       }
                       if (dp) {
@@ -1737,9 +1684,6 @@ define(function (require, exports, module) {
             ExfeeWidget.rsvpMe('INTERESTED');
             ShowRsvp();
         });
-        $('.cross-date .edit').bind('focus keydown keyup blur', function(event) {
-            ChangeTime($(event.target).val());
-        });
         $('.cross-place .edit').bind('keydown', function(event) {
             if (event.shiftKey && event.which === 13) {
                 event.which = 4;
@@ -1774,7 +1718,10 @@ define(function (require, exports, module) {
 
 
     var fixTime = function() {
-        var strDate = moment().format('YYYY-MM-DD');
+       var d = new Date(),
+          strDate = HumanTime.formatDate(
+            d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+          );
         Cross.time  = {
             begin_at : {
                 date_word : '', date : strDate,
@@ -1824,11 +1771,6 @@ define(function (require, exports, module) {
     var ChangeDescription = function(description) {
         Cross.description = ExfeUtilities.trim(description);
         ShowDescription();
-    };
-
-
-    var ChangeTime = function(time) {
-        Cross.time = ExfeUtilities.parseTimestring(time);
     };
 
 
@@ -2377,8 +2319,6 @@ define(function (require, exports, module) {
             curIdentity = ExfeUtilities.clone(User.identities[0]);
         }
 
-        // init moment
-        require('moment');
         // init cross step 1
         ResetCross();
         // init exfee widgets

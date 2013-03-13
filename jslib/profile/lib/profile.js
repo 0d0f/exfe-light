@@ -12,16 +12,6 @@ define(function (require, exports, module) {
   var Util = require('util');
   var Bus = require('bus');
   var Api = require('api');
-  var Moment = require('moment');
-
-  Moment.calendar = {
-    sameDay : 'ha, dddd MMMM D',
-    nextDay : 'h:ssA [Tomorrow], dddd MMMM D',
-    nextWeek : 'dddd [at] LT',
-    lastDay : 'hA, dddd MMMM D',
-    lastWeek : 'hA, dddd MMMM D',
-    sameElse : 'L'
-  };
 
   // 覆盖默认 `each` 添加 `__index__` 属性
   Handlebars.registerHelper('each', function (context, options) {
@@ -396,10 +386,6 @@ define(function (require, exports, module) {
 
           Handlebars.registerHelper('conversation_nums', function () {
             return this.__conversation_nums;
-          });
-
-          Handlebars.registerHelper('humanTime', function (t) {
-            return Moment().from(t);
           });
 
           if (invitations.length) {
