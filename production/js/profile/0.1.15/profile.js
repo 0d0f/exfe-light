@@ -125,7 +125,7 @@ define(function (require, exports, module) {
   });
 
   Handlebars.registerHelper('ifVerifying', function (provider, status, options) {
-    var context = (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'CONNECTED';
+    var context = (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'VERIFYING';
     return Handlebars.helpers['if'].call(this, context, options);
   });
 
