@@ -118,10 +118,10 @@ define('util', function () {
           break;
 
         case 'phone':
-          if (/^\+1.{10}$/.test(username)) {
-            username = username.replace(/^(\+1)(.{3})(.{3})(.{4})$/, '$1 ($2) $3-$4');
-          } else if (/^\+86.{11}$/.test(username)) {
-            username = username.replace(/^(\+86)(.{3})(.{4})(.{4})$/, '$1 $2 $3 $4');
+          if (/^\+1\d{10}$/.test(username)) {
+            username = username.replace(/^(\+1)(\d{3})(\d{3})(\d{4})$/, '$1 ($2) $3-$4');
+          } else if (/^\+86\d{11}$/.test(username)) {
+            username = username.replace(/^(\+86)(\d{3})(\d{4})(\d{4})$/, '$1 $2 $3 $4');
           }
           break;
       }
