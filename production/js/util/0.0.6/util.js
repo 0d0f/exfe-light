@@ -104,7 +104,7 @@ define('util', function () {
 
     tokenRegExp: /token=([a-zA-Z0-9]{32})/,
 
-    printExtUserName: function (identity) {
+    printExtUserName: function (identity, status) {
       var username = identity.external_username,
           provider = identity.provider;
 
@@ -118,10 +118,12 @@ define('util', function () {
           break;
 
         case 'phone':
-          if (/^\+1\d{10}$/.test(username)) {
-            username = username.replace(/^(\+1)(\d{3})(\d{3})(\d{4})$/, '$1 ($2) $3-$4');
-          } else if (/^\+86\d{11}$/.test(username)) {
-            username = username.replace(/^(\+86)(\d{3})(\d{4})(\d{4})$/, '$1 $2 $3 $4');
+          if (status) {
+            if (/^\+1\d{10}$/.test(username)) {
+              username = username.replace(/^(\+1)(\d{3})(\d{3})(\d{4})$/, '$1 ($2) $3-$4');
+            } else if (/^\+86\d{11}$/.test(username)) {
+              username = username.replace(/^(\+86)(\d{3})(\d{4})(\d{4})$/, '$1 $2 $3 $4');
+            }
           }
           break;
       }
