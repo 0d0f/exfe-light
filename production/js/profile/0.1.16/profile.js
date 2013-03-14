@@ -1,17 +1,17 @@
 define(function (require, exports, module) {
   "use strict";
 
-  var $ = require('jquery'),
-      Store = require('store'),
-      Config = require('config'),
-      Dialog = require('dialog'),
-      Dialogs = require('xdialog').dialogs,
-      Handlebars = require('handlebars'),
-      HumanTime = require('humantime'),
-      R = require('rex'),
-      Util = require('util'),
-      Bus = require('bus'),
-      Api = require('api');
+  var $ = require('jquery');
+  var Store = require('store');
+  var Config = require('config');
+  var Dialog = require('dialog');
+  var Dialogs = require('xdialog').dialogs;
+  var Handlebars = require('handlebars');
+  var HumanTime = require('humantime');
+  var R = require('rex');
+  var Util = require('util');
+  var Bus = require('bus');
+  var Api = require('api');
 
   // 覆盖默认 `each` 添加 `__index__` 属性
   Handlebars.registerHelper('each', function (context, options) {
@@ -1001,30 +1001,12 @@ define(function (require, exports, module) {
     if (!PhotoXPanel) {
       PhotoXPanel = require('photox');
     }
-    var user = Store.get('user');
-    if (user) {
-      var identities = user.identities,
-          photo_providers = Config.photo_providers,
-          providers = photo_providers.slice(0),
-          ips = [], i;
-      R.each(identities, function (v) {
-        i = R.indexOf(providers, v.provider);
-        if (-1 !== i) {
-          providers.splice(i, 1);
-          ips.push(v.provider);
-        }
-      });
-      ips.push(''); providers.push('');
-      // providers = 'flickr:1 facebook:0 dropbox:0'
-      providers = ips.join(':1 ') + providers.join(':0 ');
-      (new PhotoXPanel({
-        options: {
-          parentNode: $('#app-tmp'),
-          srcNode: $('.open-photox'),
-          providers: providers
-        }
-      })).show();
-    }
+    (new PhotoXPanel({
+      options: {
+        parentNode: $('#app-tmp'),
+        srcNode: $('.open-photox')
+      }
+    })).show();
   });
 
 });

@@ -1,3 +1,7 @@
+* v0.1.16 2013-03-14T15:11:19 UTC+0800
+  - Bugs Fixed
+    * edited `identity-name`, if set value = '', reset value = oldvalue in `Profile` Page
+
 * v0.1.15 2013-03-02T15:07:56 UTC+0800
   - Changes
     * removed `moment.js` library
