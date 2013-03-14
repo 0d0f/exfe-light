@@ -1330,7 +1330,7 @@ define('xdialog', function (require, exports) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
-	  this.befer = null;
+	         this.befer = null;
         }
         this.destory();
       },

@@ -329,7 +329,7 @@ define('mappanel', function (require, exports, module) {
     this.component = component
     this.$container = this.component.element;
     this.selector = selector;
-    this.$element = this.component.$(selector);
+    this.$element = component.$(selector);
     this.listen();
   };
 
@@ -440,7 +440,7 @@ define('mappanel', function (require, exports, module) {
     this.component = component
     this.$container = this.component.element;
     this.selector = selector;
-    this.$element = this.component.$(selector);
+    this.$element = component.$(selector);
 
     this.$items = null;
     this.len = 0;
@@ -676,7 +676,7 @@ define('mappanel', function (require, exports, module) {
   var XMap = function (component, selector) {
     this.component = component;
     this.selector = selector;
-    this.$element = this.component.$(selector);
+    this.$element = component.$(selector);
     this.$wrap = this.$element.parent();
 
     // google.maps

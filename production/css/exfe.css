@@ -6613,16 +6613,14 @@ img:-moz-broken {
           box-shadow: 0 1px 4px rgba(0, 31, 64, 0.25);
 }
 
-/*
 .panel:before {
-	position: absolute;
-	content: '';
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: -1em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -0.5em;
+  left: 0;
+  content: '';
 }
-*/
 
 .panel:focus {
   outline: none;
@@ -11645,6 +11643,357 @@ body {
   -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
      -moz-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
           box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.photox-panel {
+  width: 520px;
+  min-width: 520px;
+  min-height: 372px;
+  background-color: #222;
+  border: none;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.photox-panel .badge {
+  position: absolute;
+  height: 24px;
+  min-width: 24px;
+  padding: 0 3px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #60adff;
+  border: 2px solid #fff;
+  -webkit-border-radius: 24px;
+     -moz-border-radius: 24px;
+          border-radius: 24px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+       -o-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.photox-panel .panel-header {
+  width: 100%;
+  background-color: #808080;
+  background-image: -moz-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: -webkit-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: -o-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: linear-gradient(90deg, #4c4c4c, #808080);
+  background-repeat: repeat-x;
+  -webkit-border-radius: 6px 6px 0 0;
+     -moz-border-radius: 6px 6px 0 0;
+          border-radius: 6px 6px 0 0;
+}
+
+.photox-panel .panel-header .panel-title {
+  margin: 0 0 0 15px;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 66px;
+  color: white;
+}
+
+.photox-panel .panel-header .nav {
+  height: 66px;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.photox-panel .panel-header .nav-tabs > li {
+  position: relative;
+  height: 100%;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: -moz-linear-gradient(0deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
+  background-image: -webkit-linear-gradient(0deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
+  background-image: -o-linear-gradient(0deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
+  background-repeat: repeat-x;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+}
+
+.photox-panel .panel-header .nav-tabs > li:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.photox-panel .panel-header .nav-tabs > li:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.photox-panel .panel-header .nav-tabs > li .badgex {
+  top: 1px;
+  right: 1px;
+}
+
+.photox-panel .panel-header .nav-tabs > li.active {
+  background-color: #3784d5;
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.photox-panel .panel-header .nav-tabs > li.active > a {
+  background-color: transparent;
+}
+
+.photox-panel .panel-header .nav-tabs > li.active > a:after {
+  position: absolute;
+  bottom: 0;
+  left: 26px;
+  width: 0;
+  height: 0;
+  border: 0;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid black;
+  border-left: 7px solid transparent;
+  content: '';
+}
+
+.photox-panel .panel-header .nav-tabs > li > a {
+  position: relative;
+  display: block;
+  width: 66px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  border: 0;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+}
+
+.photox-panel .panel-header .nav-tabs > li > a.ix-add {
+  -webkit-border-radius: 0 6px 0 0;
+     -moz-border-radius: 0 6px 0 0;
+          border-radius: 0 6px 0 0;
+}
+
+.photox-panel .panel-header .nav-tabs > li > a:hover {
+  background-color: transparent;
+}
+
+.photox-panel .panel-body .breadcrumb {
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  background-color: #4c4c4c;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.photox-panel .panel-body .breadcrumb li {
+  margin-left: 20px;
+  line-height: 40px;
+}
+
+.photox-panel .panel-body .breadcrumb li:first-child {
+  margin-left: 15px;
+}
+
+.photox-panel .panel-body .breadcrumb li a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.photox-panel .panel-body .breadcrumb .divider {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 15px -10px 0 15px;
+  border-color: transparent;
+  border-left-color: #cccccc;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  content: " ";
+}
+
+.photox-panel .panel-body .breadcrumb .active {
+  color: #fff;
+}
+
+.photox-panel .panel-body .albums {
+  height: 240px;
+  margin: 0;
+  overflow: scroll;
+}
+
+.photox-panel .panel-body .albums > li {
+  margin: 0 0 0 8px;
+}
+
+.photox-panel .panel-body .albums .thumbnail {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border: none;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+.photox-panel .panel-body .albums .thumbnail:hover {
+  border: none;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-figure {
+  position: relative;
+  top: 20px;
+  left: 20px;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  margin: 0;
+  background-color: #ddd;
+  -webkit-transform: translateZ(0) rotate(5deg);
+     -moz-transform: translateZ(0) rotate(5deg);
+       -o-transform: translateZ(0) rotate(5deg);
+          transform: translateZ(0) rotate(5deg);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-figure:before,
+.photox-panel .panel-body .albums .thumbnail .album-figure:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  content: "";
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-figure:before {
+  background-color: #eee;
+  -webkit-transform: translateZ(0) rotate(-10deg);
+     -moz-transform: translateZ(0) rotate(-10deg);
+       -o-transform: translateZ(0) rotate(-10deg);
+          transform: translateZ(0) rotate(-10deg);
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-figure:after {
+  background-color: #ffffff;
+  background-image: -moz-linear-gradient(90deg, #e5e5e5, #ffffff);
+  background-image: -webkit-linear-gradient(90deg, #e5e5e5, #ffffff);
+  background-image: -o-linear-gradient(90deg, #e5e5e5, #ffffff);
+  background-image: linear-gradient(90deg, #e5e5e5, #ffffff);
+  background-repeat: repeat-x;
+  -webkit-transform: translateZ(0) rotate(-5deg);
+     -moz-transform: translateZ(0) rotate(-5deg);
+       -o-transform: translateZ(0) rotate(-5deg);
+          transform: translateZ(0) rotate(-5deg);
+}
+
+.photox-panel .panel-body .albums .thumbnail figure {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 70px;
+  height: 70px;
+  padding: 0;
+  margin: 0;
+}
+
+.photox-panel .panel-body .albums .thumbnail figure > img {
+  height: 100%;
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-badge {
+  right: 12px;
+  bottom: 14px;
+  z-index: 7;
+}
+
+.photox-panel .panel-body .albums .thumbnail .album-name {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 14px;
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 14px;
+  color: #ccc;
+  text-align: center;
+}
+
+.photox-panel .panel-footer {
+  position: relative;
+  width: 100%;
+  height: 66px;
+  color: #fff;
+  background-color: #808080;
+  background-image: -moz-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: -webkit-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: -o-linear-gradient(90deg, #4c4c4c, #808080);
+  background-image: linear-gradient(90deg, #4c4c4c, #808080);
+  background-repeat: repeat-x;
+  -webkit-border-radius: 0 0 6px 6px;
+     -moz-border-radius: 0 0 6px 6px;
+          border-radius: 0 0 6px 6px;
+}
+
+.photox-panel .panel-footer .detail {
+  position: absolute;
+  left: 15px;
+  line-height: 66px;
+}
+
+.photox-panel .panel-footer .icon-resize {
+  position: absolute;
+  right: 15px;
+}
+
+.photox-panel .panel-footer .xbtn-upload {
+  position: relative;
+  top: 13px;
+  display: block;
+  width: 160px;
+  height: 40px;
+  margin: 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 40px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background-color: #6bc0fb;
+  background-image: -moz-linear-gradient(90deg, #155ca6, #6bc0fb);
+  background-image: -webkit-linear-gradient(90deg, #155ca6, #6bc0fb);
+  background-image: -o-linear-gradient(90deg, #155ca6, #6bc0fb);
+  background-image: linear-gradient(90deg, #155ca6, #6bc0fb);
+  background-repeat: repeat-x;
+  border: none;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+     -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
 #app-main {

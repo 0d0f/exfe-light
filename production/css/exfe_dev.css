@@ -6613,16 +6613,14 @@ img:-moz-broken {
           box-shadow: 0 1px 4px rgba(0, 31, 64, 0.25);
 }
 
-/*
 .panel:before {
-	position: absolute;
-	content: '';
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: -1em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -0.5em;
+  left: 0;
+  content: '';
 }
-*/
 
 .panel:focus {
   outline: none;
@@ -11648,8 +11646,8 @@ body {
 }
 
 .photox-panel {
-  width: 480px;
-  min-width: 480px;
+  width: 520px;
+  min-width: 520px;
   min-height: 372px;
   background-color: #222;
   border: none;
@@ -11659,15 +11657,6 @@ body {
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
      -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-.photox-panel:before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: -2em;
-  left: 0;
-  content: '';
 }
 
 .photox-panel .badge {
