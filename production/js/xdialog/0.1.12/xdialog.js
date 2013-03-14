@@ -70,7 +70,6 @@ define('xdialog', function (require, exports) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
-          this._oauth_ = null;
         }
         this.destory();
 
@@ -1330,7 +1329,6 @@ define('xdialog', function (require, exports) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
-	         this.befer = null;
         }
         this.destory();
       },
@@ -1688,7 +1686,6 @@ define('xdialog', function (require, exports) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
-          this.befer = null;
         }
         this.destory();
       },
@@ -1924,7 +1921,7 @@ define('xdialog', function (require, exports) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort() && (this.befer = null);
+        this.befer && this.befer.abort();
         this.destory();
       },
 
@@ -2300,7 +2297,6 @@ define('xdialog', function (require, exports) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
-	  this._oauth_ = null;
         }
         this.destory();
       },

@@ -1,3 +1,7 @@
+* v0.1.12 2013-03-14T15:27:22 UTC+0800
+  - Changes
+    * `Rome`-Dialog: text
+
 * v0.1.11 2013-03-12T00:54:43 UTC+0800
   - Changes
     * `Rome` replaced `Sandbox`
