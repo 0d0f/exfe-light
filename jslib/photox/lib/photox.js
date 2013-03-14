@@ -3,7 +3,8 @@ define('photox', function (require) {
 
   var Api = require('api'),
       request = Api.request,
-      Config = require('config');
+      Config = require('config'),
+      proto;
 
   var setToken = function (token) {
     return Api.setToken(token);
@@ -173,10 +174,25 @@ define('photox', function (require) {
     }
   };
 
+
   /**
    * Nav-Tabs composition
    */
-  var NavTabs = function () {};
+  var NavTabs = function (composition, selector, sources, identities) {
+    this.composition = composition;
+    this.selector = selector;
+    this.$element = composition.$(selector);
+  };
+  proto = NavTabs.prototype;
+
+  proto.liTmp = '<li><a href="#" class="hide-text"></a></li>';
+
+  proto.badgeTmmp = '<div class="badge badgex"></div>';
+
+  proto.generate = function () {};
+
+  proto.sort = function () {};
+
 
   /**
    * Breadcrumb composition
@@ -223,13 +239,24 @@ define('photox', function (require) {
 
     init: function () {
       var options = this.options;
+      this.providers = options.providers;
+      delete options.providers;
+
       this.render();
+
+      this.navTabs = new NavTabs(this, '.panel-header .nav-tabs', this.providers);
+
       this.listen();
     },
 
     listen: function () {},
 
     showAfter: function () {
+      var offset = this.srcNode.parent().offset();
+      this.element.css({
+        top: offset.top + 50,
+        left: offset.left - 20
+      });
     },
 
     destory: function () {
