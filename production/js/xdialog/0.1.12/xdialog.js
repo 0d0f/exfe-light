@@ -1220,6 +1220,9 @@ define('xdialog', function (require, exports) {
             return false;
           }
 
+          var provider = od.provider
+            , external_username = od.external_username || '';
+
           function addIdentity(external_username, provider, that) {
             var authorization = Store.get('authorization')
               , token = authorization.token;
