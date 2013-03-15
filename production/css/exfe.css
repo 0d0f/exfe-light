@@ -7077,7 +7077,6 @@ body {
 }
 
 .modal-id .oauth > a {
-  display: block;
   float: left;
   width: 40px;
   height: 40px;
@@ -7647,6 +7646,13 @@ body {
 .modal-unsubscribe .modal-main {
   min-height: auto;
   padding-bottom: 19px;
+}
+
+.modal-id .phone-tip,
+.modal-ai .phone-tip {
+  font-size: 12px;
+  line-height: 14px;
+  color: #7f7f7f;
 }
 
 html,
