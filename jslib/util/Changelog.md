@@ -1,4 +1,4 @@
-* v0.0.7 2013-03-13T14:32:19 UTC+0800
+* v0.1.6 2013-03-14T19:43:13 UTC+0800
   * New Features
     - formated `phone` identity external_username
 

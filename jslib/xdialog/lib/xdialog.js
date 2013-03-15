@@ -407,7 +407,7 @@ define('xdialog', function (require, exports) {
                       + '</div>'
                     + '</div>'
                     + '<div class="controls">'
-                      + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email" />'
+                      + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
                       + '<i class="help-subject"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
@@ -443,6 +443,13 @@ define('xdialog', function (require, exports) {
                       + '</label>'
                     + '</div>'
                   + '</div>'
+
+                  + '<div class="control-group phone-tip hide">'
+                    + '<div class="xalert">'
+                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
+                    + '</div>'
+                  + '</div>'
+
 
                   + '<div class="verify-before d d04 hide">'
                     + '<span class="xalert-fail">This identity requires verification before using.</span><br />'
@@ -1329,7 +1336,7 @@ define('xdialog', function (require, exports) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
-	        this.befer = null;
+          this.befer = null;
         }
         this.destory();
       },
@@ -1347,6 +1354,8 @@ define('xdialog', function (require, exports) {
               + '<div class="pull-left oauth">'
                 + '<a href="#" class="oauth-twitter" data-oauth="twitter">twitter</a>'
                 + '<a href="#" class="oauth-facebook" data-oauth="facebook">facebook</a>'
+                + '<a href="#" class="oauth-dropbox hide" data-oauth="dropbox">dropbox</a>'
+                + '<a href="#" class="oauth-flickr hide" data-oauth="flickr">flickr</a>'
               + '</div>'
             + '</div>'
             + '<div class="orspliter">or</div>'
@@ -1363,7 +1372,7 @@ define('xdialog', function (require, exports) {
                       + '</div>'
                     + '</div>'
                     + '<div class="controls">'
-                      + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email" />'
+                      + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
                       + '<i class="help-subject"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
@@ -1380,6 +1389,12 @@ define('xdialog', function (require, exports) {
                     + '<div class="controls">'
                       + '<input type="password" class="input-large" id="password" autocomplete="off" placeholder="Identity\'s EXFE password" />'
                       + '<i class="help-inline icon16-pass-hide pointer" id="password-eye"></i>'
+                    + '</div>'
+                  + '</div>'
+
+                  + '<div class="control-group phone-tip hide">'
+                    + '<div class="xalert">'
+                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
                     + '</div>'
                   + '</div>'
 
@@ -1423,6 +1438,10 @@ define('xdialog', function (require, exports) {
             that._identity = null;
           }
 
+          if (data.identity.provider === 'phone') {
+            that.$('.phone-tip').toggleClass('hide', /\+/.test(that.$('#identity').val()));
+          }
+
           var registration_flag = data.registration_flag;
           that.registration_flag = registration_flag || '';
           // SIGN_IN
@@ -1453,6 +1472,7 @@ define('xdialog', function (require, exports) {
           that.$('.xbtn-success').removeClass('disabled');
         } else {
           that.$('.xbtn-success').addClass('disabled');
+          that.$('.phone-tip').addClass('hide');
           that.$('.xbtn-forgotpwd').addClass('disabled').data('source', null);
         }
 
@@ -1460,9 +1480,10 @@ define('xdialog', function (require, exports) {
       });
       Bus.off('widget-dialog-identification-nothing');
       Bus.on('widget-dialog-identification-nothing', function () {
+        that.$('.control-group.d').removeClass('hide');
+        that.$('.phone-tip').addClass('hide');
       });
     }
-
   };
 
   dialogs.addIdentityAfterSignIn = {
@@ -2934,6 +2955,10 @@ define('xdialog', function (require, exports) {
             that.$('.user-identity').addClass('hide');
           }
 
+          if (data.identity.provider === 'phone') {
+            that.$('.phone-tip').toggleClass('hide', /\+/.test(that.$('#identity').val()));
+          }
+
           that.identityFlag = data.registration_flag;
           // SIGN_IN
           if (data.registration_flag === 'SIGN_IN') {
@@ -2962,6 +2987,7 @@ define('xdialog', function (require, exports) {
           }
           that.availability = true;
         } else {
+          that.$('.phone-tip').addClass('hide');
           that.$('.help-subject')
             .removeClass('icon14-clear')
             .addClass('icon14-question');
