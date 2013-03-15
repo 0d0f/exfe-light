@@ -408,7 +408,7 @@ define('xdialog', function (require, exports) {
                       + '</div>'
                     + '</div>'
                     + '<div class="controls">'
-                        + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
+                      + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
                       + '<i class="help-subject"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
@@ -1074,6 +1074,19 @@ define('xdialog', function (require, exports) {
           if (!od) {
             return false;
           }
+
+          var provider = od.provider
+            , external_username = od.external_username || ''
+            , user = Store.get('user');
+
+          // 如果该身份已经添加过，则不再重复添加
+          if (R.find(user.identities, function (v) {
+                if (v.provider === provider && v.external_username === external_username) { return true; }
+              })) {
+            that.destory();
+            return;
+          }
+
           if (flag === 'SIGN_IN') {
             var password = $.trim(that.$('#password').val());
             var successe = false;
@@ -1146,19 +1159,6 @@ define('xdialog', function (require, exports) {
             that.defer = defer;
           }
           else if (flag === 'SIGN_UP') {
-
-            var provider = od.provider
-              , external_username = od.external_username || ''
-              , user = Store.get('user');
-
-            // 如果该身份已经添加过，则不再重复添加
-            if (R.find(user.identities, function (v) {
-                  if (v.provider === provider && v.external_username === external_username) { return true; }
-                })) {
-              that.destory();
-              return;
-            }
-
             var addIdentity = function (external_username, provider, that) {
               var authorization = Store.get('authorization')
                 , token = authorization.token;
@@ -1218,18 +1218,6 @@ define('xdialog', function (require, exports) {
 
           if (!od) {
             return false;
-          }
-
-          var provider = od.provider
-            , external_username = od.external_username || ''
-            , user = Store.get('user');
-
-          // 如果该身份已经添加过，则不再重复添加
-          if (R.find(user.identities, function (v) {
-                if (v.provider === provider && v.external_username === external_username) { return true; }
-              })) {
-            that.destory();
-            return;
           }
 
           function addIdentity(external_username, provider, that) {
