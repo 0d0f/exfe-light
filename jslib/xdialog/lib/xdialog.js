@@ -1220,7 +1220,16 @@ define('xdialog', function (require, exports) {
           }
 
           var provider = od.provider
-            , external_username = od.external_username || '';
+            , external_username = od.external_username || ''
+            , user = Store.get('user');
+
+          // 如果该身份已经添加过，则不再重复添加
+          if (R.find(user.identities, function (v) {
+                if (v.provider === provider && v.external_username === external_username) { return true; }
+              })) {
+            that.destory();
+            return;
+          }
 
           function addIdentity(external_username, provider, that) {
             var authorization = Store.get('authorization')
