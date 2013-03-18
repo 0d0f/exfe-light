@@ -1,20 +1,16 @@
-define('user', function (require, exports, module) {
-  var $ = require('jquery');
-  var R = require('rex');
-  var Api = require('api');
-  var Bus = require('bus');
-  var Util = require('util');
-  var Store = require('store');
-  var Handlebars = require('handlebars');
+define('user', function (require) {
+  "use strict";
 
-
-  // --------------------------------------------------------------------------
-  // User Sign In
-  Bus.on('app:user:signin', signIn);
-
+  var $ = require('jquery'),
+      R = require('rex'),
+      Api = require('api'),
+      Bus = require('bus'),
+      Util = require('util'),
+      Store = require('store'),
+      Handlebars = require('handlebars');
 
   // `status` 可以跳转到 profile
-  function signIn(token, user_id, redirect, block_redirect) {
+  var signIn = function (token, user_id, redirect, block_redirect) {
     getUser(token, user_id
       , function (data) {
           var last_external_username = Store.get('last_external_username')
@@ -89,29 +85,25 @@ define('user', function (require, exports, module) {
     );
   }
 
-
   // --------------------------------------------------------------------------
-  // Get User
-  Bus.on('app:api:getuser', getUser);
+  // User Sign In
+  Bus.on('app:user:signin', signIn);
 
-
-  function getUser(token, user_id, done, fail) {
+  var getUser = function (token, user_id, done, fail) {
     // return `Deferred Object`
     Api.request('getUser',
       {
         params: { token: token },
         resources: { user_id: user_id }
       }
-      , done || function (data) {}
-      , fail || function (err) {}
+      , done || function () {}
+      , fail || function () {}
     );
   }
 
-
   // --------------------------------------------------------------------------
-  // Get Cross List, User-Menu
-  Bus.on('app:usermenu:crosslist', getCrossList);
-
+  // Get User
+  Bus.on('app:api:getuser', getUser);
 
   function getCrossList(token, user_id, done, fail) {
     Api.request('crosslist',
@@ -129,11 +121,11 @@ define('user', function (require, exports, module) {
           var limit = 5
             , list;
 
-          R.map(crosses, function (v, i) {
+          R.map(crosses, function (v) {
             if (v.exfee
                 && v.exfee.invitations
                 && v.exfee.invitations.length) {
-              var t = R.filter(v.exfee.invitations, function (v2, j) {
+              var t = R.filter(v.exfee.invitations, function (v2) {
                 if ('ACCEPTED' === v2.rsvp_status
                     && user_id === v2.identity.connected_user_id) {
                   return true;
@@ -160,10 +152,9 @@ define('user', function (require, exports, module) {
             , n24 = now + 24 * 60 * 60 * 1000;
 
 
-          list = R.filter(list, function (v, i) {
-            var s = ''
-              , beginAt = v.time.begin_at
-              , dt = new Date(beginAt.date.replace(/\-/g, '/') + ' ' + beginAt.time).getTime();
+          list = R.filter(list, function (v) {
+            var beginAt = v.time.begin_at,
+                dt = new Date(beginAt.date.replace(/\-/g, '/') + ' ' + beginAt.time).getTime();
 
               if (now <= dt && dt <= threeDays) {
                 return true;
@@ -205,7 +196,7 @@ define('user', function (require, exports, module) {
           var html = Handlebars.compile(tpl)(list);
           $('#app-user-menu .user-panel .body').append(html);
         }
-      , fail || function (err) {}
+      , fail || function () {}
     );
   }
 
@@ -379,7 +370,7 @@ define('user', function (require, exports, module) {
     $appUserName.attr('href', location.href);
 
     $nameSpan
-      .text(browsing_user.name || browsing_user.nickname)
+      .html('Browsing as: <em>' + (browsing_user.name || browsing_user.nickname) + '</em>')
       .addClass('browsing-identity');
 
     tplFun = Handlebars.compile(userMenuTpls.browsing_identity);

@@ -6698,10 +6698,8 @@ body {
 }
 
 .navbar .user-name .browsing-identity {
-  padding: 6px 3px;
+  padding: 6px 8px;
   margin-top: -6px;
-  font-weight: bold;
-  color: #7C9CBF;
   text-shadow: 0 1px 1px #fff;
   background-color: rgba(127, 127, 127, 0.05);
   background-image: -moz-linear-gradient(270deg, rgba(5, 5, 5, 0.05), rgba(127, 127, 127, 0.05));
@@ -6713,6 +6711,10 @@ body {
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
+}
+
+.navbar .user-name .browsing-identity > strong {
+  color: #7C9CBF;
 }
 
 .navbar .user-name:before {
