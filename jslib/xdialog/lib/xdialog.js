@@ -446,7 +446,7 @@ define('xdialog', function (require, exports) {
 
                   + '<div class="control-group phone-tip hide">'
                     + '<div class="xalert">'
-                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
+                      + 'Please format phone number with country code prefix, e.g.: +1 555 450 0303'
                     + '</div>'
                   + '</div>'
 
@@ -1394,7 +1394,7 @@ define('xdialog', function (require, exports) {
 
                   + '<div class="control-group phone-tip hide">'
                     + '<div class="xalert">'
-                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
+                      + 'Please format phone number with country code prefix, e.g.: +1 555 450 0303'
                     + '</div>'
                   + '</div>'
 

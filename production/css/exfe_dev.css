@@ -7628,6 +7628,7 @@ body {
 
 .modal-id .phone-tip,
 .modal-ai .phone-tip {
+  width: 234px;
   font-size: 12px;
   line-height: 14px;
   color: #7f7f7f;
