@@ -1,3 +1,7 @@
+* v0.0.8 2013-03-18T14:15:00 UTC+0800
+  * Changes
+    - browsing-identity
+
 * v0.0.7 2012-12-04T16:48:12 UTC+0800
   * Fixed Bugs
     - setTimeout, set delay magic-number
