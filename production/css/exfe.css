@@ -5506,6 +5506,30 @@ img:-moz-broken {
   background-position: -288px -26px;
 }
 
+.icon16-identity-instagram-blue {
+  background-position: -304px -26px;
+}
+
+.icon16-identity-instagram {
+  background-position: -320px -26px;
+}
+
+.icon16-identity-dropbox-blue {
+  background-position: -336px -26px;
+}
+
+.icon16-identity-dropbox {
+  background-position: -352px -26px;
+}
+
+.icon16-identity-flickr-blue {
+  background-position: -368px -26px;
+}
+
+.icon16-identity-flickr {
+  background-position: -384px -26px;
+}
+
 .icon10-host-h {
   background-position: -44px -44px;
 }
