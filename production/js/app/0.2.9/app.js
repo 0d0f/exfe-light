@@ -63,7 +63,7 @@ define(function (require) {
 
   // profile
   //        email:    cfd@exfe.com        - `/#cfd@exfe.com`
-  //      twitter:    @cfddream@twitter   - `/#@cfddream@twitter`
+  //      twitter:    @cfddream           - `/#@cfddream`
   //     facebook:    cfddream@facebook   - `/#cfddream@facebook`
   //        phone:    +86138964xx233      - `/#+86138964xx233`
   //    instagram:    cfddream@instagram  - `/#cfddream@instagram`
