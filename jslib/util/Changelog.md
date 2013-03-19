@@ -1,3 +1,7 @@
+* v0.2.6 2013-03-19T17:34:00 UTC+0800
+  * New Features
+    - formated `twitter` `instagram` `flickr` identity external_username
+
 * v0.1.6 2013-03-14T19:43:13 UTC+0800
   * New Features
     - formated `phone` identity external_username
