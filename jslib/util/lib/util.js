@@ -56,6 +56,9 @@ define('util', function () {
     parseId: function () {
       var facebook = /^([a-z0-9_\.]{1,})@facebook$/i,
           twitter = /^@([a-z0-9_]{1,15})$|^@?([a-z0-9_]{1,15})@twitter$/i,
+          instagram = /^([a-z0-9_\.]{1,})@instagram$/i,
+          dropbox = /^(.*)@dropbox$/i,
+          flickr = /^(.*)@flickr$/i,
           normal = /^[a-z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i,
           enormal = /^[^@]*<[a-z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?>$/i,
           phone = /^(\+)?((?:(86)?(1(?:3\d|4[57]|5\d|8\d)\d{8}))|(?:(1)?(\d{5,15})))$/;
@@ -64,8 +67,26 @@ define('util', function () {
         var res = {}, m;
         strid = Util.trim(strid);
 
+        if ((m = strid.match(dropbox)) && (normal.test(m[1]))) {
+          res.name = m[1];
+          res.external_username = m[1];
+          res.provider = 'dropbox';
+        }
+
+        // flickr
+        else if ((m = strid.match(flickr))) {
+          res.name = m[1];
+          res.external_username = m[1];
+          res.provider = 'flickr';
+        }
+
+        // instagram
+        else if ((m = strid.match(instagram))) {
+          res.name = m[1];
+          res.external_username = m[1];
+          res.provider = 'instagram';
         // facebook
-        if ((m = strid.match(facebook))) {
+        } else if ((m = strid.match(facebook))) {
           res.name = m[1];
           res.external_username = m[1];
           res.provider = 'facebook';
@@ -142,6 +163,7 @@ define('util', function () {
       case 'facebook':
       case 'instagram':
       case 'flickr':
+      case 'dropbox':
         username += '@' + provider;
         break;
 
