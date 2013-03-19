@@ -2,11 +2,13 @@
  * Routes
  */
 define('routes', function (require, exports, module) {
-  var R = require('rex');
-  var Api = require('api');
-  var Bus = require('bus');
-  var Util = require('util');
-  var Store = require('store');
+  "use strict";
+
+  var R = require('rex'),
+      Api = require('api'),
+      Bus = require('bus'),
+      Util = require('util'),
+      Store = require('store');
 
   require('user');
 
@@ -14,7 +16,7 @@ define('routes', function (require, exports, module) {
 
 
   // index
-  routes.index = function (req, res, next) {
+  routes.index = function (req, res) {
     // redirect to `profile`
     if (req.session.authorization) {
       redirectToProfile(req, res);
@@ -42,7 +44,7 @@ define('routes', function (require, exports, module) {
 
 
   // gather a x
-  routes.gather = function (req, res, next) {
+  routes.gather = function (req, res) {
     var session = req.session;
 
     // is not `home` page
@@ -50,20 +52,20 @@ define('routes', function (require, exports, module) {
 
     if (!session.initMenuBar) {
 
-      var authorization = session.authorization
-        , user = session.user;
+      var authorization = session.authorization,
+          user = session.user;
 
       Bus.emit('app:page:usermenu', !!authorization);
 
-        if (authorization) {
-          session.initMenuBar = true;
-          Bus.emit('app:usermenu:updatenormal', user);
+      if (authorization) {
+        session.initMenuBar = true;
+        Bus.emit('app:usermenu:updatenormal', user);
 
-          Bus.emit('app:usermenu:crosslist'
-            , authorization.token
-            , authorization.user_id
-          );
-        }
+        Bus.emit('app:usermenu:crosslist',
+          authorization.token,
+          authorization.user_id
+        );
+      }
     }
 
     res.render('x.html', function(tpl) {
@@ -96,9 +98,9 @@ define('routes', function (require, exports, module) {
       , originToken = req.params[0];
 
     session.originToken = originToken;
-    var dfd = Api.request('resolveToken'
-      , { type: 'POST', data: { token: originToken } }
-      , function (data) {
+    Api.request('resolveToken',
+      { type: 'POST', data: { token: originToken } },
+      function (data) {
           // token_type
           //  verify
           //  forgot password: SET_PASSWORD
@@ -116,7 +118,6 @@ define('routes', function (require, exports, module) {
           var target_token = data.token
             , target_user_id = data.user_id
             , target_user_name = data.user_name
-            , target_identity_id = data.identity_id
             // 是否还有可以合并的 `identities`
             //, mergeable_user = data.mergeable_user
             , mergeable_user = null
@@ -129,8 +130,8 @@ define('routes', function (require, exports, module) {
                 || (!authorization && token_type === 'VERIFY' && action === 'VERIFIED'))
              ) {
             authorization = {
-                token: target_token
-              , user_id: target_user_id
+              token: target_token,
+              user_id: target_user_id
             };
             Store.set('authorization', session.authorization = authorization);
             session.auto_sign = action !== 'INPUT_NEW_PASSWORD';
@@ -188,7 +189,7 @@ define('routes', function (require, exports, module) {
     );
   };
 
-  routes.resolveShow = function (req, res, next) {
+  routes.resolveShow = function (req, res) {
     var session = req.session
       , auto_sign = session.auto_sign
       , originToken = session.originToken
@@ -198,9 +199,6 @@ define('routes', function (require, exports, module) {
       , browsing_user = session.browsing_user
       , resolveData = session.resolveData
       , target_identity_id = resolveData.identity_id
-      , target_user_name = resolveData.user_name
-      , target_user_id = resolveData.user_id
-      , target_token = resolveData.token
       , token_type = resolveData.token_type
       //, mergeable_user = resolveData.mergeable_user
       , mergeable_user = null
@@ -251,6 +249,7 @@ define('routes', function (require, exports, module) {
 
 
     if (action === 'INPUT_NEW_PASSWORD') {
+      var d;
       tplUrl = 'forgot_password.html';
       res.render(tplUrl, function (tpl) {
         $('#app-main').append(tpl);
@@ -260,7 +259,6 @@ define('routes', function (require, exports, module) {
               return true;
             }
           });
-          var d;
           if (token_type === 'VERIFY') {
             d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">');
             d.data('source', {
@@ -315,7 +313,7 @@ define('routes', function (require, exports, module) {
   };
 
   // cross
-  routes.cross = function (req, res, next) {
+  routes.cross = function (req, res) {
     var session = req.session
       , authorization = session.authorization
       , user = session.user;
@@ -392,7 +390,7 @@ define('routes', function (require, exports, module) {
 
 
   // Opening a private invitation X.
-  routes.crossInvitation = function (req, res, next) {
+  routes.crossInvitation = function (req, res) {
     var session = req.session
       , authorization = session.authorization
       , user = session.user
@@ -492,7 +490,7 @@ define('routes', function (require, exports, module) {
               data: {
                 refere: window.location.href
               },
-              beforeSend: function (xhr) {
+              beforeSend: function () {
                 clicked = true;
                 $fail.addClass('hide');
                 $redirecting.removeClass('hide');
@@ -636,7 +634,6 @@ define('routes', function (require, exports, module) {
   routes.crossToken = function (req, res, next) {
     var session = req.session
       , authorization = session.authorization
-      , user = session.user
       , authToken = authorization && authorization.token
       , ctoken = req.params[0]
       , crossAction = req.params[1]
@@ -658,7 +655,7 @@ define('routes', function (require, exports, module) {
 
     data = { invitation_token: ctoken };
     if (cat) {
-      data['cross_access_token'] = cat;
+      data.cross_access_token = cat;
     }
 
     _crosstoken(res, req, next, params, data, cats, cat, ctoken, accept, mute);
@@ -667,7 +664,6 @@ define('routes', function (require, exports, module) {
   routes.crossPhoneToken = function (req, res, next) {
     var session = req.session,
         authorization = session.authorization,
-        user = session.user,
         authToken = authorization && authorization.token,
         cross_id = req.params[0],
         ctoken = req.params[1],
@@ -691,7 +687,7 @@ define('routes', function (require, exports, module) {
       cross_id: cross_id
     };
     if (cat) {
-      data['cross_access_token'] = cat;
+      data.cross_access_token = cat;
     }
 
     _crosstoken(res, req, next, params, data, cats, cat, ctoken, accept, mute);
@@ -699,7 +695,7 @@ define('routes', function (require, exports, module) {
 
 
   // profile
-  routes.profile = function (req, res, next) {
+  routes.profile = function (req, res) {
     var session = req.session
       , authorization = session.authorization
       , user = session.user
@@ -743,7 +739,8 @@ define('routes', function (require, exports, module) {
 
           $('#app-main').append(tpl);
           Bus.emit('app:profile:identities', user);
-          var dfd = $.Deferred();
+          var dfd = $.Deferred(),
+              e = $.Event('click.dialog.data-api');
           dfd.resolve(authorization);
           Bus.emit('app:profile:show', dfd);
 
@@ -751,7 +748,6 @@ define('routes', function (require, exports, module) {
           // `identity_status`: connected | new | revoked
           if (oauth) {
             if (oauth.identity_status !== 'connected') {
-              var e = $.Event('click.dialog.data-api');
               e.following = oauth.following;
               e.identity = oauth.identity;
               e.token = authorization.token;
@@ -764,7 +760,6 @@ define('routes', function (require, exports, module) {
             Store.remove('oauth');
             delete session.oauth;
           } else if (session.verification_token) {
-            var e = $.Event('click.dialog.data-api');
             $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>')
             .data('token', session.verification_token)
             .appendTo($('#app-tmp'))
@@ -814,7 +809,7 @@ define('routes', function (require, exports, module) {
 
 
   // invalid
-  routes.invalid = function (req, res, next) {
+  routes.invalid = function (req, res) {
     var session = req.session
       , authorization = session.authorization
       , user = session.user;
@@ -842,7 +837,7 @@ define('routes', function (require, exports, module) {
 
 
   // signout
-  routes.signout = function (req, res, next) {
+  routes.signout = function () {
     Store.remove('cats');
     Store.remove('user');
     Store.remove('authorization');
