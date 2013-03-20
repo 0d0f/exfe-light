@@ -729,12 +729,12 @@ define(function (require, exports, module) {
             window.scrollTo(0, 0);
         }, 0);
 
-        function isLocalStorageNameSupported() {
+        function isLocalStorageSupported() {
             try { 
-                var supported = (localStorageName in win && win[localStorageName]);
+                var supported = typeof window.localStorage !== 'undefined';
                 if (supported) {
-                    localStorage.setItem('storage', '');
-                    localStorage.removeItem('storage');
+                    window.localStorage.setItem('storage', 0);
+                    window.localStorage.removeItem('storage');
                 }
                 return supported;
             } catch(err) {
@@ -742,7 +742,7 @@ define(function (require, exports, module) {
             }
         }
 
-        if (!isLocalStorageNameSupported()) {
+        if (!isLocalStorageSupported()) {
             alert('EXFE cannot be used in private browsing mode.');
         }
     });
