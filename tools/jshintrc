@@ -5,7 +5,6 @@
     "passfail"      : false,  // Stop on first error.                                                                                                       报错即停止
     "maxerr"        : 100,    // Maximum error before stopping.                                                                                             设定错误阀值
 
-
     // Predefined globals whom JSHint will ignore.
     "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
 
@@ -18,21 +17,6 @@
     "prototypejs"   : false,
     "mootools"      : false,
     "dojo"          : false,
-
-    "predef"        : [  // Custom globals.
-      "$",
-      "define",
-      "Modernizr",
-      // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Functions#escape_and_unescape_functions
-      "escape",
-      "unescape",
-        //"exampleVar",
-        //"anotherCoolGlobal",
-        //"iLoveDouglas"
-      "App",
-      "Cross"
-    ],
-
 
     // Development.
     "debug"         : false,  // Allow debugger statements e.g. browser breakpoints.
@@ -55,7 +39,7 @@
     "eqeqeq"        : true,   // Require triple equals i.e. `===`.                                                                                          强比较
     "eqnull"        : false,  // Tolerate use of `== null`.                                                                                                 == 比较
     "evil"          : false,  // Tolerate use of `eval`.                                                                                                    允许 eval
-    "expr"          : false,  // Tolerate `ExpressionStatement` as Programs.
+    "expr"          : true,  // Tolerate `ExpressionStatement` as Programs.
     "forin"         : false,  // Tolerate `for in` loops without `hasOwnPrototype`.
     "immed"         : true,   // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`                                           true: (function (){}()) false: (function() {})()
     "latedef"       : true,   // Prohipit variable use before definition.
@@ -72,7 +56,7 @@
 
 
     // Personal styling prefrences.
-    "newcap"        : true,   // Require capitalization of all constructor functions e.g. `new F()`.                                                        构造函数名以大写字母开头
+    "newcap"        : false,   // Require capitalization of all constructor functions e.g. `new F()`.                                                        构造函数名以大写字母开头
     "noempty"       : true,   // Prohipit use of empty blocks.                                                                                              禁止出现空代码片段
     "nonew"         : true,   // Prohibit use of constructors for side-effects.
     "nomen"         : false,  // Prohibit use of initial or trailing underbars in names.                                                                    禁止以下滑线开头声名变量
@@ -81,5 +65,41 @@
     "sub"           : false,  // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
     "trailing"      : false,  // Prohibit trailing whitespaces.
     "white"         : false,  // Check against strict whitespace and indentation rules.                                                                     空白
-    "indent"        : 2
+    "indent"        : 2,
+    "unused"        : true,
+
+    // Custom globals.
+    "predef"        : [
+        "_",
+        "__dirname",
+        "require",
+        "jasmine",
+        "describe",
+        "xdescribe",
+        "it",
+        "xit",
+        "beforeEach",
+        "afterEach",
+        "expect",
+        "spyOn",
+        "runs",
+        "waits",
+        "waitsFor",
+        "Benchmark",
+        "Raphael",
+        "Backbone",
+        "Modernizr",
+        "Ext",
+        "_gaq",
+        "$",
+        "define",
+        "exports",
+        "module",
+        "Modernizr",
+        // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Functions#escape_and_unescape_functions
+        "escape",
+        "unescape",
+        "App",
+        "Cross"
+    ]
 }

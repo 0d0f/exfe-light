@@ -223,7 +223,7 @@ define('mappanel', function (require, exports, module) {
         placeData.lng = place.lng || '';
         placeData.external_id = place.external_id;
         placeData.provider = place.provider;
-        searchable = !!searchable && place.title;
+        searchable = !!searchable && place.title.length;
         var d = new Date();
         placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
           + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
@@ -357,7 +357,7 @@ define('mappanel', function (require, exports, module) {
 
     , lookup: function () {
         var place = this.getPlace();
-        place.title && this.component.emit('change-place', place, true);
+        this.component.emit('change-place', place, true);
       }
 
     //, click: function (e)  {}
@@ -750,15 +750,16 @@ define('mappanel', function (require, exports, module) {
               }
           };
 
-          this._map = new GMaps.Map(this.$element[0]
-            , this.defaultOptions = {
-                zoom: this.zoomNum
-              , center: this._center
-              , disableDefaultUI: true
-              , MapTypeId: GMaps.MapTypeId.ROADMAP
-              , panControl: false
-              , zoomControl: false
-              , scaleControl: false
+          this._map = new GMaps.Map(
+            this.$element[0],
+            this.defaultOptions = {
+              zoom: this.zoomNum,
+              center: this._center,
+              disableDefaultUI: true,
+              MapTypeId: GMaps.MapTypeId.ROADMAP,
+              panControl: false,
+              zoomControl: false,
+              scaleControl: false
             }
           );
 
@@ -797,8 +798,8 @@ define('mappanel', function (require, exports, module) {
                 , latLng = dl.latLng;
               component.placesList.clear();
               self.clearMarkers();
-              place.lat = '' + latLng.Ya;
-              place.lng = '' + latLng.Za;
+              place.lat = '' + latLng.lat();
+              place.lng = '' + latLng.lng();
               self.createMarkers([
                 place
               ], true);

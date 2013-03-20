@@ -1,27 +1,17 @@
 define(function (require, exports, module) {
   "use strict";
 
-  var $ = require('jquery');
-  var Store = require('store');
-  var Config = require('config');
-  var Dialog = require('dialog');
-  var Dialogs = require('xdialog').dialogs;
-  var Handlebars = require('handlebars');
-  var HumanTime = require('humantime');
-  var R = require('rex');
-  var Util = require('util');
-  var Bus = require('bus');
-  var Api = require('api');
-  var Moment = require('moment');
-
-  Moment.calendar = {
-    sameDay : 'ha, dddd MMMM D',
-    nextDay : 'h:ssA [Tomorrow], dddd MMMM D',
-    nextWeek : 'dddd [at] LT',
-    lastDay : 'hA, dddd MMMM D',
-    lastWeek : 'hA, dddd MMMM D',
-    sameElse : 'L'
-  };
+  var $ = require('jquery'),
+      Store = require('store'),
+      Config = require('config'),
+      Dialog = require('dialog'),
+      Dialogs = require('xdialog').dialogs,
+      Handlebars = require('handlebars'),
+      HumanTime = require('humantime'),
+      R = require('rex'),
+      Util = require('util'),
+      Bus = require('bus'),
+      Api = require('api');
 
   // 覆盖默认 `each` 添加 `__index__` 属性
   Handlebars.registerHelper('each', function (context, options) {
@@ -135,12 +125,12 @@ define(function (require, exports, module) {
   });
 
   Handlebars.registerHelper('ifVerifying', function (provider, status, options) {
-    var context = provider === 'email' && status === 'VERIFYING';
+    var context = (!Handlebars.helpers['isOAuthIdentity'].call(this, provider, options)) && status === 'VERIFYING';
     return Handlebars.helpers['if'].call(this, context, options);
   });
 
   Handlebars.registerHelper('atName', function (identity) {
-    return Util.printExtUserName(identity);
+    return Util.printExtUserName(identity, true);
   });
 
   Handlebars.registerHelper('editable', function (provider, status, options) {
@@ -398,10 +388,6 @@ define(function (require, exports, module) {
             return this.__conversation_nums;
           });
 
-          Handlebars.registerHelper('humanTime', function (t) {
-            return Moment().from(t);
-          });
-
           if (invitations.length) {
             var jst_invitations = $('#jst-invitations');
             var s = Handlebars.compile(jst_invitations.html());
@@ -576,7 +562,7 @@ define(function (require, exports, module) {
       if (t === 'focusout' || (kc === 9 || (!e.shiftKey && kc === 13))) {
         var value = $.trim($(this).val());
         var oldValue = $(this).data('oldValue');
-        $(this).hide().prev().html(value).show();
+        $(this).hide().prev().html(value || oldValue).show();
         $(this).remove();
         !$('.settings-panel').data('hoverout') && $('.xbtn-changepassword').removeClass('hide');
 
@@ -625,9 +611,8 @@ define(function (require, exports, module) {
         var value = $.trim($(this).val());
         var oldValue = $(this).data('oldValue');
         var identity_id = $(this).parents('li').data('identity-id');
-        $(this).hide().prev().text(value).show();
+        $(this).hide().prev().text(value || oldValue).show();
         $(this).remove();
-
 
         if (!value || value === oldValue) return;
         var authorization = Store.get('authorization')
@@ -1009,6 +994,37 @@ define(function (require, exports, module) {
     _deleteIdentity(identity_id);
 
     return false;
+  });
+
+  var PhotoXPanel = null;
+  $BODY.on('click.open-photox', '.open-photox', function () {
+    if (!PhotoXPanel) {
+      PhotoXPanel = require('photox');
+    }
+    var user = Store.get('user');
+    if (user) {
+      var identities = user.identities,
+          photo_providers = Config.photo_providers,
+          providers = photo_providers.slice(0),
+          ips = [], i;
+      R.each(identities, function (v) {
+        i = R.indexOf(providers, v.provider);
+        if (-1 !== i) {
+          providers.splice(i, 1);
+          ips.push(v.provider);
+        }
+      });
+      ips.push(''); providers.push('');
+      // providers = 'flickr:1 facebook:0 dropbox:0'
+      providers = ips.join(':1 ') + providers.join(':0 ');
+      (new PhotoXPanel({
+        options: {
+          parentNode: $('#app-tmp'),
+          srcNode: $('.open-photox'),
+          providers: providers
+        }
+      })).show();
+    }
   });
 
 });

@@ -1,20 +1,28 @@
-* v0.1.4 2013-03-02T15:07:56 UTC+0800
+* v0.1.16 2013-03-14T15:11:19 UTC+0800
+  - Bugs Fixed
+    * edited `identity-name`, if set value = '', reset value = oldvalue in `Profile` Page
+
+* v0.1.15 2013-03-02T15:07:56 UTC+0800
+  - Changes
+    * removed `moment.js` library
+
+* v0.1.14 2013-03-02T15:07:56 UTC+0800
   - Changes
     * "use strict";
 
-* v0.1.3 2013-02-28T13:06:21 UTC+0800
+* v0.1.13 2013-02-28T13:06:21 UTC+0800
   - Changes
     * added `flickr` `instagram` `dropbox` providers
 
-* v0.1.2 2013-01-17T21:31:59 UTC+0800
+* v0.1.12 2013-01-17T21:31:59 UTC+0800
   - Changes
     * `purpose` replaced `intent`
 
-* v0.1.1 2013-01-14T14:13:42 UTC+0800
+* v0.1.11 2013-01-14T14:13:42 UTC+0800
   - Changes
     * tweaks gather-a-x button
 
-* v0.1.0 2013-01-08T10:50:06 UTC+0800
+* v0.1.10 2013-01-08T10:50:06 UTC+0800
   - Changes
     * used new `humantime` library
 

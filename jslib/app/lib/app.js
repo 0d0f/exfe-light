@@ -63,9 +63,14 @@ define(function (require) {
 
   // profile
   //        email:    cfd@exfe.com        - `/#cfd@exfe.com`
-  //      twitter:    @cfddream           - `/#@cfddream`
+  //      twitter:    @cfddream@twitter   - `/#@cfddream@twitter`
   //     facebook:    cfddream@facebook   - `/#cfddream@facebook`
+  //        phone:    +86138964xx233      - `/#+86138964xx233`
+  //    instagram:    cfddream@instagram  - `/#cfddream@instagram`
+  //       flickr:    u0391@flickr        - `/#u0391@flickr`
+  //      dropbox:    cfd@exfe.com        - `/#cfd@exfe.com
   app.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
+  app.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
 
   // invalid link
   app.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, routes.invalid);
