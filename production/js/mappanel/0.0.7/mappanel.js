@@ -1004,7 +1004,6 @@ define('mappanel', function (require, exports, module) {
       }
 
     , zoom: function (n) {
-        alert(this.isGo);
         if (!this.isGo) { return; }
         this.sizeStatus = n;
         var component = this.component
