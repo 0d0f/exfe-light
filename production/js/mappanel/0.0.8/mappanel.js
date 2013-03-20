@@ -221,7 +221,7 @@ define('mappanel', function (require) {
         placeData.lng = place.lng || '';
         placeData.external_id = place.external_id;
         placeData.provider = place.provider;
-        searchable = !!searchable && place.title;
+        searchable = !!searchable && place.title.length;
         var d = new Date();
         placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
           + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
