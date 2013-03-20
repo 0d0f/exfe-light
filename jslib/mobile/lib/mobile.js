@@ -145,7 +145,7 @@ define(function (require, exports, module) {
             '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in <span class="sec">5</span>s.</div>'
           + '<div class="content">'
           +     '<div class="title_area">'
-          +         '<div class="title_text"></div>'
+          +         '<div class="title_wrap"><div class="title_text"></div></div>'
           +         '<div class="inviter"><div class="ribbon"></div><div class="textoverflow"><span class="inviter_highlight"></span> invites you</div></div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
