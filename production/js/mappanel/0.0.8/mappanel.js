@@ -217,8 +217,6 @@ define('mappanel', function (require) {
           , oldLng = placeData.lng;
         placeData.title = place.title;
         placeData.description = place.description;
-        placeData.lat = place.lat || '';
-        placeData.lng = place.lng || '';
         placeData.external_id = place.external_id;
         placeData.provider = place.provider;
         searchable = !!searchable && place.title.length;
@@ -231,6 +229,8 @@ define('mappanel', function (require) {
             this.xmap.textSearch(place.title);
           }
         } else {
+          placeData.lat = place.lat || '';
+          placeData.lng = place.lng || '';
           this.placeInput.change(printPlace(place.title, place.description));
         }
         if (oldTitle !== place.title || oldDesc !== place.description || oldLat !== place.lat || oldLng !== place.lng) {
@@ -709,14 +709,21 @@ define('mappanel', function (require) {
       }
 
     , initMap: function () {
-        var component = this.component;
-        this.userPosition = component.userPosition;
-        this.placePosition = component.placePosition;
-        this.hasLatLng = component.hasLatLng;
-        var coords = this.placePosition.coords;
-        coords || (this.placePosition.coords = coords = {});
+        var component = this.component,
+            placePosition = this.placePosition = component.placePosition,
+            userPosition = this.userPosition = component.userPosition,
+            coords = placePosition.coords,
+            ucoords = userPosition.coords;
+
+        coords || (placePosition.coords = coords = {});
         coords.latitude || (coords.latitude = '');
         coords.longitude || (coords.longitude = '');
+
+        ucoords || (userPosition.coords = ucoords = {});
+        ucoords.latitude || (ucoords.latitude = '');
+        ucoords.longitude || (ucoords.longitude = '');
+
+        this.hasLatLng = component.hasLatLng;
         this.isGo = true;
 
         this._request = {
@@ -767,10 +774,10 @@ define('mappanel', function (require) {
 
           if (this.hasLatLng) {
             this._placeMarker = new GMaps.Marker({
-                position: new GMaps.LatLng(this.placePosition.coords.latitude, this.placePosition.coords.longitude)
+                position: new GMaps.LatLng(coords.latitude, coords.longitude)
               , map: this._map
               , icon: this.bicon
-              , title: this.placePosition.coords.title || ''
+              , title: coords.title || ''
             });
             this.markers.push(this._placeMarker);
             // 中心点偏右上
@@ -778,10 +785,10 @@ define('mappanel', function (require) {
           }
 
           this._userMarker = new GMaps.Marker({
-              position: new GMaps.LatLng(this.userPosition.coords.latitude, this.userPosition.coords.longitude)
-            , map: this._map
-            , icon: this.sbicon
-            , title: this.userPosition.coords.title || ''
+            position: new GMaps.LatLng(ucoords.latitude, ucoords.longitude),
+            map: this._map,
+            icon: this.sbicon,
+            title: ucoords.title || ''
           });
 
           this._service = new GMaps.places.PlacesService(this._map);
@@ -826,8 +833,7 @@ define('mappanel', function (require) {
           GMaps.event.addListener(this._map, 'center_changed', function () {
             clearTimeout(self._timer);
           });
-          //google.maps.event.addListener(this._map, 'click', function (dl) {
-            //}, false);
+          //google.maps.event.addListener(this._map, 'click', function (dl) {}, false);
         } catch (e) {
           this.isGo = false;
         }
@@ -1072,7 +1078,9 @@ define('mappanel', function (require) {
 
     return {
       title: title,
-      description: description
+      description: description,
+      provider: '',
+      external_id: ''
     };
   };
 
