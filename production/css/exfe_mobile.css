@@ -1057,7 +1057,7 @@ footer {
   height: 11px;
   font-size: 9px;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 10px;
   color: white;
   text-align: center;
   text-shadow: 0 1px rgba(255, 255, 255, 0.5);
@@ -1099,6 +1099,15 @@ footer {
   font-size: 14px;
   line-height: 17px;
   color: #333;
+}
+
+.place_mark {
+  position: relative;
+  top: 14px;
+  display: block;
+  width: 26px;
+  height: 36px;
+  margin: auto;
 }
 
 .time_tobe,
