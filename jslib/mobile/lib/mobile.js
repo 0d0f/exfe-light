@@ -283,10 +283,10 @@ define(function (require, exports, module) {
                         );
                         $('.map_link').attr(
                             'href', 
-                            'maps://maps?saddr=Current+Location&daddr='
-                          + encodeURIComponent(placeTitle) + '@'
-                          + data.response.cross.place.lat  + ','
-                          + data.response.cross.place.lng
+                            'http://maps.google.com/maps?daddr='
+                          + encodeURIComponent(placeTitle + '@'
+                          + data.response.cross.place.lat + ','
+                          + data.response.cross.place.lng)
                         );
                     } else {
                         $('.place_area .map').hide();
