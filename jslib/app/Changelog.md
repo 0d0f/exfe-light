@@ -1,3 +1,7 @@
+* v0.2.9 2013-03-19T17:10:00 UTC+0800
+  - Changes
+    * `profile` url 支持 `flickr` `instagram`
+
 * v0.2.8 2013-03-13T15:29:16 UTC+0800
   - Changes
     * `profile` url 支持手机号码
