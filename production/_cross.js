@@ -2075,7 +2075,7 @@ define(function (require, exports, module) {
 
         function getMap(position) {
           var coords = position.coords;
-          if (place.title === 'Right there on map') place.title = '';
+          //if (place.title === 'Right there on map') place.title = '';
           map_dom = map_dom.replace(/\{\{lat\}\}/ig, coords.latitude)
             .replace(/\{\{lng\}\}/ig, coords.longitude)
             .replace(/\{\{title\}\}/ig, (place.provider === '' ? coords.latitude + ',' + coords.longitude + ' ' : '') + encodeURIComponent(place.title));
