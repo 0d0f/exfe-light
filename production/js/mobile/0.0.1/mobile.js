@@ -434,8 +434,8 @@ define(function (require, exports, module) {
                                      + '?user_id='     + user_id
                                      + '&token='       + authorization.token
                                      + '&identity_id=' + myIdId;
+                                my_token = authorization.token;
                             }
-                            my_token = authorization.my_token;
                         }
                     }
                     if (my_token
