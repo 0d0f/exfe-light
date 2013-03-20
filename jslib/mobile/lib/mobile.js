@@ -230,6 +230,9 @@ define(function (require, exports, module) {
                     } else {
                         $('.inf_area .description .xbtn-more').hide();
                     }
+                    if (!data.response.cross.description) {
+                        $('.time_area').addClass('no_prepend');
+                    }
                     // render time
                     var timeTitle   = 'Sometime';
                     var timeContent = 'To be decided';
@@ -262,7 +265,18 @@ define(function (require, exports, module) {
                         var scale = typeof window.devicePixelRatio !== 'undefined'
                              && window.devicePixelRatio <= 2
                               ? window.devicePixelRatio  : 1;
-                        $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false&scale=' + scale + ')');
+                        $('.place_area .map').css(
+                            'background-image',
+                            'url(https://maps.googleapis.com/maps/api/staticmap?center='
+                          + data.response.cross.place.lat + ','
+                          + data.response.cross.place.lng + '&markers=icon%3a'
+                          + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')
+                          + '%7C'
+                          + data.response.cross.place.lat + ','
+                          + data.response.cross.place.lng
+                          + '&zoom=13&size=290x100&maptype=road&sensor=false&scale='
+                          + scale + ')'
+                        );
                     } else {
                         $('.place_area .map').hide();
                     }
@@ -331,7 +345,7 @@ define(function (require, exports, module) {
                                   ? ('<div class="portrait_mymate">+'
                                   + data.response.cross.exfee.invitations[i].mates
                                   + '</div>') : '')
-                              +     '<div class="name_me">'
+                              +     '<div class="name_me textcut">'
                               +         escape(data.response.cross.exfee.invitations[i].identity.name)
                               +     '</div>'
                               + '</td>'
@@ -409,7 +423,10 @@ define(function (require, exports, module) {
                             my_token = authorization.my_token;
                         }
                     }
-                    if (my_token) {
+                    if (my_token
+                     && idMyInv !== -1
+                     && data.response.cross.exfee.invitations[idMyInv].identity.id
+                    !== data.response.cross.exfee.invitations[idMyInv].invited_by.id) {
                         $('.rsvp_toolbar').show();
                         $('.portrait.me').on('click', function() {
                             $('.rsvp_toolbar').toggleClass(
@@ -476,7 +493,7 @@ define(function (require, exports, module) {
           +     '</div>'
           +     '<div class="actions">'
           +         '<div class="get-button">'
-          +             '<button>Get <span class="exfe">EXFE</span> App <span class="free">free</span></button>'
+          +             '<button>Get <span class="exfe">EXFE</span> app <span class="free">free</span></button>'
           +         '</div>'
           +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +     '</div>'
