@@ -219,7 +219,7 @@ define('mappanel', function (require) {
         placeData.description = place.description;
         placeData.external_id = place.external_id;
         placeData.provider = place.provider;
-        searchable = !!searchable && place.title.length;
+        searchable = searchable || (!!searchable && place.title.length);
         var d = new Date();
         placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
           + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
@@ -682,7 +682,10 @@ define('mappanel', function (require) {
 
     // map size: false/true <--> big/small
     this.sizeStatus = true;
-    this.zoomNum = 16;
+    // lat,lng is emtpy
+    this.zoom12 = 12;
+    this.zoom16 = 16;
+    this.zoomN = 16;
 
     // 地图放大，窗口可视区域的 80%
     this.a = 0.8;
@@ -710,12 +713,16 @@ define('mappanel', function (require) {
 
     , initMap: function () {
         var component = this.component,
+            place = component.place,
             placePosition = this.placePosition = component.placePosition,
             userPosition = this.userPosition = component.userPosition,
             coords = placePosition.coords,
             ucoords = userPosition.coords;
 
-        coords || (placePosition.coords = coords = {});
+        if (!coords) {
+          placePosition.coords = coords = {};
+          this.zoomN = this.zoom12;
+        }
         coords.latitude || (coords.latitude = '');
         coords.longitude || (coords.longitude = '');
 
@@ -758,7 +765,7 @@ define('mappanel', function (require) {
           this._map = new GMaps.Map(
             this.$element[0],
             this.defaultOptions = {
-              zoom: this.zoomNum,
+              zoom: this.zoomN,
               center: this._center,
               disableDefaultUI: true,
               MapTypeId: GMaps.MapTypeId.ROADMAP,
@@ -777,9 +784,19 @@ define('mappanel', function (require) {
                 position: new GMaps.LatLng(coords.latitude, coords.longitude)
               , map: this._map
               , icon: this.bicon
+              , draggable: true
               , title: coords.title || ''
-            });
+            })
+            this._placeMarker._place = $.extend({}, place);
             this.markers.push(this._placeMarker);
+            //GMaps.event.addListener(this._placeMarker, 'dragstart', function () {});
+            GMaps.event.addListener(this._placeMarker, 'dragend', function (dl) {
+              var latLng = dl.latLng;
+              this._place.lat = '' + latLng.lat();
+              this._place.lng = '' + latLng.lng();
+              this._place.provider = '';
+              component.emit('change-place', this._place, false);
+            });
             // 中心点偏右上
             this._map.panBy(-100, 0);
           }
@@ -795,50 +812,70 @@ define('mappanel', function (require) {
 
           //google.maps.event.addListener(this._map, 'bounds_changed', function () { console.dir(this.getBounds()); });
 
-          var self = this, geocoder = new GMaps.Geocoder(), cb;
-          GMaps.event.addListener(this._map, 'mousedown', function (dl) {
-            clearTimeout(self._timer);
-            self._timer = setTimeout(function () {
-              var place = component.placeInput.getPlace()
-                , latLng = dl.latLng;
-              component.placesList.clear();
-              self.clearMarkers();
-              place.lat = '' + latLng.lat();
-              place.lng = '' + latLng.lng();
-              self.createMarkers([
-                place
-              ], true);
-              GMaps.event.trigger(self.markers[0], 'mouseover');
-              if ((!place.title && !place.description) || (place.title === 'Right there on map')) {
-                cb = function (results, status) {
-                  if (self._timer
-                      && cb.id === self.cbid
-                      && status === google.maps.GeocoderStatus.OK
-                      && results.length) {
-                    self.cbid = 0;
-                    place.title = 'Right there on map';
-                    place.description = results[0].formatted_address;
-                    place.provider = ''; // exfe
-                    place.external_id = '';
-                    component.emit('change-place', place, false);
-                  }
-                };
-                cb.id = ++self.cbid;
-                geocoder.geocode({latLng: new GMaps.LatLng(place.lat, place.lng)}, cb);
-              } else {
-                component.emit('change-place', place, false);
-              }
-            }, 610);
+          var self = this, geocoder = new GMaps.Geocoder(), cb,
+              mousedown_func = function (dl) {
+                clearTimeout(self._timer);
+                self._timer = setTimeout(function () {
+                  var place = component.placeInput.getPlace()
+                    , latLng = dl.latLng, marker;
+                  component.placesList.clear();
+                  self.clearMarkers();
+                  place.lat = '' + latLng.lat();
+                  place.lng = '' + latLng.lng();
+                  self.createMarkers([ place ], true);
+                  marker = self.markers[0];
+                  marker.setDraggable(true);
+                  GMaps.event.addListener(marker, 'dragend', function (dl) {
+                    var latLng = dl.latLng;
+                    this._place.lat = '' + latLng.lat();
+                    this._place.lng = '' + latLng.lng();
+                    this._place.provider = '';
+                    component.emit('change-place', this._place, false);
+                  });
+                  GMaps.event.trigger(marker, 'mouseover');
+                  //if ((!place.title && !place.description) || (place.title === 'Right there on map')) {
+                    cb = function (results, status) {
+                      if (self._timer
+                          && cb.id === self.cbid
+                          && status === google.maps.GeocoderStatus.OK
+                          && results.length) {
+                        clearTimeout(self._timer);
+                        self.cbid = 0;
+                        place.title = 'Right there on map';
+                        place.description = results[0].formatted_address;
+                        place.provider = ''; // exfe
+                        place.external_id = '';
+                        component.emit('change-place', marker._place = place, false);
+                      }
+                    };
+                    cb.id = ++self.cbid;
+                    geocoder.geocode({latLng: new GMaps.LatLng(place.lat, place.lng)}, cb);
+                  //} else {
+                    //component.emit('change-place', place, false);
+                  //}
+                }, 610);
+              },
+              mouseup_func = function () { clearTimeout(self._timer); };
+
+          GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
+          GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
+          GMaps.event.addListener(this._map, 'mousedown', mousedown_func);
+          GMaps.event.addListener(this._map, 'mouseup', mouseup_func);
+          GMaps.event.addListener(this._map, 'dragstart', mouseup_func);
+          //GMaps.event.addListener(this._map, 'center_changed', function () { self._moving = true; });
+          /*
+          GMaps.event.addListener(this._map, 'zoom_changed', function () {
+            console.log(this.getZoom())
           });
-          GMaps.event.addListener(this._map, 'center_changed', function () {
-            clearTimeout(self._timer);
-          });
+          */
+
           //google.maps.event.addListener(this._map, 'click', function (dl) {}, false);
         } catch (e) {
           this.isGo = false;
         }
       }
 
+    /*
     , updateCenter: function (place) {
         if (this.isGo) {
           var GMaps = this.GMaps;
@@ -847,6 +884,7 @@ define('mappanel', function (require) {
           //this._marker.setPosition(this._center);
         }
       }
+    */
 
     , textSearch: function (query) {
         var self = this
@@ -857,20 +895,22 @@ define('mappanel', function (require) {
           , request = self._request
           , cb;
 
-        if (isGo && query && query !== request.query) {
-          request.query = query;
-          cb = function (results, status) {
-            if (cb.id === self.cbid
-              && status === GMaps.places.PlacesServiceStatus.OK) {
-              self.cbid = 0;
-              self.clearMarkers();
-              self.createMarkers(results);
-              component.emit('search-completed', results);
-            }
-          };
-          // 避免多异步回调问题
-          cb.id = ++self.cbid;
-          service.textSearch(request, cb);
+        if (isGo) {
+          self.clearMarkers();
+          if (query && query !== request.query) {
+            request.query = query;
+            cb = function (results, status) {
+              if (cb.id === self.cbid
+                && status === GMaps.places.PlacesServiceStatus.OK) {
+                self.cbid = 0;
+                self.createMarkers(results);
+                component.emit('search-completed', results);
+              }
+            };
+            // 避免多异步回调问题
+            cb.id = ++self.cbid;
+            service.textSearch(request, cb);
+          }
         } else {
           component.emit('search-completed', []);
         }
@@ -890,8 +930,8 @@ define('mappanel', function (require) {
     , showMarker: function (i) {
         // small size
         if (this.sizeStatus) {
-          if (this.zoomNum !== this._map.getZoom()) {
-            this._map.setZoom(this.zoomNum);
+          if (this.zoomN !== this._map.getZoom()) {
+            this._map.setZoom(this.zoomN);
           }
         }
         this.selectMarker(i, this.sizeStatus);
@@ -933,8 +973,17 @@ define('mappanel', function (require) {
 
     , saveMarker: function (i, isMouseEnter) {
         this.selectMarker(i, isMouseEnter);
-        var oldMarker = this.markers.splice(i, 1)[0];
+        var oldMarker = this.markers.splice(i, 1)[0], component = this.component;
         this.clearMarkers();
+        oldMarker.setDraggable(true);
+
+        this.GMaps.event.addListener(oldMarker, 'dragend', function (dl) {
+          var latLng = dl.latLng;
+          this._place.lat = '' + latLng.lat();
+          this._place.lng = '' + latLng.lng();
+          this._place.provider = '';
+          component.emit('change-place', this._place, false);
+        });
         this.markers.push(oldMarker);
       }
 
