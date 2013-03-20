@@ -158,7 +158,11 @@ define(function (require, exports, module) {
           +         '<div class="place_area">'
           +             '<div class="place_major"></div>'
           +             '<div class="place_minor"></div>'
-          +             '<div class="map"></div>'
+          +             '<a class="map_link" href="#">'
+          +                 '<div class="map">'
+          +                     '<img class="place_mark" src="http://img.exfe.com/web/map_pin_blue@2x.png">'
+          +                 '</div>'
+          +             '</a>'
           +         '</div>'
           +         '<div class="rsvp_toolbar">'
           +             '<div class="tri"></div>'
@@ -276,6 +280,13 @@ define(function (require, exports, module) {
                           + data.response.cross.place.lng
                           + '&zoom=13&size=290x100&maptype=road&sensor=false&scale='
                           + scale + ')'
+                        );
+                        $('.map_link').attr(
+                            'href', 
+                            'maps://maps?saddr=Current+Location&daddr='
+                          + encodeURIComponent(placeTitle) + '@'
+                          + data.response.cross.place.lat  + ','
+                          + data.response.cross.place.lng
                         );
                     } else {
                         $('.place_area .map').hide();
@@ -664,7 +675,12 @@ define(function (require, exports, module) {
                     for (var i in data.response.user.identities) {
                         if (data.response.user.identities[i].id === result.identity_id) {
                             $('.identity .avatar').attr('src', data.response.user.identities[i].avatar_filename);
-                            $('.identity .provider').attr('src', '/static/img/identity_' + data.response.user.identities[i].provider + '_18_grey@2x.png');
+                            $('.identity .provider').attr(
+                                'src',
+                                '/static/img/identity_'
+                              + data.response.user.identities[i].provider
+                              + '_18_grey@2x.png'
+                            );
                             $('.identity .name').html(data.response.user.identities[i].external_username);
                             $('.done-info').show();
                             redirecting('?user_id=' + data.response.user.user_id + '&token=' + result.token);
@@ -712,6 +728,23 @@ define(function (require, exports, module) {
         setTimeout(function() {
             window.scrollTo(0, 0);
         }, 0);
+
+        function isLocalStorageNameSupported() {
+            try { 
+                var supported = (localStorageName in win && win[localStorageName]);
+                if (supported) {
+                    localStorage.setItem('storage', '');
+                    localStorage.removeItem('storage');
+                }
+                return supported;
+            } catch(err) {
+                return false
+            }
+        }
+
+        if (!isLocalStorageNameSupported()) {
+            alert('EXFE cannot be used in private browsing mode.');
+        }
     });
 
     if (sms_token) {
