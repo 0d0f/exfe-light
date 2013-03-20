@@ -1,3 +1,8 @@
+* v0.0.8 2013-03-20T13:02:00 UTC+0800
+  - Bugs Fix
+    * Updated Cross-place when input value is empty
+    * used google-map-v3 LatLng#lat(), LatLng#lng()
+
 * v0.0.7 2013-02-28T17:15:51 UTC+0800
   - Bugs Fix
     * used google-map-v3 LatLng#lat(), LatLng#lng()
