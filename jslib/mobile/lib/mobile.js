@@ -145,7 +145,7 @@ define(function (require, exports, module) {
             '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in <span class="sec">5</span>s.</div>'
           + '<div class="content">'
           +     '<div class="title_area">'
-          +         '<div class="title_text"></div>'
+          +         '<div class="title_text textcut"></div>'
           +         '<div class="inviter"><div class="ribbon"></div><div class="textoverflow"><span class="inviter_highlight"></span> invites you</div></div>'
           +         '<div class="title_overlay"></div>'
           +     '</div>'
@@ -262,7 +262,18 @@ define(function (require, exports, module) {
                         var scale = typeof window.devicePixelRatio !== 'undefined'
                              && window.devicePixelRatio <= 2
                               ? window.devicePixelRatio  : 1;
-                        $('.place_area .map').css('background-image', 'url(https://maps.googleapis.com/maps/api/staticmap?center=' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&markers=icon%3a' + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png') + '%7C' + data.response.cross.place.lat + ',' + data.response.cross.place.lng + '&zoom=13&size=290x100&maptype=road&sensor=false&scale=' + scale + ')');
+                        $('.place_area .map').css(
+                            'background-image',
+                            'url(https://maps.googleapis.com/maps/api/staticmap?center='
+                          + data.response.cross.place.lat + ','
+                          + data.response.cross.place.lng + '&markers=icon%3a'
+                          + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')
+                          + '%7C'
+                          + data.response.cross.place.lat + ','
+                          + data.response.cross.place.lng
+                          + '&zoom=13&size=290x100&maptype=road&sensor=false&scale='
+                          + scale + ')'
+                        );
                     } else {
                         $('.place_area .map').hide();
                     }
@@ -331,7 +342,7 @@ define(function (require, exports, module) {
                                   ? ('<div class="portrait_mymate">+'
                                   + data.response.cross.exfee.invitations[i].mates
                                   + '</div>') : '')
-                              +     '<div class="name_me">'
+                              +     '<div class="name_me textcut">'
                               +         escape(data.response.cross.exfee.invitations[i].identity.name)
                               +     '</div>'
                               + '</td>'
