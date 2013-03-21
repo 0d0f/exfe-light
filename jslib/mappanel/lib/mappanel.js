@@ -209,28 +209,31 @@ define('mappanel', function (require) {
         }, 0);
       }
 
-    , change: function (place, searchable) {
+    , change: function (place, searchable, isLatLng) {
         var placeData = this.place
           , oldTitle = placeData.title
           , oldDesc = placeData.description
           , oldLat = placeData.lat
           , oldLng = placeData.lng;
         placeData.title = place.title;
-        placeData.description = place.description;
+        placeData.description = place.title.length ? place.description : '';
         placeData.external_id = place.external_id;
         placeData.provider = place.provider;
-        searchable = searchable || (!!searchable && place.title.length);
+        if (oldTitle !== place.title || isLatLng) {
+          placeData.lat = place.lat || '';
+          placeData.lng = place.lng || '';
+        }
+        searchable = !!searchable;
         var d = new Date();
         placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
           + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
           + ' +0000';
+
         if (searchable) {
-          if (oldTitle !== place.title && place.description === '') {
+          if (!place.title || (oldTitle !== place.title && place.description === '')) {
             this.xmap.textSearch(place.title);
           }
         } else {
-          placeData.lat = place.lat || '';
-          placeData.lng = place.lng || '';
           this.placeInput.change(printPlace(place.title, place.description));
         }
         if (oldTitle !== place.title || oldDesc !== place.description || oldLat !== place.lat || oldLng !== place.lng) {
@@ -795,7 +798,7 @@ define('mappanel', function (require) {
               this._place.lat = '' + latLng.lat();
               this._place.lng = '' + latLng.lng();
               this._place.provider = '';
-              component.emit('change-place', this._place, false);
+              component.emit('change-place', this._place, false, true);
             });
             // 中心点偏右上
             this._map.panBy(-100, 0);
@@ -830,7 +833,7 @@ define('mappanel', function (require) {
                     this._place.lat = '' + latLng.lat();
                     this._place.lng = '' + latLng.lng();
                     this._place.provider = '';
-                    component.emit('change-place', this._place, false);
+                    component.emit('change-place', this._place, false, true);
                   });
                   GMaps.event.trigger(marker, 'mouseover');
                   //if ((!place.title && !place.description) || (place.title === 'Right there on map')) {
@@ -982,7 +985,7 @@ define('mappanel', function (require) {
           this._place.lat = '' + latLng.lat();
           this._place.lng = '' + latLng.lng();
           this._place.provider = '';
-          component.emit('change-place', this._place, false);
+          component.emit('change-place', this._place, false, true);
         });
         this.markers.push(oldMarker);
       }

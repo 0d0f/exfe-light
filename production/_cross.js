@@ -1503,7 +1503,7 @@ define(function (require, exports, module) {
                   if ($mp.size()) {
                     var cid = $mp.data('widget-id');
                     var mp = App.widgetCaches[cid];
-                    if (oldEditing === 'map-panel') {
+                    if (oldEditing === 'map-panel' || oldEditing === 'place') {
                       Cross.place = mp.place;
                       AutoSaveCross();
                     }
