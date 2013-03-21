@@ -814,7 +814,7 @@ define('mappanel', function (require) {
 
           var self = this, geocoder = new GMaps.Geocoder(), cb,
               mousedown_func = function (dl) {
-                clearTimeout(self._timer);
+                //clearTimeout(self._timer);
                 self._timer = setTimeout(function () {
                   var place = component.placeInput.getPlace()
                     , latLng = dl.latLng, marker;
