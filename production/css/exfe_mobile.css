@@ -500,6 +500,7 @@ body.x {
   height: 44px;
   margin: 0 auto;
   font: 500 16px "HelveticaNeue-Medium";
+  font-weight: bold;
   color: #333;
   text-shadow: 0 1px rgba(255, 255, 255, 0.5);
   background-image: -moz-linear-gradient(90deg, rgba(238, 238, 238, 0.9) 0, rgba(255, 255, 255, 0.9) 100%);
@@ -826,9 +827,24 @@ footer {
 .title_area {
   position: relative;
   width: 100%;
-  height: 100px;
+  height: 65px;
+  padding-top: 15px;
   color: white;
   background-size: 100% auto;
+  -webkit-box-shadow: inset 0 -4px 4px -5px rgba(0, 0, 0, 0.2);
+     -moz-box-shadow: inset 0 -4px 4px -5px rgba(0, 0, 0, 0.2);
+}
+
+.title_wrap_a {
+  display: table;
+  width: 100%;
+  height: 50px;
+}
+
+.title_wrap_b {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .title_overlay {
@@ -841,16 +857,13 @@ footer {
 }
 
 .title_text {
-  position: absolute;
-  top: 30px;
+  position: relative;
   z-index: 1;
   width: 290px;
   max-height: 50px;
-  margin-right: 15px;
-  margin-left: 15px;
+  margin: auto 15px auto 15px;
   overflow: hidden;
   font: 500 21px/25px "HelveticaNeue-Medium";
-  font-size: 20px;
   color: white;
   text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
@@ -911,6 +924,7 @@ footer {
 .description {
   position: relative;
   width: 290px;
+  margin-top: 10px;
   overflow: hidden;
   font-size: 14px;
   line-height: 17px;
@@ -924,6 +938,7 @@ footer {
 .exfee {
   margin-top: 16px;
   -webkit-transform: translateZ(0);
+  user-select: none;
 }
 
 .exfee td {
@@ -981,11 +996,13 @@ footer {
 }
 
 .portrait_rsvp.accepted {
-  background-color: #3A6EA5;
+  background-color: #3E75AF;
 }
 
 .portrait_rsvp.pending {
   background-color: #ffffff;
+  border-color: #AAA;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .portrait_rsvp.declined {
@@ -1027,6 +1044,7 @@ footer {
   font-size: 9px;
   color: white;
   text-align: center;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.5);
   background-color: rgba(50, 50, 50, 0.75);
   border-radius: 0 3px;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -1050,9 +1068,11 @@ footer {
   width: 16px;
   height: 11px;
   font-size: 9px;
-  line-height: 14px;
+  font-weight: bold;
+  line-height: 10px;
   color: white;
   text-align: center;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.5);
   background-color: rgba(50, 50, 50, 0.75);
   border-radius: 3px;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -1075,6 +1095,10 @@ footer {
   margin-top: 16px;
 }
 
+.time_area.no_prepend {
+  margin-top: 0;
+}
+
 .time_major,
 .place_major {
   font: 500 21px/25px "HelveticaNeue-Medium";
@@ -1087,6 +1111,15 @@ footer {
   font-size: 14px;
   line-height: 17px;
   color: #333;
+}
+
+.place_mark {
+  position: relative;
+  top: 14px;
+  display: block;
+  width: 26px;
+  height: 36px;
+  margin: auto;
 }
 
 .time_tobe,
@@ -1122,7 +1155,7 @@ footer {
   height: 0;
   margin: 0;
   opacity: 0;
-  -webkit-transform: scale(0.1) translate(0, 100px) rotate(-10deg);
+  -webkit-transform: scale(0.1) translate(0, 100px);
 }
 
 .rsvp_toolbar table {
