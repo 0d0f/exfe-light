@@ -16,9 +16,11 @@
       height: auto;
       overflow-y: auto;
 
+      /*
       & ~ .map-resize {
         bottom: 18px;
       }
+      */
     }
   }
 
@@ -91,6 +93,7 @@
       #arrow > .lt(9px, #B2B2B2);
     }
 
+
     .compact, .lt {
       display: none;
     }
@@ -99,10 +102,17 @@
       .expand, .rb {
         display: none;
       }
-      .compact, .lt {
+      .lt {
         display: inline-block;
       }
+
+      &:hover {
+        .compact {
+          display: inline;
+        }
+      }
     }
+
   }
 
   .map-place {
@@ -167,6 +177,16 @@
       position: absolute;
       width: 320px;
       .border-radius(3px);
+
+      &:before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: -20px;
+      }
     }
 
     .places-list {
@@ -228,6 +248,12 @@
           height: 38px;
           border: 1px solid rgba(250, 250, 250, .8);
           .box-shadow(0 1px 4px 0px rgba(0, 0, 0, .25));
+        }
+
+        &.place-marker {
+          .title {
+            color: @exfeBlue;
+          }
         }
       }
 
