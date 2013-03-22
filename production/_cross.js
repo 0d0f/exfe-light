@@ -1886,7 +1886,8 @@ define(function (require, exports, module) {
             timeOffset  = getTimezoneOffset(ExfeUtilities.getTimezone()),
             timevalid   = crossOffset === timeOffset && require('config').timevalid,
             strAbsTime  = '', strRelTime = '', format = 'YYYY-MM-DD',
-            placeholder = Cross.id ? '&nbsp;' : 'Click here to set time.',
+            //placeholder = Cross.id ? '&nbsp;' : 'Click here to set time.',
+            placeholder = 'Pick a time.',
             showGray    = false;
         if (Cross.time.origin) {
           var t = HumanTime.printEFTime(Cross.time, 'X');
@@ -1916,7 +1917,8 @@ define(function (require, exports, module) {
             ).toggleClass('gray', false);
         } else {
             $('.cross-dp.cross-place > address').html(
-                Cross.id ? '&nbsp;' : 'Click here to set place.'
+                //Cross.id ? '&nbsp;' : 'Click here to set place.'
+                'Choose a place.'
             ).toggleClass('gray', true);
         }
         if ($('.cross-dp.cross-place > address').height() > 80) {

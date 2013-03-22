@@ -772,8 +772,8 @@ define('mappanel', function (require) {
     this.zoom16 = 16;
     this.zoomN = 16;
 
-    // 地图放大，窗口可视区域的 80%
-    this.a = 0.8;
+    // padding
+    this.a = 0.05;
 
     this.owidth = this.$element.width();
     this.oheight = this.$element.height();
@@ -1036,13 +1036,13 @@ define('mappanel', function (require) {
       }
 
     , panToRight: function () {
-        var GMaps = this.GMaps
-          , map = this._map
-          , overlay = this._overlay
-          , projection = overlay.getProjection()
-          , GPoint = GMaps.Point
-          , point =  projection.fromLatLngToContainerPixel(map.getCenter())
-          , center = projection.fromContainerPixelToLatLng(new GPoint(point.x - 100, point.y));
+        var GMaps = this.GMaps,
+            map = this._map,
+            overlay = this._overlay,
+            projection = overlay.getProjection(),
+            GPoint = GMaps.Point,
+            point =  projection.fromLatLngToContainerPixel(map.getCenter()),
+            center = projection.fromContainerPixelToLatLng(new GPoint(point.x - 100, point.y));
         map.setCenter(center);
       }
 
@@ -1058,15 +1058,11 @@ define('mappanel', function (require) {
         if (marker) {
           this.selectMarker(marker);
           position = marker.getPosition();
+          this._map.setCenter(position);
         }
 
         if (this.sizeStatus) {
           this._map.setZoom(this.zoomN = this.zoom16);
-        }
-
-        this._map.setCenter(position);
-
-        if (this.sizeStatus) {
           this.panToRight();
         }
 
@@ -1321,12 +1317,10 @@ define('mappanel', function (require) {
             , a = this.a
             , sT = $win.scrollTop()
             , sL = $win.scrollLeft();
-          width *= a;
-          height *= a;
-          self.resize(width, height);
+          self.resize(width * (1 - a * 2), height * (1 - a * 2));
           component.element.css({
-              top: height * (1 - a) / 2 + sT
-            , left: width * (1 - a) / 2 + sL
+              top: height * a + sT
+            , left: width * a + sL
           });
           setTimeout(function () {
             self._map.setOptions(self.enableOptions);
