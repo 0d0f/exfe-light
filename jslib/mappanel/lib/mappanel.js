@@ -6,11 +6,13 @@ define('mappanel', function (require) {
   "use strict";
 
   var $ = require('jquery'),
-      MAP_KEY = require('config').MAP_KEY,
-      R = require('rex'),
-      lead0 = require('humantime').lead0,
-      Config = require('config'),
       proxy = $.proxy,
+      extend = $.extend,
+      Config = require('config'),
+      MAP_KEY = Config.MAP_KEY,
+      LOCATION = Config.location,
+      lead0 = require('humantime').lead0,
+      R = require('rex'),
       SPLITTER = /[\r\n]+/g,
       CR = '\r',
       geolocation = window.navigator.geolocation,
@@ -59,20 +61,19 @@ define('mappanel', function (require) {
     , isGeoSupported: !!geolocation
 
     , setGeos: function (userGeo, placeGeo, hasLatLng) {
-        this.userPosition = userGeo;
-        this.placePosition = placeGeo;
-        this.hasLatLng = hasLatLng;
-        this.xmap.initMap();
+        this.xmap.initMap(userGeo, placeGeo, hasLatLng);
       }
 
     , init: function () {
-        var options = this.options;
+        var options = this.options,
+            element;
 
         this.render();
+        element = this.element;
 
         // save origin place data
         this.originPlace = options.place;
-        this.place = $.extend({}, options.place);
+        this.place = extend({}, options.place);
         delete options.place;
 
         this.placeInput = new PlaceInput(this, '#place-text');
@@ -80,8 +81,8 @@ define('mappanel', function (require) {
         this.xmap = new XMap(this, '#gmap');
         this.listen();
 
-        this.$resize = this.element.find('.map-resize');
-        this.$mask = this.element.find('.map-mask');
+        this.$resize = element.find('.map-resize');
+        this.$mask = element.find('.map-mask');
       }
 
     , listen: function () {
@@ -183,8 +184,8 @@ define('mappanel', function (require) {
         this.placesList.selectItem(i);
       }
 
-    , enterMarker: function (i, hasBlue) {
-        this.xmap.showMarker(i, hasBlue);
+    , enterMarker: function (i, hasPlace) {
+        this.xmap.showMarker(i, hasPlace);
       }
 
     , clearMarker: function (i) {
@@ -224,7 +225,7 @@ define('mappanel', function (require) {
         return p;
       }
 
-    , change: function (place, type, searchable) {
+    , change: function (place, type) {
         var p = this.place,
             oTitle = p.title,
             oDesc = p.description,
@@ -266,86 +267,50 @@ define('mappanel', function (require) {
           this.emit('update-place', p);
         }
       }
-    /*
-    , change: function (place, searchable, isLatLng) {
-        var placeData = this.place
-          , oldTitle = placeData.title
-          , oldDesc = placeData.description
-          , oldLat = placeData.lat
-          , oldLng = placeData.lng;
-        placeData.title = place.title;
-        placeData.description = place.title.length ? place.description : '';
-        placeData.external_id = place.external_id;
-        placeData.provider = place.provider;
-        if (oldTitle !== place.title || isLatLng) {
-          placeData.lat = place.lat || '';
-          placeData.lng = place.lng || '';
-        }
-        searchable = !!searchable;
-        var d = new Date();
-        placeData.updated_at = d.getUTCFullYear() + '-' + lead0(d.getUTCMonth() + 1) + '-' + lead0(d.getUTCDate())
-          + ' ' + lead0(d.getUTCHours()) + ':' + lead0(d.getUTCMinutes()) + ':' + lead0(d.getUTCSeconds())
-          + ' +0000';
-
-        if (searchable) {
-          if (!place.title || (oldTitle !== place.title && place.description === '')) {
-            this.xmap.textSearch(place.title);
-          }
-        } else {
-          this.placeInput.change(printPlace(place.title, place.description));
-        }
-        if (oldTitle !== place.title || oldDesc !== place.description || oldLat !== place.lat || oldLng !== place.lng) {
-          this.emit('update-place', placeData);
-        }
-      }
-      */
 
     , revert: function () {
         this.emit('update-place', this.originPlace);
       }
 
     , showPlace: function () {
-        var self = this
-          , place = this.place
-          , title = place.title
-          , description = place.description
-          // 只要 `title` 和 `description` 都没有就显示 `Enter place here.`
-          //, sc = !title && !description
-          , hasLatLng = place.lat && place.lng
-          , userGeo, placeGeo;
-
-        this.placeInput.change(printPlace(title, description));
+        var self = this,
+            placeInput = this.placeInput,
+            place = this.place,
+            title = place.title,
+            description = place.description,
+            // 只要 `title` 和 `description` 都没有就显示 `Enter place here.`
+            hasLatLng = place.lat && place.lng,
+            userGeo, placeGeo;
 
         // first focus Container
-        this.element.focus();
+        this.focus();
 
-        //if (sc) {
-        this.placeInput.$element.focusend();
-        //}
+        placeInput.change(printPlace(title, description));
+        placeInput.$element.focusend();
 
         if (hasLatLng) {
           placeGeo = { coords: { latitude: place.lat, longitude: place.lng, title: place.title } };
         }
 
+        var error = function () {
+          userGeo = { coords: LOCATION };
+          hasLatLng || (placeGeo = userGeo);
+          self.emit('geos', userGeo, placeGeo, hasLatLng);
+        };
+
         if (this.isGeoSupported) {
           geolocation
             .getCurrentPosition(
-                function (position) {
-                  userGeo = position;
-                  hasLatLng || (placeGeo = userGeo);
-                  self.setGeos(userGeo, placeGeo, hasLatLng);
-                }
-              , function () {
-                  userGeo = { coords: Config.location };
-                  hasLatLng || (placeGeo = userGeo);
-                  self.setGeos(userGeo, placeGeo, hasLatLng);
-                }
+              function (position) {
+                userGeo = position;
+                hasLatLng || (placeGeo = userGeo);
+                self.emit('geos', userGeo, placeGeo, hasLatLng);
+              },
+              error
             );
         }
         else {
-          userGeo = { coords: Config.location };
-          hasLatLng || (placeGeo = userGeo);
-          self.setGeos(userGeo, placeGeo, hasLatLng);
+          error();
         }
       }
 
@@ -357,10 +322,14 @@ define('mappanel', function (require) {
         var self = this,
             srcNode = self.srcNode;
         if (srcNode) {
-          var offset = srcNode.offset()
-            , width = this.element.outerWidth();
-          this.element
-            .css({ left: this.oleft = offset.left - width - 15 , top: this.otop = offset.top });
+          var offset = srcNode.offset(),
+              element = self.element,
+              width = element.outerWidth();
+          element
+            .css({
+              left: this.oleft = offset.left - width - 15,
+              top: this.otop = offset.top
+            });
         }
 
         if (isMapLoaded) {
@@ -368,7 +337,9 @@ define('mappanel', function (require) {
         } else {
           loadMap(function () {
             isMapLoaded = true;
-            self && self.showPlace && self.showPlace();
+            if (self && self.showPlace) {
+              self.showPlace();
+            }
           });
         }
       }
@@ -545,7 +516,7 @@ define('mappanel', function (require) {
         this.$element.empty();
         this.curr = 0;
         var html = '', li = this.template, location;
-        this.hasBlue = false;
+        this.hasPlace = false;
         if (this.status) {
 
           if (place) {
@@ -555,7 +526,7 @@ define('mappanel', function (require) {
               .replace('{{lat}}', place.lat)
               .replace('{{lng}}', place.lng)
               .replace('{{external_id}}', place.external_id);
-            this.hasBlue = true;
+            this.hasPlace = true;
           }
 
           R.each(places, function (v) {
@@ -583,7 +554,7 @@ define('mappanel', function (require) {
         var $item = $(e.currentTarget),
             i = $item.index();
         this.selectItem(i, true);
-        this.component.emit('enter-marker', i, this.hasBlue);
+        this.component.emit('enter-marker', i, this.hasPlace);
       }
 
     , selectItem: function (i, scrollable) {
@@ -601,7 +572,7 @@ define('mappanel', function (require) {
         this.$items = this.$element.find(' > li');
         this.len = this.$items.length;
         this.addCurrStyle('hover');
-        this.component.emit('enter-marker', this.curr, this.hasBlue);
+        this.component.emit('enter-marker', this.curr, this.hasPlace);
       }
 
     , addCurrStyle: function (c) {
@@ -638,7 +609,7 @@ define('mappanel', function (require) {
               external_id: $li.data('external-id'),
               provider: 'google'
             };
-        this.hasBlue = true;
+        this.hasPlace = true;
         component.emit('clear-marker', this.curr);
         component.emit('change-place', place, 'list');
         this.clear();
@@ -697,7 +668,7 @@ define('mappanel', function (require) {
     , keyHandler: function (e) {
         var self = this
           , component = self.component
-          , hasBlue = self.hasBlue
+          , hasPlace = self.hasPlace
           , ctrlKey = e.ctrlKey
           , kc = e.keyCode;
         switch (kc) {
@@ -711,7 +682,7 @@ define('mappanel', function (require) {
           if (!ctrlKey) {
             e.preventDefault();
             self.setPlace();
-            component.emit('enter-marker', self.curr, hasBlue);
+            component.emit('enter-marker', self.curr, hasPlace);
           }
           break;
         case 38: // up
@@ -719,14 +690,14 @@ define('mappanel', function (require) {
           e.preventDefault();
           self.scroll(-1);
           self.prev();
-          component.emit('enter-marker', self.curr, hasBlue);
+          component.emit('enter-marker', self.curr, hasPlace);
           break;
         case 40: // down
           e.stopPropagation();
           e.preventDefault();
           self.scroll(1);
           self.next();
-          component.emit('enter-marker', self.curr, hasBlue);
+          component.emit('enter-marker', self.curr, hasPlace);
           break;
         }
       }
@@ -768,6 +739,7 @@ define('mappanel', function (require) {
     // map size: false/true <--> big/small
     this.sizeStatus = true;
     // lat,lng is emtpy
+    this.zoom2 = 2;
     this.zoom12 = 12;
     this.zoom16 = 16;
     this.zoomN = 16;
@@ -796,26 +768,23 @@ define('mappanel', function (require) {
           .height(h);
       }
 
-    , initMap: function () {
-        var component = this.component,
-            self = this,
+    , initMap: function (userPosition, placePosition, hasLatLng) {
+        var self = this,
+            component = this.component,
             place = component.place,
-            placePosition = this.placePosition = component.placePosition,
-            userPosition = this.userPosition = component.userPosition,
             coords = placePosition.coords,
             ucoords = userPosition.coords,
-            hasPlace = component.hasLatLng,
+            hasPlace = hasLatLng,
             GMaps, GCP;
 
         if (!coords) { placePosition.coords = coords = {}; }
-        coords.latitude || (coords.latitude = '');
-        coords.longitude || (coords.longitude = '');
-
-        ucoords || (userPosition.coords = ucoords = {});
-        ucoords.latitude || (ucoords.latitude = '');
-        ucoords.longitude || (ucoords.longitude = '');
+        coords.latitude || (coords.latitude = '0');
+        coords.longitude || (coords.longitude = '0');
 
         this.isGo = true;
+        // has location
+        this.hasLocation = !!ucoords;
+        // has place
         this.hasPlace = hasPlace;
 
         try {
@@ -832,15 +801,13 @@ define('mappanel', function (require) {
           };
 
           this.enableOptions = {
-            //zoom: this.zoomN,
-            //panControl: true,
-            //panControl: true,
-            //panControlOptions: { position: GCP.RIGHT_TOP },
             zoomControl: true,
             zoomControlOptions: { position: GCP.RIGHT_TOP },
             scaleControl: true,
             scaleControlOptions: { position: GCP.BOTTOM_LEFT }
           };
+
+          this.zoomN = this.hasPlace ? this.zoom16 : (this.hasLocation ? this.zoom12 : this.zoom2);
 
           // map
           this._map = new GMaps.Map(
@@ -863,17 +830,18 @@ define('mappanel', function (require) {
 
           this.createIcons();
 
-          this._userMarker = new GMaps.Marker({
-            map: this._map,
-            position: new GMaps.LatLng(ucoords.latitude, ucoords.longitude),
-            icon: this.sbicon,
-            title: ucoords.title || ''
-          });
+          if (this.hasLocation) {
+            this._userMarker = new GMaps.Marker({
+              map: this._map,
+              position: new GMaps.LatLng(ucoords.latitude, ucoords.longitude),
+              icon: this.sbicon,
+              title: ucoords.title || ''
+            });
+          }
 
           this._service = new GMaps.places.PlacesService(this._map);
 
-          if (hasPlace) {
-            this._map.setZoom(this.zoomN = this.zoom16);
+          if (this.hasPlace) {
             this._map.panBy(-100, 0);
             var marker = this.createBlueMarker(GMaps.Marker,
               {
@@ -882,8 +850,8 @@ define('mappanel', function (require) {
                 icon: this.bicon,
                 draggable: true,
                 title: coords.title || ''
-              }, place);
-            this.hasBlue = true;
+              },
+              place);
             this.GMaps.event.addListener(marker, 'dragend', function (dl) {
               var latLng = dl.latLng;
               this._place.lat = '' + latLng.lat();
@@ -900,14 +868,11 @@ define('mappanel', function (require) {
               self.selectMarker(this);
               component.emit('enter-placeitem', 0);
             });
-          } else {
-            this._map.setZoom(this.zoomN = this.zoom12);
           }
-
 
           //google.maps.event.addListener(this._map, 'bounds_changed', function () { console.dir(this.getBounds()); });
 
-          var self = this, geocoder = new GMaps.Geocoder(), cb,
+          var geocoder = new GMaps.Geocoder(), cb,
               mousedown_func = function (dl) {
                 //clearTimeout(self._timer);
                 self._timer = setTimeout(function () {
@@ -943,7 +908,7 @@ define('mappanel', function (require) {
                           && status === google.maps.GeocoderStatus.OK
                           && results.length) {
                         clearTimeout(self._timer);
-                        self.hasBlue = true;
+                        self.hasPlace = true;
                         self.cbid = 0;
                         place.title = 'Right there on map';
                         place.description = results[0].formatted_address;
@@ -962,37 +927,16 @@ define('mappanel', function (require) {
               },
               mouseup_func = function () { clearTimeout(self._timer); };
 
-          GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
-          GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
+          if (ucoords) {
+            GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
+            GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
+          }
           GMaps.event.addListener(this._map, 'mousedown', mousedown_func);
           GMaps.event.addListener(this._map, 'mouseup', mouseup_func);
           GMaps.event.addListener(this._map, 'dragstart', mouseup_func);
-          //GMaps.event.addListener(this._map, 'center_changed', function () { self._moving = true; });
-          /*
-          GMaps.event.addListener(this._map, 'zoom_changed', function () {
-            console.log(this.getZoom())
-          });
-          */
-
-          //google.maps.event.addListener(this._map, 'click', function () {}, false);
         } catch (e) {
           this.isGo = false;
         }
-      }
-
-    /*
-    , updateCenter: function (place) {
-        if (this.isGo) {
-          var GMaps = this.GMaps;
-          this._center = new GMaps.LatLng(place.lat, place.lng);
-          this._map.setCenter(this._center);
-          //this._marker.setPosition(this._center);
-        }
-      }
-    */
-
-    , bindGMapsEvents: function (GMaps) {
-
       }
 
     , createBlueMarker: function (GMarker, options, place) {
@@ -1046,10 +990,10 @@ define('mappanel', function (require) {
         map.setCenter(center);
       }
 
-    , showMarker: function (i, hasBlue) {
+    , showMarker: function (i, hasPlace) {
         var marker, position;
 
-        if (hasBlue && -1 === --i) {
+        if (hasPlace && -1 === --i) {
           marker = this._placeMarker;
         } else {
           marker = this.redMarkers[i];
@@ -1065,31 +1009,6 @@ define('mappanel', function (require) {
           this._map.setZoom(this.zoomN = this.zoom16);
           this.panToRight();
         }
-
-        // small size
-        /*
-        if (this.sizeStatus) {
-          if (this.zoom16 !== this._map.getZoom()) {
-            this._map.setZoom(this.zoomN = this.zoom16);
-          }
-        }
-        if (hasBlue && 0 === i) {
-          this._map.setCenter(this._placeMarker.getPosition());
-        } else {
-          if (hasBlue) { i -= 1; }
-          if (this.sizeStatus) {
-            var marker = this.redMarkers[this.curr];
-            if (marker) {
-              this._map.setCenter(marker.getPosition());
-            }
-          }
-        }
-        console.log(i)
-        this.selectMarker(i, this.sizeStatus);
-        if (this.sizeStatus) {
-          this.panToRight();
-        }
-        */
       }
 
     , selectMarker: function (marker) {
@@ -1114,28 +1033,6 @@ define('mappanel', function (require) {
         }
       }
 
-      /*
-    , selectMarker: function (i, isMouseEnter) {
-        var map = this._map,
-            currMarker = this.currMarker,
-            marker = this.redMarkers[this.curr = i],
-            ricon = this.ricon,
-            bicon = this.bicon;
-        if (currMarker && !currMarker.isBlue) {
-          currMarker.setIcon(ricon);
-        }
-        if (marker) {
-          this.currMarker = marker;
-          marker.setZIndex(377);
-          if (!marker.isBlue) {
-            marker.setIcon(bicon);
-          }
-          !isMouseEnter && map.panTo(marker.getPosition());
-        }
-        //!isMouseEnter && map.setZoom(this.zoomN = this.zoom12);
-      }
-      */
-
     , createIcons: function () {
         var GMaps = this.GMaps
           , url = Config.site_url + '/static/img/icons.png'
@@ -1151,10 +1048,10 @@ define('mappanel', function (require) {
 
     , saveMarker: function (i) {
         var self = this,
-            hasBlue = self.hasBlue;
+            hasPlace = self.hasPlace;
 
-        if (!(hasBlue && 0 === i)) {
-          if (hasBlue) {
+        if (!(hasPlace && 0 === i)) {
+          if (hasPlace) {
             this.clearBlueMarker();
             i -= 1;
           }
@@ -1163,8 +1060,9 @@ define('mappanel', function (require) {
               GEvent = this.GMaps.event,
               marker = this._placeMarker = this.redMarkers.splice(i, 1)[0];
 
-          this.hasBlue = true;
+          this.hasPlace = true;
           this.selectMarker(marker);
+          this.defaultOptions.zoom = this.zoomN = this.zoom16;
 
           GEvent.clearListeners(marker);
 
@@ -1197,7 +1095,8 @@ define('mappanel', function (require) {
           this.clearBlueMarker();
         }
         this.clearMarkers();
-        this.hasBlue = false;
+        this.hasPlace = false;
+        this.defaultOptions.zoom = this.zoomN = this.hasLocation ? this.zoom12 : this.zoom2;
       }
 
     , removeMarker: function (marker) {
@@ -1287,49 +1186,53 @@ define('mappanel', function (require) {
     , zoom: function (n) {
         if (!this.isGo) { return; }
         this.sizeStatus = n;
-        var component = this.component
-          , GMaps = this.GMaps
-          , markers = this.redMarkers
-          , self = this;
+        var self = this,
+            component = self.component,
+            element = component.element,
+            GMaps = self.GMaps,
+            map = self._map,
+            markers = self.redMarkers;
 
         this.$wrap.toggleClass('gmap-big', !n);
         component.$resize.toggleClass('map-rc');
         component.$mask.toggleClass('hide', !n);
 
         if (n) {
-          component.element.css({
-              top: component.otop
-            , left: component.oleft
+          element.css({
+            top: component.otop,
+            left: component.oleft
           });
           self.$element
             .width(self.owidth)
             .height(self.oheight);
 
           setTimeout(function () {
-            self._map.setOptions(self.defaultOptions);
-            self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
-            self.panToRight();
+            map.setOptions(self.defaultOptions);
+            map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+            if (self.hasPlace) {
+              self.panToRight();
+            }
           }, 0);
         }
         else {
-          var width = $win.width()
-            , height = $win.height()
-            , a = this.a
-            , sT = $win.scrollTop()
-            , sL = $win.scrollLeft();
-          self.resize(width * (1 - a * 2), height * (1 - a * 2));
-          component.element.css({
-              top: height * a + sT
-            , left: width * a + sL
+          var width = $win.width(),
+              height = $win.height(),
+              a = self.a,
+              sT = $win.scrollTop(),
+              sL = $win.scrollLeft();
+          self.resize(width * (1 - a * 2), height * (1 - a ) - 56);
+          element.css({
+            top: 56 + sT,
+            left: width * a + sL
           });
           setTimeout(function () {
-            self._map.setOptions(self.enableOptions);
+            map.setOptions(self.enableOptions);
           }, 0);
         }
-        GMaps.event.trigger(self._map, 'resize');
+        GMaps.event.trigger(map, 'resize');
         // 返回到中心点
         (!self._placeMarker && markers.length) && (self._placeMarker = markers[0]);
-        self._map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+        map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
 
         component.placeInput.$element.focusend();
       }
