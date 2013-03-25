@@ -441,10 +441,10 @@ define(function (require, exports, module) {
                     if (my_token && idMyInv !== -1) {
                         if (data.response.cross.exfee.invitations[idMyInv].identity.id
                         === data.response.cross.exfee.invitations[idMyInv].invited_by.id) {
-                            $('.rsvp_toolbar').hide().toggleClass('rsvp_toolbar_off', true);
+                            $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', true);
                             $('.inviter').hide();
                         } else {
-                            $('.rsvp_toolbar').show();
+                            $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', false);
                         }
                         $('.portrait.me').on('click', function() {
                             $('.rsvp_toolbar').toggleClass(
@@ -453,7 +453,7 @@ define(function (require, exports, module) {
                             );
                         });
                     } else {
-                        $('.rsvp_toolbar').hide();
+                        $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', true);
                         $('.inviter').hide();
                     }
                     if (args) {
