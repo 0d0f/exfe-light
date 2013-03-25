@@ -454,6 +454,7 @@ define(function (require, exports, module) {
                         });
                     } else {
                         $('.rsvp_toolbar').hide();
+                        $('.inviter').hide();
                     }
                     if (args) {
                         redirecting(args);
