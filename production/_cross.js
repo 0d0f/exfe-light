@@ -2108,8 +2108,6 @@ define(function (require, exports, module) {
     };
 
 
-    var ConvTimer = null;
-
     var RawGetTimeline = function(notification) {
         var args = {resources : {exfee_id : Exfee.id}};
         if (lastConvUpdate) {
@@ -2139,7 +2137,7 @@ define(function (require, exports, module) {
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
         RawGetTimeline();
-        ConvTimer = setInterval(RtGetTimeline, 233 * 1000);
+        convTimer = setInterval(RtGetTimeline, 233 * 1000);
     };
 
 
@@ -2338,6 +2336,8 @@ define(function (require, exports, module) {
         window.ExfeePanel    = require('exfeepanel');
         // init showtime
         window.showtimeTimer = setInterval(ShowTime, 50);
+        // init 
+        window.convTimer     = null;
     });
     // init event
     bus.on('xapp:cross', function(Cross_id, browsingIdentity, cross, read_only, invitation_token, accepted) {
@@ -2375,6 +2375,7 @@ define(function (require, exports, module) {
     // init event: end
     bus.on('xapp:cross:end', function() {
         clearTimeout(window.showtimeTimer);
+        clearTimeout(window.convTimer);
     });
 
 
