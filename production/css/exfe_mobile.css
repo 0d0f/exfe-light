@@ -499,7 +499,7 @@ body.x {
   width: 290px;
   height: 44px;
   margin: 0 auto;
-  font: 500 16px "HelveticaNeue-Medium";
+  font: 500 16px "HelveticaNeue";
   font-weight: bold;
   color: #333;
   text-shadow: 0 1px rgba(255, 255, 255, 0.5);
@@ -1042,6 +1042,7 @@ footer {
   width: 16px;
   height: 11px;
   font-size: 9px;
+  font-weight: bold;
   color: white;
   text-align: center;
   text-shadow: 0 1px rgba(0, 0, 0, 0.5);
