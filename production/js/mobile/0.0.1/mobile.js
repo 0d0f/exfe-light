@@ -168,7 +168,7 @@ define(function (require, exports, module) {
           +                 '</div>'
           +             '</a>'
           +         '</div>'
-          +         '<div class="rsvp_toolbar">'
+          +         '<div class="rsvp_toolbar rsvp_toolbar_off">'
           +             '<div class="tri"></div>'
           +             '<table>'
           +                 '<tr>'
@@ -441,7 +441,6 @@ define(function (require, exports, module) {
                     if (my_token && idMyInv !== -1) {
                         if (data.response.cross.exfee.invitations[idMyInv].identity.id
                         === data.response.cross.exfee.invitations[idMyInv].invited_by.id) {
-                            $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', true);
                             $('.inviter').hide();
                         } else {
                             $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', false);
@@ -453,7 +452,6 @@ define(function (require, exports, module) {
                             );
                         });
                     } else {
-                        $('.rsvp_toolbar').toggleClass('rsvp_toolbar_off', true);
                         $('.inviter').hide();
                     }
                     if (args) {
