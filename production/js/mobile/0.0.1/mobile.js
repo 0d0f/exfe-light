@@ -16,7 +16,7 @@ define(function (require, exports, module) {
 
     var my_token      = '';
 
-    var count_down    = 500000;
+    var count_down    = 5;
 
     var lastBreathe   = +new Date;
 
