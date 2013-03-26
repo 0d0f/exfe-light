@@ -16,6 +16,8 @@ define(function (require, exports, module) {
 
     var my_token      = '';
 
+    var count_down    = 5;
+
     var lastBreathe   = +new Date;
 
     var trim = function(string) {
@@ -85,7 +87,7 @@ define(function (require, exports, module) {
           +         '<div class="error-info">You just opened an invalid link.</div>'
           +         '<div class="get-button">'
           +             '<button>Get <span class="exfe">EXFE</span> app <span class="free">free</span></button>'
-          +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">5</span>s.</div>'
+          +             '<div class="redirecting">Redirecting to EXFE app in <span class="sec">' + count_down + '</span>s.</div>'
           +         '</div>'
           +         '<div class="web-version"><span class="underline">Proceed</span> with desktop web version.</div>'
           +     '</div>'
@@ -142,7 +144,7 @@ define(function (require, exports, module) {
     var cross = function(token, cross_id) {
         styleBody('x');
         $('#app-main').html(
-            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in <span class="sec">5</span>s.</div>'
+            '<div class="cross redirecting">Redirecting to <span class="exfe_blue3">EXFE</span> app in <span class="sec">' + count_down + '</span>s.</div>'
           + '<div class="content">'
           +     '<div class="title_area">'
           +         '<div class="title_wrap_a">'
@@ -451,6 +453,37 @@ define(function (require, exports, module) {
                                 !$('.rsvp_toolbar').hasClass('rsvp_toolbar_off')
                             );
                         });
+                        if (data.response.cross.exfee.invitations[idMyInv].identity.provider === 'phone') {
+                            $('.rsvp_toolbar tr').append(
+                                '<td class="rsvp changename">Change my display name</td>'
+                            );              
+                            $('.rsvp_toolbar td').css('width', '98px');
+                            $('.changename').on('click', function() {                            
+                                var strDisplayName = prompt('Change my display name:');
+                                if (strDisplayName === null) {
+                                } else if (strDisplayName === '') {
+                                    alert('Display name cannot be empty.');
+                                } else {
+                                    $.ajax({
+                                        type    : 'post',
+                                        url     : config.api_url + '/Identities/'
+                                                + data.response.cross.exfee.invitations[idMyInv].identity.id
+                                                + '/Update' + '?token=' + my_token,
+                                        data    : {name : strDisplayName},
+                                        success : function(data) {
+                                            if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                                                $('.name_me').html(
+                                                    escape(data.response.identity.name)
+                                                );
+                                            }
+                                        },
+                                        error   : function() {
+                                            alert('Failed, please retry later.');
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     } else {
                         $('.inviter').hide();
                     }
@@ -505,7 +538,7 @@ define(function (require, exports, module) {
           +         '</div>'
           +         '<div class="done-info">'
           +             '<span class="status">Password set successfully.</span>'
-          +             '<span class="redirecting">Redirecting to app in <span class="sec">5</span>s.</span>'
+          +             '<span class="redirecting">Redirecting to app in <span class="sec">' + count_down + '</span>s.</span>'
           +         '</div>'
           +     '</div>'
           +     '<div class="actions">'
@@ -659,7 +692,7 @@ define(function (require, exports, module) {
           +         '</div>'
           +         '<div class="done-info">'
           +             '<span class="status">Verification succeeded.</span>'
-          +             '<span class="redirecting">Redirecting to app in <span class="sec">5</span>s.</span>'
+          +             '<span class="redirecting">Redirecting to app in <span class="sec">' + count_down + '</span>s.</span>'
           +         '</div>'
           +     '</div>'
           +     '<div class="space"></div>'
