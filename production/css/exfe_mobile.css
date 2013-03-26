@@ -1170,10 +1170,15 @@ footer {
   height: 15px;
   padding-top: 32px;
   font-size: 12px;
+  font-weight: bold;
   color: white;
   text-align: center;
   background: no-repeat 50% 5px;
   background-size: 26px;
+}
+
+.rsvp_toolbar td.changename {
+  padding-top: 5px;
 }
 
 .rsvp_toolbar td:active {
