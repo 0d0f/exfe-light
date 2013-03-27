@@ -1,3 +1,7 @@
+* v0.0.10 2013-03-25T14:53:10 UTC+0800
+  - Changes
+    * `res.redirect` instead of `window.location`
+
 * v0.0.9 2012-12-04T12:53:10 UTC+0800
   - Fixed Bugs
     * Mozilla Firefox-v18.0 `facebook redirect` triggered twice bug.

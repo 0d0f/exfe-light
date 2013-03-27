@@ -79,7 +79,7 @@ define('middleware', function (require, exports, module) {
       }
 
       if (authMeta.refere && authMeta.refere !== window.location.protocol + '//' + window.location.hostname + '/') {
-        window.location.href = authMeta.refere || '/';
+        res.redirect(authMeta.refere || '/');
       }
     }
 
