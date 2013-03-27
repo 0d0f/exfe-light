@@ -2400,10 +2400,14 @@ define(function (require, exports, module) {
     // NOTE: `PhotoX`
     var Config = require('config'),
         R = require('rex'),
-        PhotoXPanel = null;
+        PhotoXPanel = null,
+        photoxPanel = null;
     $(document.body).on('click.open-photox', '.open-photox', function () {
       if (!PhotoXPanel) {
         PhotoXPanel = require('photox');
+      }
+      if (photoxPanel) {
+        return;
       }
       var user = Store.get('user');
       if (user) {
@@ -2421,14 +2425,15 @@ define(function (require, exports, module) {
         ips.push(''); providers.push('');
         // providers = 'flickr:1 facebook:0 dropbox:0'
         providers = ips.join(' ') + providers.join(':0 ');
-        (new PhotoXPanel({
+        photoxPanel = new PhotoXPanel({
           options: {
             parentNode: $('#app-tmp'),
             srcNode: $('.open-photox'),
             crossId: Cross.id,
             providers: providers
           }
-        })).show();
+        });
+        photoxPanel.show();
       }
     });
 
