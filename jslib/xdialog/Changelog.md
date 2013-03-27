@@ -1,3 +1,7 @@
+* v0.1.13 2013-03-27T16:10:00 UTC+0800
+  - New Features
+    * added `instagram` `flickr` `dropbox` providers
+
 * v0.1.12 2013-03-14T15:27:22 UTC+0800
   - Changes
     * `Rome`-Dialog: text
