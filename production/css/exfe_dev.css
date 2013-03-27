@@ -11850,14 +11850,14 @@ body {
           border-radius: 0;
 }
 
-.photox-panel .panel-header .nav-tabs > li > a.ix-add {
+.photox-panel .panel-header .nav-tabs > li > a:hover {
+  background-color: transparent;
+}
+
+.photox-panel .panel-header .nav-tabs > li:last-child {
   -webkit-border-radius: 0 6px 0 0;
      -moz-border-radius: 0 6px 0 0;
           border-radius: 0 6px 0 0;
-}
-
-.photox-panel .panel-header .nav-tabs > li > a:hover {
-  background-color: transparent;
 }
 
 .photox-panel .panel-body {
