@@ -2072,19 +2072,16 @@ define(function (require, exports, module) {
         $('.cross-map').empty();
         var hasLL = place.lat.length && place.lng.length,
             Config = require('config'),
-            // NOTE: Google Static Map must be use `http`
             map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + Config.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img style="border-radius: 3px; box-shadow: 2px 2px 4px rgba(0, 0, 0, .25);" src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
 
         function getMap(position) {
           var coords = position.coords;
-          //if (place.title === 'Right there on map') place.title = '';
           map_dom = map_dom.replace(/\{\{lat\}\}/ig, coords.latitude)
             .replace(/\{\{lng\}\}/ig, coords.longitude)
             .replace(/\{\{title\}\}/ig, (place.provider === '' ? coords.latitude + ',' + coords.longitude + ' ' : '') + encodeURIComponent(place.title));
           $('.cross-map').append(map_dom);
         }
 
-        function getPositionError(msg) {}
         if (hasLL) {
           getMap({
             coords: {
@@ -2092,8 +2089,6 @@ define(function (require, exports, module) {
               longitude: place.lng
             }
           });
-        //} else if (navigator.geolocation) {
-        //  navigator.geolocation.getCurrentPosition(getMap, getPositionError);
         }
     };
 
@@ -2398,6 +2393,42 @@ define(function (require, exports, module) {
       }
       else {
         $('#app-tip-lock').remove();
+      }
+    });
+
+
+    // NOTE: `PhotoX`
+    var Config = require('config'),
+        R = require('rex'),
+        PhotoXPanel = null;
+    $(document.body).on('click.open-photox', '.open-photox', function () {
+      if (!PhotoXPanel) {
+        PhotoXPanel = require('photox');
+      }
+      var user = Store.get('user');
+      if (user) {
+        var identities = user.identities,
+            photo_providers = Config.photo_providers,
+            providers = photo_providers.slice(0),
+            ips = [], i;
+        R.each(identities, function (v) {
+          i = R.indexOf(providers, v.provider);
+          if (-1 !== i) {
+            providers.splice(i, 1);
+            ips.push(v.provider + ':' + v.id);
+          }
+        });
+        ips.push(''); providers.push('');
+        // providers = 'flickr:1 facebook:0 dropbox:0'
+        providers = ips.join(' ') + providers.join(':0 ');
+        (new PhotoXPanel({
+          options: {
+            parentNode: $('#app-tmp'),
+            srcNode: $('.open-photox'),
+            crossId: Cross.id,
+            providers: providers
+          }
+        })).show();
       }
     });
 
