@@ -2,17 +2,16 @@ define('photox', function (require) {
   "use strict";
 
   var Api = require('api'),
+      $ = require('jquery'),
+      R = require('rex'),
       request = Api.request,
       Config = require('config'),
+      PVS = Config.photo_providers,
+      Dialog = require('dialog'),
+      Store = require('store'),
+      dialogs = require('xdialog').dialogs,
+      Handlebars = require('handlebars'),
       proto;
-
-  var setToken = function (token) {
-    return Api.setToken(token);
-  };
-
-  var getPhotoProviders = function () {
-    return Config.photo_providers;
-  };
 
   var errorHandler = function (data) {
     if (data && data.meta) {
@@ -39,6 +38,7 @@ define('photox', function (require) {
     // 处理未知错误
   };
 
+  // NOTE: photox_id === cross_id
   var DataCenter = {
 
     // description: 获取一个 PhotoX 下的所有照片。
@@ -46,7 +46,6 @@ define('photox', function (require) {
       return request(
         'photox_getPhotoX',
         {
-          type      : 'POST',
           resources : { photox_id : photox_id }
         },
         // {"photox" : [object:photox]}
@@ -54,31 +53,20 @@ define('photox', function (require) {
       );
     },
 
-    // description: 获取某个第三方身份的所有可添加进 PhotoX 的相册。
-    getAlbums: function (identity_id, album_id, success_callback) {
-      return request(
-        'photox_getAlbums',
-        {
-          type : 'POST',
-          data : {
-            identity_id : identity_id,
-            album_id    : album_id
-          }
-        },
-        // {"albums" : [array:album_object]}
-        success_callback
-      );
-    },
+    // description: 获取所有身份/某个第三方身份的所有 albums & photos
+    browseSource: function (identity_id, album_id, before_callback, success_callback) {
+      var options = {},
+          data = {};
+      if (identity_id) { data.identity_id = identity_id; }
+      if (album_id) { data.album_id = album_id; }
+      if (before_callback) { options.beforeSend = before_callback; }
 
-    // description: 获取某个第三方身份的照片 feed 中的照片。
-    getSourcePhotos: function (identity_id, success_callback) {
+      options.data = data;
+
       return request(
-        'photox_getSourcePhotos',
-        {
-          type : 'POST',
-          data : { identity_id : identity_id }
-        },
-        // {"photos" : [array:photo_object]}
+        'photox_borwseSource',
+        options,
+        // {"albums" : [array:album_object]}
         success_callback
       );
     },
@@ -88,7 +76,6 @@ define('photox', function (require) {
       return request(
         'photox_getPhoto',
         {
-          type : 'POST',
           data : { photo_id : photo_id }
         },
         // {"photo" : [object:photo]}
@@ -97,14 +84,18 @@ define('photox', function (require) {
     },
 
     // description: 添加照片到 PhotoX。
-    add: function (photox_id, post_args, success_callback) {
+    add: function (photox_id, post_args, before_callback, success_callback) {
+      var options = {
+        type        : 'POST',
+        resources   : { photox_id: photox_id },
+        data        : post_args
+      };
+      if (before_callback) {
+        options.beforeSend = before_callback;
+      }
       return request(
         'photox_add',
-        {
-          type      : 'POST',
-          resources : { photox_id : photox_id },
-          data      : post_args
-        },
+        options,
         // {"photo" : [object:photo]}
         success_callback
       );
@@ -112,20 +103,21 @@ define('photox', function (require) {
 
     // description: 用于从有相册功能的身份中添加照片
     // eg: Facebook, Flickr, Dropbox
-    addAlbum: function (photox_id, identity_id, album_id, success_callback) {
+    addAlbum: function (photox_id, identity_id, album_id, before_callback, success_callback) {
       return DataCenter.add(
         photox_id,
         {
           identity_id : identity_id,
           album_id    : album_id
         },
+        before_callback, 
         success_callback
       );
     },
 
     // 用于从有照片流功能的身份中添加照片
     // eg: Instagram
-    addStream: function (photox_id, identity_id, min_id, max_id, success_callback) {
+    addStream: function (photox_id, identity_id, min_id, max_id, before_callback, success_callback) {
       return DataCenter.add(
         photox_id,
         {
@@ -133,6 +125,7 @@ define('photox', function (require) {
           min_id      : min_id,
           max_id      : max_id
         },
+        before_callback, 
         success_callback
       );
     },
@@ -152,7 +145,6 @@ define('photox', function (require) {
       return request(
         'photox_getLikes',
         {
-          type      : 'POST',
           resources : { photox_id : photox_id }
         },
         // {"likes" : [array:response_object]}
@@ -171,43 +163,372 @@ define('photox', function (require) {
         // {"like" : [object:response]}
         success_callback
       );
+    },
+
+    delAlbum: function (photox_id, provider, album_id, before_callback, success_callback) {
+      return request(
+        'photox_del',
+        {
+          type        : 'POST',
+          resources   : { photox_id : photox_id },
+          data        : {
+            provider    : provider,
+            album_id    : album_id
+          }
+        },
+        before_callback,
+        success_callback
+      );
     }
+  };
+
+  
+  var XCache = {
+    _: {}
+  };
+
+  XCache.init = function (keys) {
+    var _ = this._, k;
+    while ((k = keys.shift())) {
+      _[k] = [];
+    }
+  };
+
+  XCache.add = function (type, photo) {
+    var pt = this._[type];
+  };
+
+  XCache.del = function (type, photo) {
+  };
+
+
+  /**
+   * Paths Cache
+   * Like the `cd` command in Shell
+   */
+  var FS = function () {};
+
+  proto = FS.prototype;
+
+  proto.has = function () {
+    return !!this.uid && !!this.gid;
+  };
+
+  proto.find = function (path) {
+    return R.indexOf(this.paths, path);
+  };
+
+  proto.setUid = function (iid) {
+    this.uid = iid;
+    return this;
+  };
+
+  proto.setGid = function (p) {
+    this.gid = p;
+    return this;
+  }
+
+  proto.cd = function (path, deep, cb) {
+    if (!this.paths) { this.paths = []; }
+    deep = deep || 1;
+    this.paths = this.paths.slice(0, deep);
+    var i = this.find(path);
+    if (-1 === i) {
+      this.paths.push(path);
+    } else {
+      this.paths = this.paths.slice(0, i + 1);
+    }
+    if (cb) { cb(path, this); }
+    //console.dir(this.paths);
+    return this;
+  };
+
+  proto.clear = function (cb) {
+    if (this.paths) {
+      this.paths.length = 0;
+    }
+    if (cb) { cb(); }
+    return this;
+  };
+
+  proto.prev = function (cb) {
+    var ps = this.paths;
+    ps.pop();
+    if (cb) { cb(ps[ps.length - 1], ps); }
   };
 
 
   /**
    * Nav-Tabs composition
    */
-  var NavTabs = function (composition, selector, sources, identities) {
+  var NavTabs = function (composition, selector, providers) {
     this.composition = composition;
     this.selector = selector;
     this.$element = composition.$(selector);
+    this.providers = providers;
+    this.append(providers);
   };
+
   proto = NavTabs.prototype;
 
-  proto.liTmp = '<li><a href="#" class="hide-text"></a></li>';
+  proto.liTmp = '<li data-provider="{{provider}}" data-iid="{{iid}}"><a href="#" class="hide-text""><i class="ix-provider ix-{{provider}}"></i></a></li>';
 
   proto.badgeTmmp = '<div class="badge badgex"></div>';
 
-  proto.generate = function () {};
+  proto.generate = function (providers) {
+    var t = this.liTmp, h = '', p;
+    providers = providers.split(' ');
+    while ((p = providers.shift())) {
+      p = p.split(':');
+      h += t.replace(/\{\{provider\}\}/g, p[0])
+          .replace(/\{\{iid\}\}/, p[1]);
+    }
+    return h;
+  };
 
-  proto.sort = function () {};
+  proto.append = function (providers) {
+    this.$element.append(this.generate(providers));
+  };
 
+  proto.switch = function (provider, keep) {
+    var $e = this.$element,
+        $l = $e.find('[data-provider="' + provider + '"]'),
+        status = true;
+    if (!$l.hasClass('active')) {
+      $e.find('.active').removeClass('active');
+      $l.addClass('active');
+      status = false;
+    } else {
+      if (!keep) {
+        $l.removeClass('active');
+      }
+    }
+    return status;
+  };
+
+  proto.updateBadge = function (provider, n) {
+    var $li = this.$element.find('> [data-provider="' + provider  + '"]'),
+        $badge = $li.find('.badge'), t;
+    if ($badge.length) {
+      t = +$badge.text();
+    } else {
+      $badge = $(this.badgeTmmp);
+      $li.append($badge);
+      t = 0;
+    }
+    $badge.text(t + n);
+  };
 
   /**
+   * Dropbox
    * Breadcrumb composition
    */
-  var Breadcrumb = function () {};
+  var Breadcrumb = function (composition, selector) {
+    this.composition = composition;
+    this.selector = selector;
+    this.$element = composition.$(selector);
+
+    this.initstatus = 1;
+  };
+
+  proto = Breadcrumb.prototype;
+
+  proto.liTmp = '<li data-iid="{{iid}}" data-aid="{{aid}}"><a href="#">{{dir}}</a><span class="divider hidden"></span></li>';
+
+  proto.displayHome = function (iid) {
+    var identities = Store.get('user').identities,
+        identity = R.find(identities, function (v) {
+          if (v.id === iid) { return true; }
+        });
+    this.$element.append(this.generate(iid, '', identity.name + "'s Dropbox Photos"));
+    this.initstatus = 0;
+  };
+
+  proto.generate = function (iid, aid, dir) {
+    return this.liTmp
+      .replace('{{iid}}', iid)
+      .replace('{{aid}}', aid)
+      .replace('{{dir}}', dir);
+  };
+
+  proto.show = function (iid) {
+    var $e = this.$element;
+    if (this.initstatus) {
+      this.displayHome(iid);
+    }
+
+    this.del(1);
+
+    if ($e.hasClass('hide')) {
+      $e.removeClass('hide');
+    }
+  };
+
+  proto.del = function (n) {
+    var $last = this.$element.find('li').slice(n - 1);
+    $last.nextAll().remove();
+    //console.log($last);
+    $last.find('.divider').addClass('hidden');
+  };
+
+  proto.add = function (iid, p) {
+    var $li = $(this.generate(iid, p, p));
+    this.$element.append($li)
+    $li.prev().find('.divider').removeClass('hidden');
+  };
+
+
+  proto.hide = function () {
+    this.$element.addClass('hide');
+  };
+
+  proto.toggle = function (status, iid) {
+    status ? this.show(iid) : this.hide();
+  };
 
   /**
    * Thumbnails composition
    */
-  var Thumbnails = function () {};
+  var Thumbnails = function (composition, selector) {
+    this.composition = composition;
+    this.selector = selector;
+    this.$albums = composition.$(selector);
+    this.$parent = this.$albums.parent();
+  };
 
-  /**
-   * Photos composition
-   */
-  var Photos = function () {};
+  proto = Thumbnails.prototype;
+
+  proto.liAlbumTmp = '{{#each albums}}'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}">'
+      + '<div class="thumbnail">'
+        + '<div class="photo">'
+          + '<div class="album-figure"></div>'
+          + '{{#if artwork}}'
+          + '<figure>'
+            + '<img alt="" src="{{artwork}}" width="70" height="70" />'
+          + '{{else}}'
+          + '<figure class="placeholder ix-placehoder">'
+          + '{{/if}}'
+          + '</figure>'
+        + '</div>'
+        + '<h4 class="name">{{caption}}</h4>'
+      + '</div>'
+    + '</li>'
+    + '{{/each}}';
+
+  proto.liPhotoTmp = '{{#each photos}}'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-pid="{{external_id}}">'
+      + '<div class="thumbnail">'
+        + '<div class="badge album-badge badgex hide">√</div>'
+        + '<div class="photo">'
+          + '<div class="photo-figure"></div>'
+          + '{{#if images.preview.url}}'
+          + '<figure>'
+            + '<img alt="" src="{{images.preview.url}}" width="70" height="70" />'
+          + '{{else}}'
+          + '<figure class="placeholder ix-placehoder">'
+          + '{{/if}}'
+          + '</figure>'
+        + '</div>'
+        + '<h4 class="name">{{caption}}</h4>'
+      + '</div>'
+    + '</li>'
+    + '{{/each}}';
+
+  proto.showAlbums = function () {
+    var $albums = this.$albums,
+        liAlbumTmp = this.liAlbumTmp,
+        liPhotoTmp = this.liPhotoTmp,
+        composition = this.composition;
+    /*
+    $.when(
+      DataCenter.getPhotoX(this.cid),
+      DataCenter.browseSource(null, null)
+    )
+    .done(function (ap, ab) {
+      var d0 = ap[0],
+          d1 = ab[0];
+    });
+    */
+    DataCenter.getPhotoX(this.composition.cid, function (data) {
+      //console.dir(data);
+    });
+    DataCenter.browseSource(
+      null, null,
+      function () {
+        composition.emit('toggle-loading', true);
+      },
+      function (data) {
+        composition.emit('toggle-loading', false);
+        var at = Handlebars.compile(liAlbumTmp),
+            ah = at(data),
+            pt = Handlebars.compile(liPhotoTmp),
+            ph = pt(data);
+        $albums.html(ah + ph);
+      }
+    );
+  };
+
+  proto.hideAlbums = function () {
+    this.$albums.addClass('hide');
+  };
+
+  proto.switchByProvider = function (identityId, provider) {
+    this.$albums
+      .removeClass('hide')
+      .children()
+      .each(function () {
+        var $li = $(this),
+          p = $li.attr('data-provider');
+        $li.toggleClass('hide', p !== provider);
+      });
+  };
+
+  proto.showAllAlbums = function () {
+    this.$albums
+      .removeClass('hide')
+      .find(' > .hide')
+      .removeClass('hide');
+  };
+
+  proto.startUL = '<ul class="thumbnails photos hide">';
+  proto.endUL = '</ul>'
+
+  proto.generate = function (data) {
+    var at = Handlebars.compile(this.liAlbumTmp),
+        pt = Handlebars.compile(this.liPhotoTmp),
+        ah = at(data),
+        ph = pt(data);
+    return this.startUL + ah + ph + this.endUL;
+  };
+
+  proto.showPhotos = function (data, status) {
+    var i = data.albums.length | data.photos.length, $e;
+    //if (i) {
+      $e = $(this.generate(data));
+      this.$albums.append($e);
+      $e.removeClass('hide');
+      this.$parent.append($e);
+      if (status) {
+        $e.find('.badge').removeClass('hide');
+      }
+    //}
+  };
+
+  proto.toggleBadge = function ($t) {
+    var $b = $t.find('.badge'), h = $b.length;
+    if (h) {
+      $b.remove();
+      // TODO: 删除临时 UL 菜单
+      $t.find('.ulm').remove();
+      $t.removeAttr('data-status');
+    } else {
+      // TODO: 临时 UL 菜单
+      var s = 'position: absolute; z-index: 300; right: 0; color: #fff; background: #444;';
+      $t.find('.thumbnail').prepend('<ul class="ulm" style="'+s+'"><li>Open</li><li class="import">Import</li></ul><div class="badge album-badge badgex">√</div>');
+      $t.attr('data-status', 'selected');
+    }
+  };
 
   var Panel = require('panel');
 
@@ -223,6 +544,7 @@ define('photox', function (require) {
           + '</div>'
           + '<div class="panel-body">'
             + '<ul class="breadcrumb hide"></ul>'
+            + '<div class="loading hide"><img alt="" width="32" height="32" src="/static/img/loading.gif" /></div>'
             + '<ul class="thumbnails albums"></ul>'
           + '</div>'
           + '<div class="panel-footer">'
@@ -239,17 +561,162 @@ define('photox', function (require) {
 
     init: function () {
       var options = this.options;
+      this.cid = options.crossId;
       this.providers = options.providers;
       delete options.providers;
-
-      this.render();
+        
+      //XCache.init(PVS);
 
       this.navTabs = new NavTabs(this, '.panel-header .nav-tabs', this.providers);
+      this.breadcrumb = new Breadcrumb(this, '.panel-body .breadcrumb');
+      this.thumbnails = new Thumbnails(this, '.panel-body .albums');
+      this.fs = new FS();
 
+      this.render();
       this.listen();
     },
 
-    listen: function () {},
+    listen: function () {
+      var self = this,
+          fs = self.fs,
+          cid = self.cid,
+          element = self.element,
+          navTabs = self.navTabs,
+          thumbnails = self.thumbnails,
+          breadcrumb = self.breadcrumb,
+          $loading = self.element.find('.loading'),
+          CLICK = 0,
+          CLICKTIMER;
+
+      element.on('click.photox', '.nav-tabs > li', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $that = $(this),
+            iid = ~~$that.data('iid'), p = $that.data('provider');
+        if (iid) {
+          if (navTabs.switch(p)) {
+            self.emit('show-albums');
+            breadcrumb.toggle(false);
+          } else {
+            self.emit('switch-provider', iid, p);
+          }
+          thumbnails.$albums.nextAll('.photos').remove();
+        } else {
+          var dialog = new Dialog(dialogs.addidentity);
+          dialog.render();
+          dialog.element.find('.oauth-' + p).trigger('click');
+        }
+      });
+
+      // Dropbox 
+      element.on('click.photox', '.breadcrumb a', function (e) {
+        e.preventDefault();
+      });
+
+      // Albums' click-event
+      element.on('click.photox', '.thumbnails > li[data-aid]', function (e) {
+        //console.log('click');
+        e.preventDefault();
+        var $t = $(this),
+            iid = $t.data('iid'),
+            p = $t.data('provider'),
+            aid = $t.data('aid'),
+            status = $t.attr('data-status');
+        CLICK++;
+        if (CLICK === 1) {
+          CLICKTIMER = setTimeout(function () {
+            thumbnails.toggleBadge($t);
+            if (status === 'added') {
+              DataCenter.delAlbum(
+                cid, p, aid,
+                function () {
+                },
+                function (data) {
+                  $t.removeAttr('data-status');
+                }
+              );
+            }
+            CLICK = 0;
+          }, 233);
+        } else {
+          clearTimeout(CLICKTIMER);
+          navTabs.switch(p, true);
+
+          // Dropbox's Breadcrumb
+          if (p === 'dropbox') {
+            breadcrumb.toggle(p === 'dropbox', iid);
+            var aids = decodeURIComponent(aid).split('/'),
+                len = aids.length;
+            aid = aids[len - 1];
+            if (!fs.has()) {
+              fs.setUid(iid).setGid(p).cd('/');
+            }
+            //console.log(iid, aid, p, aids, status);
+            fs.cd(aid, len, function (p) {
+              breadcrumb.del(len);
+              breadcrumb.add(iid, p);
+            });
+          }
+
+          thumbnails.hideAlbums();
+          DataCenter.browseSource(
+            iid, aid,
+            function () {
+              self.emit('toggle-loading', true);
+            },
+            function (data) {
+              self.emit('toggle-loading', false);
+              thumbnails.showPhotos(data, status);
+            }
+          );
+          CLICK = 0;
+        }
+      });
+
+      // TODO: 临时 UL 菜单
+      element.on('click.photox', '.ulm li.import', function (e) {
+        var $e = $(this),
+            $t = $e.parents('.thumbnail').parent('li'),
+            iid = $t.data('iid'),
+            p = $t.data('provider'),
+            aid = $t.data('aid');
+        e.preventDefault();
+        e.stopPropagation();
+        DataCenter.addAlbum(cid, iid, aid, null, function (data) {
+          $e.parent().remove();
+          $t.attr('data-status', 'added');
+          //console.log('add album', data);
+        });
+      });
+
+      // Photos' click-event
+      element.on('click.photox', '.thumbnails > li[data-pid]', function (e) {
+      });
+
+      self.on('show-albums', function () {
+        thumbnails.showAllAlbums();
+      });
+
+      self.on('update-tabs-bage', function (provider, n) {
+        tabs.updateBadge(provider, n);
+      });
+
+      self.on('toggle-loading', function (b) {
+        $loading[(b ? 'remove' : 'add') + 'Class']('hide');
+      });
+
+      /**
+       * @param {Number} iid identity-id
+       * @param {String} p provider
+       */
+      self.on('switch-provider', function (iid, p) {
+        if (p === 'dropbox') {
+          fs.clear().setUid(iid).setGid(p).cd('/');
+        }
+        breadcrumb.toggle(p === 'dropbox', iid);
+        thumbnails.switchByProvider(iid, p);
+      });
+    },
 
     showAfter: function () {
       var offset = this.srcNode.parent().offset();
@@ -257,6 +724,7 @@ define('photox', function (require) {
         top: offset.top + 50,
         left: offset.left - 20
       });
+      this.thumbnails.showAlbums();
     },
 
     destory: function () {
@@ -270,9 +738,10 @@ define('photox', function (require) {
   return PhotoXPanel;
 });
 
-/* Notes:
+/* NOTES:
   - 打开 `phhotx-panel` 显示位置
     显示在 `Conversation` 上，最小宽度跟 `Converstaion` 一样
   - 第一次没有绑定任何 photo-identity, `albums` 区域显示什么
     有提示文字
+  - Ajax 操作失败
 */
