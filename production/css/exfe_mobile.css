@@ -408,7 +408,8 @@ body.verify {
 }
 
 body.x {
-  background: url(/static/img/pattern.png) #eeeeee;
+  background: url(/static/img/pattern_solidus@2x.png) #eeeeee;
+  background-size: 5px 5px;
 }
 
 #app-container {
@@ -798,7 +799,8 @@ footer {
   width: 100%;
   min-height: 100px;
   margin-bottom: 0;
-  background: url(/static/img/pattern.png) #4f565d;
+  background: url(/static/img/pattern_solidus@2x.png) #4f565d;
+  background-size: 5px 5px;
   -webkit-transform: translateZ(0);
   -webkit-box-flex: 1;
   -webkit-box-orient: vertical;
@@ -973,15 +975,15 @@ footer {
 }
 
 .portrait_rsvp_me.accepted {
-  background: url(/static/img/myrsvp_accpted.png) no-repeat;
+  background: url(/static/img/rsvp_accepted_stroke_26blue@2x.png) no-repeat;
 }
 
 .portrait_rsvp_me.pending {
-  background: url(/static/img/myrsvp_pending.png) no-repeat;
+  background: url(/static/img/rsvp_pending_stroke_26g5@2x.png) no-repeat;
 }
 
 .portrait_rsvp_me.declined {
-  background: url(/static/img/myrsvp_unavailable.png) no-repeat;
+  background: url(/static/img/rsvp_unavailable_stroke_26g5@2x.png) no-repeat;
 }
 
 .portrait_rsvp {
@@ -1200,19 +1202,15 @@ footer {
 }
 
 .rsvp_toolbar .accepted {
-  background-image: url(/static/img/accepted.png);
+  background-image: url(/static/img/rsvp_accepted_stroke_26blue@2x.png);
 }
 
 .rsvp_toolbar .unavailable {
-  background-image: url(/static/img/unavailable.png);
+  background-image: url(/static/img/rsvp_unavailable_26w@2x.png);
 }
 
-.rsvp_toolbar .pending {
-  background-image: url(/static/img/pending.png);
-}
-
-.footer_frame .actions {
-  top: 25px;
+#cross_actions .get-button {
+  margin-top: 25px;
 }
 
 .footer_frame .get-button {
@@ -1248,4 +1246,73 @@ footer {
   height: 0;
   border-top: 7px solid #b2b2b2;
   border-right: 7px solid transparent;
+}
+
+.subscribe {
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #e6e6e6;
+  text-indent: 2px;
+}
+
+.subscribe-frame {
+  width: 290px;
+  height: 50px;
+  margin-top: 6px;
+  overflow: hidden;
+  background-color: white;
+  border: 0;
+  border-radius: 5px;
+  box-shadow: 0 -1px 0px rgba(0, 0, 0, 0.6) inset, 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.5) inset, 0px 0px 2px rgba(0, 0, 0, 0.2) inset;
+}
+
+.subscribe-frame .email {
+  width: 206px;
+  height: 100%;
+  padding-left: 12px;
+  font: 300 18px/18px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  color: #333;
+  background-color: transparent;
+  border: 0;
+  outline: none;
+}
+
+.subscribe-frame .email:-moz-placeholder,
+.subscribe-frame .email:-ms-input-placeholder,
+.subscribe-frame .email:-webkit-input-placeholder {
+  color: #b2b2b2;
+}
+
+.btn_mail {
+  position: relative;
+  float: right;
+  width: 64px;
+  height: 100%;
+  background: -moz-linear-gradient(90deg, #23528c 0%, #369fe9 100%) no-repeat 0, #000000;
+  background: -webkit-gradient(linear, left bottom, left top, from(#23528c), to(#369fe9)) no-repeat 0, #000000;
+  border: 0;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset, 0px -1px 0px rgba(0, 0, 0, 0.1) inset;
+}
+
+.btn_mail:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url(/static/img/bell_26@2x.png) no-repeat 50% 50%;
+  background-size: 30px;
+  content: "";
+}
+
+.btn_mail:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#1e71c9), to(#6bc0fb));
+  background-image: -moz-linear-gradient(90deg, #1e71c9 0%, #6bc0fb 100%);
+}
+
+.btn_mail:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#115297), to(#44b0fa));
+  background-image: -moz-linear-gradient(90deg, #115297 0%, #44b0fa 100%);
 }
