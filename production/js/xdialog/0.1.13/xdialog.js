@@ -1292,6 +1292,11 @@ define('xdialog', function (require, exports) {
           var external_username = ''
             , provider = $(e.currentTarget).data('oauth')
             , that = this;
+
+          that.$('.authentication')
+            .find('.oauth-provider')
+            .text(provider);
+
           function addIdentity(external_username, provider, that) {
             var authorization = Store.get('authorization')
               , token = authorization.token;
@@ -1305,7 +1310,19 @@ define('xdialog', function (require, exports) {
                   provider: provider
                 },
                 beforeSend: function () {
-                  alert(window.location.href);
+                  that.$('.modal-body').eq(0).css('opacity', 0);
+                  that.switchTab('d05');
+                  that.$('.authentication')
+                    .find('img')
+                    .removeClass('hide');
+
+                  that.$('.authentication')
+                    .find('.redirecting')
+                    .removeClass('hide');
+
+                  that.$('.authentication')
+                    .find('.xalert-fail')
+                    .addClass('hide');
                 }
               },
               function (data) {
@@ -1422,9 +1439,33 @@ define('xdialog', function (require, exports) {
           + '<button class="xbtn-white xbtn-forgotpwd d d0 disabled" data-dialog-from="addidentity" data-widget="dialog" data-dialog-type="forgotpassword">Forgot Password...</button>'
           + '<button class="pull-right xbtn-blue xbtn-add d d0">Add</button>'
           + '<button class="pull-right xbtn-blue xbtn-verify d d1 hide">Verify</button>'
-          + '<button class="pull-right xbtn-white xbtn-done d d2 hide">Done</button>'
+          + '<button class="pull-right xbtn-white xbtn-done d d2 hide">Done</button>',
+
+        others: ''
+          + '<div class="authentication d d05 hide">'
+            + '<div class="modal-body">'
+              + '<div class="shadow title">Authentication</div>'
+              //+ '<div class="center shadow title">through Twitter</div>'
+              + '<div class="content">'
+                + '<img class="hide" src="/static/img/loading.gif" width="32" height="32" />'
+                + '<p class="redirecting hide">Redirecting to <span class="oauth-provider"></span>…</p>'
+                + '<p class="xalert-fail hide">Failed to connect with <span class="oauth-provider"></span> server.</p>'
+              + '</div>'
+            + '</div>'
+          + '</div>'
       }
 
+    },
+
+    switchTab: function (t) {
+      this.$('.d')
+        .not('.hide')
+        .addClass('hide')
+        .end()
+        .filter('.' + t)
+        .removeClass('hide');
+
+      this.switchTabType = t;
     },
 
     availability: false,
