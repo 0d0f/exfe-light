@@ -227,11 +227,37 @@
   display: inline-block;
   .ie7-restore-right-whitespace();
   vertical-align: text-top;
-  background-image: ~'url("@{imgPath}/icons.png")';
+  background-image: ~'url("@{imgPath}/icons-photox.png")';
 }
 
-.ix-add { background-position: 0 -78px; }
-.ix-facebook { background-position: -36px -78px; }
-.ix-instagram { background-position: -72px -78px; }
-.ix-flickr { background-position: -108px -78px ; }
-.ix-dropbox { background-position: -144px -78px ; }
+// 36 & 36
+@w5_36: -36px;
+.ix-add,
+.ix-provider {
+  width: 36px;
+  height: 36px;
+}
+.ix-add                          { background-position: 0 * @w5_36 0; }
+.ix-facebook                     { background-position: 1 * @w5_36 0; }
+.ix-instagram                    { background-position: 2 * @w5_36 0; }
+.ix-flickr                       { background-position: 3 * @w5_36 0; }
+.ix-dropbox                      { background-position: 4 * @w5_36 0; }
+
+// 72 * 72
+.ix-placehoder {
+  width: 72px;
+  height: 72px;
+  background-position: 0  -36px;
+}
+
+// 100 & 100
+@w6_100: -100px;
+@h6_100: -108px;
+.ix-big-provider {
+  width: 100px;
+  height: 100px;
+}
+.ix-facebook-big                 { background-position: 0 * @w6_100 @h6_100; }
+.ix-instagram-big                { background-position: 1 * @w6_100 @h6_100; }
+.ix-flickr-big                   { background-position: 2 * @w6_100 @h6_100; }
+.ix-dropbox-big                  { background-position: 3 * @w6_100 @h6_100; }

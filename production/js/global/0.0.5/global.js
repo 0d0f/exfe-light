@@ -281,6 +281,7 @@ define(function (require, exports, module) {
             Bus.emit('widget-dialog-identification-nothing');
           },
 
+          //'onAutocomplete:beforesend': function (identity) {},
           'onAutocomplete:finish': function (data) {
             var identity;
             if (data && (identity = data.identity)) {

@@ -1,17 +1,17 @@
 define(function (require, exports, module) {
   "use strict";
 
-  var $ = require('jquery');
-  var Store = require('store');
-  var Config = require('config');
-  var Dialog = require('dialog');
-  var Dialogs = require('xdialog').dialogs;
-  var Handlebars = require('handlebars');
-  var HumanTime = require('humantime');
-  var R = require('rex');
-  var Util = require('util');
-  var Bus = require('bus');
-  var Api = require('api');
+  var $ = require('jquery'),
+      Store = require('store'),
+      Config = require('config'),
+      Dialog = require('dialog'),
+      Dialogs = require('xdialog').dialogs,
+      Handlebars = require('handlebars'),
+      HumanTime = require('humantime'),
+      R = require('rex'),
+      Util = require('util'),
+      Bus = require('bus'),
+      Api = require('api');
 
   // 覆盖默认 `each` 添加 `__index__` 属性
   Handlebars.registerHelper('each', function (context, options) {
@@ -995,18 +995,4 @@ define(function (require, exports, module) {
 
     return false;
   });
-
-  var PhotoXPanel = null;
-  $BODY.on('click.open-photox', '.open-photox', function () {
-    if (!PhotoXPanel) {
-      PhotoXPanel = require('photox');
-    }
-    (new PhotoXPanel({
-      options: {
-        parentNode: $('#app-tmp'),
-        srcNode: $('.open-photox')
-      }
-    })).show();
-  });
-
 });

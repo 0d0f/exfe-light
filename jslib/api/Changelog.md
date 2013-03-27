@@ -1,3 +1,7 @@
+* v0.0.9 2013-03-27T12:07:07 UTC+0800
+  - New Features
+    * `photox` api
+
 * v0.0.8 2013-01-24T02:01:20 UTC+0800
   - Changes
     * refactor `_ajax`
