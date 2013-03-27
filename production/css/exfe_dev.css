@@ -5629,27 +5629,60 @@ img:-moz-broken {
   display: inline-block;
   *margin-right: .3em;
   vertical-align: text-top;
-  background-image: url("/production/img/icons.png");
+  background-image: url("/production/img/icons-photox.png");
+}
+
+.ix-add,
+.ix-provider {
+  width: 36px;
+  height: 36px;
 }
 
 .ix-add {
-  background-position: 0 -78px;
+  background-position: 0 0;
 }
 
 .ix-facebook {
-  background-position: -36px -78px;
+  background-position: -36px 0;
 }
 
 .ix-instagram {
-  background-position: -72px -78px;
+  background-position: -72px 0;
 }
 
 .ix-flickr {
-  background-position: -108px -78px;
+  background-position: -108px 0;
 }
 
 .ix-dropbox {
-  background-position: -144px -78px;
+  background-position: -144px 0;
+}
+
+.ix-placehoder {
+  width: 72px;
+  height: 72px;
+  background-position: 0 -36px;
+}
+
+.ix-big-provider {
+  width: 100px;
+  height: 100px;
+}
+
+.ix-facebook-big {
+  background-position: 0 -108px;
+}
+
+.ix-instagram-big {
+  background-position: -100px -108px;
+}
+
+.ix-flickr-big {
+  background-position: -200px -108px;
+}
+
+.ix-dropbox-big {
+  background-position: -300px -108px;
 }
 
 .navbar .dropdown-menu:before {
@@ -11809,6 +11842,7 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+  text-align: center;
   cursor: pointer;
   border: 0;
   -webkit-border-radius: 0;
@@ -11824,6 +11858,11 @@ body {
 
 .photox-panel .panel-header .nav-tabs > li > a:hover {
   background-color: transparent;
+}
+
+.photox-panel .panel-body {
+  position: relative;
+  min-height: 240px;
 }
 
 .photox-panel .panel-body .breadcrumb {
@@ -11872,7 +11911,9 @@ body {
 .photox-panel .panel-body .thumbnails {
   height: 240px;
   margin: 0;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .photox-panel .panel-body .thumbnails > li {
@@ -12047,6 +12088,12 @@ body {
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
      -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
           box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+.photox-panel .loading {
+  position: absolute;
+  bottom: 104px;
+  left: 244px;
 }
 
 #app-main {

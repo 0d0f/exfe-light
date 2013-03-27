@@ -1,0 +1,324 @@
+.translateZ(@z) {
+  -webkit-transform: translateZ(@z);
+     -moz-transform: translateZ(@z);
+       -o-transform: translateZ(@z);
+          transform: translateZ(@z);
+}
+.transform(@t) {
+  -webkit-transform: @t;
+     -moz-transform: @t;
+       -o-transform: @t;
+          transform: @t;
+}
+
+.photox-panel {
+	width: 520px;
+	min-width: 520px;
+	min-height: 372px;
+	background-color: #222;
+	.border-radius(6px);
+	border: none;
+	.box-shadow(0 1px 3px rgba(0, 0, 0, .5));
+
+	.badge {
+		position: absolute;
+		min-width: 24px;
+		height: 24px;
+		line-height: 20px;
+		text-align: center;
+		color: #fff;
+  	font-weight: bold;
+  	padding: 0 3px;
+		background-color: #60adff;
+		border: 2px solid #fff;
+		.box-shadow(0 1px 3px rgba(0, 0, 0, .5));
+		.border-radius(24px);
+		-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+  	-ms-box-sizing: border-box;
+  	-o-box-sizing: border-box;
+  	box-sizing: border-box;
+	}
+
+	.panel-header {
+		width: 100%;
+		#gradient > .directional(#4c4c4c, #808080, 90deg);
+		.border-radius(6px 6px 0 0);
+
+		.panel-title {
+			font-size: 26px;
+			line-height: 66px;
+			color: white;
+			font-weight: bold;
+			margin: 0 0 0 15px;
+		}
+
+		.nav {
+			height: 66px;
+			margin-bottom: 0;
+			border-bottom: 0;
+		}
+
+		.nav-tabs {
+			> li {
+				position: relative;
+				height: 100%;
+				margin-bottom: 0;
+				.border-radius(0);
+				#gradient > .directional(rgba(0, 0, 0, .12), rgba(0, 0, 0, 0), 0deg);
+
+				&:hover {
+					background-color: rgba(255, 255, 255, .12);
+				}
+
+				&:active {
+					background-color: rgba(0, 0, 0, .1);
+				}
+
+				.badgex {
+					top: 1px;
+					right: 1px;
+				}
+
+				&.active {
+					background-color: #3784d5;
+					box-shadow: inset 0px -1px 1px rgba(0,0,0,0.5);
+
+					> a {
+						background-color: transparent;
+
+						&:after {
+							content: '';
+							position: absolute;
+							left: 26px;
+							bottom: 0;
+							width: 0;
+							height: 0;
+							border: 0;
+							border-bottom: 7px solid black;
+							border-left: 7px solid transparent;
+							border-right: 7px solid transparent;
+						}
+					}
+				}
+
+				> a {
+					position: relative;
+					display: block;
+					cursor: pointer;
+					height: 100%;
+					width: 66px;
+					margin: 0;
+					padding: 0;
+					border: 0;
+          text-align: center;
+					.border-radius(0);
+
+					&.ix-add {
+						.border-radius(0 6px 0 0);
+					}
+
+					&:hover {
+						background-color: transparent;
+					}
+				}
+			}
+		}
+	}
+
+	.panel-body {
+    position: relative;
+    min-height: 240px;
+
+		.breadcrumb {
+			position: relative;
+			z-index: 1;
+			height: 40px;
+			padding: 0;
+			margin: 0;
+			background-color: #4c4c4c;
+			box-shadow: 0 0 0 1px rgba(255, 255, 255, .1) inset, 0 -1px 0 rgba(0, 0, 0, .5);
+			.border-radius(0);
+
+			li {
+				margin-left: 20px;
+				line-height: 40px;
+			}
+
+			li:first-child {
+				margin-left: 15px;
+			}
+
+			li a {
+				color: #ccc;
+				text-decoration: none;
+			}
+
+			.divider {
+				display: inline-block;
+				width: 0;
+				height: 0;
+				margin: 15px -10px 0 15px;
+				border-color: transparent;
+				border-left-color: #cccccc;
+				border-style: solid;
+				border-width: 5px 0 5px 5px;
+				content: " ";
+			}
+
+			.active {
+				color: #fff;
+			}
+		}
+
+		.thumbnails {
+			height: 240px;
+			margin: 0;
+      overflow-x: hidden;
+			overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+			> li {
+				margin: 0 0 0 8px;
+			}
+
+			.thumbnail {
+				position: relative;
+				height: 120px;
+				width: 120px;
+				padding: 0;
+				cursor: pointer;
+				border: none;
+				.border-radius(0);
+				.box-shadow(none);
+
+				&:hover {
+					border: none;
+					.box-shadow(none);
+				}
+
+				.album-figure,
+				.photo-figure {
+					position: relative;
+					top: 20px;
+					left: 20px;
+					width: 80px;
+					height: 80px;
+					margin: 0;
+					padding: 0;
+					background-color: #ddd;
+					.box-shadow(0 1px 3px rgba(0, 0, 0, .6));
+				}
+
+				.album-figure {
+					.transform(translateZ(0) rotate(5deg));
+
+					&:before, &:after {
+						position: absolute;
+						content: "";
+						top: 0;
+						right: 0;
+						left: 0;
+						bottom: 0;
+						z-index: -1;
+						.box-shadow(0 1px 3px rgba(0, 0, 0, .6));
+					}
+
+					&:before {
+						background-color: #eee;
+						.transform(translateZ(0) rotate(-10deg));
+					}
+
+					&:after {
+						#gradient > .directional(#e5e5e5, #fff, 90deg);
+						.transform(translateZ(0) rotate(-5deg));
+					}
+				}
+
+				figure {
+					position: absolute;
+					height: 70px;
+					width: 70px;
+					top: 25px;
+					left: 25px;
+					margin: 0;
+					padding: 0;
+
+					> img {
+						height: 100%;
+					}
+
+					&.placehodler {
+						background: url() no-repeat;
+					}
+				}
+
+				.album-badge {
+					right: 12px;
+					bottom: 14px;
+					z-index: 7;
+				}
+
+				.name {
+					position: absolute;
+					bottom: 0;
+					font-size: 13px;
+					color: #ccc;
+					height: 14px;
+					line-height: 14px;
+					width: 100%;
+					margin: 0;
+					text-align: center;
+					overflow: hidden;
+				}
+			}
+		}
+	}
+
+	.panel-footer {
+		position: relative;
+		height: 66px;
+		width: 100%;
+		color: #fff;
+		#gradient > .directional(#4c4c4c, #808080, 90deg);
+		.border-radius(0 0 6px 6px);
+
+		.detail {
+			position: absolute;
+			left: 15px;
+			line-height: 66px;
+		}
+
+		.icon-resize {
+			position: absolute;
+			right: 15px;
+		}
+
+		.xbtn-upload {
+			position: relative;
+			display: block;
+			height: 40px;
+			width: 160px;
+			top: 13px;
+			margin: 0 auto;
+			font-size: 18px;
+			line-height: 40px;
+			font-weight: bold;
+			color: #ffffff;
+			#gradient > .directional(#155ca6, #6bc0fb, 90deg);
+			border: none;
+			.border-radius(6px);
+			.box-shadow(0 0 0 1px rgba(0, 0, 0, .4),
+						0 1px 0 rgba(0, 0, 0, .5),
+						0 2px 0 rgba(255, 255, 255, .25),
+						0 -1px 0 rgba(255, 255, 255, .12) inset);
+			text-shadow: 0 -1px 0px rgba(0, 0, 0, .3);
+		}
+	}
+
+  .loading {
+    position: absolute;
+    left: (520 - 32) / 2px;
+    bottom: (240 - 32) / 2px
+  }
+
+}
