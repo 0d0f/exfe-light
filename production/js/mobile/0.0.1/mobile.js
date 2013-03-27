@@ -186,6 +186,12 @@ define(function (require, exports, module) {
           +     '<div class="footer-wrap">'
           +         '<div class="footer_frame">'
           +             '<div class="actions" id="cross_actions">'
+          +                 '<div class="subscribe">Subscribe to updates and engage in:'
+          +                     '<div class="subscribe-frame">'
+          +                         '<input type="text" class="email" id="email" placeholder="Enter your email">'
+          +                         '<button class="btn_mail"></button>'
+          +                     '</div>'
+          +                 '</div>'
           +                 '<div class="get-button">'
           +                     '<button class="btn_w">Get <span class="exfe">EXFE</span> app <span class="free">free</span></button>'
           +                 '</div>'
@@ -483,6 +489,15 @@ define(function (require, exports, module) {
                                     });
                                 }
                             });
+                            $('.subscribe').show();
+                            $('#email.email').on('keyup', function(event) {
+                                if (event.keyCode === 13) {
+                                    addNotificationIdentity(data);
+                                }
+                            });
+                            $('.subscribe .btn_mail').on('click', function() {
+                                addNotificationIdentity(data);
+                            });
                         }
                     } else {
                         $('.inviter').hide();
@@ -503,6 +518,30 @@ define(function (require, exports, module) {
             }
         });
     };
+
+    var addNotificationIdentity = function(data) {
+        var email = $('#email.email').val();
+        if (!/^[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(email)) {
+            $('#email.email').attr('placeholder', 'Bad email Address.');
+            return;
+        }
+        $.ajax({
+            type    : 'post',
+            url     : config.api_url + '/Exfee/'
+                    + data.response.cross.exfee.id
+                    + '/AddNotificationIdentity' + '?token=' + my_token,
+            data    : {provider          : 'email',
+                       external_username : email},
+            success : function(data) {
+                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                    $('.subscribe').hide();
+                }
+            },
+            error   : function() {
+                alert('Failed, please retry later.');
+            }
+        });
+    }
 
     var renderCrossTime = function(crossTime) {
         var humantime = require('humantime');
