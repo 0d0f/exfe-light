@@ -2402,7 +2402,20 @@ define(function (require, exports, module) {
         R = require('rex'),
         PhotoXPanel = null,
         photoxPanel = null;
-    $(document.body).on('click.open-photox', '.open-photox', function () {
+    $(document.body).on('click.open-photox', function (e) {
+      var $p = $('#photox-panel');
+      if (photoxPanel
+        && $p.length
+        && $p[0] !== e.target
+        && !$.contains($p[0], e.target)) {
+        photoxPanel.hide();
+        photoxPanel = null;
+        return;
+      }
+    });
+    $(document.body).on('click.open-photox', '.open-photox', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       if (!PhotoXPanel) {
         PhotoXPanel = require('photox');
       }

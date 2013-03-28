@@ -13,6 +13,18 @@ define('photox', function (require) {
       Handlebars = require('handlebars'),
       proto;
 
+  /**
+   *  data-imported
+   *    -2          full selected, but no submit
+   *    -1          full selected
+   *     0          no selected
+   *    > 0         selected
+   */
+
+  Handlebars.registerHelper('px_imported', function (imported) {
+    return imported > 0 ? imported : '√';
+  });
+
   var errorHandler = function (data) {
     if (data && data.meta) {
       switch (data.meta) {
@@ -54,9 +66,10 @@ define('photox', function (require) {
     },
 
     // description: 获取所有身份/某个第三方身份的所有 albums & photos
-    browseSource: function (identity_id, album_id, bcb, done, fail) {
+    browseSource: function (photox_id, identity_id, album_id, bcb, done, fail) {
       var options = {},
           data = {};
+      if (photox_id) { data.photox_id = photox_id; }
       if (identity_id) { data.identity_id = identity_id; }
       if (album_id) { data.album_id = album_id; }
       if (bcb) { options.beforeSend = bcb; }
@@ -400,9 +413,9 @@ define('photox', function (require) {
   proto = Thumbnails.prototype;
 
   proto.liAlbumTmp = '{{#each albums}}'
-    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}" {{#if imported}}data-status="added"{{/if}}>'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}" data-imported="{{imported}}">'
       + '<div class="thumbnail">'
-        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">√</div>'
+        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">{{{px_imported imported}}}</div>'
         + '<div class="photo">'
           + '<div class="album-figure"></div>'
           + '{{#if artwork}}'
@@ -419,9 +432,9 @@ define('photox', function (require) {
     + '{{/each}}';
 
   proto.liPhotoTmp = '{{#each photos}}'
-    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-pid="{{external_id}}">'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-imported="{{imported}}" data-pid="{{external_id}}">'
       + '<div class="thumbnail">'
-        + '<div class="badge album-badge badgex hide">√</div>'
+        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">√</div>'
         + '<div class="photo">'
           + '<div class="photo-figure"></div>'
           + '{{#if images.preview.url}}'
@@ -441,7 +454,8 @@ define('photox', function (require) {
     var $albums = this.$albums,
         liAlbumTmp = this.liAlbumTmp,
         liPhotoTmp = this.liPhotoTmp,
-        composition = this.composition;
+        composition = this.composition,
+        q = composition.q;
     /*
     $.when(
       DataCenter.getPhotoX(this.cid),
@@ -452,10 +466,11 @@ define('photox', function (require) {
           d1 = ab[0];
     });
     */
-    DataCenter.getPhotoX(composition.cid, function (data) {
+    q.push(DataCenter.getPhotoX(composition.cid, function (data) {
       //console.dir(data);
-    });
-    DataCenter.browseSource(
+    }));
+    q.push(DataCenter.browseSource(
+      composition.cid,
       null, null,
       function () {
         composition.emit('toggle-loading', true);
@@ -471,7 +486,7 @@ define('photox', function (require) {
       function () {
         composition.emit('toggle-loading', false);
       }
-    );
+    ));
   };
 
   proto.hideAlbums = function () {
@@ -507,16 +522,18 @@ define('photox', function (require) {
     return this.startUL + ah + ph + this.endUL;
   };
 
-  proto.showPhotos = function (data, status) {
+  proto.showPhotos = function (data, imported) {
     var i = data.albums.length | data.photos.length, $e;
     //if (i) {
       $e = $(this.generate(data));
       this.$albums.append($e);
       $e.removeClass('hide');
       this.$parent.append($e);
-      if (status) {
+      /*
+      if (imported) {
         $e.find('.badge').removeClass('hide');
       }
+      */
     //}
   };
 
@@ -526,12 +543,13 @@ define('photox', function (require) {
     if ($b.hasClass('hide')) {
       // TODO: 删除临时 UL 菜单
       $t.find('.ulm').remove();
-      $t.removeAttr('data-status');
+      $t.attr('data-imported', '0');
     } else {
       // TODO: 临时 UL 菜单
       var s = 'position: absolute; z-index: 300; right: 0; color: #fff; background: #444;';
       $t.find('.thumbnail').prepend('<ul class="ulm" style="'+s+'"><li>Open</li><li class="import">Import</li></ul>');
-      $t.attr('data-status', 'selected');
+      $t.attr('data-imported', '-2');
+      $b.text('√');
     }
   };
 
@@ -542,7 +560,7 @@ define('photox', function (require) {
     options: {
 
       template: ''
-        + '<div class="panel photox-panel">'
+        + '<div class="panel photox-panel" id="photox-panel">'
           + '<div class="clearfix panel-header">'
             + '<h3 class="pull-left title panel-title">PhotoX</h3>'
             + '<ul class="pull-right nav nav-tabs"></ul>'
@@ -577,6 +595,8 @@ define('photox', function (require) {
 
       this.render();
       this.listen();
+
+      this.q = [];
     },
 
     listen: function () {
@@ -624,18 +644,17 @@ define('photox', function (require) {
             iid = $t.data('iid'),
             p = $t.data('provider'),
             aid = $t.data('aid'),
-            status = $t.attr('data-status');
+            imported = ~~$t.attr('data-imported');
         CLICK++;
         if (CLICK === 1) {
           CLICKTIMER = setTimeout(function () {
             thumbnails.toggleBadge($t);
-            if (status === 'added') {
+            if (imported !== 0 && imported !== -2) {
               DataCenter.delAlbum(
                 cid, p, aid,
-                function () {
-                },
+                function () { },
                 function (data) {
-                  $t.removeAttr('data-status');
+                  $t.attr('data-imported', '0');
                 }
               );
             }
@@ -654,22 +673,22 @@ define('photox', function (require) {
             if (!fs.has()) {
               fs.setUid(iid).setGid(p).cd('/');
             }
-            //console.log(iid, aid, p, aids, status);
+            //console.log(iid, aid, p, aids, imported);
             fs.cd(aid, len, function (p) {
               breadcrumb.del(len);
-              breadcrumb.add(iid, p);
+              breadcrumb.add(iGid, p);
             });
           }
 
           thumbnails.hideAlbums();
           DataCenter.browseSource(
-            iid, aid,
+            cid, iid, aid,
             function () {
               self.emit('toggle-loading', true);
             },
             function (data) {
               self.emit('toggle-loading', false);
-              thumbnails.showPhotos(data, status);
+              thumbnails.showPhotos(data, imported);
             }
           );
           CLICK = 0;
@@ -687,20 +706,20 @@ define('photox', function (require) {
         e.stopPropagation();
 
         if (p === 'instagram') {
-          $.when(DataCenter.browseSource(iid, aid))
+          $.when(DataCenter.browseSource(cid, iid, aid))
             .then(function (data) {
               var ps = data.photos,
-                  max_id = ps[0],
-                  min_id = ps[ps.length - 1];
-              DataCenter.addStream(cid, iid, min_id, max_id, null, function (data) {
+                  max_photo = ps[0],
+                  min_photo = ps[ps.length - 1];
+              DataCenter.addStream(cid, iid, min_photo.external_id, max_photo.external_id, null, function (data) {
                 $e.parent().remove();
-                $t.attr('data-status', 'added');
+                $t.attr('data-imported', '-1');
               });
             });
         } else {
           DataCenter.addAlbum(cid, iid, aid, null, function (data) {
             $e.parent().remove();
-            $t.attr('data-status', 'added');
+            $t.attr('data-imported', '-1');
           });
         }
 
@@ -745,6 +764,10 @@ define('photox', function (require) {
     },
 
     destory: function () {
+      var a;
+      while ((a = this.q.shift())) {
+        a.abort();
+      }
       this.element.off();
       this.element.remove();
       this._destory();
@@ -756,7 +779,9 @@ define('photox', function (require) {
 });
 
 /* NOTES:
-  - 打开 `phhotx-panel` 显示位置
+  - 身份 re-work 情况，查看 failed_identities
+  - 关掉 `PhotoX-Panel` 是否取消之前操作，还是有提示
+  - 打开 `PhotoX-Panel` 显示位置
     显示在 `Conversation` 上，最小宽度跟 `Converstaion` 一样
   - 第一次没有绑定任何 photo-identity, `albums` 区域显示什么
     有提示文字
