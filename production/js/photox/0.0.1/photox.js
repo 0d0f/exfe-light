@@ -42,82 +42,83 @@ define('photox', function (require) {
   var DataCenter = {
 
     // description: 获取一个 PhotoX 下的所有照片。
-    getPhotoX: function (photox_id, success_callback) {
+    getPhotoX: function (photox_id, done) {
       return request(
         'photox_getPhotoX',
         {
           resources : { photox_id : photox_id }
         },
         // {"photox" : [object:photox]}
-        success_callback
+        done
       );
     },
 
     // description: 获取所有身份/某个第三方身份的所有 albums & photos
-    browseSource: function (identity_id, album_id, before_callback, success_callback) {
+    browseSource: function (identity_id, album_id, bcb, done, fail) {
       var options = {},
           data = {};
       if (identity_id) { data.identity_id = identity_id; }
       if (album_id) { data.album_id = album_id; }
-      if (before_callback) { options.beforeSend = before_callback; }
+      if (bcb) { options.beforeSend = bcb; }
 
       options.data = data;
 
       return request(
-        'photox_borwseSource',
-        options,
-        // {"albums" : [array:album_object]}
-        success_callback
-      );
+          'photox_borwseSource',
+          options,
+          // {"albums" : [array:album_object]}
+          done,
+          fail
+        );
     },
 
     // description: 获取某一张照片的全尺寸版本。
-    getPhoto: function (photo_id, success_callback) {
+    getPhoto: function (photo_id, done) {
       return request(
         'photox_getPhoto',
         {
           data : { photo_id : photo_id }
         },
         // {"photo" : [object:photo]}
-        success_callback
+        done
       );
     },
 
     // description: 添加照片到 PhotoX。
-    add: function (photox_id, post_args, before_callback, success_callback) {
+    add: function (photox_id, post_args, bcb, done) {
       var options = {
         type        : 'POST',
         resources   : { photox_id: photox_id },
         data        : post_args
       };
-      if (before_callback) {
-        options.beforeSend = before_callback;
+      if (bcb) {
+        options.beforeSend = bcb;
       }
       return request(
         'photox_add',
         options,
         // {"photo" : [object:photo]}
-        success_callback
+        done
       );
     },
 
     // description: 用于从有相册功能的身份中添加照片
     // eg: Facebook, Flickr, Dropbox
-    addAlbum: function (photox_id, identity_id, album_id, before_callback, success_callback) {
+    addAlbum: function (photox_id, identity_id, album_id, bcb, done) {
       return DataCenter.add(
         photox_id,
         {
           identity_id : identity_id,
           album_id    : album_id
         },
-        before_callback, 
-        success_callback
+        bcb,
+        done
       );
     },
 
     // 用于从有照片流功能的身份中添加照片
     // eg: Instagram
-    addStream: function (photox_id, identity_id, min_id, max_id, before_callback, success_callback) {
+    addStream: function (photox_id, identity_id, min_id, max_id, bcb, done) {
       return DataCenter.add(
         photox_id,
         {
@@ -125,35 +126,35 @@ define('photox', function (require) {
           min_id      : min_id,
           max_id      : max_id
         },
-        before_callback, 
-        success_callback
+        bcb,
+        done
       );
     },
 
     // 用于从 PhotoStream 等公开 feed 中加入照片
     // eg: PhotoStream
-    addFeed: function (photox_id, stream_id, success_callback) {
+    addFeed: function (photox_id, stream_id, done) {
       return DataCenter.add(
         photox_id,
         { stream_id : stream_id },
-        success_callback
+        done
       );
     },
 
     // description: 获取照片的 like 状态。
-    getLikes: function (photox_id, success_callback) {
+    getLikes: function (photox_id, done) {
       return request(
         'photox_getLikes',
         {
           resources : { photox_id : photox_id }
         },
         // {"likes" : [array:response_object]}
-        success_callback
+        done
       );
     },
 
     // description: Like 一张照片。
-    like: function (id, success_callback) {
+    like: function (id, done) {
       return request(
         'photox_like',
         {
@@ -161,11 +162,11 @@ define('photox', function (require) {
           data : {id : id}
         },
         // {"like" : [object:response]}
-        success_callback
+        done
       );
     },
 
-    delAlbum: function (photox_id, provider, album_id, before_callback, success_callback) {
+    delAlbum: function (photox_id, provider, album_id, bcb, done) {
       return request(
         'photox_del',
         {
@@ -176,8 +177,8 @@ define('photox', function (require) {
             album_id    : album_id
           }
         },
-        before_callback,
-        success_callback
+        bcb,
+        done
       );
     }
   };
@@ -399,8 +400,9 @@ define('photox', function (require) {
   proto = Thumbnails.prototype;
 
   proto.liAlbumTmp = '{{#each albums}}'
-    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}">'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}" {{#if imported}}data-status="added"{{/if}}>'
       + '<div class="thumbnail">'
+        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">√</div>'
         + '<div class="photo">'
           + '<div class="album-figure"></div>'
           + '{{#if artwork}}'
@@ -450,7 +452,7 @@ define('photox', function (require) {
           d1 = ab[0];
     });
     */
-    DataCenter.getPhotoX(this.composition.cid, function (data) {
+    DataCenter.getPhotoX(composition.cid, function (data) {
       //console.dir(data);
     });
     DataCenter.browseSource(
@@ -465,6 +467,9 @@ define('photox', function (require) {
             pt = Handlebars.compile(liPhotoTmp),
             ph = pt(data);
         $albums.html(ah + ph);
+      },
+      function () {
+        composition.emit('toggle-loading', false);
       }
     );
   };
@@ -516,16 +521,16 @@ define('photox', function (require) {
   };
 
   proto.toggleBadge = function ($t) {
-    var $b = $t.find('.badge'), h = $b.length;
-    if (h) {
-      $b.remove();
+    var $b = $t.find('.badge');
+    $b.toggleClass('hide');
+    if ($b.hasClass('hide')) {
       // TODO: 删除临时 UL 菜单
       $t.find('.ulm').remove();
       $t.removeAttr('data-status');
     } else {
       // TODO: 临时 UL 菜单
       var s = 'position: absolute; z-index: 300; right: 0; color: #fff; background: #444;';
-      $t.find('.thumbnail').prepend('<ul class="ulm" style="'+s+'"><li>Open</li><li class="import">Import</li></ul><div class="badge album-badge badgex">√</div>');
+      $t.find('.thumbnail').prepend('<ul class="ulm" style="'+s+'"><li>Open</li><li class="import">Import</li></ul>');
       $t.attr('data-status', 'selected');
     }
   };
@@ -564,8 +569,6 @@ define('photox', function (require) {
       this.cid = options.crossId;
       this.providers = options.providers;
       delete options.providers;
-        
-      //XCache.init(PVS);
 
       this.navTabs = new NavTabs(this, '.panel-header .nav-tabs', this.providers);
       this.breadcrumb = new Breadcrumb(this, '.panel-body .breadcrumb');
@@ -682,11 +685,25 @@ define('photox', function (require) {
             aid = $t.data('aid');
         e.preventDefault();
         e.stopPropagation();
-        DataCenter.addAlbum(cid, iid, aid, null, function (data) {
-          $e.parent().remove();
-          $t.attr('data-status', 'added');
-          //console.log('add album', data);
-        });
+
+        if (p === 'instagram') {
+          $.when(DataCenter.browseSource(iid, aid))
+            .then(function (data) {
+              var ps = data.photos,
+                  max_id = ps[0],
+                  min_id = ps[ps.length - 1];
+              DataCenter.addStream(cid, iid, min_id, max_id, null, function (data) {
+                $e.parent().remove();
+                $t.attr('data-status', 'added');
+              });
+            });
+        } else {
+          DataCenter.addAlbum(cid, iid, aid, null, function (data) {
+            $e.parent().remove();
+            $t.attr('data-status', 'added');
+          });
+        }
+
       });
 
       // Photos' click-event
@@ -743,5 +760,9 @@ define('photox', function (require) {
     显示在 `Conversation` 上，最小宽度跟 `Converstaion` 一样
   - 第一次没有绑定任何 photo-identity, `albums` 区域显示什么
     有提示文字
-  - Ajax 操作失败
+  - ajax 操作失败
+  - ajax abort
+    eg: 比如选择一个 provider, 突然有进入 一个 album, 如何处理多异步回调情况
+  - 没有对 Dropbox 深目录进行测试
+  - Instagram 添加 folder min_id ~ max_id
 */
