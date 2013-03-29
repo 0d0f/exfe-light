@@ -1,3 +1,5 @@
+define(function(require) {
+
 ExfeUtilities = {
 
     trim : function(string) {
@@ -112,87 +114,6 @@ ExfeeCache = {
                 || matchString(key, identity.name);
         };
         var arrCatched = [];
-        var phone      = key.replace(/\-|\(|\)|\ /g, '');
-        if (/^\+?[0-9]{5,15}$/.test(phone)) {
-            var name = phone.replace(/^.*(.{3})$/, '$1');
-            var id   = '';
-            if (/^\+.*$/.test(phone)) {
-                id   = phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-            } else if (/^.{11}$/.test(phone)) {
-                id   = '+86' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-                id   = '+1' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-            } else if (/^86.{11}$/.test(phone)) {
-                id   = '+' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-            } else if (/^1.{4,}$/.test(phone)) {
-                id   = '+' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-                id   = '+1' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-            } else {
-                id = '+1' + phone;
-                arrCatched.push({
-                    id                : 0,
-                    name              : name,
-                    external_id       : id,
-                    external_username : id,
-                    provider          : 'phone',
-                    avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
-                    type              : 'identity'
-                });
-            }
-        }
         key = key.toLowerCase();
         for (var i = 0; i < this.identities.length; i++) {
             if (matchIdentity(key, this.identities[i])
@@ -573,7 +494,6 @@ ExfeeWidget = {
             provider          : '',
             type              : 'identity'
         }
-        var phone   = '';
         if (/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/.test(string)) {
             var iLt = string.indexOf('<'),
                 iGt = string.indexOf('>');
@@ -597,11 +517,6 @@ ExfeeWidget = {
             objIdentity.external_username = string.replace(/@facebook$/ig, '');
             objIdentity.name              = objIdentity.external_username;
             objIdentity.provider          = 'facebook';
-        } else if ((phone = string.replace(/\-|\(|\)|\ /g, '')) && /^\+[0-9]{5,15}$/.test(phone)) {
-            objIdentity.external_id       = phone;
-            objIdentity.external_username = phone;
-            objIdentity.name              = phone.replace(/^.*(.{3})$/, '$1');
-            objIdentity.provider          = 'phone';
         } else {
             return null;
         }
@@ -610,8 +525,8 @@ ExfeeWidget = {
     },
 
 
-    checkComplete : function(objInput, key) {
-        this.showCompleteItems(objInput, key, key ? ExfeeCache.search(key) : []);
+    checkComplete : function(objInput, key, tryPhonePanel) {
+        this.showCompleteItems(objInput, key, key ? ExfeeCache.search(key) : [], tryPhonePanel);
         this.ajaxComplete(objInput, key);
     },
 
@@ -651,7 +566,7 @@ ExfeeWidget = {
     },
 
 
-    showCompleteItems : function(objInput, key, identities) {
+    showCompleteItems : function(objInput, key, identities, tryPhonePanel) {
         key = key.replace(/^\+/, '');
         var highlight = function(string) {
             var objRe = new RegExp('(' + key + ')');
@@ -697,6 +612,24 @@ ExfeeWidget = {
             objInput,
             key && ExfeeWidget.complete_exfee.length
         );
+        var phone = key.replace(/\-|\(|\)|\ /g, '');
+        if (phone
+         && tryPhonePanel
+         && !ExfeeWidget.complete_exfee.length
+         && !$('#phone-panel').length
+         && /^\+?[0-9]{5,15}$/.test(phone)) {
+            var PhonePanel = require('phonepanel');
+            var phonepanel = new PhonePanel({
+                options: {
+                    parentNode: $('#app-tmp')
+                  , srcNode: objInput
+                }
+              , add: function (identity) {
+                    ExfeeWidget.addExfee(identity);
+                }
+            });
+            phonepanel.show();
+        }
     },
 
 
@@ -819,7 +752,7 @@ ExfeeWidget = {
         ).toggleClass(
             'icon16-exfee-plus',     !bolCorrect
         );
-        this.checkComplete(objInput, strTail.replace(/^@/, ''));
+        this.checkComplete(objInput, strTail.replace(/^@/, ''), force);
     },
 
 
@@ -910,7 +843,7 @@ ExfeeWidget = {
 
 };
 
-
+});
 
 define('exfeepanel', function (require, exports, module) {
 
