@@ -2339,6 +2339,14 @@ define(function (require, exports, module) {
         // get cross
         if (Cross_id > 0) {
             GetCross(Cross_id);
+            // NOTE: `PhotoXWidget`
+            var pxw = new (require('photoxwidget'))({
+              options: {
+                crossId: Cross_id,
+                parentNode: $('.cross-photox')
+              }
+            });
+            pxw.show();
         } else if (Cross_id === null) {
             if (browsingIdentity) {
                 curIdentity = browsingIdentity;
@@ -2395,63 +2403,7 @@ define(function (require, exports, module) {
         $('#app-tip-lock').remove();
       }
     });
-
-
-    // NOTE: `PhotoX`
-    var Config = require('config'),
-        R = require('rex'),
-        PhotoXPanel = null,
-        photoxPanel = null;
-    $(document.body).on('click.open-photox', function (e) {
-      var $p = $('#photox-panel');
-      if (photoxPanel
-        && $p.length
-        && $p[0] !== e.target
-        && !$.contains($p[0], e.target)) {
-        photoxPanel.hide();
-        photoxPanel = null;
-        return;
-      }
-    });
-    $(document.body).on('click.open-photox', '.open-photox', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!PhotoXPanel) {
-        PhotoXPanel = require('photox');
-      }
-      if (photoxPanel) {
-        return;
-      }
-      var user = Store.get('user');
-      if (user) {
-        var identities = user.identities,
-            photo_providers = Config.photo_providers,
-            providers = photo_providers.slice(0),
-            ips = [], i;
-        R.each(identities, function (v) {
-          i = R.indexOf(providers, v.provider);
-          if (-1 !== i) {
-            providers.splice(i, 1);
-            ips.push(v.provider + ':' + v.id);
-          }
-        });
-        ips.push(''); providers.push('');
-        // providers = 'flickr:1 facebook:0 dropbox:0'
-        providers = ips.join(' ') + providers.join(':0 ');
-        photoxPanel = new PhotoXPanel({
-          options: {
-            parentNode: $('#app-tmp'),
-            srcNode: $('.open-photox'),
-            crossId: Cross.id,
-            providers: providers
-          }
-        });
-        photoxPanel.show();
-      }
-    });
-
 });
-
 
 
 /**

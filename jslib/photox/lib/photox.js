@@ -1,10 +1,9 @@
 define('photox', function (require) {
   "use strict";
 
-  var Api = require('api'),
-      $ = require('jquery'),
+  var $ = require('jquery'),
       R = require('rex'),
-      request = Api.request,
+      request = require('api').request,
       Config = require('config'),
       PVS = Config.photo_providers,
       Dialog = require('dialog'),
@@ -285,7 +284,7 @@ define('photox', function (require) {
 
   proto = NavTabs.prototype;
 
-  proto.liTmp = '<li data-provider="{{provider}}" data-iid="{{iid}}"><a href="#" class="hide-text""><i class="ix-provider ix-{{provider}}"></i></a></li>';
+  proto.liTmp = '<li{{class}} data-provider="{{provider}}" data-iid="{{iid}}"><a href="#" class="hide-text""><i class="ix-provider ix-{{provider}}"></i></a></li>';
 
   proto.badgeTmmp = '<div class="badge badgex"></div>';
 
@@ -294,8 +293,9 @@ define('photox', function (require) {
     providers = providers.split(' ');
     while ((p = providers.shift())) {
       p = p.split(':');
-      h += t.replace(/\{\{provider\}\}/g, p[0])
-          .replace(/\{\{iid\}\}/, p[1]);
+      h += t.replace('{{class}}', +p[1] ? '' : ' class="no-oauth"')
+        .replace(/\{\{provider\}\}/g, p[0])
+        .replace('{{iid}}', p[1]);
     }
     return h;
   };
@@ -477,11 +477,17 @@ define('photox', function (require) {
       },
       function (data) {
         composition.emit('toggle-loading', false);
-        var at = Handlebars.compile(liAlbumTmp),
-            ah = at(data),
-            pt = Handlebars.compile(liPhotoTmp),
-            ph = pt(data);
-        $albums.html(ah + ph);
+        var al = data.albums.length,
+            pl = data.photos.length;
+        if (al + pl) {
+          var at = Handlebars.compile(liAlbumTmp),
+              ah = at(data),
+              pt = Handlebars.compile(liPhotoTmp),
+              ph = pt(data);
+          $albums.html(ah + ph);
+        } else {
+          composition.emit('toggle-error', 'albums');
+        }
       },
       function () {
         composition.emit('toggle-loading', false);
@@ -567,6 +573,10 @@ define('photox', function (require) {
           + '</div>'
           + '<div class="panel-body">'
             + '<ul class="breadcrumb hide"></ul>'
+            + '<div class="errors hide">'
+              + '<div class="albums-error hide">Oops, no photo to share. Link your accounts here to import. ↗</div>'
+              + '<div class="photos-error hide">No photo found here.</div>'
+            + '</div>'
             + '<div class="loading hide"><img alt="" width="32" height="32" src="/static/img/loading.gif" /></div>'
             + '<ul class="thumbnails albums"></ul>'
           + '</div>'
@@ -688,7 +698,14 @@ define('photox', function (require) {
             },
             function (data) {
               self.emit('toggle-loading', false);
-              thumbnails.showPhotos(data, imported);
+              var al = data.albums.length,
+                  pl = data.photos.length,
+                  t = al + pl;
+              if (t) {
+                thumbnails.showPhotos(data, imported);
+              } else {
+                self.emit('toggle-error', 'photos');
+              }
             }
           );
           CLICK = 0;
@@ -741,6 +758,18 @@ define('photox', function (require) {
         $loading[(b ? 'remove' : 'add') + 'Class']('hide');
       });
 
+      self.on('toggle-error', function (t) {
+        var $es = element.find('.errors').toggleClass('hide', t);
+        if (t) {
+          $es.children().addClass('hide');
+          if (t === 'albums') {
+            $es.find('.albums-error').removeClass('hide');
+          } else {
+            $es.find('.photos-error').removeClass('hide');
+          }
+        }
+      });
+
       /**
        * @param {Number} iid identity-id
        * @param {String} p provider
@@ -755,9 +784,9 @@ define('photox', function (require) {
     },
 
     showAfter: function () {
-      var offset = this.srcNode.parent().offset();
+      var offset = this.srcNode.offset();
       this.element.css({
-        top: offset.top + 50,
+        top: offset.top,
         left: offset.left - 20
       });
       this.thumbnails.showAlbums();
