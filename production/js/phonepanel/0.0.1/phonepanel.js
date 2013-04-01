@@ -5,6 +5,7 @@ define('phonepanel', function (require) {
       proxy = $.proxy,
       extend = $.extend,
       Config = require('config'),
+      Api    = require('api'),
       SPLITTER = /[\r\n]+/g,
       CR = '\r',
       $win = $(window),
@@ -15,6 +16,7 @@ define('phonepanel', function (require) {
         'country_code' : '',
         'phone_number' : ''
       },
+      last_get  = '',
       areaInfos = require('countrycodes');
 
   var Panel = require('panel');
@@ -46,12 +48,54 @@ define('phonepanel', function (require) {
   }
 
   var checkPhone = function() {
+    getIdentity();
     if ($('#phone-panel .countrycode').val() 
      && $('#phone-panel .name').val()
      && rawPhone) {
         $('#phone-panel .add').prop('disabled', false);
     } else {
         $('#phone-panel .add').prop('disabled', true);
+    }
+  }
+
+  var escape = function(html, encode) {
+    return html
+          .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+  }
+
+  var getIdentity = function() {
+    var cur_get = '+' + areaInfos[curCntry].country_code + rawPhone;
+    if (cur_get !== last_get) {
+        Api.request(
+            'getIdentity',
+            {
+                type : 'POST',
+                data : {
+                    identities : JSON.stringify([{
+                        'provider'          : 'phone',
+                        'external_username' : cur_get
+                    }])
+                }
+            },
+            function(data) {
+                if (data && data.identities && data.identities.length && data.identities[0].connected_user_id > 0) {
+                    $('#phone-panel .identity-avatar').attr('src', data.identities[0].avatar_filename).show();
+                    $('#phone-panel .identity-name').html(escape(data.identities[0].name)).show();
+                    $('#phone-panel .name').val(data.identities[0].name).hide();
+                    $('#phone-panel .add').toggleClass('match', true);
+                } else {
+                    $('#phone-panel .identity-avatar').hide();
+                    $('#phone-panel .identity-name').hide();
+                    $('#phone-panel .name').show();
+                    $('#phone-panel .add').toggleClass('match', false); 
+                }
+            }
+        );
+        cur_get = last_get;
     }
   }
 
@@ -64,18 +108,20 @@ define('phonepanel', function (require) {
             //<div class="panel-header"></div>
             + '<div class="panel-body">'
               + '<div class="main-info">Please complete contact info:</div>'
-              + '<div class="input-area">'
-                + '<input class="countrycode" type="text" />'
-                + '<input class="phonenumber" type="text" />'
+              + '<div class="clearfix input-area">'
+                + '<input class="countrycode" tabindex="4" type="text" />'
+                + '<input class="phonenumber" tabindex="5" type="text" />'
               + '</div>'
               + '<div class="tips-area">'
                 + '<div class="ta-countrycode"></div>'
                 + '<div class="ta-phonenumber">Area code and local number</div>'
               + '</div>'
-              + '<ol class="complete-list"></ol>'
+              + '<ol class="clearfix complete-list"></ol>'
               + '<div class="name-area">'
-                + '<input class="name" type="text" placeholder="Enter contact name" />'
-                + '<button class="xbtn-blue add" disabled="disabled">Add</button>'
+                + '<input class="name" type="text" tabindex="2" placeholder="Enter contact name" />'
+                + '<img class="identity-avatar"/>'
+                + '<div class="identity-name"></div>'
+                + '<button class="xbtn-blue add" tabindex="3" disabled="disabled">Add</button>'
               + '</div>'
             + '</div>'
             //<div class="panel-footer"></div>
@@ -88,7 +134,8 @@ define('phonepanel', function (require) {
       }
 
     , init: function () {
-        var options = this.options,
+        var self    = this,
+            options = this.options,
             element;
         this.render();
         element = this.element;
@@ -102,6 +149,16 @@ define('phonepanel', function (require) {
             }
         }
         this.listen();
+        $(document.body).on('click.phonepanel', function (e) {
+          var $p = $('#phone-panel');
+          if ($p.length
+            && $p[0] !== e.target
+            && !$.contains($p[0], e.target)) {
+            self.hide();
+            $(document.body).off('click.phonepanel');
+            return;
+          }
+        });
       }
 
     , listen: function () {
@@ -214,6 +271,7 @@ define('phonepanel', function (require) {
             element.find('.complete-list').html('');
             element.find('.tips-area').show();
             element.find('.complete-list').slideUp();
+            $(this).prop('tabindex', '1');
         });
         element.on('blur.phonepanel', '.phonenumber', function (e) {
             var strPhone = element.find('.phonenumber').val().replace(/\-|\(|\)|\ /g, '');
@@ -224,6 +282,7 @@ define('phonepanel', function (require) {
             }
             formatPhone();
             checkPhone();
+            $(this).prop('tabindex', '5');
         });
         element.on('mouseover.phonepanel', '.complete-list li', function (e) {
             $(this).siblings().filter('.selected').toggleClass('selected', false);
@@ -260,11 +319,6 @@ define('phonepanel', function (require) {
             }
             checkPhone();
         });
-        //element.on('keydown.phonepanel', '.name', function(e) {
-        //    if (e.keyCode === 9) {
-        //        element.find('.countrycode').focus();
-        //    }
-        //});
         element.on('click.phonepanel', '.add', function(e) {
             var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
             var name        = element.find('.name').val();
@@ -296,6 +350,8 @@ define('phonepanel', function (require) {
             left: this.oleft = offset.left,
             top:  this.otop  = offset.top + height
           });
+          $('#phone-panel .identity-avatar').hide();
+          $('#phone-panel .identity-name').hide();
           rawPhone = srcNode.val().replace(/\-|\(|\)|\ /g, '');
           var fixedCntry = curCntry;
           if (/^\+.*$/.test(rawPhone)) {

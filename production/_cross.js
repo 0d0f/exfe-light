@@ -626,6 +626,7 @@ ExfeeWidget = {
                 }
               , add: function (identity) {
                     ExfeeWidget.addExfee(identity);
+                    objInput.val('');
                 }
             });
             phonepanel.show();
