@@ -2483,7 +2483,8 @@ define('countrycodes', function () { return [
         "short_name": "CN",
         "search_index": "86 china cn 中国",
         "support": [
-            "iMessage"
+            "iMessage",
+            "SMS"
         ],
         "regular": "^\\+86",
         "format_long": 0,
