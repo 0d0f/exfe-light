@@ -7,30 +7,38 @@
 }
 
 .main-info {
-    //color: ;
+    color: #262626;
+    font-size: 14px;
+    height: 20px
 }
 
 #phone-panel .countrycode {
     margin: 0;
     padding: 0;
-    position: relative;
-    float: left;
+    position: absolute;
     width: 68px;
     height: 26px;
     text-align: center;
     border: 1px solid @borderColor;
+    left: 0;
+    top: 0;
 }
 
 #phone-panel .phonenumber {
     margin: 0;
     padding: 0;
     position: relative;
-    float: left;
+    float: right;
     width: 189px;
     height: 26px;
     text-align: center;
     border: 1px solid @borderColor;
     border-left: 0;
+}
+
+.input-area {
+    margin-top: 10px;
+    position: relative;
 }
 
 .tips-area {
@@ -55,14 +63,14 @@
 .complete-list li {
     display: block;
     height: 43px;
-    width: 252px;
-    padding: 0 3px 0 3px;
+    width: 258px;
+    padding: 0;
     border: 1px solid @borderColor;
     border-top: 0;
 }
 
 .complete-list li.selected {
-    background-color: rgba(127,127,127,.33);
+    background-color: rgba(127,127,127,.05);
 }
 
 ol.complete-list {
@@ -80,24 +88,46 @@ ol.complete-list {
 
 .complete-list li .li-countrycode {
     font-size: 16px;
-    height: 22px;
-    width: 51px;
+    height: 100%;
+    line-height: 42px;
+    width: 55px;
     text-align: right;
     font-style: italic;
+    margin-right: 14px;
 }
 
 .complete-list li .li-countryname {
-    margin-left: 8px;
     font-size: 16px;
     height: 22px;
-    width: 193px;
+    width: 189px;
     overflow: hidden;
 }
 
 .complete-list li .li-tips {
     font-size: 12px;
     height: 16px;
-    padding-left: 59px;
+    color: #6B6B6B;
+}
+
+#phone-panel .identity-avatar {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    float: left;
+    display: block;
+    border-radius: 3px;
+}
+
+#phone-panel .identity-name {
+    width: 150px;
+    overflow: hidden;
+    position: relative;
+    display: block;
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    text-indent: 10px;
+    float: left;
 }
 
 #phone-panel .name {
@@ -117,6 +147,10 @@ ol.complete-list {
     margin-left: 10px;
     font-size: 14px;
     line-height: 20px;
+}
+
+#phone-panel .add.match {
+    margin-top: 10px;
 }
 
 .name-area {

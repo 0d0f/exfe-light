@@ -325,11 +325,6 @@ define('phonepanel', function (require) {
             }
             checkPhone();
         });
-        //element.on('keydown.phonepanel', '.name', function(e) {
-        //    if (e.keyCode === 9) {
-        //        element.find('.countrycode').focus();
-        //    }
-        //});
         element.on('click.phonepanel', '.add', function(e) {
             var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
             var name        = element.find('.name').val();
