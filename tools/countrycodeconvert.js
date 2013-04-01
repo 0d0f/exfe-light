@@ -113,18 +113,21 @@ for (var i = 1; i < csv.length; i++) {
             var formatLong  = 0;
             var formatReg   = null;
             var formatStr   = '';
+            var priority    = false;
             switch (shortName) {
                 case 'US':
                     formatLong = 10;
                     formatReg  = '^(.{3})(.{3})(.{4})$';
-                    formatStr  = '($2) $3-$4';
+                    formatStr  = '($1) $2-$3';
+                    priority   = true;
                     break;
                 case 'CN':
                     formatLong = 11;
-                    formatReg  = '/^(.{3})(.{4})(.{4})$';
+                    formatReg  = '^(.{3})(.{4})(.{4})$';
                     formatStr  = '$1 $2 $3';
+                    priority   = true;
             }
-            resCsv.push({
+            var item = {
                 'country_code' : countryCode,
                 'country_name' : countryName,
                 'short_name'   : shortName,
@@ -134,7 +137,12 @@ for (var i = 1; i < csv.length; i++) {
                 'format_long'  : formatLong,
                 'format_reg'   : formatReg,
                 'format_str'   : formatStr
-            });
+            };
+            if (priority) {
+                resCsv.unshift(item);
+            } else {
+                resCsv.push(item);
+            }
         }
     }
 }

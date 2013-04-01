@@ -19,18 +19,41 @@ define('phonepanel', function (require) {
 
   var Panel = require('panel');
 
-  var chooseCountry = function(index) {
+  var chooseCountry = function(index, soft) {
     if (typeof areaInfos[index] !== 'undefined') {
       curCntry = index;
-      console.log('x');
-      if (rawPhone.length === areaInfos[curCntry].format_long) {
-        $('#phone-panel .phonenumber').val(rawPhone.replace(
-          areaInfos[curCntry].format_reg,
-          areaInfos[curCntry].format_str
-        ));
+      if (!soft) {
+          $('#phone-panel .countrycode').val('+' + areaInfos[curCntry].country_code);
       }
+      $('.tips-area .ta-countrycode').html(areaInfos[curCntry].short_name);
+      formatPhone();
+      checkPhone();
     }
   };
+
+  var formatPhone = function() {
+    if (areaInfos[curCntry].format_long
+     && areaInfos[curCntry].format_reg
+     && areaInfos[curCntry].format_str
+     && rawPhone.length === areaInfos[curCntry].format_long) {
+      $('#phone-panel .phonenumber').val(rawPhone.replace(
+        areaInfos[curCntry].format_reg,
+        areaInfos[curCntry].format_str
+      ));
+    } else {
+      $('#phone-panel .phonenumber').val(rawPhone);
+    }
+  }
+
+  var checkPhone = function() {
+    if ($('#phone-panel .countrycode').val() 
+     && $('#phone-panel .name').val()
+     && rawPhone) {
+        $('#phone-panel .add').prop('disabled', false);
+    } else {
+        $('#phone-panel .add').prop('disabled', true);
+    }
+  }
 
   var PhonePanel = Panel.extend({
 
@@ -85,6 +108,19 @@ define('phonepanel', function (require) {
         var self    = this, 
             element = this.element;
         element.on('keyup.phonepanel', '.countrycode', function(e) {
+            var makeItem = function(idx) {
+                return '<li country-code="' + idx + '">'
+                     +   '<div class="li-countrycode">+'
+                     +     areaInfos[idx].country_code
+                     +   '</div>'
+                     +   '<div class="li-countryname">'
+                     +     areaInfos[idx].country_name
+                     +   '</div>'
+                     +   '<div class="li-tips">'
+                     +     areaInfos[idx].support.join(' and ')
+                     +   ' supported</div>'
+                     + '</li>';
+            }
             switch (e.keyCode) {
                 case 38: // up
                 case 40: // down
@@ -93,46 +129,35 @@ define('phonepanel', function (require) {
                     var selected    = $('.complete-list li.selected');
                     var countryCode = ~~selected.attr('country-code');
                     if (typeof areaInfos[countryCode]) {
-                        curCntry = countryCode;
-                        $('#phone-panel .countrycode').val('+' + areaInfos[countryCode].country_code);
-                        $('.tips-area .ta-countrycode').html(areaInfos[countryCode].short_name);
-                     // format phone
-                     // $('#phone-panel .phonenumber').val(rawPhone);
+                        chooseCountry(countryCode);
                         element.find('.tips-area').show();
                         element.find('.complete-list').slideUp();
                     }
                     return;
             }
             var found = '';
-            var key   = $(this).val().toLowerCase().replace(/^\+/, '');
+            var match = -1;
+            var key   = $(this).val().toLowerCase();
             if (key) {
-                for (var i = 0; i < areaInfos.length; i++) {
-                    if (areaInfos[i].country_code === key) {
-                        found  = '<li country-code="' + i + '">'
-                               +   '<div class="li-countrycode">+'
-                               +     areaInfos[i].country_code
-                               +   '</div>'
-                               +   '<div class="li-countryname">'
-                               +     areaInfos[i].country_name
-                               +   '</div>'
-                               +   '<div class="li-tips">'
-                               +     areaInfos[i].support.join(' and ')
-                               +   ' supported</div>'
-                               + '</li>'
-                               + found;
-                        chooseCountry(i);
-                    } else if (areaInfos[i].search_index.indexOf(key) !== -1) {
-                        found += '<li country-code="' + i + '">'
-                               +   '<div class="li-countrycode">+'
-                               +     areaInfos[i].country_code
-                               +   '</div>'
-                               +   '<div class="li-countryname">'
-                               +     areaInfos[i].country_name
-                               +   '</div>'
-                               +   '<div class="li-tips">'
-                               +     areaInfos[i].support.join(' and ')
-                               +   ' supported</div>'
-                               + '</li>'
+                if (/^\+[0-9]*/.test(key)) {
+                    for (var i = 0; i < areaInfos.length; i++) {
+                        if (('+' + areaInfos[i].country_code) === key) {
+                            found  = makeItem(i) + found;
+                            match  = i;
+                        } else if (('+' + areaInfos[i].search_index).indexOf(key) !== -1) {
+                            found += makeItem(i);
+                            match  = match === -1 ? i : match;
+                        }
+                    }
+                } else {
+                    for (i = 0; i < areaInfos.length; i++) {
+                        if (areaInfos[i].country_code === key) {
+                            found  = makeItem(i) + found;
+                            match  = i;
+                        } else if (areaInfos[i].search_index.indexOf(key) !== -1) {
+                            found += makeItem(i);
+                            match  = match === -1 ? i : match;
+                        }
                     }
                 }
             }
@@ -140,6 +165,8 @@ define('phonepanel', function (require) {
             if (found) {
                 element.find('.tips-area').hide(); 
                 element.find('.complete-list').slideDown();
+                element.find('.complete-list li').eq(0).toggleClass('selected', true);
+                chooseCountry(match, true);
             } else {
                 element.find('.tips-area').show();
                 element.find('.complete-list').slideUp();
@@ -179,6 +206,25 @@ define('phonepanel', function (require) {
                 cmpltList.scrollTop(curCellTop + celHeight - maxHeight + 1);
             }
         });
+        element.on('blur.phonepanel', '.countrycode', function(e) {
+            chooseCountry(curCntry);
+        });
+        element.on('focus.phonepanel', '.phonenumber', function (e) {
+            element.find('.phonenumber').val(rawPhone);
+            element.find('.complete-list').html('');
+            element.find('.tips-area').show();
+            element.find('.complete-list').slideUp();
+        });
+        element.on('blur.phonepanel', '.phonenumber', function (e) {
+            var strPhone = element.find('.phonenumber').val().replace(/\-|\(|\)|\ /g, '');
+            if (/^[0-9]*$/.test(strPhone)) {
+                rawPhone = strPhone;
+            } else {
+                rawPhone = '';
+            }
+            formatPhone();
+            checkPhone();
+        });
         element.on('mouseover.phonepanel', '.complete-list li', function (e) {
             $(this).siblings().filter('.selected').toggleClass('selected', false);
             $(this).toggleClass('selected', true);
@@ -187,18 +233,18 @@ define('phonepanel', function (require) {
             var selected = $(this);
             var countryCode = ~~selected.attr('country-code');
             if (typeof areaInfos[countryCode]) {
-                curCntry = countryCode;
-                $('#phone-panel .countrycode').val('+' + areaInfos[countryCode].country_code);
-                $('.tips-area .ta-countrycode').html(areaInfos[countryCode].short_name);
-             // format phone
-             // $('#phone-panel .phonenumber').val(rawPhone);
+                chooseCountry(countryCode);
                 element.find('.tips-area').show();
                 element.find('.complete-list').slideUp();
             }
         });
         element.on('keyup.phonepanel', '.name', function(e) {
+            element.find('.complete-list').html('');
+            element.find('.tips-area').show();
+            element.find('.complete-list').slideUp();
+        });
+        element.on('keyup.phonepanel', '.name', function(e) {
             if ($(this).val()) {
-                element.find('.add').prop('disabled', false);
                 if (e.keyCode === 13) {
                     var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
                     var name        = element.find('.name').val();
@@ -211,10 +257,14 @@ define('phonepanel', function (require) {
                     });
                     self.hide();
                 }
-            } else {
-                element.find('.add').prop('disabled', true);
             }
+            checkPhone();
         });
+        //element.on('keydown.phonepanel', '.name', function(e) {
+        //    if (e.keyCode === 9) {
+        //        element.find('.countrycode').focus();
+        //    }
+        //});
         element.on('click.phonepanel', '.add', function(e) {
             var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
             var name        = element.find('.name').val();
@@ -247,18 +297,18 @@ define('phonepanel', function (require) {
             top:  this.otop  = offset.top + height
           });
           rawPhone = srcNode.val().replace(/\-|\(|\)|\ /g, '');
+          var fixedCntry = curCntry;
           if (/^\+.*$/.test(rawPhone)) {
             for (var i = 0; i < areaInfos.length; i++) {
                 if (areaInfos[i].regular.test(rawPhone)) {
-                    curCntry = i;
                     rawPhone = rawPhone.replace(areaInfos[i].regular, '');
+                    fixedCntry = i;
                     break;
                 }
             }
           }
-          $('#phone-panel .countrycode').val('+' + areaInfos[curCntry].country_code);
-          $('.tips-area .ta-countrycode').html(areaInfos[curCntry].short_name);
-          $('#phone-panel .phonenumber').val(rawPhone);
+          chooseCountry(fixedCntry);
+          element.find('.name').focus();
         }
       }
 

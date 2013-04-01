@@ -1,17 +1,17 @@
 define('countrycodes', function () { return [
     {
-        "country_code": "1",
-        "country_name": "Canada",
-        "short_name": "CA",
-        "search_index": "1 canada ca 加拿大",
+        "country_code": "86",
+        "country_name": "China",
+        "short_name": "CN",
+        "search_index": "86 china cn 中国",
         "support": [
             "iMessage",
             "SMS"
         ],
-        "regular": "^\\+1",
-        "format_long": 0,
-        "format_reg": null,
-        "format_str": ""
+        "regular": "^\\+86",
+        "format_long": 11,
+        "format_reg": "^(.{3})(.{4})(.{4})$",
+        "format_str": "$1 $2 $3"
     },
     {
         "country_code": "1",
@@ -25,7 +25,21 @@ define('countrycodes', function () { return [
         "regular": "^\\+1",
         "format_long": 10,
         "format_reg": "^(.{3})(.{3})(.{4})$",
-        "format_str": "($2) $3-$4"
+        "format_str": "($1) $2-$3"
+    },
+    {
+        "country_code": "1",
+        "country_name": "Canada",
+        "short_name": "CA",
+        "search_index": "1 canada ca 加拿大",
+        "support": [
+            "iMessage",
+            "SMS"
+        ],
+        "regular": "^\\+1",
+        "format_long": 0,
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1242",
@@ -2682,20 +2696,6 @@ define('countrycodes', function () { return [
         "format_long": 0,
         "format_reg": null,
         "format_str": ""
-    },
-    {
-        "country_code": "86",
-        "country_name": "China",
-        "short_name": "CN",
-        "search_index": "86 china cn 中国",
-        "support": [
-            "iMessage",
-            "SMS"
-        ],
-        "regular": "^\\+86",
-        "format_long": 11,
-        "format_reg": "/^(.{3})(.{4})(.{4})$",
-        "format_str": "$1 $2 $3"
     },
     {
         "country_code": "880",
