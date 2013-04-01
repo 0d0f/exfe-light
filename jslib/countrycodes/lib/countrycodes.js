@@ -10,7 +10,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1",
@@ -22,8 +23,9 @@ define('countrycodes', function () { return [
             "SMS"
         ],
         "regular": "^\\+1",
-        "format_long": 0,
-        "format_reg": null
+        "format_long": 10,
+        "format_reg": "^(.{3})(.{3})(.{4})$",
+        "format_str": "($2) $3-$4"
     },
     {
         "country_code": "1242",
@@ -35,7 +37,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1242",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1246",
@@ -47,7 +50,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1246",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1264",
@@ -59,7 +63,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1264",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1268",
@@ -71,7 +76,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1268",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1284",
@@ -83,7 +89,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1284",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1340",
@@ -95,7 +102,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1340",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1345",
@@ -107,7 +115,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1345",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1441",
@@ -119,7 +128,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1441",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1473",
@@ -131,7 +141,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1473",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1649",
@@ -143,7 +154,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1649",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1664",
@@ -155,7 +167,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1664",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1670",
@@ -167,7 +180,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1670",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1671",
@@ -179,7 +193,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1671",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1684",
@@ -191,7 +206,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1684",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1721",
@@ -203,7 +219,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1721",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1758",
@@ -215,7 +232,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1758",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1767",
@@ -227,7 +245,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1767",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1784",
@@ -239,7 +258,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1784",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1787",
@@ -251,7 +271,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1787",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1939",
@@ -263,7 +284,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1939",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1809",
@@ -275,7 +297,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1809",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1829",
@@ -287,7 +310,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1829",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1849",
@@ -299,7 +323,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1849",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1868",
@@ -311,7 +336,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1868",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1869",
@@ -323,7 +349,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1869",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "1876",
@@ -335,7 +362,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+1876",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "20",
@@ -347,7 +375,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+20",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "212",
@@ -359,7 +388,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+212",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "212",
@@ -371,7 +401,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+212",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "213",
@@ -383,7 +414,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+213",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "216",
@@ -395,7 +427,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+216",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "218",
@@ -407,7 +440,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+218",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "220",
@@ -419,7 +453,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+220",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "221",
@@ -431,7 +466,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+221",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "222",
@@ -443,7 +479,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+222",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "223",
@@ -455,7 +492,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+223",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "224",
@@ -467,7 +505,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+224",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "225",
@@ -479,7 +518,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+225",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "226",
@@ -491,7 +531,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+226",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "227",
@@ -503,7 +544,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+227",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "228",
@@ -515,7 +557,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+228",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "229",
@@ -527,7 +570,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+229",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "230",
@@ -539,7 +583,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+230",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "231",
@@ -551,7 +596,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+231",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "232",
@@ -563,7 +609,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+232",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "233",
@@ -575,7 +622,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+233",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "234",
@@ -587,7 +635,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+234",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "235",
@@ -599,7 +648,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+235",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "236",
@@ -611,7 +661,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+236",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "237",
@@ -623,7 +674,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+237",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "238",
@@ -635,7 +687,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+238",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "239",
@@ -647,7 +700,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+239",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "240",
@@ -659,7 +713,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+240",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "241",
@@ -671,7 +726,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+241",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "242",
@@ -683,7 +739,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+242",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "243",
@@ -695,7 +752,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+243",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "244",
@@ -707,7 +765,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+244",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "245",
@@ -719,7 +778,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+245",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "248",
@@ -731,7 +791,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+248",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "249",
@@ -743,7 +804,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+249",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "250",
@@ -755,7 +817,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+250",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "251",
@@ -767,7 +830,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+251",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "252",
@@ -779,7 +843,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+252",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "253",
@@ -791,7 +856,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+253",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "254",
@@ -803,7 +869,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+254",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "255",
@@ -815,7 +882,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+255",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "256",
@@ -827,7 +895,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+256",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "257",
@@ -839,7 +908,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+257",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "258",
@@ -851,7 +921,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+258",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "260",
@@ -863,7 +934,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+260",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "261",
@@ -875,7 +947,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+261",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "262",
@@ -887,7 +960,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+262",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "263",
@@ -899,7 +973,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+263",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "264",
@@ -911,7 +986,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+264",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "265",
@@ -923,7 +999,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+265",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "266",
@@ -935,7 +1012,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+266",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "267",
@@ -947,7 +1025,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+267",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "268",
@@ -959,7 +1038,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+268",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "269",
@@ -971,7 +1051,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+269",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "27",
@@ -983,7 +1064,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+27",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "291",
@@ -995,7 +1077,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+291",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "297",
@@ -1007,7 +1090,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+297",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "298",
@@ -1019,7 +1103,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+298",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "299",
@@ -1031,7 +1116,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+299",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "30",
@@ -1043,7 +1129,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+30",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "31",
@@ -1055,7 +1142,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+31",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "32",
@@ -1067,7 +1155,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+32",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "33",
@@ -1079,7 +1168,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+33",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "34",
@@ -1091,7 +1181,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+34",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "350",
@@ -1103,7 +1194,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+350",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "351",
@@ -1115,7 +1207,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+351",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "352",
@@ -1127,7 +1220,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+352",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "353",
@@ -1139,7 +1233,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+353",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "354",
@@ -1151,7 +1246,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+354",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "355",
@@ -1163,7 +1259,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+355",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "356",
@@ -1175,7 +1272,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+356",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "357",
@@ -1187,7 +1285,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+357",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "358",
@@ -1199,7 +1298,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+358",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "358",
@@ -1211,7 +1311,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+358",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "359",
@@ -1223,7 +1324,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+359",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "36",
@@ -1235,7 +1337,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+36",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "370",
@@ -1247,7 +1350,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+370",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "371",
@@ -1259,7 +1363,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+371",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "372",
@@ -1271,7 +1376,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+372",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "373",
@@ -1283,7 +1389,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+373",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "374",
@@ -1295,7 +1402,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+374",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "375",
@@ -1307,7 +1415,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+375",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "376",
@@ -1319,7 +1428,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+376",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "377",
@@ -1331,7 +1441,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+377",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "378",
@@ -1343,7 +1454,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+378",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "379",
@@ -1355,7 +1467,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+379",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "380",
@@ -1367,7 +1480,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+380",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "381",
@@ -1379,7 +1493,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+381",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "382",
@@ -1391,7 +1506,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+382",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "385",
@@ -1403,7 +1519,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+385",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "386",
@@ -1415,7 +1532,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+386",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "387",
@@ -1427,7 +1545,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+387",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "389",
@@ -1439,7 +1558,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+389",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "39",
@@ -1451,7 +1571,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+39",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "39",
@@ -1463,7 +1584,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+39",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "40",
@@ -1475,7 +1597,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+40",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "41",
@@ -1487,7 +1610,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+41",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "420",
@@ -1499,7 +1623,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+420",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "421",
@@ -1511,7 +1636,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+421",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "423",
@@ -1523,7 +1649,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+423",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "43",
@@ -1535,7 +1662,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+43",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "44",
@@ -1547,7 +1675,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+44",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "44",
@@ -1559,7 +1688,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+44",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "45",
@@ -1572,7 +1702,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+45",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "46",
@@ -1584,7 +1715,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+46",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "47",
@@ -1596,7 +1728,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+47",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "48",
@@ -1608,7 +1741,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+48",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "49",
@@ -1620,7 +1754,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+49",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "500",
@@ -1632,7 +1767,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+500",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "501",
@@ -1644,7 +1780,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+501",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "502",
@@ -1656,7 +1793,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+502",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "503",
@@ -1668,7 +1806,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+503",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "504",
@@ -1680,7 +1819,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+504",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "505",
@@ -1692,7 +1832,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+505",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "506",
@@ -1704,7 +1845,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+506",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "507",
@@ -1716,7 +1858,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+507",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "508",
@@ -1728,7 +1871,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+508",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "509",
@@ -1740,7 +1884,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+509",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "51",
@@ -1752,7 +1897,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+51",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "52",
@@ -1764,7 +1910,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+52",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "53",
@@ -1776,7 +1923,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+53",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "54",
@@ -1788,7 +1936,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+54",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "55",
@@ -1800,7 +1949,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+55",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "56",
@@ -1812,7 +1962,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+56",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "57",
@@ -1824,7 +1975,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+57",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "58",
@@ -1836,7 +1988,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+58",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "590",
@@ -1848,7 +2001,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+590",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "590",
@@ -1860,7 +2014,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+590",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "591",
@@ -1872,7 +2027,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+591",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "592",
@@ -1884,7 +2040,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+592",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "593",
@@ -1896,7 +2053,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+593",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "594",
@@ -1908,7 +2066,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+594",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "595",
@@ -1920,7 +2079,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+595",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "597",
@@ -1932,7 +2092,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+597",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "598",
@@ -1944,7 +2105,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+598",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "599",
@@ -1956,7 +2118,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+599",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "599",
@@ -1968,7 +2131,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+599",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "60",
@@ -1980,7 +2144,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+60",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "61",
@@ -1992,7 +2157,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+61",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "61",
@@ -2004,7 +2170,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+61",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "61",
@@ -2016,7 +2183,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+61",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "62",
@@ -2028,7 +2196,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+62",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "63",
@@ -2040,7 +2209,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+63",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "64",
@@ -2052,7 +2222,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+64",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "64",
@@ -2064,7 +2235,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+64",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "65",
@@ -2076,7 +2248,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+65",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "66",
@@ -2088,7 +2261,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+66",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "670",
@@ -2100,7 +2274,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+670",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "672",
@@ -2112,7 +2287,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+672",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "672",
@@ -2124,7 +2300,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+672",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "673",
@@ -2136,7 +2313,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+673",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "674",
@@ -2148,7 +2326,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+674",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "675",
@@ -2160,7 +2339,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+675",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "676",
@@ -2172,7 +2352,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+676",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "677",
@@ -2184,7 +2365,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+677",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "678",
@@ -2196,7 +2378,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+678",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "679",
@@ -2208,7 +2391,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+679",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "680",
@@ -2220,7 +2404,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+680",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "681",
@@ -2232,7 +2417,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+681",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "682",
@@ -2244,7 +2430,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+682",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "683",
@@ -2256,7 +2443,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+683",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "685",
@@ -2268,7 +2456,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+685",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "686",
@@ -2280,7 +2469,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+686",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "687",
@@ -2292,7 +2482,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+687",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "688",
@@ -2304,7 +2495,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+688",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "689",
@@ -2316,7 +2508,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+689",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "690",
@@ -2328,7 +2521,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+690",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "691",
@@ -2340,7 +2534,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+691",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "692",
@@ -2352,7 +2547,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+692",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "7",
@@ -2365,7 +2561,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+7",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "7",
@@ -2378,7 +2575,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+7",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "81",
@@ -2390,7 +2588,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+81",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "82",
@@ -2402,7 +2601,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+82",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "84",
@@ -2414,7 +2614,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+84",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "850",
@@ -2426,7 +2627,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+850",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "852",
@@ -2439,7 +2641,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+852",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "853",
@@ -2451,7 +2654,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+853",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "855",
@@ -2463,7 +2667,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+855",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "856",
@@ -2475,7 +2680,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+856",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "86",
@@ -2487,8 +2693,9 @@ define('countrycodes', function () { return [
             "SMS"
         ],
         "regular": "^\\+86",
-        "format_long": 0,
-        "format_reg": null
+        "format_long": 11,
+        "format_reg": "/^(.{3})(.{4})(.{4})$",
+        "format_str": "$1 $2 $3"
     },
     {
         "country_code": "880",
@@ -2500,7 +2707,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+880",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "886",
@@ -2513,7 +2721,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+886",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "90",
@@ -2525,7 +2734,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+90",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "91",
@@ -2537,7 +2747,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+91",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "92",
@@ -2549,7 +2760,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+92",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "93",
@@ -2561,7 +2773,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+93",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "94",
@@ -2573,7 +2786,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+94",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "95",
@@ -2585,7 +2799,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+95",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "960",
@@ -2597,7 +2812,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+960",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "961",
@@ -2609,7 +2825,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+961",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "962",
@@ -2621,7 +2838,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+962",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "963",
@@ -2633,7 +2851,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+963",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "964",
@@ -2645,7 +2864,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+964",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "965",
@@ -2657,7 +2877,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+965",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "966",
@@ -2669,7 +2890,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+966",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "967",
@@ -2681,7 +2903,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+967",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "968",
@@ -2693,7 +2916,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+968",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "971",
@@ -2705,7 +2929,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+971",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "972",
@@ -2717,7 +2942,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+972",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "973",
@@ -2729,7 +2955,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+973",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "974",
@@ -2741,7 +2968,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+974",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "975",
@@ -2753,7 +2981,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+975",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "976",
@@ -2765,7 +2994,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+976",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "977",
@@ -2777,7 +3007,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+977",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "98",
@@ -2789,7 +3020,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+98",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "992",
@@ -2801,7 +3033,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+992",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "993",
@@ -2813,7 +3046,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+993",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "994",
@@ -2825,7 +3059,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+994",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "995",
@@ -2837,7 +3072,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+995",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "996",
@@ -2849,7 +3085,8 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+996",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     },
     {
         "country_code": "998",
@@ -2861,6 +3098,7 @@ define('countrycodes', function () { return [
         ],
         "regular": "^\\+998",
         "format_long": 0,
-        "format_reg": null
+        "format_reg": null,
+        "format_str": ""
     }
 ];});

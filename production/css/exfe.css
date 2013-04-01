@@ -11772,7 +11772,7 @@ ol.complete-list {
 
 .complete-list li .li-countrycode {
   width: 51px;
-  height: 22;
+  height: 22px;
   font-size: 16px;
   font-style: italic;
   text-align: right;
@@ -11780,8 +11780,9 @@ ol.complete-list {
 
 .complete-list li .li-countryname {
   width: 193px;
-  height: 22;
+  height: 22px;
   margin-left: 8px;
+  overflow: hidden;
   font-size: 16px;
 }
 
