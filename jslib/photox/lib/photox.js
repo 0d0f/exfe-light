@@ -486,7 +486,7 @@ define('photox', function (require) {
               ph = pt(data);
           $albums.html(ah + ph);
         } else {
-          composition.emit('toggle-error', 'albums');
+          composition.emit('toggle-error', false, 'albums');
         }
       },
       function () {
@@ -624,6 +624,7 @@ define('photox', function (require) {
       element.on('click.photox', '.nav-tabs > li', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        self.emit('toggle-error', true);
         var $that = $(this),
             iid = ~~$that.data('iid'), p = $that.data('provider');
         if (iid) {
@@ -704,7 +705,7 @@ define('photox', function (require) {
               if (t) {
                 thumbnails.showPhotos(data, imported);
               } else {
-                self.emit('toggle-error', 'photos');
+                self.emit('toggle-error', false, 'photos');
               }
             }
           );
@@ -758,8 +759,8 @@ define('photox', function (require) {
         $loading[(b ? 'remove' : 'add') + 'Class']('hide');
       });
 
-      self.on('toggle-error', function (t) {
-        var $es = element.find('.errors').toggleClass('hide', t);
+      self.on('toggle-error', function (b, t) {
+        var $es = element.find('.errors').toggleClass('hide', b);
         if (t) {
           $es.children().addClass('hide');
           if (t === 'albums') {

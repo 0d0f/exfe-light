@@ -12288,6 +12288,10 @@ ol.complete-list {
   vertical-align: middle;
 }
 
+.photox-panel .panel-body .errors.hide {
+  display: none !important;
+}
+
 .photox-panel .panel-body .albums-error,
 .photox-panel .panel-body .photos-error {
   display: table-cell;

@@ -52,6 +52,14 @@ define('util', function () {
           s.toString().replace(trimLeft, '').replace(trimRight, '');
       },
 
+    // parse phone
+    parsePhone: function () {
+      var reg = /^(\+)?((?:(86)?(1(?:3\d|4[57]|5\d|8\d)\d{8}))|(?:(1)?(\d{5,15})))$/;
+      return function _p(strid) {
+
+      };
+    },
+
     // 解析 用户身份
     parseId: function () {
       var facebook = /^([a-z0-9_\.]{1,})@facebook$/i,

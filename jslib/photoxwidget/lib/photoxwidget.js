@@ -71,6 +71,7 @@ define('photoxwidget', function (require) {
 
     listen: function () {
       var self = this;
+
       this.element.on('click.photoxwidget', '.btn-open', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -100,6 +101,10 @@ define('photoxwidget', function (require) {
         });
         photoxPanel.show();
         self.photoxPanel = photoxPanel
+      });
+
+      this.element.on('click.photoxwidget', '.table-wrapper', function (e) {
+        e.preventDefault();
       });
 
       $(document.body).on('click.photoxwidget', function (e) {
