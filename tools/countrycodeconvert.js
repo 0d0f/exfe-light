@@ -99,17 +99,22 @@ for (var i = 1; i < csv.length; i++) {
             var countryName = trim(csv[i][1].replace(/\(.*\)/g, ''));
             var shortName   = trim(csv[i][2].toUpperCase());
             var extraInfo   = trim(csv[i][0].toLowerCase());
+            var supportSms  = typeof csv[i][14] !== 'undefined' && csv[i][14] === 'TRUE';
             var searchIndex = countryCode               + ' '
                             + countryName.toLowerCase() + ' '
                             + shortName.toLowerCase()   + ' '
                             + extraInfo;
+            var support     = ['iMessage'];
+            if (supportSms) {
+                support.push('SMS');
+            }
             var regular     = '^\\+' + countryCode;
             resCsv.push({
                 'country_code' : countryCode,
                 'country_name' : countryName,
                 'short_name'   : shortName,
                 'search_index' : searchIndex,
-                'support'      : ['iMessage'],
+                'support'      : support,
                 'regular'      : regular,
                 'format_long'  : 0,
                 'format_reg'   : null
