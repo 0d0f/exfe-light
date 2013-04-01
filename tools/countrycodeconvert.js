@@ -77,11 +77,12 @@ function CSVToArray( strData, strDelimiter ){
 }
 
 // read source csv file
+// process.argv
 var fileCsv = '/Users/leask/Documents/Working/exfe/wiki/wiki/data/country_codes.csv';
 var csv = fs.readFileSync(fileCsv, 'utf-8');
 if (!csv) {
     console.log('Error reading source csv file.');
-    return;
+    process.exit(1);
 }
 
 // handle csv file into array && filter
@@ -109,6 +110,20 @@ for (var i = 1; i < csv.length; i++) {
                 support.push('SMS');
             }
             var regular     = '^\\+' + countryCode;
+            var formatLong  = 0;
+            var formatReg   = null;
+            var formatStr   = '';
+            switch (shortName) {
+                case 'US':
+                    formatLong = 10;
+                    formatReg  = '^(.{3})(.{3})(.{4})$';
+                    formatStr  = '($2) $3-$4';
+                    break;
+                case 'CN':
+                    formatLong = 11;
+                    formatReg  = '/^(.{3})(.{4})(.{4})$';
+                    formatStr  = '$1 $2 $3';
+            }
             resCsv.push({
                 'country_code' : countryCode,
                 'country_name' : countryName,
@@ -116,8 +131,9 @@ for (var i = 1; i < csv.length; i++) {
                 'search_index' : searchIndex,
                 'support'      : support,
                 'regular'      : regular,
-                'format_long'  : 0,
-                'format_reg'   : null
+                'format_long'  : formatLong,
+                'format_reg'   : formatReg,
+                'format_str'   : formatStr
             });
         }
     }
@@ -128,3 +144,4 @@ var doc = "define('countrycodes', function () { return "
         + JSON.stringify(resCsv, null, 4) + ";});";
 fs.writeFileSync('jslib/countrycodes/lib/countrycodes.js', doc);
 console.log('Done: ' + resCsv.length);
+process.exit();
