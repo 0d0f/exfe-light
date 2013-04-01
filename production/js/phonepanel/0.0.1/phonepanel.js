@@ -37,22 +37,12 @@ define('phonepanel', function (require) {
           'format_reg'   : /^$/
         },
         {
-          'country_code' : '1',
-          'country_name' : 'United States',
-          'short_name'   : 'US',
-          'search_index' : '1 united states america us',
+          'country_code' : '86',
+          'country_name' : 'China',
+          'short_name'   : 'CN',
+          'search_index' : '86 china prc cn',
           'support'      : ['iMessage', 'SMS'],
           'regular'      : /^\+1/,
-          'format_long'  : 8,
-          'format_reg'   : /^$/
-        },
-        {
-          'country_code' : '44',
-          'country_name' : 'United Kingdom',
-          'short_name'   : 'UK',
-          'search_index' : '44 united kingdom uk',
-          'support'      : ['iMessage'],
-          'regular'      : /^\+44/,
           'format_long'  : 8,
           'format_reg'   : /^$/
         }
