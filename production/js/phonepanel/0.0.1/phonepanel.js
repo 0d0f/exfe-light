@@ -15,38 +15,7 @@ define('phonepanel', function (require) {
         'country_code' : '',
         'phone_number' : ''
       },
-      areaInfos = [
-        {
-          'country_code' : '1',
-          'country_name' : 'United States',
-          'short_name'   : 'US',
-          'search_index' : '1 united states america us',
-          'support'      : ['iMessage', 'SMS'],
-          'regular'      : /^\+1/,
-          'format_long'  : 8,
-          'format_reg'   : /^$/
-        },
-        {
-          'country_code' : '44',
-          'country_name' : 'United Kingdom',
-          'short_name'   : 'UK',
-          'search_index' : '44 united kingdom uk',
-          'support'      : ['iMessage'],
-          'regular'      : /^\+44/,
-          'format_long'  : 8,
-          'format_reg'   : /^$/
-        },
-        {
-          'country_code' : '86',
-          'country_name' : 'China',
-          'short_name'   : 'CN',
-          'search_index' : '86 china prc cn',
-          'support'      : ['iMessage', 'SMS'],
-          'regular'      : /^\+1/,
-          'format_long'  : 8,
-          'format_reg'   : /^$/
-        }
-      ];
+      areaInfos = require('countrycodes');
 
   var Panel = require('panel');
 
@@ -87,7 +56,13 @@ define('phonepanel', function (require) {
             element;
         this.render();
         element = this.element;
-        this.listen();  
+        for (var i = 0; i < areaInfos.length; i++) {
+            areaInfos[i].regular = new RegExp(areaInfos[i].regular);
+            if (areaInfos[i].short_name === 'US') {
+                curCntry = i;
+            }
+        }
+        this.listen();
       }
 
     , listen: function () {
@@ -113,10 +88,24 @@ define('phonepanel', function (require) {
                     return;
             }
             var found = '';
-            var key   = $(this).val().toLowerCase();
+            var key   = $(this).val().toLowerCase().replace(/^\+/, '');
             if (key) {
                 for (var i = 0; i < areaInfos.length; i++) {
-                    if (areaInfos[i].search_index.indexOf(key) !== -1) {
+                    if (areaInfos[i].country_code === key) {
+                        found  = '<li country-code="' + i + '">'
+                               +   '<div class="li-countrycode">+'
+                               +     areaInfos[i].country_code
+                               +   '</div>'
+                               +   '<div class="li-countryname">'
+                               +     areaInfos[i].country_name
+                               +   '</div>'
+                               +   '<div class="li-tips">'
+                               +     areaInfos[i].support.join(' and ')
+                               +   ' supported</div>'
+                               + '</li>'
+                               + found;
+                        curCntry = i;
+                    } else if (areaInfos[i].search_index.indexOf(key) !== -1) {
                         found += '<li country-code="' + i + '">'
                                +   '<div class="li-countrycode">+'
                                +     areaInfos[i].country_code
@@ -153,11 +142,13 @@ define('phonepanel', function (require) {
             var curScroll = cmpltList.scrollTop();
             switch (e.keyCode) {
                 case 38: // up
+                    event.preventDefault();
                     if (--curIndex < 0) {
                         curIndex = maxIndex;
                     }
                     break;
                 case 40: // down
+                    event.preventDefault();
                     if (++curIndex > maxIndex) {
                         curIndex = 0;
                     }
@@ -240,7 +231,6 @@ define('phonepanel', function (require) {
             top:  this.otop  = offset.top + height
           });
           rawPhone = srcNode.val().replace(/\-|\(|\)|\ /g, '');
-          curCntry = 0;
           if (/^\+.*$/.test(rawPhone)) {
             for (var i = 0; i < areaInfos.length; i++) {
                 if (areaInfos[i].regular.test(rawPhone)) {
