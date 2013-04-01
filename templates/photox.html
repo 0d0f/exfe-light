@@ -17,237 +17,315 @@
   <script type="text/javascript"> (less = less || {}).env = 'development'; localStorage.clear();</script>
   <!--script type="text/javascript"> less.env = 'development'; less.watch(); </script-->
   <style>
-  	.photox-panel {
-  		position: absolute;
-  		top: 100px;
-  		left: 200px;
-  	}
+    .photox-panel {
+      position: absolute;
+      top: 100px;
+      left: 200px;
+    }
+
+    table figure {
+      background: red;
+    }
   </style>
 </head>
 
-	<div class="panel photox-panel">
+  <div class="widget photox-widget" style="width: 480px; left: 50px; top: 20px;">
+    <div class="tw0">
+      <div class="table-wrapper">
+        <table cellspacing="0" cellpadding="0" border-spacing="0" border="0">
+          <tbody>
+            <tr>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+              <td>
+                <figure></figure>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="btn-open"><i class="ix-wall"></i></div>
 
-		<div class="clearfix panel-header">
-			<h3 class="pull-left title panel-title">PhotoX</h3>
-			<ul class="pull-right nav nav-tabs">
-				<li class="active">
-					<a class="hide-text ix-facebook" href="#">Facebook</a>
-					<div class="badge badgex">177</div>
-				</li>
-				<li>
-					<a class="hide-text ix-flickr" href="#">Flickr</a>
-					<div class="badge badgex">7</div>
-				</li>
-				<li><a class="hide-text ix-instagram" href="#">Instagram</a></li>
-				<li><a class="hide-text ix-dropbox" href="#">Dropbox</a></li>
-				<li class="active"><a class="hide-text ix-add icon-cross" href="#">Add</a></li>
-			</ul>
-		</div>
+    <div class="thumbs-wrapper">
+      <ul class="thumbnails">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+  </div>
 
-		<div class="panel-body">
-			<ul class="breadcrumb">
-				<li><a href="#">Home</a> <span class="divider"></span></li>
-				<li><a href="#">Library</a> <span class="divider"></span></li>
-				<li class="active">Data</li>
-			</ul>
+  <div class="panel photox-panel">
+
+    <div class="clearfix panel-header">
+      <h3 class="pull-left title panel-title">PhotoX</h3>
+      <ul class="pull-right nav nav-tabs">
+        <li class="active">
+          <a class="hide-text ix-facebook" href="#">Facebook</a>
+          <div class="badge badgex">177</div>
+        </li>
+        <li>
+          <a class="hide-text ix-flickr" href="#">Flickr</a>
+          <div class="badge badgex">7</div>
+        </li>
+        <li><a class="hide-text ix-instagram" href="#">Instagram</a></li>
+        <li><a class="hide-text ix-dropbox" href="#">Dropbox</a></li>
+        <li class="active"><a class="hide-text ix-add icon-cross" href="#">Add</a></li>
+      </ul>
+    </div>
+
+    <div class="panel-body">
+      <ul class="breadcrumb">
+        <li><a href="#">Home</a> <span class="divider"></span></li>
+        <li><a href="#">Library</a> <span class="divider"></span></li>
+        <li class="active">Data</li>
+      </ul>
       <div class="loading"><img alt="" width="32" height="32" src="loading.gif" /></div>
-			<ul class="thumbnails albums">
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="http://the-pastry-box-project.net/wp-content/themes/pastrybox_new/_private/bakers/data/2012/portraits/frances-berriman.png" />
-							</figure>
-						</a>
-						<h4 class="album-name">Jenn Lukas xxxxx dfds fdsfds fds</h4>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="http://farm9.staticflickr.com/8246/8545422964_3035d3666d_n.jpg" />
-							</figure>
-						</a>
-						<h4 class="album-name">Aaron Draplin</h4>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<div class="badge album-badge badgex">6</div>
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="http://farm9.staticflickr.com/8242/8544888574_7f668b396e_n.jpg" />
-							</figure>
-						</a>
-						<h4 class="album-name">Aaron Draplin</h4>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<div class="badge album-badge badgex">√</div>
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="http://farm9.staticflickr.com/8532/8545069558_fc92bba241_n.jpg" />
-							</figure>
-						</a>
-						<h4 class="album-name">Aaron Draplin</h4>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-				<li>
-					<div class="thumbnail">
-						<a href="#" class="album">
-							<div class="album-figure"></div>
-							<figure>
-								<img alt="" src="" />
-							</figure>
-						</a>
-					</div>
-				</li>
-			</ul>
-		</div>
+      <div class="errors">
+        <div class="albums-error">Oops, no photo to share. Link your accounts here to import. ↗</div>
+        <div class="photos-error hide">No photo found here.</div>
+      </div>
+      <ul class="thumbnails albums">
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="http://the-pastry-box-project.net/wp-content/themes/pastrybox_new/_private/bakers/data/2012/portraits/frances-berriman.png" />
+              </figure>
+            </a>
+            <h4 class="album-name">Jenn Lukas xxxxx dfds fdsfds fds</h4>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="http://farm9.staticflickr.com/8246/8545422964_3035d3666d_n.jpg" />
+              </figure>
+            </a>
+            <h4 class="album-name">Aaron Draplin</h4>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <div class="badge album-badge badgex">6</div>
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="http://farm9.staticflickr.com/8242/8544888574_7f668b396e_n.jpg" />
+              </figure>
+            </a>
+            <h4 class="album-name">Aaron Draplin</h4>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <div class="badge album-badge badgex">√</div>
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="http://farm9.staticflickr.com/8532/8545069558_fc92bba241_n.jpg" />
+              </figure>
+            </a>
+            <h4 class="album-name">Aaron Draplin</h4>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="thumbnail">
+            <a href="#" class="album">
+              <div class="album-figure"></div>
+              <figure>
+                <img alt="" src="" />
+              </figure>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
 
-		<div class="panel-footer">
-			<div class="detail"><span class="selected-nums">233</span> pics selected</div>
-			<div class="icon-resize"></div>
-			<button class="xbtn-upload">Upload</button>
-		</div>
+    <div class="panel-footer">
+      <div class="detail"><span class="selected-nums">233</span> pics selected</div>
+      <div class="icon-resize"></div>
+      <button class="xbtn-upload">Upload</button>
+    </div>
 
-	</div>
+  </div>
 
 <body>
 </body>
