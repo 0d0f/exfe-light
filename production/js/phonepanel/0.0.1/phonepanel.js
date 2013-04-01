@@ -90,7 +90,7 @@ define('phonepanel', function (require) {
                 } else {
                     $('#phone-panel .identity-avatar').hide();
                     $('#phone-panel .identity-name').hide();
-                    $('#phone-panel .name').show();
+                    $('#phone-panel .name').val('').show();
                     $('#phone-panel .add').toggleClass('match', false); 
                 }
             }
