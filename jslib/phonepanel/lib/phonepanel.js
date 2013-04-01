@@ -19,6 +19,19 @@ define('phonepanel', function (require) {
 
   var Panel = require('panel');
 
+  var chooseCountry = function(index) {
+    if (typeof areaInfos[index] !== 'undefined') {
+      curCntry = index;
+      console.log('x');
+      if (rawPhone.length === areaInfos[curCntry].format_long) {
+        $('#phone-panel .phonenumber').val(rawPhone.replace(
+          areaInfos[curCntry].format_reg,
+          areaInfos[curCntry].format_str
+        ));
+      }
+    }
+  };
+
   var PhonePanel = Panel.extend({
 
       options: {
@@ -57,7 +70,10 @@ define('phonepanel', function (require) {
         this.render();
         element = this.element;
         for (var i = 0; i < areaInfos.length; i++) {
-            areaInfos[i].regular = new RegExp(areaInfos[i].regular);
+            areaInfos[i].regular    = new RegExp(areaInfos[i].regular);
+            areaInfos[i].format_reg = areaInfos[i].format_reg
+                                    ? new RegExp(areaInfos[i].format_reg)
+                                    : '';
             if (areaInfos[i].short_name === 'US') {
                 curCntry = i;
             }
@@ -104,7 +120,7 @@ define('phonepanel', function (require) {
                                +   ' supported</div>'
                                + '</li>'
                                + found;
-                        curCntry = i;
+                        chooseCountry(i);
                     } else if (areaInfos[i].search_index.indexOf(key) !== -1) {
                         found += '<li country-code="' + i + '">'
                                +   '<div class="li-countrycode">+'
