@@ -17,6 +17,7 @@ define('phonepanel', function (require) {
         'phone_number' : ''
       },
       last_get  = '',
+      avatar    = '',
       areaInfos = require('countrycodes');
 
   var Panel = require('panel');
@@ -83,11 +84,13 @@ define('phonepanel', function (require) {
             },
             function(data) {
                 if (data && data.identities && data.identities.length && data.identities[0].connected_user_id > 0) {
-                    $('#phone-panel .identity-avatar').attr('src', data.identities[0].avatar_filename).show();
+                    avatar = data.identities[0].avatar_filename;
+                    $('#phone-panel .identity-avatar').attr('src', avatar).show();
                     $('#phone-panel .identity-name').html(escape(data.identities[0].name)).show();
                     $('#phone-panel .name').val(data.identities[0].name).hide();
                     $('#phone-panel .add').toggleClass('match', true);
                 } else {
+                    avatar = '';
                     $('#phone-panel .identity-avatar').hide();
                     $('#phone-panel .identity-name').hide();
                     $('#phone-panel .name').val('').show();
@@ -318,7 +321,7 @@ define('phonepanel', function (require) {
                         external_id       : phoneNumber,
                         external_username : phoneNumber,
                         name              : name,
-                        avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                        avatar_filename   : avatar ? avatar : (ExfeeWidget.api_url + '/avatar/default?name=' + name),
                     });
                     self.hide();
                 }
@@ -333,7 +336,7 @@ define('phonepanel', function (require) {
                 external_id       : phoneNumber,
                 external_username : phoneNumber,
                 name              : name,
-                avatar_filename   : ExfeeWidget.api_url + '/avatar/default?name=' + name,
+                avatar_filename   : avatar ? avatar : (ExfeeWidget.api_url + '/avatar/default?name=' + name),
             });
             self.hide();
         });
