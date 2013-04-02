@@ -95,7 +95,7 @@ define('phonepanel', function (require) {
                 }
             }
         );
-        cur_get = last_get;
+        last_get = cur_get;
     }
   }
 
@@ -266,12 +266,18 @@ define('phonepanel', function (require) {
         element.on('blur.phonepanel', '.countrycode', function(e) {
             chooseCountry(curCntry);
         });
+        element.on('focus.phonepanel', '.countrycode', function(e) {
+            $(this).css('z-index', '1');
+            element.find('.phonenumber').css('z-index', '0');
+        });
         element.on('focus.phonepanel', '.phonenumber', function (e) {
             element.find('.phonenumber').val(rawPhone);
             element.find('.complete-list').html('');
             element.find('.tips-area').show();
             element.find('.complete-list').slideUp();
             $(this).prop('tabindex', '1');
+            $(this).css('z-index', '1');
+            element.find('.countrycode').css('z-index', '0');
         });
         element.on('blur.phonepanel', '.phonenumber', function (e) {
             var strPhone = element.find('.phonenumber').val().replace(/\-|\(|\)|\ /g, '');
