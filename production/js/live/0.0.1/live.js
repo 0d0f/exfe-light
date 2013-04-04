@@ -44,9 +44,10 @@ define(function (require, exports, module) {
     var submitCard = function() {
         secCnt = 0;
         var subData = JSON.stringify(myData);
-        log('Submitting with' + (token ? (' token(' + token + ')') : 'out token') + ': ' + subData);
+        log('Breathe with' + (token ? (' token(' + token + ')') : 'out token') + ': ' + subData);
         if (submit_request) {
             submit_request.abort();
+            log('Network timeout');
         }
         submit_request = $.ajax({
             type    : 'post',
@@ -72,7 +73,7 @@ define(function (require, exports, module) {
                     log('Repeal token: ' + token);
                 }
                 token  = '';
-                secCnt = secInt;
+                secCnt = data.status === 403 ? secInt : (secInt - 5);
             }
         });
         if (!stream.live && token) {
@@ -86,7 +87,7 @@ define(function (require, exports, module) {
 
 
     var streamCallback = function(data) {
-        if (data) {
+        if (data && data.length) {
             log('Streaming pops: ' + data[data.length - 1]);
         }
     };
@@ -105,21 +106,24 @@ define(function (require, exports, module) {
 
 
     var stream = {
-        prvLen : 0,
-        nxtIdx : 0,
-        http   : new XMLHttpRequest(),
-        timer  : 0,
+        prvLen : null,
+        nxtIdx : null,
+        timer  : null,
+        http   : null,
         pop    : null,
         dead   : null,
         live   : false,
         init   : function(url, pop, dead) {
-            this.live  = true;
-            this.pop   = pop;
-            this.dead  = dead;
+            this.prvLen = 0;
+            this.nxtIdx = 0;
+            this.live   = true;
+            this.pop    = pop;
+            this.dead   = dead;
+            this.http   = new XMLHttpRequest();
             this.http.open('get', url);
             this.http.onreadystatechange = this.listen;
             this.http.send();
-            this.timer = setInterval(this.listen, 1000);
+            this.timer  = setInterval(this.listen, 1000);
         },
         listen : function() {
             if ((stream.http.readyState   !== 4 && stream.http.readyState !== 3)
@@ -168,8 +172,25 @@ define(function (require, exports, module) {
         }, 0);
     });
 
-
     var breatheTimer = setInterval(breatheFunc, 1000);
 
+    var intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
+        if (data
+         && data.coords
+         && data.coords.latitude
+         && data.coords.longitude
+         && data.coords.accuracy) {
+            myData.latitude  = data.coords.latitude.toString();
+            myData.longitude = data.coords.longitude.toString();
+            myData.accuracy  = data.coords.accuracy.toString();
+            secCnt           = secInt - 5;
+            log(
+                'Location update: '
+              + 'lat = ' + myData.latitude + ', '
+              + 'lng = ' + myData.latitude + ', '
+              + 'acu = ' + myData.accuracy
+            );
+        }
+    });
 
 });
