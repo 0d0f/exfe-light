@@ -831,7 +831,7 @@ define(function (require, exports, module) {
 
         // @debug only {
         var myCard = Store.get('user');
-        myCard.avarar = myCard.avatar_filename;
+        myCard.avatar = myCard.avatar_filename;
         if (myCard) {
             Live.init(myCard, function(data) {
                 // console.log(data);
