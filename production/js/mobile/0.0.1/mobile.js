@@ -6,6 +6,8 @@ define(function (require, exports, module) {
 
     var Store  = require('store');
 
+    var Live   = require('live');
+
     var rdTime = null;
 
     var tridAt = 0;
@@ -16,7 +18,8 @@ define(function (require, exports, module) {
 
     var my_token      = '';
 
-    var count_down    = 5;
+    // var count_down    = 5;
+    var count_down    = 5000000000;
 
     var lastBreathe   = +new Date;
 
