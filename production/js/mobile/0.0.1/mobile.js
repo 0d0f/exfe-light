@@ -832,7 +832,6 @@ define(function (require, exports, module) {
         // @debug only {
         var myCard = Store.get('user');
         if (myCard) {
-            myCard.identities = Store.get('identities');
             Live.init(myCard, function(data) {
                 // console.log(data);
             });   
