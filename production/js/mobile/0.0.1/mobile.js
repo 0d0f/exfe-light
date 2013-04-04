@@ -19,6 +19,7 @@ define(function (require, exports, module) {
     var my_token      = '';
 
     // var count_down    = 5;
+    // @debug only
     var count_down    = 5000000000;
 
     var lastBreathe   = +new Date;
@@ -826,6 +827,19 @@ define(function (require, exports, module) {
         if (!isLocalStorageSupported()) {
             alert('EXFE cannot be used in private browsing mode.');
         }
+
+
+        // @debug only {
+        var myCard = Store.get('user');
+        if (myCard) {
+            myCard.identities = Store.get('identities');
+            Live.init(myCard, function(data) {
+                // console.log(data);
+            });   
+        } else {
+            alert('Login first!');
+        }
+        // }
     });
 
     if (sms_token) {

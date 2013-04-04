@@ -1,4 +1,5 @@
-define(function (require, exports, module) {
+define('live', function (require) {
+    "use strict";
 
     require('zepto');
 
@@ -8,28 +9,36 @@ define(function (require, exports, module) {
 
     var token  = '';
 
-    var streaming_api_url = Config.streaming_api_url;
-
     var secInt = 30;
 
     var secCnt = secInt;
 
-    var myData = {
-        'card'      : {
-
-        },
-        'latitude'  : '',
-        'longitude' : '',
-        'accuracy'  : '',
-        'traits'    : []
-    };
-
     var bolDebug = true;
 
-    var submit_request = null;
+    var echo     = null;
 
+    var lstEcho  = '';
 
-    var log = function(data) {
+    var myData   = {
+        card      : {
+            id         : Math.random() + '',
+            name       : '',
+            avatar     : '',
+            bio        : '',
+            identities : [],
+        },
+        latitude  : '',
+        longitude : '',
+        accuracy  : '',
+        traits    : []
+    };
+
+    var streaming_api_url = Config.streaming_api_url;
+
+    var submit_request    = null;
+
+    
+    var log = function(data, table) {
         if (bolDebug) {
             var type = Object.prototype.toString.call(data);
             var time = new Date().toString();
@@ -37,22 +46,23 @@ define(function (require, exports, module) {
                 data = JSON.stringify(data);
             }
             console.log(time.replace(/^.*(\d{2}:\d{2}:\d{2}).*$/, '$1') + ' - ' + data);
+            if (table && console.table) {
+                console.table(table);
+            }
         }
     }
 
 
     var submitCard = function() {
         secCnt = 0;
-        var subData = JSON.stringify(myData);
-        log('Breathe with' + (token ? (' token(' + token + ')') : 'out token') + ': ' + subData);
+        log('Breathe with' + (token ? (' token: ' + token) : 'out token'));
         if (submit_request) {
             submit_request.abort();
-            log('Network timeout');
         }
         submit_request = $.ajax({
             type    : 'post',
             url     : streaming_api_url + '/v3/live/cards' + (token ? ('?token=' + token) : ''),
-            data    : subData,
+            data    : JSON.stringify(myData),
             success : function(data) {
                 var rawToken = JSON.parse(data);
                 if (rawToken) {
@@ -61,7 +71,7 @@ define(function (require, exports, module) {
                         log('Got new token: ' + rawToken);
                         if (stream.live) {
                             stream.kill();
-                            log('Close current stream.');
+                            log('Close current stream');
                         }
                         secCnt = secInt;
                     }
@@ -69,11 +79,18 @@ define(function (require, exports, module) {
                 }
             },
             error   : function(data) {
-                if (token) {
-                    log('Repeal token: ' + token);
+                if (data.status
+                 && data.status >= 400
+                 && data.status <= 499) {
+                    if (token) {
+                        log('Repeal token: ' + token);
+                    }
+                    token  = '';
+                    secCnt = secInt;
+                } else {
+                    secCnt = secInt - 5;
+                    log('Network error');
                 }
-                token  = '';
-                secCnt = data.status === 403 ? secInt : (secInt - 5);
             }
         });
         if (!stream.live && token) {
@@ -81,26 +98,53 @@ define(function (require, exports, module) {
                 streaming_api_url + '/v3/live/streaming?token=' + token,
                 streamCallback, streamDead
             );
-            log('Streaming with token(' + token + ')...');
+            log('Streaming with token: ' + token);
         }  
     }
 
 
     var streamCallback = function(data) {
         if (data && data.length) {
-            log('Streaming pops: ' + data[data.length - 1]);
+            var rawCards = JSON.parse(data[data.length - 1]);
+            if (rawCards && rawCards.length) {
+                var cards = [];
+                for (var i in rawCards) {
+                    if (rawCards[i].id) {
+                        if (rawCards[i].id === myData.card.id) {
+                            myData.card.name       = rawCards[i].name;
+                            myData.card.avatar     = rawCards[i].avatar;
+                            myData.card.bio        = rawCards[i].bio;
+                            myData.card.identities = rawCards[i].identities;
+                        } else {
+                            cards.push(rawCards[i]);   
+                        }
+                    }
+                }
+                var result  = {me : clone(myData.card), others : cards};
+                var curEcho = JSON.stringify(result);
+                log('Streaming pops: ' + curEcho, cards);
+                if (echo && lstEcho !== curEcho) {
+                    log('Callback')
+                    echo(result);
+                    lstEcho = curEcho;
+                }
+            } else {
+                log('Data error');
+            }
         }
     };
 
 
     var streamDead = function() {
-        log('Streaming is dead.');
+        log('Streaming is dead');
     };
 
 
     var breatheFunc  = function() {
-        if (++secCnt >= secInt) {
-            submitCard();
+        if (checkCard(myData.card)) {
+            if (++secCnt >= secInt) {
+                submitCard();
+            }
         }
     };
 
@@ -166,13 +210,73 @@ define(function (require, exports, module) {
     };
 
 
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            window.scrollTo(0, 0);
-        }, 0);
-    });
+    var checkIdentity = function(identity) {
+        if (identity
+         && identity.external_username
+         && identity.provider) {
+            return true;
+        }
+        return false;
+    };
+
+
+    var checkCard = function(card) {
+        if (card
+         && card.name
+         && card.identities
+         && card.identities.length) {
+            for (var i in card.identities) {
+                if (checkIdentity(card.identities[i]) === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    };
+
+
+    var clone = function(variable) {
+        switch (Object.prototype.toString.call(variable)) {
+            case '[object Object]':       // Object instanceof Object
+                var variableNew = {};
+                for (var i in variable) {
+                    variableNew[i] = clone(variable[i]);
+                }
+                break;
+            case '[object Array]':        // Object instanceof Array
+                variableNew = [];
+                for (i in variable) {
+                    variableNew.push(clone(variable[i]));
+                }
+                break;
+            default:                      // typeof Object === 'function' || etc
+                variableNew = variable;
+        }
+        return variableNew;
+    };
+
+
+    var live = {
+        init : function(card, callback) {
+            if (checkCard(card)) {
+                myData.card.name       = card.name;
+                myData.card.avatar     = card.avatar;
+                myData.card.bio        = card.bio;
+                myData.card.identities = clone(card.identities);
+                log('Set my card: ' + JSON.stringify(myData.card));
+            } else {
+                log('Card error');
+            }
+            if (callback) {
+                echo = callback;
+                log('Set callback function');
+            }
+        }
+    };
+
 
     var breatheTimer = setInterval(breatheFunc, 1000);
+
 
     var intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
         if (data
@@ -193,4 +297,13 @@ define(function (require, exports, module) {
         }
     });
 
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 0);
+    });
+
+
+    return live;
 });
