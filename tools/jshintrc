@@ -3,6 +3,7 @@
 {
     // Settings
     "passfail"      : false,  // Stop on first error.                                                                                                       报错即停止
+    "beautify"        : true,
     "maxerr"        : 1000,    // Maximum error before stopping.                                                                                             设定错误阀值
 
     // Predefined globals whom JSHint will ignore.

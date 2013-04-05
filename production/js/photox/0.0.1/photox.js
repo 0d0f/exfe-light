@@ -130,13 +130,12 @@ define('photox', function (require) {
 
     // 用于从有照片流功能的身份中添加照片
     // eg: Instagram
-    addStream: function (photox_id, identity_id, min_id, max_id, bcb, done) {
+    addStream: function (photox_id, identity_id, ids, bcb, done) {
       return DataCenter.add(
         photox_id,
         {
           identity_id : identity_id,
-          min_id      : min_id,
-          max_id      : max_id
+          ids: ids
         },
         bcb,
         done
@@ -190,6 +189,22 @@ define('photox', function (require) {
           }
         },
         bcb,
+        done
+      );
+    },
+
+    delPhotos: function (photox_id, provider, photo_ids, bcb, done) {
+      return request(
+        'photox_del',
+        {
+          type        : 'POST',
+          resources   : { photox_id : photox_id },
+          data        : {
+            provider    : provider,
+            photo_ids   : photo_ids 
+          },
+          beforeSend: bcb
+        },
         done
       );
     }
@@ -347,7 +362,7 @@ define('photox', function (require) {
 
   proto = Breadcrumb.prototype;
 
-  proto.liTmp = '<li data-iid="{{iid}}" data-aid="{{aid}}"><a href="#">{{dir}}</a><span class="divider hidden"></span></li>';
+  proto.liTmp = '<li data-iid="{{iid}}" data-eaid="{{aid}}"><a href="#">{{dir}}</a><span class="divider hidden"></span></li>';
 
   proto.displayHome = function (iid) {
     var identities = Store.get('user').identities,
@@ -358,10 +373,10 @@ define('photox', function (require) {
     this.initstatus = 0;
   };
 
-  proto.generate = function (iid, aid, dir) {
+  proto.generate = function (iid, eaid, dir) {
     return this.liTmp
       .replace('{{iid}}', iid)
-      .replace('{{aid}}', aid)
+      .replace('{{eaid}}', eaid)
       .replace('{{dir}}', dir);
   };
 
@@ -413,7 +428,7 @@ define('photox', function (require) {
   proto = Thumbnails.prototype;
 
   proto.liAlbumTmp = '{{#each albums}}'
-    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-aid="{{external_id}}" data-imported="{{imported}}">'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-eaid="{{external_id}}" data-imported="{{imported}}">'
       + '<div class="thumbnail">'
         + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">{{{px_imported imported}}}</div>'
         + '<div class="photo">'
@@ -432,7 +447,7 @@ define('photox', function (require) {
     + '{{/each}}';
 
   proto.liPhotoTmp = '{{#each photos}}'
-    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-imported="{{imported}}" data-pid="{{external_id}}">'
+    + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-imported="{{imported}}" data-epid="{{external_id}}" data-pid="{{id}}">'
       + '<div class="thumbnail">'
         + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">√</div>'
         + '<div class="photo">'
@@ -455,6 +470,7 @@ define('photox', function (require) {
         liAlbumTmp = this.liAlbumTmp,
         liPhotoTmp = this.liPhotoTmp,
         composition = this.composition,
+        self = this,
         q = composition.q;
     /*
     $.when(
@@ -482,17 +498,27 @@ define('photox', function (require) {
         if (al + pl) {
           var at = Handlebars.compile(liAlbumTmp),
               ah = at(data),
-              pt = Handlebars.compile(liPhotoTmp),
-              ph = pt(data);
+              ph = self.genPhotosHTML(data);
           $albums.html(ah + ph);
         } else {
           composition.emit('toggle-error', false, 'albums');
         }
       },
-      function () {
+      function (data, code) {
         composition.emit('toggle-loading', false);
+        if (code === 400) {
+          composition.emit('toggle-error', false, 'albums');
+        } else {
+          composition.emit('toggle-error', false, 'ajax');
+        }
       }
     ));
+  };
+
+  proto.genPhotosHTML = function (data) {
+    var pt = Handlebars.compile(this.liPhotoTmp),
+        ph = pt(data);
+    return ph;
   };
 
   proto.hideAlbums = function () {
@@ -543,20 +569,33 @@ define('photox', function (require) {
     //}
   };
 
-  proto.toggleBadge = function ($t) {
+  proto.toggleBadge = function ($t, status) {
     var $b = $t.find('.badge');
-    $b.toggleClass('hide');
+    $b.toggleClass('hide', status);
     if ($b.hasClass('hide')) {
-      // TODO: 删除临时 UL 菜单
-      $t.find('.ulm').remove();
       $t.attr('data-imported', '0');
     } else {
-      // TODO: 临时 UL 菜单
-      var s = 'position: absolute; z-index: 300; right: 0; color: #fff; background: #444;';
-      $t.find('.thumbnail').prepend('<ul class="ulm" style="'+s+'"><li>Open</li><li class="import">Import</li></ul>');
       $t.attr('data-imported', '-2');
       $b.text('√');
     }
+  };
+
+  proto.updateBadge = function (provider, i, s) {
+    var $a = this.$albums
+          .find('[data-provider="' + provider + '"]'),
+        imported = ~~$a.attr('data-imported');
+
+    if (s) {
+      imported = i;
+    } else {
+      // Note: 删除时，imported = -1 情况，delete 接口应该返回
+      if (imported !== -1) {
+        imported += i;
+      }
+    }
+
+    $a.attr('data-imported', imported);
+    $a.find('.badge').text(imported).toggleClass('hide', !imported);
   };
 
   var Panel = require('panel');
@@ -574,8 +613,9 @@ define('photox', function (require) {
           + '<div class="panel-body">'
             + '<ul class="breadcrumb hide"></ul>'
             + '<div class="errors hide">'
-              + '<div class="albums-error hide">Oops, no photo to share. Link your accounts here to import. ↗</div>'
+              + '<div class="albums-error hide">Oops, no photo to share.<br />Link your accounts here to import. ↗</div>'
               + '<div class="photos-error hide">No photo found here.</div>'
+              + '<div class="ajax-error hide">Network error. Please try to reload.</div>'
             + '</div>'
             + '<div class="loading hide"><img alt="" width="32" height="32" src="/static/img/loading.gif" /></div>'
             + '<ul class="thumbnails albums"></ul>'
@@ -583,7 +623,7 @@ define('photox', function (require) {
           + '<div class="panel-footer">'
             + '<div class="detail"><span class="selected-nums">0</span> pics selected</div>'
             + '<div class="icon-resize"></div>'
-            + '<button class="xbtn-upload">Upload</button>'
+            + '<button class="xbtn-upload">Import</button>'
           + '</div>'
         + '</div>',
 
@@ -603,10 +643,11 @@ define('photox', function (require) {
       this.thumbnails = new Thumbnails(this, '.panel-body .albums');
       this.fs = new FS();
 
+      // ajax queues
+      this.q = [];
+
       this.render();
       this.listen();
-
-      this.q = [];
     },
 
     listen: function () {
@@ -617,13 +658,14 @@ define('photox', function (require) {
           navTabs = self.navTabs,
           thumbnails = self.thumbnails,
           breadcrumb = self.breadcrumb,
-          $loading = self.element.find('.loading'),
-          CLICK = 0,
-          CLICKTIMER;
+          queue = self.q,
+          $loading = self.element.find('.loading');
 
       element.on('click.photox', '.nav-tabs > li', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        self.killAjaxs();
+        self.emit('toggle-loading', false);
         self.emit('toggle-error', true);
         var $that = $(this),
             iid = ~~$that.data('iid'), p = $that.data('provider');
@@ -648,13 +690,14 @@ define('photox', function (require) {
       });
 
       // Albums' click-event
-      element.on('click.photox', '.thumbnails > li[data-aid]', function (e) {
+      /*
+      element.on('click.photox', '.thumbnails > li[data-eaid]', function (e) {
         //console.log('click');
         e.preventDefault();
         var $t = $(this),
             iid = $t.data('iid'),
             p = $t.data('provider'),
-            aid = $t.data('aid'),
+            eaid = $t.data('aid'),
             imported = ~~$t.attr('data-imported');
         CLICK++;
         if (CLICK === 1) {
@@ -662,7 +705,7 @@ define('photox', function (require) {
             thumbnails.toggleBadge($t);
             if (imported !== 0 && imported !== -2) {
               DataCenter.delAlbum(
-                cid, p, aid,
+                cid, p, eaid,
                 function () { },
                 function (data) {
                   $t.attr('data-imported', '0');
@@ -678,14 +721,14 @@ define('photox', function (require) {
           // Dropbox's Breadcrumb
           if (p === 'dropbox') {
             breadcrumb.toggle(p === 'dropbox', iid);
-            var aids = decodeURIComponent(aid).split('/'),
-                len = aids.length;
-            aid = aids[len - 1];
+            var eaids = decodeURIComponent(aid).split('/'),
+                len = eaids.length;
+            eaid = aids[len - 1];
             if (!fs.has()) {
               fs.setUid(iid).setGid(p).cd('/');
             }
-            //console.log(iid, aid, p, aids, imported);
-            fs.cd(aid, len, function (p) {
+            //console.log(iid, eaid, p, aids, imported);
+            fs.cd(eaid, len, function (p) {
               breadcrumb.del(len);
               breadcrumb.add(iGid, p);
             });
@@ -693,7 +736,7 @@ define('photox', function (require) {
 
           thumbnails.hideAlbums();
           DataCenter.browseSource(
-            cid, iid, aid,
+            cid, iid, eaid,
             function () {
               self.emit('toggle-loading', true);
             },
@@ -712,39 +755,190 @@ define('photox', function (require) {
           CLICK = 0;
         }
       });
-
-      // TODO: 临时 UL 菜单
-      element.on('click.photox', '.ulm li.import', function (e) {
-        var $e = $(this),
-            $t = $e.parents('.thumbnail').parent('li'),
-            iid = $t.data('iid'),
-            p = $t.data('provider'),
-            aid = $t.data('aid');
+      */
+      // `longpress` event 选中
+      element.on('mousedown.photox', '.thumbnails > li[data-eaid]', function (e) {
         e.preventDefault();
-        e.stopPropagation();
+        var $t = $(this),
+            d = $t.data(), iid = d.iid, p = d.provider, eaid = d.eaid,
+            imported = ~~$t.attr('data-imported'),
+            status = 0;
 
-        if (p === 'instagram') {
-          $.when(DataCenter.browseSource(cid, iid, aid))
-            .then(function (data) {
-              var ps = data.photos,
-                  max_photo = ps[0],
-                  min_photo = ps[ps.length - 1];
-              DataCenter.addStream(cid, iid, min_photo.external_id, max_photo.external_id, null, function (data) {
-                $e.parent().remove();
-                $t.attr('data-imported', '-1');
-              });
-            });
-        } else {
-          DataCenter.addAlbum(cid, iid, aid, null, function (data) {
-            $e.parent().remove();
+        var timer = setTimeout(function () {
+          status = 1;
+          thumbnails.toggleBadge($t);
+
+          // ajaxing
+          if (imported === -2) {
+            return;
+          }
+
+          // delete
+          if (imported !== 0 && imported !== -2) {
+            DataCenter.delAlbum(
+              cid, p, eaid,
+              null,
+              function (data) {
+                $t.attr('data-imported', '0');
+              }
+            );
+            return;
+          }
+
+          // add
+          var cb = function (data) {
             $t.attr('data-imported', '-1');
-          });
-        }
+          };
 
+          if (p === 'instagram') {
+            console.log(p);
+            $.when(DataCenter.browseSource(cid, iid, eaid))
+              .then(function (data) {
+                var ps = data.photos,
+                    ids = R.map(ps, function (v) {
+                      return v.external_id;
+                    });
+                DataCenter.addStream(cid, iid, JSON.stringify(ids), null, cb);
+              });
+          } else {
+            DataCenter.addAlbum(cid, iid, eaid, null, cb);
+          }
+
+        }, 987);
+
+        $t.on('mouseup.photox', function (e) {
+          clearTimeout(timer);
+          $t.off('mouseup.photox');
+          if (status) {
+            return;
+          }
+
+          // cd folder -----------------------------
+          navTabs.switch(p, true);
+
+          // Dropbox's Breadcrumb
+          if (p === 'dropbox') {
+            breadcrumb.toggle(p === 'dropbox', iid);
+            var eaids = decodeURIComponent(eaid).split('/'),
+                len = eaids.length;
+            eaid = aids[len - 1];
+            if (!fs.has()) {
+              fs.setUid(iid).setGid(p).cd('/');
+            }
+            //console.log(iid, eaid, p, aids, imported);
+            fs.cd(eaid, len, function (p) {
+              breadcrumb.del(len);
+              breadcrumb.add(iGid, p);
+            });
+          }
+
+          thumbnails.hideAlbums();
+          queue.push(DataCenter.browseSource(
+            cid, iid, eaid,
+            function () {
+              self.emit('toggle-loading', true);
+            },
+            function (data) {
+              self.emit('toggle-loading', false);
+              var al = data.albums.length,
+                  pl = data.photos.length,
+                  t = al + pl;
+              if (t) {
+                thumbnails.showPhotos(data, imported);
+              } else {
+                self.emit('toggle-error', false, 'photos');
+              }
+            },
+            function (data, code, statusText) {
+              if (!code && statusText === 'timeout') {
+                self.emit('toggle-loading', false);
+                self.emit('toggle-error', false, 'ajax');
+              }
+            }
+          ));
+          // ---------------------------------------
+        });
       });
 
+
       // Photos' click-event
-      element.on('click.photox', '.thumbnails > li[data-pid]', function (e) {
+      element.on('click.photox', '.thumbnails > li[data-epid]', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $t = $(this),
+            d = $t.data(), iid = d.iid, p = d.provider,
+            epid = d.epid, pid = $t.attr('data-pid'),
+            spid = '["' + pid + '"]',
+            sepid = '["' + epid + '"]',
+            imported = ~~$t.attr('data-imported');
+
+        // ajaxing
+        if (imported === -2) {
+          return;
+        }
+
+        thumbnails.toggleBadge($t);
+        // delete
+        if (imported !== 0 && imported !== -2) {
+          DataCenter.delPhotos(
+            cid, p, spid,
+            null,
+            function (data) {
+              var $tp = $t.parent(),
+                  $ts = $tp.children(),
+                  i = 0, photos = [];
+              $t.attr('data-pid', 0);
+              $t.attr('data-imported', 0);
+              R.each(data.photox.photos, function (v) {
+                if (p === v.provider) {
+                  i++;
+                  $t = $ts.filter('[data-epid="' + v.external_id + '"]');
+                  if (!$t.size()) {
+                    photos.push(v);
+                  }
+                  $t.attr('data-imported', 1);
+                  $t.attr('data-pid', v.id);
+                  $t.find('.badge').removeClass('hide');
+                }
+              });
+              if (i) {
+                $tp.append(thumbnails.genPhotosHTML({photos: photos}));
+              }
+              self.emit('update-albums-badge', p, i, true);
+            }
+          );
+          return;
+        }
+
+        // add
+        if (p === 'instagram') {
+          DataCenter.addStream(
+            cid, iid, sepid,
+            null,
+            function (data) {
+              var ps = data.photox.photos,
+                  $tp = $t.parent(),
+                  $ts = $tp.children(),
+                  i = 0, photos = [];
+              R.each(ps, function (v) {
+                if (p === v.provider) {
+                  i++;
+                  $t = $ts.filter('[data-epid="' + v.external_id + '"]');
+                  if (!$t.size()) {
+                    d.photos.push(v);
+                  }
+                  $t.attr('data-imported', 1);
+                  $t.attr('data-pid', v.id);
+                  $t.find('.badge').removeClass('hide');
+                }
+              });
+              if (i) {
+                $tp.append(thumbnails.genPhotosHTML({photos: photos}));
+                self.emit('update-albums-badge', p, i, true);
+              }
+            }
+          );
+        }
       });
 
       self.on('show-albums', function () {
@@ -765,10 +959,16 @@ define('photox', function (require) {
           $es.children().addClass('hide');
           if (t === 'albums') {
             $es.find('.albums-error').removeClass('hide');
-          } else {
+          } else if (t === 'photos') {
             $es.find('.photos-error').removeClass('hide');
+          } else {
+            $es.find('.ajax-error').removeClass('hide');
           }
         }
+      });
+
+      self.on('update-albums-badge', function (provider, i, s) {
+        thumbnails.updateBadge(provider, i, s);
       });
 
       /**
@@ -793,11 +993,14 @@ define('photox', function (require) {
       this.thumbnails.showAlbums();
     },
 
-    destory: function () {
-      var a;
+    killAjaxs: function (a) {
       while ((a = this.q.shift())) {
         a.abort();
       }
+    },
+
+    destory: function () {
+      this.killAjaxs();
       this.element.off();
       this.element.remove();
       this._destory();

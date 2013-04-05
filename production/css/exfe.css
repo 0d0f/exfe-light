@@ -5659,8 +5659,12 @@ img:-moz-broken {
   background-position: -144px 0;
 }
 
-.ix-wall {
+.ix-wall-blue {
   background-position: -180px 0;
+}
+
+.ix-wall-gay {
+  background-position: -216px 0;
 }
 
 .ix-placehoder {
@@ -11892,7 +11896,7 @@ ol.complete-list {
   padding-top: 10px;
 }
 
-.photox-widget {
+.photox-widget .tab-0 {
   position: relative;
   width: 100%;
   height: 70px;
@@ -11904,7 +11908,7 @@ ol.complete-list {
           border-radius: 4px;
 }
 
-.photox-widget:after {
+.photox-widget .tab-0:after {
   position: absolute;
   top: 0;
   right: 0;
@@ -11983,6 +11987,39 @@ ol.complete-list {
 .photox-widget .btn-open .ix-wall {
   display: block;
   margin: 17px auto 0;
+}
+
+.photox-widget .tab-1 {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 36px;
+  color: #aaa;
+  text-align: center;
+  cursor: pointer;
+  border: 1px dashed #aaa;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+.photox-widget .tab-1 .ix-wall {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.photox-widget .tab-1:hover {
+  color: #3a6ea5;
+  cursor: pointer;
+  background-color: #eee;
+  border-style: solid;
+}
+
+.photox-widget .tab-1:hover .ix-wall {
+  background-position: -180px 0;
 }
 
 .photox-panel {
@@ -12330,7 +12367,8 @@ ol.complete-list {
 }
 
 .photox-panel .panel-body .albums-error,
-.photox-panel .panel-body .photos-error {
+.photox-panel .panel-body .photos-error,
+.photox-panel .panel-body .ajax-error {
   display: table-cell;
   height: 100%;
   text-align: center;
@@ -12338,7 +12376,8 @@ ol.complete-list {
 }
 
 .photox-panel .panel-body .albums-error.hide,
-.photox-panel .panel-body .photos-error.hide {
+.photox-panel .panel-body .photos-error.hide,
+.photox-panel .panel-body .ajax-error.hide {
   display: none !important;
 }
 
@@ -12400,6 +12439,278 @@ ol.complete-list {
   position: absolute;
   bottom: 104px;
   left: 244px;
+}
+
+.mnemosyne-start {
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important;
+  -webkit-font-smoothing: antialiased;
+  opacity: 1;
+  -webkit-transform: translateZ(-999999px);
+          transform: translateZ(-999999px);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-perspective: 0;
+          perspective: 0;
+  -webkit-transform-style: flat;
+          transform-style: flat;
+}
+
+.mnemosyne-start #app-tmp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-perspective: 300px;
+          perspective: 300px;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mnemosyne-start #app-tmp.show-slideshow {
+  overflow: hidden !important;
+}
+
+.mnemosyne-start #app-tmp.show-slideshow .slideshow-panel {
+  z-index: 2000;
+  display: block;
+}
+
+.mnemosyne-start .mnemosyne-bg {
+  position: absolute;
+  z-index: 1060;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: no-repeat center center fixed #000000;
+  opacity: 0;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.mnemosyne-start .mnemosyne-bg-in {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), url("/static/img/bg_pattern.png") no-repeat center center fixed #000000;
+  background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), url("/static/img/bg_pattern.png") no-repeat center center fixed #000000;
+  background-size: cover;
+  opacity: 0;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.perspective {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+}
+
+.surface {
+  position: absolute;
+  pointer-events: auto;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-user-select: none;
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+  -webkit-transform-style: flat;
+          transform-style: flat;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.group {
+  -webkit-transform-origin: 0 0px;
+          transform-origin: 0 0px;
+}
+
+.mnemosyne-panel {
+  pointer-events: none;
+  border: 0;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+}
+
+.mnemosyne-panel .panel-body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.mnemosyne-panel .gallery {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
+  padding-top: 88px;
+  padding-bottom: 40px;
+  opacity: 1;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -0.000001, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -0.000001, 1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform-style: flat;
+          transform-style: flat;
+  -webkit-transform-origin: 0 0px;
+          transform-origin: 0 0px;
+}
+
+.mnemosyne-panel .gallery figure {
+  padding: 0;
+  margin: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.05);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+     -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+          box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+}
+
+.mnemosyne-panel .gallery figure .photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+  /*
+        -webkit-backface-visibility: visible;
+        backface-visibility: visible;
+        -webkit-transform-style: flat;
+        transform-style: flat;
+        */
+
+}
+
+.mnemosyne-panel .gallery figure .pic {
+  position: absolute;
+  display: block;
+  max-width: none;
+  max-height: none;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+}
+
+.mnemosyne-panel .gallery figure .mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background-color: #fff;
+  opacity: 0;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000003, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000003, 1);
+  -webkit-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+     -moz-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+.mnemosyne-panel .gallery figure .btn-like {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: red;
+  opacity: 0;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+}
+
+.mnemosyne-panel .gallery figure .meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  width: 100%;
+  height: 30px;
+  padding: 3px;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 24px;
+  color: #808080;
+  opacity: 0;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.mnemosyne-panel .gallery figure .meta .avatar {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin-right: 3px;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.mnemosyne-panel .gallery figure .meta .title {
+  -webkit-box-flex: 1;
+  /* safari */
+
+  -webkit-flex: 1;
+     -moz-flex: 1;
+      -ms-flex: 1;
+       -o-flex: 1;
+          flex: 1;
+}
+
+.slideshow-panel {
+  display: none;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  -webkit-perspective: 0;
+          perspective: 0;
+}
+
+.slideshow-panel .pic {
+  position: absolute;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.05);
+  -webkit-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+     -moz-box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+          box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.12) inset;
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
 }
 
 #app-main {

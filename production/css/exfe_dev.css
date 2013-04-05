@@ -5659,8 +5659,12 @@ img:-moz-broken {
   background-position: -144px 0;
 }
 
-.ix-wall {
+.ix-wall-blue {
   background-position: -180px 0;
+}
+
+.ix-wall-gay {
+  background-position: -216px 0;
 }
 
 .ix-placehoder {
@@ -11730,7 +11734,7 @@ body {
   color: #3a6ea5;
 }
 
-.photox-widget {
+.photox-widget .tab-0 {
   position: relative;
   width: 100%;
   height: 70px;
@@ -11742,7 +11746,7 @@ body {
           border-radius: 4px;
 }
 
-.photox-widget:after {
+.photox-widget .tab-0:after {
   position: absolute;
   top: 0;
   right: 0;
@@ -11821,6 +11825,39 @@ body {
 .photox-widget .btn-open .ix-wall {
   display: block;
   margin: 17px auto 0;
+}
+
+.photox-widget .tab-1 {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 36px;
+  color: #aaa;
+  text-align: center;
+  cursor: pointer;
+  border: 1px dashed #aaa;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+.photox-widget .tab-1 .ix-wall {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.photox-widget .tab-1:hover {
+  color: #3a6ea5;
+  cursor: pointer;
+  background-color: #eee;
+  border-style: solid;
+}
+
+.photox-widget .tab-1:hover .ix-wall {
+  background-position: -180px 0;
 }
 
 .photox-panel {
@@ -12168,7 +12205,8 @@ body {
 }
 
 .photox-panel .panel-body .albums-error,
-.photox-panel .panel-body .photos-error {
+.photox-panel .panel-body .photos-error,
+.photox-panel .panel-body .ajax-error {
   display: table-cell;
   height: 100%;
   text-align: center;
@@ -12176,7 +12214,8 @@ body {
 }
 
 .photox-panel .panel-body .albums-error.hide,
-.photox-panel .panel-body .photos-error.hide {
+.photox-panel .panel-body .photos-error.hide,
+.photox-panel .panel-body .ajax-error.hide {
   display: none !important;
 }
 

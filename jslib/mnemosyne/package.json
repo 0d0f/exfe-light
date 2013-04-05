@@ -1,9 +1,9 @@
 {
-  "name": "xphoto",
+  "name": "mnemosyne",
   "version": "0.0.1",
-  "description": "X Photo",
+  "description": "PhotoX Wall",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-01-17T16:07:21 UTC+0800",
+  "date": "2013-04-01T14:38:00 UTC+0800",
   "hint": true
 }

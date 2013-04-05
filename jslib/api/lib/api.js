@@ -249,11 +249,14 @@ define('api', function (require) {
         var code = data && data.meta && data.meta.code;
         if (200 === code) {
           dfd.resolve(data.response, statusText, jqXHR);
+        } else {
+          dfd.reject(data, code, statusText, jqXHR);
         }
-        else {
-          dfd.reject(data, statusText, jqXHR);
-        }
-      });
+      })
+      .fail(function (data, statusText, jqXHR) {
+          var code = data && data.meta && data.meta.code;
+          dfd.reject(data, code, statusText, jqXHR);
+        });
 
     promise.jqXHR = jqXHR;
     promise.abort = function (statusText) {
