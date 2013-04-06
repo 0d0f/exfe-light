@@ -3,7 +3,7 @@ define('photoxwidget', function (require) {
 
   var request = require('api').request,
       R = require('rex'),
-      config_photo_providers = require('config').photo_providers,
+      //config_photo_providers = require('config').photo_providers,
       Store = require('store'),
       PhotoXPanel = require('photox'),
       Mnemosyne = require('mnemosyne'),
@@ -34,8 +34,7 @@ define('photoxwidget', function (require) {
             + '<div class="btn-open"><i class="ix-wall ix-wall-blue"></i></div>'
           + '</div>'
           + '<div class="tab tab-1 hide">'
-            + 'Share Photos here'
-            + '<i class="ix-wall ix-wall-gay"></i>'
+            + '<i class="ix-wall ix-wall-gay"></i>Share photos, save memory.'
           + '</div>'
         + '</div>',
 
@@ -99,7 +98,8 @@ define('photoxwidget', function (require) {
             ips.push(v.provider + ':' + v.id);
           }
         });
-        ips.push(''); providers.push('');
+        ips.push('');
+        providers.push('');
         // providers = 'flickr:1 facebook:0 dropbox:0'
         providers = ips.join(' ') + providers.join(':0 ');
         var photoxPanel = new PhotoXPanel({
@@ -171,8 +171,8 @@ define('photoxwidget', function (require) {
             l = photos.length,
             b = l > limited;
         if (l) {
-            tab0.removeClass('hide');
-            tab1.addClass('hide');
+          tab0.removeClass('hide');
+          tab1.addClass('hide');
           if (b) { photos = photos.slice(0, limited); }
           $tr.html(self.generate(photos, b));
         } else {
