@@ -625,7 +625,7 @@ define('mnemosyne', function (require) {
 
     SlideShow.prototype._clone_0 = function (f) {
       this.$element.empty();
-      self.lockup = true;
+      this.lockup = true;
       var self = this,
           r = f.getBoundingClientRect(),
           w = f.clientWidth,
