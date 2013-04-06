@@ -3,30 +3,29 @@ define('mnemosyne', function (require) {
 
   /* requestAnimationFrame */
   //(function() {
-    var lastTime = 0,
-        vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-      window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-      window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
+  var lastTime = 0, vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                  || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
  
-    if (!window.requestAnimationFrame) {
-      window.requestAnimationFrame = function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-          timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-      };
-    }
- 
-    if (!window.cancelAnimationFrame) {
-      window.cancelAnimationFrame = function(id) {
-        clearTimeout(id);
-      };
-    }
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+        timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+  }
+
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+  }
   //}());
 
   /**********************************************/
@@ -64,7 +63,6 @@ define('mnemosyne', function (require) {
       atan = Math.atan,
       atan2 = Math.atan2,
       min = Math.min,
-      max = Math.max,
       PI = Math.PI,
       PRECISION = 1E-6;
 
@@ -307,7 +305,6 @@ define('mnemosyne', function (require) {
 
   var $ = require('jquery'),
       TWEEN = require('tween'),
-      proxy = $.proxy,
       Handlebars = require('handlebars'),
       Panel = require('panel'),
       request = require('api').request,
@@ -627,10 +624,9 @@ define('mnemosyne', function (require) {
     };
 
     SlideShow.prototype._clone_0 = function (f) {
-      var self = this;
       this.$element.empty();
       self.lockup = true;
-      var whlt = f.getAttribute('data-whlt').split(','),
+      var self = this,
           r = f.getBoundingClientRect(),
           w = f.clientWidth,
           h = f.clientHeight,
@@ -649,16 +645,13 @@ define('mnemosyne', function (require) {
       _img.height = fh;
       //_img.style.opacity = 0;
       var m0 = Matrix.move(Matrix.multiply(Matrix.scale(sw, sh), Matrix.identity()), [l, t, 1]);
-      var t = Matrix.toCSSMatrix3d(m0);
       _img.style.webkitTransform = m0;
       _img.style.transform = m0;
 
       loadImage(
         null,
         fu,
-        function (img) {
-          _img.src = fu;
-        }
+        function (img) { img.src = fu; }
         // error
       );
       this.$element.append(_img);
@@ -711,7 +704,8 @@ define('mnemosyne', function (require) {
 
     SlideShow.prototype.effect = function (curr, next, a) {
       this.lookup = true;
-      var cm = curr._m4,
+      var self = this,
+          cm = curr._m4,
           nm = next._m4,
           cs = curr.style,
           ns = next.style,
@@ -753,7 +747,7 @@ define('mnemosyne', function (require) {
       new TWEEN.Tween(m4)
         .to(m, 233)
         .easing(TWEEN.Easing.Quadratic.InOut)
-        .onUpdate(function (t) {
+        .onUpdate(function () {
           imgs.webkitTransform = imgs.transform = toCSSMatrix3d(slice.call(this));
         })
         .onComplete(function () {
@@ -773,9 +767,7 @@ define('mnemosyne', function (require) {
     };
 
     SlideShow.prototype._clone_1 = function (f) {
-      var vw = this.vw,
-          vh = this.vh,
-          pu = f.getAttribute('data-preview-url'),
+      var pu = f.getAttribute('data-preview-url'),
           fu = f.getAttribute('data-fullsize-url'),
           fw = +f.getAttribute('data-fullsize-width'),
           fh = +f.getAttribute('data-fullsize-height'),
@@ -796,8 +788,8 @@ define('mnemosyne', function (require) {
         null,
         fu,
         function (img) {
-          _img.src = fu;
-          _img = undefined;
+          img.src = fu;
+          img = VOID;
         }
         //error
       );
@@ -876,12 +868,14 @@ define('mnemosyne', function (require) {
         this.offsetTop = 0;
         this.offsetLeft = 24;
 
+        this.paddingRight = 30;
+
         this.listen();
       },
 
       listen: function () {
         var self = this,
-            element = self.element,
+            //element = self.element,
             typesetting = self.typesetting,
             slideshow = self.slideshow,
             $exit = self.$exit,
@@ -1204,6 +1198,24 @@ define('mnemosyne', function (require) {
 
           offsetLeft += vw;
         }
+
+        this.addPaddingRight(0, offsetLeft);
+      },
+
+      addPaddingRight: function (top, left) {
+        var $g = this.$gallery, $pr = $g.find('.photos-padding-right');
+        if (!$pr.size()) {
+          $pr = $('<div class="photos-padding-right"></div>')
+            .css({width: this.paddingRight});
+        }
+        $pr.css({
+          '-webkit-transform': 'translate3d(' + left + 'px, ' + top  + 'px, 0)',
+          '-moz-transform': 'translate3d(' + left + 'px, ' + top  + 'px, 0)',
+          '-ms-transform': 'translate3d(' + left + 'px, ' + top  + 'px, 0)',
+          '-o-transform': 'translate3d(' + left + 'px, ' + top  + 'px, 0)',
+          'transform': 'translate3d(' + left + 'px, ' + top  + 'px, 0)'
+        });
+        $g.append($pr);
       },
 
       getPhotos: function () {
@@ -1332,10 +1344,10 @@ define('mnemosyne', function (require) {
             'transform': 'none'
           });
         $(window).off('throttledresize.mnemosyne');
+        cancelAnimationFrame(this.frame);
         this.element.off();
         this.element.remove();
         this._destory();
-        cancelAnimationFrame(self.frame);
       }
     });
 
