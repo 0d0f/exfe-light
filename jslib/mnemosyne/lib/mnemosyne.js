@@ -342,11 +342,11 @@ define('mnemosyne', function (require) {
           img.onload = img.onerror = img = f = undefined;
         };
     img.onload = function () {
-      cb(img, f);
+      cb && cb(img, f);
       abort(img);
     };
     img.onerror = function () {
-      ecb(img, f);
+      ecb && ecb(img, f);
       abort(img);
     };
     img.src = url;
@@ -509,7 +509,7 @@ define('mnemosyne', function (require) {
           + '<div class="photo perspective">'
           + '</div>'
           + '<div class="mask"></div>'
-          + '<div class="btn-like"></div>'
+          + '<div class="btn-like">Like</div>'
           + '<div class="meta">'
             + '<div class="avatar"><img width="24" height="24" src="{{by_identity.avatar_filename}}" alt="" /></div>'
             + '<div class="title">{{caption}}</div>'
@@ -609,15 +609,26 @@ define('mnemosyne', function (require) {
     };
 
     SlideShow.prototype.exit = function () {
-      var $e = this.$element;
-      $e.empty()
-        .attr('tabindex', 'none')
+      var $e = this.$element, es = $e[0].style;
+      $e.attr('tabindex', 'none')
+      new TWEEN.Tween({ o: 1 })
+            .to({ o: 0 }, 400)
+            .interpolation(TWEEN.Interpolation.Bezier)
+            .easing(TWEEN.Easing.Exponential.Out)
+            .onUpdate(function () {
+              es.opacity = this.o;
+            })
+            .onComplete(function () {
+              $e.empty();
+            })
+            .start();
       this.img = this.curr = VOID;
       this.lockup = false;
     };
 
     SlideShow.prototype._clone_0 = function (f) {
       var self = this;
+      this.$element.empty();
       self.lockup = true;
       var whlt = f.getAttribute('data-whlt').split(','),
           r = f.getBoundingClientRect(),
@@ -625,6 +636,7 @@ define('mnemosyne', function (require) {
           h = f.clientHeight,
           l = r.left,
           t = r.top,
+          es = this.$element[0].style,
           pu = f.getAttribute('data-preview-url'),
           fu = f.getAttribute('data-fullsize-url'),
           fw = +f.getAttribute('data-fullsize-width'),
@@ -635,7 +647,7 @@ define('mnemosyne', function (require) {
       _img.src = pu;
       _img.width = fw;
       _img.height = fh;
-      _img.style.opacity = 0;
+      //_img.style.opacity = 0;
       var m0 = Matrix.move(Matrix.multiply(Matrix.scale(sw, sh), Matrix.identity()), [l, t, 1]);
       var t = Matrix.toCSSMatrix3d(m0);
       _img.style.webkitTransform = m0;
@@ -646,11 +658,9 @@ define('mnemosyne', function (require) {
         fu,
         function (img) {
           _img.src = fu;
-        },
-        function (img) {
         }
+        // error
       );
-      //console.log(this.$element);
       this.$element.append(_img);
 
       this.curr = f;
@@ -660,16 +670,18 @@ define('mnemosyne', function (require) {
       _img._m4 = m1;
       new TWEEN.Tween(m0)
         .to(m1, 400)
-        .easing(TWEEN.Easing.Cubic.InOut)
+        .interpolation(TWEEN.Interpolation.Bezier)
+        .easing(TWEEN.Easing.Exponential.Out)
         .onUpdate(function (time) {
           var t = Matrix.toCSSMatrix3d(this);
           style.webkitTransform = t;
           style.transform = t;
-          style.opacity = time;
+          //style.opacity = time;
+          es.opacity = time;
         })
         .onComplete(function () {
-          TWEEN.remove(this);
           self.lockup = false;
+          TWEEN.remove(this);
         })
         .start();
       return _img;
@@ -786,8 +798,8 @@ define('mnemosyne', function (require) {
         function (img) {
           _img.src = fu;
           _img = undefined;
-        },
-        function (img) { }
+        }
+        //error
       );
       this.$element.append(_img);
       return _img;
@@ -833,6 +845,7 @@ define('mnemosyne', function (require) {
             //+ '<div class="panel-footer"></div>'
           + '</div>'
           + '<div class="slideshow-panel perspective group"></div>'
+          + '<div class="mnemosyne-exit">Exit</div>'
 
       },
 
@@ -850,6 +863,7 @@ define('mnemosyne', function (require) {
         this.$mnemosyne = element.eq(0);
         this.$gallery = this.$mnemosyne.find('.gallery');
         this.$slideshow = element.eq(1);
+        this.$exit = element.eq(2);
         this.typesetting = new Typesetting();
         this.slideshow = new SlideShow(this, this.$slideshow);
 
@@ -870,6 +884,7 @@ define('mnemosyne', function (require) {
             element = self.element,
             typesetting = self.typesetting,
             slideshow = self.slideshow,
+            $exit = self.$exit,
             $m = self.$mnemosyne,
             $g = self.$gallery,
             $s = self.$slideshow,
@@ -943,8 +958,12 @@ define('mnemosyne', function (require) {
             .on('click.mnemosyne', '.surface .btn-like', function (e) {
               e.preventDefault();
               e.stopPropagation();
-              alert(123);
             });
+        $exit.on('click.mnemosyne', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.hide();
+        });
 
           $s.on('keydown.mnemosyne', function (e) {
               e.preventDefault();
@@ -965,9 +984,25 @@ define('mnemosyne', function (require) {
               }
             });
 
+        var _exits = $exit[0].style;
         $at.on('scroll.mnemosyne', function (e) {
           e.preventDefault();
           e.stopPropagation();
+
+
+          var _x = _exits._x, tx = this.scrollLeft;
+          new TWEEN.Tween({ x: _x })
+            .to({ x: tx }, 144)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onUpdate(function () {
+              _exits.transform = _exits.webkitTransform
+                = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + this.x  + ', ' + '0, 2.3333333, 1)';
+            })
+            .onComplete(function () {
+              _exits._x = tx;
+            })
+            .start();
+
           var $fs = $g.find('[data-lazy="-1"]'), f;
 
           if (0 === $fs.length) { return; }
@@ -1031,12 +1066,13 @@ define('mnemosyne', function (require) {
 
         self.on('launch-slideshow', function (figure) {
           var ms = $m[0].style;
-          new TWEEN.Tween({ z: 1})
-            .to({ z: -144 })
-            .easing(TWEEN.Easing.Exponential.In)
+          new TWEEN.Tween({ z: 1 })
+            .to({ z: -144 }, 400)
+            //.interpolation(TWEEN.Interpolation.Bezier)
+            .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(function (t) {
-              ms.webkitTransform =
-                ms.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
+              ms.transform =
+                ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
               ms.opacity = 0.5 * t;
             })
             .onComplete(function () {TWEEN.remove(this);})
@@ -1045,19 +1081,22 @@ define('mnemosyne', function (require) {
         });
 
         self.on('exit-slideshow', function () {
-          $at.removeClass('show-slideshow');
           self.slideshow.exit();
-          $m.focus();
           var ms = $m[0].style;
           new TWEEN.Tween({ z: -144 })
-            .to({ z: 1.0000099999999748 })
+            .to({ z: 1.0000099999999748 }, 400)
+            .interpolation(TWEEN.Interpolation.Bezier)
             .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(function (t) {
-              ms.webkitTransform =
-                ms.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
+              ms.transform =
+                ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
               ms.opacity = 0.5 * (t + 1);
             })
-            .onComplete(function () { TWEEN.remove(this); })
+            .onComplete(function () {
+              $at.removeClass('show-slideshow');
+              $m.focus();
+              TWEEN.remove(this);
+            })
             .start()
         });
 
@@ -1076,18 +1115,17 @@ define('mnemosyne', function (require) {
       },
 
       updateViewport: function () {
-        var matrix3d0 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 0.000001, 1)';
-        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 0.010000, 1)';
-        $('.mnemosyne-bg')
-          .css({
-            '-webkit-transform': matrix3d0,
-            'transform': matrix3d0
-          });
-        this.$appTmp
-          .css({
-            '-webkit-transform': matrix3d1,
-            'transform': matrix3d1
-          });
+        var x = window.scrollX, y = window.scrollY;
+        var matrix3d0 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.000001, 1)';
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.010000, 1)';
+        var matrix3d2 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + '0, 2.3333333, 1)';
+        var ms = $('.mnemosyne-bg')[0].style;
+        ms.transform = ms.webkitTransform = matrix3d0;
+        var as = this.$appTmp[0].style;
+        as.transform = as.webkitTransform = matrix3d1;
+        var es = this.$exit[0].style;
+        es.transform = es.webkitTransform = matrix3d2;
+        es._x = x;
       },
 
       addMBG: function () {
@@ -1217,6 +1255,9 @@ define('mnemosyne', function (require) {
               .easing(TWEEN.Easing.Back.InOut)
               .onUpdate(function () {
                 mbgStyle.opacity = this.v;
+              })
+              .onComplete(function () {
+                TWEEN.remove(this);
               });
         var step1 = new TWEEN.Tween({v: 0})
               .to({ v: 1}, 1400)
@@ -1224,6 +1265,9 @@ define('mnemosyne', function (require) {
               .easing(TWEEN.Easing.Linear.None)
               .onUpdate(function () {
                 mbgInStyle.opacity = this.v;
+              })
+              .onComplete(function () {
+                TWEEN.remove(this);
               });
         var step2 = new TWEEN.Tween({v: 1024})
               .to({ v: 1.00001}, 1100)
@@ -1235,6 +1279,7 @@ define('mnemosyne', function (require) {
               })
               .onComplete(function () {
                 $at.trigger('scroll.mnemosyne');
+                TWEEN.remove(this);
               });
         step0.chain(step1);
         step1.chain(step2);
@@ -1250,13 +1295,37 @@ define('mnemosyne', function (require) {
         return this;
       },
 
+      hide: function () {
+        TWEEN.removeAll();
+        var self = this,
+            mbgs = $('.mnemosyne-bg')[0].style,
+            ms = self.$mnemosyne[0].style,
+            ss = self.$slideshow[0].style;
+
+        $(document).off('keydown.panel');
+        this.element.off();
+
+        new TWEEN.Tween({ o: 1 })
+          .to({ o: 0 }, 610)
+          .easing(TWEEN.Easing.Cubic.In)
+          .onUpdate(function () {
+            mbgs.opacity
+              = ms.opacity
+              = ss.opacity
+              = this.o;
+          })
+          .onComplete(function () {
+            self.destory();
+            TWEEN.removeAll();
+          })
+          .start();
+      },
+
       destory: function () {
         this.delMBG();
-        TWEEN.removeAll();
-        cancelAnimationFrame(self.frame);
         $('body').removeClass('mnemosyne-start');
-        //$('#app-tmp').off('scroll.mnemosyne');
         this.$appTmp
+          .removeClass('.show-mnemosyne')
           .off('.mnemosyne')
           .css({
             '-webkit-transform': 'none',
@@ -1266,6 +1335,7 @@ define('mnemosyne', function (require) {
         this.element.off();
         this.element.remove();
         this._destory();
+        cancelAnimationFrame(self.frame);
       }
     });
 

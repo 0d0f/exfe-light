@@ -12483,6 +12483,7 @@ ol.complete-list {
 .mnemosyne-start #app-tmp.show-slideshow .slideshow-panel {
   z-index: 2000;
   display: block;
+  opacity: 0;
 }
 
 .mnemosyne-start .mnemosyne-bg {
@@ -12544,6 +12545,20 @@ ol.complete-list {
 .group {
   -webkit-transform-origin: 0 0px;
           transform-origin: 0 0px;
+}
+
+.mnemosyne-exit {
+  position: absolute;
+  z-index: 3000;
+  width: 50px;
+  height: 50px;
+  pointer-events: auto;
+  cursor: pointer;
+  background: red;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
 
 .mnemosyne-panel {
@@ -12696,6 +12711,7 @@ ol.complete-list {
 
 .slideshow-panel {
   display: none;
+  opacity: 0;
   -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
           transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   -webkit-perspective: 0;

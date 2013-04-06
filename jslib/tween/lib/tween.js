@@ -50,16 +50,19 @@ var TWEEN = TWEEN || ( function () {
 		},
 
 		update: function ( time ) {
+      var numTweens = _tweens.length;
 
-			if ( _tweens.length === 0 ) return false;
+			if ( numTweens === 0 ) return false;
 
-			var i = 0, numTweens = _tweens.length;
+			var i = 0, _tween;
 
 			time = time !== undefined ? time : ( window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
 
 			while ( i < numTweens ) {
 
-				if ( _tweens[ i ].update( time ) ) {
+        _tween = _tweens[i];
+
+				if ( _tween && _tween.update( time ) ) {
 
 					i ++;
 
