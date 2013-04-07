@@ -11831,7 +11831,7 @@ body {
 .photox-widget .table-wrapper figure {
   width: 100px;
   height: 100%;
-  margin: 0 3px 0 0;
+  margin: 0 1px 0 0;
   -webkit-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
      -moz-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
           box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
@@ -11903,7 +11903,7 @@ body {
 .photox-panel {
   width: 520px;
   min-width: 520px;
-  min-height: 372px;
+  min-height: 366px;
   background-color: #222;
   border: none;
   -webkit-border-radius: 6px;
@@ -11953,14 +11953,19 @@ body {
 
 .photox-panel .panel-header .panel-title {
   margin: 0 0 0 15px;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: bold;
-  line-height: 66px;
+  line-height: 60px;
   color: white;
 }
 
+.photox-panel .panel-header .ix-wall-blue {
+  margin-top: 12px;
+  vertical-align: top;
+}
+
 .photox-panel .panel-header .nav {
-  height: 66px;
+  height: 60px;
   margin-bottom: 0;
   border-bottom: 0;
 }

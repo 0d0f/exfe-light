@@ -3,6 +3,7 @@ define('photox', function (require) {
 
   var $ = require('jquery'),
       R = require('rex'),
+      Bus = require('bus'),
       request = require('api').request,
       Config = require('config'),
       PVS = Config.photo_providers,
@@ -186,9 +187,9 @@ define('photox', function (require) {
           data        : {
             provider    : provider,
             album_id    : album_id
-          }
+          },
+          beforeSend: bcb
         },
-        bcb,
         done
       );
     },
@@ -396,7 +397,6 @@ define('photox', function (require) {
   proto.del = function (n) {
     var $last = this.$element.find('li').slice(n - 1);
     $last.nextAll().remove();
-    //console.log($last);
     $last.find('.divider').addClass('hidden');
   };
 
@@ -482,9 +482,9 @@ define('photox', function (require) {
           d1 = ab[0];
     });
     */
-    q.push(DataCenter.getPhotoX(composition.cid, function (data) {
+    //q.push(DataCenter.getPhotoX(composition.cid, function (data) {
       //console.dir(data);
-    }));
+    //}));
     q.push(DataCenter.browseSource(
       composition.cid,
       null, null,
@@ -607,7 +607,7 @@ define('photox', function (require) {
       template: ''
         + '<div class="panel photox-panel" id="photox-panel">'
           + '<div class="clearfix panel-header">'
-            + '<h3 class="pull-left title panel-title">PhotoX</h3>'
+            + '<h3 class="pull-left title panel-title"><i class="ix-wall ix-wall-blue"></i>&nbsp;PhotoX</h3>'
             + '<ul class="pull-right nav nav-tabs"></ul>'
           + '</div>'
           + '<div class="panel-body">'
@@ -776,10 +776,13 @@ define('photox', function (require) {
           // delete
           if (imported !== 0 && imported !== -2) {
             DataCenter.delAlbum(
-              cid, p, eaid,
-              null,
+              cid, p, eaid, null,
               function (data) {
                 $t.attr('data-imported', '0');
+
+                // todo: 优化
+                // 出发 `photox-widget` 更新
+                Bus.emit('update-photoxwidget');
               }
             );
             return;
@@ -788,10 +791,13 @@ define('photox', function (require) {
           // add
           var cb = function (data) {
             $t.attr('data-imported', '-1');
+
+            // todo: 优化
+            // 出发 `photox-widget` 更新
+            Bus.emit('update-photoxwidget');
           };
 
           if (p === 'instagram') {
-            console.log(p);
             $.when(DataCenter.browseSource(cid, iid, eaid))
               .then(function (data) {
                 var ps = data.photos,
@@ -905,12 +911,16 @@ define('photox', function (require) {
                 $tp.append(thumbnails.genPhotosHTML({photos: photos}));
               }
               self.emit('update-albums-badge', p, i, true);
+
+              // todo: 优化
+              // 出发 `photox-widget` 更新
+              Bus.emit('update-photoxwidget');
             }
           );
           return;
         }
 
-        // add
+        // add 现在只支持 `instagram` 单张
         if (p === 'instagram') {
           DataCenter.addStream(
             cid, iid, sepid,
@@ -936,6 +946,10 @@ define('photox', function (require) {
                 $tp.append(thumbnails.genPhotosHTML({photos: photos}));
                 self.emit('update-albums-badge', p, i, true);
               }
+
+              // todo: 优化
+              // 出发 `photox-widget` 更新
+              Bus.emit('update-photoxwidget');
             }
           );
         }

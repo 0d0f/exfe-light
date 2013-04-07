@@ -3,6 +3,7 @@ define('photoxwidget', function (require) {
 
   var request = require('api').request,
       R = require('rex'),
+      Bus = require('bus'),
       //config_photo_providers = require('config').photo_providers,
       Store = require('store'),
       PhotoXPanel = require('photox'),
@@ -77,6 +78,10 @@ define('photoxwidget', function (require) {
 
     listen: function () {
       var self = this;
+
+      Bus.on('update-photoxwidget', function () {
+        self.load();
+      });
 
       this.element.on('click.photoxwidget', '.btn-open, .tab-1', function (e) {
         e.preventDefault();
@@ -166,7 +171,10 @@ define('photoxwidget', function (require) {
           tab0 = tabs.eq(0),
           tab1 = tabs.eq(1),
           limited = self.limited;
-      getPhotoX(this.crossId, function (data) {
+      if (this.defer) {
+        this.defer.abort();
+      }
+      this.defer = getPhotoX(this.crossId, function (data) {
         var photos = data.photox.photos,
             l = photos.length,
             b = l > limited;

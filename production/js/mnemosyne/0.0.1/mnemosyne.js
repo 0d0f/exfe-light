@@ -742,13 +742,12 @@ define('mnemosyne', function (require) {
           fw = +f.getAttribute('data-fullsize-width'),
           fh = +f.getAttribute('data-fullsize-height'),
           m = this.cal(fw, fh),
-          slice = [].slice,
           toCSSMatrix3d = Matrix.toCSSMatrix3d;
       new TWEEN.Tween(m4)
         .to(m, 233)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onUpdate(function () {
-          imgs.webkitTransform = imgs.transform = toCSSMatrix3d(slice.call(this));
+          imgs.webkitTransform = imgs.transform = toCSSMatrix3d(slice(this));
         })
         .onComplete(function () {
           TWEEN.remove(this);
