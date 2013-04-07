@@ -11985,18 +11985,25 @@ ol.complete-list {
 }
 
 .photox-widget .table-wrapper td.more {
-  line-height: 70px;
+  line-height: 64px;
   text-align: center;
   vertical-align: middle;
 }
 
+.photox-widget .table-wrapper td.more > figure {
+  width: 64px;
+}
+
 .photox-widget .table-wrapper figure {
-  width: 100px;
   height: 100%;
   margin: 0 1px 0 0;
   -webkit-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
      -moz-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
           box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.photox-widget .table-wrapper .pic {
+  max-width: none;
 }
 
 .photox-widget .btn-open {
@@ -12560,6 +12567,20 @@ ol.complete-list {
           backface-visibility: hidden;
 }
 
+.mnemosyne-exit {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 3000;
+  width: 50px;
+  height: 50px;
+  pointer-events: auto;
+  cursor: pointer;
+  background: red;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
 .perspective {
   position: absolute;
   width: 100%;
@@ -12592,24 +12613,10 @@ ol.complete-list {
           transform-origin: 0 0px;
 }
 
-.mnemosyne-exit {
-  position: absolute;
-  z-index: 3000;
-  width: 50px;
-  height: 50px;
-  pointer-events: auto;
-  cursor: pointer;
-  background: red;
-  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
-          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-}
-
 .mnemosyne-panel {
   pointer-events: none;
   border: 0;
-  opacity: 1;
+  opacity: 0;
   visibility: visible;
   box-shadow: none;
 }
@@ -12626,8 +12633,8 @@ ol.complete-list {
   bottom: 0;
   left: 0;
   height: auto;
-  padding-top: 88px;
-  padding-bottom: 40px;
+  padding-top: 40px;
+  padding-bottom: 60px;
   opacity: 1;
   -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -0.000001, 1);
           transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -0.000001, 1);
@@ -12677,8 +12684,6 @@ ol.complete-list {
   display: block;
   max-width: none;
   max-height: none;
-  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
-          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
 }
 
 .mnemosyne-panel .gallery figure .mask {
@@ -12726,6 +12731,7 @@ ol.complete-list {
   font-size: 13px;
   line-height: 24px;
   color: #808080;
+  background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
           transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
@@ -12738,9 +12744,12 @@ ol.complete-list {
   width: 24px;
   height: 24px;
   margin-right: 3px;
-  -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
+}
+
+.mnemosyne-panel .gallery figure .meta .avatar > img {
+  -webkit-border-radius: 1px;
+     -moz-border-radius: 1px;
+          border-radius: 1px;
 }
 
 .mnemosyne-panel .gallery figure .meta .title {

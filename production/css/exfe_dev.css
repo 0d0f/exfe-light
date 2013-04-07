@@ -11823,18 +11823,25 @@ body {
 }
 
 .photox-widget .table-wrapper td.more {
-  line-height: 70px;
+  line-height: 64px;
   text-align: center;
   vertical-align: middle;
 }
 
+.photox-widget .table-wrapper td.more > figure {
+  width: 64px;
+}
+
 .photox-widget .table-wrapper figure {
-  width: 100px;
   height: 100%;
   margin: 0 1px 0 0;
   -webkit-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
      -moz-box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
           box-shadow: 1px 0 rgba(0, 0, 0, 0.2) inset, -1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.photox-widget .table-wrapper .pic {
+  max-width: none;
 }
 
 .photox-widget .btn-open {
