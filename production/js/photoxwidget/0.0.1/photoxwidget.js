@@ -40,7 +40,7 @@ define('photoxwidget', function (require) {
         + '</div>',
 
       tdTmp: ''
-        + '<td><figure><img src="{{url}}" width="100" height="70" /></figure></td>',
+        + '<td><figure><img class="pic" src="{{url}}" width="{{width}}" height="{{height}}" /></figure></td>',
 
       tdTmpMore: ''
         + '<td class="more"><figure>...</figure></td>',
@@ -152,9 +152,12 @@ define('photoxwidget', function (require) {
     generate: function (photos, b) {
       var tdTmp = this.options.tdTmp,
           i = 0, l = photos.length,
-          html = '';
+          html = '', image;
       for (; i < l; ++i) {
-        html += tdTmp.replace('{{url}}', photos[i].images.preview.url);
+        image = photos[i].images.preview;
+        html += tdTmp.replace('{{url}}', image.url)
+              .replace('{{height}}', 64)
+              .replace('{{width}}', 64 * image.width / image.height);
       }
 
       if (b) {

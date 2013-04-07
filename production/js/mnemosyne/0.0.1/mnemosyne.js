@@ -382,6 +382,19 @@ define('mnemosyne', function (require) {
     return [w1, h1];
   };
 
+  var scaleForSmall = function (w0, h0, w1, h1) {
+    var r0 = w1 / h1,
+        r1 = w0 / h0;
+    if (r1 > r0) {
+      w1 = w0;
+      h1 = w1 / r0;
+    } else {
+      h1 = h0;
+      w1 = h1 * r0;
+    }
+    return [w1, h1];
+  };
+
   var layoutCreator = function (g) {
     return extend({ id: G_N++ }, g);
   };
@@ -400,6 +413,7 @@ define('mnemosyne', function (require) {
     f.style.webkitTransform = Matrix.toCSSMatrix3d(m4);
     f.style.transform = Matrix.toCSSMatrix3d(m4);
     f._m4 = m4;
+
     if (f.getAttribute('data-lazy') === '-1') {
       f.setAttribute('data-whlt', [pw, ph, (rw - pw) / 2, (rh - ph) / 2].join(','));
     } else {
@@ -503,7 +517,7 @@ define('mnemosyne', function (require) {
             + 'data-fullsize-height="{{images.fullsize.height}}" '
             + 'data-fullsize-width="{{images.fullsize.width}}" '
             + '>'
-          + '<div class="photo perspective">'
+          + '<div class="photo">'
           + '</div>'
           + '<div class="mask"></div>'
           + '<div class="btn-like">Like</div>'
@@ -836,7 +850,6 @@ define('mnemosyne', function (require) {
             //+ '<div class="panel-footer"></div>'
           + '</div>'
           + '<div class="slideshow-panel perspective group"></div>'
-          + '<div class="mnemosyne-exit">Exit</div>'
 
       },
 
@@ -854,7 +867,6 @@ define('mnemosyne', function (require) {
         this.$mnemosyne = element.eq(0);
         this.$gallery = this.$mnemosyne.find('.gallery');
         this.$slideshow = element.eq(1);
-        this.$exit = element.eq(2);
         this.typesetting = new Typesetting();
         this.slideshow = new SlideShow(this, this.$slideshow);
 
@@ -877,7 +889,6 @@ define('mnemosyne', function (require) {
             //element = self.element,
             typesetting = self.typesetting,
             slideshow = self.slideshow,
-            $exit = self.$exit,
             $m = self.$mnemosyne,
             $g = self.$gallery,
             $s = self.$slideshow,
@@ -920,7 +931,7 @@ define('mnemosyne', function (require) {
 
           if (isMouseEnter) {
             tween
-              .delay(144)
+              .delay(233)
               .to({ v: 1.01 }, 150)
               .onUpdate(function () {
                 masks.opacity = (this.v - 1) * 4;
@@ -952,11 +963,6 @@ define('mnemosyne', function (require) {
               e.preventDefault();
               e.stopPropagation();
             });
-        $exit.on('click.mnemosyne', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          self.hide();
-        });
 
           $s.on('keydown.mnemosyne', function (e) {
               e.preventDefault();
@@ -977,24 +983,9 @@ define('mnemosyne', function (require) {
               }
             });
 
-        var _exits = $exit[0].style;
         $at.on('scroll.mnemosyne', function (e) {
           e.preventDefault();
           e.stopPropagation();
-
-
-          var _x = _exits._x, tx = this.scrollLeft;
-          new TWEEN.Tween({ x: _x })
-            .to({ x: tx }, 144)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onUpdate(function () {
-              _exits.transform = _exits.webkitTransform
-                = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + this.x  + ', ' + '0, 2.3333333, 1)';
-            })
-            .onComplete(function () {
-              _exits._x = tx;
-            })
-            .start();
 
           var $fs = $g.find('[data-lazy="-1"]'), f;
 
@@ -1005,7 +996,7 @@ define('mnemosyne', function (require) {
               var whlt = f.getAttribute('data-whlt').split(','),
                   style = img.style;
               f.setAttribute('data-lazy', '1');
-              img.setAttribute('class', 'pic perspective');
+              img.setAttribute('class', 'pic');
               style.width = whlt[0] + 'px';
               style.height = whlt[1] + 'px';
               style.left = whlt[2] + 'px';
@@ -1060,13 +1051,13 @@ define('mnemosyne', function (require) {
         self.on('launch-slideshow', function (figure) {
           var ms = $m[0].style;
           new TWEEN.Tween({ z: 1 })
-            .to({ z: -144 }, 400)
+            .to({ z: -610 }, 400)
             //.interpolation(TWEEN.Interpolation.Bezier)
             .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(function (t) {
               ms.transform =
                 ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
-              ms.opacity = 0.5 * t;
+              ms.opacity = 0.1 * t;
             })
             .onComplete(function () {TWEEN.remove(this);})
             .start()
@@ -1074,6 +1065,7 @@ define('mnemosyne', function (require) {
         });
 
         self.on('exit-slideshow', function () {
+          $m.focus();
           self.slideshow.exit();
           var ms = $m[0].style;
           new TWEEN.Tween({ z: -144 })
@@ -1087,7 +1079,6 @@ define('mnemosyne', function (require) {
             })
             .onComplete(function () {
               $at.removeClass('show-slideshow');
-              $m.focus();
               TWEEN.remove(this);
             })
             .start()
@@ -1105,28 +1096,35 @@ define('mnemosyne', function (require) {
           $WIN.trigger('throttledresize.mnemosyne');
         });
 
+        $(document).one('click.mnemosyne', '.mnemosyne-exit', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.hide();
+        });
       },
 
       updateViewport: function () {
         var x = window.scrollX, y = window.scrollY;
         var matrix3d0 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.000001, 1)';
         var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.010000, 1)';
-        var matrix3d2 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + '0, 2.3333333, 1)';
+        var matrix3d2 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.010000, 1)';
         var ms = $('.mnemosyne-bg')[0].style;
         ms.transform = ms.webkitTransform = matrix3d0;
         var as = this.$appTmp[0].style;
         as.transform = as.webkitTransform = matrix3d1;
-        var es = this.$exit[0].style;
-        es.transform = es.webkitTransform = matrix3d2;
-        es._x = x;
+        var mes = $('.mnemosyne-exit')[0].style;
+        mes.transform = mes.webkitTransform = matrix3d2;
       },
 
       addMBG: function () {
         var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 0.000001, 1)';
-        $('<div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1.000001, 1)';
+        matrix3d1 = '-webkit-transform:' +matrix3d1+';transform:'+matrix3d1+';';
+        $('<div class="mnemosyne-exit" style="'+matrix3d1+'"></div><div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
       },
 
       delMBG: function () {
+        $('.mnemosyne-exit').remove();
         $('.mnemosyne-bg').remove();
       },
 
@@ -1189,6 +1187,10 @@ define('mnemosyne', function (require) {
             rw = cell.width * vw - margin.left - margin.right;
             rt = offsetTop + cell.y * vh + margin.top + (gvh - vh) / 2;
             rl = offsetLeft + cell.x * vw + margin.left;
+
+            var wh = scaleForSmall(rw, rh, pw, ph);
+            pw = wh[0];
+            ph = wh[1];
 
             updateFigure($f[0], gid, ph, pw, rh, rw, rt, rl);
 
@@ -1255,46 +1257,35 @@ define('mnemosyne', function (require) {
             $at = this.$appTmp,
             ms = this.$mnemosyne[0].style;
 
-        ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1024, 1)';
-        ms.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1024, 1)';
-        ms.opacity = 1;
+        //1024
+        ms.transform = ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1)';
 
         var step0 = new TWEEN.Tween({v: 0})
               .to({ v: 1}, 1600)
               .delay(200)
               .interpolation(TWEEN.Interpolation.Bezier)
-              .easing(TWEEN.Easing.Back.InOut)
+              .easing(TWEEN.Easing.Cubic.In)
               .onUpdate(function () {
-                mbgStyle.opacity = this.v;
+                mbgStyle.opacity = mbgInStyle.opacity = this.v;
               })
               .onComplete(function () {
                 TWEEN.remove(this);
               });
-        var step1 = new TWEEN.Tween({v: 0})
-              .to({ v: 1}, 1400)
+        var step1 = new TWEEN.Tween({ v: 2584})
+              .to({ v: 1.000001 }, 1600)
+              .delay(500)
               .interpolation(TWEEN.Interpolation.Bezier)
-              .easing(TWEEN.Easing.Linear.None)
-              .onUpdate(function () {
-                mbgInStyle.opacity = this.v;
-              })
-              .onComplete(function () {
-                TWEEN.remove(this);
-              });
-        var step2 = new TWEEN.Tween({v: 1024})
-              .to({ v: 1.00001}, 1100)
-              .interpolation(TWEEN.Interpolation.Bezier)
-              .easing(TWEEN.Easing.Linear.None)
-              .onUpdate(function () {
+              .easing(TWEEN.Easing.Cubic.In)
+              .onUpdate(function (t) {
+                ms.opacity = t;
                 ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.v + ', 1)'
-                ms.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.v + ', 1)'
               })
               .onComplete(function () {
                 $at.trigger('scroll.mnemosyne');
                 TWEEN.remove(this);
               });
-        step0.chain(step1);
-        step1.chain(step2);
         step0.start();
+        step1.start();
       },
 
       show: function () {
