@@ -298,7 +298,7 @@ define(function (require, exports, module) {
                           + scale + ')'
                         );
                         $('.map_link').attr(
-                            'href', 
+                            'href',
                             'http://maps.google.com/maps?daddr='
                           + encodeURIComponent(placeTitle) + '@'
                           + data.response.cross.place.lat  + ','
@@ -466,9 +466,9 @@ define(function (require, exports, module) {
                         if (data.response.cross.exfee.invitations[idMyInv].identity.provider === 'phone') {
                             $('.rsvp_toolbar tr').append(
                                 '<td class="rsvp changename">Change my display name</td>'
-                            );              
+                            );
                             $('.rsvp_toolbar td').css('width', '98px');
-                            $('.changename').on('click', function() {                            
+                            $('.changename').on('click', function() {
                                 var strDisplayName = prompt('Change my display name:');
                                 if (strDisplayName === null) {
                                 } else if (strDisplayName === '') {
@@ -806,13 +806,265 @@ define(function (require, exports, module) {
         });
     };
 
+    var parseAttendeeInfo = function(string) {
+        string = trim(string);
+        var objIdentity = {
+            id                : 0,
+            name              : '',
+            external_id       : '',
+            external_username : '',
+            provider          : '',
+            type              : 'identity'
+        }
+        if (/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/.test(string)) {
+            var iLt = string.indexOf('<'),
+                iGt = string.indexOf('>');
+            objIdentity.external_id       = trim(string.substring(++iLt, iGt));
+            objIdentity.external_username = objIdentity.external_id;
+            objIdentity.name              = trim(cutLongName(trim(string.substring(0, iLt)).replace(/^"|^'|"$|'$/g, '')));
+            objIdentity.provider          = 'email';
+        } else if (/^[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(string)) {
+            objIdentity.external_id       = string;
+            objIdentity.external_username = string;
+            objIdentity.name              = trim(cutLongName(string.split('@')[0]));
+            objIdentity.provider          = 'email';
+        } else if (/^@[a-z0-9_]{1,15}$|^@[a-z0-9_]{1,15}@twitter$|^[a-z0-9_]{1,15}@twitter$/i.test(string)) {
+            objIdentity.external_id       = '';
+            objIdentity.external_username = string.replace(/^@|@twitter$/ig, '');
+            objIdentity.name              = objIdentity.external_username;
+            objIdentity.provider          = 'twitter';
+        } else if (/^[a-z0-9\.]{5,}@facebook$/i.test(string)) {
+        // https://www.facebook.com/help/?faq=105399436216001#What-are-the-guidelines-around-creating-a-custom-username?
+            objIdentity.external_id       = '';
+            objIdentity.external_username = string.replace(/@facebook$/ig, '');
+            objIdentity.name              = objIdentity.external_username;
+            objIdentity.provider          = 'facebook';
+        } else if (/^\+[\d\-]{5,15}$/.test(string)) {
+            string = string.replace(/\-|\(|\)|\ /g, '');
+            objIdentity.external_id       = string;
+            objIdentity.external_username = string;
+            objIdentity.name              = string.replace(/^.*([\d]{4})$/, '$1');
+            objIdentity.provider          = 'phone';
+        } else {
+            return null;
+        }
+        objIdentity.avatar_filename = encodeURI(config.api_url + '/avatar/default?name=' + objIdentity.name);
+        return objIdentity;
+    };
+
+    var here = function(card) {
+        $('#app-main').html(
+            '<div class="here-main">'
+          +     '<ol class="near-by"></ol>'
+          +     '<div class="my-card">'
+          +         '<img class="my-avatar" src="">'
+          +         '<div class="name-input">'
+          +             '<input type="text" class="name" value="">'
+          +             '<button class="ok">OK</button>'
+          +         '</div>'
+          +         '<div class="identities-list">'
+          +             '<ol></ol>'
+          +             '<button class="add">Enter your email or mobile</button>'
+          +         '</div>'
+          +     '</div>'
+          + '</div>'
+        );
+
+        var myCard = Store.get('user');
+        if (myCard && myCard.identities && myCard.identities.length) {
+            $('.here-main .name-input .name').val(myCard.name);
+            $('.here-main .my-card .my-avatar').attr('src', myCard.avatar_filename);
+            for (var i in myCard.identities) {
+                switch (myCard.identities[i].provider) {
+                    case 'email':
+                    case 'phone':
+                        addNewField(myCard.identities[i].external_username);
+                }
+            }
+        }
+
+        $('.here-main .name-input .ok').on('click', setMyCard);
+        $('.here-main .name-input .name').on('keyup', function() {
+            console.log(checkInput());
+            $('.here-main .name-input .ok').prop('disabled', !checkInput());
+        });
+        $('.here-main .identities-list').on('keyup', '.new-identity', function() {
+            $('.here-main .name-input .ok').prop('disabled', !checkInput());
+        });
+        $('.here-main .identities-list .add').on('click', addNewField);
+    };
+
+    var getUTF8Length = function(string) {
+        var length = 0;
+        if (string) {
+            for (var i = 0; i < string.length; i++) {
+                charCode = string.charCodeAt(i);
+                if (charCode < 0x007f) {
+                    length += 1;
+                } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
+                    length += 2;
+                } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
+                    length += 3;
+                }
+            }
+        }
+        return length;
+    };
+
+    var cutLongName = function(string) {
+        string = string ? string.replace(/[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g, ' ') : '';
+        while (getUTF8Length(string) > 30) {
+            string = string.substring(0, string.length - 1);
+        }
+        return string;
+    };
+
+    var checkInput = function() {
+        if (!$('.here-main .name-input .name').val()) {
+            return false;
+        }
+        var inputs = $('.here-main .identities-list li');
+        var numIds = 0;
+        for (var i = 0; i < inputs.length; i++) {
+            var strIdentity = $(inputs[i]).find('.new-identity').val();
+            if (strIdentity) {
+                if (parseAttendeeInfo(strIdentity)) {
+                    numIds++;
+                } else {
+                    return false;
+                }
+            }
+        }
+        if (!numIds) {
+            return false;
+        }
+        return true;
+    };
+
+    var setMyCard = function() {
+        var myCard = {
+            name       : $('.here-main .name-input .name').val(),
+            avatar     : $('.here-main .my-card .my-avatar').attr('src'),
+            identities : []
+        };
+        var inputs = $('.here-main .identities-list li');
+        for (var i = 0; i < inputs.length; i++) {
+            var objIdentity = parseAttendeeInfo($(inputs[i]).find('.new-identity').val());
+            if (objIdentity) {
+                myCard.identities.push(objIdentity);
+            }
+        }
+        if (myCard.name && myCard.identities.length) {
+            Live.init(myCard, liveCallback);
+        }
+    };
+
+    var updateMyCard = function(card) {
+        // update name
+        var objName = $('.here-main .name-input .name');
+        var curName = trim(objName.val()).toLowerCase();
+        var gotName = trim(card.name);
+        if (curName !== gotName.toLowerCase()) {
+            objName.val(gotName);
+        }
+        // update avatar
+        var objAvatar = $('.here-main .my-card .my-avatar');
+        var curAvatar = trim(objAvatar.attr('src')).toLowerCase();
+        var gotAvatar = trim(card.avatar);
+        if (curAvatar !== gotAvatar.toLowerCase()) {
+            objAvatar.attr('arc', gotAvatar);
+        }
+        // update identities
+        var inputs = $('.here-main .identities-list li');
+        var found  = {};
+        for (var i = 0; i < inputs.length; i++) {
+            var idItem = trim($(inputs[i]).find('.new-identity').val()).toLowerCase();
+            for (var j = 0; j < card.identities.length; j++) {
+                var idGot = trim(card.identities[j].external_username).toLowerCase();
+                if (idItem === idGot) {
+                    found[card.identities[j].external_username] = true;
+                }
+            }
+        }
+        for (i = 0; i < card.identities.length; i++) {
+            if (typeof found[card.identities[i].external_username] === 'undefined') {
+                addNewField(trim(card.identities[i].external_username));
+            }
+        }
+    };
+
+    var updateOthers = function(cards) {
+        var olNearBy = $('.here-main .near-by li');
+        var found    = {};
+        for (var i = 0; i < olNearBy.length; i++) {
+            var domItem = $(olNearBy[i]);
+            var id = domItem.data('id');
+            if (id) {
+                if (typeof cards[id] === 'undefined') {
+                    domItem.remove();
+                } else {
+                    updatePerson(cards[id]);
+                    found[id] = true;
+                }
+            }
+        }
+        for (i in cards) {
+            if (typeof found[i] === 'undefined') {
+                addNewPerson(cards[i]);
+            }
+        }
+    };
+
+    var liveCallback = function(data) {
+        if (typeof data['me'] !== 'undefined') {
+            updateMyCard(data.me);
+        }
+        if (typeof data['others'] !== 'undefined') {
+            updateOthers(data.others);
+        }
+    };
+
+    var addNewField = function(val) {
+        $('.here-main .identities-list').append(
+            '<li><input class="new-identity" type="text" value="'
+          + (Object.prototype.toString.call(val) === '[object String]' ? escape(val) : '')
+          + '"></li>'
+        );
+    };
+
+    var addNewPerson = function(card) {
+        var objLi = $(
+            '<li data-id="' + card.id + '">'
+          +     '<img calss="avatar" src="' + card.avatar + '"/>'
+          +     '<div class="name">' + escape(card.name) + '</div>'
+          + '</li>'
+        );
+        objLi.data('card', card);
+        $('.here-main .near-by').append(objLi);
+    };
+
+    var updatePerson = function(card) {
+        // update dom
+        var objLi = $('.here-main .near-by [data-id="' + card.id + '"]');
+        var oldData = objLi.data('card');
+        objLi.data('card', card);
+        // update name
+        if (trim(oldData.name).toLowerCase() !== trim(card.name).toLowerCase()) {
+            objLi.find('.name').html(card.name);
+        }
+        // update avatar
+        if (trim(oldData.avatar).toLowerCase() !== trim(card.avatar).toLowerCase()) {
+            objLi.find('.avatar').attr('src', card.avatar);
+        }
+    };
+
     window.addEventListener('load', function() {
         setTimeout(function() {
             window.scrollTo(0, 0);
         }, 0);
 
         function isLocalStorageSupported() {
-            try { 
+            try {
                 var supported = typeof window.localStorage !== 'undefined';
                 if (supported) {
                     window.localStorage.setItem('storage', 0);
@@ -827,19 +1079,6 @@ define(function (require, exports, module) {
         if (!isLocalStorageSupported()) {
             alert('EXFE cannot be used in private browsing mode.');
         }
-
-
-        // @debug only {
-        var myCard = Store.get('user');
-        myCard.avatar = myCard.avatar_filename;
-        if (myCard) {
-            Live.init(myCard, function(data) {
-                // console.log(data);
-            });   
-        } else {
-            alert('Login first!');
-        }
-        // }
     });
 
     if (sms_token) {
@@ -872,6 +1111,9 @@ define(function (require, exports, module) {
                         && typeof hash[i + 1] !== 'undefined'
                         && hash[i + 1].match(/^.{4}/)) {
                     cross(hash[i + 1], hash[i].replace(/^\!(.*)/, '$1', hash[i]));
+                    return;
+                } else if (hash[i].match(/^here/)) {
+                    here();
                     return;
                 } else {
                     // 404

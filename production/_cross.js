@@ -520,7 +520,7 @@ ExfeeWidget = {
         } else {
             return null;
         }
-        objIdentity.avatar_filename = ExfeeWidget.api_url + '/avatar/default?name=' + objIdentity.name;
+        objIdentity.avatar_filename = encodeURI(ExfeeWidget.api_url + '/avatar/default?name=' + objIdentity.name);
         return objIdentity;
     },
 
@@ -2265,7 +2265,7 @@ define(function (require, exports, module) {
         window.ExfeePanel    = require('exfeepanel');
         // init showtime
         window.showtimeTimer = setInterval(ShowTime, 50);
-        // init 
+        // init
         window.convTimer     = null;
     });
     // init event

@@ -21,7 +21,7 @@ define('live', function (require) {
 
     var myData   = {
         card      : {
-            id         : Math.random() + '',
+            id         : '',
             name       : '',
             avatar     : '',
             bio        : '',
@@ -37,7 +37,7 @@ define('live', function (require) {
 
     var submit_request    = null;
 
-    
+
     var log = function(data, table) {
         if (bolDebug) {
             var type = Object.prototype.toString.call(data);
@@ -65,17 +65,18 @@ define('live', function (require) {
             data    : JSON.stringify(myData),
             success : function(data) {
                 var rawToken = JSON.parse(data);
-                if (rawToken) {
+                if (rawToken && rawToken.length) {
                     secCnt = 0;
-                    if (token !== rawToken) {
-                        log('Got new token: ' + rawToken);
+                    if (token !== rawToken[0]) {
+                        log('Got new token: ' + rawToken[0] + ', id: ' + rawToken[1]);
                         if (stream.live) {
                             stream.kill();
                             log('Close current stream');
                         }
                         secCnt = secInt;
                     }
-                    token = rawToken;
+                    token = rawToken[0];
+                    myData.card.id = rawToken[1];
                 }
             },
             error   : function(data) {
@@ -99,7 +100,7 @@ define('live', function (require) {
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
-        }  
+        }
     }
 
 
@@ -107,7 +108,7 @@ define('live', function (require) {
         if (data && data.length) {
             var rawCards = JSON.parse(data[data.length - 1]);
             if (rawCards && rawCards.length) {
-                var cards = [];
+                var cards = {};
                 for (var i in rawCards) {
                     if (rawCards[i].id) {
                         if (rawCards[i].id === myData.card.id) {
@@ -116,7 +117,12 @@ define('live', function (require) {
                             myData.card.bio        = rawCards[i].bio;
                             myData.card.identities = rawCards[i].identities;
                         } else {
-                            cards.push(rawCards[i]);   
+                            if (!rawCards[i].avatar) {
+                                rawCards[i].avatar = encodeURI(
+                                    Config.api_url + '/avatar/default?name=' + rawCards[i].name
+                                );
+                            }
+                            cards[rawCards[i].id] = rawCards[i];
                         }
                     }
                 }
@@ -193,7 +199,7 @@ define('live', function (require) {
                     stream.pop(lneResp);
                 }
             }
-            if ( stream.http.readyState === 4 && stream.prvLen === stream.http.responseText.length) {                
+            if ( stream.http.readyState === 4 && stream.prvLen === stream.http.responseText.length) {
                 stream.kill();
             }
         },
@@ -259,6 +265,7 @@ define('live', function (require) {
     var live = {
         init : function(card, callback) {
             if (checkCard(card)) {
+                stream.kill();
                 myData.card.name       = card.name;
                 myData.card.avatar     = card.avatar;
                 myData.card.bio        = card.bio;
@@ -271,6 +278,7 @@ define('live', function (require) {
                 echo = callback;
                 log('Set callback function');
             }
+            secCnt = secInt;
         }
     };
 
