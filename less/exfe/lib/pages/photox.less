@@ -60,7 +60,7 @@
     height: 80px;
     overflow-x: auto;
     overflow-y: hidden;
-    background-color: #c0c0c0;
+    background-color: #ccc;
     //border: 1px solid transparent;
     .border-radius(4px 0 0 4px);
     .box-sizing();
@@ -154,22 +154,27 @@
 
   .badge {
     position: absolute;
-    min-width: 24px;
-    height: 24px;
-    line-height: 20px;
+    min-width: 30px;
+    height: 30px;
+    line-height: 26px;
     text-align: center;
     color: #fff;
     font-weight: bold;
+    font-size: 18px;
     padding: 0 3px;
     background-color: #60adff;
     border: 2px solid #fff;
     .box-shadow(0 1px 3px rgba(0, 0, 0, .5));
-    .border-radius(24px);
+    .border-radius(30px);
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     -o-box-sizing: border-box;
     box-sizing: border-box;
+
+    .ix-selected {
+      margin-top: -2px;
+    }
   }
 
   .panel-header {

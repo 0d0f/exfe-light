@@ -5694,6 +5694,31 @@ img:-moz-broken {
   background-position: -300px -108px;
 }
 
+.ix-selected,
+.ix-like,
+.ix-unlike {
+  width: 20px;
+  height: 20px;
+}
+
+.ix-selected {
+  background-position: 0 -208px;
+}
+
+.ix-unlike {
+  background-position: -20px -208px;
+}
+
+.ix-like {
+  background-position: -40px -208px;
+}
+
+.ix-exit {
+  width: 48px;
+  height: 48px;
+  background-position: 0 -228px;
+}
+
 .navbar .dropdown-menu:before {
   display: none;
   border: none;
@@ -11800,7 +11825,7 @@ body {
   height: 80px;
   overflow-x: auto;
   overflow-y: hidden;
-  background-color: #c0c0c0;
+  background-color: #ccc;
   -webkit-border-radius: 4px 0 0 4px;
      -moz-border-radius: 4px 0 0 4px;
           border-radius: 4px 0 0 4px;
@@ -11923,18 +11948,19 @@ body {
 
 .photox-panel .badge {
   position: absolute;
-  height: 24px;
-  min-width: 24px;
+  height: 30px;
+  min-width: 30px;
   padding: 0 3px;
+  font-size: 18px;
   font-weight: bold;
-  line-height: 20px;
+  line-height: 26px;
   color: #fff;
   text-align: center;
   background-color: #60adff;
   border: 2px solid #fff;
-  -webkit-border-radius: 24px;
-     -moz-border-radius: 24px;
-          border-radius: 24px;
+  -webkit-border-radius: 30px;
+     -moz-border-radius: 30px;
+          border-radius: 30px;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
      -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -11943,6 +11969,10 @@ body {
       -ms-box-sizing: border-box;
        -o-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.photox-panel .badge .ix-selected {
+  margin-top: -2px;
 }
 
 .photox-panel .panel-header {
