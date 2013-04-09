@@ -22,7 +22,7 @@ define('photox', function (require) {
    */
 
   Handlebars.registerHelper('px_imported', function (imported) {
-    return imported > 0 ? imported : '√';
+    return imported > 0 ? imported : '<i class="ix-selected"></i>';
   });
 
   var errorHandler = function (data) {
@@ -171,7 +171,7 @@ define('photox', function (require) {
         'photox_like',
         {
           type : 'POST',
-          data : {id : id}
+          data : { id : id }
         },
         // {"like" : [object:response]}
         done
@@ -449,7 +449,7 @@ define('photox', function (require) {
   proto.liPhotoTmp = '{{#each photos}}'
     + '<li data-provider="{{provider}}" data-iid="{{by_identity.id}}" data-imported="{{imported}}" data-epid="{{external_id}}" data-pid="{{id}}">'
       + '<div class="thumbnail">'
-        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}">√</div>'
+        + '<div class="badge album-badge badgex {{#unless imported}}hide{{/unless}}"><i class="ix-selected"></i></div>'
         + '<div class="photo">'
           + '<div class="photo-figure"></div>'
           + '{{#if images.preview.url}}'
@@ -576,7 +576,7 @@ define('photox', function (require) {
       $t.attr('data-imported', '0');
     } else {
       $t.attr('data-imported', '-2');
-      $b.text('√');
+      $b.html('<i class="ix-selected"></i>');
     }
   };
 

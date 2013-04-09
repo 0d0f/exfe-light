@@ -305,23 +305,65 @@ define('mnemosyne', function (require) {
 
   var $ = require('jquery'),
       TWEEN = require('tween'),
+      R = require('rex'),
+      HumanTime = require('humantime'),
       Handlebars = require('handlebars'),
       Panel = require('panel'),
       request = require('api').request,
+      addLike = function (photo_id, done, fail) {
+        return request(
+          'photox_like',
+          {
+            type: 'POST',
+            data: { id: photo_id }//,
+            //beforeSend: before
+          },
+          done,
+          fail
+        );
+      },
+      unLike = function (photo_id, done, fail) {
+        return request(
+          'photox_like',
+          {
+            type: 'POST',
+            data: {
+              id: photo_id,
+              LIKE: false
+            }//,
+            //beforeSend: before
+          },
+          done,
+          fail
+        );
+      },
+      getLikes = function (photox_id, done) {
+        return request(
+          'photox_getLikes',
+          {
+            resources: { photox_id : photox_id }
+          },
+          done
+        );
+      },
       getPhotoX = function (photox_id, before, done, fail) {
         return request(
           'photox_getPhotoX',
           {
-            resources : { photox_id : photox_id },
+            resources: { photox_id : photox_id },
             beforeSend: before
           },
-          // {"photox" : [object:photox]}
           done,
           fail
         );
       },
       mrandom = Math.random,
       proto;
+
+  Handlebars.registerHelper('photoxPrintTime', function (updated_at) {
+    var d = HumanTime.parseISO(HumanTime.toISO(updated_at));
+    return HumanTime(d, (new Date).getTime());
+  });
 
   /**
    * Help functions.
@@ -409,7 +451,7 @@ define('mnemosyne', function (require) {
     f.style.opacity = 1;
     f.style.width = rw + 'px';
     f.style.height = rh + 'px';
-    var m4 = Matrix.translate(rl, rt, PRECISION);
+    var m4 = Matrix.translate(rl, rt, 6);
     f.style.webkitTransform = Matrix.toCSSMatrix3d(m4);
     f.style.transform = Matrix.toCSSMatrix3d(m4);
     f._m4 = m4;
@@ -516,15 +558,15 @@ define('mnemosyne', function (require) {
             + 'data-fullsize-url="{{images.fullsize.url}}" '
             + 'data-fullsize-height="{{images.fullsize.height}}" '
             + 'data-fullsize-width="{{images.fullsize.width}}" '
+            + 'data-liked="{{like}}" '
             + '>'
-          + '<div class="photo">'
-          + '</div>'
+          + '<div class="photo"></div>'
           + '<div class="mask"></div>'
-          + '<div class="btn-like">Like</div>'
+          + '<div class="btn-like ix-{{#unless like}}un{{/unless}}like"{{#unless like}} style="opacity: 0;"{{/unless}}></div>'
           + '<div class="meta">'
             + '<div class="avatar"><img width="24" height="24" src="{{by_identity.avatar_filename}}" alt="" /></div>'
             + '<div class="title">{{caption}}</div>'
-            + '<time>{{updated_at}}</time>'
+            + '<time>{{photoxPrintTime updated_at}}</time>'
             + '<div class="place"></div>'
           + '</div>'
         + '</figure>';
@@ -613,8 +655,8 @@ define('mnemosyne', function (require) {
     SlideShow.prototype.show = function (figure) {
       var $e = this.$element,
           s = $e[0].style;
-      s.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + $('#app-tmp').scrollLeft() + ', 0, 1, 1)';
-      s.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + $('#app-tmp').scrollLeft() + ', 0, 1, 1)';
+      s.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + $('#app-tmp').scrollLeft() + ', 0, 10, 1)';
+      s.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + $('#app-tmp').scrollLeft() + ', 0, 10, 1)';
       this.$element.attr('tabindex', '-1').focus();
       this.clone(figure);
     };
@@ -652,46 +694,69 @@ define('mnemosyne', function (require) {
           fw = +f.getAttribute('data-fullsize-width'),
           fh = +f.getAttribute('data-fullsize-height'),
           sw = w / fw, sh = h / fh;
+      var _div = document.createElement('div');
+      _div.setAttribute('class', 'pic');
+      _div.style.width = fw + 'px';
+      _div.style.height = fh + 'px';
       var _img = new Image();
-      _img.setAttribute('class', 'pic');
       _img.src = pu;
-      _img.width = fw;
-      _img.height = fh;
-      //_img.style.opacity = 0;
       var m0 = Matrix.move(Matrix.multiply(Matrix.scale(sw, sh), Matrix.identity()), [l, t, 1]);
-      _img.style.webkitTransform = m0;
-      _img.style.transform = m0;
+      _div.style.webkitTransform = _div.style.transform = m0;
 
       loadImage(
-        null,
+        _div,
         fu,
-        function (img) { img.src = fu; }
-        // error
+        function (img, div) {
+          /*
+          if (img.width !== fw || img.height !== fh) {
+            img.width = img.width;
+            img.height = img.height;
+            div.style.width = img.width + 'px';
+            div.style.height = img.height + 'px';
+            var m1 = self.cal(img.width, img.height);
+            div._m4 = m1;
+            console.log(div._m4);
+            style.webkitTransform = style.transform = Matrix.toCSSMatrix3d(div._m4);
+          } else {
+            img.width = fw;
+            img.height = fh;
+          }
+          */
+          img.width = fw;
+          img.height = fh;
+          img.src = fu;
+          div.appendChild(img);
+          img = VOID;
+        },
+        function (img, div) {
+          d.setAttribute('class', 'load-failed');
+        }
       );
-      this.$element.append(_img);
+
+      this.$element.append(_div);
 
       this.curr = f;
-      var m1 = this.cal(fw, fh),
-          style = _img.style;
 
-      _img._m4 = m1;
+      var m1 = this.cal(fw, fh),
+          style = _div.style;
+
+      _div._m4 = m1;
       new TWEEN.Tween(m0)
         .to(m1, 400)
         .interpolation(TWEEN.Interpolation.Bezier)
         .easing(TWEEN.Easing.Exponential.Out)
         .onUpdate(function (time) {
           var t = Matrix.toCSSMatrix3d(this);
-          style.webkitTransform = t;
-          style.transform = t;
-          //style.opacity = time;
+          style.webkitTransform = style.transform = t;
           es.opacity = time;
         })
         .onComplete(function () {
           self.lockup = false;
+          _div._tween = null;
           TWEEN.remove(this);
         })
         .start();
-      return _img;
+      return _div;
     };
 
     SlideShow.prototype.prev = function () {
@@ -758,10 +823,10 @@ define('mnemosyne', function (require) {
           m = this.cal(fw, fh),
           toCSSMatrix3d = Matrix.toCSSMatrix3d;
       new TWEEN.Tween(m4)
-        .to(m, 233)
+        .to(m, 144)
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onUpdate(function () {
-          imgs.webkitTransform = imgs.transform = toCSSMatrix3d(slice(this));
+          imgs.webkitTransform = imgs.transform = toCSSMatrix3d([].slice.call(this));
         })
         .onComplete(function () {
           TWEEN.remove(this);
@@ -786,28 +851,35 @@ define('mnemosyne', function (require) {
           fh = +f.getAttribute('data-fullsize-height'),
           m = this.cal(fw, fh);
 
+      var _div = document.createElement('div');
+      _div.setAttribute('class', 'pic');
+      _div.style.width = fw + 'px';
+      _div.style.height = fh + 'px';
+      _div._m4 = m;
+
       var _img = new Image();
-      _img.setAttribute('class', 'pic');
       _img.src = pu;
-      _img.width = fw;
-      _img.height = fh;
-      _img._m4 = m;
+
       m = Matrix.toCSSMatrix3d(m);
-      _img.style.webkitTransform = m;
-      _img.style.transform = m;
-      _img.style.opacity = 0;
+      _div.style.webkitTransform = _div.style.transform = m;
+      _div.style.opacity = 0;
 
       loadImage(
-        null,
+        _div,
         fu,
-        function (img) {
+        function (img, div) {
+          img.width = fw;
+          img.height = fh;
           img.src = fu;
+          div.appendChild(img);
           img = VOID;
+        },
+        function (img, div) {
+          div.setAttribute('class', 'load-failed');
         }
-        //error
       );
-      this.$element.append(_img);
-      return _img;
+      this.$element.append(_div);
+      return _div;
     };
 
     SlideShow.prototype.resize = function (w, h) {
@@ -858,6 +930,8 @@ define('mnemosyne', function (require) {
 
         // crossId = photoxId
         this.crossId = opts.crossId;
+        // userId
+        this.userId = opts.userId;
         delete opts.crossId;
 
         this.render();
@@ -881,6 +955,10 @@ define('mnemosyne', function (require) {
 
         this.paddingRight = 30;
 
+        this.scrollLeft = 0;
+
+        this.showPhotoStatus = false;
+
         this.listen();
       },
 
@@ -901,11 +979,6 @@ define('mnemosyne', function (require) {
         }
         animate();
 
-        $m.on('click.mnemosyne', '.gallery .surface', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        });
-
         $m.on('mouseenter.mnemosyne mouseleave.mnemosyne', '.gallery .surface', function (e) {
           e.preventDefault();
           var t = this,
@@ -914,6 +987,7 @@ define('mnemosyne', function (require) {
               _m4 = this._m4,
               isMouseEnter = e.type === 'mouseenter',
               tween = $t.data('tween'),
+              liked = +$t.attr('data-liked'),
               masks = t.querySelector('.mask').style,
               likes = t.querySelector('.btn-like').style,
               metas = t.querySelector('.meta').style,
@@ -933,17 +1007,21 @@ define('mnemosyne', function (require) {
             tween
               .delay(233)
               .to({ v: 1.01 }, 150)
-              .onUpdate(function () {
+              .onUpdate(function (t) {
                 masks.opacity = (this.v - 1) * 4;
-                likes.opacity = metas.opacity = this.v * 0.99; // 1 / 1.01
+                metas.opacity = t; // 1 / 1.01
+                if (liked !== 1) { likes.opacity = t; }
                 ts.transform = ts.webkitTransform = toCSSMatrix3d(multiply(scale(this.v, this.v), _m4));
               });
           } else {
             tween.delay(0)
               .to({ v: 1 }, 150)
-              .onUpdate(function () {
+              .onUpdate(function (p) {
                 masks.opacity = (this.v - 1) * 4;
-                likes.opacity = metas.opacity = (this.v - 1) * 0.99;
+                metas.opacity = (1 - p) * 0.99;
+                if (liked !== 1) {
+                  likes.opacity = 1 - p;
+                }
                 t.style.transform = ts.webkitTransform= toCSSMatrix3d(multiply(scale(this.v, this.v), _m4));
               })
               .onComplete(function () {
@@ -956,12 +1034,51 @@ define('mnemosyne', function (require) {
           .on('click.mnemosyne', '.gallery .surface', function (e) {
             e.preventDefault();
             //$(this).trigger('mouseleave.mnemosyne');
+            self.scrollLeft = $at.scrollLeft();
             $at.addClass('show-slideshow');
             self.emit('launch-slideshow', this);
           })
             .on('click.mnemosyne', '.surface .btn-like', function (e) {
               e.preventDefault();
               e.stopPropagation();
+              var $t = $(this),
+                  $p = $t.parent(),
+                  pid = +$p.data('id'),
+                  liked = +$p.attr('data-liked');
+
+              if (liked === -2) {
+                return;
+              }
+
+              $p.attr('data-liked', -2);
+
+              if (liked === 1) {
+                unLike(
+                  pid,
+                  function (data) {
+                    $p.attr('data-liked', 0);
+                    $t
+                      .addClass('ix-unlike')
+                      .removeClass('ix-like');
+                  },
+                  function () {
+                    $p.attr('data-liked', 1);
+                  }
+                );
+                return;
+              }
+
+              addLike(pid,
+                function (data) {
+                  $p.attr('data-liked', 1);
+                  $t
+                    .addClass('ix-like')
+                    .removeClass('ix-unlike');
+                },
+                function () {
+                  $p.attr('data-liked', 0);
+                }
+              );
             });
 
           $s.on('keydown.mnemosyne', function (e) {
@@ -983,6 +1100,23 @@ define('mnemosyne', function (require) {
               }
             });
 
+          $s.on('click.mnemosyne', function (e) {
+            e.preventDefault();
+            if (e.target.tagName !== 'IMG') {
+              self.emit('exit-slideshow');
+            }
+          });
+
+        // todo: mousewheel 可以禁用浏览器的默认的左右滚动手势，但现在html jie
+        // 结构不生效
+        $('html, body').bind('mousewheel.mnemosyne', function (e, d, x) { return false; });
+        $at.bind('mousewheel.mnemosyne', function (e, d, x) {
+          var left = $(this).scrollLeft();
+          var pixels = left + x;
+          $(this).scrollLeft(pixels);
+          return false;
+        });
+
         $at.on('scroll.mnemosyne', function (e) {
           e.preventDefault();
           e.stopPropagation();
@@ -993,6 +1127,7 @@ define('mnemosyne', function (require) {
 
           var cb = function (img, f) {
             if (f) {
+              $(f).removeClass('load-failed');
               var whlt = f.getAttribute('data-whlt').split(','),
                   style = img.style;
               f.setAttribute('data-lazy', '1');
@@ -1006,15 +1141,16 @@ define('mnemosyne', function (require) {
               new TWEEN.Tween({v: 0})
                 .to({ v: 1 })
                 .easing(TWEEN.Easing.Cubic.InOut)
-                .onUpdate(function () {
-                  style.opacity = this.v;
-                })
+                .onUpdate(function () { style.opacity = this.v; })
                 .onComplete(function () { TWEEN.remove(this); })
                 .start();
             }
           },
           ecb = function (img, f) {
-            f && f.setAttribute('data-lazy', '-1');
+            if (f) {
+              f.setAttribute('data-lazy', '-1');
+              $(f).addClass('load-failed');
+            }
           };
 
           while ((f = $fs.splice(0, 1)[0])) {
@@ -1035,6 +1171,7 @@ define('mnemosyne', function (require) {
           self.getGallery();
           self.updateViewport();
           self.update();
+          //$at.trigger('scroll.mnemosyne');
           $at.trigger('scroll.mnemosyne');
         });
 
@@ -1049,15 +1186,17 @@ define('mnemosyne', function (require) {
         });
 
         self.on('launch-slideshow', function (figure) {
-          var ms = $m[0].style;
-          new TWEEN.Tween({ z: 1 })
+          self.showPhotoStatus = true;
+          var gs = $g[0].style;
+          //var ms = $m[0].style;
+          new TWEEN.Tween({ z: 3 })
             .to({ z: -610 }, 400)
             //.interpolation(TWEEN.Interpolation.Bezier)
             .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(function (t) {
-              ms.transform =
-                ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
-              ms.opacity = 0.1 * t;
+              gs.transform =
+                gs.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
+              gs.opacity = 0.1 * t;
             })
             .onComplete(function () {TWEEN.remove(this);})
             .start()
@@ -1065,17 +1204,20 @@ define('mnemosyne', function (require) {
         });
 
         self.on('exit-slideshow', function () {
+          self.showPhotoStatus = false;
           $m.focus();
           self.slideshow.exit();
-          var ms = $m[0].style;
-          new TWEEN.Tween({ z: -144 })
-            .to({ z: 1.0000099999999748 }, 400)
+          //var ms = $m[0].style;
+          var gs = $g[0].style;
+          new TWEEN.Tween({ z: -610 })
+            .to({ z: 1 }, 400)
             .interpolation(TWEEN.Interpolation.Bezier)
             .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(function (t) {
-              ms.transform =
-                ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
-              ms.opacity = 0.5 * (t + 1);
+              $at.scrollLeft(self.scrollLeft);
+              gs.transform =
+                gs.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.z + ', 1)';
+              gs.opacity = 0.5 * (t + 1);
             })
             .onComplete(function () {
               $at.removeClass('show-slideshow');
@@ -1096,7 +1238,7 @@ define('mnemosyne', function (require) {
           $WIN.trigger('throttledresize.mnemosyne');
         });
 
-        $(document).one('click.mnemosyne', '.mnemosyne-exit', function (e) {
+        $('body').on('click.mnemosyne', '.mnemosyne-exit', function (e) {
           e.preventDefault();
           e.stopPropagation();
           self.hide();
@@ -1105,9 +1247,9 @@ define('mnemosyne', function (require) {
 
       updateViewport: function () {
         var x = window.scrollX, y = window.scrollY;
-        var matrix3d0 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.000001, 1)';
-        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.010000, 1)';
-        var matrix3d2 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0.010000, 1)';
+        var matrix3d0 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 1, 1)';
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 3, 1)';
+        var matrix3d2 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 17, 1)';
         var ms = $('.mnemosyne-bg')[0].style;
         ms.transform = ms.webkitTransform = matrix3d0;
         var as = this.$appTmp[0].style;
@@ -1117,10 +1259,10 @@ define('mnemosyne', function (require) {
       },
 
       addMBG: function () {
-        var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 0.000001, 1)';
-        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1.000001, 1)';
+        var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1, 1)';
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 2, 1)';
         matrix3d1 = '-webkit-transform:' +matrix3d1+';transform:'+matrix3d1+';';
-        $('<div class="mnemosyne-exit" style="'+matrix3d1+'"></div><div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
+        $('<div class="mnemosyne-exit ix-exit" style="'+matrix3d1+'"></div><div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
       },
 
       delMBG: function () {
@@ -1220,15 +1362,27 @@ define('mnemosyne', function (require) {
       },
 
       getPhotos: function () {
-        var self = this;
-        getPhotoX(self.crossId,
-          function () {
-            //console.log(233);
-          },
-          function (data) {
-            self.emit('load-photos', data);
-          }
-        );
+        var self = this, userId = this.userId;
+          getPhotoX(
+            self.crossId,
+            null,
+            function (a) {
+            //var likes = a[0].likes,
+            var likes = a.likes,
+                photos = a.photox.photos;
+            R.each(photos, function (v) {
+              var lk = likes[v.id];
+              v.like = 0;
+              if (lk && lk.length) {
+                R.each(lk, function (u) {
+                  if (u.object_id === v.id && u.by_identity.connected_user_id === userId) {
+                    v.like = 1;
+                  }
+                });
+              }
+          });
+          self.emit('load-photos', a);
+        });
       },
 
       getViewport: function () {
@@ -1240,13 +1394,13 @@ define('mnemosyne', function (require) {
 
       getGallery: function () {
         this.gvw = this.vw;
-        this.gvh = this.vh - 80 - 40;
+        this.gvh = this.vh - 40 - 60;
       },
 
       showBefore: function () {
         $('body').addClass('mnemosyne-start');
-        $('#app-tmp').css('-webkit-transform', 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1.000001, 1)');
-        $('#app-tmp').css('transform', 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1.000001, 1)');
+        $('#app-tmp').css('-webkit-transform', 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 3, 1)');
+        $('#app-tmp').css('transform', 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 3, 1)');
         this.getPhotos();
       },
 
@@ -1254,31 +1408,45 @@ define('mnemosyne', function (require) {
         var $mbg = $('.mnemosyne-bg'),
             mbgStyle = $mbg[0].style,
             mbgInStyle = $mbg.find('.mnemosyne-bg-in')[0].style,
+            //$at = this.$appTmp,
+            $m = this.$mnemosyne,
+            ms = $m[0].style,
             $at = this.$appTmp,
-            ms = this.$mnemosyne[0].style;
+            $g = this.$gallery,
+            gs = $g[0].style;
 
         //1024
-        ms.transform = ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1)';
+        //ms.transform = ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1)';
+        //gs.transform = gs.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1)';
 
         var step0 = new TWEEN.Tween({v: 0})
-              .to({ v: 1}, 1600)
-              .delay(200)
+              .to({ v: 1}, 750)
               .interpolation(TWEEN.Interpolation.Bezier)
               .easing(TWEEN.Easing.Cubic.In)
               .onUpdate(function () {
-                mbgStyle.opacity = mbgInStyle.opacity = this.v;
+                mbgStyle.opacity = this.v;
               })
               .onComplete(function () {
                 TWEEN.remove(this);
               });
-        var step1 = new TWEEN.Tween({ v: 2584})
-              .to({ v: 1.000001 }, 1600)
-              .delay(500)
+        var step1 = new TWEEN.Tween({v: 0})
+              .delay(250)
+              .to({ v: 1}, 1000)
               .interpolation(TWEEN.Interpolation.Bezier)
               .easing(TWEEN.Easing.Cubic.In)
-              .onUpdate(function (t) {
-                ms.opacity = t;
-                ms.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.v + ', 1)'
+              .onUpdate(function () {
+                mbgInStyle.opacity = this.v;
+              })
+              .onComplete(function () {
+                TWEEN.remove(this);
+              });
+        var step2 = new TWEEN.Tween({ v: 2584})
+              .delay(250)
+              .to({ v: 3  }, 1500)
+              .interpolation(TWEEN.Interpolation.Bezier)
+              .easing(TWEEN.Easing.Cubic.In)
+              .onUpdate(function () {
+                gs.webkitTransform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, ' + this.v + ', 1)'
               })
               .onComplete(function () {
                 $at.trigger('scroll.mnemosyne');
@@ -1286,6 +1454,7 @@ define('mnemosyne', function (require) {
               });
         step0.start();
         step1.start();
+        step2.start();
       },
 
       show: function () {
@@ -1308,7 +1477,7 @@ define('mnemosyne', function (require) {
         this.element.off();
 
         new TWEEN.Tween({ o: 1 })
-          .to({ o: 0 }, 610)
+          .to({ o: 0 }, 250)
           .easing(TWEEN.Easing.Cubic.In)
           .onUpdate(function () {
             mbgs.opacity
@@ -1325,7 +1494,9 @@ define('mnemosyne', function (require) {
 
       destory: function () {
         this.delMBG();
-        $('body').removeClass('mnemosyne-start');
+        $('html, body').unbind('mousewheel.mnemosyne');
+        $('body').off('.mnemosyne').removeClass('mnemosyne-start');
+        $('.mnemosyne-exit').off('click.mnemosyne');
         this.$appTmp
           .removeClass('.show-mnemosyne')
           .off('.mnemosyne')

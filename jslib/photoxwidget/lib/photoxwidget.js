@@ -125,11 +125,13 @@ define('photoxwidget', function (require) {
         if ($('.mnemosyne-panel').size()) {
           return;
         }
+        var user = Store.get('user');
         var mnemosyne = new Mnemosyne({
           options: {
             parentNode: $('#app-tmp'),
             srcNode: $('.table-wrapper'),
-            crossId: Cross.id
+            crossId: Cross.id,
+            userId: user.id
           }
         });
         mnemosyne.show();
@@ -144,6 +146,7 @@ define('photoxwidget', function (require) {
           e.stopPropagation();
           self.photoxPanel.hide();
           self.photoxPanel = null;
+          $(this).off('click.photoxwidget');
           return;
         }
       });
