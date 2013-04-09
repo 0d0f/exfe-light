@@ -5729,6 +5729,12 @@ img:-moz-broken {
   border: none;
 }
 
+@font-face {
+  font-family: "digital-7";
+  font-style: normal;
+  src: url(/static/font/digital-7-italic.woff) format('woff');
+}
+
 .xbtn {
   cursor: pointer;
 }
@@ -8560,18 +8566,18 @@ body {
 .cross-background .cross-background-blur {
   width: 100%;
   height: 297px;
-  background-color: rgba(250, 250, 250, 0.904);
+  background-color: rgba(250, 250, 250, 0.728);
   background-color: transparent;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(250, 250, 250, 0.7)), color-stop(50%, rgba(250, 250, 250, 0.88)), to(#fafafa));
-  background-image: -webkit-linear-gradient(rgba(250, 250, 250, 0.7), rgba(250, 250, 250, 0.88) 50%, #fafafa);
-  background-image: -moz-linear-gradient(top, rgba(250, 250, 250, 0.7), rgba(250, 250, 250, 0.88) 50%, #fafafa);
-  background-image: -o-linear-gradient(rgba(250, 250, 250, 0.7), rgba(250, 250, 250, 0.88) 50%, #fafafa);
-  background-image: linear-gradient(rgba(250, 250, 250, 0.7), rgba(250, 250, 250, 0.88) 50%, #fafafa);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(250, 250, 250, 0.33)), color-stop(50%, rgba(250, 250, 250, 0.66)), to(#fafafa));
+  background-image: -webkit-linear-gradient(rgba(250, 250, 250, 0.33), rgba(250, 250, 250, 0.66) 50%, #fafafa);
+  background-image: -moz-linear-gradient(top, rgba(250, 250, 250, 0.33), rgba(250, 250, 250, 0.66) 50%, #fafafa);
+  background-image: -o-linear-gradient(rgba(250, 250, 250, 0.33), rgba(250, 250, 250, 0.66) 50%, #fafafa);
+  background-image: linear-gradient(rgba(250, 250, 250, 0.33), rgba(250, 250, 250, 0.66) 50%, #fafafa);
   background-repeat: no-repeat;
   -webkit-border-radius: 4px 4px 0 0;
      -moz-border-radius: 4px 4px 0 0;
           border-radius: 4px 4px 0 0;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b3fafafa', endColorstr='#fffafafa', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#54fafafa', endColorstr='#fffafafa', GradientType=0);
 }
 
 .cross-background .cross-background-side {
@@ -12010,13 +12016,21 @@ ol.complete-list {
 }
 
 .photox-widget .table-wrapper td.more {
+  display: inline-block;
+  width: 100px;
+  font-size: 42px;
   line-height: 64px;
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
   vertical-align: middle;
-}
-
-.photox-widget .table-wrapper td.more > figure {
-  width: 64px;
+  background-color: #cccccc;
+  background-image: -moz-linear-gradient(left, #7f7f7f, #cccccc);
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#7f7f7f), to(#cccccc));
+  background-image: -webkit-linear-gradient(left, #7f7f7f, #cccccc);
+  background-image: -o-linear-gradient(left, #7f7f7f, #cccccc);
+  background-image: linear-gradient(to right, #7f7f7f, #cccccc);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff7f7f7f', endColorstr='#ffcccccc', GradientType=1);
 }
 
 .photox-widget .table-wrapper figure {
@@ -12148,6 +12162,9 @@ ol.complete-list {
   -webkit-border-radius: 6px 6px 0 0;
      -moz-border-radius: 6px 6px 0 0;
           border-radius: 6px 6px 0 0;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-header .panel-title {
@@ -12204,7 +12221,9 @@ ol.complete-list {
 
 .photox-panel .panel-header .nav-tabs > li.active {
   background-color: #3784d5;
-  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+          box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-header .nav-tabs > li.active > a {
@@ -12244,7 +12263,7 @@ ol.complete-list {
 }
 
 .photox-panel .panel-header .nav-tabs > li > a i {
-  margin-top: 15px;
+  margin-top: 12px;
   vertical-align: middle;
 }
 
@@ -12258,6 +12277,8 @@ ol.complete-list {
   position: relative;
   min-height: 240px;
   overflow-x: hidden;
+  color: #e6e6e6;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-body .breadcrumb {
@@ -12283,8 +12304,9 @@ ol.complete-list {
 }
 
 .photox-panel .panel-body .breadcrumb li a {
-  color: #ccc;
+  color: #e6e6e6;
   text-decoration: none;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-body .breadcrumb .divider {
@@ -12300,7 +12322,8 @@ ol.complete-list {
 }
 
 .photox-panel .panel-body .breadcrumb .active {
-  color: #fff;
+  color: #e6e6e6;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-body .thumbnails {
@@ -12439,9 +12462,17 @@ ol.complete-list {
   display: table;
   width: 100%;
   min-height: 240px;
-  font-size: 18px;
   color: #7f7f7f;
   vertical-align: middle;
+}
+
+.photox-panel .panel-body .errors p {
+  margin-bottom: 0;
+}
+
+.photox-panel .panel-body .errors .title {
+  font-size: 21px;
+  line-height: 26px;
 }
 
 .photox-panel .panel-body .errors.hide {
@@ -12483,6 +12514,8 @@ ol.complete-list {
   position: absolute;
   left: 15px;
   line-height: 66px;
+  color: #e6e6e6;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .photox-panel .panel-footer .icon-resize {
@@ -12490,31 +12523,31 @@ ol.complete-list {
   right: 15px;
 }
 
-.photox-panel .panel-footer .xbtn-upload {
+.photox-panel .panel-footer .xbtn-import {
   position: relative;
   top: 13px;
   display: block;
-  width: 160px;
+  width: 180px;
   height: 40px;
   margin: 0 auto;
   font-size: 18px;
   font-weight: bold;
   line-height: 40px;
   color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
-  background-color: #6bc0fb;
-  background-image: -moz-linear-gradient(90deg, #155ca6, #6bc0fb);
-  background-image: -webkit-linear-gradient(90deg, #155ca6, #6bc0fb);
-  background-image: -o-linear-gradient(90deg, #155ca6, #6bc0fb);
-  background-image: linear-gradient(90deg, #155ca6, #6bc0fb);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  background-color: #23558c;
+  background-image: -moz-linear-gradient(180deg, #369fe9, #23558c);
+  background-image: -webkit-linear-gradient(180deg, #369fe9, #23558c);
+  background-image: -o-linear-gradient(180deg, #369fe9, #23558c);
+  background-image: linear-gradient(180deg, #369fe9, #23558c);
   background-repeat: repeat-x;
-  border: none;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
-     -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
-          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+  border: 1px solid #23558C;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+     -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+          box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .photox-panel .loading {
@@ -12526,7 +12559,8 @@ ol.complete-list {
 .mnemosyne-start {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   -webkit-font-smoothing: antialiased;
   opacity: 1;
   -webkit-transform: translateZ(-999999px);
@@ -12542,9 +12576,10 @@ ol.complete-list {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1060;
+  z-index: 1062;
   width: 100%;
   height: 100%;
+  min-height: 100%;
   padding: 0;
   margin: 0;
   overflow-x: scroll;
@@ -12584,6 +12619,7 @@ ol.complete-list {
 
 .mnemosyne-start .mnemosyne-bg-in {
   position: absolute;
+  z-index: 1061;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -12624,6 +12660,7 @@ ol.complete-list {
   position: absolute;
   pointer-events: auto;
   -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
           box-sizing: border-box;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
@@ -12745,7 +12782,7 @@ ol.complete-list {
   z-index: 3px;
   display: -webkit-box;
   display: -webkit-flex;
-  display: -moz-flex;
+  display: -moz-box;
   display: -ms-flex;
   display: -o-flex;
   display: flex;
@@ -12758,7 +12795,9 @@ ol.complete-list {
   color: #808080;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  box-orient: horizontal;
   -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
 
@@ -12786,6 +12825,10 @@ ol.complete-list {
           flex: 1;
 }
 
+.mnemosyne-panel .gallery figure .meta time {
+  font-family: "digital-7", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .mnemosyne-panel .gallery .photos-padding-right {
   position: absolute;
   height: 100%;
@@ -12811,7 +12854,7 @@ ol.complete-list {
           transform-origin: 0 0;
 }
 
-.load-failed {
+.load-failed:before {
   position: absolute;
   top: 0;
   right: 0;

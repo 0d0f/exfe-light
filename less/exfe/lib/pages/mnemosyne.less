@@ -1,7 +1,7 @@
 .mnemosyne-start {
- // overflow-x: auto !important;
-  //overflow-y: hidden !important;
-  overflow: hidden;
+  // note: 必须设置这样，防止浏览器左右滑动历史翻页
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   opacity: 1;
 
   /*-----------------------*/
@@ -26,7 +26,7 @@
   height: 100%;
   min-height: 100%;
   //overflow: hidden !important;
-  z-index: 1060;
+  z-index: 1062;
   overflow-x: scroll;
   overflow-y: hidden;
 
@@ -74,6 +74,7 @@
   -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1);
   transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1);
   opacity: 0;
+  z-index: 1061;
 }
 
 .mnemosyne-exit {
@@ -115,6 +116,7 @@
   transform-style: flat;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   pointer-events: auto;
   -webkit-user-select: none;
@@ -237,10 +239,11 @@
         opacity: 0;
         display: -webkit-box; /* safari */
         display: -webkit-flex;
-        display: -moz-flex;
+        display: -moz-box;
         display: -ms-flex;
         display: -o-flex;
         display: flex;
+        box-orient: horizontal;
         position: absolute;
         left: 0;
         bottom: 0;
@@ -255,6 +258,7 @@
         background-color: rgba(0, 0, 0, .5);
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
+        -moz-box-sizing: border-box;
         //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
         //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
 
@@ -276,6 +280,10 @@
           -ms-flex: 1;
           -o-flex: 1;
           flex: 1;
+        }
+
+        time {
+          font-family: "digital-7", @baseFontFamily;
         }
       }
     }
