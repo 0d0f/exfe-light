@@ -857,7 +857,7 @@ define(function (require, exports, module) {
             '<div class="here-main">'
           +     '<ol class="near-by"></ol>'
           +     '<div class="my-card">'
-          +         '<img class="my-avatar" src="">'
+          +         '<img class="my-avatar" src="' + config.api_url + '/avatar/default' + '">'
           +         '<div class="name-input">'
           +             '<input type="text" class="name" value="">'
           +             '<button class="ok">OK</button>'
@@ -942,9 +942,14 @@ define(function (require, exports, module) {
     };
 
     var setMyCard = function() {
+        var objName   = $('.here-main .name-input .name');
+        var objAvatar = $('.here-main .my-card .my-avatar');
+        if (objAvatar.attr('src') === config.api_url + '/avatar/default') {
+            objAvatar.attr('src', encodeURI(config.api_url + '/avatar/default?name=' + objName.val()));
+        }
         var myCard = {
-            name       : $('.here-main .name-input .name').val(),
-            avatar     : $('.here-main .my-card .my-avatar').attr('src'),
+            name       : objName.val(),
+            avatar     : objAvatar.attr('src'),
             identities : []
         };
         var inputs = $('.here-main .identities-list li');
