@@ -298,8 +298,8 @@ define('live', function (require) {
             secCnt           = secInt - 5;
             log(
                 'Location update: '
-              + 'lat = ' + myData.latitude + ', '
-              + 'lng = ' + myData.latitude + ', '
+              + 'lat = ' + myData.latitude  + ', '
+              + 'lng = ' + myData.longitude + ', '
               + 'acu = ' + myData.accuracy
             );
         }
