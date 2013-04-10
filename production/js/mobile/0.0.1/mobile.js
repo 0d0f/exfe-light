@@ -885,7 +885,6 @@ define(function (require, exports, module) {
 
         $('.here-main .name-input .ok').on('click', setMyCard);
         $('.here-main .name-input .name').on('keyup', function() {
-            console.log(checkInput());
             $('.here-main .name-input .ok').prop('disabled', !checkInput());
         });
         $('.here-main .identities-list').on('keyup', '.new-identity', function() {
