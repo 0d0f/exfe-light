@@ -1,3 +1,7 @@
+* v0.0.8 2013-04-10T14:54:10 UTC+0800
+  - Features
+    * added `HumanTime#printTime`
+
 * v0.0.7 2013-03-02T14:54:10 UTC+0800
   - Bugs Fix
     * 有日期无时间，isToday 判断
