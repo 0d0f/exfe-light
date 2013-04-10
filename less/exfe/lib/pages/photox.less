@@ -76,10 +76,11 @@
       text-align: center;
       vertical-align: middle;
       line-height: 64px;
-
-      > figure {
-        width: 64px;
-      }
+      font-size: 42px;
+      display: inline-block;
+      width: 100px;
+      color: rgba(255, 255, 255, .5);
+      #gradient > .horizontal(#7F7F7F, #CCCCCC);
     }
 
     figure {
@@ -181,6 +182,7 @@
     width: 100%;
     #gradient > .directional(#4c4c4c, #808080, 90deg);
     .border-radius(6px 6px 0 0);
+    .box-shadow(0 1px 3px rgba(0, 0, 0, .5));
 
     .panel-title {
       font-size: 24px;
@@ -228,7 +230,7 @@
 
         &.active {
           background-color: #3784d5;
-          box-shadow: inset 0px -1px 1px rgba(0,0,0,0.5);
+          .box-shadow(inset 0px -1px 1px rgba(0,0,0,0.5));
 
           > a {
             background-color: transparent;
@@ -265,7 +267,7 @@
           }
 
           i {
-            margin-top: (66-36) / 2px;
+            margin-top: (60-36) / 2px;
             vertical-align: middle;
           }
         }
@@ -281,6 +283,8 @@
     position: relative;
     overflow-x: hidden;
     min-height: 240px;
+    color: rgb(230, 230, 230);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
 
     .breadcrumb {
       position: relative;
@@ -302,8 +306,9 @@
       }
 
       li a {
-        color: #ccc;
+        color: rgb(230, 230, 230);
         text-decoration: none;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
       }
 
       .divider {
@@ -319,7 +324,9 @@
       }
 
       .active {
-        color: #fff;
+        color: rgb(230, 230, 230);
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+        //color: #fff;
       }
     }
 
@@ -433,10 +440,18 @@
       position: absolute;
       left: 0;
       bottom: 0;
-      font-size: 18px;
       color: #7f7f7f;
       display: table;
       vertical-align: middle;
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .title {
+        font-size: 21px;
+        line-height: 26px;
+      }
 
       &.hide {
         display: none !important;
@@ -469,6 +484,8 @@
       position: absolute;
       left: 15px;
       line-height: 66px;
+      color: rgb(230, 230, 230);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
     }
 
     .icon-resize {
@@ -476,25 +493,22 @@
       right: 15px;
     }
 
-    .xbtn-upload {
+    .xbtn-import {
       position: relative;
       display: block;
       height: 40px;
-      width: 160px;
+      width: 180px;
       top: 13px;
       margin: 0 auto;
       font-size: 18px;
       line-height: 40px;
       font-weight: bold;
       color: #ffffff;
-      #gradient > .directional(#155ca6, #6bc0fb, 90deg);
-      border: none;
-      .border-radius(6px);
-      .box-shadow(0 0 0 1px rgba(0, 0, 0, .4),
-            0 1px 0 rgba(0, 0, 0, .5),
-            0 2px 0 rgba(255, 255, 255, .25),
-            0 -1px 0 rgba(255, 255, 255, .12) inset);
-      text-shadow: 0 -1px 0px rgba(0, 0, 0, .3);
+      #gradient > .directional(#369FE9, #23558C, 180deg);
+      border: 1px solid #23558C;
+      .border-radius(4px);
+      .box-shadow(0 1px 1px rgba(255, 255, 255, .2));
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
     }
   }
 

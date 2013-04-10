@@ -43,7 +43,7 @@ define('photoxwidget', function (require) {
         + '<td><figure><img class="pic" src="{{url}}" width="{{width}}" height="{{height}}" /></figure></td>',
 
       tdTmpMore: ''
-        + '<td class="more"><figure>...</figure></td>',
+        + '<td class="more">···</td>',
 
       parentNode: null,
 
@@ -137,15 +137,14 @@ define('photoxwidget', function (require) {
         mnemosyne.show();
       });
 
-      $(document.body).on('click.photoxwidget', function (e) {
+      $('body').on('click.photoxwidget', function (e) {
         var $p = $('#photox-panel');
         if ($p.length
           && $p[0] !== e.target
           && !$.contains($p[0], e.target)) {
           e.preventDefault();
           e.stopPropagation();
-          self.photoxPanel.hide();
-          self.photoxPanel = null;
+          $p.trigger('destory.widget');
           return;
         }
       });

@@ -446,7 +446,8 @@ define('mnemosyne', function (require) {
   // ph, pw - preview.height & preview.width
   // rh, rw - calculate height, width
   // rt, rl - calculate top, left
-  var updateFigure = function (f, gid, ph, pw, rh, rw, rt, rl) {
+  // provider
+  var updateFigure = function (f, gid, ph, pw, rh, rw, rt, rl, provider) {
     f.setAttribute('data-gid', gid);
     f.style.opacity = 1;
     f.style.width = rw + 'px';
@@ -455,6 +456,12 @@ define('mnemosyne', function (require) {
     f.style.webkitTransform = Matrix.toCSSMatrix3d(m4);
     f.style.transform = Matrix.toCSSMatrix3d(m4);
     f._m4 = m4;
+
+    // note: 去掉滤镜边框
+    if (provider === 'instagram') {
+      pw *= 1.10;
+      ph *= 1.10;
+    }
 
     if (f.getAttribute('data-lazy') === '-1') {
       f.setAttribute('data-whlt', [pw, ph, (rw - pw) / 2, (rh - ph) / 2].join(','));
@@ -559,6 +566,7 @@ define('mnemosyne', function (require) {
             + 'data-fullsize-height="{{images.fullsize.height}}" '
             + 'data-fullsize-width="{{images.fullsize.width}}" '
             + 'data-liked="{{like}}" '
+            + 'data-provider="{{provider}}" '
             + '>'
           + '<div class="photo"></div>'
           + '<div class="mask"></div>'
@@ -1303,7 +1311,7 @@ define('mnemosyne', function (require) {
             offsetLeft = this.offsetLeft,
             index = 0, vh = gvh, vw = gvw,
             layout, cells, cl, cell, aspect_ratio,
-            $f, pw, ph, margin, rw, rh, rl, rt;
+            $f, pw, ph, provider, margin, rw, rh, rl, rt;
 
         while ((layout = layouts.shift())) {
           gid = layout.id;
@@ -1315,10 +1323,11 @@ define('mnemosyne', function (require) {
             vw = scaleWidthByHeight(gvh, aspect_ratio);
           }
 
-          while((cell = cells.shift())) {
+          while ((cell = cells.shift())) {
             $f = $fs.eq(index);
             ph = +$f.data('preview-height');
             pw = +$f.data('preview-width');
+            provider = $f.data('provider');
 
             if (1 === cl) {
               vw = scaleWidthByHeight(gvh, pw / ph);
@@ -1334,7 +1343,7 @@ define('mnemosyne', function (require) {
             pw = wh[0];
             ph = wh[1];
 
-            updateFigure($f[0], gid, ph, pw, rh, rw, rt, rl);
+            updateFigure($f[0], gid, ph, pw, rh, rw, rt, rl, provider);
 
             index++;
           }
