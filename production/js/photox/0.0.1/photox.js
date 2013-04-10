@@ -370,7 +370,7 @@ define('photox', function (require) {
         identity = R.find(identities, function (v) {
           if (v.id === iid) { return true; }
         });
-    this.$element.append(this.generate(iid, '', identity.name + "'s Dropbox Photos"));
+    this.$element.append(this.generate(iid, '', identity.name + "'s Dropbox"));
     this.initstatus = 0;
   };
 
@@ -624,7 +624,7 @@ define('photox', function (require) {
               + '</div>'
               + '<div class="ajax-error hide">'
                 + '<p class="title">Network error. Please try to reload.</p>'
-                + '</div>'
+              + '</div>'
             + '</div>'
             + '<div class="loading hide"><img alt="" width="32" height="32" src="/static/img/loading.gif" /></div>'
             + '<ul class="thumbnails albums"></ul>'
@@ -836,14 +836,14 @@ define('photox', function (require) {
             breadcrumb.toggle(p === 'dropbox', iid);
             var eaids = decodeURIComponent(eaid).split('/'),
                 len = eaids.length;
-            eaid = aids[len - 1];
+            eaid = eaids[len - 1];
             if (!fs.has()) {
               fs.setUid(iid).setGid(p).cd('/');
             }
             //console.log(iid, eaid, p, aids, imported);
             fs.cd(eaid, len, function (p) {
               breadcrumb.del(len);
-              breadcrumb.add(iGid, p);
+              breadcrumb.add(iid, p);
             });
           }
 

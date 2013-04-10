@@ -362,7 +362,7 @@ define('mnemosyne', function (require) {
 
   Handlebars.registerHelper('photoxPrintTime', function (updated_at) {
     var d = HumanTime.parseISO(HumanTime.toISO(updated_at));
-    return HumanTime(d, (new Date).getTime());
+    return HumanTime.printTime(d);
   });
 
   /**
@@ -1251,6 +1251,19 @@ define('mnemosyne', function (require) {
           e.stopPropagation();
           self.hide();
         });
+        /*
+      $('body').on('click.photoxwidget', function (e) {
+        var $p = $('#photox-panel');
+        if ($p.length
+          && $p[0] !== e.target
+          && !$.contains($p[0], e.target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          $p.trigger('destory.widget');
+          return;
+        }
+      });
+      */
       },
 
       updateViewport: function () {
@@ -1268,7 +1281,7 @@ define('mnemosyne', function (require) {
 
       addMBG: function () {
         var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1, 1)';
-        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 2, 1)';
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 20, 1)';
         matrix3d1 = '-webkit-transform:' +matrix3d1+';transform:'+matrix3d1+';';
         $('<div class="mnemosyne-exit ix-exit" style="'+matrix3d1+'"></div><div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
       },

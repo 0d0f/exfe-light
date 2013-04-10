@@ -13,7 +13,11 @@ define('photoxwidget', function (require) {
         return request(
           'photox_getPhotoX',
           {
-            resources : { photox_id : photox_id }
+            resources : { photox_id : photox_id },
+            data: {
+              sort: 'imported_time_desc',
+              limit: 11
+            }
           },
           // {"photox" : [object:photox]}
           done
