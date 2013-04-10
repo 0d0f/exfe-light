@@ -3,6 +3,7 @@ define('mnemosyne', function (require) {
 
   var Emitter = require('emitter'),
       Handlebars = require('handlebars'),
+<<<<<<< HEAD
       $ = require('jquery'),
       $proxy = $.proxy,
       $WIN = $(window),
@@ -14,6 +15,90 @@ define('mnemosyne', function (require) {
       min = Math.min,
       mfloor = Math.floor,
       mrandom = Math.random;
+=======
+      Panel = require('panel'),
+      request = require('api').request,
+      addLike = function (photo_id, done, fail) {
+        return request(
+          'photox_like',
+          {
+            type: 'POST',
+            data: { id: photo_id }//,
+            //beforeSend: before
+          },
+          done,
+          fail
+        );
+      },
+      unLike = function (photo_id, done, fail) {
+        return request(
+          'photox_like',
+          {
+            type: 'POST',
+            data: {
+              id: photo_id,
+              LIKE: false
+            }//,
+            //beforeSend: before
+          },
+          done,
+          fail
+        );
+      },
+      getLikes = function (photox_id, done) {
+        return request(
+          'photox_getLikes',
+          {
+            resources: { photox_id : photox_id }
+          },
+          done
+        );
+      },
+      getPhotoX = function (photox_id, before, done, fail) {
+        return request(
+          'photox_getPhotoX',
+          {
+            resources: { photox_id : photox_id },
+            beforeSend: before
+          },
+          done,
+          fail
+        );
+      },
+      mrandom = Math.random,
+      proto;
+
+  Handlebars.registerHelper('photoxPrintTime', function (updated_at) {
+    var d = HumanTime.parseISO(HumanTime.toISO(updated_at));
+    return HumanTime.printTime(d);
+  });
+
+  /**
+   * Help functions.
+   */
+
+  /**
+   * Load Image
+   * todo: 后面有单独的图片加载模块。
+   */
+  var loadImage = function (f, url, cb, ecb) {
+    // https://github.com/Modernizr/Modernizr/pull/377
+    //var img = document.createElement('img'),
+    var img = new Image(),
+        abort = function (img) {
+          img.onload = img.onerror = img = f = undefined;
+        };
+    img.onload = function () {
+      cb && cb(img, f);
+      abort(img);
+    };
+    img.onerror = function () {
+      ecb && ecb(img, f);
+      abort(img);
+    };
+    img.src = url;
+  };
+>>>>>>> 63c9c61... updated `photox`
 
   //---------------------------------------------------------------
   // grouping number
@@ -563,6 +648,7 @@ define('mnemosyne', function (require) {
     });
   };
 
+<<<<<<< HEAD
   View.prototype.scroll = function ($item, isNotFirst) {
     var a = isNotFirst ? 1800 / (1800 + 377) : 1,
         p = $item.position();
@@ -570,6 +656,27 @@ define('mnemosyne', function (require) {
       scrollLeft: (p.left + 24 - (this.vw - $item.find('.photo').width()) / 2 * a) / a
     }, 377);
   };
+=======
+        $('body').on('click.mnemosyne', '.mnemosyne-exit', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.hide();
+        });
+        /*
+      $('body').on('click.photoxwidget', function (e) {
+        var $p = $('#photox-panel');
+        if ($p.length
+          && $p[0] !== e.target
+          && !$.contains($p[0], e.target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          $p.trigger('destory.widget');
+          return;
+        }
+      });
+      */
+      },
+>>>>>>> 63c9c61... updated `photox`
 
   var inViewport = function (top, right, bottom, left, vh, vw) {
     return (
@@ -584,12 +691,21 @@ define('mnemosyne', function (require) {
       );
   };
 
+<<<<<<< HEAD
   var i = 0;
   var checkInViewport = function (e) {
     var r = e.getBoundingClientRect(),
         top = r.top, right = r.right, bottom = r.bottom, left = r.left,
         vh = window.innerHeight || document.documentElement.clientHeight,
         vw = window.innerWidth || document.documentElement.clientWidth;
+=======
+      addMBG: function () {
+        var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 1, 1)';
+        var matrix3d1 = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + window.scrollX + ', ' + window.scrollY + ', 20, 1)';
+        matrix3d1 = '-webkit-transform:' +matrix3d1+';transform:'+matrix3d1+';';
+        $('<div class="mnemosyne-exit ix-exit" style="'+matrix3d1+'"></div><div class="mnemosyne-bg perspective" style="-webkit-transform: ' + matrix3d + '; transform: ' + matrix3d + ';"><div class="mnemosyne-bg-in"></div></div>').prependTo($('body'));
+      },
+>>>>>>> 63c9c61... updated `photox`
 
     return inViewport(top, right, bottom, left, vh, vw);
   };
