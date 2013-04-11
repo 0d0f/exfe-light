@@ -891,6 +891,12 @@ define(function (require, exports, module) {
             $('.here-main .name-input .ok').prop('disabled', !checkInput());
         });
         $('.here-main .identities-list .add').on('click', addNewField);
+
+        Live.shake(function() {
+            alert('shake start!');
+        }, function() {
+            alert('shake end!');
+        });
     };
 
     var getUTF8Length = function(string) {
