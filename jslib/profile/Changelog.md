@@ -1,3 +1,7 @@
+* v0.1.17 2013-04-11T11:50:00 UTC+0800
+  - Bugs Fixed
+    * ignored `rsvp#NOTIFICATION`
+
 * v0.1.16 2013-03-14T15:11:19 UTC+0800
   - Bugs Fixed
     * edited `identity-name`, if set value = '', reset value = oldvalue in `Profile` Page
