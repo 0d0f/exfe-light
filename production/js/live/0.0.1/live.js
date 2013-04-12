@@ -174,7 +174,7 @@ define('live', function (require) {
             this.pop    = pop;
             this.dead   = dead;
             this.http   = new XMLHttpRequest();
-            this.http.open('get', url);
+            this.http.open('post', url);
             this.http.onreadystatechange = this.listen;
             this.http.send();
             this.timer  = setInterval(this.listen, 1000);
