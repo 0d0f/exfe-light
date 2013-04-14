@@ -254,7 +254,6 @@ define(function (require, exports, module) {
                 window.scrollTo(0, 0);
               }, 0);
             }
-            //console.log(t.id);
             if ((t.id === "facebook-identity" || t.id === 'add-identity') && !addedFacebook) {
               $('#add-identity-facebook').removeClass('hide');
             } else {
@@ -347,7 +346,6 @@ define(function (require, exports, module) {
           .on('touchstart.live', '#icard', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            //console.log('PAGE_STATUS', PAGE_STATUS)
             if (PAGE_STATUS) {
               return;
             }
@@ -388,10 +386,16 @@ define(function (require, exports, module) {
             return false;
           })
           .on('touchstart.live', '.delete', function (e) {
-            var input = $(this).prev(), v = trim(input.val()), identity = parseId(v);
+            var input = $(this).prev(), provider = input.attr('data-provider'), v = trim(input.val()), identity;
+            if (provider === 'facebook') {
+              addedFacebook = false;
+              v += 'facebook';
+            }
+            identity = parseId(v)
             if (identity && identity.provider) {
               delIdentityFromCard(identity.external_username);
             }
+            input.blur();
             $(this).parents('li').remove();
           })
             .on('touchstart.live', '.back', function (e) {
