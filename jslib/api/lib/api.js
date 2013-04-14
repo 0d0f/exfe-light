@@ -228,7 +228,8 @@ define('api', function (require) {
   var defaultOptions = {
     type: 'GET',
     dataType: 'JSON',
-    timeout: 4698,
+    //timeout: 4698,
+    timeout: 10000,
     cache: false,
     // CORS: Cross Origin Resource Share
     xhrFields: { withCredentials: true }

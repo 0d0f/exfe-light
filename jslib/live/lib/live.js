@@ -1,8 +1,6 @@
 define('live', function (require) {
     "use strict";
 
-    require('zepto');
-
     var Config = require('config');
 
     var Store  = require('store');
@@ -13,7 +11,7 @@ define('live', function (require) {
 
     var secCnt = secInt;
 
-    var bolDebug = true;
+    var bolDebug = false;
 
     var echo     = null;
 
@@ -68,7 +66,8 @@ define('live', function (require) {
             url     : streaming_api_url + '/v3/live/cards' + (token ? ('?token=' + token) : ''),
             data    : JSON.stringify(myData),
             success : function(data) {
-                var rawToken = JSON.parse(data);
+                //var rawToken = JSON.parse(data);
+                var rawToken = data;
                 if (rawToken && rawToken.length) {
                     secCnt = 0;
                     if (token !== rawToken[0]) {
