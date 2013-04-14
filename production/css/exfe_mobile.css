@@ -729,7 +729,6 @@ body {
 
 .card .avatar {
   position: relative;
-  z-index: 1;
   display: inline-block;
   width: 64px;
   height: 64px;
