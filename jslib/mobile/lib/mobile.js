@@ -1492,7 +1492,10 @@ define(function (require, exports, module) {
     var updateMe = function (card) {
       liveCard.card = card;
       if (card.avatar) $('#icard').find('.avatar').attr('src', card.avatar);
-      if (card.name) $('#icard').find('.name').text(card.name);
+      if (card.name) {
+        $('#icard').find('.name').text(card.name); 
+        $('#card-name').val(card.name);
+      }
       if (card.bio) $('#card-bio').text(card.bio);
       Store.set('livecard', liveCard);
     };
