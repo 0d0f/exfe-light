@@ -1482,7 +1482,7 @@ define(function (require, exports, module) {
 
     var delCard = function (elem) {
       var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i');
-      MAPS.push([g, i]);
+      MAPS.unshift([g, i]);
       elem.remove();
     };
 
