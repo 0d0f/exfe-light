@@ -393,6 +393,10 @@ input {
   display: none;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 html,
 body {
   width: 100%;

@@ -28,8 +28,6 @@ define(function (require, exports, module) {
 
     var $ = require('zepto');
 
-    var tabIndex = 0;
-
     var config = require('config');
 
     var TWEEN = require('tween');
@@ -184,11 +182,6 @@ define(function (require, exports, module) {
         }
         $('.get-button button').unbind('click').bind('click', showAppInStore);
 
-        //$('.box .inner').on('click', function (e) { //window.scrollTo(0, 390); //$('#inputEmail').focus(); });
-        //$(document).on('touchmove.prevent', function(e) {
-          //e.preventDefault();
-        //});
-
         generateMyCard();
 
         var $list = $('.card-form .list');
@@ -197,20 +190,11 @@ define(function (require, exports, module) {
 
           // `live-gather` layer
           .on('touchstart.live', '.live-gather', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
               if ($(e.target).hasClass('live-gather')) {
                 if (PAGE_STATUS === 1) {
-                  //e.preventDefault();
-                  //e.stopPropagation();
-                  //console.log('switch base');
                   $('.input-item').blur();
-                  //$('.discover').hide();
-                  //$('.card-form').hide();
-                  //$('.live-title').hide();
-                  //var icard = document.getElementById('icard'), s = icard.style;
-                  //console.log(icard._oldTransform);
-                  //s.webkitTransform = s.transform = icard._oldTransform;
-                  //LOGO_TWEEN.start(1000);
-                  //$('.box').show();
                   PAGE_STATUS = 0;
                   CARD_TWEEN.stop();
                   LOGO_TWEEN.stop();
@@ -243,12 +227,12 @@ define(function (require, exports, module) {
 
         // `input-item` input
           .on('touchstart.live', '.input-item', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+            //e.preventDefault();
+            //e.stopPropagation();
+            var t = e.target;
             if (ANIMATE_STATUS) {
               return false;
             }
-            var t = this;
             if (t.id === 'card-name') {
               setTimeout(function () {
                 window.scrollTo(0, 0);
@@ -259,26 +243,33 @@ define(function (require, exports, module) {
             } else {
               $('#add-identity-facebook').addClass('hide');
             }
-            this.focus();
-            //return false;
+            t.focus();
+            return false;
           })
           .on('focus.live', '.input-item', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            //console.log('focus input');
-            var t = this;
+            var t = e.target;
             if (t.id === 'card-name') {
               setTimeout(function () {
                 window.scrollTo(0, 0);
               }, 0);
             }
+            if (t.getAttribute('data-provider')) {
+              $(t).next().removeClass('hidden')
+            }
+            return false;
           })
           .on('blur.live', '.input-item', function (e) {
-            //console.log('blur input');
-            var id = this.id;
+            var t = e.target,
+                id = t.id;
+
+            if (t.getAttribute('data-provider')) {
+              $(t).next().addClass('hidden')
+            }
 
             if ((id === "facebook-identity" && !addedFacebook) || (id === 'add-identity')) {
-              var isFacebook = (id === 'facebook-identity'), v = trim(this.value), identity;
+              var isFacebook = (id === 'facebook-identity'), v = trim(t.value), identity;
               if (!v) {
                 return;
               }
@@ -293,14 +284,13 @@ define(function (require, exports, module) {
               if (identity.provider
                 && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
                 identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                //console.dir(identity);
                 $list.append(genIdentity(identity));
                 if (isFacebook) { addedFacebook = true };
                 addIdentityToCard(identity);
                 setMyCard();
               }
               $('#add-identity-facebook').addClass('hide');
-              this.value = '';
+              t.value = '';
             }
           })
 
@@ -309,7 +299,6 @@ define(function (require, exports, module) {
                 isFacebook = (this.id === 'facebook-identity'),
                 identity;
 
-            //console.log(k);
             // empty text
             if (!v) {
               return;
@@ -342,8 +331,6 @@ define(function (require, exports, module) {
             }
           })
 
-          //.on('keydown.live', '#card-name', function (e) { })
-
           // `me` card
           .on('touchstart.live', '#icard', function (e) {
             e.preventDefault();
@@ -360,15 +347,16 @@ define(function (require, exports, module) {
 
           // `start-button`
           .on('tap.live touchstart.live', '.btn-start', function (e) {
-            e.preventDefault();
             e.stopPropagation();
-
-            if (checkFields()) {
+            setTimeout(function () {
               $('.input-item').blur();
+            }, 0);
+            if (checkFields()) {
               $('.discover').addClass('hide');
               $('.card-form').addClass('hide');
               $('.live-title').removeClass('hide');
               var icard = document.getElementById('icard'), s = icard.style;
+              icard.querySelector('.name').className = 'name';
               s.webkitTransform = s.transform = 'translate3d(' + _coords[0][0] + 'px, ' + _coords[0][1]  + 'px, 0)';
               setMyCard();
               PAGE_STATUS = 2;
@@ -403,6 +391,7 @@ define(function (require, exports, module) {
             .on('touchstart.live', '.back', function (e) {
               PAGE_STATUS = 0;
               var icard = document.getElementById('icard'), s = icard.style;
+              icard.querySelector('.name').className = 'name hide';
               s.opacity = 0;
               s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
               $('.live-title').addClass('hide');
@@ -416,18 +405,6 @@ define(function (require, exports, module) {
               $('.big-logo').css('opacity', 1);
               LOGO_TWEEN.start();
             });
-          /*
-            .on('tap.live', '.live-tip', function (e) {
-              $('.live-tip').addClass('live-tip-close');
-              new TWEEN.Tween({o:0})
-                .delay(288)
-                .to({o:1}, 0)
-                .onUpdate(function () {
-                  $('.wave').css('opacity', this.o);
-                })
-                .start();
-            });
-            */
 
         // live
         var offset = $('.box .inner').offset();
@@ -478,21 +455,19 @@ define(function (require, exports, module) {
               $('.discover').css('opacity', 0).removeClass('hide');
               $('.card-form').css('opacity', 0).removeClass('hide');
               icard.style.opacity = 1;
-              ANIMATE_STATUS = true;
               $('.actions').css('z-index', 0);
+              ANIMATE_STATUS = true;
             })
             .onUpdate(function () {
               $('.box').css('opacity', 1 - this.o);
               $('.actions').css('opacity', 1 - this.o);
               discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
-              //console.log(this.o);
-              //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
               icard.style.transform = icard.style.webkitTransform = 'translate3d(128px, ' + ((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1])  + 'px, 0)';
             })
             .onComplete(function (){
               this.o = 0;
-              TWEEN.remove(this);
               ANIMATE_STATUS = false;
+              TWEEN.remove(this);
             });
       STEP2_TWEEN_IN_1 = new TWEEN.Tween({o: 0})
           .delay(250)
@@ -507,7 +482,6 @@ define(function (require, exports, module) {
             this.o = 0;
             ANIMATE_STATUS = false;
             TWEEN.remove(this);
-            $('#card-name').focus();
           });
 
       STEP2_TWEEN_OUT_0 = new TWEEN.Tween({o : 1})
@@ -523,7 +497,6 @@ define(function (require, exports, module) {
             $('.actions').css('opacity', 1 - this.o);
             $('.big-logo').css('opacity', 1 - this.o);
             discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
-            //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
         })
         .onComplete(function () {
           this.o = 1;
@@ -607,13 +580,14 @@ define(function (require, exports, module) {
 
           +   '<div id="icard" class="card" data-g="0" data-i="0">'
           +     '<div class="avatar"></div>'
+          +     '<div class="name hide"></div>'
           +     '<div class="tap-tip">Tap to start</div>'
           +   '</div>'
 
           +   '<div class="card-form hide">'
           //+     '<form class="form-horizontal"><fieldset>'
           +         '<div class="controls" style="-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1); -webkit-backface-visibility: hidden;">'
-          +           '<input class="input-item" type="text" autocapitalize="none" id="card-name" placeholder="Name"/>'
+          +           '<input class="input-item" type="text" autocapitalize="none" tabindex="1" id="card-name" placeholder="Name"/>'
           +           '<button class="btn btn-start" type="button">Start</button>'
           +         '</div>'
           +         '<div class="hide" id="card-bio"></div>'
@@ -1390,7 +1364,7 @@ define(function (require, exports, module) {
 
     var LI_TMP = '<li class="identity" style="-webkit-transform: translate3d(0, 0, 0);">'
         + '<span class="provider">{{provider_alias}}</span>'
-        + '<input data-provider="{{provider}}" style="-webkit-transform: translate3d(0, 0, 0);" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete">x</div>'
+        + '<input data-provider="{{provider}}" style="-webkit-transform: translate3d(0, 0, 0);" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete hidden">x</div>'
         //+ '<span class="permission">Public<span>'
       + '</li>';
 
@@ -1684,14 +1658,17 @@ define(function (require, exports, module) {
     */
 
     var liveCallback = function(data) {
-        //console.dir(data);
         if (data.me) {
           updateMe(data.me);
         }
 
         if (data.others) {
           updateOthers(data.others);
-          $('.card-other').removeClass('hide');
+          if (PAGE_STATUS == 2) {
+            $('.card-other').removeClass('hide');
+          } else {
+            $('.card-other').addClass('hide');
+          }
         }
     };
 
