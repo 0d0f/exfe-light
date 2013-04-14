@@ -254,7 +254,6 @@ define(function (require, exports, module) {
                 window.scrollTo(0, 0);
               }, 0);
             }
-            //console.log(t.id);
             if ((t.id === "facebook-identity" || t.id === 'add-identity') && !addedFacebook) {
               $('#add-identity-facebook').removeClass('hide');
             } else {
@@ -298,6 +297,7 @@ define(function (require, exports, module) {
                 $list.append(genIdentity(identity));
                 if (isFacebook) { addedFacebook = true };
                 addIdentityToCard(identity);
+                setMyCard();
               }
               $('#add-identity-facebook').addClass('hide');
               this.value = '';
@@ -334,6 +334,7 @@ define(function (require, exports, module) {
                   if (addedFacebook) {
                     $('#add-identity-facebook').addClass('hide');
                   }
+                  setMyCard();
                   addIdentityToCard(identity);
                 }
                 this.value = '';
@@ -347,7 +348,6 @@ define(function (require, exports, module) {
           .on('touchstart.live', '#icard', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            //console.log('PAGE_STATUS', PAGE_STATUS)
             if (PAGE_STATUS) {
               return;
             }
@@ -388,13 +388,16 @@ define(function (require, exports, module) {
             return false;
           })
           .on('touchstart.live', '.delete', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // note: 更新 localstorge
-            var input = $(this).prev(), v = trim(input.val()), identity = parseId(v);
+            var input = $(this).prev(), provider = input.attr('data-provider'), v = trim(input.val()), identity;
+            if (provider === 'facebook') {
+              addedFacebook = false;
+              v += 'facebook';
+            }
+            identity = parseId(v)
             if (identity && identity.provider) {
               delIdentityFromCard(identity.external_username);
             }
+            input.blur();
             $(this).parents('li').remove();
           })
             .on('touchstart.live', '.back', function (e) {
@@ -404,7 +407,7 @@ define(function (require, exports, module) {
               s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
               $('.live-title').addClass('hide');
               // todo:
-              $('.card-other').remove();
+              $('.card-other').addClass('hide');
               $('.box').css('opacity', 1);
               $('.actions').css({
                 'opacity': 1,
@@ -603,7 +606,7 @@ define(function (require, exports, module) {
           +   '<div class="discover hide">Discover people nearby and share contacts.</div>'
 
           +   '<div id="icard" class="card" data-g="0" data-i="0">'
-          +     '<img class="avatar" width="64" height="64" src="/static/img/portrait_default.png" alt="" />'
+          +     '<div class="avatar"></div>'
           +     '<div class="tap-tip">Tap to start</div>'
           +   '</div>'
 
@@ -1422,8 +1425,8 @@ define(function (require, exports, module) {
       return dt;
     };
 
-    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
-        + '<img class="avatar" scr="{{avatar}}" alt="" />'
+    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
+        + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
         + '<div class="name">{{name}}</div>'
         + '{{tip-html}}'
       + '</div>'
@@ -1490,14 +1493,17 @@ define(function (require, exports, module) {
 
     var updateMe = function (card) {
       liveCard.card = card;
-      if (card.avatar) $('#icard').find('.avatar').attr('src', card.avatar);
-      if (card.name) $('#icard').find('.name').text(card.name);
+      if (card.avatar) $('#icard').find('.avatar').css('background-image', 'url('+card.avatar+')');
+      if (card.name) {
+        $('#icard').find('.name').text(card.name); 
+        $('#card-name').val(card.name);
+      }
       if (card.bio) $('#card-bio').text(card.bio);
       Store.set('livecard', liveCard);
     };
 
     var updateCard = function (elem, card) {
-      elem.querySelector('.avatar').setAttribute('src', card.avatar);
+      elem.querySelector('.avatar').style.backgroundImage = 'url('+card.avatar+')';
       elem.querySelector('.name').innerText = card.name;
     };
 
@@ -1685,6 +1691,7 @@ define(function (require, exports, module) {
 
         if (data.others) {
           updateOthers(data.others);
+          $('.card-other').removeClass('hide');
         }
     };
 
