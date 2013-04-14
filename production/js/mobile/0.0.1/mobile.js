@@ -407,7 +407,7 @@ define(function (require, exports, module) {
               s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
               $('.live-title').addClass('hide');
               // todo:
-              $('.card-other').remove();
+              $('.card-other').addClass('hide');
               $('.box').css('opacity', 1);
               $('.actions').css({
                 'opacity': 1,
@@ -1691,6 +1691,7 @@ define(function (require, exports, module) {
 
         if (data.others) {
           updateOthers(data.others);
+          $('.card-other').removeClass('hide');
         }
     };
 
