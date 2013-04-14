@@ -403,18 +403,25 @@ body.x {
     display: inline-block;
     -webkit-border-radius: 64px;
     border-radius: 64px;
+    width: 64px;
+    height: 64px;
+
+    //background-color: #fafafa;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 
     &:before {
       position: absolute;
       display: block;
       content: '';
-      left: 0;
-      bottom: 0;
-      top: 0;
-      right: 0;
+      left: 1px;
+      bottom: 1px;
+      top: 1px;
+      right: 1px;
       background-color: #fafafa;
       -webkit-border-radius: 64px;
       border-radius: 64px;
+      z-index: -1;
     }
 
   }
