@@ -3,7 +3,7 @@ define('util', function () {
   var trimLeft = /^\s+/,
       trimRight = /\s+$/,
       zh_CN = /[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g,
-      trim = String.prototype.trim;
+      NativeTrim = String.prototype.trim;
 
   var Util = {
 
@@ -11,8 +11,17 @@ define('util', function () {
     zh_CN: zh_CN,
 
     // 30个字符，并且删除中文字符
-    cut30length: function (s) {
-      return s.replace(zh_CN, ' ').substring(0, 30);
+    cut30length: function (s, len) {
+      //return s.replace(zh_CN, ' ').substring(0, 30);
+      if (!s) {
+        return '';
+      }
+      s = s.replace(zh_CN, ' ');
+      len || (len = 30);
+      while (Util.utf8length(s) > len) {
+        s  = s.substring(0, s.length - 1)
+      }
+      return s;
     },
 
     // https://gist.github.com/2762686
@@ -40,25 +49,25 @@ define('util', function () {
     },
 
     // Remove whitespace
-    trim: trim ?
+    trim: NativeTrim ?
       function (s) {
-        return s === null ?
+        return s == null ?
           '':
-          trim.call(s);
+          NativeTrim.call(s);
       } :
       function (s) {
-        return s === null ?
+        return s == null ?
           '' :
           s.toString().replace(trimLeft, '').replace(trimRight, '');
       },
 
     // parse phone
+    /*
     parsePhone: function () {
       var reg = /^(\+)?((?:(86)?(1(?:3\d|4[57]|5\d|8\d)\d{8}))|(?:(1)?(\d{5,15})))$/;
-      return function _p(strid) {
-
-      };
+      return function _p(strid) { };
     },
+    */
 
     // 解析 用户身份
     parseId: function () {

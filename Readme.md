@@ -42,6 +42,7 @@ EXFE.COM 前端架构
     - http://modernizr.com/
     - http://modernizr.github.com/Modernizr/test/
     - https://github.com/paulirish/html5-boilerplate
+    - http://css-tricks.com/box-sizing/
   * Validating Tools
     - http://validator.w3.org/unicorn/
     - http://html5/validator.nu/
