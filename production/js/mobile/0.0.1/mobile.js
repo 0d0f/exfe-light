@@ -297,6 +297,7 @@ define(function (require, exports, module) {
                 $list.append(genIdentity(identity));
                 if (isFacebook) { addedFacebook = true };
                 addIdentityToCard(identity);
+                setMyCard();
               }
               $('#add-identity-facebook').addClass('hide');
               this.value = '';
@@ -333,6 +334,7 @@ define(function (require, exports, module) {
                   if (addedFacebook) {
                     $('#add-identity-facebook').addClass('hide');
                   }
+                  setMyCard();
                   addIdentityToCard(identity);
                 }
                 this.value = '';
@@ -1423,8 +1425,8 @@ define(function (require, exports, module) {
       return dt;
     };
 
-    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
-        + '<img class="avatar" scr="{{avatar}}" alt="" />'
+    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
+        + '<img width="64" height="64" class="avatar" scr="{{avatar}}" alt="" />'
         + '<div class="name">{{name}}</div>'
         + '{{tip-html}}'
       + '</div>'
