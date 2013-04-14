@@ -419,7 +419,14 @@ body.x {
 
   }
 
-  .name { }
+  .name {
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    height: 28px;
+    line-height: 14px;
+    overflow: hidden;
+  }
 }
 #icard {
   z-index: 3;
@@ -546,8 +553,9 @@ body.x {
   }
 
   #add-identity {
-    width: 290px;
+    width: 220px;
     height: 40px;
+    font-size: 18px;
     font-style: normal;
 
     &::-webkit-input-placeholder {
@@ -586,7 +594,7 @@ body.x {
       font-size: 18px;
       line-height: 30px;
       //min-width: 155px;
-      width: 180px;
+      width: 160px;
       margin-right: 10px;
       color: #fff;
     }
@@ -594,6 +602,8 @@ body.x {
     .delete {
       display: inline-block;
       cursor: pointer;
+      width: 24px;
+      background-color: red;
     }
   }
 
@@ -607,22 +617,22 @@ body.x {
     left: 0;
     width: 100%;
     text-align: center;
-    line-height: 12.5px;
+    line-height: 40px;
   }
 
   .facebook-identity {
-    width: 200px;
+    width: 220px;
     line-height: 40px;
     height: 40px;
-    font-size: 14px;
+    font-size: 18px;
     color: #7f7f7f;
     margin: 0 auto;
 
     input {
       border-bottom: 1px solid #444;
       text-align: left;
-      width: 100px;
-      height: 16px;
+      width: 90px;
+      height: 19px;
     }
   }
 }
@@ -649,7 +659,7 @@ body.x {
 }
 
 .get-button button, .set-button button {
-    width: 290px;
+    width: 280px;
     height: 44px;
     margin: 0 auto;
     // margin-top: 30px;
@@ -668,7 +678,7 @@ body.x {
 }
 
 .x .get-button button, .x .set-button button {
-    width: 290px;
+    width: 280px;
 }
 
 .set-button button {

@@ -743,6 +743,15 @@ body {
   content: '';
 }
 
+.card .name {
+  height: 28px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 14px;
+  color: #fff;
+  text-align: center;
+}
+
 #icard {
   z-index: 3;
   opacity: 0;
@@ -856,8 +865,9 @@ body {
 }
 
 .card-form #add-identity {
-  width: 290px;
+  width: 220px;
   height: 40px;
+  font-size: 18px;
   font-style: normal;
 }
 
@@ -892,7 +902,7 @@ body {
 
 .card-form .identity .external_username {
   display: inline-block;
-  width: 180px;
+  width: 160px;
   margin-right: 10px;
   font-size: 18px;
   line-height: 30px;
@@ -902,7 +912,9 @@ body {
 
 .card-form .identity .delete {
   display: inline-block;
+  width: 24px;
   cursor: pointer;
+  background-color: red;
 }
 
 .card-form .detail {
@@ -914,22 +926,22 @@ body {
   position: absolute;
   left: 0;
   width: 100%;
-  line-height: 12.5px;
+  line-height: 40px;
   text-align: center;
 }
 
 .card-form .facebook-identity {
-  width: 200px;
+  width: 220px;
   height: 40px;
   margin: 0 auto;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 40px;
   color: #7f7f7f;
 }
 
 .card-form .facebook-identity input {
-  width: 100px;
-  height: 16px;
+  width: 90px;
+  height: 19px;
   text-align: left;
   border-bottom: 1px solid #444;
 }
@@ -957,7 +969,7 @@ body {
 .get-button button,
 .set-button button {
   display: none;
-  width: 290px;
+  width: 280px;
   height: 44px;
   margin: 0 auto;
   font: 500 16px "HelveticaNeue";
@@ -975,7 +987,7 @@ body {
 
 .x .get-button button,
 .x .set-button button {
-  width: 290px;
+  width: 280px;
 }
 
 .set-button button {
