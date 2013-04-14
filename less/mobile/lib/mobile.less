@@ -405,11 +405,13 @@ body.x {
 
   .avatar {
     position: relative;
+    top: 2px;
+    left: 2px;
     display: inline-block;
-    -webkit-border-radius: 64px;
-    border-radius: 64px;
-    width: 64px;
-    height: 64px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+    width: 60px;
+    height: 60px;
 
     background-image: url('/static/img/portrait_default.png');
     background-repeat: no-repeat;
@@ -435,10 +437,10 @@ body.x {
       position: absolute;
       display: block;
       content: '';
-      left: 0;
-      bottom: 0;
-      top: 0;
-      right: 0;
+      left: -2px;
+      bottom: -2px;
+      top: -2px;
+      right: -2px;
       background: url('/static/img/portrait_64@2x.png') no-repeat;
       background-size: 100% 100%;
     }
@@ -452,6 +454,7 @@ body.x {
     height: 28px;
     line-height: 14px;
     overflow: hidden;
+    margin-top: 2px;
   }
 
 }

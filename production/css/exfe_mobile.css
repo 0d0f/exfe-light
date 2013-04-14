@@ -730,22 +730,24 @@ body {
 
 .card .avatar {
   position: relative;
+  top: 2px;
+  left: 2px;
   display: inline-block;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   background-image: url('/static/img/portrait_default.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  -webkit-border-radius: 64px;
-          border-radius: 64px;
+  -webkit-border-radius: 60px;
+          border-radius: 60px;
 }
 
 .card .avatar:after {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
   display: block;
   background: url('/static/img/portrait_64@2x.png') no-repeat;
   background-size: 100% 100%;
@@ -754,6 +756,7 @@ body {
 
 .card .name {
   height: 28px;
+  margin-top: 2px;
   overflow: hidden;
   font-size: 14px;
   line-height: 14px;
