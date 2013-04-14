@@ -190,8 +190,8 @@ define(function (require, exports, module) {
 
           // `live-gather` layer
           .on('touchstart.live', '.live-gather', function (e) {
-              e.preventDefault();
-              e.stopPropagation();
+              //e.preventDefault();
+              //e.stopPropagation();
               if ($(e.target).hasClass('live-gather')) {
                 if (PAGE_STATUS === 1) {
                   $('.input-item').blur();
