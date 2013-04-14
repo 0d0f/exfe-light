@@ -1468,6 +1468,9 @@ define(function (require, exports, module) {
       liveCard.card = card;
       if (avatar !== card.avatar) {
         avatar = card.avatar;
+        if (!avatar) {
+          avatar = card.name ? (config.api_url + '/avatar/default?name=' + card.name) : '/static/img/portrait_default.png';
+        }
         icard.querySelector('.avatar').style.backgroundImage = 'url(' + avatar + ')';
         icard.setAttribute('data-url', avatar);
       }
@@ -1484,6 +1487,9 @@ define(function (require, exports, module) {
       var avatar = elem.getAttribute('data-url');
       if (avatar !== card.avatar) {
         avatar = card.avatar;
+        if (!avatar) {
+          avatar = card.name ? (config.api_url + '/avatar/default?name=' + card.name) : '/static/img/portrait_default.png';
+        }
         elem.querySelector('.avatar').style.backgroundImage = 'url(' + avatar + ')';
         elem.setAttribute('data-url', avatar);
       }
