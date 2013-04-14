@@ -606,7 +606,7 @@ define(function (require, exports, module) {
           +   '<div class="discover hide">Discover people nearby and share contacts.</div>'
 
           +   '<div id="icard" class="card" data-g="0" data-i="0">'
-          +     '<img class="avatar" width="64" height="64" src="/static/img/portrait_default.png" alt="" />'
+          +     '<div class="avatar"></div>'
           +     '<div class="tap-tip">Tap to start</div>'
           +   '</div>'
 
@@ -1426,7 +1426,7 @@ define(function (require, exports, module) {
     };
 
     var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
-        + '<img width="64" height="64" class="avatar" scr="{{avatar}}" alt="" />'
+        + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
         + '<div class="name">{{name}}</div>'
         + '{{tip-html}}'
       + '</div>'
@@ -1493,7 +1493,7 @@ define(function (require, exports, module) {
 
     var updateMe = function (card) {
       liveCard.card = card;
-      if (card.avatar) $('#icard').find('.avatar').attr('src', card.avatar);
+      if (card.avatar) $('#icard').find('.avatar').css('background-image', 'url('+card.avatar+')');
       if (card.name) {
         $('#icard').find('.name').text(card.name); 
         $('#card-name').val(card.name);
@@ -1503,7 +1503,7 @@ define(function (require, exports, module) {
     };
 
     var updateCard = function (elem, card) {
-      elem.querySelector('.avatar').setAttribute('src', card.avatar);
+      elem.querySelector('.avatar').style.backgroundImage = 'url('+card.avatar+')';
       elem.querySelector('.name').innerText = card.name;
     };
 
