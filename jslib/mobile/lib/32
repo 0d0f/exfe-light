@@ -1,30 +1,4 @@
 define(function (require, exports, module) {
-  /* requestAnimationFrame */
-  //(function() {
-  var lastTime = 0, vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                  || window[vendors[x]+'CancelRequestAnimationFrame'];
-  }
- 
-  if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function(callback, element) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-        timeToCall);
-      lastTime = currTime + timeToCall;
-      return id;
-    };
-  }
-
-  if (!window.cancelAnimationFrame) {
-    window.cancelAnimationFrame = function(id) {
-      clearTimeout(id);
-    };
-  }
-  //}());
 
     var $ = require('zepto');
 
@@ -32,101 +6,13 @@ define(function (require, exports, module) {
 
     var config = require('config');
 
-    var TWEEN = require('tween');
-
     var Store  = require('store');
 
     var Live   = require('live');
 
-    var getLiveCard = function () {
-      var liveCard = Store.get('livecard');
-      if (!liveCard) {
-        var card = {
-          id         : '',
-          name       : '',
-          avatar     : '',
-          bio        : '',
-          identities : []
-        };
-        liveCard = {
-          // Note: 是否清空原来 user.id
-          card: card,
-          latitude  : '',
-          longitude : '',
-          accuracy  : '',
-          traits    : []
-        };
-        var user = Store.get('user');
-        if (user) {
-          card.id = user.id;
-          card.name = user.name;
-          card.avatar = user.avatar_filename;
-          card.bio = user.bio;
-          card.identities = user.identities;
-        }
-        Store.set('livecard', liveCard);
-      }
-      return liveCard;
-    };
-
-    var liveCard = getLiveCard();
-
     var util   = require('util'),
         trim = util.trim,
         parseId = util.parseId;
-
-    var _coords = {};
-
-    var addedFacebook = false;
-
-    var genCoords = function (w, h, l, t) {
-      _coords[0] = [ w * .5 - l, h * .88 - t ];
-
-      _coords[1] = [];
-      _coords[1][0] = [ w * .25 - 5  - l, h * .66 + 30 - t ];
-      _coords[1][1] = [ w * .5 - l      , h * .66 - t ];
-      _coords[1][2] = [ w * .75 + 5  - l, h * .66 + 30 - t ];
-
-      _coords[2] = [];
-      _coords[2][0] = [ w * .125 + 5 - l, h * .44 + 40 - t ];
-      _coords[2][1] = [ w * .375 - l    , h * .44 - t ];
-      _coords[2][2] = [ w * .625 - l    , h * .44 - t ];
-      _coords[2][3] = [ w * .875 - 5 - l, h * .44 + 40 - t ];
-
-      _coords[3] = [];
-      _coords[3][0] = [ w * .125 - l, h * .22 + 40 - t ];
-      _coords[3][1] = [ w * .375 - l, h * .22 - t ];
-      _coords[3][2] = [ w * .625 - l, h * .22 - t ];
-      _coords[3][3] = [ w * .875 - l, h * .22 + 40 - t ];
-    };
-
-    var MAPS = [
-      [1, 0],
-      [1, 1],
-      [1, 2],
-      [2, 0],
-      [2, 1],
-      [2, 2],
-      [2, 3],
-      [3, 0],
-      [3, 1],
-      [3, 2],
-      [3, 3]
-    ];
-
-    var CARD_P0 = [128, 28, 0];
-    var CARD_P1 = [128, 0, 0];
-
-    var LOGO_TWEEN;
-    var CARD_TWEEN;
-    var STEP2_TWEEN_IN_0;
-    var STEP2_TWEEN_IN_1;
-    var STEP2_TWEEN_OUT_0;
-    var OPTIONS = { o : 1 };
-    var ANIMATE_STATUS = false;
-
-    // 0: home, 1: create card, 2: live-gather
-    var PAGE_STATUS = 0;
 
     var rdTime = null;
 
@@ -138,9 +24,9 @@ define(function (require, exports, module) {
 
     var my_token      = '';
 
-    var count_down    = 5;
+    // var count_down    = 5;
     // @debug only
-    //var count_down    = 5000000000;
+    var count_down    = 5000000000;
 
     var lastBreathe   = +new Date;
 
@@ -151,26 +37,15 @@ define(function (require, exports, module) {
         } else if (height < 350) {
             height = 350;
         }
-        height += 60;
-        $('html, body').css('min-height', height + 'px');
-        $('html, body').css('height', height + 'px');
+        $('html').css('min-height', (height + 60) + 'px');
         //$('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
         var top = (height - 86 - (banner ? 50 : 0));
         if (!cross) {
             $('.actions').css('top',  top + 'px');
         }
-        //$('.box').css('height', (top - 45) + 'px');
+        $('.box').css('height', (top - 45) + 'px');
         //$('.box').css('height', (height + 60) + 'px');
-        $('.box .inner').css('top', (height - 300) / 2 + 'px')
-        var liveGather = document.querySelector('.live-gather');
-        liveGather.style.height = height + 'px';
-        $('#icard').css({
-          '-webkit-transform': 'translate3d(128px, ' + (CARD_P1[1] = (height - 64) / 2)  + 'px, 0)',
-          'transform': 'translate3d(128px, ' + CARD_P1[1] + 'px, 0)'
-        });
-          // 44 = iphone bottom bar
-        var w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
-        genCoords(w, h, ol, ot);
+        $('.live-gather').css('height', (height + 60) + 'px');
 
         if (navigator.userAgent.match(/iPad/)) {
             $('.redirecting').unbind('click').bind('click', function() {
@@ -184,348 +59,194 @@ define(function (require, exports, module) {
         }
         $('.get-button button').unbind('click').bind('click', showAppInStore);
 
-        //$('.box .inner').on('click', function (e) { //window.scrollTo(0, 390); //$('#inputEmail').focus(); });
+        $('.box .inner').on('click', function (e) {
+          //window.scrollTo(0, 390);
+          //$('#inputEmail').focus();
+        });
         //$(document).on('touchmove.prevent', function(e) {
           //e.preventDefault();
         //});
 
         generateMyCard();
-
         var $list = $('.card-form .list');
-        $(function () {
         $(document)
 
           // `live-gather` layer
           .on('touchstart.live', '.live-gather', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
               if ($(e.target).hasClass('live-gather')) {
-                if (PAGE_STATUS === 1) {
-                  //e.preventDefault();
-                  //e.stopPropagation();
-                  //console.log('switch base');
-                  $('.input-item').blur();
-                  //$('.discover').hide();
-                  //$('.card-form').hide();
-                  //$('.live-title').hide();
-                  //var icard = document.getElementById('icard'), s = icard.style;
-                  //console.log(icard._oldTransform);
-                  //s.webkitTransform = s.transform = icard._oldTransform;
-                  //LOGO_TWEEN.start(1000);
-                  //$('.box').show();
-                  PAGE_STATUS = 0;
-                  CARD_TWEEN.stop();
-                  LOGO_TWEEN.stop();
-                  STEP2_TWEEN_OUT_0.start();
-                } else if (PAGE_STATUS === 2) {
-                  $('.live-tip').addClass('live-tip-close');
-                  new TWEEN.Tween({o:0})
-                    .delay(288)
-                    .to({o:1}, 0)
-                    .onUpdate(function () {
-                      $('.wave').css('opacity', this.o);
-                    })
-                    .start();
-                }
+                console.log('switch base');
+                $('#input-identity').blur();
+                $('.discover').hide();
+                $('.card-form').hide();
               }
             })
-
-        .on('touchstart.live', '.live-tip', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          $('.live-tip').addClass('live-tip-close');
-          new TWEEN.Tween({o:0})
-            .delay(288)
-            .to({o:1}, 0)
-            .onUpdate(function () {
-              $('.wave').css('opacity', this.o);
-            })
-            .start();
-        })
 
         // `input-item` input
           .on('touchstart.live', '.input-item', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (ANIMATE_STATUS) {
-              return false;
-            }
-            var t = this;
-            if (t.id === 'card-name') {
-              setTimeout(function () {
-                window.scrollTo(0, 0);
-              }, 0);
-            }
-            //console.log(t.id);
-            if ((t.id === "facebook-identity" || t.id === 'add-identity') && !addedFacebook) {
-              $('#add-identity-facebook').removeClass('hide');
-            } else {
-              $('#add-identity-facebook').addClass('hide');
-            }
-            this.focus();
+            //e.preventDefault();
+            //e.stopPropagation();
+            console.log(e.target);
+            e.target.focus();
             //return false;
           })
           .on('focus.live', '.input-item', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            //console.log('focus input');
-            var t = this;
-            if (t.id === 'card-name') {
+            //e.preventDefault();
+            //e.stopPropagation();
+            console.log(this);
+            if (this.id === 'card-name') {
               setTimeout(function () {
                 window.scrollTo(0, 0);
               }, 0);
             }
+            console.log('focus input');
           })
           .on('blur.live', '.input-item', function (e) {
-            //console.log('blur input');
-            var id = this.id;
+            /*
+            if (this.id === 'card-name') {
+              setTimeout(function () {
+                window.scrollTo(0, 0);
+              }, 0);
+            }
+            */
+            console.log('blur input');
+          })
 
-            if ((id === "facebook-identity" && !addedFacebook) || (id === 'add-identity')) {
-              var isFacebook = (id === 'facebook-identity'), v = trim(this.value), identity;
-              if (!v) {
-                return;
-              }
-
-              if (isFacebook) {
-                v += '@facebook';
-              }
-
-              identity = parseId(v);
-              var $list = $('.card-form .list');
-              // @Note: 检查是否有重复身份
-              if (identity.provider
-                && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
-                identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                //console.dir(identity);
-                $list.append(genIdentity(identity));
-                if (isFacebook) { addedFacebook = true };
-                addIdentityToCard(identity);
-              }
-              $('#add-identity-facebook').addClass('hide');
-              this.value = '';
+          // e touchstart.live 很容易 crash
+          .on('tap.liv', '#add-identity', function (e) {
+            e.preventDefault();
+            $('#card-name').blur();
+            var status = ~~this.getAttribute('data-status');
+            if (status) {
+              setTimeout(function () {
+              $list.prepend(
+                genIdentity(
+                  {
+                    name: '',
+                    external_username: '',
+                    provider: '',
+                    avatar_filename: ''
+                  },
+                  true
+                )
+              );
+              var next = $list.find('.input-item').eq(0)[0];
+              console.log(next);
+              next.focus();
+              }, 2000);
+              this.setAttribute('data-status', 0)
             }
           })
 
-          .on('keydown.live', '#add-identity, #facebook-identity', function (e) {
+          .on('keydown.live', '#card-name', function (e) {
             var v = trim(this.value), k = e.keyCode,
-                isFacebook = (this.id === 'facebook-identity'),
                 identity;
 
-            //console.log(k);
             // empty text
             if (!v) {
               return;
             }
 
-            if (isFacebook) {
-              v += '@facebook';
-            }
-
             switch (k) {
               case 13:
                 identity = parseId(v);
-                //console.log(identity);
+                console.log(identity);
                 var $list = $('.card-form .list');
                 // @Note: 检查是否有重复身份
                 if (identity.provider
                   && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
                   identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                  //console.dir(identity);
-                  $list.append(genIdentity(identity));
-                  if (isFacebook) { addedFacebook = true };
-                  if (addedFacebook) {
-                    $('#add-identity-facebook').addClass('hide');
-                  }
-                  addIdentityToCard(identity);
+                  console.dir(identity);
+                  $list.prepend(genIdentity(identity));
                 }
                 this.value = '';
                 break;
             }
           })
 
-          //.on('keydown.live', '#card-name', function (e) { })
-
           // `me` card
-          .on('touchstart.live', '#icard', function (e) {
+          .on('tap.live touchstart.live', '#icard', function (e) {
+            //if (isFocus) { return; }
             e.preventDefault();
             e.stopPropagation();
-            //console.log('PAGE_STATUS', PAGE_STATUS)
-            if (PAGE_STATUS) {
-              return;
-            }
-            PAGE_STATUS = 1;
-            CARD_TWEEN.stop();
-            LOGO_TWEEN.stop();
-            STEP2_TWEEN_IN_0.start();
-            STEP2_TWEEN_IN_1.start();
+            $('.discover').show();
+            $('.card-form').show();
+            $('#card-name').focus();
           })
 
           // `start-button`
           .on('tap.live touchstart.live', '.btn-start', function (e) {
             e.preventDefault();
             e.stopPropagation();
-
-            if (checkFields()) {
-              $('.input-item').blur();
-              $('.discover').addClass('hide');
-              $('.card-form').addClass('hide');
-              $('.live-title').removeClass('hide');
-              var icard = document.getElementById('icard'), s = icard.style;
-              s.webkitTransform = s.transform = 'translate3d(' + _coords[0][0] + 'px, ' + _coords[0][1]  + 'px, 0)';
-              setMyCard();
-              PAGE_STATUS = 2;
-            }
-
-            return false;
+            $('#card-name').blur();
+            //isFocus = false;
+            console.log(e.type);
+            console.log('start button');
           });
-        })
-          .on('tap.live', '.live-title h2', function (e) {
-            $('.wave').css('opacity', 0);
-            $('.live-tip').removeClass('live-tip-close');
-          })
-          .on('touchstart.live', '#facebook-label', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.getElementById('facebook-identity').focus();
-            return false;
-          })
-          .on('touchstart.live', '.delete', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // note: 更新 localstorge
-            var input = $(this).prev(), v = trim(input.val()), identity = parseId(v);
-            if (identity && identity.provider) {
-              delIdentityFromCard(identity.external_username);
-            }
-            $(this).parents('li').remove();
-          })
-            .on('touchstart.live', '.back', function (e) {
-              PAGE_STATUS = 0;
-              var icard = document.getElementById('icard'), s = icard.style;
-              s.opacity = 0;
-              s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
-              $('.live-title').addClass('hide');
-              $('.box').css('opacity', 1);
-              $('.actions').css('opacity', 1);
-              $('.big-logo').css('opacity', 1);
-              LOGO_TWEEN.start();
-            });
-          /*
-            .on('tap.live', '.live-tip', function (e) {
-              $('.live-tip').addClass('live-tip-close');
-              new TWEEN.Tween({o:0})
-                .delay(288)
-                .to({o:1}, 0)
-                .onUpdate(function () {
-                  $('.wave').css('opacity', this.o);
-                })
-                .start();
-            });
-            */
 
         // live
         var offset = $('.box .inner').offset();
-
-      var logo = document.querySelector('.big-logo'),
-          icard = document.querySelector('#icard'),
-          update = function () {
-            logo.style.opacity = OPTIONS.o;
-            icard.style.opacity = 1 - OPTIONS.o;
-          };
-      LOGO_TWEEN = new TWEEN.Tween(OPTIONS)
-            .delay(1377)
-            .to({ o: 0}, 1377)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onStart(function () {
-              OPTIONS.o = 1;
-              logo.style.opacity = 1;
-              icard.style.opacity = 0;
-              ANIMATE_STATUS = true;
-            })
-            .onUpdate(update)
-            .onComplete(function () {
-              ANIMATE_STATUS = false;
-            });
-      CARD_TWEEN = new TWEEN.Tween(OPTIONS)
-            .delay(1377)
-            .to({ o: 1}, 1377)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onStart(function () {
-              ANIMATE_STATUS = true;
-            })
-            .onUpdate(update)
-              .onComplete(function () {
-                ANIMATE_STATUS = false;
-              });
-      LOGO_TWEEN.chain(CARD_TWEEN);
-      CARD_TWEEN.chain(LOGO_TWEEN);
-      LOGO_TWEEN.start();
-
-      var discover = document.querySelector('.discover'),
-          cardForm = document.querySelector('.card-form');
-      STEP2_TWEEN_IN_0 = new TWEEN.Tween({ o: 0})
-            .to({ o: 1}, 500)
-            .easing(TWEEN.Easing.Cubic.In)
-            .onStart(function () {
-              window.scrollTo(0, 0);
-              $('.tap-tip').addClass('hide');
-              $('.discover').css('opacity', 0).removeClass('hide');
-              $('.card-form').css('opacity', 0).removeClass('hide');
-              icard.style.opacity = 1;
-              ANIMATE_STATUS = true;
-            })
-            .onUpdate(function () {
-              $('.box').css('opacity', 1 - this.o);
-              $('.actions').css('opacity', 1 - this.o);
-              discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
-              //console.log(this.o);
-              //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
-              icard.style.transform = icard.style.webkitTransform = 'translate3d(128px, ' + ((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1])  + 'px, 0)';
-            })
-            .onComplete(function (){
-              this.o = 0;
-              TWEEN.remove(this);
-              ANIMATE_STATUS = false;
-            });
-      STEP2_TWEEN_IN_1 = new TWEEN.Tween({o: 0})
-          .delay(250)
-          .to({ o: 1}, 500)
-          .onStart(function () {
-              ANIMATE_STATUS = true;
-          })
-          .onUpdate(function () {
-            cardForm.style.opacity  = this.o;
-          })
-          .onComplete(function (){
-            this.o = 0;
-            ANIMATE_STATUS = false;
-            TWEEN.remove(this);
-            $('#card-name').focus();
-          });
-
-      STEP2_TWEEN_OUT_0 = new TWEEN.Tween({o : 1})
-        .to({o: 0}, 500)
-        .easing(TWEEN.Easing.Cubic.Out)
-        .onStart(function () {
-            ANIMATE_STATUS = true;
-        })
-        .onUpdate(function () {
-            cardForm.style.opacity  = this.o;
-            icard.style.opacity = this.o;
-            $('.box').css('opacity', 1 - this.o);
-            $('.actions').css('opacity', 1 - this.o);
-            $('.big-logo').css('opacity', 1 - this.o);
-            discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
-            //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
-        })
-        .onComplete(function () {
-          this.o = 1;
-          icard.style.transform = icard.style.webkitTransform = 'translate3d(128px, ' + CARD_P1[1]  + 'px, 0)';
-          LOGO_TWEEN.start();
-          $('.discover').addClass('hide');
-          $('.tap-tip').removeClass('hide');
-          $('.card-form').addClass('hide');
-          ANIMATE_STATUS = false;
-          TWEEN.remove(this);
+        /*
+        var top = (182 - 64) / 2 + offset.top;
+        $('.discover').css({
+          top: top - 20
         });
+        $('#icard').css({
+          top: top
+        });
+        $('.card-form').css({
+          top: top + 80 - 20
+        });
+        $('#icard').on('tap.live', function (e) {
+        });
+        $('#inputEmail').on('focus.live tap.live', function (e) {
+          $('.live-gather').animate({
+            marginTop: -50
+          }, 144, function () {
+            alert(233);
+          });
+          //e.preventDefault();
+        $('#inputEmail').on('blur.live', function (e) {
+          $('.live-gather').animate({
+            marginTop: parseInt($('body').css('margin-top')) - 30
+          }, 144, function () {
+            alert(233);
+          });
+        $(document).off('touchmove.prevent');
+        });
+
+        $(document).on('touchstart', function(e) {
+            if (e.target.nodeName !== 'INPUT') {
+              //$(document).off('touchmove.prevent');
+            }
+        });
+        */
+        function draw() {
+          var c0s = $('.c0'), c1s = $('.c1'), c2s = $('.c2'), c3s = $('.c3');
+          var liveGather = document.querySelector('.live-gather'),
+              // 44 = iphone bottom bar
+              w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
+
+          c0s.css('-webkit-transform', 'translate3d(' + (w * .5             - ol)  + 'px,' +  (h * .88      - ot) + 'px, 0)');
+
+          c1s.eq(0).css('-webkit-transform', 'translate3d(' + (w * .25 - 5  - ol)  + 'px,' +  (h * .66 + 30 - ot) + 'px, 0)');
+          c1s.eq(1).css('-webkit-transform', 'translate3d(' + (w * .5       - ol)  + 'px,' +  (h * .66      - ot) + 'px, 0)');
+          c1s.eq(2).css('-webkit-transform', 'translate3d(' + (w * .75 + 5  - ol)  + 'px,' +  (h * .66 + 30 - ot) + 'px, 0)');
+
+          c2s.eq(0).css('-webkit-transform', 'translate3d(' + (w * .125 + 5 - ol)  + 'px,' +  (h * .44 + 40 - ot) + 'px, 0)');
+          c2s.eq(1).css('-webkit-transform', 'translate3d(' + (w * .375     - ol)  + 'px,' +  (h * .44      - ot) + 'px, 0)');
+          c2s.eq(2).css('-webkit-transform', 'translate3d(' + (w * .625     - ol)  + 'px,' +  (h * .44      - ot) + 'px, 0)');
+          c2s.eq(3).css('-webkit-transform', 'translate3d(' + (w * .875 - 5 - ol)  + 'px,' +  (h * .44 + 40 - ot) + 'px, 0)');
+
+          c3s.eq(0).css('-webkit-transform', 'translate3d(' + (w * .125     - ol)  + 'px,' +  (h * .22 + 40 - ot) + 'px, 0)');
+          c3s.eq(1).css('-webkit-transform', 'translate3d(' + (w * .375     - ol)  + 'px,' +  (h * .22      - ot) + 'px, 0)');
+          c3s.eq(2).css('-webkit-transform', 'translate3d(' + (w * .625     - ol)  + 'px,' +  (h * .22      - ot) + 'px, 0)');
+          c3s.eq(3).css('-webkit-transform', 'translate3d(' + (w * .875     - ol)  + 'px,' +  (h * .22 + 40 - ot) + 'px, 0)');
+        }
+
+        draw();
+
     };
 
     var redirecting = function(args) {
@@ -560,15 +281,15 @@ define(function (require, exports, module) {
         $('#app-main').html(
             '<div class="dialog-box">'
           +     '<div class="box">'
-          +         '<div class="title">'
-          +           '<h1>EXFE</h1>'
-          +           '<p>A utility for gathering with friends.</p>'
-          +         '</div>'
           +         '<div class="inner">'
-          +           '<img class="big-logo" width="320" height="300" src="/static/img/EXFE_glossy@2x.png"/>'
+          +           '<img class="big-logo" width="182" height="182" src="/static/img/exfe.png"/>'
+          //+           '<div class="identity-people">'
+          //+             '<div class="avatar"></div>'
+          //+             '<div class="tip">Tap to start</div>'
+          //+           '</div>'
           +         '</div>'
           +     '</div>'
-          +     '<div class="actions">'
+          +     '<div class="actions" style="display: none">'
           +         '<div class="error-info">You just opened an invalid link.</div>'
           +         '<div class="get-button">'
           +             '<button>Get <span class="exfe">EXFE</span> app <span class="free">free</span></button>'
@@ -578,44 +299,56 @@ define(function (require, exports, module) {
           +     '</div>'
           /// live gather
           +   '<div class="live-gather">'
-          +   '<div class="live-title hide">'
-          +     '<div class="back"><img width="20" height="44" src="/static/img/back@2x.png" alt="" /></div>'
-          +     '<h2>Live <span class="x">·X·</span></h2>'
-          //      Note: 暂时去掉
-          //+     '<button class="btn btn-confirm hide" type="button">Confirm</button>'
-          +     '<div id="live-tip" class="live-tip live-tip-close">'
-          +       '<h4>Gather people nearby</h4>'
-          +       '<p>Close two phones together to capture people using Live ·X·. For those accessing exfe.com, max their speaker volume.</p>'
-          +     '</div>'
-          +     '<div id="wave" class="wave"><div class="win">'
-          +       '<div class="circle"></div>'
-          +       '<div class="circle"></div>'
-          +       '<div class="circle"></div></div>'
-          +     '</div>'
-          +   '</div>'
-          +   '<div class="discover hide">Discover people nearby and share contacts.</div>'
+          +   '<div class="discover hide">1123 123 312 3213 21 3213</div>'
 
-          +   '<div id="icard" class="card" data-g="0" data-i="0">'
-          +     '<img class="avatar" width="64" height="64" src="/static/img/portrait_default.png" alt="" />'
-          +     '<div class="tap-tip">Tap to start</div>'
+          +   '<div class="card c3 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c3 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c3 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c3 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
           +   '</div>'
 
+          +   '<div class="card c2 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c2 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c2 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c2 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+
+          +   '<div class="card c1 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c1 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+          +   '<div class="card c1 hide">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
+
+          +   '<div id="icard" class="card">'
+          +     '<img class="avatar" width="64" height="64" src="' + config.api_url + '/avatar/default' + '" alt="" />'
+          +   '</div>'
           +   '<div class="card-form hide">'
           //+     '<form class="form-horizontal"><fieldset>'
           +         '<div class="controls" style="-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1); -webkit-backface-visibility: hidden;">'
-          +           '<input class="input-item" type="text" autocapitalize="none" id="card-name" placeholder="Name"/>'
+          +           '<input class="input-item" type="text" id="card-name" placeholder="Name" tabindex="0"/>'
           +           '<button class="btn btn-start" type="button">Start</button>'
           +         '</div>'
-          +         '<div class="hide" id="card-bio"></div>'
-          +         '<div class="identities"><ul class="list"></ul>'
-          +         '<input class="input-item" id="add-identity" autocapitalize="none" data-status="1" type="email" placeholder="Add your email or mobile" />'
-          +         '<div class="identity facebook-identity hide" id="add-identity-facebook">'
-          +           '<label id="facebook-label" for="facebook-identity">facebook.com/'
-          +           '<input name="facebook-identity" autocapitalize="off" id="facebook-identity" class="input-item" type="text" /></label>'
-          +         '</div>'
-          +         '<div class="detail detail-invent hide">The best way to predict the future is to invent it.</div>'
-          +         '<div class="detail detail-concat">*People nearby can see your public contacts.</div>'
-          +         '<div>'
+          +         '<div id="add-identity" data-status="1">Enter your email or mobile</div>'
+          +         '<div class="identities"><ul class="list">'
+          +         '</ul><div>'
           //+     '</fieldset></form>'
           +   '</div>'
           + '</div>'
@@ -1378,143 +1111,34 @@ define(function (require, exports, module) {
         return objIdentity;
     };
 
-    var LI_TMP = '<li class="identity" style="-webkit-transform: translate3d(0, 0, 0);">'
-        + '<span class="provider">{{provider_alias}}</span>'
-        + '<input data-provider="{{provider}}" style="-webkit-transform: translate3d(0, 0, 0);" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete">x</div>'
-        //+ '<span class="permission">Public<span>'
+    var LI_TMP = '<li class="identity" data-provider="{{provider}}" data-name="{{name}}" data-external-username="{{external_username}}" data-avatar-filename="{{avatar_filename}}" style="-webkit-transform: translate3d(0, 0, 0);">'
+        + '<span class="provider">{{provider}}</span>'
+        + '<input tabindex="{{tabindex}}" style="-webkit-transform: translate3d(0, 0, 0);" {{disabled}} class="external_username input-item normal" value="{{external_username}}" type="text"/>'
+        + '<span class="permission">Public<span>'
       + '</li>';
 
     var genIdentity = function (identity, disabled) {
-      var provider = identity.provider;
-      if (provider === 'email') {
-        provider = 'Email';
-      } else if (provider === 'phone') {
-        provider = 'Mobile';
-      } else if (provider === 'facebook') {
-        provider = 'Facebook';
-      }
-
-      var $card = $(LI_TMP.replace(/\{\{provider\}\}/g, identity.provider)
-        .replace(/\{\{provider_alias\}\}/g, provider)
-        .replace(/\{\{external_username\}\}/g, identity.external_username));
-        //.replace(/\{\{disabled\}\}/, disabled ? '' : 'disabled');
-      $card.data('card', identity);
-      return $card;
-    };
-
-    var genTip = function (card) {
-      var dt = '<div class="tip">', de = '</div>';
-      dt += '<div class="bio">' + (card.bio || '') + '</div>';
-      var ids = card.identities;
-      dt += '<ul>';
-      for (var i = 0, l = ids; i < l; ++i) {
-        dt += '<li><span>' + ids[i].external_username + '</span><span>' + ids[i].provider + '</span></li>';
-      }
-      dt += '</ul>';
-      dt += de;
-      return dt;
-    };
-
-    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
-        + '<img class="avatar" scr="{{avatar}}" alt="" />'
-        + '<div class="name">{{name}}</div>'
-        + '{{tip-html}}'
-      + '</div>'
-    var genCard = function (card, tl, g, i) {
-      var $card = $(CARD_TMP.replace('{{avatar}}', card.avatar)
-        .replace('{{id}}', card.id)
-        .replace('{{g}}', g)
-        .replace('{{i}}', i)
-        .replace('{{name}}', card.name)
-        .replace('{{left}}', tl[0])
-        .replace('{{top}}', tl[1])
-        .replace('{{tip-html}}', genTip(card)));
-      $card.data('card', card);
-      return $card;
+      return LI_TMP.replace(/\{\{provider\}\}/g, identity.provider)
+        .replace(/\{\{external_username\}\}/g, identity.external_username)
+        .replace(/\{\{name\}\}/g, identity.name)
+        .replace(/\{\{tabindex\}\}/, ++tabIndex)
+        .replace(/\{\{avatar_filename\}\}/, identity.avatar_filename)
+        .replace(/\{\{disabled\}\}/, disabled ? '' : 'disabled');
     };
 
     var generateMyCard = function () {
-      var card = liveCard.card,
-          identities = card.identities, len;
-
-      updateMe(card);
-
+      var user = Store.get('user'),
+          identities = user && user.identities,
+          len;
       if (identities && (len = identities.length)) {
+        $('#icard').find('.avatar').attr('src', user.avatar_filename);
+        $('#icard').find('.name').text(user.name);
         var $list = $('.card-form').find('.list'), i = 0, identity;
         for (; i < len; ++i) {
           identity = identities[i];
           if (identity.provider === 'email' || identity.provider === 'phone') {
             $list.append(genIdentity(identities[i]));
           }
-        }
-      }
-
-    };
-
-    var addIdentityToCard = function (identity) {
-      var identities = liveCard.card.identities;
-      identities.push(identity);
-      Store.set('livecard', liveCard);
-    };
-    var delIdentityFromCard = function (external_username) {
-      var identities = liveCard.card.identities, len = identities.length, i = 0, d;
-      for (; i < len; ++i) {
-        if (identities[i].external_username === external_username) {
-          d = true;
-          identities.splice(i, 1);
-          break;
-        }
-      }
-      if (d) {
-        Store.set('livecard', liveCard);
-      }
-    };
-
-    var delCard = function (elem) {
-      var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i');
-      MAPS.push([g, i]);
-      elem.remove();
-    };
-
-    var addCard = function (card) {
-      var gi = MAPS.shift(), g = gi[0], i = gi[1], ol = _coords[g][i];
-      $('#icard').before(genCard(card, ol, g, i));
-    };
-
-    var updateMe = function (card) {
-      liveCard.card = card;
-      if (card.avatar) $('#icard').find('.avatar').attr('src', card.avatar);
-      if (card.name) $('#icard').find('.name').text(card.name);
-      if (card.bio) $('#card-bio').text(card.bio);
-      Store.set('livecard', liveCard);
-    };
-
-    var updateCard = function (elem, card) {
-      elem.querySelector('.avatar').setAttribute('src', card.avatar);
-      elem.querySelector('.name').innerText = card.name;
-    };
-
-    var updateOthers = function (cards) {
-      var elems = document.querySelectorAll('.card-other'), len = elems.length, i = 0, elem, id, k, card;
-
-      // 删除 old-card
-      for (; i < len; ++i) {
-        elem = elems[i];
-        id = elem.getAttribute('id');
-        if (!(id in cards)) {
-          delCard(elem);
-        }
-      }
-
-      // 添加 更新卡片
-      for (k in cards) {
-        card = cards[k];
-        //console.log(card);
-        elem = document.getElementById(card.id);
-        if (elem) {
-          updateCard(elem, card);
-        } else {
-          addCard(card);
         }
       }
     };
@@ -1568,49 +1192,76 @@ define(function (require, exports, module) {
     };
     */
 
-    var checkFields = function() {
-        var name = trim($('#card-name').val()), rest = false;
-        if (!name) {
-          return rest;
-        }
-
-        var card = liveCard.card;
-        card.name = name;
-
-        var inputs = $('.list .input-item'), identities = [];
-
-        for (var i = 0, len = inputs.length; i < len; ++i) {
-          var input = inputs.eq(i), value = trim(input.val()), provider = input.attr('data-provider');
-          if (value) {
-            if (provider === 'facebook') {
-              value += '@facebook';
+    var getUTF8Length = function(string) {
+        var length = 0;
+        if (string) {
+            for (var i = 0; i < string.length; i++) {
+                charCode = string.charCodeAt(i);
+                if (charCode < 0x007f) {
+                    length += 1;
+                } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
+                    length += 2;
+                } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
+                    length += 3;
+                }
             }
-            var identity = parseId(value);
-            if (identity && identity.provider) {
-              identities.push(identity);
+        }
+        return length;
+    };
+
+    var cutLongName = function(string) {
+        string = string ? string.replace(/[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g, ' ') : '';
+        while (getUTF8Length(string) > 30) {
+            string = string.substring(0, string.length - 1);
+        }
+        return string;
+    };
+
+    var checkInput = function() {
+        if (!$('.here-main .name-input .name').val()) {
+            return false;
+        }
+        var inputs = $('.here-main .identities-list li');
+        var numIds = 0;
+        for (var i = 0; i < inputs.length; i++) {
+            var strIdentity = $(inputs[i]).find('.new-identity').val();
+            if (strIdentity) {
+                if (parseAttendeeInfo(strIdentity)) {
+                    numIds++;
+                } else {
+                    return false;
+                }
             }
-          }
         }
-
-        if (identities.length) {
-          card.identities = identities;
-          rest = true;
+        if (!numIds) {
+            return false;
         }
-
-        Store.set('livecard', liveCard);
-
-        return rest;
+        return true;
     };
 
     var setMyCard = function() {
-      var card = liveCard.card;
-      if (card.identities.length) {
-        Live.init(card, liveCallback);
-      }
-      //console.dir(card);
+        var objName   = $('.here-main .name-input .name');
+        var objAvatar = $('.here-main .my-card .my-avatar');
+        if (objAvatar.attr('src') === config.api_url + '/avatar/default') {
+            objAvatar.attr('src', encodeURI(config.api_url + '/avatar/default?name=' + objName.val()));
+        }
+        var myCard = {
+            name       : objName.val(),
+            avatar     : objAvatar.attr('src'),
+            identities : []
+        };
+        var inputs = $('.here-main .identities-list li');
+        for (var i = 0; i < inputs.length; i++) {
+            var objIdentity = parseAttendeeInfo($(inputs[i]).find('.new-identity').val());
+            if (objIdentity) {
+                myCard.identities.push(objIdentity);
+            }
+        }
+        if (myCard.name && myCard.identities.length) {
+            Live.init(myCard, liveCallback);
+        }
     };
 
-    /*
     var updateMyCard = function(card) {
         // update name
         var objName = $('.here-main .name-input .name');
@@ -1644,9 +1295,7 @@ define(function (require, exports, module) {
             }
         }
     };
-    */
 
-    /*
     var updateOthers = function(cards) {
         var olNearBy = $('.here-main .near-by li');
         var found    = {};
@@ -1668,16 +1317,13 @@ define(function (require, exports, module) {
             }
         }
     };
-    */
 
     var liveCallback = function(data) {
-        //console.dir(data);
-        if (data.me) {
-          updateMe(data.me);
+        if (typeof data['me'] !== 'undefined') {
+            updateMyCard(data.me);
         }
-
-        if (data.others) {
-          updateOthers(data.others);
+        if (typeof data['others'] !== 'undefined') {
+            updateOthers(data.others);
         }
     };
 
@@ -1716,13 +1362,6 @@ define(function (require, exports, module) {
     };
 
     window.addEventListener('load', function() {
-
-        function animate() {
-          requestAnimationFrame(animate);
-          TWEEN.update();
-        }
-        animate();
-
         setTimeout(function() {
             window.scrollTo(0, 0);
         }, 0);
@@ -1790,8 +1429,3 @@ define(function (require, exports, module) {
     home();
 
 });
-
-/*
- *
-@0: .1 1.1 .9 1
- */
