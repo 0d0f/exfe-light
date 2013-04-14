@@ -138,9 +138,9 @@ define(function (require, exports, module) {
 
     var my_token      = '';
 
-    // var count_down    = 5;
+    var count_down    = 5;
     // @debug only
-    var count_down    = 5000000000;
+    //var count_down    = 5000000000;
 
     var lastBreathe   = +new Date;
 
