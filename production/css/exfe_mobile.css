@@ -723,6 +723,7 @@ body {
   width: 64px;
   height: 64px;
   cursor: pointer;
+  opacity: 0;
   -webkit-transform-origin: 50% 50%;
   -webkit-transform-style: flat;
 }

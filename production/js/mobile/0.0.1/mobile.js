@@ -472,6 +472,7 @@ define(function (require, exports, module) {
           .delay(250)
           .to({ o: 1}, 500)
           .onStart(function () {
+              document.getElementById('card-name').value = liveCard.card.name;
               ANIMATE_STATUS = true;
           })
           .onUpdate(function () {
@@ -1455,9 +1456,7 @@ define(function (require, exports, module) {
 
     var delCard = function (elem) {
       var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i'), s = elem.style, t = s.transform || s.webkitTransform;
-      MAPS.unshift([g, i]);
-
-      new TWEEN.Tween({ o: 1})
+      new TWEEN.Tween({ o: 1 })
         .to({ o: 0 }, 233)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(function () {
@@ -1465,6 +1464,7 @@ define(function (require, exports, module) {
           s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
         })
         .onComplete(function () {
+          MAPS.unshift([g, i]);
           elem.remove();
           TWEEN.remove(this);
         })
@@ -1472,8 +1472,23 @@ define(function (require, exports, module) {
     };
 
     var addCard = function (card) {
-      var gi = MAPS.shift(), g = gi[0], i = gi[1], ol = _coords[g][i];
-      $('#icard').before(genCard(card, ol, g, i));
+      var gi = MAPS.shift(), g = gi[0], i = gi[1], ol = _coords[g][i],
+          $card = genCard(card, ol, g, i), elem = $card[0], s = elem.style, t = s.transform || s.webkitTransform;
+      $('#icard').before($card);
+      new TWEEN.Tween({ o: 0 })
+        .to({ o: 1 }, 233)
+        .easing(TWEEN.Easing.Bounce.In)
+        .onStart(function () {
+          $card.removeClass('hide')
+        })
+        .onUpdate(function () {
+          s.opacity = this.o;
+          s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
+        })
+        .onComplete(function () {
+          TWEEN.remove(this);
+        })
+        .start();
     };
 
     var updateMe = function (card) {
@@ -1489,7 +1504,7 @@ define(function (require, exports, module) {
       }
       if (card.name) {
         icard.querySelector('.name').innerText = card.name;
-        //document.getElementById('card-name').value =
+        //document.getElementById('card-name').value = card.name;
       }
       if (card.bio) {
         document.getElementById('card-bio').innerText = card.bio;
