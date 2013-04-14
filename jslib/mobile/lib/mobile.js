@@ -151,7 +151,7 @@ define(function (require, exports, module) {
         }
         height += 60;
         $('html, body').css('min-height', height + 'px');
-        $('html, body').css('height', height + 'px');
+        $('body').css('height', height + 'px');
         //$('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
         var top = (height - 86 - (banner ? 50 : 0));
         if (!cross) {
@@ -311,13 +311,11 @@ define(function (require, exports, module) {
             switch (k) {
               case 13:
                 identity = parseId(v);
-                //console.log(identity);
                 var $list = $('.card-form .list');
                 // @Note: 检查是否有重复身份
                 if (identity.provider
                   && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
                   identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                  //console.dir(identity);
                   $list.append(genIdentity(identity));
                   if (isFacebook) { addedFacebook = true };
                   if (addedFacebook) {
@@ -1399,13 +1397,13 @@ define(function (require, exports, module) {
       return dt;
     };
 
-    var CARD_TMP = '<div id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
+    var CARD_TMP = '<div data-url="{{avatar}}" id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
         + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
         + '<div class="name">{{name}}</div>'
         + '{{tip-html}}'
       + '</div>'
     var genCard = function (card, tl, g, i) {
-      var $card = $(CARD_TMP.replace('{{avatar}}', card.avatar)
+      var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
         .replace('{{id}}', card.id)
         .replace('{{g}}', g)
         .replace('{{i}}', i)
@@ -1466,18 +1464,29 @@ define(function (require, exports, module) {
     };
 
     var updateMe = function (card) {
+      var icard = document.getElementById('icard'), avatar = icard.getAttribute('data-url');
       liveCard.card = card;
-      if (card.avatar) $('#icard').find('.avatar').css('background-image', 'url('+card.avatar+')');
-      if (card.name) {
-        $('#icard').find('.name').text(card.name); 
-        $('#card-name').val(card.name);
+      if (avatar !== card.avatar) {
+        avatar = card.avatar;
+        icard.querySelector('.avatar').style.backgroundImage = 'url(' + avatar + ')';
+        icard.setAttribute('data-url', avatar);
       }
-      if (card.bio) $('#card-bio').text(card.bio);
+      if (card.name) {
+        icard.querySelector('.name').innerText = document.getElementById('card-name').value = card.name;
+      }
+      if (card.bio) {
+        document.getElementById('card-bio').innerText = card.bio;
+      }
       Store.set('livecard', liveCard);
     };
 
     var updateCard = function (elem, card) {
-      elem.querySelector('.avatar').style.backgroundImage = 'url('+card.avatar+')';
+      var avatar = elem.getAttribute('data-url');
+      if (avatar !== card.avatar) {
+        avatar = card.avatar;
+        elem.querySelector('.avatar').style.backgroundImage = 'url(' + avatar + ')';
+        elem.setAttribute('data-url', avatar);
+      }
       elem.querySelector('.name').innerText = card.name;
     };
 
@@ -1496,7 +1505,6 @@ define(function (require, exports, module) {
       // 添加 更新卡片
       for (k in cards) {
         card = cards[k];
-        //console.log(card);
         elem = document.getElementById(card.id);
         if (elem) {
           updateCard(elem, card);
@@ -1594,7 +1602,6 @@ define(function (require, exports, module) {
       if (card.identities.length) {
         Live.init(card, liveCallback);
       }
-      //console.dir(card);
     };
 
     /*
