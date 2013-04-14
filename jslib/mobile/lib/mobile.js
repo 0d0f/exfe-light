@@ -565,7 +565,7 @@ define(function (require, exports, module) {
           +           '<img class="big-logo" width="320" height="300" src="/static/img/EXFE_glossy@2x.png"/>'
           +         '</div>'
           +     '</div>'
-          +     '<div class="actions" style="display: none">'
+          +     '<div class="actions">'
           +         '<div class="error-info">You just opened an invalid link.</div>'
           +         '<div class="get-button">'
           +             '<button>Get <span class="exfe">EXFE</span> app <span class="free">free</span></button>'
