@@ -403,8 +403,13 @@ define(function (require, exports, module) {
               s.opacity = 0;
               s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
               $('.live-title').addClass('hide');
+              // todo:
+              $('.card-other').remove();
               $('.box').css('opacity', 1);
-              $('.actions').css('opacity', 1);
+              $('.actions').css({
+                'opacity': 1,
+                'z-index': 3
+              });
               $('.big-logo').css('opacity', 1);
               LOGO_TWEEN.start();
             });
@@ -471,6 +476,7 @@ define(function (require, exports, module) {
               $('.card-form').css('opacity', 0).removeClass('hide');
               icard.style.opacity = 1;
               ANIMATE_STATUS = true;
+              $('.actions').css('z-index', 0);
             })
             .onUpdate(function () {
               $('.box').css('opacity', 1 - this.o);
@@ -523,6 +529,7 @@ define(function (require, exports, module) {
           $('.discover').addClass('hide');
           $('.tap-tip').removeClass('hide');
           $('.card-form').addClass('hide');
+          $('.actions').css('z-index', 3);
           ANIMATE_STATUS = false;
           TWEEN.remove(this);
         });
