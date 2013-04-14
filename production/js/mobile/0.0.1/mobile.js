@@ -404,6 +404,7 @@ define(function (require, exports, module) {
               s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
               $('.live-title').addClass('hide');
               $('.box').css('opacity', 1);
+              $('.actions').css('opacity', 1);
               $('.big-logo').css('opacity', 1);
               LOGO_TWEEN.start();
             });
@@ -473,6 +474,7 @@ define(function (require, exports, module) {
             })
             .onUpdate(function () {
               $('.box').css('opacity', 1 - this.o);
+              $('.actions').css('opacity', 1 - this.o);
               discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
               //console.log(this.o);
               //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
@@ -509,6 +511,7 @@ define(function (require, exports, module) {
             cardForm.style.opacity  = this.o;
             icard.style.opacity = this.o;
             $('.box').css('opacity', 1 - this.o);
+            $('.actions').css('opacity', 1 - this.o);
             $('.big-logo').css('opacity', 1 - this.o);
             discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
             //console.log((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1]);
