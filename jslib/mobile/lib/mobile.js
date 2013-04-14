@@ -388,9 +388,6 @@ define(function (require, exports, module) {
             return false;
           })
           .on('touchstart.live', '.delete', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // note: 更新 localstorge
             var input = $(this).prev(), v = trim(input.val()), identity = parseId(v);
             if (identity && identity.provider) {
               delIdentityFromCard(identity.external_username);
