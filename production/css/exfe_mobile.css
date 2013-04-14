@@ -582,7 +582,7 @@ body {
   width: 290px;
   height: 100px;
   padding: 10px;
-  font-weight: 300;
+  font-weight: lighter;
   color: #fff;
   text-align: center;
   text-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.5);
@@ -740,17 +740,15 @@ body {
           border-radius: 64px;
 }
 
-.card .avatar:before {
+.card .avatar:after {
   position: absolute;
-  top: 1px;
-  right: 1px;
-  bottom: 1px;
-  left: 1px;
-  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: block;
-  background-color: #fafafa;
-  -webkit-border-radius: 64px;
-          border-radius: 64px;
+  background: url('/static/img/portrait_64@2x.png') no-repeat;
+  background-size: 100% 100%;
   content: '';
 }
 
@@ -761,6 +759,32 @@ body {
   line-height: 14px;
   color: #fff;
   text-align: center;
+}
+
+#card-tip {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: lighter;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255, 255, 255, 0.96)), to(rgba(230, 230, 230, 0.96)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.96), rgba(230, 230, 230, 0.96));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.96), rgba(230, 230, 230, 0.96));
+  background-repeat: repeat-x;
+  -webkit-border-radius: 8px;
+          border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+#card-tip .bio {
+  margin-bottom: 6px;
+}
+
+#card-tip ul {
+  padding: 0;
+  margin: 0;
 }
 
 #icard {

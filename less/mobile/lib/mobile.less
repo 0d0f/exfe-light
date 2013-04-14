@@ -259,7 +259,7 @@ body.x {
     background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
     background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
     box-sizing: border-box;
-    font-weight: 300;
+    font-weight: lighter;
     background-repeat: repeat-x;
     // 38
     -webkit-transform-origin: 50% 50%;
@@ -415,6 +415,7 @@ body.x {
     background-repeat: no-repeat;
     background-size: 100% 100%;
 
+    /*
     &:before {
       position: absolute;
       display: block;
@@ -428,6 +429,19 @@ body.x {
       border-radius: 64px;
       z-index: -1;
     }
+    */
+
+    &:after {
+      position: absolute;
+      display: block;
+      content: '';
+      left: 0;
+      bottom: 0;
+      top: 0;
+      right: 0;
+      background: url('/static/img/portrait_64@2x.png') no-repeat;
+      background-size: 100% 100%;
+    }
 
   }
 
@@ -439,7 +453,38 @@ body.x {
     line-height: 14px;
     overflow: hidden;
   }
+
 }
+
+#card-tip {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+  @startColor: rgba(255, 255, 255, .96);
+  @endColor: rgba(230, 230 , 230, .96);
+  //background-color: mix(@startColor, @endColor, 60%);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
+  background-repeat: repeat-x;
+  box-sizing: border-box;
+  font-weight: lighter;
+  padding: 10px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+
+  .bio {
+    margin-bottom: 6px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 #icard {
   z-index: 3;
   //normal: top ~ 28px;
