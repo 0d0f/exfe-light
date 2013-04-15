@@ -514,7 +514,7 @@ body.x {
   text-align: center;
   top: 200px;
   width: 100%;
-  min-height: 85%;
+  min-height: 80.3%;
   padding: 4px;
   font-weight: lighter;
   -webkit-box-sizing: border-box;
@@ -525,9 +525,16 @@ body.x {
   background-image: linear-gradient(90deg, #333, #222); // Standard, IE10
   z-index: 3;
   top: 100px;
-  border-top: 1px solid rgba(255, 255, 255, .25);
+  border-top: 1px solid rgba(255,255,255, 0.12);
   opacity: 0;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+
+  #card-bio {
+    line-height: 40px;
+    font-size: 14px;
+    color: #fff;
+  }
+
 
   fieldset {
     margin: 0;
@@ -630,6 +637,7 @@ body.x {
   }
 
   .identity {
+    position: relative;
     width: 100%;
     height: 30px;
     font-size: 10px;
@@ -638,31 +646,61 @@ body.x {
     margin-top: 9px;
 
     .provider {
-      width: 75px;
+      width: 60px;
       display: inline-block;
       margin: 0;
-      float: none;
-      margin-right: 10px;
-      line-height: 30px;
+      line-height: 35px;
+      height: 30px;
       text-align: right;
       vertical-align: baseline;
     }
 
     .external_username {
+      float: left;
       display: inline-block;
       text-align: left;
       font-size: 18px;
       line-height: 30px;
       //min-width: 155px;
-      width: 160px;
-      margin-right: 10px;
+      width: 190px;
+      margin-left: 10px;
       color: #fff;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
 
     .delete {
-      display: inline-block;
+      position: absolute;
+      height: 30px;
+      width: 30px;
+      right: -5px;
+      display: block;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    .delete-x {
+      position: relative;
+      top: 6px;
+      right: -5px;
+      display: block;
       cursor: pointer;
-      width: 24px;
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      line-height: 13px;
+      text-align: center;
+      font-weight: lighter;
+      color: #191919;
+      @startColor: rgba(250, 250, 250, .2);
+      @endColor: rgba(230, 230, 230, .2);
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+
+      background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+      background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
+      background-repeat: repeat-x;
+      -webkit-border-radius: 18px;
+      border-radius: 18px;
+      pointer-events: auto;
     }
   }
 

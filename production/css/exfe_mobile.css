@@ -814,7 +814,7 @@ body {
   top: 100px;
   z-index: 3;
   width: 100%;
-  min-height: 85%;
+  min-height: 80.3%;
   padding: 4px;
   font-weight: lighter;
   text-align: center;
@@ -823,10 +823,16 @@ body {
   background-image: -webkit-linear-gradient(90deg, #333333, #222222);
   background-image: linear-gradient(90deg, #333333, #222222);
   background-repeat: repeat-x;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   opacity: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.card-form #card-bio {
+  font-size: 14px;
+  line-height: 40px;
+  color: #fff;
 }
 
 .card-form fieldset {
@@ -920,6 +926,7 @@ body {
 }
 
 .card-form .identity {
+  position: relative;
   width: 100%;
   height: 30px;
   margin-top: 9px;
@@ -929,29 +936,57 @@ body {
 
 .card-form .identity .provider {
   display: inline-block;
-  float: none;
-  width: 75px;
+  width: 60px;
+  height: 30px;
   margin: 0;
-  margin-right: 10px;
-  line-height: 30px;
+  line-height: 35px;
   text-align: right;
   vertical-align: baseline;
 }
 
 .card-form .identity .external_username {
   display: inline-block;
-  width: 160px;
-  margin-right: 10px;
+  float: left;
+  width: 190px;
+  margin-left: 10px;
   font-size: 18px;
   line-height: 30px;
   color: #fff;
   text-align: left;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
 }
 
 .card-form .identity .delete {
-  display: inline-block;
-  width: 24px;
+  position: absolute;
+  right: -5px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+
+.card-form .identity .delete-x {
+  position: relative;
+  top: 6px;
+  right: -5px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  font-weight: lighter;
+  line-height: 13px;
+  color: #191919;
+  text-align: center;
+  pointer-events: auto;
   cursor: pointer;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(250, 250, 250, 0.2)), to(rgba(230, 230, 230, 0.2)));
+  background-image: -webkit-linear-gradient(top, rgba(250, 250, 250, 0.2), rgba(230, 230, 230, 0.2));
+  background-image: linear-gradient(to bottom, rgba(250, 250, 250, 0.2), rgba(230, 230, 230, 0.2));
+  background-repeat: repeat-x;
+  -webkit-border-radius: 18px;
+          border-radius: 18px;
 }
 
 .card-form .detail {
