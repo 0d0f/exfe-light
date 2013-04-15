@@ -974,8 +974,8 @@ body {
   display: block;
   width: 18px;
   height: 18px;
+  font-family: HelveticaNeue-Light;
   font-size: 18px;
-  font-weight: lighter;
   line-height: 13px;
   color: #191919;
   text-align: center;
