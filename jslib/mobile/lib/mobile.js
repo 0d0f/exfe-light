@@ -262,7 +262,7 @@ define(function (require, exports, module) {
           })
           .on('blur.live', '.input-item', function (e) {
             var t = e.target,
-                id = t.id;
+                id = t.id,
                 isRemoved = ~~t.getAttribute('data-removed');
 
             if (isRemoved) {
@@ -286,13 +286,13 @@ define(function (require, exports, module) {
               identity = parseId(v);
               var $list = $('.card-form .list');
               // @Note: 检查是否有重复身份
-              if (identity.provider
-                && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
-                identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                $list.append(genIdentity(identity));
-                if (isFacebook) { addedFacebook = true; }
-                addIdentityToCard(identity);
-                setMyCard();
+              if (identity.provider) {
+                if (addIdentityToCard(identity)) {
+                  //identity.avatar_filename = '';//config.api_url + '/avatar/default?name=' + identity.name;
+                  $list.append(genIdentity(identity));
+                  if (isFacebook) { addedFacebook = true; }
+                  setMyCard();
+                }
               }
               $('#add-identity-facebook').addClass('hide');
               t.value = '';
@@ -318,16 +318,16 @@ define(function (require, exports, module) {
                 identity = parseId(v);
                 var $list = $('.card-form .list');
                 // @Note: 检查是否有重复身份
-                if (identity.provider
-                  && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
-                  identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                  $list.append(genIdentity(identity));
-                  if (isFacebook) { addedFacebook = true };
-                  if (addedFacebook) {
-                    $('#add-identity-facebook').addClass('hide');
+                if (identity.provider) {
+                  if (addIdentityToCard(identity)) {
+                    //identity.avatar_filename = '';//config.api_url + '/avatar/default?name=' + identity.name;
+                    $list.append(genIdentity(identity));
+                    if (isFacebook) { addedFacebook = true };
+                    if (addedFacebook) {
+                      $('#add-identity-facebook').addClass('hide');
+                    }
+                    setMyCard();
                   }
-                  setMyCard();
-                  addIdentityToCard(identity);
                 }
                 this.value = '';
                 break;
@@ -1449,9 +1449,20 @@ define(function (require, exports, module) {
     };
 
     var addIdentityToCard = function (identity) {
-      var identities = liveCard.card.identities;
-      identities.push(identity);
-      Store.set('livecard', liveCard);
+      var identities = liveCard.card.identities, rest = true, en = identity.external_username;
+      for (var i = 0, len = identities.length; i < len; ++i) {
+        if (en === identities[i].external_username) {
+          rest = false;
+          break;
+        }
+      }
+
+      if (rest) {
+        identities.push(identity);
+        Store.set('livecard', liveCard);
+      }
+
+      return rest;
     };
     var delIdentityFromCard = function (external_username) {
       var identities = liveCard.card.identities, len = identities.length, i = 0, d;
