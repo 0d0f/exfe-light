@@ -263,6 +263,11 @@ define(function (require, exports, module) {
           .on('blur.live', '.input-item', function (e) {
             var t = e.target,
                 id = t.id;
+                isRemoved = ~~t.getAttribute('data-removed');
+
+            if (isRemoved) {
+              return;
+            }
 
             if (t.getAttribute('data-provider')) {
               $(t).next().addClass('hidden')
@@ -336,6 +341,13 @@ define(function (require, exports, module) {
             if (PAGE_STATUS) {
               return;
             }
+            if (tryTimer || rdTime) {
+              clearInterval(rdTime);
+              clearInterval(tryTimer);
+              tryTimer = rdTime = null;
+              $('.get-button button').show();
+              $('.redirecting').hide();
+            }
             PAGE_STATUS = 1;
             CARD_TWEEN.stop();
             LOGO_TWEEN.stop();
@@ -384,6 +396,7 @@ define(function (require, exports, module) {
             if (identity && identity.provider) {
               delIdentityFromCard(identity.external_username);
             }
+            input.attr('data-removed', 1);
             input.blur();
             $(this).parents('li').remove();
           })
@@ -592,14 +605,14 @@ define(function (require, exports, module) {
           +         '</div>'
           +         '<div class="hide" id="card-bio"></div>'
           +         '<div class="identities"><ul class="list"></ul>'
-          +         '<input class="input-item" id="add-identity" autocapitalize="none" data-status="1" type="email" placeholder="Add your email or mobile" />'
+          +         '<input class="input-item" id="add-identity" autocapitalize="none" data-status="1" type="email" placeholder="Add email or mobile no." />'
           +         '<div class="identity facebook-identity hide" id="add-identity-facebook">'
           +           '<label id="facebook-label" for="facebook-identity">facebook.com/'
           +           '<input name="facebook-identity" autocapitalize="off" id="facebook-identity" class="input-item" type="text" /></label>'
           +         '</div>'
           +         '<div class="detail detail-invent hide">The best way to predict the future is to invent it.</div>'
-          +         '<div class="detail detail-concat">*People nearby can see your public contacts.</div>'
-          +         '<div>'
+          +         '<div class="detail detail-concat">*People nearby can see your profile.</div>'
+          +         '</div>'
           //+     '</fieldset></form>'
           +   '</div>'
           + '</div>'
@@ -1364,7 +1377,7 @@ define(function (require, exports, module) {
 
     var LI_TMP = '<li class="identity" style="-webkit-transform: translate3d(0, 0, 0);">'
         + '<span class="provider">{{provider_alias}}</span>'
-        + '<input data-provider="{{provider}}" style="-webkit-transform: translate3d(0, 0, 0);" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete hidden">x</div>'
+        + '<input data-provider="{{provider}}" style="" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete hidden"><div class="delete-x">x</div></div>'
         //+ '<span class="permission">Public<span>'
       + '</li>';
 
@@ -1387,11 +1400,11 @@ define(function (require, exports, module) {
     };
 
     var genTip = function (card) {
-      var dt = '<div class="tip">', de = '</div>';
+      var dt = '<div class="tip hide">', de = '</div>';
       dt += '<div class="bio">' + (card.bio || '') + '</div>';
       var ids = card.identities;
       dt += '<ul>';
-      for (var i = 0, l = ids; i < l; ++i) {
+      for (var i = 0, l = ids.length; i < l; ++i) {
         dt += '<li><span>' + ids[i].external_username + '</span><span>' + ids[i].provider + '</span></li>';
       }
       dt += '</ul>';
@@ -1402,7 +1415,7 @@ define(function (require, exports, module) {
     var CARD_TMP = '<div data-url="{{avatar}}" id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
         + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
         + '<div class="name">{{name}}</div>'
-        + '{{tip-html}}'
+        //+ '{{tip-html}}'
       + '</div>'
     var genCard = function (card, tl, g, i) {
       var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
@@ -1411,8 +1424,8 @@ define(function (require, exports, module) {
         .replace('{{i}}', i)
         .replace('{{name}}', card.name)
         .replace('{{left}}', tl[0])
-        .replace('{{top}}', tl[1])
-        .replace('{{tip-html}}', genTip(card)));
+        .replace('{{top}}', tl[1]));
+        //.replace('{{tip-html}}', genTip(card)));
       $card.data('card', card);
       return $card;
     };
@@ -1457,8 +1470,8 @@ define(function (require, exports, module) {
     var delCard = function (elem) {
       var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i'), s = elem.style, t = s.transform || s.webkitTransform;
       new TWEEN.Tween({ o: 1 })
-        .to({ o: 0 }, 233)
-        .easing(TWEEN.Easing.Cubic.Out)
+        .to({ o: 0 }, 250)
+        .easing(TWEEN.Easing.Bounce.Out)
         .onUpdate(function () {
           s.opacity = this.o;
           s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
@@ -1475,20 +1488,22 @@ define(function (require, exports, module) {
       var gi = MAPS.shift(), g = gi[0], i = gi[1], ol = _coords[g][i],
           $card = genCard(card, ol, g, i), elem = $card[0], s = elem.style, t = s.transform || s.webkitTransform;
       $('#icard').before($card);
-      new TWEEN.Tween({ o: 0 })
-        .to({ o: 1 }, 233)
-        .easing(TWEEN.Easing.Bounce.In)
-        .onStart(function () {
-          $card.removeClass('hide')
-        })
-        .onUpdate(function () {
-          s.opacity = this.o;
-          s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
-        })
-        .onComplete(function () {
-          TWEEN.remove(this);
-        })
-        .start();
+      if (PAGE_STATUS === 2) {
+        new TWEEN.Tween({ o: 0 })
+          .to({ o: 1 }, 250)
+          .easing(TWEEN.Easing.Bounce.In)
+          .onStart(function () {
+            $card.removeClass('hide')
+          })
+          .onUpdate(function () {
+            s.opacity = this.o;
+            s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
+          })
+          .onComplete(function () {
+            TWEEN.remove(this);
+          })
+          .start();
+        }
     };
 
     var updateMe = function (card) {
@@ -1506,9 +1521,11 @@ define(function (require, exports, module) {
         icard.querySelector('.name').innerText = card.name;
         //document.getElementById('card-name').value = card.name;
       }
+      var bioDiv = document.getElementById('card-bio');
       if (card.bio) {
-        document.getElementById('card-bio').innerText = card.bio;
+        bioDiv.innerText = card.bio;
       }
+      bioDiv.className = card.bio ? '' : 'hide';
       Store.set('livecard', liveCard);
     };
 
