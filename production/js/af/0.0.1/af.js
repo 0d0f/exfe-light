@@ -5,9 +5,19 @@
 define('af', function () {
   'use strict';
 
+  var performanceNow = window.performance && window.performance.now,
+      now = performanceNow ?
+        function () {
+          return window.performance.now();
+        }
+          : Date.now || function () {
+              return new Date().getTime();
+            };
+
   /** Thanks to:
    *      http://paulirish.com/2011/requestanimationframe-for-smart-animating/
    *      http://creativejs.com/resources/requestanimationframe/
+   *      http://www.makeitgo.ws/articles/animationframe/
    *      https://github.com/component/raf/blob/master/index.js
    *      https://gist.github.com/paulirish/1579671
    *      https://gist.github.com/joelambert/1002116
@@ -15,7 +25,7 @@ define('af', function () {
    */
 
    /**
-    * `requestAnimationFram(time)`
+    * `requestAnimationFrame(time)`
     */
 
   var r = window.requestAnimationFrame
@@ -25,7 +35,7 @@ define('af', function () {
     || window.msRequestAnimationFrame;
 
    /**
-    * `cancelAnimationFram`
+    * `cancelAnimationFrame`
     */
 
   var c = window.cancelAnimationFrame
@@ -37,7 +47,7 @@ define('af', function () {
   if (!r) {
     var prev = 0;
     r = function (callback/*, element*/) {
-      var curr = new Date().getTime(),
+      var curr = now(),
           ms = Math.max(0, 16 - (curr - prev)),
           id = setTimeout(function () {
             callback(curr + ms);
