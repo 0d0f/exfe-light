@@ -11,11 +11,11 @@ define('af', function () {
    *      https://github.com/component/raf/blob/master/index.js
    *      https://gist.github.com/paulirish/1579671
    *      https://gist.github.com/joelambert/1002116
+   *      https://gist.github.com/KrofDrakula/5318048
    */
 
    /**
     * `requestAnimationFram(time)`
-    * `cancelAnimationFram`
     */
 
   var r = window.requestAnimationFrame
@@ -25,6 +25,7 @@ define('af', function () {
     || window.msRequestAnimationFrame;
 
    /**
+    * `cancelAnimationFram`
     */
 
   var c = window.cancelAnimationFrame

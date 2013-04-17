@@ -16,7 +16,6 @@ define('af', function () {
 
    /**
     * `requestAnimationFram(time)`
-    * `cancelAnimationFram`
     */
 
   var r = window.requestAnimationFrame
@@ -26,6 +25,7 @@ define('af', function () {
     || window.msRequestAnimationFrame;
 
    /**
+    * `cancelAnimationFram`
     */
 
   var c = window.cancelAnimationFrame
