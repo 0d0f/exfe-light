@@ -1,30 +1,8 @@
 define(function (require, exports, module) {
-  /* requestAnimationFrame */
-  //(function() {
-  var lastTime = 0, vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                  || window[vendors[x]+'CancelRequestAnimationFrame'];
-  }
- 
-  if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function(callback, element) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-        timeToCall);
-      lastTime = currTime + timeToCall;
-      return id;
-    };
-  }
 
-  if (!window.cancelAnimationFrame) {
-    window.cancelAnimationFrame = function(id) {
-      clearTimeout(id);
-    };
-  }
-  //}());
+  var AF = require('af'),
+    requestAnimationFrame = AF.request,
+    cancelAnimationFrame = AF.cancel;
 
     var $ = require('zepto');
 
@@ -98,19 +76,11 @@ define(function (require, exports, module) {
       _coords[3][3] = [ w * .875 - l, h * .22 + 40 - t ];
     };
 
-    var MAPS = [
-      [1, 0],
-      [1, 1],
-      [1, 2],
-      [2, 0],
-      [2, 1],
-      [2, 2],
-      [2, 3],
-      [3, 0],
-      [3, 1],
-      [3, 2],
-      [3, 3]
-    ];
+    var MAPS = [ [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2], [2, 3], [3, 0], [3, 1], [3, 2], [3, 3] ];
+
+    var cssMatrix = function (m) {
+      return 'matrix(' + m.join(',') + ')';
+    };
 
     var CARD_P0 = [128, 28, 0];
     var CARD_P1 = [128, 0, 0];
@@ -152,19 +122,16 @@ define(function (require, exports, module) {
         height += 60;
         $('html, body').css('min-height', height + 'px');
         $('body').css('height', height + 'px');
-        //$('.dialog-box').css('min-height', window.innerHeight - (banner ? 50 : 0) + 'px');
         var top = (height - 86 - (banner ? 50 : 0));
         if (!cross) {
             $('.actions').css('top',  top + 'px');
         }
-        //$('.box').css('height', (top - 45) + 'px');
-        //$('.box').css('height', (height + 60) + 'px');
         $('.box .inner').css('top', (height - 300) / 2 + 'px')
         var liveGather = document.querySelector('.live-gather');
         liveGather.style.height = height + 'px';
         $('#icard').css({
-          '-webkit-transform': 'translate3d(128px, ' + (CARD_P1[1] = (height - 64) / 2)  + 'px, 0)',
-          'transform': 'translate3d(128px, ' + CARD_P1[1] + 'px, 0)'
+          '-webkit-transform': cssMatrix([ 1, 0, 0, 1, 128, CARD_P1[1] = (height - 64) / 2 ]),
+          'transform': cssMatrix([ 1, 0, 0, 1, 128, CARD_P1[1] ])
         });
           // 44 = iphone bottom bar
         var w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
@@ -183,10 +150,13 @@ define(function (require, exports, module) {
         $('.get-button button').unbind('click').bind('click', showAppInStore);
 
         generateMyCard();
+        var TOUCH_TIMEOUT;
 
         var $list = $('.card-form .list');
         $(function () {
         $(document)
+
+        //$(window).on('pageshow, pagehide')
 
           // `live-gather` layer
           .on('touchstart.live', '.live-gather', function (e) {
@@ -262,13 +232,18 @@ define(function (require, exports, module) {
           })
           .on('blur.live', '.input-item', function (e) {
             var t = e.target,
-                id = t.id;
+                id = t.id,
+                isRemoved = ~~t.getAttribute('data-removed');
+
+            if (isRemoved) {
+              return;
+            }
 
             if (t.getAttribute('data-provider')) {
               $(t).next().addClass('hidden')
             }
 
-            if ((id === "facebook-identity" && !addedFacebook) || (id === 'add-identity')) {
+            if ((id === "facebook-identity" && !addedFacebook) || (id === 'add-identity') || (id === 'card-name')) {
               var isFacebook = (id === 'facebook-identity'), v = trim(t.value), identity;
               if (!v) {
                 return;
@@ -281,23 +256,34 @@ define(function (require, exports, module) {
               identity = parseId(v);
               var $list = $('.card-form .list');
               // @Note: 检查是否有重复身份
-              if (identity.provider
-                && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
-                identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                $list.append(genIdentity(identity));
-                if (isFacebook) { addedFacebook = true; }
-                addIdentityToCard(identity);
-                setMyCard();
+              if (identity.provider) {
+                if (addIdentityToCard(identity)) {
+                  //identity.avatar_filename = '';//config.api_url + '/avatar/default?name=' + identity.name;
+                  $list.append(genIdentity(identity));
+                  if (isFacebook) { addedFacebook = true; }
+                  if (id === 'card-name') {
+                    var name = '';
+                    if (identity.provider === 'phone') {
+                      name = 'Anonym_' + identity.external_username.slice(identity.external_username.length - 4);
+                    } else {
+                      name = identity.external_username.split('@')[0];
+                    }
+                    liveCard.card.name = this.value = name;
+                  }
+                  setMyCard();
+                }
               }
               $('#add-identity-facebook').addClass('hide');
-              t.value = '';
+              if (t.id !== 'card-name') {
+                t.value = '';
+              }
             }
           })
 
-          .on('keydown.live', '#add-identity, #facebook-identity', function (e) {
-            var v = trim(this.value), k = e.keyCode,
-                isFacebook = (this.id === 'facebook-identity'),
-                identity;
+          .on('keydown.live', '#card-name, #add-identity, #facebook-identity', function (e) {
+            var v = trim(this.value), k = e.keyCode, id = this.id,
+                isFacebook = (id === 'facebook-identity'),
+                identity, addStatus;
 
             // empty text
             if (!v) {
@@ -313,18 +299,30 @@ define(function (require, exports, module) {
                 identity = parseId(v);
                 var $list = $('.card-form .list');
                 // @Note: 检查是否有重复身份
-                if (identity.provider
-                  && $list.find('[data-external-username="' + identity.external_username + '"]').length === 0) {
-                  identity.avatar_filename = config.api_url + '/avatar/default?name=' + identity.name;
-                  $list.append(genIdentity(identity));
-                  if (isFacebook) { addedFacebook = true };
-                  if (addedFacebook) {
-                    $('#add-identity-facebook').addClass('hide');
+                if (identity.provider) {
+                  if (addIdentityToCard(identity)) {
+                    addStatus = true;
+                    //identity.avatar_filename = '';//config.api_url + '/avatar/default?name=' + identity.name;
+                    $list.append(genIdentity(identity));
+                    if (isFacebook) { addedFacebook = true };
+                    if (addedFacebook) {
+                      $('#add-identity-facebook').addClass('hide');
+                    }
+                    if (id === 'card-name') {
+                      var name = '';
+                      if (identity.provider === 'phone') {
+                        name = 'Anonym_' + identity.external_username.slice(identity.external_username.length - 4);
+                      } else {
+                        name = identity.external_username.split('@')[0];
+                      }
+                      liveCard.card.name = this.value = name;
+                    }
+                    setMyCard();
                   }
-                  setMyCard();
-                  addIdentityToCard(identity);
                 }
-                this.value = '';
+                if (id !== 'card-name') {
+                  this.value = '';
+                }
                 break;
             }
           })
@@ -336,12 +334,68 @@ define(function (require, exports, module) {
             if (PAGE_STATUS) {
               return;
             }
+            if (tryTimer || rdTime) {
+              clearInterval(rdTime);
+              clearInterval(tryTimer);
+              tryTimer = rdTime = null;
+              $('.get-button button').show();
+              $('.redirecting').hide();
+            }
             PAGE_STATUS = 1;
             CARD_TWEEN.stop();
             LOGO_TWEEN.stop();
             STEP2_TWEEN_IN_0.start();
             STEP2_TWEEN_IN_1.start();
           })
+
+          .on('hold:live', '.card .avatar', function (e) {
+            var t = this, pe = t.parentNode;
+            var card = $(pe).data('card')
+            var matrix = pe.style.transform || pe.style.webkitTransform;
+            var m = matrix.match(/(\d+)/g);
+            var tip = document.getElementById('card-tip'), s = tip.style;
+            var html = '';
+            for (var i = 0, l = card.identities.length; i < l; ++i) {
+              var identity = card.identities[i], p = identity.provider, eu = identity.external_username;
+              if (p === 'phone') {
+                p = 'mobile';
+              }
+              p = p.substr(0, 1).toUpperCase() + p.substr(1);
+              html += '<li><span class="external-username">'+eu+'</span><span class="provider">'+p+'</span></li>'
+            }
+            tip.querySelector('ul').innerHTML = html;
+            tip.className = 'card-tip';
+            var h = tip.clientHeight;
+            var x = ~~m[4] - (200 - 64) / 2, y = ~~m[5] - (6 + h), ax = 93;
+            if (x < 0) {
+              x = 10;
+            } else if (x + 200 >= 320) {
+              x = 320 - 200 - 10;
+            }
+            if (x === 10 || x === 110 ) {
+              ax = ~~m[4] + 32 - 7 - x;
+            }
+            s.transform = s.webkitTransform = cssMatrix([ 1, 0, 0, 1, x , y ]);
+            tip.querySelector('.ang').style.left = ax + 'px';
+            tip.querySelector('.bio').innerText = card.bio;
+          })
+
+          .on('touchstart.live', '.card .avatar', function (e) {
+              var $t = $(this), delta = 250, fingers = e.touches.length;
+              TOUCH_TIMEOUT && clearTimeout(TOUCH_TIMEOUT);
+              if (fingers === 1 && PAGE_STATUS === 2) {
+                if (fingers >= 1) {
+                  TOUCH_TIMEOUT = setTimeout(function () {
+                    $t.trigger('hold:live');
+                  }, delta);
+                }
+              }
+            })
+
+          .on('touchend.live', '.card .avatar', function (e) {
+              TOUCH_TIMEOUT && clearTimeout(TOUCH_TIMEOUT);
+              document.getElementById('card-tip').className = 'card-tip hidden';
+            })
 
           // `start-button`
           .on('tap.live touchstart.live', '.btn-start', function (e) {
@@ -356,8 +410,9 @@ define(function (require, exports, module) {
               $('.live-title').removeClass('hide');
               var icard = document.getElementById('icard'), s = icard.style;
               icard.querySelector('.name').className = 'name';
-              s.webkitTransform = s.transform = 'translate3d(' + _coords[0][0] + 'px, ' + _coords[0][1]  + 'px, 0)';
+              s.webkitTransform = s.transform = cssMatrix([ 1, 0, 0, 1, _coords[0][0], _coords[0][1] ]);
               PAGE_STATUS = 2;
+              $('.card-other').removeClass('hide').css('opacity', 1);
               setMyCard();
             }
 
@@ -365,8 +420,21 @@ define(function (require, exports, module) {
           });
         })
           .on('tap.live', '.live-title h2', function (e) {
-            $('.wave').css('opacity', 0);
-            $('.live-tip').removeClass('live-tip-close');
+            var has = $(this).hasClass('clicked');
+            if (has) {
+              $('.live-tip').addClass('live-tip-close');
+              new TWEEN.Tween({o:0})
+                .delay(288)
+                .to({o:1}, 0)
+                .onUpdate(function () {
+                  $('.wave').css('opacity', this.o);
+                })
+                .start();
+            } else {
+              $('.wave').css('opacity', 0);
+              $('.live-tip').removeClass('live-tip-close');
+            }
+            $(this).toggleClass('clicked', !has);
           })
           .on('touchstart.live', '#facebook-label', function (e) {
             e.preventDefault();
@@ -378,13 +446,15 @@ define(function (require, exports, module) {
             var input = $(this).prev(), provider = input.attr('data-provider'), v = trim(input.val()), identity;
             if (provider === 'facebook') {
               addedFacebook = false;
-              v += 'facebook';
+              v += '@facebook';
             }
             identity = parseId(v)
             if (identity && identity.provider) {
               delIdentityFromCard(identity.external_username);
             }
+            input.attr('data-removed', 1);
             input.blur();
+            input.off('blur focus touchstart touchend singleTap tap');
             $(this).parents('li').remove();
           })
             .on('touchstart.live', '.back', function (e) {
@@ -392,7 +462,7 @@ define(function (require, exports, module) {
               var icard = document.getElementById('icard'), s = icard.style;
               icard.querySelector('.name').className = 'name hide';
               s.opacity = 0;
-              s.webkitTransform = s.transform = 'translate3d(' + CARD_P1[0]  + 'px, ' + CARD_P1[1]  + 'px, 0)';
+              s.webkitTransform = s.transform = cssMatrix([ 1, 0, 0, 1, CARD_P1[0], CARD_P1[1] ]);
               $('.live-title').addClass('hide');
               // todo:
               $('.card-other').addClass('hide');
@@ -409,7 +479,7 @@ define(function (require, exports, module) {
         var offset = $('.box .inner').offset();
 
       var logo = document.querySelector('.big-logo'),
-          icard = document.querySelector('#icard'),
+          icard = document.getElementById('icard'),
           update = function () {
             logo.style.opacity = OPTIONS.o;
             icard.style.opacity = 1 - OPTIONS.o;
@@ -460,8 +530,8 @@ define(function (require, exports, module) {
             .onUpdate(function () {
               $('.box').css('opacity', 1 - this.o);
               $('.actions').css('opacity', 1 - this.o);
-              discover.style.opacity = this.o; //= cardForm.style.opacity  = this.o;
-              icard.style.transform = icard.style.webkitTransform = 'translate3d(128px, ' + ((CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1])  + 'px, 0)';
+              discover.style.opacity = this.o;
+              icard.style.transform = icard.style.webkitTransform = cssMatrix([ 1, 0, 0, 1, CARD_P1[0], (CARD_P1[1] - CARD_P0[1]) * (1 - this.o) + CARD_P0[1] ]);
             })
             .onComplete(function (){
               this.o = 0;
@@ -481,6 +551,11 @@ define(function (require, exports, module) {
           .onComplete(function (){
             this.o = 0;
             ANIMATE_STATUS = false;
+            /*
+            setTimeout(function () {
+              document.getElementById('card-name').focus();
+            }, 500);
+            */
             TWEEN.remove(this);
           });
 
@@ -500,7 +575,7 @@ define(function (require, exports, module) {
         })
         .onComplete(function () {
           this.o = 1;
-          icard.style.transform = icard.style.webkitTransform = 'translate3d(128px, ' + CARD_P1[1]  + 'px, 0)';
+          icard.style.transform = icard.style.webkitTransform = cssMatrix([ 1, 0, 0, 1, 128, CARD_P1[1] ]);
           LOGO_TWEEN.start();
           $('.discover').addClass('hide');
           $('.tap-tip').removeClass('hide');
@@ -584,22 +659,32 @@ define(function (require, exports, module) {
           +     '<div class="tap-tip">Tap to start</div>'
           +   '</div>'
 
+          +   '<div id="card-tip" class="card-tip hidden">'
+          +     '<div class="bio"></div>'
+          +     '<ul>'
+          //+       '<li><span class="external-username">cfddream@gmail.com</span><span class="provider">Email</span></li>'
+          //+       '<li><span class="external-username">+8613764834570</span><span class="provider">Mobile</span></li>'
+          //+       '<li><span class="external-username">cfddream</span><span class="provider">Facebook</span></li>'
+          +     '</ul>'
+          +     '<div class="ang"></div>'
+          +   '</div>'
+
           +   '<div class="card-form hide">'
           //+     '<form class="form-horizontal"><fieldset>'
           +         '<div class="controls" style="-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1); -webkit-backface-visibility: hidden;">'
-          +           '<input class="input-item" type="text" autocapitalize="none" tabindex="1" id="card-name" placeholder="Name"/>'
+          +           '<input class="input-item" type="email" autocapitalize="none" tabindex="1" id="card-name" placeholder="Your email or mobile no."/>'
           +           '<button class="btn btn-start" type="button">Start</button>'
           +         '</div>'
           +         '<div class="hide" id="card-bio"></div>'
           +         '<div class="identities"><ul class="list"></ul>'
-          +         '<input class="input-item" id="add-identity" autocapitalize="none" data-status="1" type="email" placeholder="Add your email or mobile" />'
+          +         '<input class="input-item" id="add-identity" autocapitalize="none" data-status="1" type="email" placeholder="Add email or mobile no." />'
           +         '<div class="identity facebook-identity hide" id="add-identity-facebook">'
           +           '<label id="facebook-label" for="facebook-identity">facebook.com/'
           +           '<input name="facebook-identity" autocapitalize="off" id="facebook-identity" class="input-item" type="text" /></label>'
           +         '</div>'
           +         '<div class="detail detail-invent hide">The best way to predict the future is to invent it.</div>'
-          +         '<div class="detail detail-concat">*People nearby can see your public contacts.</div>'
-          +         '<div>'
+          +         '<div class="detail detail-concat">*People nearby can see your profile.</div>'
+          +         '</div>'
           //+     '</fieldset></form>'
           +   '</div>'
           + '</div>'
@@ -1316,55 +1401,9 @@ define(function (require, exports, module) {
         });
     };
 
-    var parseAttendeeInfo = function(string) {
-        string = trim(string);
-        var objIdentity = {
-            id                : 0,
-            name              : '',
-            external_id       : '',
-            external_username : '',
-            provider          : '',
-            type              : 'identity'
-        }
-        if (/^[^@]*<[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/.test(string)) {
-            var iLt = string.indexOf('<'),
-                iGt = string.indexOf('>');
-            objIdentity.external_id       = trim(string.substring(++iLt, iGt));
-            objIdentity.external_username = objIdentity.external_id;
-            objIdentity.name              = trim(cutLongName(trim(string.substring(0, iLt)).replace(/^"|^'|"$|'$/g, '')));
-            objIdentity.provider          = 'email';
-        } else if (/^[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(string)) {
-            objIdentity.external_id       = string;
-            objIdentity.external_username = string;
-            objIdentity.name              = trim(cutLongName(string.split('@')[0]));
-            objIdentity.provider          = 'email';
-        } else if (/^@[a-z0-9_]{1,15}$|^@[a-z0-9_]{1,15}@twitter$|^[a-z0-9_]{1,15}@twitter$/i.test(string)) {
-            objIdentity.external_id       = '';
-            objIdentity.external_username = string.replace(/^@|@twitter$/ig, '');
-            objIdentity.name              = objIdentity.external_username;
-            objIdentity.provider          = 'twitter';
-        } else if (/^[a-z0-9\.]{5,}@facebook$/i.test(string)) {
-        // https://www.facebook.com/help/?faq=105399436216001#What-are-the-guidelines-around-creating-a-custom-username?
-            objIdentity.external_id       = '';
-            objIdentity.external_username = string.replace(/@facebook$/ig, '');
-            objIdentity.name              = objIdentity.external_username;
-            objIdentity.provider          = 'facebook';
-        } else if (/^\+[\d\-]{5,15}$/.test(string)) {
-            string = string.replace(/\-|\(|\)|\ /g, '');
-            objIdentity.external_id       = string;
-            objIdentity.external_username = string;
-            objIdentity.name              = string.replace(/^.*([\d]{4})$/, '$1');
-            objIdentity.provider          = 'phone';
-        } else {
-            return null;
-        }
-        objIdentity.avatar_filename = encodeURI(config.api_url + '/avatar/default?name=' + objIdentity.name);
-        return objIdentity;
-    };
-
     var LI_TMP = '<li class="identity" style="-webkit-transform: translate3d(0, 0, 0);">'
         + '<span class="provider">{{provider_alias}}</span>'
-        + '<input data-provider="{{provider}}" style="-webkit-transform: translate3d(0, 0, 0);" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete hidden">x</div>'
+        + '<input data-provider="{{provider}}" style="" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/><div class="delete hidden"><div class="delete-x">x</div></div>'
         //+ '<span class="permission">Public<span>'
       + '</li>';
 
@@ -1387,11 +1426,11 @@ define(function (require, exports, module) {
     };
 
     var genTip = function (card) {
-      var dt = '<div class="tip">', de = '</div>';
+      var dt = '<div class="tip hide">', de = '</div>';
       dt += '<div class="bio">' + (card.bio || '') + '</div>';
       var ids = card.identities;
       dt += '<ul>';
-      for (var i = 0, l = ids; i < l; ++i) {
+      for (var i = 0, l = ids.length; i < l; ++i) {
         dt += '<li><span>' + ids[i].external_username + '</span><span>' + ids[i].provider + '</span></li>';
       }
       dt += '</ul>';
@@ -1399,10 +1438,10 @@ define(function (require, exports, module) {
       return dt;
     };
 
-    var CARD_TMP = '<div data-url="{{avatar}}" id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: translate3d({{left}}px, {{top}}px, 0); opacity: 1;">'
+    var CARD_TMP = '<div data-url="{{avatar}}" id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card card-other hide" style="-webkit-transform: matrix(1, 0, 0, 1, {{left}}, {{top}});">'
         + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
         + '<div class="name">{{name}}</div>'
-        + '{{tip-html}}'
+        //+ '{{tip-html}}'
       + '</div>'
     var genCard = function (card, tl, g, i) {
       var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
@@ -1411,8 +1450,8 @@ define(function (require, exports, module) {
         .replace('{{i}}', i)
         .replace('{{name}}', card.name)
         .replace('{{left}}', tl[0])
-        .replace('{{top}}', tl[1])
-        .replace('{{tip-html}}', genTip(card)));
+        .replace('{{top}}', tl[1]));
+        //.replace('{{tip-html}}', genTip(card)));
       $card.data('card', card);
       return $card;
     };
@@ -1424,10 +1463,18 @@ define(function (require, exports, module) {
       updateMe(card);
 
       if (identities && (len = identities.length)) {
+
+        // 第一时间，提交用户信息
+        setMyCard();
+
         var $list = $('.card-form').find('.list'), i = 0, identity;
         for (; i < len; ++i) {
           identity = identities[i];
-          if (identity.provider === 'email' || identity.provider === 'phone') {
+          var provider = identity.provider;
+          if (provider === 'email' || provider === 'phone' || provider === 'facebook') {
+            if (provider === 'facebook') {
+              addedFacebook = true;
+            }
             $list.append(genIdentity(identities[i]));
           }
         }
@@ -1436,9 +1483,20 @@ define(function (require, exports, module) {
     };
 
     var addIdentityToCard = function (identity) {
-      var identities = liveCard.card.identities;
-      identities.push(identity);
-      Store.set('livecard', liveCard);
+      var identities = liveCard.card.identities, rest = true, en = identity.external_username;
+      for (var i = 0, len = identities.length; i < len; ++i) {
+        if (en === identities[i].external_username) {
+          rest = false;
+          break;
+        }
+      }
+
+      if (rest) {
+        identities.push(identity);
+        Store.set('livecard', liveCard);
+      }
+
+      return rest;
     };
     var delIdentityFromCard = function (external_username) {
       var identities = liveCard.card.identities, len = identities.length, i = 0, d;
@@ -1457,8 +1515,8 @@ define(function (require, exports, module) {
     var delCard = function (elem) {
       var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i'), s = elem.style, t = s.transform || s.webkitTransform;
       new TWEEN.Tween({ o: 1 })
-        .to({ o: 0 }, 233)
-        .easing(TWEEN.Easing.Cubic.Out)
+        .to({ o: 0 }, 250)
+        .easing(TWEEN.Easing.Bounce.Out)
         .onUpdate(function () {
           s.opacity = this.o;
           s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
@@ -1472,23 +1530,31 @@ define(function (require, exports, module) {
     };
 
     var addCard = function (card) {
+      if (MAPS.length === 0) {
+        return false;
+      }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], ol = _coords[g][i],
-          $card = genCard(card, ol, g, i), elem = $card[0], s = elem.style, t = s.transform || s.webkitTransform;
+          $card = genCard(card, ol, g, i), elem = $card[0], s = elem.style, t = s.transform || s.webkitTransform,
+          m = t.match(/(\d+)/g);
+      $card.data('card', card);
       $('#icard').before($card);
-      new TWEEN.Tween({ o: 0 })
-        .to({ o: 1 }, 233)
-        .easing(TWEEN.Easing.Bounce.In)
-        .onStart(function () {
-          $card.removeClass('hide')
-        })
-        .onUpdate(function () {
-          s.opacity = this.o;
-          s.transform = s.webkitTransform = t + ' scale(' + this.o + ',' + this.o + ')';
-        })
-        .onComplete(function () {
-          TWEEN.remove(this);
-        })
-        .start();
+      if (PAGE_STATUS === 2) {
+        new TWEEN.Tween({ o: 0 })
+          .to({ o: 1 }, 250)
+          .easing(TWEEN.Easing.Bounce.In)
+          .onStart(function () {
+            $card.removeClass('hide')
+          })
+          .onUpdate(function () {
+            s.opacity = this.o;
+            m[0] = m[3] = this.o;
+            s.transform = s.webkitTransform = cssMatrix(m);
+          })
+          .onComplete(function () {
+            TWEEN.remove(this);
+          })
+          .start();
+        }
     };
 
     var updateMe = function (card) {
@@ -1504,11 +1570,14 @@ define(function (require, exports, module) {
       }
       if (card.name) {
         icard.querySelector('.name').innerText = card.name;
-        //document.getElementById('card-name').value = card.name;
+        document.getElementById('card-name').value = card.name;
       }
+      var bioDiv = document.getElementById('card-bio');
       if (card.bio) {
-        document.getElementById('card-bio').innerText = card.bio;
+        bioDiv.innerText = card.bio;
       }
+      bioDiv.className = card.bio ? '' : 'hide';
+      $(icard).data('card', card);
       Store.set('livecard', liveCard);
     };
 
@@ -1523,6 +1592,7 @@ define(function (require, exports, module) {
         elem.setAttribute('data-url', avatar);
       }
       elem.querySelector('.name').innerText = card.name;
+      $(elem).data('card', card);
     };
 
     var updateOthers = function (cards) {
@@ -1557,12 +1627,15 @@ define(function (require, exports, module) {
 
         var card = liveCard.card;
         card.name = name;
-        updateMe(card);
 
-        var inputs = $('.list .input-item'), identities = [];
+        var inputs = document.querySelectorAll('.list .input-item'), len = inputs.length, identities = [];
+
+        if (len) {
+          updateMe(card);
+        }
 
         for (var i = 0, len = inputs.length; i < len; ++i) {
-          var input = inputs.eq(i), value = trim(input.val()), provider = input.attr('data-provider');
+          var input = inputs[i], value = trim(input.value), provider = input.getAttribute('data-provider');
           if (value) {
             if (provider === 'facebook') {
               value += '@facebook';
@@ -1591,55 +1664,19 @@ define(function (require, exports, module) {
       }
     };
 
-    /*
-    var updateMyCard = function(card) {
-        // update name
-        var objName = $('.here-main .name-input .name');
-        var curName = trim(objName.val()).toLowerCase();
-        var gotName = trim(card.name);
-        if (curName !== gotName.toLowerCase()) {
-            objName.val(gotName);
-        }
-        // update avatar
-        var objAvatar = $('.here-main .my-card .my-avatar');
-        var curAvatar = trim(objAvatar.attr('src')).toLowerCase();
-        var gotAvatar = trim(card.avatar);
-        if (curAvatar !== gotAvatar.toLowerCase()) {
-            objAvatar.attr('arc', gotAvatar);
-        }
-        // update identities
-        var inputs = $('.here-main .identities-list li');
-        var found  = {};
-        for (var i = 0; i < inputs.length; i++) {
-            var idItem = trim($(inputs[i]).find('.new-identity').val()).toLowerCase();
-            for (var j = 0; j < card.identities.length; j++) {
-                var idGot = trim(card.identities[j].external_username).toLowerCase();
-                if (idItem === idGot) {
-                    found[card.identities[j].external_username] = true;
-                }
-            }
-        }
-        for (i = 0; i < card.identities.length; i++) {
-            if (typeof found[card.identities[i].external_username] === 'undefined') {
-                addNewField(trim(card.identities[i].external_username));
-            }
-        }
-    };
-    */
-
     var liveCallback = function(data) {
-        if (data.me) {
-          updateMe(data.me);
-        }
+      if (data.me) {
+        updateMe(data.me);
+      }
 
-        if (data.others) {
-          updateOthers(data.others);
-          if (PAGE_STATUS == 2) {
-            $('.card-other').removeClass('hide');
-          } else {
-            $('.card-other').addClass('hide');
-          }
+      if (data.others) {
+        updateOthers(data.others);
+        if (PAGE_STATUS == 2) {
+          $('.card-other').removeClass('hide');
+        } else {
+          $('.card-other').addClass('hide');
         }
+      }
     };
 
     window.addEventListener('load', function() {
@@ -1719,6 +1756,6 @@ define(function (require, exports, module) {
 });
 
 /*
- *
-@0: .1 1.1 .9 1
- */
+1. auto focus failed.
+
+*/
