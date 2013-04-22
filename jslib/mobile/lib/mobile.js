@@ -7,7 +7,7 @@ define(function (require, exports, module) {
     window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
   }
- 
+
   if (!window.requestAnimationFrame) {
     window.requestAnimationFrame = function(callback, element) {
       var currTime = new Date().getTime();
@@ -621,7 +621,7 @@ define(function (require, exports, module) {
     };
 
     var launchApp = function(args) {
-        window.location = 'exfe://crosses/' + (args ? args : '');
+        window.location = config.app_scheme + '://crosses/' + (args ? args : '');
     };
 
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
@@ -1469,7 +1469,7 @@ define(function (require, exports, module) {
       liveCard.card = card;
       if (card.avatar) $('#icard').find('.avatar').css('background-image', 'url('+card.avatar+')');
       if (card.name) {
-        $('#icard').find('.name').text(card.name); 
+        $('#icard').find('.name').text(card.name);
         $('#card-name').val(card.name);
       }
       if (card.bio) $('#card-bio').text(card.bio);
