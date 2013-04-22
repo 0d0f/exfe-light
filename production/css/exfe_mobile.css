@@ -579,10 +579,11 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 233;
   width: 290px;
   height: 100px;
   padding: 10px;
-  font-weight: 300;
+  font-weight: lighter;
   color: #fff;
   text-align: center;
   text-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.5);
@@ -723,43 +724,71 @@ body {
   width: 64px;
   height: 64px;
   cursor: pointer;
+  opacity: 0;
   -webkit-transform-origin: 50% 50%;
   -webkit-transform-style: flat;
 }
 
 .card .avatar {
   position: relative;
+  top: 2px;
+  left: 2px;
   display: inline-block;
-  width: 64px;
-  height: 64px;
-  background-image: url(/static/img/portrait_default.png);
+  width: 60px;
+  height: 60px;
+  background-image: url('/static/img/portrait_default.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  -webkit-border-radius: 64px;
-          border-radius: 64px;
+  -webkit-border-radius: 60px;
+          border-radius: 60px;
 }
 
-.card .avatar:before {
+.card .avatar:after {
   position: absolute;
-  top: 1px;
-  right: 1px;
-  bottom: 1px;
-  left: 1px;
-  z-index: -1;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
   display: block;
-  background-color: #fafafa;
-  -webkit-border-radius: 64px;
-          border-radius: 64px;
+  background: url('/static/img/portrait_64@2x.png') no-repeat;
+  background-size: 100% 100%;
   content: '';
 }
 
 .card .name {
   height: 28px;
+  margin-top: 2px;
   overflow: hidden;
   font-size: 14px;
   line-height: 14px;
   color: #fff;
   text-align: center;
+}
+
+#card-tip {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: lighter;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255, 255, 255, 0.96)), to(rgba(230, 230, 230, 0.96)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.96), rgba(230, 230, 230, 0.96));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.96), rgba(230, 230, 230, 0.96));
+  background-repeat: repeat-x;
+  -webkit-border-radius: 8px;
+          border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+#card-tip .bio {
+  margin-bottom: 6px;
+}
+
+#card-tip ul {
+  padding: 0;
+  margin: 0;
 }
 
 #icard {
@@ -786,7 +815,7 @@ body {
   top: 100px;
   z-index: 3;
   width: 100%;
-  min-height: 85%;
+  min-height: 80.3%;
   padding: 4px;
   font-weight: lighter;
   text-align: center;
@@ -795,10 +824,16 @@ body {
   background-image: -webkit-linear-gradient(90deg, #333333, #222222);
   background-image: linear-gradient(90deg, #333333, #222222);
   background-repeat: repeat-x;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   opacity: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.card-form #card-bio {
+  font-size: 14px;
+  line-height: 40px;
+  color: #fff;
 }
 
 .card-form fieldset {
@@ -892,6 +927,7 @@ body {
 }
 
 .card-form .identity {
+  position: relative;
   width: 100%;
   height: 30px;
   margin-top: 9px;
@@ -901,29 +937,57 @@ body {
 
 .card-form .identity .provider {
   display: inline-block;
-  float: none;
-  width: 75px;
+  width: 60px;
+  height: 30px;
   margin: 0;
-  margin-right: 10px;
-  line-height: 30px;
+  line-height: 35px;
   text-align: right;
   vertical-align: baseline;
 }
 
 .card-form .identity .external_username {
   display: inline-block;
-  width: 160px;
-  margin-right: 10px;
+  float: left;
+  width: 190px;
+  margin-left: 10px;
   font-size: 18px;
   line-height: 30px;
   color: #fff;
   text-align: left;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
 }
 
 .card-form .identity .delete {
-  display: inline-block;
-  width: 24px;
+  position: absolute;
+  right: -5px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+
+.card-form .identity .delete-x {
+  position: relative;
+  top: 6px;
+  right: -5px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  font-family: HelveticaNeue-Light;
+  font-size: 18px;
+  line-height: 13px;
+  color: #191919;
+  text-align: center;
+  pointer-events: auto;
   cursor: pointer;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(250, 250, 250, 0.2)), to(rgba(230, 230, 230, 0.2)));
+  background-image: -webkit-linear-gradient(top, rgba(250, 250, 250, 0.2), rgba(230, 230, 230, 0.2));
+  background-image: linear-gradient(to bottom, rgba(250, 250, 250, 0.2), rgba(230, 230, 230, 0.2));
+  background-repeat: repeat-x;
+  -webkit-border-radius: 18px;
+          border-radius: 18px;
 }
 
 .card-form .detail {
@@ -971,6 +1035,7 @@ body {
 .actions {
   position: absolute;
   left: 20px;
+  z-index: 3;
   width: 280px;
 }
 
