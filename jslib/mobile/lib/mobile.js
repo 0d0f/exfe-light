@@ -128,6 +128,7 @@ define(function (require, exports, module) {
         }
         $('.box .inner').css('top', (height - 300) / 2 + 'px')
         var liveGather = document.querySelector('.live-gather');
+        if (liveGather) {
         liveGather.style.height = height + 'px';
         $('#icard').css({
           '-webkit-transform': cssMatrix([ 1, 0, 0, 1, 128, CARD_P1[1] = (height - 64) / 2 ]),
@@ -136,6 +137,7 @@ define(function (require, exports, module) {
           // 44 = iphone bottom bar
         var w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
         genCoords(w, h, ol, ot);
+        }
 
         if (navigator.userAgent.match(/iPad/)) {
             $('.redirecting').unbind('click').bind('click', function() {
