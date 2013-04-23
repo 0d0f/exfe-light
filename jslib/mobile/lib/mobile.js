@@ -822,7 +822,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Crosses/GetCrossByInvitationToken',
             data    : submitData,
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     // render title
                     $('.title_area  .title_text').html(escape(data.response.cross.title));
                     // render description
@@ -1076,7 +1076,7 @@ define(function (require, exports, module) {
                                                 + '/Update' + '?token=' + my_token,
                                         data    : {name : strDisplayName},
                                         success : function(data) {
-                                            if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                                            if (data && data.meta && data.meta.code === 200) {
                                                 $('.name_me').html(
                                                     escape(data.response.identity.name)
                                                 );
@@ -1132,7 +1132,7 @@ define(function (require, exports, module) {
             data    : {provider          : 'email',
                        external_username : email},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     $('.subscribe').hide();
                 }
             },
@@ -1200,7 +1200,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/' + result.user_id + '?token=' + result.token,
             data    : {token : result.token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     $('.identity .avatar').attr('src', data.response.user.avatar_filename);
                     $('.identity .name').val(data.response.user.name);
                     return;
@@ -1243,7 +1243,7 @@ define(function (require, exports, module) {
                 success : function(data) {
                     $('.loading').hide();
                     $('.eye').show();
-                    if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                    if (data && data.meta && data.meta.code === 200) {
                         if (data.response.authorization) {
                             $('.error-info').hide();
                             $('.set-button').hide();
@@ -1348,7 +1348,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/' + result.user_id + '?token=' + result.token,
             data    : {token : result.token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     for (var i in data.response.user.identities) {
                         if (data.response.user.identities[i].id === result.identity_id) {
                             $('.identity .avatar').attr('src', data.response.user.identities[i].avatar_filename);
@@ -1381,7 +1381,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/ResolveToken',
             data    : {token : token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     switch (data.response.action) {
                         case 'VERIFIED':
                             verification(data.response);
