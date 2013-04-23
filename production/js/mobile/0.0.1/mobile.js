@@ -137,6 +137,7 @@ define(function (require, exports, module) {
           // 44 = iphone bottom bar
         var w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
         genCoords(w, h, ol, ot);
+        generateMyCard();
         }
 
         if (navigator.userAgent.match(/iPad/)) {
@@ -151,11 +152,10 @@ define(function (require, exports, module) {
         }
         $('.get-button button').unbind('click').bind('click', showAppInStore);
 
-        generateMyCard();
         var TOUCH_TIMEOUT;
 
-        var $list = $('.card-form .list');
         $(function () {
+        var $list = $('.card-form .list');
         $(document)
 
         //$(window).on('pageshow, pagehide')
