@@ -486,6 +486,7 @@ define(function (require, exports, module) {
             logo.style.opacity = OPTIONS.o;
             icard.style.opacity = 1 - OPTIONS.o;
           };
+      if (logo && icard) {
       LOGO_TWEEN = new TWEEN.Tween(OPTIONS)
             .delay(1377)
             .to({ o: 0}, 1377)
@@ -586,6 +587,7 @@ define(function (require, exports, module) {
           ANIMATE_STATUS = false;
           TWEEN.remove(this);
         });
+      }
     };
 
     var redirecting = function(args) {
