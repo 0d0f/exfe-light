@@ -816,6 +816,12 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.card-iphone4 .name {
+  height: 14px;
+  margin-top: -4px;
+  -webkit-line-clamp: 1;
+}
+
 .card-me {
   opacity: 1;
 }
