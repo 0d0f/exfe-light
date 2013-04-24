@@ -1683,7 +1683,7 @@ define(function (require) {
           + '<div class="name">{{name}}</div>'
         + '</div>';
 
-      return function (card, pos, g, i, isMe) {
+      return function (card, pos, g, i, isMe, ios) {
         var m = M4.slice(0);
         m[12] = pos[0];
         m[13] = pos[1];
