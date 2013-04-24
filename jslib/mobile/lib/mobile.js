@@ -103,21 +103,24 @@ define(function (require) {
       // Button-bar: 44px
       var html = document.documentElement,
           htmlStyle = html.style,
-          height = window.innerHeight;
+          height = window.innerHeight,
+          app = req.app;
       // 1136 / 2 - (20 + 60 + 44)
       if (height >= 444) {
         height = 508;
-        req.app.ios = 'iphone5';
       // 960 / 2 - (20 + 60 + 44)
       } else if (height <= 356) {
         height = 420;
-        req.app.ios = 'iphone4';
+        app.ios = 'iphone4';
       }
 
-      req.app.screen = {
+      app.screen = {
         width: 320,
         height: height
       };
+
+      dir(app)
+      log(app.ios)
 
       htmlStyle.minHeight = height + 'px';
 
@@ -560,8 +563,6 @@ define(function (require) {
           template: $('#live-tmpl').html()
         }
       });
-
-      alert(app.ios)
 
       liveCont.emit('show', app.screen, app.ios);
 
