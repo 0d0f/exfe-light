@@ -808,6 +808,9 @@ define(function (require) {
         clearInterval(redirectTimer);
         tryTimer = redirectTimer = void 0;
 
+        element.find('.redirecting').addClass('hide');
+        element.find('.get-button').removeClass('hide');
+
         self.stopAnimate();
 
         // {{{
