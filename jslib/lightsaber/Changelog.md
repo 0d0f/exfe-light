@@ -1,3 +1,7 @@
+* v0.0.5 2013-04-19T13:10:00 UTC+0800
+  - New Features
+    * added `zepto`
+
 * v0.0.4 18:03:29 09/12/2012
   + Response.location, like window.location.href = 'xxx';
 
