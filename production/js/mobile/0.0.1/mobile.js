@@ -1710,8 +1710,8 @@ define(function (require) {
           a1 = card.name ? (config.api_url + '/avatar/default?name=' + card.name) : '/static/img/portrait_default.png';
         }
         if (a0 !== a1) {
-          elem.querySelector('.avatar').style.backgroundImage = 'url(' + avatar + ')';
-          elem.setAttribute('data-url', avatar);
+          elem.querySelector('.avatar').style.backgroundImage = 'url(' + a1 + ')';
+          elem.setAttribute('data-url', a1);
         }
       }
       elem.querySelector('.name').innerText = card.name;
