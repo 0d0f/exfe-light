@@ -11,7 +11,7 @@ define('live', function (require) {
 
     var secCnt = secInt;
 
-    var bolDebug = false;
+    var bolDebug = !false;
 
     var echo     = null;
 
