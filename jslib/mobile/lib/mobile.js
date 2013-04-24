@@ -104,23 +104,21 @@ define(function (require) {
       var html = document.documentElement,
           htmlStyle = html.style,
           height = window.innerHeight,
-          app = req.app;
+          app = req.app, ios;
       // 1136 / 2 - (20 + 60 + 44)
       if (height >= 444) {
         height = 508;
       // 960 / 2 - (20 + 60 + 44)
       } else if (height <= 356) {
         height = 420;
-        app.ios = 'iphone4';
+        ios = 'iphone4';
       }
 
       app.screen = {
         width: 320,
-        height: height
+        height: height,
+        ios: ios
       };
-
-      dir(app)
-      log(app.ios)
 
       htmlStyle.minHeight = height + 'px';
 
@@ -190,7 +188,6 @@ define(function (require) {
 
     // `index`
     index: function (req, res) {
-      log('index `Home`');
       var error = req.error;
       var app = req.app, controllers = app.controllers,
           homeCont = controllers.home,
@@ -211,7 +208,6 @@ define(function (require) {
     },
 
     verify: function (req, res) {
-      log('verify');
       var smsToken = req.smsToken;
       var app = req.app;
       if (smsToken) {
@@ -232,7 +228,6 @@ define(function (require) {
     },
 
     setPassword: function (req, res) {
-      log('set-password');
       var smsToken = req.smsToken;
       var app = req.app;
       if (smsToken) {
@@ -255,7 +250,6 @@ define(function (require) {
 
     // `resolve-token`
     resolveToken: function (req, res) {
-      log('`resolve token`');
       var app = req.app;
       var originToken = req.params[0];
 
@@ -296,12 +290,10 @@ define(function (require) {
 
     // `phone-cross-token`
     crossPhoneToken: function (req, res) {
-      log('cross `phone token`');
       var app = req.app;
       var _params = req.params,
           cross_id = _params[0],
           ctoken = _params[1];
-      log('cross', cross_id, ctoken);
 
       var cats = Store.get('cats'),
           params, data, token;
@@ -322,7 +314,6 @@ define(function (require) {
 
     // `cross-token`
     crossToken: function (req, res) {
-      log('cross `normal token`');
       var app = req.app;
       var ctoken = req.params[0],
           cats = Store.get('cats'),
@@ -512,8 +503,6 @@ define(function (require) {
               }
             }
 
-            dir(cross)
-
             // cross
             var app = req.app, controllers = app.controllers,
                 crossCont = controllers.cross;
@@ -550,7 +539,6 @@ define(function (require) {
 
     // `live`
     live: function (req, res) {
-      log('`live`');
       var app = req.app, controllers = app.controllers,
           liveCont = controllers.live;
 
@@ -849,8 +837,6 @@ define(function (require) {
       });
 
       this.on('show', function (screen) {
-        log(this.$('#home-card')[0])
-
         // set `logo` & `my-card` position
         var h = screen.height;
         MCP1[13] = (h - 64) / 2;
@@ -1234,13 +1220,9 @@ define(function (require) {
         this.$('#add-identity-facebook').removeClass('hide');
       });
 
-      this.on('show', function (screen, ios) {
+      this.on('show', function (screen) {
 
         this.screen = screen;
-
-        this.ios = ios;
-
-        alert(this.ios)
 
         $('#app-footer').addClass('hide');
 
@@ -1266,7 +1248,6 @@ define(function (require) {
       });
 
       this.on('post-card', function (e) {
-        log('post-card')
         this.postMyCard();
       });
 
@@ -1277,7 +1258,6 @@ define(function (require) {
       });
 
       this.on('live-gather', function () {
-        log('live-gahter')
         this.$('.live-form').addClass('hide');
         this.$('.live-gather').removeClass('hide');
         this.measurePositions(this.screen.width, this.screen.height - 10, 64 / 2,  64 / 2);
@@ -1286,9 +1266,8 @@ define(function (require) {
 
         this.$('.live-gather').find('.card').remove();
         var card = this.liveCard.card;
-        var $me = this.genCard(card, this.coords[0][0], 0, 0, true, this.ios)
+        var $me = this.genCard(card, this.coords[0][0], 0, 0, true, this.screen.ios)
           .appendTo(this.$('.live-gather'));
-        log($me[0])
         this.updateCard($me[0], card);
 
         // test
@@ -1710,7 +1689,7 @@ define(function (require) {
         return false;
       }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], pos = this.coords[g][i],
-          $card = this.genCard(card, pos, g, i, false, this.ios), elem = $card[0], s = elem.style,
+          $card = this.genCard(card, pos, g, i, false, this.screen.ios), elem = $card[0], s = elem.style,
           m = M4.slice(0);
 
       m[0] = m[5] = 0;
@@ -1902,7 +1881,6 @@ define(function (require) {
           this.emit('start-redirect');
         }
         this.$('.error-info').toggleClass('hide', !hasError);
-        log('show footer bar')
       });
 
       this.on('show-from-cross', function (exfee_id, token, args) {
@@ -2004,7 +1982,6 @@ define(function (require) {
 
   var tryTimer;
   app.on('launched', function () {
-    log('app launched');
     // During tests on 3g/3gs this timeout fires immediately if less than 500ms.
     tryTimer = setInterval(function () {
       var n = now();
