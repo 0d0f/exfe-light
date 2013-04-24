@@ -1684,6 +1684,7 @@ define(function (require) {
         + '</div>';
 
       return function (card, pos, g, i, isMe, ios) {
+        alert(ios)
         var m = M4.slice(0);
         m[12] = pos[0];
         m[13] = pos[1];
