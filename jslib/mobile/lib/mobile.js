@@ -1141,9 +1141,6 @@ define(function (require) {
               for (var i = 0, l = card.identities.length; i < l; ++i) {
                 var identity = card.identities[i], p = identity.provider, eu = identity.external_username;
                 var ps = '';
-                if (p !== 'email' || p !== 'phone' || p !== 'facebook') {
-                  continue;
-                }
                 if (p !== 'email' && p !== 'phone') {
                   p = p.substr(0, 1).toUpperCase() + p.substr(1);
                   ps = '<span class="provider">'+p+'</span>'
