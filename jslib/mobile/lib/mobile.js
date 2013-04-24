@@ -1358,7 +1358,7 @@ define(function (require) {
           card.bio = user.bio;
           card.identities = user.identities;
         }
-        //Store.set('livecard', liveCard);
+        Store.set('livecard', liveCard);
       }
       liveCard.card.id = '';
       return liveCard;
@@ -1802,7 +1802,7 @@ define(function (require) {
         })
 
       this.on('show', function (screen, hasBanner, hasCross, hasError) {
-        var top = screen.height - 86 - (hasBanner ? 50 : 0);
+        var top = screen.height - 96 - (hasBanner ? 60 : 0);
         this.element.removeClass('hide');
         this.element.css('top',  top + 'px');
         this.$('.redirecting').removeClass('hide');
