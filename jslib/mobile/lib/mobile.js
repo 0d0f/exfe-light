@@ -1246,7 +1246,7 @@ define(function (require) {
         this.$('#live-discover').css('opacity', 0);
         this.$('#card-form').css({
           'opacity': 0,
-          'min-height': (h - 100) / h
+          'min-height': ((h - 100) / h) * 100 + '%'
         });
 
         this.$('.identities .list').empty();
