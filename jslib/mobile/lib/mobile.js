@@ -1703,7 +1703,7 @@ define(function (require) {
 
     updateCard: function (elem, card) {
       var a0 = elem.getAttribute('data-url'), a1 = '';
-      if (a0 !== card.avatar) {
+      if (!a0 || a0 !== card.avatar) {
         a1 = card.avatar;
         if (!a1) {
           a1 = card.name ? (config.api_url + '/avatar/default?name=' + card.name) : '/static/img/portrait_default.png';
