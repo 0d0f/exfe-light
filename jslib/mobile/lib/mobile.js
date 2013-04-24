@@ -1280,6 +1280,7 @@ define(function (require) {
         var card = this.liveCard.card;
         var $me = this.genCard(card, this.coords[0][0], 0, 0, true)
           .appendTo(this.$('.live-gather'));
+        log($me[0])
         this.updateCard($me[0], card);
 
         if (this._others) {
