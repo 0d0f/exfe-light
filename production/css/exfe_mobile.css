@@ -816,6 +816,10 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.card-me {
+  opacity: 1;
+}
+
 #card-tip {
   position: absolute;
   z-index: 7;
@@ -986,6 +990,10 @@ body {
   background: #4C4C4C;
 }
 
+.card-form #card-name.normal {
+  background: transparent;
+}
+
 .card-form .btn-start {
   width: 60px;
   height: 40px;
@@ -1005,6 +1013,10 @@ body {
           box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.2);
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.card-form .btn-start.disabled {
+  opacity: .5;
 }
 
 .card-form #add-identity {
@@ -1094,7 +1106,8 @@ body {
 }
 
 .card-form .detail-concat {
-  position: absolute;
+  position: relative;
+  top: 25px;
   left: 0;
   width: 100%;
   line-height: 40px;
