@@ -1283,6 +1283,21 @@ define(function (require) {
         log($me[0])
         this.updateCard($me[0], card);
 
+        // test
+        this._others = {
+          0: {},
+          1: {},
+          2: {},
+          3: {},
+          4: {},
+          5: {},
+          6: {},
+          7: {},
+          8: {},
+          9: {}
+        };
+        //
+
         if (this._others) {
           this.updateOthers();
         }
