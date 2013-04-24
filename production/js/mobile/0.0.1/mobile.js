@@ -1271,6 +1271,7 @@ define(function (require) {
         this.updateCard($me[0], card);
 
         // test
+        /*
         this._others = {
           0: {
             id: 0,
@@ -1317,6 +1318,7 @@ define(function (require) {
             name: 'adbd sdfdsf s fds'
           }
         };
+        */
         //
 
         if (this._others) {
