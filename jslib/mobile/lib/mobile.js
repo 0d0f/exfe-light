@@ -1277,8 +1277,10 @@ define(function (require) {
         this.MAPS = this._MAPS.slice(0);
 
         this.$('.live-gather').find('.card').remove();
-        this.genCard(this.liveCard.card, this.coords[0][0], 0, 0, true)
+        var card = this.liveCard.card;
+        var $me = this.genCard(card, this.coords[0][0], 0, 0, true)
           .appendTo(this.$('.live-gather'));
+        this.updateCard($me[0], card);
 
         if (this._others) {
           this.updateOthers();

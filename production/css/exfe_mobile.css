@@ -820,6 +820,11 @@ body {
   opacity: 1;
 }
 
+.card-me .name {
+  height: 14px;
+  -webkit-line-clamp: 1;
+}
+
 #card-tip {
   position: absolute;
   z-index: 7;
