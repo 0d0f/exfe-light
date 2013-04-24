@@ -561,6 +561,8 @@ define(function (require) {
         }
       });
 
+      alert(app.ios)
+
       liveCont.emit('show', app.screen, app.ios);
 
       app.currPageName = 'LIVE' ;
