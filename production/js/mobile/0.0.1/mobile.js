@@ -1286,34 +1286,48 @@ define(function (require) {
         // test
         this._others = {
           0: {
-            id: 0
+            id: 0,
+            name: 'adbds fds'
           },
           1: {
-            id: 1
+            id: 1,
+            name: 'adbd sffdsfs fds'
           },
           2: {
-            id: 2
+            id: 2,
+            name: 'adbds fds'
           },
           3: {
-            id: 3
+            id: 3,
+            name: 'adbds fdsfds ffds'
           },
           4: {
-            id: 4
+            id: 4,
+            name: 'adbds fds fds fds'
           },
           5: {
-            id: 5
+            id: 5,
+            name: 'adbds  fdsf dsfds'
           },
           6: {
-            id: 6
+            id: 6,
+            name: 'ad fdsfds bds fds'
           },
           7: {
-            id: 7
+            id: 7,
+            name: 'adbds  fdsfds df fds'
           },
           8: {
-            id: 8
+            id: 8,
+            name: 'adbds  fdsfds fds fds'
           },
           9: {
-            id: 9
+            id: 9,
+            name: 'adbds fdsf dsf ds fds fds'
+          },
+          10: {
+            id: 10,
+            name: 'adbd sdfdsf s fds'
           }
         };
         //
