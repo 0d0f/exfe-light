@@ -808,9 +808,6 @@ define(function (require) {
         clearInterval(redirectTimer);
         tryTimer = redirectTimer = void 0;
 
-        element.find('.redirecting').addClass('hide');
-        element.find('.get-button').removeClass('hide');
-
         self.stopAnimate();
 
         // {{{
@@ -819,6 +816,8 @@ define(function (require) {
       })
 
       this.on('goto-live', function () {
+        app.controllers.footer.emit('stop-redirect');
+
         app.request.switchPageCallback = function () {
           element.addClass('hide');
         };
@@ -1861,6 +1860,7 @@ define(function (require) {
       });
 
       this.on('stop-redirect', function () {
+        this.$('.get-button').removeClass('hide');
         $('.redirecting').addClass('hide');
         clearInterval(redirectTimer);
         redirectTimer = void 0;
