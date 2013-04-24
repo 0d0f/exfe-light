@@ -107,9 +107,11 @@ define(function (require) {
       // 1136 / 2 - (20 + 60 + 44)
       if (height >= 444) {
         height = 508;
+        req.app.ios = 'iphone5';
       // 960 / 2 - (20 + 60 + 44)
       } else if (height <= 356) {
         height = 420;
+        req.app.ios = 'iphone4';
       }
 
       req.app.screen = {
@@ -559,7 +561,7 @@ define(function (require) {
         }
       });
 
-      liveCont.emit('show', app.screen);
+      liveCont.emit('show', app.screen, app.ios);
 
       app.currPageName = 'LIVE' ;
     }
@@ -1229,9 +1231,11 @@ define(function (require) {
         this.$('#add-identity-facebook').removeClass('hide');
       });
 
-      this.on('show', function (screen) {
+      this.on('show', function (screen, ios) {
 
         this.screen = screen;
+
+        this.ios = ios;
 
         $('#app-footer').addClass('hide');
 
@@ -1252,7 +1256,6 @@ define(function (require) {
         this.$('.identities .list').empty();
         this.liveCard = this.getLiveCard();
         this.updateMyCardForm();
-        dir(this.liveCard);
 
         this.startAnimate();
       });
@@ -1278,7 +1281,7 @@ define(function (require) {
 
         this.$('.live-gather').find('.card').remove();
         var card = this.liveCard.card;
-        var $me = this.genCard(card, this.coords[0][0], 0, 0, true)
+        var $me = this.genCard(card, this.coords[0][0], 0, 0, true, this.ios)
           .appendTo(this.$('.live-gather'));
         log($me[0])
         this.updateCard($me[0], card);
@@ -1368,7 +1371,6 @@ define(function (require) {
     postMyCard: function () {
       Store.set('livecard', this.liveCard);
       var card = this.liveCard.card;
-      dir(this.liveCard)
       if (card.identities.length) {
         card._time = (new Date()).getTime()
         Live.init(card, $.proxy(this.liveCallback, this));
@@ -1385,7 +1387,6 @@ define(function (require) {
       }
       this._others = result.others;
       this.updateOthers();
-      dir(result)
     },
 
     updateMyCardForm: function () {
@@ -1674,8 +1675,6 @@ define(function (require) {
       coords[3][1] = [ w * .375 - l, h * .22 - t ];
       coords[3][2] = [ w * .625 - l, h * .22 - t ];
       coords[3][3] = [ w * .875 - l, h * .22 + 40 - t ];
-
-      dir(coords);
     },
 
     genCard: function () {
@@ -1690,7 +1689,7 @@ define(function (require) {
         m[13] = pos[1];
         var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
           .replace('{{id}}', card.id)
-          .replace('{{class}}', isMe ? 'card-me' : 'card-other hide')
+          .replace('{{class}}', (isMe ? 'card-me' : 'card-other hide') + (ios === 'iphone4' ? ' card-iphone4' : ''))
           .replace('{{g}}', g)
           .replace('{{i}}', i)
           .replace('{{name}}', card.name)
@@ -1706,7 +1705,7 @@ define(function (require) {
         return false;
       }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], pos = this.coords[g][i],
-          $card = this.genCard(card, pos, g, i), elem = $card[0], s = elem.style,
+          $card = this.genCard(card, pos, g, i, false, this.ios), elem = $card[0], s = elem.style,
           m = M4.slice(0);
 
       m[0] = m[5] = 0;
