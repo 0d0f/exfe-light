@@ -1278,6 +1278,7 @@ define(function (require) {
         this.measurePositions(this.screen.width, this.screen.height - 10, 64 / 2,  64 / 2);
 
         this.MAPS = this._MAPS.slice(0);
+        alert(this.ios)
 
         this.$('.live-gather').find('.card').remove();
         var card = this.liveCard.card;
@@ -1684,7 +1685,6 @@ define(function (require) {
         + '</div>';
 
       return function (card, pos, g, i, isMe, ios) {
-        alert(ios)
         var m = M4.slice(0);
         m[12] = pos[0];
         m[13] = pos[1];
