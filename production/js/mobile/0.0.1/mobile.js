@@ -1723,7 +1723,7 @@ define(function (require) {
       var cardForm = this.$('#card-form')[0];
       var discover = this.$('#live-discover')[0];
       var m1_13 = MCP1[13], m0_13 = MCP0[13];
-      var m = M4.slice(0);
+      var m = MCP1.slice(0);
       var a = this.a = new TWEEN.Tween({ o: 0 })
             .to({ o: 1 }, 500)
             .easing(TWEEN.Easing.Cubic.In)
