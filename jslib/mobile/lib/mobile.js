@@ -105,19 +105,19 @@ define(function (require) {
           htmlStyle = html.style,
           height = window.innerHeight,
           app = req.app, ios;
+
       // 1136 / 2 - (20 + 60 + 44)
       if (height >= 444) {
         height = 508;
       // 960 / 2 - (20 + 60 + 44)
       } else if (height <= 356) {
         height = 420;
-        ios = 'iphone4';
       }
 
       app.screen = {
         width: 320,
         height: height,
-        ios: ios
+        ios: (height <= 420 ? 'iphone4': '')
       };
 
       htmlStyle.minHeight = height + 'px';
