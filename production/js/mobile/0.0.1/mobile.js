@@ -900,10 +900,10 @@ define(function (require) {
           card = document.getElementById('home-card');
 
       console.log('stopAnimate', 2)
+      this._a.chain();
+      this._b.chain();
       this._b.stop();
       this._a.stop();
-      TWEEN.remove(this._b);
-      TWEEN.remove(this._a);
 
       aopts.o = logo.style.opacity = 1;
       card.style.opacity = 0;
