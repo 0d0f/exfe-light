@@ -827,7 +827,6 @@ define(function (require) {
         clearInterval(redirectTimer);
         tryTimer = redirectTimer = void 0;
 
-        console.log('stopAnimate', 1)
         self.stopAnimate();
 
         // {{{
@@ -899,7 +898,6 @@ define(function (require) {
           logo = document.getElementById('big-logo'),
           card = document.getElementById('home-card');
 
-      console.log('stopAnimate', 2)
       this._a.chain();
       this._b.chain();
       this._b.stop();
@@ -1246,7 +1244,10 @@ define(function (require) {
         this.$('.live-form').removeClass('hide');
         //this.$('.card-form').removeClass('hide');
         this.$('#live-discover').css('opacity', 0);
-        this.$('#card-form').css('opacity', 0);
+        this.$('#card-form').css({
+          'opacity': 0,
+          'min-height': (h - 100) / h
+        });
 
         this.$('.identities .list').empty();
         this.liveCard = this.getLiveCard();
