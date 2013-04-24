@@ -881,15 +881,15 @@ define(function (require) {
             .to({ o: 1 }, 1377)
             .easing(TWEEN.Easing.Cubic.InOut)
             .onUpdate(update);
-
-      a.chain(b);
-      b.chain(a);
     },
 
     startAnimate: function () {
       if (!this._a && !this._b) {
         this.createAnimate();
       }
+
+      this._a.chain(this._b);
+      this._b.chain(this._a);
 
       this._a.start();
     },
