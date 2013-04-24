@@ -71,8 +71,9 @@ define(function (require) {
   };
 
   /**- _ -**/
-  var MCP0 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 28, 0, 1 ]; // `live-edit` my-card position
-  var MCP1 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128,  0, 0, 1 ]; // `home` home-card position
+  var M4 = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,  0, 0, 1 ];
+  var MCP0 = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 28, 0, 1 ]; // `live-edit` my-card position
+  var MCP1 = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128,  0, 0, 1 ]; // `home` home-card position
   /**- _ -**/
 
   var getSMSTokenFromHead = function () {
@@ -594,6 +595,7 @@ define(function (require) {
     init: function () {},
 
     _destory: function () {
+      this.element.off();
       delete Controller.caches[this.cid];
       Controller.superclass.destory.call(this);
     },
@@ -808,12 +810,17 @@ define(function (require) {
 
         self.stopAnimate();
 
+        // {{{
+        self.emit('goto-live');
+        // }}}
+      })
+
+      this.on('goto-live', function () {
         app.request.switchPageCallback = function () {
           element.addClass('hide');
         };
-
         app.response.redirect('/#live');
-      })
+      });
 
       this.on('show', function (screen) {
         log(this.$('#home-card')[0])
@@ -1600,7 +1607,7 @@ define(function (require) {
         + '</div>';
 
       return function (card, pos, g, i, isMe) {
-        var m = MCP0.slice(0);
+        var m = M4.slice(0);
         m[12] = pos[0];
         m[13] = pos[1];
         var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
@@ -1622,7 +1629,7 @@ define(function (require) {
       }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], pos = this.coords[g][i],
           $card = this.genCard(card, pos, g, i), elem = $card[0], s = elem.style,
-          m = MCP0.slice(0);
+          m = M4.slice(0);
 
       m[0] = m[5] = 0;
       m[12] = pos[0]; m[13] = pos[1];
@@ -1649,7 +1656,7 @@ define(function (require) {
     delCard: function (elem) {
       var MAPS = this.MAPS;
       var g = elem.getAttribute('data-g'), i = elem.getAttribute('data-i');
-      var m = MCP0.slice(0), pos = this.coords[g][i], s = elem.style;
+      var m = M4.slice(0), pos = this.coords[g][i], s = elem.style;
       m[12] = pos[0]; m[13] = pos[1];
       new TWEEN.Tween({ o: 1 })
         .to({ o: 0 }, 250)
@@ -1716,7 +1723,7 @@ define(function (require) {
       var cardForm = this.$('#card-form')[0];
       var discover = this.$('#live-discover')[0];
       var m1_13 = MCP1[13], m0_13 = MCP0[13];
-      var m = MCP0.slice(0);
+      var m = M4.slice(0);
       var a = this.a = new TWEEN.Tween({ o: 0 })
             .to({ o: 1 }, 500)
             .easing(TWEEN.Easing.Cubic.In)

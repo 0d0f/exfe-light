@@ -1357,6 +1357,8 @@ button .exfe {
 }
 
 .error-info {
+  position: absolute;
+  width: 100%;
   height: 17px;
   font-size: 14px;
   line-height: 17px;
