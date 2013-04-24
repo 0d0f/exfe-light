@@ -827,6 +827,7 @@ define(function (require) {
         clearInterval(redirectTimer);
         tryTimer = redirectTimer = void 0;
 
+        console.log('stopAnimate', 1)
         self.stopAnimate();
 
         // {{{
@@ -898,8 +899,9 @@ define(function (require) {
           logo = document.getElementById('big-logo'),
           card = document.getElementById('home-card');
 
-      this._a.stop();
+      console.log('stopAnimate', 2)
       this._b.stop();
+      this._a.stop();
 
       aopts.o = logo.style.opacity = 1;
       card.style.opacity = 0;
