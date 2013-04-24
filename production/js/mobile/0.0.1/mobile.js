@@ -902,6 +902,8 @@ define(function (require) {
       console.log('stopAnimate', 2)
       this._b.stop();
       this._a.stop();
+      TWEEN.remove(this._b);
+      TWEEN.remove(this._a);
 
       aopts.o = logo.style.opacity = 1;
       card.style.opacity = 0;
