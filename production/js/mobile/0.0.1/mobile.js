@@ -201,11 +201,14 @@ define(function (require) {
       homeCont.emit('show', screen);
       footerCont.emit('show', screen, false, false, error);
       delete req.error;
+
+      app.currPageName = 'HOME';
     },
 
     verify: function (req, res) {
       log('verify');
       var smsToken = req.smsToken;
+      var app = req.app;
       if (smsToken) {
         $('#app-header').removeClass('hide');
         var verifyCont = new VerifyController({
@@ -219,11 +222,14 @@ define(function (require) {
         req.error = true;
         res.redirect('/');
       }
+
+      app.currPageName = 'VERIFY';
     },
 
     setPassword: function (req, res) {
       log('set-password');
       var smsToken = req.smsToken;
+      var app = req.app;
       if (smsToken) {
         $('#app-header').removeClass('hide');
         var setPasswordCont = new SetPasswordController({
@@ -238,11 +244,14 @@ define(function (require) {
         req.error = true;
         res.redirect('/');
       }
+
+      app.currPageName = 'SET_PASSWORD';
     },
 
     // `resolve-token`
     resolveToken: function (req, res) {
       log('`resolve token`');
+      var app = req.app;
       var originToken = req.params[0];
 
       if (originToken) {
@@ -274,6 +283,8 @@ define(function (require) {
         req.error = true;
         res.redirect('/');
       }
+
+      app.currPageName = 'RESOLVE_TOKEN';
     },
 
     // `cross`
@@ -281,6 +292,7 @@ define(function (require) {
     // `phone-cross-token`
     crossPhoneToken: function (req, res) {
       log('cross `phone token`');
+      var app = req.app;
       var _params = req.params,
           cross_id = _params[0],
           ctoken = _params[1];
@@ -299,11 +311,14 @@ define(function (require) {
       }
 
       showCross(req, res, data);
+
+      app.currPageName = 'CROSS';
     },
 
     // `cross-token`
     crossToken: function (req, res) {
       log('cross `normal token`');
+      var app = req.app;
       var ctoken = req.params[0],
           cats = Store.get('cats'),
           data = { invitation_token: ctoken },
@@ -314,6 +329,8 @@ define(function (require) {
       }
 
       showCross(req, res, data);
+
+      app.currPageName = 'CROSS';
     },
 
     showCross: function showCross(req, res, data) {
@@ -543,6 +560,8 @@ define(function (require) {
       });
 
       liveCont.emit('show', app.screen);
+
+      app.currPageName = 'LIVE' ;
     }
 
   };
@@ -1788,6 +1807,8 @@ define(function (require) {
       this.listen();
     },
 
+    enableTimer: true,
+
     listen: function () {
       var self = this,
           element = self.element;
@@ -1814,9 +1835,11 @@ define(function (require) {
         var top = screen.height - 96 - (hasBanner ? 60 : 0);
         this.element.removeClass('hide');
         this.element.css('top',  top + 'px');
-        this.$('.redirecting').removeClass('hide');
-        //this.$('.web-version').removeClass('hide');
-        this.emit('start-redirect');
+        if (this.enableTimer) {
+          this.$('.redirecting').removeClass('hide');
+          //this.$('.web-version').removeClass('hide');
+          this.emit('start-redirect');
+        }
         this.$('.error-info').toggleClass('hide', !hasError);
         log('show footer bar')
       });
@@ -1860,6 +1883,7 @@ define(function (require) {
       });
 
       this.on('stop-redirect', function () {
+        this.enableTimer = false;
         this.$('.get-button').removeClass('hide');
         $('.redirecting').addClass('hide');
         clearInterval(redirectTimer);
