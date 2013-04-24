@@ -1137,34 +1137,36 @@ define(function (require) {
             var m = matrix.match(/([\-\d\.]+)/g).slice(1);
             var tip = document.getElementById('card-tip');
             var html = '';
-            for (var i = 0, l = card.identities.length; i < l; ++i) {
-              var identity = card.identities[i], p = identity.provider, eu = identity.external_username;
-              var ps = '';
-              if (p !== 'email' || p !== 'phone' || p !== 'facebook') {
-                continue;
+            if (card && card.identities) {
+              for (var i = 0, l = card.identities.length; i < l; ++i) {
+                var identity = card.identities[i], p = identity.provider, eu = identity.external_username;
+                var ps = '';
+                if (p !== 'email' || p !== 'phone' || p !== 'facebook') {
+                  continue;
+                }
+                if (p !== 'email' && p !== 'phone') {
+                  p = p.substr(0, 1).toUpperCase() + p.substr(1);
+                  ps = '<span class="provider">'+p+'</span>'
+                }
+                html += '<li><span class="external-username'+(ps ? '' : ' normal')+'">'+eu+'</span>'+ps+'</li>'
               }
-              if (p !== 'email' && p !== 'phone') {
-                p = p.substr(0, 1).toUpperCase() + p.substr(1);
-                ps = '<span class="provider">'+p+'</span>'
+              tip.querySelector('ul').innerHTML = html;
+              var h = tip.clientHeight;
+              var x = ~~m[12] - (200 - 64) / 2, y = ~~m[13] - (6 + h), ax = 93;
+              if (x < 0) {
+                x = 10;
+              } else if (x + 200 >= 320) {
+                x = 320 - 200 - 10;
               }
-              html += '<li><span class="external-username'+(ps ? '' : ' normal')+'">'+eu+'</span>'+ps+'</li>'
+              if (x === 10 || x === 110 ) {
+                ax = ~~m[12] + 32 - 7 - x;
+              }
+              m[12] = x; m[13] = y; m[14] = 7;
+              setCSSMatrix(tip, m);
+              tip.querySelector('.ang').style.left = ax + 'px';
+              tip.querySelector('.bio').innerText = card.bio;
+              tip.className = 'card-tip';
             }
-            tip.querySelector('ul').innerHTML = html;
-            var h = tip.clientHeight;
-            var x = ~~m[12] - (200 - 64) / 2, y = ~~m[13] - (6 + h), ax = 93;
-            if (x < 0) {
-              x = 10;
-            } else if (x + 200 >= 320) {
-              x = 320 - 200 - 10;
-            }
-            if (x === 10 || x === 110 ) {
-              ax = ~~m[12] + 32 - 7 - x;
-            }
-            m[12] = x; m[13] = y; m[14] = 7;
-            setCSSMatrix(tip, m);
-            tip.querySelector('.ang').style.left = ax + 'px';
-            tip.querySelector('.bio').innerText = card.bio;
-            tip.className = 'card-tip';
           })
 
           .on('touchstart.live', '.card .avatar', function (e) {
