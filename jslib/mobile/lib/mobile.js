@@ -898,6 +898,7 @@ define(function (require) {
           logo = document.getElementById('big-logo'),
           card = document.getElementById('home-card');
 
+      alert(123)
       this._b.stop();
       this._a.stop();
       TWEEN.remove(this._b);
