@@ -797,7 +797,7 @@ define('mobilecontroller', function (require, exports, module) {
                 ax = ~~m[12] + 32 - 7 - x;
               }
               m[12] = x;
-              m[13] = y;
+              m[13] = y - 5;
               m[14] = 7;
               setCSSMatrix(tip, m);
               tip.querySelector('.ang').style.left = ax + 'px';

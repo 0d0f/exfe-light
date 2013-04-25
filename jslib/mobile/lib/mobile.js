@@ -35,9 +35,8 @@ define(function (require) {
 
   app.controllers = {};
 
-  app.controllers.footer = new FooterController({
-    App: app
-  });
+  // @todo: 优化这种引用 或者 改掉
+  app.controllers.footer = new FooterController({ App: app });
 
   // `index`
   // index - `/#?`
