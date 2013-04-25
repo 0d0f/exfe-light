@@ -141,8 +141,8 @@ define('mobilecontroller', function (require, exports, module) {
   // `app-footer` controller
   exports.FooterController = Controller.extend({
 
-    //countDown: 5,
-    countDown: 500000,
+    countDown: 5,
+    //countDown: 500000,
 
     element: $('#app-footer'),
 
