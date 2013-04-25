@@ -713,10 +713,12 @@ body {
   from {
     opacity: 1;
     -webkit-transform: scale(0);
+            transform: scale(0);
   }
   to {
     opacity: 0;
     -webkit-transform: scale(1);
+            transform: scale(1);
   }
 }
 
@@ -730,18 +732,24 @@ body {
   border-radius: 47px;
   opacity: 0;
   -webkit-animation: wave 1s linear 0s infinite;
+          animation: wave 1s linear 0s infinite;
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
 }
 
 .live-title .wave .circle:nth-child(1) {
   -webkit-animation-delay: 0s;
+          animation-delay: 0s;
 }
 
 .live-title .wave .circle:nth-child(2) {
   -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
 }
 
 .live-title .wave .circle:nth-child(3) {
   -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s;
 }
 
 .discover {

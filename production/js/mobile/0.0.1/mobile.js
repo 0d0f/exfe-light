@@ -178,6 +178,10 @@ define(function (require) {
       delete req.switchPageCallback;
 
       next();
+    },
+
+    errorHandler: function (req, res) {
+      res.redirect('/');
     }
 
   };
@@ -1834,6 +1838,7 @@ define(function (require) {
   app.use(middleware.checkSMSToken);
   app.use(middleware.cleanup);
   app.initRouter();
+  app.use(middleware.errorHandler);
 
   app.controllers = {};
 
