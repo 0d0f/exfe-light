@@ -475,17 +475,28 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show', function (screen) {
         // set `logo` & `my-card` position
         var h = screen.height;
-        MCP1[13] = (h - 64) / 2;
         this.$('.logo-box .inner').css('top', (h - 300) / 2 + 'px');
-        var liveCard = getLiveCard(), card = liveCard.card,
-            $homeCard = this.$('#home-card');
-        setCSSMatrix($homeCard[0], MCP1);
-        if (card && card.name && card.avatar) {
-          $homeCard.find('.avatar').attr('src', card.avatar);
-        }
         element.removeClass('hide');
+        MCP1[13] = (h - 64) / 2;
+        this.setHomeCard(MCP1);
         this.startAnimate();
       });
+    },
+
+    setHomeCard: function (m4) {
+      var liveCard = getLiveCard(), card = liveCard.card,
+          name = card.name, avatar = card.avatar,
+          $homeCard = this.$('#home-card');
+      setCSSMatrix($homeCard[0], m4);
+      if (card && (name || avatar)) {
+        if (!avatar) {
+          avatar = name ? (config.api_url + '/avatar/default?name=' + name) : '/static/img/portrait_default.png';
+        }
+        avatar = 'url(' + avatar + ')';
+      } else {
+        avatar = '';
+      }
+      $homeCard.find('.avatar').css('background-image', avatar);
     },
 
     // animation options
