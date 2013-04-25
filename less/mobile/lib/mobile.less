@@ -312,9 +312,13 @@ body.x {
     background-repeat: repeat-x;
     // 38
     -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
     -webkit-transform-style: perspective-3d;
+    transform-style: perspective-3d;
     -webkit-transform: translate3d(15px,44px,0) rotate(0deg) scale(1, 1);
+    transform: translate3d(15px,44px,0) rotate(0deg) scale(1, 1);
     -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     opacity: .92;
     //translate3d(50px,22px,0) rotate(-90deg) scale(.07, .22)
     //-webkit-transform: translate3d(60px,-27px,0) rotate(-90deg) scale(.07, .22);
@@ -349,6 +353,7 @@ body.x {
 
   .live-tip-close {
     -webkit-transform: translate3d(65.5px, -27px, 0) rotate(-90deg) scale(.07, .22);
+    transform: translate3d(65.5px, -27px, 0) rotate(-90deg) scale(.07, .22);
     opacity: 0;
   }
 
@@ -359,13 +364,9 @@ body.x {
     height: 22px;
     width: 22px;
     pointer-events: none;
-    //-webkit-transition-delay: .27s;
-    //-webkit-transition: opacity 0s ease-in-out;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
     opacity: 1;
-
-    &:s0 {
-      //-webkit-transition-delay: 0;
-    }
 
     .win {
       position: relative;
@@ -431,6 +432,11 @@ body.x {
         animation-delay: 0.4s;
       }
     }
+
+    &.start .circle {
+      -webkit-animation-play-state: running;
+      animation-play-state: running;
+    }
   }
 }
 
@@ -488,7 +494,6 @@ body.x {
       background-size: 100% 100%;
       pointer-events: none;
     }
-
   }
 
   .name {
@@ -508,6 +513,22 @@ body.x {
     -webkit-box-orient: vertical;
     display: -webkit-box;
   }
+
+  &.selected {
+    .avatar:before {
+      position: absolute;
+      display: block;
+      content: '';
+      left: -7.5px;
+      bottom: -7.5px;
+      top: -7.5px;
+      right: -7.5px;
+      background-image: url('/static/img/portrait_64_selected@2x.png');
+      background-size: 100% 100%;
+      pointer-events: none;
+    }
+  }
+
 }
 
 .card-iphone4 {
