@@ -13,7 +13,6 @@ define(function (require) {
       FooterController = require('mobilecontroller').FooterController,
       routes = require('mobileroutes');
 
-
   /**- Helpers -**/
   var now = Date.now || function () { return new Date().getTime(); };
 
@@ -23,7 +22,6 @@ define(function (require) {
     App.set('tryRedirectAt', now());
     window.location = 'exfe://crosses/' + (args || '');
   };
-
 
   var lightsaber = require('lightsaber');
 
@@ -37,7 +35,9 @@ define(function (require) {
 
   app.controllers = {};
 
-  app.controllers.footer = new FooterController();
+  app.controllers.footer = new FooterController({
+    App: app
+  });
 
   // `index`
   // index - `/#?`
@@ -62,6 +62,7 @@ define(function (require) {
   // cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8`
   app.get(/^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken);
 
+  // redirect time
   app.set('tryRedirectAt', 0);
 
   app.on('launched', function () {

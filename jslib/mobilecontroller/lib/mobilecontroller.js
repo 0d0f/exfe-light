@@ -180,7 +180,6 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.css('top',  top + 'px');
         if (this.enableTimer) {
           this.$('.redirecting').removeClass('hide');
-          //this.$('.web-version').removeClass('hide');
           this.emit('start-redirect');
         }
         this.$('.error-info').toggleClass('hide', !hasError);
@@ -212,7 +211,7 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('start-redirect', function (args) {
         var $r = $('.redirecting'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
-        var redirectTimer = setInterval(function() {
+        this.App.set('redirectTimer', setInterval(function() {
           si -= 1;
           if (si >= 1) {
             $s.text(si);
@@ -221,17 +220,14 @@ define('mobilecontroller', function (require, exports, module) {
             launchApp(args);
             //$('.actions .error-info').hide();
           }
-        }, 1000);
-        App.set('redirectTimer', redirectTimer);
+        }, 1000));
       });
 
       this.on('stop-redirect', function () {
         this.enableTimer = false;
         this.$('.get-button').removeClass('hide');
         $('.redirecting').addClass('hide');
-        var redirectTimer = App.set('redirectTimer');
-        clearInterval(redirectTimer);
-        App.set('redirectTimer', redirectTimer = void 0);
+        this.App.set('redirectTimer', clearInterval(this.App.set('redirectTimer')));
       });
     },
 
@@ -452,9 +448,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       element.on('touchstart.home', '#home-card', function () {
         clearInterval(App.set('tryTimer'));
-        clearInterval(App.set('redirectTimer'));
         App.set('tryTimer', void 0);
-        App.set('redirectTimer', void 0);
 
         self.stopAnimate();
 

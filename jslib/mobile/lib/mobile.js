@@ -35,7 +35,9 @@ define(function (require) {
 
   app.controllers = {};
 
-  app.controllers.footer = new FooterController();
+  app.controllers.footer = new FooterController({
+    App: app
+  });
 
   // `index`
   // index - `/#?`
