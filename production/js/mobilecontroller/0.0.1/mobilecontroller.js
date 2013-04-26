@@ -810,6 +810,7 @@ define('mobilecontroller', function (require, exports, module) {
           .on('touchstart.live', '.live-gather .card .avatar', function (e) {
               var $t = $(this), delta = 250, fingers = e.touches.length;
               TOUCH_TIME = now();
+              console.log(TOUCH_TIME);
               if (TOUCH_TIMEOUT) {
                 clearTimeout(TOUCH_TIMEOUT);
                 TOUCH_TIMEOUT = void 0;
@@ -828,6 +829,7 @@ define('mobilecontroller', function (require, exports, module) {
                 clearTimeout(TOUCH_TIMEOUT);
                 TOUCH_TIMEOUT = void 0;
               }
+              console.log(now() - TOUCH_TIME);
               if (now() - TOUCH_TIME < 250) {
                 var $p = $(this).parent();
                 if (!$p.hasClass('card-me')) {
