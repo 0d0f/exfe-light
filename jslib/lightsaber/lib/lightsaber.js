@@ -8,33 +8,26 @@
  *    - https://github.com/maccman/spine/blob/master/lib/route.js
  */
 define('lightsaber', function (require, exports, module) {
+  'use strict';
+
   /**
    * Module dependencies
    */
-  var Emitter = require('emitter');
-  var $ = require('jquery') || require('zepto');
-  var proxy = $.proxy;
+  var Emitter = require('emitter'),
+      $ = require('jquery') || require('zepto'),
+      proxy = $.proxy;
 
-  var win = window
-    , location = win.location
-    , history = win.history
-    , historySupport
-    , ROOT = '/';
+  var location = window.location,
+      history = window.history,
+      historySupport,
+      ROOT = '/';
 
   // http://cacheandquery.com/blog/category/technology/
   var _firstLoad = false;
-  $(win).on('load', function (e) {
+  $(window).on('load', function (e) {
     _firstLoad = true;
     setTimeout(function () { _firstLoad = false; }, 0);
   });
-
-  // export module
-  exports = module.exports = createApplication;
-
-  var proto;
-
-  // lightsaber version
-  exports.version = '0.0.4';
 
   // Create Application
   function createApplication() {
@@ -45,6 +38,14 @@ define('lightsaber', function (require, exports, module) {
     app.init();
     return app;
   }
+
+  // export module
+  exports = module.exports = createApplication;
+
+  var proto;
+
+  // lightsaber version
+  exports.version = '0.0.5';
 
   // Application
   function Application() {}
@@ -177,7 +178,8 @@ define('lightsaber', function (require, exports, module) {
       , view;
 
     if ('function' === typeof options) {
-      fn = options, options = {};
+      fn = options;
+      options = {};
     }
 
     // merge app.locals
@@ -260,7 +262,7 @@ define('lightsaber', function (require, exports, module) {
   };
 
   // get method request
-  proto.get = function (path) {
+  proto.get = function () {
     var args = [].slice.call(arguments);
     this.initRouter();
     return this._router.route.apply(this._router, args);
@@ -353,13 +355,13 @@ define('lightsaber', function (require, exports, module) {
     if (false !== options.popstate) {
 
       if (this.historySupport) {
-        //$(win).on('popstate', { app: this }, this.change);
-        $(win).on('popstate', proxy(this.change, this));
-        //win.addEventListener('popstate', this.change, false);
+        //$(window).on('popstate', { app: this }, this.change);
+        $(window).on('popstate', proxy(this.change, this));
+        //window.addEventListener('popstate', this.change, false);
       } else {
-        //$(win).on('hashchange', { app: this }, this.change);
-        $(win).on('hashchange', proxy(this.change, this));
-        //win.addEventListener('hashchange', this.change, false);
+        //$(window).on('hashchange', { app: this }, this.change);
+        $(window).on('hashchange', proxy(this.change, this));
+        //window.addEventListener('hashchange', this.change, false);
       }
 
     }
@@ -413,10 +415,14 @@ define('lightsaber', function (require, exports, module) {
 
 
   // Request
-  function Request() {
+  function Request(enableFullUrlPath) {
+    // listen full url path
+    this.enableFullUrlPath = !!enableFullUrlPath;
+
     // session
     this.session = {};
 
+    this.path = '/';
     this.method = 'GET';
     this.updateUrl();
   }
@@ -427,10 +433,12 @@ define('lightsaber', function (require, exports, module) {
   proto.updateUrl = function () {
     this.host = location.hostname;
     this.port = location.port || 80;
-    this.path = location.pathname;
+    if (this.enableFullUrlPath) {
+      this.path = location.pathname;
+    }
     this.hash = decodeURIComponent(location.hash);
     this.querystring = decodeURIComponent(location.search);
-    this.url = location.pathname + this.querystring + this.hash;
+    this.url = this.path + this.querystring + this.hash;
   };
 
   proto.param = function (name, defaultValue) {
@@ -475,9 +483,9 @@ define('lightsaber', function (require, exports, module) {
 
     // `back` `forward`
     //if (1 === argsLen) {
-      url = arguments[0];
-      if (url === 'back' || url === 'forward') {
-        history[url]();
+    url = arguments[0];
+    if (url === 'back' || url === 'forward') {
+      history[url]();
       //} else {
       //  // 进入线程, 防止失败
       //  _redirect(url);
@@ -501,7 +509,7 @@ define('lightsaber', function (require, exports, module) {
     this.state.id = uuid();
     this.pushState();
 
-    $(win).triggerHandler('popstate');
+    $(window).triggerHandler('popstate');
   };
 
   // save state
@@ -517,8 +525,7 @@ define('lightsaber', function (require, exports, module) {
   proto.render = function (view, options, fn) {
     var self = this
       , options = options || {}
-      , app = this.app
-      , req = app.request;
+      , app = this.app;
 
     // support callback function as second arg
     if ('function' === typeof options) {
@@ -589,8 +596,7 @@ define('lightsaber', function (require, exports, module) {
         , paramVal
         , route
         , keys
-        , key
-        , ret;
+        , key;
 
       // match next route
       function nextRoute(err) {
