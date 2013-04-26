@@ -5,6 +5,7 @@ define('mobilecontroller', function (require, exports, module) {
       Store = require('store'),
       TWEEN = require('tween'),
       config = require('config'),
+      Handlebars = require('handlebars'),
 
       util   = require('util'),
       trim = util.trim,
@@ -972,18 +973,24 @@ define('mobilecontroller', function (require, exports, module) {
       Store.set('livecard', this.liveCard);
       var card = this.liveCard.card;
       if (card.identities.length) {
-        card._time = (new Date()).getTime()
+        card.timestamp = now();
         Live.init(card, $.proxy(this.liveCallback, this));
       }
     },
 
     // 是否更新界面
-    state: 0,
+    state: 1,
 
     liveCallback: function (result) {
+      var liveCard = this.liveCard, myCard = result.me;
+      alert(JSON.stringify(result));
       if (this.state === 1) {
-        this.updateMe(this.liveCard.card = result.me);
-        Store.set('livecard', this.liveCard);
+        if (myCard
+            && myCard.name
+            && myCard.identities.length) {
+          this.updateMe(liveCard.card = myCard);
+          Store.set('livecard', liveCard);
+        }
       }
       this._others = result.others;
       this.updateOthers();
@@ -1100,30 +1107,25 @@ define('mobilecontroller', function (require, exports, module) {
       this.emit('post-card');
     },
 
-    genIdentity: (function () {
-      var LI_TMP = '<li class="identity">'
-        + '<span class="provider">{{provider_alias}}</span>'
-        + '<input data-provider="{{provider}}" style="" autocapitalize="none" class="external_username input-item normal" value="{{external_username}}" type="email"/>'
-        + '<div class="delete hidden"><div class="delete-x">x</div></div>'
-        + '</li>';
+    genIdentity: function (identity) {
+      var tmpl = Handlebars.compile($('#live-li-identity-tmpl').html()),
+          provider = identity.provider;
+      if (provider === 'email') {
+        provider = 'Email';
+      } else if (provider === 'phone') {
+        provider = 'Mobile';
+      } else if (provider === 'facebook') {
+        provider = 'Facebook';
+      }
 
-      return function gen(identity) {
-        var provider = identity.provider;
-        if (provider === 'email') {
-          provider = 'Email';
-        } else if (provider === 'phone') {
-          provider = 'Mobile';
-        } else if (provider === 'facebook') {
-          provider = 'Facebook';
+      var $li = $(
+        tmpl({
+          provider_alias: provider,
+          identity: identity
         }
-
-        var $li = $(LI_TMP.replace(/\{\{provider\}\}/g, identity.provider)
-          .replace(/\{\{provider_alias\}\}/g, provider)
-          .replace(/\{\{external_username\}\}/g, identity.external_username));
-        return $li;
-      };
-
-    })(),
+      ));
+      return $li;
+    },
 
     resetCard: function () {
       this.state = 0;
