@@ -759,8 +759,8 @@ define('mobilecontroller', function (require, exports, module) {
 
         identity = parseId(v);
 
+        $(this).parent().remove();
         if (identity && identity.provider) {
-          $(this).parent().remove();
           self.removeIdentity(identity);
         }
 
