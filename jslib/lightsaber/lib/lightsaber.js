@@ -433,9 +433,8 @@ define('lightsaber', function (require, exports, module) {
   proto.updateUrl = function () {
     this.host = location.hostname;
     this.port = location.port || 80;
-    if (this.enableFullUrlPath) {
-      this.path = location.pathname;
-    }
+    this.fullpath = location.pathname;
+    this.enableFullUrlPath && (this.path = this.fullpath);
     this.hash = decodeURIComponent(location.hash);
     this.querystring = decodeURIComponent(location.search);
     this.url = this.path + this.querystring + this.hash;
