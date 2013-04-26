@@ -14,14 +14,14 @@ define(function (require) {
       routes = require('mobileroutes');
 
   /**- Helpers -**/
-  var now = Date.now || function () { return new Date().getTime(); };
+  var now = Date.now || function () { return new Date().getTime(); },
 
-  var lastBreathe = now();
+      lastBreathe = now(),
 
-  var launchApp = function (args) {
-    App.set('tryRedirectAt', now());
-    window.location = 'exfe://crosses/' + (args || '');
-  };
+      launchApp = function (args) {
+        App.set('tryRedirectAt', now());
+        window.location = 'exfe://crosses/' + (args || '');
+      };
 
   var lightsaber = require('lightsaber');
 
@@ -35,9 +35,8 @@ define(function (require) {
 
   app.controllers = {};
 
-  app.controllers.footer = new FooterController({
-    App: app
-  });
+  // @todo: 优化这种引用 或者 改掉
+  app.controllers.footer = new FooterController({ App: app });
 
   // `index`
   // index - `/#?`

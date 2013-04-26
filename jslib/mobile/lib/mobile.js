@@ -14,14 +14,14 @@ define(function (require) {
       routes = require('mobileroutes');
 
   /**- Helpers -**/
-  var now = Date.now || function () { return new Date().getTime(); };
+  var now = Date.now || function () { return new Date().getTime(); },
 
-  var lastBreathe = now();
+      lastBreathe = now(),
 
-  var launchApp = function (args) {
-    App.set('tryRedirectAt', now());
-    window.location = 'exfe://crosses/' + (args || '');
-  };
+      launchApp = function (args) {
+        App.set('tryRedirectAt', now());
+        window.location = 'exfe://crosses/' + (args || '');
+      };
 
   var lightsaber = require('lightsaber');
 
