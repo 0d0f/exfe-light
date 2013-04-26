@@ -983,6 +983,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     liveCallback: function (result) {
       var liveCard = this.liveCard, myCard = result.me;
+      // @todo: 检查时间 timestamp
       if (this.state === 1) {
         if (myCard
             && myCard.name
@@ -1248,27 +1249,25 @@ define('mobilecontroller', function (require, exports, module) {
       coords[3][3] = [ w * 0.875 - l, h * 0.22 + 40 - t ];
     },
 
-    genCard: (function () {
-      var CARD_TMP = '<div data-url="{{avatar}}" id="{{id}}" data-g="{{g}}" data-i="{{i}}" class="card {{class}}" style="-webkit-transform: matrix3d({{matrix}});">'
-          + '<div class="avatar" style="background-image: url({{avatar}})"></div>'
-          + '<div class="name">{{name}}</div>'
-        + '</div>';
+    genCard: function (card, pos, g, i, isMe, ios) {
+      var tmpl = Handlebars.compile($('#live-card-tmpl').html()),
+          m = M4.slice(0);
+      m[12] = pos[0];
+      m[13] = pos[1];
 
-      return function (card, pos, g, i, isMe, ios) {
-        var m = M4.slice(0);
-        m[12] = pos[0];
-        m[13] = pos[1];
-        var $card = $(CARD_TMP.replace(/\{\{avatar\}\}/g, card.avatar)
-          .replace('{{id}}', card.id)
-          .replace('{{class}}', (isMe ? 'card-me' : 'card-other hide') + (ios === 'iphone4' ? ' card-iphone4' : ''))
-          .replace('{{g}}', g)
-          .replace('{{i}}', i)
-          .replace('{{name}}', card.name)
-          .replace('{{matrix}}', m.join(',')));
-        $card.data('card', card);
-        return $card;
-      };
-    })(),
+      var $card = $(
+        tmpl({
+          g: g,
+          i: i,
+          matrix: m.join(','),
+          'class': (isMe ? 'card-me' : 'card-other hide') + (ios === 'iphone4' ? ' card-iphone4' : ''),
+          card: card
+        })
+      );
+
+      $card.data('card', card);
+      return $card;
+    },
 
     addCard: function (card) {
       var MAPS = this.MAPS;
