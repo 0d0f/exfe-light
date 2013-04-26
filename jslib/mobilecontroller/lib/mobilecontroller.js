@@ -11,6 +11,8 @@ define('mobilecontroller', function (require, exports, module) {
       trim = util.trim,
       parseId = util.parseId,
 
+      iPad = navigator.userAgent.match(/iPad/),
+
       Live   = require('live'),
 
       escape = function (html, encode) {
@@ -187,6 +189,9 @@ define('mobilecontroller', function (require, exports, module) {
           this.$('.redirecting').removeClass('hide');
           this.emit('start-redirect');
         }
+        if (iPad) {
+          this.$('.web-version').removeClass('hide');
+        }
         this.$('.error-info').toggleClass('hide', !hasError);
       });
 
@@ -207,10 +212,9 @@ define('mobilecontroller', function (require, exports, module) {
         if (args) {
           this.emit('start-redirect', args);
         } else {
-          this.$('.get-button, .web-version').removeClass('hide');
+          this.$('.get-button').removeClass('hide');
           this.emit('stop-redirect');
         }
-        //this.$('.get-button, .web-version').removeClass('hide');
       });
 
       this.on('start-redirect', function (args) {
@@ -346,8 +350,8 @@ define('mobilecontroller', function (require, exports, module) {
           password = this.$('#password').val();
       if (password.length >= 4) {
         $button
-          .addClass('disabled')
-          .prop('disabled', true);
+          .addClass('disabled');
+          //.prop('disabled', true);
 
         $.ajax({
           type: 'POST',
@@ -362,14 +366,14 @@ define('mobilecontroller', function (require, exports, module) {
             $eye.removeClass('hide');
             $error.html('Failed to set password. Please try later.').removeClass('hide');
             // $('#password').prop('disabled', false);
-            $button.removeClass('disabled').prop('disabled', false);
+            $button.removeClass('disabled');//.prop('disabled', false);
           },
           error: function () {
             $loading.addClass('hide');
             $eye.removeClass('hide');
             $error.html('Failed to set password. Please try later.').removeClass('hide');
             // $('#password').prop('disabled', false);
-            $button.removeClass('disabled').prop('disabled', false);
+            $button.removeClass('disabled');//.prop('disabled', false);
           }
         });
       } else {
@@ -693,7 +697,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.focus();
       })
 
-        .on('touchstart.live', '.live-form', function (e) {
+        .on('touchend.live', '.live-form', function (e) {
           e.stopPropagation();
           if ($(e.target).hasClass('live-form')) {
             App.response.redirect('/');
@@ -739,15 +743,17 @@ define('mobilecontroller', function (require, exports, module) {
       })
       .on('blur.live', '.list .input-item', function () {
         $(this).next().addClass('hidden')
+        self.updateIdentityLi(this);
       })
 
       .on('touchstart.live', '.list .delete', function () {
         var input = $(this).prev()[0],
             v = trim(input.value),
             dp = input.getAttribute('data-provider'),
+            isFacebook = dp === 'facebook',
             identity;
 
-        if (dp === 'facebook') {
+        if (isFacebook) {
           v += '@facebook';
         }
 
@@ -757,21 +763,39 @@ define('mobilecontroller', function (require, exports, module) {
           $(this).parent().remove();
           self.removeIdentity(identity);
         }
+
+        if (isFacebook) {
+          self.emit('show-add-facebook');
+        }
       })
 
         .on('touchstart.live', '.btn-start', function () {
+          /*
           var disabled = this.disabled;
           if (!disabled) {
-            setTimeout(function () {
-              $('.input-item').blur();
-            }, 0)
+          */
+          var $inputs = $('.list .input-item');
+          $inputs.each(function () {
+            self.updateIdentityLi(this);
+          });
 
+          var cardName = document.getElementById('card-name');
+          cardName.blur();
+          var v = trim(cardName.value);
+          if (v) {
+            self.liveCard.card.name = v;
+          } else {
+            self.setCardName(cardName);
+          }
+
+          setTimeout(function () {
             if (self.inspectFields()) {
               self.emit('post-card');
               self.emit('live-gather');
             }
+          }, 23)
 
-          }
+          //}
         })
         .on('hold:live', '.live-gather .card .avatar', function () {
             var t = this, pe = t.parentNode;
@@ -922,8 +946,8 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('disabled-live-btn', function (type) {
         this.$('.btn-start')
-          .toggleClass('disabled', type)
-          .prop('disabled', type);
+          .toggleClass('disabled', type);
+          //.prop('disabled', type);
       });
 
       this.on('live-gather', function () {
@@ -941,6 +965,69 @@ define('mobilecontroller', function (require, exports, module) {
           this.updateOthers();
         }
       });
+    },
+
+    // 编辑 input, 后检查更新
+    updateIdentityLi: function (elem) {
+      var eun = elem.getAttribute('data-external-username'),
+          p = elem.getAttribute('data-provider'),
+          n = elem.getAttribute('data-name'),
+          empty = '',
+          v = trim(elem.value), delable = false, failed = false, addable = false, identity;
+
+      if (v) {
+        if (p === 'facebook') {
+          v += '@facebook';
+        }
+        identity = parseId(v);
+        if (identity && identity.provider) {
+          var has = this.findIdentity(identity), isSelf = (identity.provider === p && identity.external_username === eun);
+          if (has && !isSelf) {
+            elem.value = empty;
+          }
+          if (!has && !isSelf) {
+            addable = true;
+            delable = true;
+          }
+        } else {
+          failed = true;
+          delable = true;
+        }
+      } else {
+        failed = true;
+        delable = true;
+      }
+
+      if (failed) {
+        elem.value = '';
+        elem.setAttribute('data-name', empty);
+        elem.setAttribute('data-external-username', empty);
+        elem.setAttribute('data-provider', empty);
+        setTimeout(function () {
+          alert('Invalid contact.');
+        }, 14);
+      }
+
+      if (addable) {
+        elem.setAttribute('data-name', identity.name);
+        elem.setAttribute('data-external-username', identity.external_username);
+        elem.setAttribute('data-provider', identity.provider);
+        elem.value = identity.external_username;
+        $(elem).prev().text(this.aliasProvider(identity.provider));
+        this.updateLiveCard(identity, '+');
+      }
+
+      if (delable) {
+        this.updateLiveCard({
+          name: n,
+          external_username: eun,
+          provider: p
+        }, '-', true);
+      }
+
+      if (delable || addable) {
+        this.emit('post-card');
+      }
     },
 
     postContacts: function () {},
@@ -975,7 +1062,7 @@ define('mobilecontroller', function (require, exports, module) {
     postMyCard: function () {
       Store.set('livecard', this.liveCard);
       var card = this.liveCard.card;
-      if (card.identities.length) {
+      if (card.name && card.identities.length) {
         card.timestamp = now();
         Live.init(card, $.proxy(this.liveCallback, this));
       }
@@ -1030,11 +1117,28 @@ define('mobilecontroller', function (require, exports, module) {
     },
 
     resetLiveCard: function () {
+      this.emit('disabled-live-btn', true);
       Store.clear('livecard');
       this.liveCard = getLiveCard();
     },
 
-    updateLiveCard: function (identity, operation) {
+    findIdentity: function (identity) {
+      var card = this.liveCard.card,
+          identities = card.identities,
+          len = identities.length;
+      if (len) {
+        for (var i = 0; i < len; ++i) {
+          var id = identities[i];
+          if (id.provider === identity.provider
+            && id.external_username === identity.external_username) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+
+    updateLiveCard: function (identity, operation, enable) {
       var card = this.liveCard.card, identities = card.identities;
       // add
       if (operation === '+') {
@@ -1045,12 +1149,11 @@ define('mobilecontroller', function (require, exports, module) {
           var id = identities[i];
           if (id.provider === identity.provider
             && id.external_username === identity.external_username) {
-
             identities.splice(i, 1);
             break;
           }
         }
-        if (identities.length === 0) {
+        if (!enable && identities.length === 0) {
           this.resetLiveCard();
         }
       }
@@ -1110,9 +1213,7 @@ define('mobilecontroller', function (require, exports, module) {
       this.emit('post-card');
     },
 
-    genIdentity: function (identity) {
-      var tmpl = Handlebars.compile($('#live-li-identity-tmpl').html()),
-          provider = identity.provider;
+    aliasProvider: function (provider) {
       if (provider === 'email') {
         provider = 'Email';
       } else if (provider === 'phone') {
@@ -1120,6 +1221,14 @@ define('mobilecontroller', function (require, exports, module) {
       } else if (provider === 'facebook') {
         provider = 'Facebook';
       }
+      return provider;
+    },
+
+    genIdentity: function (identity) {
+      var tmpl = Handlebars.compile($('#live-li-identity-tmpl').html()),
+          provider = identity.provider;
+
+      provider = this.aliasProvider(provider);
 
       var $li = $(
         tmpl({
