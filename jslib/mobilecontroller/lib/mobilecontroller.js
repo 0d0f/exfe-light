@@ -983,7 +983,6 @@ define('mobilecontroller', function (require, exports, module) {
 
     liveCallback: function (result) {
       var liveCard = this.liveCard, myCard = result.me;
-      alert(JSON.stringify(result));
       if (this.state === 1) {
         if (myCard
             && myCard.name
