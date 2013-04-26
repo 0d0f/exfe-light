@@ -124,8 +124,12 @@ define('mobilecontroller', function (require, exports, module) {
 
     init: function () {},
 
-    _destory: function () {
+    destory: function () {
       this.element.off();
+      this._destory();
+    },
+
+    _destory: function () {
       delete Controller.caches[this.cid];
       Controller.superclass.destory.call(this);
     },
@@ -828,7 +832,6 @@ define('mobilecontroller', function (require, exports, module) {
                 clearTimeout(TOUCH_TIMEOUT);
                 TOUCH_TIMEOUT = void 0;
               }
-              console.log(now() - TOUCH_TIME);
               if (now() - TOUCH_TIME < 250) {
                 var $p = $(this).parent();
                 if (!$p.hasClass('card-me')) {
@@ -1317,7 +1320,7 @@ define('mobilecontroller', function (require, exports, module) {
         })
         .onComplete(function () {
           MAPS.unshift([g, i]);
-          elem.remove();
+          elem.parentNode.removeChild(elem);
           TWEEN.remove(this);
         })
         .start();
