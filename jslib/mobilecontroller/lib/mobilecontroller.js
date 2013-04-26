@@ -1275,7 +1275,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     addCard: function (card) {
       var MAPS = this.MAPS;
-      if (MAPS.length === 0) {
+      if (!MAPS || MAPS.length === 0) {
         return false;
       }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], pos = this.coords[g][i],
