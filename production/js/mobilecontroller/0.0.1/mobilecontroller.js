@@ -906,6 +906,9 @@ define('mobilecontroller', function (require, exports, module) {
           'min-height': ((h - 100) / h) * 100 + '%'
         });
 
+        this.measurePositions(screen.width, screen.height - 10, 64 / 2,  64 / 2);
+        this.MAPS = this._MAPS.slice(0);
+
         this.$('.identities .list').empty();
         this.liveCard = getLiveCard();
         this.updateMyCardForm();
@@ -927,10 +930,6 @@ define('mobilecontroller', function (require, exports, module) {
         this.$('.live-form').addClass('hide');
         this.$('.live-gather').removeClass('hide');
         this.$('.wave').addClass('start');
-
-        this.measurePositions(this.screen.width, this.screen.height - 10, 64 / 2,  64 / 2);
-
-        this.MAPS = this._MAPS.slice(0);
 
         this.$('.live-gather').find('.card').remove();
         var card = this.liveCard.card;
@@ -1230,6 +1229,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     coords: ''.split(),
     _MAPS: [ [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2], [2, 3], [3, 0], [3, 1], [3, 2], [3, 3] ],
+    MAPS: ''.split(),
     measurePositions: function (w, h, l, t) {
       var coords = this.coords;
 
@@ -1275,7 +1275,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     addCard: function (card) {
       var MAPS = this.MAPS;
-      if (MAPS.length === 0) {
+      if (!MAPS || MAPS.length === 0) {
         return false;
       }
       var gi = MAPS.shift(), g = gi[0], i = gi[1], pos = this.coords[g][i],
