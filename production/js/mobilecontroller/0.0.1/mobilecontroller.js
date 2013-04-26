@@ -828,7 +828,7 @@ define('mobilecontroller', function (require, exports, module) {
                 clearTimeout(TOUCH_TIMEOUT);
                 TOUCH_TIMEOUT = void 0;
               }
-              alert(now() - TOUCH_TIME);
+              console.log(now() - TOUCH_TIME);
               if (now() - TOUCH_TIME < 250) {
                 var $p = $(this).parent();
                 if (!$p.hasClass('card-me')) {
