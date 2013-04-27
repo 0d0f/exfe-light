@@ -2036,6 +2036,10 @@ button .exfe {
   right: 0;
   width: 64px;
   height: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
   background: -moz-linear-gradient(90deg, #23528c 0%, #369fe9 100%) no-repeat 0, #000000;
   background: -webkit-gradient(linear, left bottom, left top, from(#23528c), to(#369fe9)) no-repeat 0, #000000;
   border: 0;
