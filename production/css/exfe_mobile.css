@@ -2049,7 +2049,6 @@ button .exfe {
   right: 0;
   bottom: 0;
   left: 0;
-  background: url(/static/img/bell_26@2x.png) no-repeat 50% 50%;
   background-size: 30px;
   content: "";
 }
