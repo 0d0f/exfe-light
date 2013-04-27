@@ -475,13 +475,20 @@ define('mobilecontroller', function (require, exports, module) {
         App.response.redirect('/#live');
       });
 
-      this.on('show', function (screen) {
+      this.on('show', function (screen, error) {
         // set `logo` & `my-card` position
         var h = screen.height;
         this.$('.logo-box .inner').css('top', (h - 300) / 2 + 'px');
         element.removeClass('hide');
         MCP1[13] = (h - 64) / 2;
         this.setHomeCard(MCP1);
+
+        error = !!(error && (error.code === 404));
+
+        var $title = this.$('.title');
+        $title.find('.normal').toggleClass('hide', error);
+        $title.find('.invalid').toggleClass('hide', !error);
+
         this.startAnimate();
       });
     },
@@ -700,6 +707,7 @@ define('mobilecontroller', function (require, exports, module) {
         .on('touchend.live', '.live-form', function (e) {
           e.stopPropagation();
           if ($(e.target).hasClass('live-form')) {
+            element.find('.input-item').blur();
             App.response.redirect('/');
           }
         })
@@ -770,10 +778,6 @@ define('mobilecontroller', function (require, exports, module) {
       })
 
         .on('touchstart.live', '.btn-start', function () {
-          /*
-          var disabled = this.disabled;
-          if (!disabled) {
-          */
           var $inputs = $('.list .input-item');
           $inputs.each(function () {
             self.updateIdentityLi(this);
@@ -935,7 +939,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         this.$('.identities .list').empty();
         this.liveCard = getLiveCard();
-        this.updateMyCardForm();
+        this. updateMyCardForm();
 
         this.startAnimate();
       });
@@ -999,7 +1003,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
       if (failed) {
-        elem.value = '';
+        //elem.value = '';
         elem.setAttribute('data-name', empty);
         elem.setAttribute('data-external-username', empty);
         elem.setAttribute('data-provider', empty);
@@ -1037,6 +1041,13 @@ define('mobilecontroller', function (require, exports, module) {
       return card.name && card.identities.length;
     },
 
+    updateCardName: function (card) {
+      if (card.name) {
+        this.liveCard.card.name = document.getElementById('card-name').value = card.name;
+        Store.set('livecard', this.liveCard)
+      }
+    },
+
     updateMe: function (card) {
       var icard = document.getElementById('icard'), a0 = icard.getAttribute('data-url'), a1;
       if (a0 !== card.avatar) {
@@ -1049,9 +1060,6 @@ define('mobilecontroller', function (require, exports, module) {
           icard.setAttribute('data-url', a1);
         }
       }
-      if (card.name) {
-        document.getElementById('card-name').value = card.name;
-      }
       var bioDiv = document.getElementById('card-bio');
       if (card.bio) {
         bioDiv.innerText = card.bio;
@@ -1063,7 +1071,6 @@ define('mobilecontroller', function (require, exports, module) {
       Store.set('livecard', this.liveCard);
       var card = this.liveCard.card;
       if (card.name && card.identities.length) {
-        card.timestamp = now();
         Live.init(card, $.proxy(this.liveCallback, this));
       }
     },
@@ -1078,6 +1085,12 @@ define('mobilecontroller', function (require, exports, module) {
         if (myCard
             && myCard.name
             && myCard.identities.length) {
+
+          // 1 minute
+          if (now() - myCard.timestamp > 60 * 1000) {
+            this.updateCardName(myCard);
+          }
+
           this.updateMe(liveCard.card = myCard);
           Store.set('livecard', liveCard);
         }
@@ -1092,6 +1105,7 @@ define('mobilecontroller', function (require, exports, module) {
           identities = card.identities,
           len;
       if (identities && (len = identities.length)) {
+        this.updateCardName(card);
         this.updateMe(card);
 
         this.postMyCard();

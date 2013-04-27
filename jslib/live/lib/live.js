@@ -24,12 +24,15 @@ define('live', function (require) {
             avatar     : '',
             bio        : '',
             identities : [],
+            timestamp  : 0
         },
         latitude  : '',
         longitude : '',
         accuracy  : '',
         traits    : []
     };
+
+    var now = Date.now || function () { return new Date().getTime(); };
 
     var streaming_api_url = Config.streaming_api_url;
 
@@ -119,6 +122,7 @@ define('live', function (require) {
                             myData.card.avatar     = rawCards[i].avatar;
                             myData.card.bio        = rawCards[i].bio;
                             myData.card.identities = rawCards[i].identities;
+                            myData.card.timestamp  = rawCards[i].timestamp;
                         } else {
                             if (!rawCards[i].avatar) {
                                 rawCards[i].avatar = encodeURI(
@@ -309,6 +313,7 @@ define('live', function (require) {
                 myData.card.avatar     = card.avatar;
                 myData.card.bio        = card.bio;
                 myData.card.identities = clone(card.identities);
+                myData.card.timestamp  = now();
                 log('Set my card: ' + JSON.stringify(myData.card));
             } else {
                 log('Card error');

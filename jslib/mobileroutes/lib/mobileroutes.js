@@ -35,8 +35,8 @@ define('mobileroutes', function (require, exports, module) {
           }
         });
       }
-      homeCont.emit('show', screen);
-      footerCont.emit('show', screen, false, false, error);
+      homeCont.emit('show', screen, error);
+      footerCont.emit('show', screen, false, false, error === true);
       delete req.error;
 
       app.currPageName = 'HOME';
