@@ -244,7 +244,7 @@ define('mobilecontroller', function (require, exports, module) {
       exfee_id = this.cross.exfee_id;
       token = this.cross.token;
       var identity = parseId(email);
-      if (identity && identity.provider !== 'provider') {
+      if (identity && identity.provider !== 'email') {
         $('#email.email').attr('placeholder', 'Bad email Address.');
         return;
       }
