@@ -56,7 +56,7 @@ define('mobileroutes', function (require, exports, module) {
               && time.begin_at.timezone) {
               cross.time = renderCrossTime(time);
             } else {
-              cross.time.tobe = true;
+              cross.time.tobe = 'tobe';
             }
 
             // place
@@ -80,6 +80,8 @@ define('mobileroutes', function (require, exports, module) {
               cross.place.href = 'http://maps.google.com/maps?daddr='
                 + encodeURIComponent(cross.place.title) + '@'
                 + lat  + ',' + lng;
+            } else {
+              cross.place.tobe = 'tobe';
             }
 
             // title background
