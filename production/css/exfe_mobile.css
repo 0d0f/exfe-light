@@ -418,10 +418,13 @@ body {
 
 #app-main {
   position: relative;
-  display: -webkit-box;
   width: 320px;
   height: 100%;
   margin: 0 auto;
+}
+
+.app-box {
+  display: -webkit-box;
   -webkit-box-orient: vertical;
 }
 

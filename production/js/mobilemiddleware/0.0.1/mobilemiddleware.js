@@ -12,7 +12,9 @@ define('mobilemiddleware', function (require, exports, module) {
     }
 
     return smsToken;
-  };
+  },
+
+  iPhone = navigator.userAgent.match(/iPhone/);
 
 
   module.exports = {
@@ -23,6 +25,10 @@ define('mobilemiddleware', function (require, exports, module) {
       setTimeout(function() {
         window.scrollTo(0, 0);
       }, 0);
+
+      if (!iPhone) {
+        $('#app-main').addClass('app-box');
+      }
 
       // Status-bar: 20px
       // Nav-bar: 60px
