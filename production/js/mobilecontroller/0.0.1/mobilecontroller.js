@@ -196,6 +196,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('show-from-cross', function (exfee_id, token, args) {
+        this.emit('stop-redirect');
         this.element.addClass('ft-bg');
         this.cross = {
           exfee_id: exfee_id,
@@ -213,7 +214,6 @@ define('mobilecontroller', function (require, exports, module) {
           this.emit('start-redirect', args);
         } else {
           this.$('.get-button').removeClass('hide');
-          this.emit('stop-redirect');
         }
       });
 
