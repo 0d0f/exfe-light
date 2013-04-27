@@ -177,7 +177,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         })
         .on('click.footer', '.subscribe .btn_mail', function () {
-          var email = self.$('#email').val();
+          var email = trim(self.$('#email').val());
           self.addNotificationIdentity(email);
         })
 
@@ -243,7 +243,8 @@ define('mobilecontroller', function (require, exports, module) {
     addNotificationIdentity: function (email, exfee_id, token) {
       exfee_id = this.cross.exfee_id;
       token = this.cross.token;
-      if (!/^[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(email)) {
+      var identity = parseId(email);
+      if (identity && identity.provider !== 'provider') {
         $('#email.email').attr('placeholder', 'Bad email Address.');
         return;
       }
@@ -251,7 +252,7 @@ define('mobilecontroller', function (require, exports, module) {
         type: 'POST',
         url: config.api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
         data: {
-          provider: 'emailuu',
+          provider: 'email',
           external_username: email
         },
         success : function(data) {
