@@ -284,7 +284,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     listen: function () {
       var self = this,
-          smsToken = this.smsToken;
+          resolveToken = this.resolveToken;
       this.on('show', function (req, res) {
         var cb = function () {
           // error getting identity informations
@@ -294,17 +294,17 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.removeClass('hide');
         $.ajax({
           type: 'POST',
-          url: config.api_url + '/Users/' + smsToken.user_id + '?token=' + smsToken.token,
-          data: { token : smsToken.token },
+          url: config.api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
+          data: { token : resolveToken.token },
           success: function (data) {
             if (data && data.meta && data.meta.code === 200) {
               var user = data.response.user,
                   identities = user.identities;
               for (var i = 0, len = identities.length; i < len; ++i) {
                 var identity = identities[i];
-                if (identity.id === smsToken.identity_id) {
+                if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
-                  App.controllers.footer.emit('start-redirect', '?user_id=' + user.user_id + '&token=' + smsToken.token);
+                  App.controllers.footer.emit('start-redirect', '?user_id=' + user.user_id + '&token=' + resolveToken.token);
                   return;
                 }
               }
@@ -387,7 +387,7 @@ define('mobilecontroller', function (require, exports, module) {
     listen: function () {
       var self = this,
           element = this.element,
-          smsToken = this.smsToken;
+          resolveToken = this.resolveToken;
 
       element.on('touchstart.setpassword', '.eye', function () {
         var $input = $(this).prev();
@@ -417,8 +417,8 @@ define('mobilecontroller', function (require, exports, module) {
 
         $.ajax({
           type: 'POST',
-          url: config.api_url + '/Users/' + smsToken.user_id + '?token=' + smsToken.token,
-          data: { token : smsToken.token },
+          url: config.api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
+          data: { token : resolveToken.token },
           success: function (data) {
             var user = data.response.user;
             if (data && data.meta && data.meta.code === 200) {
