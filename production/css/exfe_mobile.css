@@ -434,7 +434,6 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   color: white;
-  background: url("/static/img/homebar_bg@2x.png");
 }
 
 .page-header .center {
@@ -1350,10 +1349,10 @@ button .exfe {
 }
 
 .verify-actions {
-  width: 280px;
-  padding-top: 20px;
+  padding: 0 20px;
   margin-right: auto;
   margin-left: auto;
+  background: #FAFAFA;
 }
 
 .identity {
