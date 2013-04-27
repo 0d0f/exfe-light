@@ -530,6 +530,10 @@ body {
   line-height: 18px;
 }
 
+.logo-box .title .invalid p {
+  color: #FFEFF2;
+}
+
 .logo-box .inner {
   position: absolute;
   top: 0;

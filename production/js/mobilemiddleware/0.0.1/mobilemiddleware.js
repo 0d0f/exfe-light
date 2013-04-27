@@ -106,6 +106,9 @@ define('mobilemiddleware', function (require, exports, module) {
     },
 
     errorHandler: function (req, res) {
+      req.error = {
+        code: 404
+      };
       res.redirect('/');
     }
 

@@ -475,13 +475,20 @@ define('mobilecontroller', function (require, exports, module) {
         App.response.redirect('/#live');
       });
 
-      this.on('show', function (screen) {
+      this.on('show', function (screen, error) {
         // set `logo` & `my-card` position
         var h = screen.height;
         this.$('.logo-box .inner').css('top', (h - 300) / 2 + 'px');
         element.removeClass('hide');
         MCP1[13] = (h - 64) / 2;
         this.setHomeCard(MCP1);
+
+        error = !!(error && (error.code === 404));
+
+        var $title = this.$('.title');
+        $title.find('.normal').toggleClass('hide', error);
+        $title.find('.invalid').toggleClass('hide', !error);
+
         this.startAnimate();
       });
     },
@@ -996,7 +1003,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
       if (failed) {
-        elem.value = '';
+        //elem.value = '';
         elem.setAttribute('data-name', empty);
         elem.setAttribute('data-external-username', empty);
         elem.setAttribute('data-provider', empty);
