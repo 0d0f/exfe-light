@@ -193,7 +193,7 @@ ExfeeWidget = {
 
     soft_limit       : 12,
 
-    hard_limit       : 20,
+    hard_limit       : 50,
 
 
     make : function(dom_id, editable, callback) {
@@ -378,7 +378,7 @@ ExfeeWidget = {
 
     addExfee : function(identity, host, rsvp) {
         var items = ExfeeWidget.summary().items;
-        if (items < ExfeeWidget.soft_limit && identity) {
+        if (items < ExfeeWidget.hard_limit && identity) {
             var idx = this.checkExistence(identity);
             if (idx === false) {
                 Exfee.invitations.push({
@@ -741,7 +741,7 @@ ExfeeWidget = {
             objInput.val(newInput);
         }
         this.ajaxIdentity(arrValid);
-        if (ExfeeWidget.summary().items >= ExfeeWidget.soft_limit && strInput) {
+        if (ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput) {
             strTail = '';
             this.showLimitWarning();
         } else {
