@@ -252,8 +252,8 @@ define('mobilecontroller', function (require, exports, module) {
         type: 'POST',
         url: config.api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
         data: {
-          provider: 'email',
-          external_username: email
+          provider: identity.provider,
+          external_username: identity.external_username
         },
         success : function(data) {
           if (data && data.meta && data.meta.code === 200) {
