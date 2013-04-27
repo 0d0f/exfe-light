@@ -19,153 +19,7 @@ define('mobileroutes', function (require, exports, module) {
       CrossController = Controllers.CrossController,
       LiveController = Controllers.LiveController;
 
-  module.exports = {
-
-    // `index`
-    index: function (req) {
-      var error = req.error;
-      var app = req.app, controllers = app.controllers,
-          homeCont = controllers.home,
-          footerCont = controllers.footer,
-          screen = app.screen;
-      if (!homeCont) {
-        homeCont = app.controllers.home = new HomeController({
-          options: {
-            template: $('#home-tmpl').html()
-          }
-        });
-      }
-      homeCont.emit('show', screen, error);
-      footerCont.emit('show', screen, false, false, error === true);
-      delete req.error;
-
-      app.currPageName = 'HOME';
-    },
-
-    verify: function (req, res) {
-      var smsToken = req.smsToken;
-      var app = req.app;
-      if (smsToken) {
-        $('#app-header').removeClass('hide');
-        var verifyCont = new VerifyController({
-          options: {
-            template: $('#verify-tmpl').html()
-          },
-          smsToken: smsToken
-        });
-        verifyCont.emit('show', req, res);
-      } else {
-        req.error = true;
-        res.redirect('/');
-      }
-
-      app.currPageName = 'VERIFY';
-    },
-
-    setPassword: function (req, res) {
-      var smsToken = req.smsToken;
-      var app = req.app;
-      if (smsToken) {
-        $('#app-header').removeClass('hide');
-        var setPasswordCont = new SetPasswordController({
-          options: {
-            template: $('#setpassword-tmpl').html()
-          },
-          smsToken: smsToken,
-          token: smsToken.origin_token
-        });
-        setPasswordCont.emit('show', req, res);
-      } else {
-        req.error = true;
-        res.redirect('/');
-      }
-
-      app.currPageName = 'SET_PASSWORD';
-    },
-
-    // `resolve-token`
-    resolveToken: function (req, res) {
-      var app = req.app;
-      var originToken = req.params[0];
-
-      if (originToken) {
-
-        $.ajax({
-          type: 'POST',
-          url: config.api_url + '/Users/ResolveToken',
-          data: { token : originToken },
-          success: function (data) {
-            if (data && data.meta && data.meta.code === 200) {
-              // todo: rename
-              req.smsToken = data.response;
-              var action = req.smsToken.action;
-              if (action === 'VERIFIED') {
-                res.redirect('/#verify');
-              } else if (action === 'INPUT_NEW_PASSWORD') {
-                req.smsToken.origin_token = originToken;
-                res.redirect('/#set_password');
-              }
-            }
-          },
-          error: function () {
-            req.error = true;
-            res.redirect('/');
-          }
-        });
-
-      } else {
-        req.error = true;
-        res.redirect('/');
-      }
-
-      app.currPageName = 'RESOLVE_TOKEN';
-    },
-
-    // `cross`
-
-    // `phone-cross-token`
-    crossPhoneToken: function (req, res) {
-      var app = req.app;
-      var params = req.params,
-          cross_id = params[0],
-          ctoken = params[1];
-
-      var cats = Store.get('cats'),
-          data, token;
-
-      data = {
-        invitation_token: ctoken,
-        cross_id: cross_id
-      };
-
-      if (cats && (token = cats[ctoken])) {
-        data.cross_access_token = token;
-      }
-
-      showCross(req, res, data, cats, ctoken, token);
-
-      app.currPageName = 'CROSS';
-    },
-
-    // `cross-token`
-    crossToken: function (req, res) {
-      var app = req.app;
-      var ctoken = req.params[0],
-          cats = Store.get('cats'),
-          data = { invitation_token: ctoken },
-          token;
-
-      if (cats && (token = cats[ctoken])) {
-        data.cross_access_token = token;
-      }
-
-      showCross(req, res, data, cats, ctoken, token);
-
-      app.currPageName = 'CROSS';
-    },
-
-    showCross: function showCross(req, res, data, cats, ctoken, token) {
-
+  var showCross = function (req, res, data, cats, ctoken, token) {
       $.ajax({
         type: 'POST',
         url: config.api_url + '/Crosses/GetCrossByInvitationToken',
@@ -362,17 +216,163 @@ define('mobileroutes', function (require, exports, module) {
 
             app.controllers.footer.emit('show-from-cross', originCross.exfee.id, token, args);
           } else {
-            req.error = true;
+            req.error = { code: 404 };
             res.redirect('/');
           }
         },
         error: function () {
-          req.error = true;
+          req.error = { code: 404 };
           res.redirect('/');
         }
       });
 
+    };
+
+  module.exports = {
+
+    // `index`
+    index: function (req) {
+      var error = req.error;
+      var app = req.app, controllers = app.controllers,
+          homeCont = controllers.home,
+          footerCont = controllers.footer,
+          screen = app.screen;
+      if (!homeCont) {
+        homeCont = app.controllers.home = new HomeController({
+          options: {
+            template: $('#home-tmpl').html()
+          }
+        });
+      }
+      homeCont.emit('show', screen, error);
+      footerCont.emit('show', screen, false, false, error === true);
+      delete req.error;
+
+      app.currPageName = 'HOME';
     },
+
+    verify: function (req, res) {
+      var smsToken = req.smsToken;
+      var app = req.app;
+      if (smsToken) {
+        $('#app-header').removeClass('hide');
+        var verifyCont = new VerifyController({
+          options: {
+            template: $('#verify-tmpl').html()
+          },
+          smsToken: smsToken
+        });
+        verifyCont.emit('show', req, res);
+      } else {
+        req.error = true;
+        res.redirect('/');
+      }
+
+      app.currPageName = 'VERIFY';
+    },
+
+    setPassword: function (req, res) {
+      var smsToken = req.smsToken;
+      var app = req.app;
+      if (smsToken) {
+        $('#app-header').removeClass('hide');
+        var setPasswordCont = new SetPasswordController({
+          options: {
+            template: $('#setpassword-tmpl').html()
+          },
+          smsToken: smsToken,
+          token: smsToken.origin_token
+        });
+        setPasswordCont.emit('show', req, res);
+      } else {
+        req.error = true;
+        res.redirect('/');
+      }
+
+      app.currPageName = 'SET_PASSWORD';
+    },
+
+    // `resolve-token`
+    resolveToken: function (req, res) {
+      var app = req.app;
+      var originToken = req.params[0];
+
+      if (originToken) {
+
+        $.ajax({
+          type: 'POST',
+          url: config.api_url + '/Users/ResolveToken',
+          data: { token : originToken },
+          success: function (data) {
+            if (data && data.meta && data.meta.code === 200) {
+              // todo: rename
+              req.smsToken = data.response;
+              var action = req.smsToken.action;
+              if (action === 'VERIFIED') {
+                res.redirect('/#verify');
+              } else if (action === 'INPUT_NEW_PASSWORD') {
+                req.smsToken.origin_token = originToken;
+                res.redirect('/#set_password');
+              }
+            }
+          },
+          error: function () {
+            req.error = true;
+            res.redirect('/');
+          }
+        });
+
+      } else {
+        req.error = true;
+        res.redirect('/');
+      }
+
+      app.currPageName = 'RESOLVE_TOKEN';
+    },
+
+    // `cross`
+
+    // `phone-cross-token`
+    crossPhoneToken: function (req, res) {
+      var app = req.app;
+      var params = req.params,
+          cross_id = params[0],
+          ctoken = params[1];
+
+      var cats = Store.get('cats'),
+          data, token;
+
+      data = {
+        invitation_token: ctoken,
+        cross_id: cross_id
+      };
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      showCross(req, res, data, cats, ctoken, token);
+
+      app.currPageName = 'CROSS';
+    },
+
+    // `cross-token`
+    crossToken: function (req, res) {
+      var app = req.app;
+      var ctoken = req.params[0],
+          cats = Store.get('cats'),
+          data = { invitation_token: ctoken },
+          token;
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      showCross(req, res, data, cats, ctoken, token);
+
+      app.currPageName = 'CROSS';
+    },
+
 
     // `live`
     live: function (req) {

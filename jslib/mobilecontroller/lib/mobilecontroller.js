@@ -1511,6 +1511,7 @@ define('mobilecontroller', function (require, exports, module) {
         .onUpdate(function () {
           cardForm.style.opacity  = this.o;
         });
+        //.onComplete(function () {});
     },
 
     startAnimate: function () {
