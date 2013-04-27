@@ -1844,6 +1844,11 @@ button .exfe {
   color: #333;
 }
 
+.time_minor.tobe,
+.place_minor.tobe {
+  color: #b2b2b2;
+}
+
 .place_mark {
   position: relative;
   top: 14px;
