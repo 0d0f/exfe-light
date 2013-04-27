@@ -143,7 +143,7 @@ define('mobileroutes', function (require, exports, module) {
                 }
                 //invitations.unshift(invitation);
                 invitation.isphone = invitation.provider === 'phone';
-                cross.identity = invitation;
+                cross.identity = invitation.identity;
                 orderRSVP.ACCEPTED.unshift(invitation);
               } else {
                 //invitations.push(invitation);
