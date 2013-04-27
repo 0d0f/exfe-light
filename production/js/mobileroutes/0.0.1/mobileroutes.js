@@ -257,15 +257,16 @@ define('mobileroutes', function (require, exports, module) {
     },
 
     verify: function (req, res) {
-      var smsToken = req.smsToken;
-      var app = req.app;
-      if (smsToken) {
+      var session = req.session,
+          resolveToken = session.resolveToken,
+          app = req.app;
+      if (resolveToken) {
         $('#app-header').removeClass('hide');
         var verifyCont = new VerifyController({
           options: {
             template: $('#verify-tmpl').html()
           },
-          smsToken: smsToken
+          resolveToken: resolveToken
         });
         verifyCont.emit('show', req, res);
       } else {
@@ -277,16 +278,17 @@ define('mobileroutes', function (require, exports, module) {
     },
 
     setPassword: function (req, res) {
-      var smsToken = req.smsToken;
-      var app = req.app;
-      if (smsToken) {
+      var session = req.session,
+          resolveToken = session.resolveToken,
+          app = req.app;
+      if (resolveToken) {
         $('#app-header').removeClass('hide');
         var setPasswordCont = new SetPasswordController({
           options: {
             template: $('#setpassword-tmpl').html()
           },
-          smsToken: smsToken,
-          token: smsToken.origin_token
+          resolveToken: resolveToken,
+          token: resolveToken.origin_token
         });
         setPasswordCont.emit('show', req, res);
       } else {
@@ -311,12 +313,13 @@ define('mobileroutes', function (require, exports, module) {
           success: function (data) {
             if (data && data.meta && data.meta.code === 200) {
               // todo: rename
-              req.smsToken = data.response;
-              var action = req.smsToken.action;
+              var session = req.session;
+              session.resolveToken = data.response;
+              var action = session.resolveToken.action;
               if (action === 'VERIFIED') {
                 res.redirect('/#verify');
               } else if (action === 'INPUT_NEW_PASSWORD') {
-                req.smsToken.origin_token = originToken;
+                session.resolveToken.origin_token = originToken;
                 res.redirect('/#set_password');
               }
             }
