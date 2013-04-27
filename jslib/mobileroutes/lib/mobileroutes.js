@@ -147,7 +147,9 @@ define('mobileroutes', function (require, exports, module) {
                 orderRSVP.ACCEPTED.unshift(invitation);
               } else {
                 //invitations.push(invitation);
-                orderRSVP[invitation.rsvp_status].push(invitation);
+                if (invitation.rsvp_status in orderRSVP) {
+                  orderRSVP[invitation.rsvp_status].push(invitation);
+                }
               }
             }
 
