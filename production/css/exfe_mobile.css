@@ -1219,8 +1219,10 @@ body {
 .set-button button {
   width: 290px;
   height: 44px;
-  margin: 24px auto 0;
-  font: 800 16px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  margin: 0 auto;
+  font: 800 18px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  font-weight: bold;
+  line-height: 44px;
   color: #333;
   text-shadow: 0 1px rgba(255, 255, 255, 0.5);
   background-image: -webkit-gradient(linear, left bottom, left top, from(#eeeeee), to(#ffffff));
