@@ -2003,6 +2003,7 @@ button .exfe {
 }
 
 .subscribe-frame {
+  position: relative;
   width: 290px;
   height: 50px;
   margin: 6px auto 0;
