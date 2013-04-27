@@ -128,6 +128,7 @@ define(function (require, exports, module) {
         }
         $('.box .inner').css('top', (height - 300) / 2 + 'px')
         var liveGather = document.querySelector('.live-gather');
+        if (liveGather) {
         liveGather.style.height = height + 'px';
         $('#icard').css({
           '-webkit-transform': cssMatrix([ 1, 0, 0, 1, 128, CARD_P1[1] = (height - 64) / 2 ]),
@@ -136,6 +137,8 @@ define(function (require, exports, module) {
           // 44 = iphone bottom bar
         var w = liveGather.clientWidth, h = liveGather.clientHeight - 44, ol = 64 / 2, ot = 0; //64 / 2;
         genCoords(w, h, ol, ot);
+        generateMyCard();
+        }
 
         if (navigator.userAgent.match(/iPad/)) {
             $('.redirecting').unbind('click').bind('click', function() {
@@ -149,11 +152,10 @@ define(function (require, exports, module) {
         }
         $('.get-button button').unbind('click').bind('click', showAppInStore);
 
-        generateMyCard();
         var TOUCH_TIMEOUT;
 
-        var $list = $('.card-form .list');
         $(function () {
+        var $list = $('.card-form .list');
         $(document)
 
         //$(window).on('pageshow, pagehide')
@@ -484,6 +486,7 @@ define(function (require, exports, module) {
             logo.style.opacity = OPTIONS.o;
             icard.style.opacity = 1 - OPTIONS.o;
           };
+      if (logo && icard) {
       LOGO_TWEEN = new TWEEN.Tween(OPTIONS)
             .delay(1377)
             .to({ o: 0}, 1377)
@@ -584,6 +587,7 @@ define(function (require, exports, module) {
           ANIMATE_STATUS = false;
           TWEEN.remove(this);
         });
+      }
     };
 
     var redirecting = function(args) {
@@ -822,7 +826,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Crosses/GetCrossByInvitationToken',
             data    : submitData,
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     // render title
                     $('.title_area  .title_text').html(escape(data.response.cross.title));
                     // render description
@@ -1076,7 +1080,7 @@ define(function (require, exports, module) {
                                                 + '/Update' + '?token=' + my_token,
                                         data    : {name : strDisplayName},
                                         success : function(data) {
-                                            if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                                            if (data && data.meta && data.meta.code === 200) {
                                                 $('.name_me').html(
                                                     escape(data.response.identity.name)
                                                 );
@@ -1132,7 +1136,7 @@ define(function (require, exports, module) {
             data    : {provider          : 'email',
                        external_username : email},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     $('.subscribe').hide();
                 }
             },
@@ -1200,7 +1204,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/' + result.user_id + '?token=' + result.token,
             data    : {token : result.token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     $('.identity .avatar').attr('src', data.response.user.avatar_filename);
                     $('.identity .name').val(data.response.user.name);
                     return;
@@ -1243,7 +1247,7 @@ define(function (require, exports, module) {
                 success : function(data) {
                     $('.loading').hide();
                     $('.eye').show();
-                    if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                    if (data && data.meta && data.meta.code === 200) {
                         if (data.response.authorization) {
                             $('.error-info').hide();
                             $('.set-button').hide();
@@ -1348,7 +1352,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/' + result.user_id + '?token=' + result.token,
             data    : {token : result.token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     for (var i in data.response.user.identities) {
                         if (data.response.user.identities[i].id === result.identity_id) {
                             $('.identity .avatar').attr('src', data.response.user.identities[i].avatar_filename);
@@ -1381,7 +1385,7 @@ define(function (require, exports, module) {
             url     : config.api_url + '/Users/ResolveToken',
             data    : {token : token},
             success : function(data) {
-                if (data && (data = JSON.parse(data)) && data.meta.code === 200) {
+                if (data && data.meta && data.meta.code === 200) {
                     switch (data.response.action) {
                         case 'VERIFIED':
                             verification(data.response);
