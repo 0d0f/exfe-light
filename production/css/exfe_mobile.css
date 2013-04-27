@@ -2032,8 +2032,8 @@ button .exfe {
 }
 
 .btn_mail {
-  position: relative;
-  float: right;
+  position: absolute;
+  right: 0;
   width: 64px;
   height: 100%;
   background: -moz-linear-gradient(90deg, #23528c 0%, #369fe9 100%) no-repeat 0, #000000;
