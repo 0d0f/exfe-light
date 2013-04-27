@@ -20,6 +20,7 @@ define('mobileroutes', function (require, exports, module) {
       LiveController = Controllers.LiveController;
 
   var showCross = function (req, res, data, cats, ctoken, token) {
+      cats || (cats = {});
       $.ajax({
         type: 'POST',
         url: config.api_url + '/Crosses/GetCrossByInvitationToken',
