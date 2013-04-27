@@ -34,8 +34,8 @@ define('mobileroutes', function (require, exports, module) {
             var originCross = response.cross;
             var cross = {
               id: originCross.id,
-              title: originCross.title,
-              description: originCross.description.replace(/\r\n|\r|\n/g, '<br />'),
+              title: escape(originCross.title),
+              description: escape(originCross.description.replace(/\r\n|\r|\n/g, '<br />')),
               time: {
                 title: 'Sometime',
                 content: 'To be decided'
