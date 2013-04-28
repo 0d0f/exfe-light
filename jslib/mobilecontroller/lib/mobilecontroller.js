@@ -315,7 +315,7 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show', function (req, res) {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 0)
+        }, 23)
         var cb = function () {
           // error getting identity informations
           req.error = true;
@@ -337,6 +337,7 @@ define('mobilecontroller', function (require, exports, module) {
                 var identity = identities[i];
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
+                  alert(i)
                   self.$('.done-info').removeClass('hide');
                   App.controllers.footer.emit('show-from-resolve-token');
                   break;
