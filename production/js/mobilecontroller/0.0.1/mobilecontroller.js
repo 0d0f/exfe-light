@@ -336,7 +336,6 @@ define('mobilecontroller', function (require, exports, module) {
               for (var i = 0, len = identities.length; i < len; ++i) {
                 var identity = identities[i];
                 if (identity.id === resolveToken.identity_id) {
-                  alert(i)
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
                   App.controllers.footer.emit('show-from-resolve-token');
