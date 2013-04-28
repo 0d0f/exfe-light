@@ -240,7 +240,9 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
-        this.emit('start-redirect');
+        if (this.countDown >= 1) {
+          this.emit('start-redirect');
+        }
       });
 
       this.on('start-redirect', function (args) {
@@ -248,7 +250,7 @@ define('mobilecontroller', function (require, exports, module) {
         var $r = $('.redirecting').removeClass('hide'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
         this.App.set('redirectTimer', setInterval(function() {
-          si -= 1;
+          self.countDown = si -= 1;
           if (si >= 1) {
             $s.text(si);
           } else {
@@ -316,7 +318,7 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show', function (req, res) {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 23)
+        }, 14);
         var cb = function () {
           // error getting identity informations
           req.error = true;
