@@ -401,7 +401,7 @@ define('mobilecontroller', function (require, exports, module) {
       })
         .on('touchend.setpassword', '.pass', function () {
           // 0.3 minute
-          if (now - TST > 30 * 1000) {
+          if (now() - TST > 30 * 1000) {
             var $input = $(this).prev();
             $input.prop('type', 'text');
             // 0.5 minute
