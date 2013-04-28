@@ -241,7 +241,6 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
         this.emit('start-redirect');
-        alert('start redirect')
       });
 
       this.on('start-redirect', function (args) {
@@ -327,7 +326,8 @@ define('mobilecontroller', function (require, exports, module) {
           url: config.api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
           data: { token : resolveToken.token },
           success: function (data) {
-            if (data && data.meta && data.meta.code === 200) {
+            var meta = data.meta;
+            if (meta && meta.code === 200) {
               var user = data.response.user,
                   identities = user.identities;
               for (var i = 0, len = identities.length; i < len; ++i) {
@@ -336,9 +336,10 @@ define('mobilecontroller', function (require, exports, module) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
                   App.controllers.footer.emit('show-from-resolve-token');
-                  return;
+                  break;
                 }
               }
+              return;
             }
             // error getting identity informations
             cb();
