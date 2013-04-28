@@ -1401,6 +1401,10 @@ button .exfe {
   top: 16px;
   left: 16px;
   display: block;
+  width: 18px;
+  height: 18px;
+  background: url("/static/img/lock_18@2x.png") no-repeat;
+  background-size: 100% 100%;
   -webkit-user-select: none;
           user-select: none;
 }
@@ -1410,6 +1414,10 @@ button .exfe {
   top: 15px;
   right: 5px;
   display: block;
+  width: 20px;
+  height: 20px;
+  background: url("/static/img/pass_show@2x.png") no-repeat;
+  background-size: 100% 100%;
   -webkit-user-select: none;
           user-select: none;
 }

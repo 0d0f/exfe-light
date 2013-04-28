@@ -76,7 +76,7 @@ define('mobilemiddleware', function (require, exports, module) {
 
       if (smsToken) {
         var action = smsToken.action;
-        req.smsToken = smsToken;
+        req.resolveToken = smsToken;
         if ('VERIFIED' === action) {
 
           res.redirect('/#verify');
@@ -95,6 +95,7 @@ define('mobilemiddleware', function (require, exports, module) {
     // cleanup `Pages`
     cleanup: function (req, res, next) {
       delete req.smsToken;
+      $('#app-body').css('height', 'auto');
       $('#app-header').addClass('hide');
       $('#app-footer').removeClass('ft-bg');
 

@@ -431,6 +431,7 @@ define('mobilecontroller', function (require, exports, module) {
           res.redirect('/');
         };
         element.removeClass('hide');
+        $('#app-body').css('height', '100%');
 
         $.ajax({
           type: 'POST',
