@@ -238,13 +238,14 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('start-redirect', function (args) {
         this.$('.redirecting').removeClass('hide');
-        var $r = $('.redirecting'), $s = $r.find('.sec'), countDown = self.countDown, si;
+        var $r = $('.redirecting').removeClass('hide'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
         this.App.set('redirectTimer', setInterval(function() {
           si -= 1;
           if (si >= 1) {
             $s.text(si);
           } else {
+            $r.addClass('hide');
             clearInterval(App.set('redirectTimer'));
             launchApp(args);
             //$('.actions .error-info').hide();
