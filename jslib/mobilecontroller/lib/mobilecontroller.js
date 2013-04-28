@@ -389,13 +389,27 @@ define('mobilecontroller', function (require, exports, module) {
           element = this.element,
           resolveToken = this.resolveToken;
 
-      element.on('touchstart.setpassword', '.eye', function () {
+      var TST, TOUCH_TIMEOUT;
+      element.on('touchstart.setpassword', '.pass', function () {
+        if (TOUCH_TIMEOUT) {
+          clearTimeout(TOUCH_TIMEOUT);
+          TOUCH_TIMEOUT = void 0;
+        }
+        TST = now();
         var $input = $(this).prev();
-        $input.prop('type', function (i, val) {
-          return val === 'password' ? 'text' : 'password';
-        });
-        $(this).toggleClass('icon16-pass-hide icon16-pass-show');
+        $input.prop('type', 'password');
       })
+        .on('touchend.setpassword', '.pass', function () {
+          // 0.3 minute
+          if (now - TST > 30 * 1000) {
+            var $input = $(this).prev();
+            $input.prop('type', 'text');
+            // 0.5 minute
+            TOUCH_TIMEOUT = setTimeout(function () {
+              $input.prop('type', 'password');
+            }, 500);
+          }
+        })
         .on('keydown.setpassword', '#password', function (e) {
           if (e.keyCode === 13) {
             self.submitPassword();
