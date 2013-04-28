@@ -99,6 +99,10 @@ define(function (require) {
   // app running
   app.run();
 
+  window.addEventListen('page-show', function () {
+    alert(123)
+  });
+
   // global
   window.App = app;
 
