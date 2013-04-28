@@ -50,6 +50,7 @@ define(function (require) {
   // sms token
   // ?t=2345
   app.get(/^\?t=([a-zA-Z0-9]{3,})$/, function (req, res) {
+    alert(123)
     var getSMSTokenFromHead = function () {
       var header = document.getElementsByTagName('head')[0],
           meta = document.getElementsByName('sms-token')[0],
