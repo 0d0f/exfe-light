@@ -28,7 +28,7 @@ define(function (require) {
   // Create App   ***********************************
   var app = lightsaber();
   app.use(middleware.setHtmlHeight);
-  app.use(middleware.checkSMSToken);
+  //app.use(middleware.checkSMSToken);
   app.use(middleware.cleanup);
   app.initRouter();
   app.use(middleware.errorHandler);
