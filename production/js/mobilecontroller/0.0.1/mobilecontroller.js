@@ -544,6 +544,9 @@ define('mobilecontroller', function (require, exports, module) {
         $title.find('.invalid').toggleClass('hide', !error);
         */
         $title.find('.normal').removeClass('hide');
+        if (error) {
+          alert('Sorry. Your link is invalid or expired. Requested page was not found.');
+        }
 
         this.startAnimate();
       });
