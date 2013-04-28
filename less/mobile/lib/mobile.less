@@ -1131,7 +1131,7 @@ button .exfe {
       position: absolute;
       display: block;
       top: 15px;
-      right: 5px;
+      right: 10px;
       background: url("/static/img/pass_show@2x.png") no-repeat;
       background-size: 100% 100%;
       width: 20px;
@@ -1149,11 +1149,17 @@ button .exfe {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    color: #b2b2b2;
+    color: #000;
     font-size: 18px;
     font-weight: lighter;
     margin-left: 50px;
     text-align: left;
+
+    &:-moz-placeholder,
+    &:-ms-input-placeholder,
+    &:-webkit-input-placeholder {
+        color: #b2b2b2;
+    }
   }
 }
 

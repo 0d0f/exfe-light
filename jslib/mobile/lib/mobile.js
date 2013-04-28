@@ -99,6 +99,10 @@ define(function (require) {
   // app running
   app.run();
 
+  //window.pageshow = function () {};
+
+  alert(navigator.notification);
+
   // global
   window.App = app;
 

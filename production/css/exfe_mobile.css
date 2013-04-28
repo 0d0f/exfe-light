@@ -1416,7 +1416,7 @@ button .exfe {
 .user-form .password .pass {
   position: absolute;
   top: 15px;
-  right: 5px;
+  right: 10px;
   display: block;
   width: 20px;
   height: 20px;
@@ -1432,13 +1432,19 @@ button .exfe {
   margin-left: 50px;
   font-size: 18px;
   font-weight: lighter;
-  color: #b2b2b2;
+  color: #000;
   text-align: left;
   background: transparent;
   border: none;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
+}
+
+.user-form #password:-moz-placeholder,
+.user-form #password:-ms-input-placeholder,
+.user-form #password:-webkit-input-placeholder {
+  color: #b2b2b2;
 }
 
 .verify-actions .btn-done {

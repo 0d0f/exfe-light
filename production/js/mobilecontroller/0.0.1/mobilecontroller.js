@@ -475,7 +475,7 @@ define('mobilecontroller', function (require, exports, module) {
             var user = data.response.user;
             if (data && data.meta && data.meta.code === 200) {
               $('.identity .avatar').attr('src', user.avatar_filename);
-              $('.identity .name').text(user.name);
+              $('.identity .name').html(user.name);
               return;
             }
             cb();
@@ -539,8 +539,14 @@ define('mobilecontroller', function (require, exports, module) {
         error = !!(error && (error.code === 404));
 
         var $title = this.$('.title');
+        /*
         $title.find('.normal').toggleClass('hide', error);
         $title.find('.invalid').toggleClass('hide', !error);
+        */
+        $title.find('.normal').removeClass('hide');
+        if (error) {
+          alert();
+        }
 
         this.startAnimate();
       });
