@@ -328,7 +328,8 @@ define('live', function (require) {
             shake_start_callback = start_callback;
             shake_end_callback   = end_callback;
         },
-        startGeo: startGeo
+        startGeo: startGeo,
+        stopGeo: stopGeo
     };
 
 
@@ -338,6 +339,10 @@ define('live', function (require) {
     var inthndShake  = rawShake(shake_start_callback, shake_end_callback);
 
     var intGeoWatch;
+
+    function stopGeo() {
+        navigator.geolocation.clearWatch(intGeoWatch);
+    }
 
     function startGeo() {
         intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
@@ -358,7 +363,7 @@ define('live', function (require) {
                 );
             }
         });
-    };
+    }
 
 
     window.addEventListener('load', function() {
