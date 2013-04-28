@@ -304,7 +304,9 @@ define('mobileroutes', function (require, exports, module) {
       var app = req.app,
           originToken = req.params[0],
           cb = function (req, res) {
-            req.error = true;
+            req.error = {
+              code: 404
+            };
             res.redirect('/');
           };
 
