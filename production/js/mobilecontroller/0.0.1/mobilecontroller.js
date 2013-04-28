@@ -345,8 +345,10 @@ define('mobilecontroller', function (require, exports, module) {
       var token = this.token,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
-          name = trim(this.$('#name').val()),
-          password = this.$('#password').val();
+          $name = this.$('#name'),
+          $pass = this.$('#password'),
+          name = trim($name.val()),
+          password = $pass.val();
       if (name && password.length >= 4) {
         $button
           .addClass('disabled')
@@ -363,11 +365,14 @@ define('mobilecontroller', function (require, exports, module) {
           success: function (data) {
             var meta = data.meta;
             if (meta && meta.code === 200) {
+              $name.blur();
+              $pass.blur();
               $error.html('').addClass('hide');
-              $button.addClass('hide');
+              $button.parent().addClass('hide');
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
+            $button.removeClass('disabled').prop('disabled', true);
           },
           error: function () {
             $error.html('Failed to set password. Please try later.').removeClass('hide');
