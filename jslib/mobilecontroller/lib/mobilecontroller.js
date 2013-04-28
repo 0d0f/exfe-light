@@ -974,7 +974,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('show', function (screen) {
-        Live.startGeo();
+        //Live.startGeo();
 
         this.screen = screen;
 
