@@ -197,6 +197,18 @@ define('mobilecontroller', function (require, exports, module) {
         this.$('.error-info').toggleClass('hide', !hasError);
       });
 
+      this.on('reset-position', function () {
+        var top = App.screen.height - 96;
+        this.element.removeClass('hide');
+        this.element.css({
+          position: 'absolute',
+          top:  top + 'px'
+        });
+        if (iPad) {
+          this.$('.web-version').removeClass('hide');
+        }
+      });
+
       this.on('show-from-cross', function (exfee_id, token, args) {
         this.element.css({
           position: 'relative',
@@ -221,19 +233,12 @@ define('mobilecontroller', function (require, exports, module) {
           this.$('.get-button').removeClass('hide');
           $('.redirect').addClass('hide');
         }
-      });
-
-
-      this.on('show-from-set-password', function () {
-        var top = App.screen.height - 96;
-        this.element.removeClass('hide');
-        this.element.css({
-          position: 'absolute',
-          top:  top + 'px'
-        });
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
+      });
+
+      this.on('show-from-set-password', function () {
         this.emit('stop-redirect');
         this.emit('start-redirect');
       });
