@@ -244,7 +244,6 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('start-redirect', function (args) {
-        self.countDown = 5;
         var $r = $('.redirecting').removeClass('hide'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
         this.App.set('redirectTimer', setInterval(function() {
