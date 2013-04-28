@@ -217,6 +217,12 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('show-from-set-password', function () {
+        var top = App.screen.height - 96;
+        this.element.removeClass('hide');
+        this.element.css('top',  top + 'px');
+        if (iPad) {
+          this.$('.web-version').removeClass('hide');
+        }
         this.emit('stop-redirect');
         this.emit('start-redirect');
       });
