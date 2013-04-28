@@ -186,7 +186,6 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.removeClass('hide');
         this.element.css('top',  top + 'px');
         if (this.enableTimer) {
-          this.$('.redirecting').removeClass('hide');
           this.emit('start-redirect');
         }
         if (iPad) {
@@ -207,17 +206,23 @@ define('mobilecontroller', function (require, exports, module) {
         if (token) {
           this.$('.subscribe').removeClass('hide')
         }
-        this.$('.redirecting').removeClass('hide');
         this.element.removeClass('hide');
         $('#app-footer').addClass('ft-bg');
-        if (args) {
+        if (args && this.enableTimer) {
           this.emit('start-redirect', args);
         } else {
           this.$('.get-button').removeClass('hide');
+          $('.redirect').addClass('hide');
         }
       });
 
+      this.on('show-from-set-password', function () {
+        this.emit('stop-redirect');
+        this.emit('start-redirect');
+      });
+
       this.on('start-redirect', function (args) {
+        this.$('.redirecting').removeClass('hide');
         var $r = $('.redirecting'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
         this.App.set('redirectTimer', setInterval(function() {
@@ -342,7 +347,8 @@ define('mobilecontroller', function (require, exports, module) {
     },
 
     submitPassword: function () {
-      var token = this.token,
+      var self = this,
+          token = this.token,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
           $name = this.$('#name'),
@@ -367,8 +373,10 @@ define('mobilecontroller', function (require, exports, module) {
             if (meta && meta.code === 200) {
               $name.blur();
               $pass.blur();
+              self.
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
+              App.controllers.footer.emit('show-from-set-password');
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
