@@ -1368,6 +1368,8 @@ button .exfe {
 
 .user-form .identity {
   width: auto;
+  height: 50px;
+  padding: 5px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1383,22 +1385,26 @@ button .exfe {
 
 .user-form .password {
   position: relative;
+  height: 50px;
+  padding: 5px;
 }
 
 .user-form .password .lock {
-  position: relative;
-  top: 11px;
-  left: 11px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
   display: block;
 }
 
 .user-form .password .eye {
   position: absolute;
-  right: 0;
+  top: 12px;
+  right: 5px;
 }
 
 .user-form #password {
   width: 200px;
+  height: 40px;
   margin-left: 10px;
   font-size: 18px;
   font-weight: lighter;
@@ -1408,6 +1414,14 @@ button .exfe {
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
+}
+
+.verify-actions .btn-done {
+  width: 280px;
+  height: 50px;
+  line-height: 50px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .identity {
@@ -1479,11 +1493,11 @@ button .exfe {
 
 .done-info .status {
   display: block;
-  height: 26px;
+  height: 21px;
   padding-top: 12px;
-  font-size: 20px;
+  font-size: 21px;
   line-height: 26px;
-  color: #FFFFFF;
+  color: #191919;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
@@ -1502,7 +1516,7 @@ button .exfe {
   padding-top: 3px;
   font-size: 14px;
   line-height: 18px;
-  color: #CCC;
+  color: #b2b2b2;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
