@@ -220,7 +220,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('reset-position', function (type, top) {
         top = App.screen.height - 96 + top;
-        alert(top + 'px')
+        alert(top)
         this.element.removeClass('hide');
         /*
         this.element.css({
