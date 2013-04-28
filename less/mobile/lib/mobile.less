@@ -1064,13 +1064,13 @@ button .exfe {
     margin-right: auto;
     //padding-top: 20px;
     //width: 280px;
-    padding: 0 20px;
+  padding: 20px;
+    //padding: 0 20px;
     box-shadow: 0 0 4px rgba(0, 0, 0, .5);
 }
 
 .user-form {
   width: 290px;
-  padding: 5px;
   border-radius: 4px;
   background-color: #fafafa;
   -webkit-box-sizing: border-box;
@@ -1078,6 +1078,52 @@ button .exfe {
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2) inset,
     0px 1px 4px rgba(0,0,0,0.4) inset,
     0px 1px 0px rgba(255,255,255,0.25);
+
+  margin-left: -5px;
+
+  .identity {
+    width: auto;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .identity .name {
+    border: none;
+    background: transparent;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 10px;
+  }
+
+  .password {
+    position: relative;
+
+    .lock {
+      position: relative;
+      display: block;
+      top: 11px;
+      left: 11px;
+    }
+
+    .eye {
+      position: absolute;
+      right: 0;
+    }
+  }
+
+  #password {
+    width: 200px;
+    border: none;
+    background: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    color: #b2b2b2;
+    font-size: 18px;
+    font-weight: lighter;
+    margin-left: 10px;
+  }
 }
 
 .identity {

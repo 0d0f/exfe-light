@@ -1349,7 +1349,7 @@ button .exfe {
 }
 
 .verify-actions {
-  padding: 0 20px;
+  padding: 20px;
   margin-right: auto;
   margin-left: auto;
   background: #FAFAFA;
@@ -1358,12 +1358,56 @@ button .exfe {
 
 .user-form {
   width: 290px;
-  padding: 5px;
+  margin-left: -5px;
   background-color: #fafafa;
   border-radius: 4px;
   box-shadow: 0 0px 1px rgba(0, 0, 0, 0.2) inset, 0px 1px 4px rgba(0, 0, 0, 0.4) inset, 0px 1px 0px rgba(255, 255, 255, 0.25);
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.user-form .identity {
+  width: auto;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.user-form .identity .name {
+  height: 40px;
+  margin-left: 10px;
+  line-height: 40px;
+  background: transparent;
+  border: none;
+}
+
+.user-form .password {
+  position: relative;
+}
+
+.user-form .password .lock {
+  position: relative;
+  top: 11px;
+  left: 11px;
+  display: block;
+}
+
+.user-form .password .eye {
+  position: absolute;
+  right: 0;
+}
+
+.user-form #password {
+  width: 200px;
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: lighter;
+  color: #b2b2b2;
+  background: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
 }
 
 .identity {
