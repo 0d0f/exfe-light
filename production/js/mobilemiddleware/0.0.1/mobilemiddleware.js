@@ -1,6 +1,7 @@
 define('mobilemiddleware', function (require, exports, module) {
   'use strict';
 
+  /*
   var getSMSTokenFromHead = function () {
     var header = document.getElementsByTagName('head')[0],
         meta = document.getElementsByName('sms-token')[0],
@@ -13,8 +14,9 @@ define('mobilemiddleware', function (require, exports, module) {
 
     return smsToken;
   },
+  */
 
-  iPhone = navigator.userAgent.match(/iPhone/);
+  var iPhone = navigator.userAgent.match(/iPhone/);
 
 
   module.exports = {
@@ -71,6 +73,7 @@ define('mobilemiddleware', function (require, exports, module) {
     },
 
     // check `sms-token`
+    /*
     checkSMSToken: function (req, res, next) {
       var smsToken = getSMSTokenFromHead();
 
@@ -91,6 +94,7 @@ define('mobilemiddleware', function (require, exports, module) {
 
       next();
     },
+    */
 
     // cleanup `Pages`
     cleanup: function (req, res, next) {
