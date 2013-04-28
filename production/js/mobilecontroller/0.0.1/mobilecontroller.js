@@ -258,7 +258,7 @@ define('mobilecontroller', function (require, exports, module) {
             $s.text(si);
           } else {
             $r.addClass('hide');
-            clearInterval(App.set('redirectTimer'));
+            self.emit('stop-redirect');
             launchApp(args);
             //$('.actions .error-info').hide();
           }
