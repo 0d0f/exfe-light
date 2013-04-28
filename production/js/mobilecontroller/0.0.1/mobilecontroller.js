@@ -544,9 +544,6 @@ define('mobilecontroller', function (require, exports, module) {
         $title.find('.invalid').toggleClass('hide', !error);
         */
         $title.find('.normal').removeClass('hide');
-        if (error) {
-          alert();
-        }
 
         this.startAnimate();
       });
@@ -974,6 +971,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('show', function (screen) {
+        Live.startGeo();
 
         this.screen = screen;
 

@@ -327,7 +327,8 @@ define('live', function (require) {
         shake : function(start_callback, end_callback) {
             shake_start_callback = start_callback;
             shake_end_callback   = end_callback;
-        }
+        },
+        startGeo: startGeo
     };
 
 
@@ -336,25 +337,28 @@ define('live', function (require) {
 
     var inthndShake  = rawShake(shake_start_callback, shake_end_callback);
 
+    var intGeoWatch;
 
-    var intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
-        if (data
-         && data.coords
-         && data.coords.latitude
-         && data.coords.longitude
-         && data.coords.accuracy) {
-            myData.latitude  = data.coords.latitude.toString();
-            myData.longitude = data.coords.longitude.toString();
-            myData.accuracy  = data.coords.accuracy.toString();
-            secCnt           = secInt - 5;
-            log(
-                'Location update: '
-              + 'lat = ' + myData.latitude  + ', '
-              + 'lng = ' + myData.longitude + ', '
-              + 'acu = ' + myData.accuracy
-            );
-        }
-    });
+    var startGeo = function () {
+        intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
+            if (data
+             && data.coords
+             && data.coords.latitude
+             && data.coords.longitude
+             && data.coords.accuracy) {
+                myData.latitude  = data.coords.latitude.toString();
+                myData.longitude = data.coords.longitude.toString();
+                myData.accuracy  = data.coords.accuracy.toString();
+                secCnt           = secInt - 5;
+                log(
+                    'Location update: '
+                  + 'lat = ' + myData.latitude  + ', '
+                  + 'lng = ' + myData.longitude + ', '
+                  + 'acu = ' + myData.accuracy
+                );
+            }
+        });
+    };
 
 
     window.addEventListener('load', function() {
