@@ -336,10 +336,9 @@ define('mobilecontroller', function (require, exports, module) {
               for (var i = 0, len = identities.length; i < len; ++i) {
                 var identity = identities[i];
                 if (identity.id === resolveToken.identity_id) {
-                  alert(i)
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  //App.controllers.footer.emit('show-from-resolve-token');
+                  App.controllers.footer.emit('show-from-resolve-token');
                   break;
                 }
               }
@@ -357,7 +356,7 @@ define('mobilecontroller', function (require, exports, module) {
       var $identity = this.$('.identity');
       $identity.find('.name').text(identity.name);
       $identity.find('.avatar').attr('src', identity.avatar_filename);
-      $identity.find('.provider').attr('src', '/static/img/identity_' + identity.provider + '_18_grey@2x.png');
+      //$identity.find('.provider').attr('src', '/static/img/identity_' + identity.provider + '_18_grey@2x.png');
       $identity.next().removClass('hide');
     }
 
