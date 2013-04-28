@@ -182,7 +182,12 @@ define('mobilecontroller', function (require, exports, module) {
         })
 
       this.on('show', function (screen, hasBanner, hasCross, hasError) {
-        this.emit('reset-position', false, -(hasBanner ? 60 : 0));
+        var top = screen.height - 96 - (hasBanner ? 60 : 0);
+        this.element.removeClass('hide');
+        this.element.css({
+          position: 'relative',
+          top:  top + 'px'
+        });
         if (this.enableTimer) {
           this.emit('start-redirect');
         }
@@ -195,7 +200,7 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show-from-cross', function (exfee_id, token, args) {
         this.element.css({
           position: 'relative',
-          top: 0
+          top: 0,
         });
         this.emit('stop-redirect');
         this.element.addClass('ft-bg');
@@ -218,20 +223,14 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-      this.on('reset-position', function (type, top) {
-        top = App.screen.height - 96 + top;
-        alert(top)
-        this.element.removeClass('hide');
-        /*
-        this.element.css({
-          position: type ? 'absolute' : 'relative',
-          top:  top + 'px'
-        });
-        */
-      });
 
       this.on('show-from-set-password', function () {
-        this.emit('reset-position', true, 0);
+        var top = App.screen.height - 96;
+        this.element.removeClass('hide');
+        this.element.css({
+          position: 'absolute',
+          top:  top + 'px'
+        });
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
@@ -458,7 +457,7 @@ define('mobilecontroller', function (require, exports, module) {
         };
         element.removeClass('hide');
         $('#app-body').css('height', '100%');
-        App.controllers.footer.emit('reset-position', true, 0);
+        App.controllers.footer.emit('reset-position');
 
         $.ajax({
           type: 'POST',
