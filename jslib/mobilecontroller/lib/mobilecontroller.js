@@ -184,7 +184,10 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show', function (screen, hasBanner, hasCross, hasError) {
         var top = screen.height - 96 - (hasBanner ? 60 : 0);
         this.element.removeClass('hide');
-        this.element.css('top',  top + 'px');
+        this.element.css({
+          position: 'relative',
+          top:  top + 'px'
+        });
         if (this.enableTimer) {
           this.emit('start-redirect');
         }
@@ -195,6 +198,9 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('show-from-cross', function (exfee_id, token, args) {
+        this.element.css({
+          position: 'relative'
+        });
         this.emit('stop-redirect');
         this.element.addClass('ft-bg');
         this.cross = {
@@ -219,7 +225,10 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show-from-set-password', function () {
         var top = App.screen.height - 96;
         this.element.removeClass('hide');
-        this.element.css('top',  top + 'px');
+        this.element.css({
+          position: 'absolute',
+          top:  top + 'px'
+        });
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
