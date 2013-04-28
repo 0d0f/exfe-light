@@ -240,10 +240,11 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
-        if (this.countDown >= 1) {
-          this.emit('start-redirect');
+        if (this.countDown < 1) {
           $('.redirecting').removeClass('hide');
           launchApp();
+        } else {
+          this.emit('start-redirect');
         }
       });
 
