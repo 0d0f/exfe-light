@@ -343,16 +343,14 @@ define('mobilecontroller', function (require, exports, module) {
 
     submitPassword: function () {
       var token = this.token,
-          $eye = this.$('.eye').addClass('hide'),
-          $loading = this.$('.loading').removeClass('hide'),
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
           name = trim(this.$('#name').val()),
           password = this.$('#password').val();
-      if (password.length >= 4) {
+      if (name && password.length >= 4) {
         $button
-          .addClass('disabled');
-          //.prop('disabled', true);
+          .addClass('disabled')
+          .prop('disabled', true);
 
         $.ajax({
           type: 'POST',
@@ -362,25 +360,22 @@ define('mobilecontroller', function (require, exports, module) {
             name: name,
             password: password
           },
-          success: function () {
-            $loading.addClass('hide');
-            $eye.removeClass('hide');
-            $error.html('Failed to set password. Please try later.').removeClass('hide');
-            // $('#password').prop('disabled', false);
-            $button.removeClass('disabled');//.prop('disabled', false);
+          success: function (data) {
+            var meta = data.meta;
+            if (meta && meta.code === 200) {
+              $error.html('').addClass('hide');
+              $button.addClass('hide');
+            } else {
+              $button.removeClass('disabled').prop('disabled', true);
+            }
           },
           error: function () {
-            $loading.addClass('hide');
-            $eye.removeClass('hide');
             $error.html('Failed to set password. Please try later.').removeClass('hide');
-            // $('#password').prop('disabled', false);
-            $button.removeClass('disabled');//.prop('disabled', false);
+            $button.removeClass('disabled').prop('disabled', false);
           }
         });
       } else {
         $error.html('Password must be longer than four!').removeClass('hide');
-        $loading.addClass('hide');
-        $eye.removeClass('hide');
       }
     },
 

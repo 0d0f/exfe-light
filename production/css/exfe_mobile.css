@@ -1378,6 +1378,7 @@ button .exfe {
 
 .user-form .identity .name {
   height: 40px;
+  padding: 0;
   margin-left: 50px;
   line-height: 40px;
   background: transparent;
