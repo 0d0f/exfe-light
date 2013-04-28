@@ -241,10 +241,10 @@ define('mobilecontroller', function (require, exports, module) {
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
         this.emit('start-redirect');
+        alert('start redirect')
       });
 
       this.on('start-redirect', function (args) {
-        alert(self.countDown)
         var $r = $('.redirecting').removeClass('hide'), $s = $r.find('.sec'), countDown = self.countDown, si;
         $s.text(si = countDown);
         this.App.set('redirectTimer', setInterval(function() {
