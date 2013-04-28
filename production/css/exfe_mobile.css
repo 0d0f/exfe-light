@@ -1387,6 +1387,8 @@ button .exfe {
   position: relative;
   height: 50px;
   padding: 5px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .user-form .password .lock {
@@ -1396,16 +1398,17 @@ button .exfe {
   display: block;
 }
 
-.user-form .password .eye {
+.user-form .password .pass {
   position: absolute;
-  top: 12px;
+  top: 15px;
   right: 5px;
+  display: block;
 }
 
 .user-form #password {
   width: 200px;
   height: 40px;
-  margin-left: 10px;
+  margin-left: 50px;
   font-size: 18px;
   font-weight: lighter;
   color: #b2b2b2;
@@ -1498,7 +1501,6 @@ button .exfe {
   font-size: 21px;
   line-height: 26px;
   color: #191919;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .actions .error-info {
@@ -1507,7 +1509,6 @@ button .exfe {
   font-size: 20px;
   line-height: 26px;
   color: #FFFFFF;
-  text-shadow: 0 1px 1px rgba(255, 0, 0, 0.5);
 }
 
 .done-info .redirecting {
@@ -1517,7 +1518,6 @@ button .exfe {
   font-size: 14px;
   line-height: 18px;
   color: #b2b2b2;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 .space {
