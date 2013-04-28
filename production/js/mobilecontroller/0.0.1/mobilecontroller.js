@@ -339,7 +339,7 @@ define('mobilecontroller', function (require, exports, module) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
                   alert(i)
-                  App.controllers.footer.emit('show-from-resolve-token');
+                  //App.controllers.footer.emit('show-from-resolve-token');
                   break;
                 }
               }
