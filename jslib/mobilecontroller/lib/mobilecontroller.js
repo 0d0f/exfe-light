@@ -182,7 +182,6 @@ define('mobilecontroller', function (require, exports, module) {
         })
 
       this.on('show', function (screen, hasBanner, hasCross, hasError) {
-        this.element.removeClass('hide');
         this.emit('reset-position', false, -(hasBanner ? 60 : 0));
         if (this.enableTimer) {
           this.emit('start-redirect');
@@ -221,15 +220,15 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('reset-position', function (type, top) {
         top = App.screen.height - 96 + top;
-        this.element.removeClass('hide');
         this.element.css({
           position: type ? 'absolute' : 'relative',
           top:  top + 'px'
         });
+        this.element.removeClass('hide');
       })
 
       this.on('show-from-set-password', function () {
-        this.emit('reset-position');
+        this.emit('reset-position', true, 0);
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
@@ -456,7 +455,7 @@ define('mobilecontroller', function (require, exports, module) {
         };
         element.removeClass('hide');
         $('#app-body').css('height', '100%');
-        App.controllers.footer.emit('reset-position');
+        App.controllers.footer.emit('reset-position', true, 0);
 
         $.ajax({
           type: 'POST',
