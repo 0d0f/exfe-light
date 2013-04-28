@@ -339,7 +339,7 @@ define('live', function (require) {
 
     var intGeoWatch;
 
-    var startGeo = function () {
+    function startGeo() {
         intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
             if (data
              && data.coords
