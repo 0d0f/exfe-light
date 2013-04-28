@@ -1412,6 +1412,7 @@ button .exfe {
   font-size: 18px;
   font-weight: lighter;
   color: #b2b2b2;
+  text-align: left;
   background: transparent;
   border: none;
   -webkit-box-shadow: none;
