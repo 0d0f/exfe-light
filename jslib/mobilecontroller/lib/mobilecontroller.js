@@ -455,6 +455,9 @@ define('mobilecontroller', function (require, exports, module) {
           });
 
       this.on('show', function (req, res) {
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+        }, 0)
         var cb = function () {
           // error getting identity informations
           req.error = true;
