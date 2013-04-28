@@ -373,7 +373,7 @@ define('mobilecontroller', function (require, exports, module) {
             if (meta && meta.code === 200) {
               $name.blur();
               $pass.blur();
-              self.
+              self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
               App.controllers.footer.emit('show-from-set-password');
