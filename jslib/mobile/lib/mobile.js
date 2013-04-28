@@ -47,6 +47,40 @@ define(function (require) {
   app.get(/^\/+(?:\?)?#live\/?$/, routes.live);
 
   // `verify`
+  // sms token
+  // ?t=2345
+  app.get(/^\?t=([a-zA-Z0-9]{3,})$/, function (req, res) {
+    var getSMSTokenFromHead = function () {
+      var header = document.getElementsByTagName('head')[0],
+          meta = document.getElementsByName('sms-token')[0],
+          smsToken = null;
+
+      if (meta) {
+        smsToken = JSON.parse(meta.content);
+        header.removeChild(meta);
+      }
+
+      return smsToken;
+    };
+    var smsToken = getSMSTokenFromHead();
+
+    if (smsToken) {
+      var action = smsToken.action;
+      req.resolveToken = smsToken;
+      if ('VERIFIED' === action) {
+
+        res.redirect('/#verify');
+
+      } else if ('INPUT_NEW_PASSWORD' === action) {
+
+        res.redirect('/#set_password');
+
+      }
+    } else {
+      req.error = { code: 404 };
+      req.redirect('/');
+    }
+  });
   app.get(/^\/+(?:\?)?#verify\/?$/, routes.verify);
 
   // `set-password`
