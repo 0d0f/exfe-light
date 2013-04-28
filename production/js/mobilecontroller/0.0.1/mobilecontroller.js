@@ -242,6 +242,8 @@ define('mobilecontroller', function (require, exports, module) {
         this.emit('stop-redirect');
         if (this.countDown >= 1) {
           this.emit('start-redirect');
+          $('.redirecting').removeClass('hide');
+          launchApp();
         }
       });
 
