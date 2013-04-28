@@ -301,8 +301,13 @@ define('mobileroutes', function (require, exports, module) {
 
     // `resolve-token`
     resolveToken: function (req, res) {
-      var app = req.app;
-      var originToken = req.params[0];
+      var app = req.app,
+          originToken = req.params[0],
+          cb = function (req, res) {
+            req.error = true;
+            res.redirect('/');
+          };
+
 
       if (originToken) {
 
@@ -322,17 +327,17 @@ define('mobileroutes', function (require, exports, module) {
                 session.resolveToken.origin_token = originToken;
                 res.redirect('/#set_password');
               }
+            } else {
+              cb(req, res);
             }
           },
           error: function () {
-            req.error = true;
-            res.redirect('/');
+            cb(req, res);
           }
         });
 
       } else {
-        req.error = true;
-        res.redirect('/');
+        cb(req, res);
       }
 
       app.currPageName = 'RESOLVE_TOKEN';
