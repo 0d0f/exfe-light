@@ -182,6 +182,7 @@ define('mobilecontroller', function (require, exports, module) {
         })
 
       this.on('show', function (screen, hasBanner, hasCross, hasError) {
+        this.element.removeClass('hide');
         this.emit('reset-position', false, -(hasBanner ? 60 : 0));
         if (this.enableTimer) {
           this.emit('start-redirect');
