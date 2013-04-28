@@ -24,12 +24,15 @@ define('live', function (require) {
             avatar     : '',
             bio        : '',
             identities : [],
+            timestamp  : 0
         },
         latitude  : '',
         longitude : '',
         accuracy  : '',
         traits    : []
     };
+
+    var now = Date.now || function () { return new Date().getTime(); };
 
     var streaming_api_url = Config.streaming_api_url;
 
@@ -119,6 +122,7 @@ define('live', function (require) {
                             myData.card.avatar     = rawCards[i].avatar;
                             myData.card.bio        = rawCards[i].bio;
                             myData.card.identities = rawCards[i].identities;
+                            myData.card.timestamp  = rawCards[i].timestamp;
                         } else {
                             if (!rawCards[i].avatar) {
                                 rawCards[i].avatar = encodeURI(
@@ -177,6 +181,8 @@ define('live', function (require) {
             this.http.onreadystatechange = this.listen;
             this.http.send();
             this.timer  = setInterval(this.listen, 1000);
+            // temporary @leaskh with @googollee
+            secCnt      = secInt - 3;
         },
         listen : function() {
             if ((stream.http.readyState   !== 4 && stream.http.readyState !== 3)
@@ -307,6 +313,7 @@ define('live', function (require) {
                 myData.card.avatar     = card.avatar;
                 myData.card.bio        = card.bio;
                 myData.card.identities = clone(card.identities);
+                myData.card.timestamp  = now();
                 log('Set my card: ' + JSON.stringify(myData.card));
             } else {
                 log('Card error');
@@ -320,7 +327,9 @@ define('live', function (require) {
         shake : function(start_callback, end_callback) {
             shake_start_callback = start_callback;
             shake_end_callback   = end_callback;
-        }
+        },
+        startGeo: startGeo,
+        stopGeo: stopGeo
     };
 
 
@@ -329,25 +338,32 @@ define('live', function (require) {
 
     var inthndShake  = rawShake(shake_start_callback, shake_end_callback);
 
+    var intGeoWatch;
 
-    var intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
-        if (data
-         && data.coords
-         && data.coords.latitude
-         && data.coords.longitude
-         && data.coords.accuracy) {
-            myData.latitude  = data.coords.latitude.toString();
-            myData.longitude = data.coords.longitude.toString();
-            myData.accuracy  = data.coords.accuracy.toString();
-            secCnt           = secInt - 5;
-            log(
-                'Location update: '
-              + 'lat = ' + myData.latitude  + ', '
-              + 'lng = ' + myData.longitude + ', '
-              + 'acu = ' + myData.accuracy
-            );
-        }
-    });
+    function stopGeo() {
+        navigator.geolocation.clearWatch(intGeoWatch);
+    }
+
+    function startGeo() {
+        intGeoWatch  = navigator.geolocation.watchPosition(function(data) {
+            if (data
+             && data.coords
+             && data.coords.latitude
+             && data.coords.longitude
+             && data.coords.accuracy) {
+                myData.latitude  = data.coords.latitude.toString();
+                myData.longitude = data.coords.longitude.toString();
+                myData.accuracy  = data.coords.accuracy.toString();
+                secCnt           = secInt - 5;
+                log(
+                    'Location update: '
+                  + 'lat = ' + myData.latitude  + ', '
+                  + 'lng = ' + myData.longitude + ', '
+                  + 'acu = ' + myData.accuracy
+                );
+            }
+        });
+    }
 
 
     window.addEventListener('load', function() {

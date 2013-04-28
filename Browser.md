@@ -1,6 +1,7 @@
 浏览器-客户端功能列表
 =====================
 
+
 ### Cross Domain Ajax:
   * **[CORS w3][]** **[cors caniuse][]
     - IE8+           XDR      XDomainRequest        无法传送 cookie, 只能通过 get 方法传送 token 标识符

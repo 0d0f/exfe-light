@@ -21,7 +21,7 @@ define('api', function (require) {
     // -------------- Must Use Token ---------------------- //
     getUser: '/Users/:user_id',
 
-    signout: '/Users/signout/:user_id', // @todo
+    signout: '',
 
     updateUser: '/Users/update',
 
@@ -99,34 +99,7 @@ define('api', function (require) {
     recognize: '/time/recognize',
 
     // sort identities
-    sortIdentities: '/Users/:user_id/sortIdentities',
-
-
-    // PhotoX {
-
-    // Get PhotoX
-    photox_getPhotoX: '/photox/:photox_id',
-
-    // Get albums
-    photox_getAlbums: '/photox/GetSourceAlbums',
-
-    // Get source photos
-    photox_getSourcePhotos: '/photox/GetSourcePhotos',
-
-    // Get photo
-    photox_getPhoto: '/photox/GetPhoto',
-
-    // Add
-    photox_add: '/photox/:photox_id/Add',
-
-    // Get likes
-    photox_getLikes: '/photox/:photox_id/GetLikes',
-
-    // Like
-    photox_like: '/photox/Like'
-
-    // PhotoX }
-
+    sortIdentities: '/Users/:user_id/sortIdentities'
   };
 
   // Not Use Token
@@ -224,8 +197,7 @@ define('api', function (require) {
   var defaultOptions = {
     type: 'GET',
     dataType: 'JSON',
-    //timeout: 4698,
-    timeout: 10000,
+    timeout: 3777,
     cache: false,
     // cors: Cross Origin Resource Share
     xhrFields: { withCredentials: true }
@@ -253,7 +225,7 @@ define('api', function (require) {
       });
 
     promise.jqXHR = jqXHR;
-    promise.abort = function (statusText) {
+    promise.abort = function (statusText) { 
       if (jqXHR) {
         jqXHR.abort(statusText);
         jqXHR = dfd = promise = null;

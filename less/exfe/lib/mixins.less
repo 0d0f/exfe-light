@@ -131,3 +131,9 @@
 // http://adriansandu.com/how-to-handle-broken-images-in-firefox/
 // Github.com image broken image { float: left; }
 img:-moz-broken { -moz-force-broken-image-icon:1; }
+
+.box-sizing() {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}

@@ -7,7 +7,6 @@ define(function (require) {
 
   view.render(data.response.photos.slice(0, 30));
   view.update();
-  view.doscroll();
   $(window).trigger('throttledresize');
   view.lazyLoad();
   view.doscroll();

@@ -70,6 +70,7 @@ define('xdialog', function (require, exports) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+          this._oauth_ = null;
         }
         this.destory();
 
@@ -446,7 +447,7 @@ define('xdialog', function (require, exports) {
 
                   + '<div class="control-group phone-tip hide">'
                     + '<div class="xalert">'
-                      + 'Please format phone number with country code prefix, e.g.: +1 555 450 0303'
+                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
                     + '</div>'
                   + '</div>'
 
@@ -1417,7 +1418,7 @@ define('xdialog', function (require, exports) {
 
                   + '<div class="control-group phone-tip hide">'
                     + '<div class="xalert">'
-                      + 'Please format phone number with country code prefix, e.g.: +1 555 450 0303'
+                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
                     + '</div>'
                   + '</div>'
 
@@ -1755,6 +1756,7 @@ define('xdialog', function (require, exports) {
       onHideAfter: function () {
         if (this.befer) {
           this.befer.abort();
+          this.befer = null;
         }
         this.destory();
       },
@@ -1990,7 +1992,7 @@ define('xdialog', function (require, exports) {
     options: {
 
       onHideAfter: function () {
-        this.befer && this.befer.abort();
+        this.befer && this.befer.abort() && (this.befer = null);
         this.destory();
       },
 
@@ -2366,6 +2368,7 @@ define('xdialog', function (require, exports) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
+	  this._oauth_ = null;
         }
         this.destory();
       },
