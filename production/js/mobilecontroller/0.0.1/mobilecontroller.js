@@ -545,7 +545,9 @@ define('mobilecontroller', function (require, exports, module) {
         */
         $title.find('.normal').removeClass('hide');
         if (error) {
-          alert('Sorry. Your link is invalid or expired. Requested page was not found.');
+          setTimeout(function () {
+            alert('Sorry. Your link is invalid or expired. Requested page was not found.');
+          }, 14)
         }
 
         this.startAnimate();
