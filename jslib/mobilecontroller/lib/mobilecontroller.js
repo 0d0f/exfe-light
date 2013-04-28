@@ -240,8 +240,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
-        alert(12312)
-        //this.emit('start-redirect');
+        this.emit('start-redirect');
       });
 
       this.on('start-redirect', function (args) {
@@ -314,6 +313,9 @@ define('mobilecontroller', function (require, exports, module) {
       var self = this,
           resolveToken = this.resolveToken;
       this.on('show', function (req, res) {
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+        }, 0)
         var cb = function () {
           // error getting identity informations
           req.error = true;
@@ -336,6 +338,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
+                  alert(i)
                   App.controllers.footer.emit('show-from-resolve-token');
                   break;
                 }
