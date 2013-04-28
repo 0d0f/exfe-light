@@ -475,7 +475,7 @@ define('mobilecontroller', function (require, exports, module) {
             var user = data.response.user;
             if (data && data.meta && data.meta.code === 200) {
               $('.identity .avatar').attr('src', user.avatar_filename);
-              $('.identity .name').val(user.name);
+              $('.identity .name').text(user.name);
               return;
             }
             cb();
