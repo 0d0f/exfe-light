@@ -240,7 +240,8 @@ define('mobilecontroller', function (require, exports, module) {
 
       this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
-        this.emit('start-redirect');
+        alert(12312)
+        //this.emit('start-redirect');
       });
 
       this.on('start-redirect', function (args) {
