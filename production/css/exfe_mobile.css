@@ -1377,10 +1377,15 @@ button .exfe {
 
 .user-form .identity .name {
   height: 40px;
-  margin-left: 10px;
+  margin-left: 50px;
   line-height: 40px;
   background: transparent;
   border: none;
+}
+
+.user-form .identity .avatar {
+  position: absolute;
+  float: none;
 }
 
 .user-form .password {
@@ -1396,6 +1401,8 @@ button .exfe {
   top: 16px;
   left: 16px;
   display: block;
+  -webkit-user-select: none;
+          user-select: none;
 }
 
 .user-form .password .pass {
@@ -1403,6 +1410,8 @@ button .exfe {
   top: 15px;
   right: 5px;
   display: block;
+  -webkit-user-select: none;
+          user-select: none;
 }
 
 .user-form #password {

@@ -399,7 +399,7 @@ define('mobilecontroller', function (require, exports, module) {
         var $input = $(this).prev();
         $input.prop('type', 'password');
       })
-        .on('touchend.setpassword', '.pass', function () {
+        .on('touchend.setpassword', '.pass', function (e) {
           // 0.3 minute
           if (now() - TST > 0.3 * 1000) {
             var $input = $(this).prev();
@@ -409,6 +409,9 @@ define('mobilecontroller', function (require, exports, module) {
               $input.prop('type', 'password');
             }, 500);
           }
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
         })
         .on('keydown.setpassword', '#password', function (e) {
           if (e.keyCode === 13) {
