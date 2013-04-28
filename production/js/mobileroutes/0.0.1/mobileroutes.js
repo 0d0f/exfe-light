@@ -237,8 +237,8 @@ define('mobileroutes', function (require, exports, module) {
 
     // `index`
     index: function (req) {
-      var error = req.error;
-      var app = req.app, controllers = app.controllers,
+      var error = req.error,
+          app = req.app, controllers = app.controllers,
           homeCont = controllers.home,
           footerCont = controllers.footer,
           screen = app.screen;
@@ -249,6 +249,7 @@ define('mobileroutes', function (require, exports, module) {
           }
         });
       }
+      document.title = 'EXFE - A utility for gathering with friends.';
       homeCont.emit('show', screen, error);
       footerCont.emit('show', screen, false, false, error === true);
       delete req.error;
@@ -304,7 +305,9 @@ define('mobileroutes', function (require, exports, module) {
       var app = req.app,
           originToken = req.params[0],
           cb = function (req, res) {
-            req.error = true;
+            req.error = {
+              code: 404
+            };
             res.redirect('/');
           };
 
