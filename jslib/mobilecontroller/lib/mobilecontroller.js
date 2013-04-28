@@ -238,7 +238,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-      this.on('show-from-set-password', function () {
+      this.on('show-from-resolve-token', function () {
         this.emit('stop-redirect');
         this.emit('start-redirect');
       });
@@ -319,6 +319,8 @@ define('mobilecontroller', function (require, exports, module) {
           res.redirect('/');
         };
         this.element.removeClass('hide');
+        $('#app-body').css('height', '100%');
+        App.controllers.footer.emit('reset-position');
         $.ajax({
           type: 'POST',
           url: config.api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
@@ -331,7 +333,8 @@ define('mobilecontroller', function (require, exports, module) {
                 var identity = identities[i];
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
-                  App.controllers.footer.emit('start-redirect', '?user_id=' + user.user_id + '&token=' + resolveToken.token);
+                  self.$('.done-info').removeClass('hide');
+                  App.controllers.footer.emit('show-from-resolve-token');
                   return;
                 }
               }
@@ -398,7 +401,7 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('show-from-set-password');
+              App.controllers.footer.emit('show-from-resolve-token');
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }

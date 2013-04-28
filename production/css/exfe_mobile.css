@@ -1484,6 +1484,16 @@ button .exfe {
   line-height: 40px;
 }
 
+.verify-page .identity .name {
+  display: inline-block;
+  width: 230px;
+  margin-left: 10px;
+  overflow: hidden;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .identity input.name {
   width: 220px;
   height: 30px;
@@ -1519,7 +1529,7 @@ button .exfe {
 }
 
 .done-info {
-  text-align: center;
+  text-align: left;
 }
 
 .done-info .status {
