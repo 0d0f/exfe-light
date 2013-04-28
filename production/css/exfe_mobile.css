@@ -1349,6 +1349,7 @@ button .exfe {
 }
 
 .verify-actions {
+  height: 100%;
   padding: 20px;
   margin-right: auto;
   margin-left: auto;
