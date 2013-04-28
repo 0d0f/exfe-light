@@ -101,8 +101,6 @@ define(function (require) {
 
   //window.pageshow = function () {};
 
-  alert(navigator.notification);
-
   // global
   window.App = app;
 
