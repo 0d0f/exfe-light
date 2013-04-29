@@ -9972,8 +9972,7 @@ body {
 
 .settings-panel .user-infos .user-name {
   position: relative;
-  height: 25px;
-  margin-bottom: 12px;
+  height: 30px;
   line-height: 25px;
 }
 
@@ -10012,6 +10011,15 @@ body {
 
 .settings-panel .user-infos .changepassword.xbtn-changepassword span {
   display: inline;
+}
+
+.settings-panel .user-infos .user-bio {
+  width: 85%;
+  min-height: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  visibility: visible;
 }
 
 .settings-panel .user-infos [data-editable="true"] .avatar {

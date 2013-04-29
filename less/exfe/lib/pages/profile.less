@@ -91,9 +91,8 @@
 
       .user-name {
         position: relative;
-        height: 25px;
+        height: 30px;
         line-height: 25px;
-        margin-bottom: 12px;
 
         h3 {
           font-size: 21px;
@@ -131,6 +130,13 @@
         &.xbtn-changepassword span {
           display: inline;
         }
+      }
+
+      .user-bio {
+        visibility: visible;
+        width: 85%;
+        min-height: 12px;
+        .text-overflow();
       }
 
       [data-editable="true"] {
