@@ -1,3 +1,7 @@
+* v0.1.3 2013-04-29T15:11:00 UTC+0800
+  - Fixed Bugs
+    * if `eftime#outputformat` = 1, `timeline` scroll to 9AM
+
 * v0.1.2 2013-01-13T16:55:15 UTC+0800
   - Changes
     * Normal hidden `timeline`
