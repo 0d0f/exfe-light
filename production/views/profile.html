@@ -17,7 +17,7 @@
             <ul class="unstyled identity-list" data-draggable="true"></ul>
 
           </div>
-          <button id="app-profile-addidentity" class="pull-right xbtn xbtn-addidentity hide" data-widget="dialog" data-dialog-type="addidentity">Add Identity…</button>
+          <button id="app-profile-addidentity" class="pull-right xbtn xbtn-addidentity" data-widget="dialog" data-dialog-type="addidentity">Add Identity…</button>
 
           <div class="pull-right identities-trash hide">
             <div class="pull-right trash-message">
@@ -132,14 +132,14 @@
         <a href="/#!{{id}}" data-id="{{id}}" data-link>
           <h5>{{title}}</h5>
           <time>{{printTime time}}</time>
-          <address>{{place.title}} 
+          <address>{{place.title}}
           {{#if place.description}}
             <span class="gray333">({{place.description}})</span>
           {{/if}}
           </address>
-          <div><span>{{{confirmed_nums exfee.invitations}}}</span> 
-            <span class="gray333">of</span> 
-            {{{total exfee.invitations}}} 
+          <div><span>{{{confirmed_nums exfee.invitations}}}</span>
+            <span class="gray333">of</span>
+            {{{total exfee.invitations}}}
             <span class="gray333">accepted</span>: <span>{{{confirmed_identities exfee.invitations}}}</span>
           </div>
         </a>
