@@ -233,7 +233,7 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , showTL: function () {
-        this.timeline.$element.removeClass('hide');
+        this.timeline.show(this.eftime);
       }
 
     , keydown: function (e) {
@@ -835,8 +835,13 @@ define('datepanel', function (require/*, exports, module*/) {
 
   Timeline.prototype = {
 
+      show: function (eft) {
+        this.$element.removeClass('hide');
+        this.select(eft);
+      }
+
       //              eftime
-      select: function (eft) {
+    , select: function (eft) {
         this.enable = true;
         this.removeSelected();
         if (eft
@@ -862,8 +867,7 @@ define('datepanel', function (require/*, exports, module*/) {
 
           // moved to middle position
           this.$tw.scrollTop(Math.max(0, t - this.vph / 2));
-        }
-        else {
+        } else {
           this.$tw.scrollTop(180);
         }
         this.enable = false;
