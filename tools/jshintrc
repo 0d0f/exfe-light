@@ -3,7 +3,8 @@
 {
     // Settings
     "passfail"      : false,  // Stop on first error.                                                                                                       报错即停止
-    "maxerr"        : 100,    // Maximum error before stopping.                                                                                             设定错误阀值
+    "beautify"        : true,
+    "maxerr"        : 1000,    // Maximum error before stopping.                                                                                             设定错误阀值
 
     // Predefined globals whom JSHint will ignore.
     "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
@@ -25,7 +26,7 @@
 
     // EcmaScript 5.
     "es5"           : true,   // Allow EcmaScript 5 syntax.
-    "strict"        : false,  // Require `use strict` pragma  in every file.
+    "strict"        : true,  // Require `use strict` pragma  in every file.
     "globalstrict"  : false,  // Allow global "use strict" (also enables 'strict').
 
 
@@ -99,6 +100,7 @@
         // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Functions#escape_and_unescape_functions
         "escape",
         "unescape",
+        "google",
         "App",
         "Cross"
     ]

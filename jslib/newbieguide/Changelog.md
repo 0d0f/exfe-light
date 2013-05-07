@@ -1,3 +1,7 @@
+* v0.0.4 2013-04-29T16:01:05 UTC+0800
+  - Changes
+    * tweaks some text
+
 * v0.0.3 2013-01-17T19:18:16 UTC+0800
   - Changes
     * `purpose` replaced `intent`

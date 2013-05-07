@@ -50,11 +50,15 @@ EXFE.COM 前端架构
     - http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml
   * [odof.js][id]
   * https://developers.google.com/closure/
-  * http://semver.org/
+  * http://semver.org/ Semantic Versioning
+  * http://en.wikipedia.org/wiki/Software_versioning
   * https://github.com/styleguide
   * http://tomdoc.org/
   * http://rng.io/
   * task-based https://github.com/gruntjs/grunt
+  * http://jsperf.com/
+  * task-based https://github.com/gruntjs/grunt
+  * https://speakerdeck.com/jonrohan/githubs-css-performance
 
 ## Node.js & Packages
   - npm install -gd less

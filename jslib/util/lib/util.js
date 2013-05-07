@@ -61,8 +61,6 @@ define('util', function () {
           s.toString().replace(trimLeft, '').replace(trimRight, '');
       },
 
-<<<<<<< HEAD
-=======
     // parse phone
     /*
     parsePhone: function () {
@@ -71,7 +69,6 @@ define('util', function () {
     },
     */
 
->>>>>>> d36f8a0... updated
     // 解析 用户身份
     parseId: function () {
       var facebook = /^([a-z0-9_\.]{1,})@facebook$/i,

@@ -1,0 +1,14 @@
+{
+  "name": "jqtransit",
+  "version": "0.9.9",
+  "homepage": "http://ricostacruz.com/jquery.transit/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rstacruz/jquery.transit"
+  },
+  "pull": {
+    "url": "http://ricostacruz.com/jquery.transit/jquery.transit.js",
+    "minurl": "http://ricostacruz.com/jquery.transit/jquery.transit.min.js"
+  },
+  "hint": false
+}

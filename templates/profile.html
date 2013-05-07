@@ -29,6 +29,10 @@
 
   <!-- Include less.js -->
   <script src="../jslib/less/lib/less.js"></script>
+  <script type="text/javascript">
+    less.env = "development";
+    less.watch();
+  </script>
 </head>
 <body>
   <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6.
@@ -107,11 +111,13 @@
             <div class="user-name">
               <input value="Steve Exfee" type="text" />
             </div>
+            <div class="user-bio">The best way to predict the future is to invent it.</div>
             <div class="user-name">
               <!--<button class="xbtn xbtn-changepassword">Change Password...</button>-->
               <h3 class="pull-left">Steve Exfee</h3>
               <div class="xbtn changepassword xbtn-changepassword"><i class="icon14-lock"></i><span>Change Password...</span></div>
             </div>
+            <div class="user-bio">The best way to predict the future is to invent it.</div>
             <ul class="unstyled identity-list">
               <li class="default">
                 <i class="icon14-clear icon-move">

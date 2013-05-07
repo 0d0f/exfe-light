@@ -1,3 +1,9 @@
+* v0.1.18 2013-04-29T16:05:00 UTC+0800
+  - Changes
+    * displayed `bio` information
+    * displayed `Add Identity` Button all the time
+    * updated `newbieguide`.js-v0.0.4
+
 * v0.1.17 2013-04-11T11:50:00 UTC+0800
   - Bugs Fixed
     * ignored `rsvp#NOTIFICATION`

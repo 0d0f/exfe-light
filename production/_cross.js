@@ -520,7 +520,7 @@ ExfeeWidget = {
         } else {
             return null;
         }
-        objIdentity.avatar_filename = ExfeeWidget.api_url + '/avatar/default?name=' + objIdentity.name;
+        objIdentity.avatar_filename = encodeURI(ExfeeWidget.api_url + '/avatar/default?name=' + objIdentity.name);
         return objIdentity;
     },
 
@@ -2006,19 +2006,16 @@ define(function (require, exports, module) {
         $('.cross-map').empty();
         var hasLL = place.lat.length && place.lng.length,
             Config = require('config'),
-            // NOTE: Google Static Map must be use `http`
             map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + Config.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img style="border-radius: 3px; box-shadow: 2px 2px 4px rgba(0, 0, 0, .25);" src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
 
         function getMap(position) {
           var coords = position.coords;
-          //if (place.title === 'Right there on map') place.title = '';
           map_dom = map_dom.replace(/\{\{lat\}\}/ig, coords.latitude)
             .replace(/\{\{lng\}\}/ig, coords.longitude)
             .replace(/\{\{title\}\}/ig, (place.provider === '' ? coords.latitude + ',' + coords.longitude + ' ' : '') + encodeURIComponent(place.title));
           $('.cross-map').append(map_dom);
         }
 
-        function getPositionError(msg) {}
         if (hasLL) {
           getMap({
             coords: {
@@ -2026,8 +2023,6 @@ define(function (require, exports, module) {
               longitude: place.lng
             }
           });
-        //} else if (navigator.geolocation) {
-        //  navigator.geolocation.getCurrentPosition(getMap, getPositionError);
         }
     };
 
@@ -2270,7 +2265,7 @@ define(function (require, exports, module) {
         window.ExfeePanel    = require('exfeepanel');
         // init showtime
         window.showtimeTimer = setInterval(ShowTime, 50);
-        // init 
+        // init
         window.convTimer     = null;
     });
     // init event
@@ -2278,6 +2273,14 @@ define(function (require, exports, module) {
         // get cross
         if (Cross_id > 0) {
             GetCross(Cross_id);
+            // NOTE: `PhotoXWidget`
+            var pxw = new (require('photoxwidget'))({
+              options: {
+                crossId: Cross_id,
+                parentNode: $('.cross-photox')
+              }
+            });
+            pxw.show();
         } else if (Cross_id === null) {
             if (browsingIdentity) {
                 curIdentity = browsingIdentity;
@@ -2334,9 +2337,7 @@ define(function (require, exports, module) {
         $('#app-tip-lock').remove();
       }
     });
-
 });
-
 
 
 /**
