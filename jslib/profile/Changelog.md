@@ -3,6 +3,7 @@
     * displayed `bio` information
     * displayed `Add Identity` Button all the time
     * updated `newbieguide`.js-v0.0.4
+    * checked `identity#status` === REVOKED
 
 * v0.1.17 2013-04-11T11:50:00 UTC+0800
   - Bugs Fixed
@@ -70,10 +71,10 @@
   * add Twitter OAuth identity
   * fixed: 如果 `time.outputformat` = 1 & `time.origin` = '' 时，应该显示 `Sometime`
 
-* v0.0.4 12:31:54 08/31/2012   
-  \+ 如果是 OAuth identity, 双击修改 identity name 时，提示红色文字   
-  \* 修复 newbieguide.js 重复加载问题, newbieguide 升级到 v0.0.2   
+* v0.0.4 12:31:54 08/31/2012
+  \+ 如果是 OAuth identity, 双击修改 identity name 时，提示红色文字
+  \* 修复 newbieguide.js 重复加载问题, newbieguide 升级到 v0.0.2
   \* Fix change identity name bug.
 
-* v0.0.3 16:27:04 08/30/2012   
+* v0.0.3 16:27:04 08/30/2012
   Updated exfee 输出，条件（当前 user 下身份/操作的 出外).
