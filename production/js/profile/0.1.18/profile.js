@@ -120,8 +120,8 @@ define(function (require, exports, module) {
     return Handlebars.helpers['if'].call(this, context, options);
   });
 
-  Handlebars.registerHelper('ifOauthVerifying', function (status, options) {
-    return Handlebars.helpers['if'].call(this, status === 'VERIFYING', options);
+  Handlebars.registerHelper('ifRevoked', function (status, options) {
+    return Handlebars.helpers['if'].call(this, status === 'REVOKED', options);
   });
 
   Handlebars.registerHelper('ifVerifying', function (provider, status, options) {

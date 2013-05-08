@@ -76,13 +76,13 @@
           <!-- {{#makeDefault __default__ status}}<a class="makedefault" href="#" data-link="nota">Make default</a>{{/makeDefault}} -->
           {{#isOAuthIdentity provider}}
           <span class="xlabel isOAuth hide">Wanna change this name? Please do it in {{capitalize provider}}.</span>
-          {{#ifOauthVerifying status}}
+          {{#ifRevoked status}}
           <span class="xlabel">
             <i class="icon16-warning"></i>
             <span>Authorization failed.</span>
             <button class="xbtn xbtn-reauthorize" data-widget="dialog" data-dialog-type="verification_oauth" data-link="nota">Re-Authorize</button>
           </span>
-          {{/ifOauthVerifying}}
+          {{/ifRevoked}}
           {{/isOAuthIdentity}}
           {{#ifVerifying provider status}}
           <span class="xlabel">
