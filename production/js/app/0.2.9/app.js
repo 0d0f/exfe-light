@@ -36,6 +36,31 @@ define(function (require) {
   // /^\/+#?\/?$/i
   app.get(/^\/+(?:\?)?(?:ipad)?#{0,}$/, routes.index);
 
+  // sms-token
+  app.get(/^\?t=([a-zA-Z0-9]{3,})$/, function (req, res, next) {
+    var getSMSTokenFromHead = function () {
+      var header = document.getElementsByTagName('head')[0],
+          meta = document.getElementsByName('sms-token')[0],
+          smsToken = null;
+
+      if (meta) {
+        smsToken = JSON.parse(meta.content);
+        header.removeChild(meta);
+      }
+
+      return smsToken;
+    };
+
+    var smsToken = getSMSTokenFromHead(),
+        originToken = req.params[0];
+
+    if (smsToken) {
+      routes.inspectResolveToken(req, res, next, smsToken, originToken);
+    } else {
+      res.redirect('/#invalid/token=' + originToken);
+    }
+
+  }, routes.resolveShow);
 
   // gather a x - `/#gather`
   app.get(/^\/+(?:\?)?(?:ipad)?#gather\/?$/, routes.refreshAuthUser, routes.gather);
@@ -63,7 +88,7 @@ define(function (require) {
 
   // profile
   //        email:    cfd@exfe.com        - `/#cfd@exfe.com`
-  //      twitter:    @cfddream           - `/#@cfddream`
+  //      twitter:    @cfddream@twitter   - `/#@cfddream@twitter`
   //     facebook:    cfddream@facebook   - `/#cfddream@facebook`
   //        phone:    +86138964xx233      - `/#+86138964xx233`
   //    instagram:    cfddream@instagram  - `/#cfddream@instagram`
