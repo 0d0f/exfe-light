@@ -181,8 +181,6 @@ define('live', function (require) {
             this.http.onreadystatechange = this.listen;
             this.http.send();
             this.timer  = setInterval(this.listen, 1000);
-            // temporary @leaskh with @googollee
-            secCnt      = secInt - 3;
         },
         listen : function() {
             if ((stream.http.readyState   !== 4 && stream.http.readyState !== 3)
