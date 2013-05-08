@@ -685,8 +685,7 @@ define(function (require, exports, module) {
   */
 
   // 添加身份
-  $BODY.on('click.profile.identity', '.xbtn-addidentity', function (e) {
-  });
+  //$BODY.on('click.profile.identity', '.xbtn-addidentity', function (e) {});
 
   $BODY.on('click.profile', '#profile div.cross-type', function (e) {
     e.preventDefault();

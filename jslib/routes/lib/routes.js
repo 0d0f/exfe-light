@@ -91,101 +91,106 @@ define('routes', function (require, exports, module) {
     }
   };
 
+  routes.inspectResolveToken = function (req, res, next, data, originToken) {
+    var session = req.session,
+        user = session.user,
+        authorization = session.authorization;
+    // token_type
+    //  verify
+    //  forgot password: SET_PASSWORD
+    /*
+     * data = {
+     *   user_id
+     * , user_name
+     * , identity_id
+     * , token
+     * , token_type
+     * , action
+     * }
+     */
+    session.resolveData = data;
+    var target_token = data.token
+      , target_user_id = data.user_id
+      , target_user_name = data.user_name
+      // 是否还有可以合并的 `identities`
+      //, mergeable_user = data.mergeable_user
+      , mergeable_user = null
+      , token_type = data.token_type
+      , action = data.action
+      , browsing_authorization;
+
+    if (!mergeable_user
+        && ((authorization && authorization.user_id === target_user_id)
+          || (!authorization && token_type === 'VERIFY' && action === 'VERIFIED'))
+       ) {
+      authorization = {
+        token: target_token,
+        user_id: target_user_id
+      };
+      Store.set('authorization', session.authorization = authorization);
+      session.auto_sign = action !== 'INPUT_NEW_PASSWORD';
+    }
+    else {
+      session.browsing_authorization = browsing_authorization = data;
+    }
+
+    Bus.emit('app:api:getuser'
+      , target_token
+      , target_user_id
+      , function done(data) {
+        var new_user = data.user;
+        session.resolveData.setup = action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false;
+        if (browsing_authorization) {
+          session.browsing_user = new_user;
+          var eun = Util.printExtUserName(new_user.identities[0])
+            , forwardUrl;
+          if (authorization) {
+            forwardUrl = '/#' + eun + '/token=' + originToken;
+          }
+          else {
+            forwardUrl = '/#' + eun;
+          }
+          Bus.emit('app:usermenu:updatebrowsing',
+            {   normal: user
+              , browsing: new_user
+              , action: action
+              , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
+              , originToken: originToken
+              , tokenType: 'user'
+              , page: 'resolve'
+              , readOnly: true
+              , user_name: target_user_name || new_user.name
+              , mergeable_user: mergeable_user
+              , forward: forwardUrl
+            }
+            , 'browsing_identity');
+        }
+        else {
+          Store.set('user', user = session.user = data.user);
+          Bus.emit('app:usermenu:updatenormal', user);
+          Bus.emit('app:usermenu:crosslist'
+            , authorization.token
+            , authorization.user_id
+          );
+        }
+        next();
+      }
+    );
+  };
+
   routes.resolveRequest = function (req, res, next) {
     var session = req.session
-      , user = session.user
-      , authorization = session.authorization
       , originToken = req.params[0];
 
     session.originToken = originToken;
     Api.request('resolveToken',
       { type: 'POST', data: { token: originToken } },
       function (data) {
-          // token_type
-          //  verify
-          //  forgot password: SET_PASSWORD
-          /*
-           * data = {
-           *   user_id
-           * , user_name
-           * , identity_id
-           * , token
-           * , token_type
-           * , action
-           * }
-           */
-          session.resolveData = data;
-          var target_token = data.token
-            , target_user_id = data.user_id
-            , target_user_name = data.user_name
-            // 是否还有可以合并的 `identities`
-            //, mergeable_user = data.mergeable_user
-            , mergeable_user = null
-            , token_type = data.token_type
-            , action = data.action
-            , browsing_authorization;
-
-          if (!mergeable_user
-              && ((authorization && authorization.user_id === target_user_id)
-                || (!authorization && token_type === 'VERIFY' && action === 'VERIFIED'))
-             ) {
-            authorization = {
-              token: target_token,
-              user_id: target_user_id
-            };
-            Store.set('authorization', session.authorization = authorization);
-            session.auto_sign = action !== 'INPUT_NEW_PASSWORD';
-          }
-          else {
-            session.browsing_authorization = browsing_authorization = data;
-          }
-
-          Bus.emit('app:api:getuser'
-            , target_token
-            , target_user_id
-            , function done(data) {
-              var new_user = data.user;
-              session.resolveData.setup = action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false;
-              if (browsing_authorization) {
-                session.browsing_user = new_user;
-                var eun = Util.printExtUserName(new_user.identities[0])
-                  , forwardUrl;
-                if (authorization) {
-                  forwardUrl = '/#' + eun + '/token=' + originToken;
-                }
-                else {
-                  forwardUrl = '/#' + eun;
-                }
-                Bus.emit('app:usermenu:updatebrowsing',
-                  {   normal: user
-                    , browsing: new_user
-                    , action: action
-                    , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
-                    , originToken: originToken
-                    , tokenType: 'user'
-                    , page: 'resolve'
-                    , readOnly: true
-                    , user_name: target_user_name || new_user.name
-                    , mergeable_user: mergeable_user
-                    , forward: forwardUrl
-                  }
-                  , 'browsing_identity');
-              }
-              else {
-                Store.set('user', user = session.user = data.user);
-                Bus.emit('app:usermenu:updatenormal', user);
-                Bus.emit('app:usermenu:crosslist'
-                  , authorization.token
-                  , authorization.user_id
-                );
-              }
-              next();
-            }
-          );
-        }
-      , function () {
-          res.redirect('/#invalid/token=' + originToken);
-        }
+        routes.inspectResolveToken(req, res, next, data, originToken);
+      },
+      function () {
+        res.redirect('/#invalid/token=' + originToken);
+      }
     );
   };
 
