@@ -140,7 +140,10 @@ define('datepanel', function (require/*, exports, module*/) {
         this.on('show-tl', this.showTL);
       }
 
-    , save: function (/*eft*/) {
+    , save: function (s) {
+        if (s) {
+          this.eftime.origin = s;
+        }
         $('body').trigger('click');
       }
 
@@ -315,7 +318,7 @@ define('datepanel', function (require/*, exports, module*/) {
             break;
           case 13:
             e.preventDefault();
-            component.emit('save');
+            component.emit('save', trim(this.$element.val()));
             break;
           case 40: // down
             // if the cursor in the last, tab to PlacesList
@@ -372,7 +375,7 @@ define('datepanel', function (require/*, exports, module*/) {
 
         if (self.befer) {
           self.befer.abort();
-          delete self.befer;
+          self.befer = void 0;
         }
 
         if ('' === s) {
@@ -389,7 +392,10 @@ define('datepanel', function (require/*, exports, module*/) {
                 }
             }
           , function (data) {
-              component.emit('rf-di', data.cross_time);
+              // sometimes `datepanel` is closed.
+              if (component) {
+                component.emit('rf-di', data.cross_time);
+              }
             }
         );
       }
