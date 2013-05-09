@@ -492,7 +492,7 @@ define(function (require, exports, module) {
     //Store.set('newbie_guide', 0);
     var newbie_status = Store.get('newbie_guide:' + user_id);
 
-    if (!newbie_status && cross_nums <= 3 && !$('#app-browsing-identity').size()) {
+    if (!newbie_status && cross_nums <= 3 && !$('#app-browsing-identity').length && !$('.newbie').length) {
       var s = document.createElement('script');
       var $ss = $('script#js-newbieguide');
       s.id = 'js-newbieguide';
