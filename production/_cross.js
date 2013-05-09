@@ -1317,7 +1317,9 @@ define(function (require, exports, module) {
             $('body').trigger('click');
             if (curIdentity) {
                 if (!$(this).hasClass('disabled')) {
-                    $(this).toggleClass('disabled', true);
+                    $(this)
+                        .prop('disabled', true)
+                        .toggleClass('disabled', true);
                     Gather();
                 }
             } else {
@@ -2147,7 +2149,9 @@ define(function (require, exports, module) {
             },
             function(data) {
                 $('.cross-opts .saving').hide();
-                $('#cross-form-gather').toggleClass('disabled', false);
+                $('#cross-form-gather')
+                    .prop('disabled', false)
+                    .toggleClass('disabled', false);
             }
         );
     };
