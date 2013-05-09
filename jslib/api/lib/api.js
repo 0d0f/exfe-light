@@ -263,13 +263,13 @@ define('api', function (require) {
     promise.abort = function (statusText) {
       if (jqXHR) {
         jqXHR.abort(statusText);
-        jqXHR = dfd = promise = null;
+        jqXHR = dfd = promise = void 0;
       }
     };
     promise
       .done(done)
       .fail(fail)
-      .always(function () { jqXHR = dfd = promise = null; });
+      .always(function () { jqXHR = dfd = promise = void 0; });
 
     return promise;
   }
