@@ -5,6 +5,9 @@
     * updated `newbieguide`.js-v0.0.4
     * checked `identity#status` === REVOKED
 
+  - Fix Bugs
+    * `newbieguide` repeated
+
 * v0.1.17 2013-04-11T11:50:00 UTC+0800
   - Bugs Fixed
     * ignored `rsvp#NOTIFICATION`
