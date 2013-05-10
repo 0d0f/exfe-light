@@ -13,7 +13,7 @@
   },
   "hint": false,
   "module": {
-    "header": "define('marked', [], function (require, exports, module) {\n\n\n",
+    "header": "define('marked', function (require, exports, module) {\n\n\n",
     "footer": "\n\n\n});"
   }
 }

@@ -1,3 +1,7 @@
+* v0.1.19 2013-05-10T16:42:07 UTC+0800
+  - Changes
+    * `window._ENV_` in exchange for `require('config')`
+
 * v0.1.18 2013-04-29T16:05:00 UTC+0800
   - Changes
     * displayed `bio` information

@@ -1,4 +1,4 @@
-define('marked', [], function (require, exports, module) {
+define('marked', function (require, exports, module) {
 
 
 /**

@@ -1264,7 +1264,7 @@ define(function (require, exports, module) {
 
     var ExfeeWidgestInit = function() {
         ExfeeCache.init();
-        ExfeeWidget.api_url = require('config').api_url;
+        ExfeeWidget.api_url = window._ENV_.api_url;
         window.GatherExfeeWidget = ExfeeWidget.make(
             'gather-exfee', true, ExfeeCallback
         );
@@ -1672,7 +1672,7 @@ define(function (require, exports, module) {
 
 
     var fixBackground = function(purge) {
-        var backgrounds = ExfeUtilities.clone(require('config').backgrounds);
+        var backgrounds = ExfeUtilities.clone(window._ENV_.backgrounds);
         backgrounds.push('');
         for (var i = 0; i < Cross.widget.length; i++) {
             if (Cross.widget[i].type === 'Background') {
@@ -1820,7 +1820,7 @@ define(function (require, exports, module) {
         }
         var crossOffset = getTimezoneOffset(Cross.time.begin_at.timezone),
             timeOffset  = getTimezoneOffset(ExfeUtilities.getTimezone()),
-            timevalid   = crossOffset === timeOffset && require('config').timevalid,
+            timevalid   = crossOffset === timeOffset && window._ENV_.timevalid,
             strAbsTime  = '', strRelTime = '', format = 'YYYY-MM-DD',
             //placeholder = Cross.id ? '&nbsp;' : 'Click here to set time.',
             placeholder = 'Pick a time.',
@@ -2007,8 +2007,7 @@ define(function (require, exports, module) {
     var ShowGoogleMap = function (place) {
         $('.cross-map').empty();
         var hasLL = place.lat.length && place.lng.length,
-            Config = require('config'),
-            map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + Config.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img style="border-radius: 3px; box-shadow: 2px 2px 4px rgba(0, 0, 0, .25);" src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
+            map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img style="border-radius: 3px; box-shadow: 2px 2px 4px rgba(0, 0, 0, .25);" src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
 
         function getMap(position) {
           var coords = position.coords;
