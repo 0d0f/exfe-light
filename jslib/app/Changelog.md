@@ -1,3 +1,7 @@
+* v0.2.10 2013-05-10T16:42:07 UTC+0800
+  - Changes
+    * `window._ENV_` in exchange for `require('config')`
+
 * v0.2.9 2013-03-19T17:10:00 UTC+0800
   - Changes
     * `profile` url 支持 `flickr` `instagram`

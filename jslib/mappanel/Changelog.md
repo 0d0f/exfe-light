@@ -1,3 +1,7 @@
+* v0.0.9 2013-05-10T17:00:00 UTC+0800
+  - Changes
+    * `window._ENV_` in exchange for `require('config')`
+
 * v0.0.8 2013-03-20T13:02:00 UTC+0800
   - Bugs Fix
     * Updated Cross-place when input value is empty

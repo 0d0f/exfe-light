@@ -5,3 +5,4 @@ less/1b.less
 less/themes
 *.bk*
 node_modules/
+.idea/
