@@ -67,6 +67,11 @@ MOBILE_META.forEach(function (v) {
   PUBLISH[v.name] = path.join('src', v.name);
   MOBILE_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
 });
+
+JSHINT.DESKTOP = path.join('dist', 'all-' + PKG.desktop.version + '.js');
+JSHINT.DESKTOP_MIN = path.join('dist', 'all-' + PKG.desktop.version + '.min.js');
+JSHINT.MOBILE = path.join('dist', 'mobile-all-' + PKG.mobile.version + '.js');
+JSHINT.MOBILE_MIN = path.join('dist', 'mobile-all-' + PKG.mobile.version + '.min.js');
 // }}}
 
 module.exports = function (grunt) {
@@ -107,9 +112,29 @@ module.exports = function (grunt) {
           'dist/all-<%= pkg.desktop.version %>.min.js': ['dist/all-<%= pkg.desktop.version %>.js']
         }
       },
+      desktop_beautify: {
+        options: {
+          beautify: true,
+          width: 80,
+          banner: '/*! EXFE.COM all@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        },
+        files: {
+          'dist/all-<%= pkg.desktop.version %>.js': ['dist/all-<%= pkg.desktop.version %>.js']
+        }
+      },
       mobile: {
         files: {
           'dist/mobile-all-<%= pkg.mobile.version %>.min.js': ['dist/mobile-all-<%= pkg.mobile.version %>.js']
+        }
+      },
+      mobile_beautify: {
+        options: {
+          beautify: true,
+          width: 80,
+          banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        },
+        files: {
+          'dist/mobile-all-<%= pkg.mobile.version %>.js': ['dist/mobile-all-<%= pkg.mobile.version %>.js']
         }
       }
     }
@@ -172,6 +197,13 @@ module.exports = function (grunt) {
       grunt.file.copy(path.join(p, 'lib', name + '.js'), path.join(vdp, name + '.js'));
     } else {
       grunt.log.error('Not Found A Module.');
+    }
+  });
+
+  grunt.registerTask('deploy', 'Deploy Static Files', function () {
+    var len = arguments.length;
+    if (0 === len) {
+    } else {
     }
   });
 

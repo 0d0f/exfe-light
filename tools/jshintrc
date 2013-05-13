@@ -21,7 +21,7 @@
 
     // Development.
     "debug"         : false,  // Allow debugger statements e.g. browser breakpoints.
-    "devel"         : true,   // Allow developments statements e.g. `console.log();`.
+    "devel"         : false,   // Allow developments statements e.g. `console.log();`.
 
 
     // EcmaScript 5.
@@ -42,10 +42,10 @@
     "eqeqeq"        : true,   // Require triple equals i.e. `===`.                                                                                          强比较
     "eqnull"        : false,  // Tolerate use of `== null`.                                                                                                 == 比较
     "evil"          : false,  // Tolerate use of `eval`.                                                                                                    允许 eval
-    "expr"          : true,  // Tolerate `ExpressionStatement` as Programs.
+    "expr"          : false,  // Tolerate `ExpressionStatement` as Programs.
     "forin"         : false,  // Tolerate `for in` loops without `hasOwnPrototype`.
     "immed"         : true,   // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`                                           true: (function (){}()) false: (function() {})()
-    "latedef"       : true,   // Prohipit variable use before definition.
+    "latedef"       : false,   // Prohipit variable use before definition.
     "loopfunc"      : false,  // Allow functions to be defined within loops.
     "noarg"         : true,   // Prohibit use of `arguments.caller` and `arguments.callee`.                                                                 禁止使用，arguments.callee -> 当前执行的函数，ES5 严格模式中被禁用；arguments.callee -> 调用当前函数的函数（如果有的话），JS 引擎实现不一致
     "regexp"        : true,   // Prohibit `.` and `[^...]` in regular expressions.
@@ -70,29 +70,13 @@
     "white"         : false,  // Check against strict whitespace and indentation rules.                                                                     空白
     "indent"        : 2,
     "unused"        : true,
+    "multistr"      : false,
 
     // Custom globals.
     "predef"        : [
         "_",
         "__dirname",
         "require",
-        "jasmine",
-        "describe",
-        "xdescribe",
-        "it",
-        "xit",
-        "beforeEach",
-        "afterEach",
-        "expect",
-        "spyOn",
-        "runs",
-        "waits",
-        "waitsFor",
-        "Benchmark",
-        "Raphael",
-        "Backbone",
-        "Modernizr",
-        "Ext",
         "_gaq",
         "$",
         "define",
