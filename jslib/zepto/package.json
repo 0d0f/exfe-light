@@ -10,9 +10,5 @@
     "url": "http://zeptojs.com/zepto.js",
     "minurl": "http://zeptojs.com/zepto.min.js"
   },
-  "hint": false,
-  "module": {
-    "header": "define('zepto', function (require, exports, module) {\n\n\n",
-    "footer": "\n\n\nreturn Zepto;\n\n\n});"
-  }
+  "hint": false
 }

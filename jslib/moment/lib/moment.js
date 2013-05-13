@@ -1,6 +1,3 @@
-define('moment', [], function (require, exports, module) {
-
-
 // moment.js
 // version : 1.7.2
 // author : Tim Wood
@@ -1214,7 +1211,3 @@ define('moment', [], function (require, exports, module) {
         });
     }
 }).call(this);
-
-
-
-});

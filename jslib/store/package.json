@@ -11,9 +11,5 @@
     "minurl": "https://raw.github.com/marcuswestin/store.js/master/store.min.js"
   },
   "date": "2012-11-07T11:26:06 UTC+0800",
-  "hint": false,
-  "module": {
-    "header": "define('store', function (require, exports, module) {\n\n\n",
-    "footer": "\n\n\n});"
-  }
+  "hint": false
 }
