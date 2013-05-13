@@ -220,7 +220,7 @@ module.exports = function (grunt) {
       if (!grunt.file.exists(fontdir = dir + '/font')) {
         grunt.file.mkdir(fontdir);
       }
-      if (!grunt.file.exists(fontdir = dir + '/views')) {
+      if (!grunt.file.exists(viewsdir = dir + '/views')) {
         grunt.file.mkdir(viewsdir);
       }
       switch (name) {
