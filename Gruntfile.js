@@ -44,18 +44,18 @@ var JSHINT = {
 };
 
 DESKTOP_META.forEach(function (v) {
-  var p = path.join('jslib', v.name, 'lib', v.name + '.js');
+  var p = path.join('src', v.name, 'lib', v.name + '.js');
   JSHINT.desktop.push(p);
   JSHINT[v.name + '_'] = p;
-  PUBLISH[v.name] = path.join('jslib', v.name);
+  PUBLISH[v.name] = path.join('src', v.name);
   DESKTOP_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
 });
 
 MOBILE_META.forEach(function (v) {
-  var p = path.join('jslib', v.name, 'lib', v.name + '.js');
+  var p = path.join('src', v.name, 'lib', v.name + '.js');
   JSHINT.mobile.push(p);
   JSHINT[v.name + '_'] = p;
-  PUBLISH[v.name] = path.join('jslib', v.name);
+  PUBLISH[v.name] = path.join('src', v.name);
   MOBILE_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
 });
 // }}}
@@ -119,13 +119,13 @@ module.exports = function (grunt) {
     var TABS = '    ';
     grunt.log.writeln(TABS + 'Desktop Modules');
     DESKTOP_META.forEach(function (v) {
-      var pkg = JSON.parse(fs.readFileSync(path.join('jslib', v.name, 'package.json')));
+      var pkg = JSON.parse(fs.readFileSync(path.join('src', v.name, 'package.json')));
       grunt.log.writeln(TABS + TABS, pkg.name, ' - ', pkg.description, 'v' + pkg.version);
     });
 
     grunt.log.writeln("\n" + TABS + 'Mobile Modules');
     MOBILE_META.forEach(function (v) {
-      var pkg = JSON.parse(fs.readFileSync(path.join('jslib', v.name, 'package.json')));
+      var pkg = JSON.parse(fs.readFileSync(path.join('src', v.name, 'package.json')));
       grunt.log.writeln(TABS + TABS, pkg.name, ' - ', pkg.description, 'v' + pkg.version);
     });
   });
@@ -148,7 +148,7 @@ module.exports = function (grunt) {
         }
       });
     } else if (name in grunt.config.get('publish')) {
-      var p = path.join('jslib', name);
+      var p = path.join('src', name);
       var pkg = JSON.parse(fs.readFileSync(path.join(p, 'package.json')));
       var dp = path.join('dist', name);
       grunt.log.writeln(name);
