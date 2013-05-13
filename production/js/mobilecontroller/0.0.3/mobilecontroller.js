@@ -564,6 +564,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
         // @note: 先隐藏掉 live 功能，等待功能完善
+        this.$('#home-card').css('display', 'none');
         //this.startAnimate();
       });
     },
