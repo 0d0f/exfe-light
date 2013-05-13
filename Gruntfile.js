@@ -43,12 +43,21 @@ var JSHINT = {
 
 };
 
+var DESKTOP_OTHERS = ['home', 'newbieguide'];
+
 DESKTOP_META.forEach(function (v) {
   var p = path.join('src', v.name, 'lib', v.name + '.js');
   JSHINT.desktop.push(p);
   JSHINT[v.name + '_'] = p;
   PUBLISH[v.name] = path.join('src', v.name);
   DESKTOP_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
+});
+
+DESKTOP_OTHERS.forEach(function (v) {
+  var p = path.join('src', v, 'lib', v + '.js');
+  JSHINT.desktop.push(p);
+  JSHINT[v + '_'] = p;
+  PUBLISH[v] = path.join('src', v);
 });
 
 MOBILE_META.forEach(function (v) {
