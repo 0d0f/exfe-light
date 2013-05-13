@@ -204,9 +204,24 @@ module.exports = function (grunt) {
     var len = arguments.length;
     if (0 === len) {
     } else {
-      var dir = '/exfe/exfelight/{js,css,img,font,views}';
+      var dir = '/exfe/exfelight';
       if (!grunt.file.exists(dir)) {
         grunt.file.mkdir(dir);
+      }
+      if (!grunt.file.exists(var jsdir = dir + '/js')) {
+        grunt.file.mkdir(jsdir);
+      }
+      if (!grunt.file.exists(var cssdir = dir + '/css')) {
+        grunt.file.mkdir(cssdir);
+      }
+      if (!grunt.file.exists(var imgdir = dir + '/img')) {
+        grunt.file.mkdir(imgdir);
+      }
+      if (!grunt.file.exists(var fontdir = dir + '/font')) {
+        grunt.file.mkdir(fontdir);
+      }
+      if (!grunt.file.exists(var fontdir = dir + '/views')) {
+        grunt.file.mkdir(viewsdir);
       }
       switch (name) {
       case 'js':
