@@ -147,7 +147,34 @@ module.exports = function (grunt) {
 
     copy: {
       deploy_js: {
-        { expand: true, cwd: '<%= dirs.dist %>', src: ['**'], dest: '/exfe/exfelight/js/' }
+        expand: true,
+        cwd: '<%= dirs.dist %>',
+        src: ['**'],
+        dest: '/exfe/exfelight/js/'
+      },
+      deploy_css: {
+        expand: true,
+        cwd: 'production/css',
+        src: ['**'],
+        dest: '/exfe/exfelight/css/'
+      },
+      deploy_img: {
+        expand: true,
+        cwd: 'production/img',
+        src: ['**'],
+        dest: '/exfe/exfelight/img/'
+      },
+      deploy_font: {
+        expand: true,
+        cwd: 'production/font',
+        src: ['**'],
+        dest: '/exfe/exfelight/font/'
+      },
+      deploy_views: {
+        expand: true,
+        cwd: 'production/views',
+        src: ['**'],
+        dest: '/exfe/exfelight/views/'
       }
     }
   });
@@ -232,6 +259,22 @@ module.exports = function (grunt) {
         //grunt.file.copy(dist + grunt.config.get('dirs.desktop_min'), jsdir + '/' + grunt.config.get('dirs.desktop_min'));
         //grunt.file.copy(dist + grunt.config.get('dirs.mobile'), jsdir + '/' + grunt.config.get('dirs.mobile'));
         //grunt.file.copy(dist + grunt.config.get('dirs.mobile_min'), jsdir + '/' + grunt.config.get('dirs.mobile_min'));
+        break;
+
+      case 'css':
+        grunt.task.run('copy:deploy_css');
+        break;
+
+      case 'img':
+        grunt.task.run('copy:deploy_img');
+        break;
+
+      case 'font':
+        grunt.task.run('copy:deploy_font');
+        break;
+
+      case 'views':
+        grunt.task.run('copy:deploy_views');
         break;
       }
     }
