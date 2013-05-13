@@ -200,10 +200,18 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('deploy', 'Deploy Static Files', function () {
+  grunt.registerTask('deploy', 'Deploy Static Files.', function (name) {
     var len = arguments.length;
     if (0 === len) {
     } else {
+      var dir = '/exfe/exfelight/{js,css,img,font,views}';
+      if (!grunt.file.exists(dir)) {
+        grunt.file.mkdir(dir);
+      }
+      switch (name) {
+      case 'js':
+        break;
+      }
     }
   });
 
