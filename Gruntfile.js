@@ -143,13 +143,19 @@ module.exports = function (grunt) {
           '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
         }
       }
-    }
+    },
 
+    copy: {
+      deploy_js: {
+        { expand: true, cwd: '<%= dirs.dist %>', src: ['**'], dest: '/exfe/exfelight/js/' }
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
   //grunt.registerTask('default', ['uglify']);
@@ -221,7 +227,7 @@ module.exports = function (grunt) {
       switch (name) {
       case 'js':
         var dist = grunt.config.get('dirs.dist') + '/';
-        grunt.file.copy(dist, jsdir + '/');
+        grunt.task.run('copy:deploy_js');
         //grunt.file.copy(dist + grunt.config.get('dirs.desktop'), jsdir + '/' + grunt.config.get('dirs.desktop'));
         //grunt.file.copy(dist + grunt.config.get('dirs.desktop_min'), jsdir + '/' + grunt.config.get('dirs.desktop_min'));
         //grunt.file.copy(dist + grunt.config.get('dirs.mobile'), jsdir + '/' + grunt.config.get('dirs.mobile'));
