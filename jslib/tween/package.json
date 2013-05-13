@@ -9,9 +9,5 @@
     "url": "https://raw.github.com/sole/tween.js/master/src/Tween.js",
     "minurl": ""
   },
-  "module": {
-    "header": "define('tween', function (require) {\n\n\n",
-    "footer": "return TWEEN;\n\n\n});"
-  },
   "hint": false
 }

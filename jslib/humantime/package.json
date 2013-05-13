@@ -5,9 +5,5 @@
   "homepage": "https://exfe.com/",
   "author": "cfd",
   "date": "2013-04-10T14:43:00 UTC+0800",
-  "module": {
-    "header": "define('humantime', function (require, exports, module) {\n",
-    "footer": "\nreturn HumanTime;\n});"
-  },
   "hint": true
 }

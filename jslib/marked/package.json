@@ -11,10 +11,6 @@
     "url": "https://raw.github.com/chjj/marked/master/lib/marked.js",
     "minurl": ""
   },
-  "hint": false,
-  "module": {
-    "header": "define('marked', function (require, exports, module) {\n\n\n",
-    "footer": "\n\n\n});"
-  }
+  "hint": false
 }
 
