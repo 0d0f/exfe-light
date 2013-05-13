@@ -81,10 +81,11 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: PKG,
     dirs: {
-      desktop: 'dist/all-<%= pkg.desktop.version %>.js',
-      desktop_min: 'dist/all-<%= pkg.desktop.version %>.min.js',
-      mobile: 'dist/mobile-all-<%= pkg.mobile.version %>.js',
-      mobile_min: 'dist/mobile-all-<%= pkg.mobile.version %>.min.js'
+      dir: 'dist',
+      desktop: 'all-<%= pkg.desktop.version %>.js',
+      desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
+      mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
+      mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js'
     },
 
     jshint: JSHINT,
@@ -114,7 +115,7 @@ module.exports = function (grunt) {
       },
       desktop: {
         files: {
-          '<%= dirs.desktop_min %>': ['<%= dirs.desktop %>']
+          '<%= dirs.dir %>/<%= dirs.desktop_min %>': ['<%= dirs.dir %>/<%= dirs.desktop %>']
         }
       },
       desktop_beautify: {
@@ -124,12 +125,12 @@ module.exports = function (grunt) {
           banner: '/*! EXFE.COM all@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
         },
         files: {
-          '<%= dirs.desktop %>': ['<%= dirs.desktop %>']
+          '<%= dirs.dir %>/<%= dirs.desktop %>': ['<%= dirs.dir %>/<%= dirs.desktop %>']
         }
       },
       mobile: {
         files: {
-          '<%= dirs.mobile_min %>': ['<%= dirs.mobile %>']
+          '<%= dirs.dir %>/<%= dirs.mobile_min %>': ['<%= dirs.dir %>/<%= dirs.mobile %>']
         }
       },
       mobile_beautify: {
@@ -139,7 +140,7 @@ module.exports = function (grunt) {
           banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
         },
         files: {
-          '<%= dirs.mobile %>': ['<%= dirs.mobile %>']
+          '<%= dirs.dir %>/<%= dirs.mobile %>': ['<%= dirs.dir %>/<%= dirs.mobile %>']
         }
       }
     }
@@ -219,10 +220,10 @@ module.exports = function (grunt) {
 
       switch (name) {
       case 'js':
-        grunt.file.copy(grunt.config.get('dirs.desktop'), jsdir);
-        grunt.file.copy(grunt.config.get('dirs.desktop_min'), jsdir);
-        grunt.file.copy(grunt.config.get('dirs.mobile'), jsdir);
-        grunt.file.copy(grunt.config.get('dirs.mobile_min'), jsdir);
+        grunt.file.copy('dirs/' + grunt.config.get('dirs.desktop'), jsdir + grunt.config.get('dirs.desktop'));
+        grunt.file.copy('dirs/' + grunt.config.get('dirs.desktop_min'), jsdir + grunt.config.get('dirs.desktop_min'));
+        grunt.file.copy('dirs/' + grunt.config.get('dirs.mobile'), jsdir + grunt.config.get('dirs.mobile'));
+        grunt.file.copy('dirs/' + grunt.config.get('dirs.mobile_min'), jsdir + grunt.config.get('dirs.mobile_min'));
         break;
       }
     }
