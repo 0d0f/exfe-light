@@ -1,4 +1,4 @@
-define('store', function (require, module) {
+define('store', function (require, exports, module) {
 /* Copyright (c) 2010-2012 Marcus Westin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

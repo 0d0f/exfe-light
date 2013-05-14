@@ -1,4 +1,4 @@
-/*! EXFE.COM mobile-all@0.0.1 2013-05-14 02:05:20 */
+/*! EXFE.COM mobile-all@0.0.1 2013-05-14 02:05:47 */
 (function(t) {
     "use strict";
     function e(t, e, i) {
@@ -2642,7 +2642,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
             throw new Handlebars.Exception("The partial " + e + " could not be compiled when running in runtime-only mode");
         }
     }, Handlebars.template = Handlebars.VM.template, Handlebars;
-}), define("store", function(t, e) {
+}), define("store", function(t, e, n) {
     (function() {
         function t() {
             try {
@@ -2651,7 +2651,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                 return !1;
             }
         }
-        function n() {
+        function e() {
             try {
                 return l in o && o[l] && o[l][o.location.hostname];
             } catch (t) {
@@ -2697,7 +2697,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                 t[n] = a.get(n);
             }
             return t;
-        }; else if (n()) s = o[l][o.location.hostname], a.set = function(t, e) {
+        }; else if (e()) s = o[l][o.location.hostname], a.set = function(t, e) {
             return void 0 === e ? a.remove(t) : (s[t] = a.serialize(e), e);
         }, a.get = function(t) {
             return a.deserialize(s[t] && s[t].value);
@@ -2744,7 +2744,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
         } catch (f) {
             a.disabled = !0;
         }
-        a.enabled = !a.disabled, e !== void 0 && "function" != typeof e ? e.exports = a : "function" == typeof define && define.amd ? define(a) : this.store = a;
+        a.enabled = !a.disabled, n !== void 0 && "function" != typeof n ? n.exports = a : "function" == typeof define && define.amd ? define(a) : this.store = a;
     })();
 });
 
