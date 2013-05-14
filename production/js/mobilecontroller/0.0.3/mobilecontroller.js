@@ -388,9 +388,9 @@ define('mobilecontroller', function (require, exports, module) {
           $error = this.$('.error-info'),
           $name = this.$('#name'),
           $pass = this.$('#password'),
-          name = trim($name.val()),
+          //name = trim($name.val()),
           password = $pass.val();
-      if (name && password.length >= 4) {
+      if (/*name && */password.length >= 4) {
         $button
           .addClass('disabled')
           .prop('disabled', true);

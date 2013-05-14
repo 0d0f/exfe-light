@@ -1,4 +1,4 @@
-/*! EXFE.COM mobile-all@0.0.1 2013-05-14 03:05:04 */
+/*! EXFE.COM mobile-all@0.0.1 2013-05-14 04:05:20 */
 (function(t) {
     "use strict";
     function e(t, e, i) {
@@ -3945,14 +3945,14 @@ var lead0 = HumanTime.lead0 = function(t, e) {
             $("#app-setpassword").length || this.element.appendTo($("#app-body"));
         },
         submitPassword: function() {
-            var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = u(r.val()), c = s.val();
-            o && c.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
+            var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = s.val();
+            o.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
                 type: "POST",
                 url: a + "/Users/ResetPassword",
                 data: {
                     token: e,
-                    name: o,
-                    password: c
+                    name: name,
+                    password: o
                 },
                 success: function(e) {
                     var a = e.meta;
