@@ -115,6 +115,9 @@ module.exports = function (grunt) {
         banner: '/*! EXFE.COM <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
       desktop: {
+        options: {
+          banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        },
         files: {
           '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
         }
@@ -122,14 +125,16 @@ module.exports = function (grunt) {
       desktop_beautify: {
         options: {
           beautify: true,
-          width: 80,
-          banner: '/*! EXFE.COM all@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+          width: 80
         },
         files: {
           '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
         }
       },
       mobile: {
+        options: {
+          banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        },
         files: {
           '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
         }
@@ -137,10 +142,9 @@ module.exports = function (grunt) {
       mobile_beautify: {
         options: {
           beautify: true,
-          width: 80,
-          banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+          width: 80
         },
-            files: {
+        files: {
           '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
         }
       }
