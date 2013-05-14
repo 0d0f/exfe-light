@@ -1,4 +1,4 @@
-/*! EXFE.COM all@0.0.1 2013-05-14 02:05:20 */
+/*! EXFE.COM all@0.0.1 2013-05-14 02:05:38 */
 (function(e) {
     "use strict";
     function t(e, t, n) {
@@ -3675,7 +3675,7 @@ TWEEN.Tween = function(e) {
         request: i,
         cancel: n
     };
-}), define("store", function(e, t) {
+}), define("store", function(e, t, i) {
     (function() {
         function e() {
             try {
@@ -3684,7 +3684,7 @@ TWEEN.Tween = function(e) {
                 return !1;
             }
         }
-        function i() {
+        function t() {
             try {
                 return d in o && o[d] && o[d][o.location.hostname];
             } catch (e) {
@@ -3730,7 +3730,7 @@ TWEEN.Tween = function(e) {
                 e[i] = s.get(i);
             }
             return e;
-        }; else if (i()) r = o[d][o.location.hostname], s.set = function(e, t) {
+        }; else if (t()) r = o[d][o.location.hostname], s.set = function(e, t) {
             return void 0 === t ? s.remove(e) : (r[e] = s.serialize(t), t);
         }, s.get = function(e) {
             return s.deserialize(r[e] && r[e].value);
@@ -3777,7 +3777,7 @@ TWEEN.Tween = function(e) {
         } catch (f) {
             s.disabled = !0;
         }
-        s.enabled = !s.disabled, t !== void 0 && "function" != typeof t ? t.exports = s : "function" == typeof define && define.amd ? define(s) : this.store = s;
+        s.enabled = !s.disabled, i !== void 0 && "function" != typeof i ? i.exports = s : "function" == typeof define && define.amd ? define(s) : this.store = s;
     })();
 }), define("marked", function(e, t, i) {
     (function() {
