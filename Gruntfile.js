@@ -85,7 +85,8 @@ module.exports = function (grunt) {
       desktop: 'all-<%= pkg.desktop.version %>.js',
       desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
       mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
-      mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js'
+      mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js',
+      deploy: '/exfe/exfelight'
     },
 
     jshint: JSHINT,
@@ -176,6 +177,16 @@ module.exports = function (grunt) {
         src: ['**'],
         dest: '/exfe/exfelight/views/'
       }
+    },
+
+    shell: {
+      git: {
+        command: [
+          'cd <%= dirs.deploy %>',
+          'git add .',
+          'git commit -am "<%= git.tag %>" || echo "";'
+        ].join('&&')
+      }
     }
   });
 
@@ -183,6 +194,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-shell');
 
   // Default task(s).
   //grunt.registerTask('default', ['uglify']);
@@ -239,7 +251,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('deploy', 'Deploy Static Files.', function (name) {
+  grunt.registerTask('deploy', 'Deploy Static Files.', function (name, tag) {
     var len = arguments.length;
     if (0 === len) {
     } else {
@@ -275,6 +287,11 @@ module.exports = function (grunt) {
 
       case 'views':
         grunt.task.run('copy:deploy_views');
+        break;
+
+      case 'build':
+        grunt.config.set('git.tag', tag);
+        grunt.task.run('shell:git');
         break;
       }
     }
