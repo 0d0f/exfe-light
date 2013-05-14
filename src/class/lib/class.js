@@ -1,3 +1,4 @@
+/*jshint -W030 */
 /*jshint strict: false */
 define('class', function () {
 /*

@@ -81,7 +81,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: PKG,
     dirs: {
-      dist: 'dist',
+      dist: 'production/js',
       desktop: 'all-<%= pkg.desktop.version %>.js',
       desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
       mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
@@ -246,7 +246,7 @@ module.exports = function (grunt) {
     } else if (name in grunt.config.get('publish')) {
       var p = path.join('src', name);
       var pkg = JSON.parse(fs.readFileSync(path.join(p, 'package.json')));
-      var dp = path.join('dist', name);
+      var dp = path.join('production/js', name);
       grunt.log.writeln(name);
       grunt.task.run('jshint:' + name + '_');
       if (!grunt.file.exists(dp)) {

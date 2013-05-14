@@ -266,7 +266,7 @@ define(function (require) {
 //});
 
   var identities = Store.get('identities');
-  !identities && (identities = []);
+  if (!identities) { identities = []; }
 
   $BODY.on('focus.typeahead.data-api', '[data-typeahead-type="identity"]', function (e) {
     var $this = $(this);

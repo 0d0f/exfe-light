@@ -1,4 +1,4 @@
-/*! EXFE.COM all@0.0.1 2013-05-13 11:05:58 */
+/*! EXFE.COM all@0.0.1 2013-05-14 01:05:12 */
 (function(e) {
     "use strict";
     function t(e, t, n) {
@@ -309,9 +309,9 @@
     }, h.isRegex = function(e) {
         return !(!(e && e.test && e.exec) || !e.ignoreCase && e.ignoreCase !== !1);
     }, h.isUndefined = function(e) {
-        return e === void 0;
+        return void 0 === e;
     }, h.isDefined = function(e) {
-        return e !== void 0;
+        return void 0 !== e;
     }, h.isNaN = function(e) {
         return e !== e;
     }, h.isNull = function(e) {
@@ -823,7 +823,7 @@
             } else for (;s > r && i.call(e[r], r, e[r++]) !== !1; ) ;
             return e;
         },
-        trim: Z && !Z.call("﻿ ") ? function(e) {
+        trim: Z && !Z.call(" ") ? function(e) {
             return null == e ? "" : Z.call(e);
         } : function(e) {
             return null == e ? "" : (e + "").replace(it, "");
@@ -1255,16 +1255,13 @@
         },
         val: function(e) {
             var i, n, a, r = this[0];
-            {
-                if (arguments.length) return a = J.isFunction(e), this.each(function(n) {
-                    var r, s = J(this);
-                    1 === this.nodeType && (r = a ? e.call(this, n, s.val()) : e, null == r ? r = "" : "number" == typeof r ? r += "" : J.isArray(r) && (r = J.map(r, function(e) {
-                        return null == e ? "" : e + "";
-                    })), i = J.valHooks[this.type] || J.valHooks[this.nodeName.toLowerCase()], i && "set" in i && i.set(this, r, "value") !== t || (this.value = r));
-                });
-                if (r) return i = J.valHooks[r.type] || J.valHooks[r.nodeName.toLowerCase()], i && "get" in i && (n = i.get(r, "value")) !== t ? n : (n = r.value, 
-                "string" == typeof n ? n.replace(xt, "") : null == n ? "" : n);
-            }
+            return arguments.length ? (a = J.isFunction(e), this.each(function(n) {
+                var r, s = J(this);
+                1 === this.nodeType && (r = a ? e.call(this, n, s.val()) : e, null == r ? r = "" : "number" == typeof r ? r += "" : J.isArray(r) && (r = J.map(r, function(e) {
+                    return null == e ? "" : e + "";
+                })), i = J.valHooks[this.type] || J.valHooks[this.nodeName.toLowerCase()], i && "set" in i && i.set(this, r, "value") !== t || (this.value = r));
+            })) : r ? (i = J.valHooks[r.type] || J.valHooks[r.nodeName.toLowerCase()], i && "get" in i && (n = i.get(r, "value")) !== t ? n : (n = r.value, 
+            "string" == typeof n ? n.replace(xt, "") : null == n ? "" : n)) : void 0;
         }
     }), J.extend({
         valHooks: {
@@ -1295,11 +1292,11 @@
         attrFn: {},
         attr: function(e, i, n, a) {
             var r, s, o, l = e.nodeType;
-            if (e && 3 !== l && 8 !== l && 2 !== l) return a && J.isFunction(J.fn[i]) ? J(e)[i](n) : e.getAttribute === t ? J.prop(e, i, n) : (o = 1 !== l || !J.isXMLDoc(e), 
+            return e && 3 !== l && 8 !== l && 2 !== l ? a && J.isFunction(J.fn[i]) ? J(e)[i](n) : e.getAttribute === t ? J.prop(e, i, n) : (o = 1 !== l || !J.isXMLDoc(e), 
             o && (i = i.toLowerCase(), s = J.attrHooks[i] || (Et.test(i) ? yt : vt)), n !== t ? null === n ? (J.removeAttr(e, i), 
             t) : s && "set" in s && o && (r = s.set(e, n, i)) !== t ? r : (e.setAttribute(i, n + ""), 
             n) : s && "get" in s && o && null !== (r = s.get(e, i)) ? r : (r = e.getAttribute(i), 
-            null === r ? t : r));
+            null === r ? t : r)) : void 0;
         },
         removeAttr: function(e, t) {
             var i, n, a, r, s = 0;
@@ -1340,8 +1337,8 @@
         },
         prop: function(e, i, n) {
             var a, r, s, o = e.nodeType;
-            if (e && 3 !== o && 8 !== o && 2 !== o) return s = 1 !== o || !J.isXMLDoc(e), s && (i = J.propFix[i] || i, 
-            r = J.propHooks[i]), n !== t ? r && "set" in r && (a = r.set(e, n, i)) !== t ? a : e[i] = n : r && "get" in r && null !== (a = r.get(e, i)) ? a : e[i];
+            return e && 3 !== o && 8 !== o && 2 !== o ? (s = 1 !== o || !J.isXMLDoc(e), s && (i = J.propFix[i] || i, 
+            r = J.propHooks[i]), n !== t ? r && "set" in r && (a = r.set(e, n, i)) !== t ? a : e[i] = n : r && "get" in r && null !== (a = r.get(e, i)) ? a : e[i]) : void 0;
         },
         propHooks: {
             tabIndex: {
@@ -3195,13 +3192,13 @@
             top: 0,
             left: 0
         }, c = this[0], u = c && c.ownerDocument;
-        if (u) return (n = u.body) === c ? J.offset.bodyOffset(c) : (i = u.documentElement, 
+        return u ? (n = u.body) === c ? J.offset.bodyOffset(c) : (i = u.documentElement, 
         J.contains(i, c) ? (c.getBoundingClientRect !== t && (d = c.getBoundingClientRect()), 
         a = H(u), r = i.clientTop || n.clientTop || 0, s = i.clientLeft || n.clientLeft || 0, 
         o = a.pageYOffset || i.scrollTop, l = a.pageXOffset || i.scrollLeft, {
             top: d.top + o - r,
             left: d.left + l - s
-        }) : d);
+        }) : d) : void 0;
     }, J.offset = {
         bodyOffset: function(e) {
             var t = e.offsetTop, i = e.offsetLeft;
@@ -3577,17 +3574,17 @@ TWEEN.Tween = function(e) {
         In: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            -(i * Math.pow(2, 10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n)));
+            -(i * Math.pow(2, 10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n)));
         },
         Out: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            i * Math.pow(2, -10 * e) * Math.sin((e - t) * 2 * Math.PI / n) + 1);
+            i * Math.pow(2, -10 * e) * Math.sin(2 * (e - t) * Math.PI / n) + 1);
         },
         InOut: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            1 > (e *= 2) ? -.5 * i * Math.pow(2, 10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n) : .5 * i * Math.pow(2, -10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n) + 1);
+            1 > (e *= 2) ? -.5 * i * Math.pow(2, 10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n) : .5 * i * Math.pow(2, -10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n) + 1);
         }
     },
     Back: {
@@ -3705,7 +3702,7 @@ TWEEN.Tween = function(e) {
     if (r.disabled = !1, r.set = function() {}, r.get = function() {}, r.remove = function() {}, 
     r.clear = function() {}, r.transact = function(e, t, i) {
         var n = r.get(e);
-        null == i && (i = t, t = null), n === void 0 && (n = t || {}), i(n), r.set(e, n);
+        null == i && (i = t, t = null), void 0 === n && (n = t || {}), i(n), r.set(e, n);
     }, r.getAll = function() {}, r.serialize = function(e) {
         return JSON.stringify(e);
     }, r.deserialize = function(e) {
@@ -4017,7 +4014,7 @@ TWEEN.Tween = function(e) {
             return h(t), r(e);
         }, u.lexer = function(e, t) {
             return h(t), p.lexer(e);
-        }, u.parse = u, i !== void 0 ? i.exports = u : this.marked = u;
+        }, u.parse = u, void 0 !== i ? i.exports = u : this.marked = u;
     }).call(function() {
         return this || ("undefined" != typeof window ? window : global);
     }());
@@ -4787,14 +4784,14 @@ TWEEN.Tween = function(e) {
                 }
                 var i = this, n = [ 0 ], a = [ null ], r = [], s = this.table, o = "", l = 0, d = 0, c = 0;
                 this.lexer.setInput(e), this.lexer.yy = this.yy, this.yy.lexer = this.lexer, this.yy.parser = this, 
-                this.lexer.yylloc === void 0 && (this.lexer.yylloc = {});
+                void 0 === this.lexer.yylloc && (this.lexer.yylloc = {});
                 var u = this.lexer.yylloc;
                 r.push(u);
                 var h = this.lexer.options && this.lexer.options.ranges;
                 "function" == typeof this.yy.parseError && (this.parseError = this.yy.parseError);
                 for (var p, f, m, g, v, y, _, b, x, w = {}; ;) {
-                    if (m = n[n.length - 1], this.defaultActions[m] ? g = this.defaultActions[m] : ((null === p || p === void 0) && (p = t()), 
-                    g = s[m] && s[m][p]), g === void 0 || !g.length || !g[0]) {
+                    if (m = n[n.length - 1], this.defaultActions[m] ? g = this.defaultActions[m] : ((null === p || void 0 === p) && (p = t()), 
+                    g = s[m] && s[m][p]), void 0 === g || !g.length || !g[0]) {
                         var k = "";
                         if (!c) {
                             x = [];
@@ -4824,10 +4821,9 @@ TWEEN.Tween = function(e) {
                             first_column: r[r.length - (_ || 1)].first_column,
                             last_column: r[r.length - 1].last_column
                         }, h && (w._$.range = [ r[r.length - (_ || 1)].range[0], r[r.length - 1].range[1] ]), 
-                        v = this.performAction.call(w, o, d, l, this.yy, g[1], a, r), v !== void 0) return v;
-                        _ && (n = n.slice(0, 2 * -1 * _), a = a.slice(0, -1 * _), r = r.slice(0, -1 * _)), 
-                        n.push(this.productions_[g[1]][0]), a.push(w.$), r.push(w._$), b = s[n[n.length - 2]][n[n.length - 1]], 
-                        n.push(b);
+                        v = this.performAction.call(w, o, d, l, this.yy, g[1], a, r), void 0 !== v) return v;
+                        _ && (n = n.slice(0, -2 * _), a = a.slice(0, -1 * _), r = r.slice(0, -1 * _)), n.push(this.productions_[g[1]][0]), 
+                        a.push(w.$), r.push(w._$), b = s[n[n.length - 2]][n[n.length - 1]], n.push(b);
                         break;
 
                       case 3:
@@ -4920,7 +4916,7 @@ TWEEN.Tween = function(e) {
                 },
                 lex: function() {
                     var e = this.next();
-                    return e !== void 0 ? e : this.lex();
+                    return void 0 !== e ? e : this.lex();
                 },
                 begin: function(e) {
                     this.conditionStack.push(e);
@@ -4938,7 +4934,7 @@ TWEEN.Tween = function(e) {
                     this.begin(e);
                 }
             };
-            return e.options = {}, e.performAction = function(e, t, i, n) {
+            return e.options = {}, e.performAction = function(e, t, i) {
                 switch (i) {
                   case 0:
                     if ("\\" !== t.yytext.slice(-1) && this.begin("mu"), "\\" === t.yytext.slice(-1) && (t.yytext = t.yytext.substr(0, t.yyleng - 1), 
@@ -5048,7 +5044,7 @@ TWEEN.Tween = function(e) {
         }();
         return t.lexer = i, e.prototype = t, t.Parser = e, new e();
     }();
-    return e !== void 0 && t !== void 0 && (t.parser = n, t.Parser = n.Parser, t.parse = function() {
+    return void 0 !== e && void 0 !== t && (t.parser = n, t.Parser = n.Parser, t.parse = function() {
         return n.parse.apply(n, arguments);
     }, t.main = function(i) {
         if (!i[1]) throw Error("Usage: " + i[0] + " FILE");
@@ -5056,7 +5052,7 @@ TWEEN.Tween = function(e) {
         return n = "undefined" != typeof process ? e("fs").readFileSync(e("path").resolve(i[1]), "utf8") : e("file").path(e("file").cwd()).join(i[1]).read({
             charset: "utf-8"
         }), t.parser.parse(n);
-    }, i !== void 0 && e.main === i && t.main("undefined" != typeof process ? process.argv.slice(1) : e("system").args)), 
+    }, void 0 !== i && e.main === i && t.main("undefined" != typeof process ? process.argv.slice(1) : e("system").args)), 
     Handlebars.Parser = n, Handlebars.parse = function(e) {
         return Handlebars.Parser.yy = Handlebars.AST, Handlebars.Parser.parse(e);
     }, Handlebars.print = function(e) {
@@ -5132,7 +5128,7 @@ TWEEN.Tween = function(e) {
                 return e instanceof Handlebars.SafeString ? "" + e : null == e || e === !1 ? "" : i.test(e) ? e.replace(t, n) : e;
             },
             isEmpty: function(e) {
-                return e === void 0 ? !0 : null === e ? !0 : e === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(e) && 0 === e.length ? !0 : !1;
+                return void 0 === e ? !0 : null === e ? !0 : e === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(e) && 0 === e.length ? !0 : !1;
             }
         };
     }(), Handlebars.Compiler = function() {}, Handlebars.JavaScriptCompiler = function() {}, 
@@ -5738,7 +5734,7 @@ HumanTime.locale = "en", HumanTime.locales = {
     a = floor(d / 60 + N2)) : 43200 > d ? (c.token = 12, t = 3 > h ? h : floor((d + 1439) / 1440), 
     s = o.getDay()) : (c.token = 13, n = floor(d / 525949), i = floor(d % 525949 / 43829 + N2), 
     12 === i && (i = 0, n++)), n && (u.years = n), i && (u.months = i), t && (u.days = t), 
-    a && (u.hours = a), r && (u.minutes = r), s !== void 0 && (u.day = s), c;
+    a && (u.hours = a), r && (u.minutes = r), void 0 !== s && (u.day = s), c;
 }, HumanTime.distanceOfTime = function(e, t) {
     e ? "number" == typeof e ? e = new Date(e) : "string" == typeof e && (e = parseISO(toISO(e))) : e = new Date(), 
     t ? "number" == typeof t ? t = new Date(t) : "string" == typeof t && (t = parseISO(toISO(t))) : t = new Date(), 
@@ -8030,7 +8026,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
             e.stopPropagation(), e.preventDefault();
             var t = this.y;
             this.px = e.pageX, this.py = e.pageY, this.x = this.px - this.ox, this.y = this.py - this.oy + this.st - this.hh, 
-            this.y = Math.max(0, Math.min(this.y, 4 * 3 * (this.l - 1) * this.h)), t !== this.y && (this.hoverItem(), 
+            this.y = Math.max(0, Math.min(this.y, 12 * (this.l - 1) * this.h)), t !== this.y && (this.hoverItem(), 
             this.showFuzzyTime(e.pageY));
         },
         clickCT: function(e) {
@@ -11532,7 +11528,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
 }), define("phonepanel", function(e) {
     "use strict";
     var t = e("jquery"), i = e("api"), n = "", a = 0, r = "", s = "", o = e("countrycodes"), l = e("panel"), d = function(e, i) {
-        o[e] !== void 0 && (a = e, i || t("#phone-panel .countrycode").val("+" + o[a].country_code), 
+        void 0 !== o[e] && (a = e, i || t("#phone-panel .countrycode").val("+" + o[a].country_code), 
         t(".tips-area .ta-countrycode").html(o[a].short_name), c(), u());
     }, c = function() {
         o[a].format_long && o[a].format_reg && o[a].format_str && n.length === o[a].format_long ? t("#phone-panel .phonenumber").val(n.replace(o[a].format_reg, o[a].format_str)) : t("#phone-panel .phonenumber").val(n);
@@ -14479,7 +14475,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
             if (e = ExfeUtilities.trim(e)) {
                 var t = e.split(":");
                 if (2 === t.length) {
-                    var i = 60 * 60 * parseInt(t[0], 10), n = 60 * parseInt(t[1], 10);
+                    var i = 3600 * parseInt(t[0], 10), n = 60 * parseInt(t[1], 10);
                     return i + (i > 0 ? n : -n);
                 }
             }

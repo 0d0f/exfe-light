@@ -1,4 +1,5 @@
 /*jshint -W116*/
+/*jshint -W030*/
 
 /**
  * rex: a lightweight JavaScript's functional library.

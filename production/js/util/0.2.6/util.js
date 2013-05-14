@@ -1,3 +1,4 @@
+/*jshint -W030*/
 define('util', function () {
   "use strict";
   var trimLeft = /^\s+/,

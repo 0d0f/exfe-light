@@ -1,3 +1,4 @@
+/*jshint -W030*/
 define(function (require) {
   'use strict';
 
