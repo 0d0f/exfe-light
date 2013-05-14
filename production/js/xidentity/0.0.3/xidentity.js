@@ -1,11 +1,11 @@
+/*jshint -W116*/
+
 define('xidentity', function (require) {
+  'use strict';
 
   var $ = require('jquery');
   var Util = require('util');
-  var Bus = require('bus');
   var Api = require('api');
-  var $BODY = $(document.body);
-  var Store = require('store');
   var Typeahead = require('typeahead');
   var Handlebars = require('handlebars');
 
@@ -66,31 +66,31 @@ define('xidentity', function (require) {
       if (!this.isShown) return;
 
       keyCode = e.keyCode;
-      switch(keyCode) {
-        case 9: // tab
-          //e.preventDefault();
-          this.tab();
-          break;
-        //case 13: // enter
-        //case 27: // escape
-          //e.preventDefault();
-          //break;
+      switch (keyCode) {
+      case 9: // tab
+        //e.preventDefault();
+        this.tab();
+        break;
+      //case 13: // enter
+      //case 27: // escape
+        //e.preventDefault();
+        //break;
 
-        case 38: // up arrow
-          if (e.type !== 'keydown') break;
-          e.preventDefault();
-          this.selecting = true;
-          this.prev();
-          this.select();
-          break;
+      case 38: // up arrow
+        if (e.type !== 'keydown') break;
+        e.preventDefault();
+        this.selecting = true;
+        this.prev();
+        this.select();
+        break;
 
-        case 40: //down break
-          if (e.type !== 'keydown') break;
-          e.preventDefault();
-          this.selecting = true;
-          this.next()
-          this.select();
-          break;
+      case 40: //down break
+        if (e.type !== 'keydown') break;
+        e.preventDefault();
+        this.selecting = true;
+        this.next()
+        this.select();
+        break;
       }
 
       e.stopPropagation();
@@ -149,13 +149,13 @@ define('xidentity', function (require) {
         if (that.timer) {
           clearTimeout(that.timer);
           // ajax loading
-          that.target.next().addClass('hide');;
+          that.target.next().addClass('hide');
         }
 
         if ((res = Util.parseId(q)).provider) {
           var identity = {
-              provider: res.provider
-            , external_username: res.external_username
+            provider: res.provider,
+            external_username: res.external_username
           };
 
           that.timer = setTimeout(function () {
@@ -164,7 +164,7 @@ define('xidentity', function (require) {
           }, options.delay);
 
           // falg: SIGN_IN SIGIN_UP VERIFY SET_PASSWORD
-          function ajax(e) {
+          var ajax = function (e) {
             that.ajaxDefer && that.ajaxDefer.readyState < 4 && that.ajaxDefer.abort();
             that.emit('autocomplete:beforesend', identity);
             if (options.useCache && that.cache[e]) that.emit('autocomplete:finish', that.cache[e]);
@@ -172,13 +172,13 @@ define('xidentity', function (require) {
               that.ajaxDefer = Api.request('getRegistrationFlag'
                 , {
                   data: identity,
-                  beforesend: function (xhr) {
+                  beforesend: function () {
                     // ajax loading
-                    that.target.next().removeClass('hide');;
+                    that.target.next().removeClass('hide');
                   },
-                  complete: function (xhr) {
+                  complete: function () {
                     // ajax loading
-                    that.target.next().addClass('hide');;
+                    that.target.next().addClass('hide');
                   }
                 }
                 , function (data) {
@@ -192,7 +192,7 @@ define('xidentity', function (require) {
             }
           }
 
-          function search(a) {
+          var search = function (a) {
             if (a.length >= that.options.minLength) {
               ajax(a);
               that.searchValue = a;

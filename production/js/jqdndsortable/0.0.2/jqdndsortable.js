@@ -1,7 +1,7 @@
 define(function (require) {
+  'use strict';
 
   var $ = require('jquery');
-  var $BODY = $(document.body);
   /**
     * Refer:
     *  https://github.com/bgrins/nativesortable/blob/master/nativesortable.js
@@ -63,7 +63,7 @@ define(function (require) {
           return false;
         })
         // dragenter
-        .on('dragenter.ui', selector, function (e) {
+        .on('dragenter.ui', selector, function () {
           if (!dragging || dragging === this) {
             return true;
           }
@@ -90,7 +90,7 @@ define(function (require) {
           return false;
         })
         // dragleave
-        .on('dragleave.ui', selector, function (e) {
+        .on('dragleave.ui', selector, function () {
           // Prevent dragenter on a child from allowing a dragleave on the container
           var prevCounter = dragenterData(this);
           dragenterData(this, prevCounter - 1);
@@ -116,16 +116,16 @@ define(function (require) {
 
           if (options.wrap) {
             wrap($this, dragging, this, options.delay, function (dragging, dropzone) {
-                options.sort ?
-                  options.sort.call($this, dragging, dropzone) :
-                  sort.call($this, dragging, dropzone);
+              options.sort ?
+                options.sort.call($this, dragging, dropzone) :
+                sort.call($this, dragging, dropzone);
 
-                var data;
-                if (e.originalEvent.dataTransfer) {
-                  data = e.originalEvent.dataTransfer.getData('Text');
-                }
+              var data;
+              if (e.originalEvent.dataTransfer) {
+                data = e.originalEvent.dataTransfer.getData('Text');
+              }
 
-                options.change && options.change.call(dropzone, data);
+              options.change && options.change.call(dropzone, data);
             });
           }
 
@@ -155,12 +155,12 @@ define(function (require) {
     , childClass: 'sortable-child'
     , dragenterData: 'child-dragenter'
     , setData: function () {}
-      //start: function () {}
-      //end: function () {}
-      //enter: function () {}
-      //leave: function () {}
-      //change: function () {}
-  };
+    //start: function () {}
+    //end: function () {}
+    //enter: function () {}
+    //leave: function () {}
+    //change: function () {}
+    };
 
   function dragenterData(ele, val, ded) {
     ele = $(ele);
@@ -176,8 +176,9 @@ define(function (require) {
 
   function sort(dragging, dropzone) {
     var sibling = $(dragging).next();
-    if (sibling[0] === dropzone) $(dragging).before(dropzone);
-    else {
+    if (sibling[0] === dropzone) {
+      $(dragging).before(dropzone);
+    } else {
       $(dropzone).before(dragging);
       sibling.before(dropzone);
     }

@@ -4,7 +4,6 @@ define('photoxwidget', function (require) {
   var request = require('api').request,
       R = require('rex'),
       Bus = require('bus'),
-      //config_photo_providers = require('config').photo_providers,
       Store = require('store'),
       PhotoXPanel = require('photox'),
       Mnemosyne = require('mnemosyne'),
@@ -96,7 +95,6 @@ define('photoxwidget', function (require) {
         }
         var user = Store.get('user');
         var identities = user.identities,
-            //photo_providers = config_photo_providers,
             photo_providers = ['facebook', 'instagram', 'flickr', 'dropbox'],
             providers = photo_providers.slice(0),
             ips = [], i;

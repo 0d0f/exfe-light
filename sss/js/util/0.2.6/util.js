@@ -51,11 +51,13 @@ define('util', function () {
     // Remove whitespace
     trim: NativeTrim ?
       function (s) {
+        /*jshint -W116*/
         return s == null ?
           '':
           NativeTrim.call(s);
       } :
       function (s) {
+        /*jshint -W116*/
         return s == null ?
           '' :
           s.toString().replace(trimLeft, '').replace(trimRight, '');
@@ -70,7 +72,7 @@ define('util', function () {
     */
 
     // 解析 用户身份
-    parseId: function () {
+    parseId: (function () {
       var facebook = /^([a-z0-9_\.]{1,})@facebook$/i,
           twitter = /^@([a-z0-9_]{1,15})$|^@?([a-z0-9_]{1,15})@twitter$/i,
           instagram = /^([a-z0-9_\.]{1,})@instagram$/i,
@@ -164,7 +166,7 @@ define('util', function () {
         return res;
       }
 
-    }(),
+    })(),
 
     tokenRegExp: /token=([a-zA-Z0-9]{32})/,
 

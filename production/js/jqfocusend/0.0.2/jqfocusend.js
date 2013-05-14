@@ -1,6 +1,7 @@
-define(function (require) {
+define(function () {
+  'use strict';
 
-  var jQuery = require('jquery');
+  var $ = require('jquery');
 
   $.fn.focusend = function () {
       if (!this[0]) {

@@ -1,4 +1,4 @@
-define('handlebars', [], function (require, exports, module) {
+define('handlebars', function (require, exports, module) {
 
 
 // lib/handlebars/base.js

@@ -1,3 +1,5 @@
+/*jshint -W116*/
+
 /**
  * rex: a lightweight JavaScript's functional library.
  *
@@ -12,17 +14,15 @@
  *    - http://fitzgen.github.com/wu.js/
  */
 
-define('rex', function (require, exports, module) {
+define('rex', function () {
+  'use strict';
 
   var NULL = null
-    , UNDEFINED = undefined
     , ArrayProto = Array.prototype
     , ObjectProto = Object.prototype
     , hasOwn = ObjectProto.hasOwnProperty
     , toString = ObjectProto.toString
     , slice = ArrayProto.slice
-    , NForEach = ArrayProto.forEach
-    , NMap = ArrayProto.map
     , NIndexOf = ArrayProto.indexof
     , NLastIndexOf = ArrayProto.lastIndexOf
     , NReduce = ArrayProto.reduce
@@ -111,7 +111,8 @@ define('rex', function (require, exports, module) {
     return a.lastIndexOf(el, isFinite(start) ? start : a.length);
   } :
   function (a, el, i) {
-    var l = a.length, i = l - 1;
+    var l = a.length;
+    i = l - 1;
     if (!l) return -1;
     (arguments.length > 1) && (i = Math.min(i, arguments[1]));
     (i < 0) && (i += l);
@@ -189,7 +190,7 @@ define('rex', function (require, exports, module) {
   }
 
   R.reject = function (a, fn, ctx) {
-    var r = [], i = 0, j = 0, l = a.length;
+    var r = [], i = 0, l = a.length;
     for (; i < l; ++i) {
       if (i in a) {
         if (fn.call(ctx, a[i], i, a)) {
@@ -263,7 +264,7 @@ define('rex', function (require, exports, module) {
       }
     } else {
       while (two[j] !== undefined) {
-        first[i++] = second[j++];
+        one[i++] = two[j++];
       }
     }
     one.length = i;
@@ -277,20 +278,18 @@ define('rex', function (require, exports, module) {
   R.compose = function () {
     var fns = arguments, i = fns.length, args;
 
-    return cp;
-
     function cp() {
       args = arguments;
       for (; i >= 0; --i) {
         args = [fns[i].apply(this, args)];
       }
       return args[0];
-    };
+    }
+
+    return cp;
   };
 
-  R.pluck = function (a, k) {
-
-  };
+  //R.pluck = function (a, k) { };
 
   R.has = function (o, k) {
     return hasOwn.call(o, k);
@@ -324,7 +323,7 @@ define('rex', function (require, exports, module) {
   // https://gist.github.com/2708275
   R.tap = function (o, f) {
     var r;
-    if (f) r = fn(o);v
+    if (f) r = f(o);
     return !r ? o : r;
   };
 
@@ -333,10 +332,10 @@ define('rex', function (require, exports, module) {
   };
 
   R.countDown = function (n, f) {
-    return cb;
     function cb() {
       if (--n === 0) f();
     }
+    return cb;
   };
 
   R.isFunction = function (f) {
@@ -401,14 +400,13 @@ define('rex', function (require, exports, module) {
   };
 
   R.isEmpty = function (o) {
-    var i = 0, k;
     return R.isArray(o) ? o.length === 0 :
       R.isObject(o) ? (function () {
-      for (k in o) {
-        i++;
+      for (var i in o) {
+        i = 1;
         break;
       }
-      return (i === 0)
+      return !!i;
     }()) :
     o === '';
   };

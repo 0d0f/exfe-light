@@ -1,3 +1,4 @@
+/*jshint strict: false */
 define('class', function () {
 /*
  * Class
@@ -54,13 +55,13 @@ define('class', function () {
 
       // Only call initialize in self constructor.
       if (this.constructor === subclass && this.initialize) {
-          this.initialize.apply(this, arguments);
-          this.initialized = true;
+        this.initialize.apply(this, arguments);
+        this.initialized = true;
       }
     }
 
     // Inherit class (static) properties from parent.
-    if (parent !== Class) mixin(subclass, parent);
+    if (parent !== Class) { mixin(subclass, parent); }
 
     subclass.Extends = parent;
 
@@ -70,12 +71,12 @@ define('class', function () {
 
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
-    if (protoProps) mixin(protos, protoProps);
+    if (protoProps) { mixin(protos, protoProps); }
 
     subclass.prototype = protos;
 
     // Add static properties to the constructor function, if supplied.
-    if (staticProps) mixin(subclass, staticProps);
+    if (staticProps) { mixin(subclass, staticProps); }
 
     // Set a convenience property in case the parent's prototype is needed later.
     subclass.superclass = parentProtos;
@@ -100,13 +101,13 @@ define('class', function () {
     };
 
   function implement(properties) {
-    var key, value, proto = this.prototype;
-    for (key in properties) proto[key] = properties[key];
+    var key, proto = this.prototype;
+    for (key in properties) { proto[key] = properties[key]; }
   }
 
   function mixin(r, s) {
     var k;
-    for (k in s) r[k] = s[k];
+    for (k in s) { r[k] = s[k]; }
   }
 
   var toString = Object.prototype.toString;

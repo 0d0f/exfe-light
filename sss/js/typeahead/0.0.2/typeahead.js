@@ -1,4 +1,5 @@
-define('typeahead', function (require, exports, module) {
+define('typeahead', function (require) {
+  'use strict';
 
   /**
    * Typeahead
@@ -85,7 +86,7 @@ define('typeahead', function (require, exports, module) {
       return item;
     },
 
-    itemRender: function (item, i) {
+    itemRender: function (item) {
       return $(this.options.viewData.item).data('value', item).html(item);
     },
 
@@ -122,11 +123,7 @@ define('typeahead', function (require, exports, module) {
       return this;
     },
 
-    lookup: function (e) {
-      var that = this
-        , options = this.options
-        , items;
-
+    lookup: function () {
       this.query = $.trim(this.target.val());
 
       if (!this.query) {
@@ -137,7 +134,7 @@ define('typeahead', function (require, exports, module) {
       this.emit('search', this.query);
     },
 
-    next: function (e) {
+    next: function () {
       var active = this.element.find('.active')
         , next = active.next();
 
@@ -149,7 +146,7 @@ define('typeahead', function (require, exports, module) {
       next.addClass('active');
     },
 
-    prev: function (e) {
+    prev: function () {
       var active = this.element.find('.active')
         , prev = active.prev();
 
@@ -161,28 +158,28 @@ define('typeahead', function (require, exports, module) {
       prev.addClass('active');
     },
 
-    focus: function (e) {},
+    focus: function () {},
 
     keyup: function (e, keyCode) {
       keyCode = e.keyCode;
-      switch(keyCode) {
-        case 40: // down arrow
-        case 38: // up arrow
-          break;
+      switch (keyCode) {
+      case 40: // down arrow
+      case 38: // up arrow
+        break;
 
-        case 9: //tab
-        case 13: //enter
-          if (!this.isShown) { return; }
-          this.select();
-          break;
+      case 9: //tab
+      case 13: //enter
+        if (!this.isShown) { return; }
+        this.select();
+        break;
 
-        case 27: // escape
-          if (!this.isShown) { return; }
-          this.hide();
-          break;
+      case 27: // escape
+        if (!this.isShown) { return; }
+        this.hide();
+        break;
 
-        default:
-          this.lookup();
+      default:
+        this.lookup();
       }
 
       e.stopPropagation();
@@ -193,30 +190,30 @@ define('typeahead', function (require, exports, module) {
       if (!this.isShown) { return; }
 
       keyCode = e.keyCode;
-      switch(keyCode) {
-        //case 9: // tab
-        case 13: // nete
-        case 27: // escape
-          e.preventDefault();
-          break;
+      switch (keyCode) {
+      //case 9: // tab
+      case 13: // nete
+      case 27: // escape
+        e.preventDefault();
+        break;
 
-        case 38: // up arrow
-          if (e.type !== 'keydown') { return; }
-          e.preventDefault();
-          this.prev();
-          break;
+      case 38: // up arrow
+        if (e.type !== 'keydown') { return; }
+        e.preventDefault();
+        this.prev();
+        break;
 
-        case 40: //down break
-          if (e.type !== 'keydown') { return; }
-          e.preventDefault();
-          this.next();
-          break;
+      case 40: //down break
+        if (e.type !== 'keydown') { return; }
+        e.preventDefault();
+        this.next();
+        break;
       }
 
       e.stopPropagation();
     },
 
-    blur: function (e) {
+    blur: function () {
       var that = this;
       setTimeout(function () {that.hide();}, 150);
     },
@@ -234,8 +231,6 @@ define('typeahead', function (require, exports, module) {
 
   });
 
-  return Typeahead;
-
   // simple proxy function, $.proxy
   function proxy(f, c) {
     if (!f) { return; }
@@ -243,5 +238,7 @@ define('typeahead', function (require, exports, module) {
       return f.call(c, e);
     };
   }
+
+  return Typeahead;
 });
 

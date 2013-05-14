@@ -267,16 +267,6 @@ module.exports = function (grunt) {
     console.dir(arguments);
     if (0 === len) {
     } else {
-      var dir = tp || '/exfe/exfelight', jsdir, cssdir, imgdir, fontdir, viewsdir;
-      console.log(tp, dir);
-      grunt.config.set('dirs.deploy', dir);
-      if (!grunt.file.exists(dir)) { grunt.file.mkdir(dir); }
-      if (!grunt.file.exists(jsdir = dir + '/js')) { grunt.file.mkdir(jsdir); }
-      if (!grunt.file.exists(cssdir = dir + '/css')) { grunt.file.mkdir(cssdir); }
-      if (!grunt.file.exists(imgdir = dir + '/img')) { grunt.file.mkdir(imgdir); }
-      if (!grunt.file.exists(fontdir = dir + '/font')) { grunt.file.mkdir(fontdir); }
-      if (!grunt.file.exists(viewsdir = dir + '/views')) { grunt.file.mkdir(viewsdir); }
-
       switch (name) {
       case 'js':
         grunt.task.run('copy:deploy_js');
@@ -304,6 +294,16 @@ module.exports = function (grunt) {
         break;
 
       case 'build':
+        var dir = tp || '/exfe/exfelight', jsdir, cssdir, imgdir, fontdir, viewsdir;
+        console.log(tp, dir);
+        grunt.config.set('dirs.deploy', dir);
+        if (!grunt.file.exists(dir)) { grunt.file.mkdir(dir); }
+        if (!grunt.file.exists(jsdir = dir + '/js')) { grunt.file.mkdir(jsdir); }
+        if (!grunt.file.exists(cssdir = dir + '/css')) { grunt.file.mkdir(cssdir); }
+        if (!grunt.file.exists(imgdir = dir + '/img')) { grunt.file.mkdir(imgdir); }
+        if (!grunt.file.exists(fontdir = dir + '/font')) { grunt.file.mkdir(fontdir); }
+        if (!grunt.file.exists(viewsdir = dir + '/views')) { grunt.file.mkdir(viewsdir); }
+
         grunt.task.run('copy:deploy');
         grunt.task.run('copy:deploy_meta');
         grunt.config.set('git.tag', tag);
