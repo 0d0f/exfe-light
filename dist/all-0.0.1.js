@@ -1,4 +1,4 @@
-/*! EXFE.COM all@0.0.1 2013-05-14 01:05:13 */
+/*! EXFE.COM all@0.0.1 2013-05-14 01:05:46 */
 (function(e) {
     "use strict";
     function t(e, t, n) {
@@ -3273,10 +3273,10 @@
     }), e.jQuery = e.$ = J, "function" == typeof define && define.amd && define.amd.jQuery && define("jquery", [], function() {
         return J;
     });
-}(window), define(function() {
+}(window), define(function(e) {
     "use strict";
-    var e = require("jquery");
-    e.fn.focusend = function() {
+    var t = e("jquery");
+    t.fn.focusend = function() {
         if (this[0]) {
             var e = this[0], t = e.value.length;
             e.focus();
