@@ -1,6 +1,3 @@
-define('zepto', function (require, exports, module) {
-
-
 /* Zepto v1.0-3-g342d490 - zepto polyfill event ajax form data touch - zeptojs.com/license */
 
 
@@ -1590,9 +1587,6 @@ window.Zepto = Zepto
   })
 })(Zepto)
 
-
-
-return Zepto;
-
-
-});
+if ( typeof define === "function") {
+  define( "zepot", function () { return Zepto; } );
+}

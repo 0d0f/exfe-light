@@ -1,3 +1,4 @@
+/*jslint evil: true */
 /*!
  * https://github.com/cfddream/odof
  * License MIT
@@ -10,9 +11,8 @@
  *  - https://github.com/tobie/modulr-node
  *  - http://www.page.ca/~wes/CommonJS/modules-2.0-draft8/commonjs%20modules%202.0-8(2).pdf
  */
-!function (context) {
-
-  context.define = define;
+(function (context) {
+  'use strict';
 
   /**
    * define a module
@@ -44,6 +44,8 @@
   // AMD
   define.amd = { jQuery: true };
 
+  context.define = define;
+
   /**
    * 不对外提供此接口
    * Accepts a module identifier.
@@ -63,7 +65,7 @@
     return module.exports;
   }
 
-  function _initExports(module, context) {
+  function _initExports(module/*, context*/) {
     var factory = module.factory, result;
 
     delete module.factory;
@@ -102,4 +104,4 @@
 
   var __cache = Module.__cache = {};
 
-}(this);
+})(this);

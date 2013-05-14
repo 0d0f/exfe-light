@@ -1,4 +1,5 @@
-define('bus', function (require, exports, module) {
+define('bus', function (require) {
+  'use strict';
 
   /**
    *

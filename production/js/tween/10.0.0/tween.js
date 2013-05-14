@@ -1,6 +1,3 @@
-define('tween', function (require) {
-
-
 /**
  * @author sole / http://soledadpenades.com
  * @author mrdoob / http://mrdoob.com
@@ -694,7 +691,6 @@ TWEEN.Interpolation = {
 
 };
 
-return TWEEN;
-
-
-});
+if ( typeof define === "function") {
+  define( "tween", function () { return TWEEN; } );
+}

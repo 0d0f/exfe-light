@@ -1,4 +1,8 @@
-define('dialog', function (require, exports, module) {
+/*jsint -*/
+
+define('dialog', function (require) {
+  'use strict';
+
   /**
    *
    * Dependence:
@@ -107,8 +111,8 @@ define('dialog', function (require, exports, module) {
       this.element.removeClass('hide');
 
       this.isShown = true;
-      escape.call(this);
-      backdrop.call(this);
+      escapeFn.call(this);
+      backdropFn.call(this);
 
       this.element.addClass('in');
 
@@ -125,8 +129,8 @@ define('dialog', function (require, exports, module) {
       this.element.addClass('hide');
 
       this.isShown = false;
-      escape.call(this);
-      backdrop.call(this);
+      escapeFn.call(this);
+      backdropFn.call(this);
 
       this.element.removeClass('in');
 
@@ -174,11 +178,9 @@ define('dialog', function (require, exports, module) {
   // Helper
   // ------
 
-  var backdropNode = '<div id="js-modal-backdrop" class="modal-backdrop" />'
-  function backdrop(callback) {
+  var backdropNode = '<div id="js-modal-backdrop" class="modal-backdrop" />';
+  function backdropFn() {
     // 遮罩层结构
-    var that = this;
-
     if (this.isShown && this.options.backdrop) {
       this.$backdrop = $(backdropNode).appendTo(this.parentNode);
 
@@ -196,7 +198,7 @@ define('dialog', function (require, exports, module) {
     this.$backdrop = null;
   }
 
-  function escape() {
+  function escapeFn() {
     var that = this;
     if (this.isShown && this.options.keyboard) {
       $BODY.on('keyup.dismiss.modal', function (e) {

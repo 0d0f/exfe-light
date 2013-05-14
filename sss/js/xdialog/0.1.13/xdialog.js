@@ -1,3 +1,5 @@
+/*jshint -W116*/
+
 define('xdialog', function (require, exports) {
   "use strict";
   var $ = require('jquery'),
@@ -1138,22 +1140,22 @@ define('xdialog', function (require, exports) {
                     data: {
                       browsing_identity_token: btoken,
                       identity_ids: '[' + id + ']'
-                      }
-                    },
-                    function (data) {
-                      var identity = data.status[id];
-                      if (identity) {
-                        var user = Store.get('user'),
-                            identities = user.identities,
-                            s, h;
-                        identities.push(identity);
-                        Store.set('user', user);
-                        s = Handlebars.compile($('#jst-identity-item').html());
-                        h = s(identity);
-                        $('.identity-list').append(h);
-                        that && that.destory();
-                      }
                     }
+                  },
+                  function (data) {
+                    var identity = data.status[id];
+                    if (identity) {
+                      var user = Store.get('user'),
+                          identities = user.identities,
+                          s, h;
+                      identities.push(identity);
+                      Store.set('user', user);
+                      s = Handlebars.compile($('#jst-identity-item').html());
+                      h = s(identity);
+                      $('.identity-list').append(h);
+                      that && that.destory();
+                    }
+                  }
                 );
               }
             });
@@ -2061,13 +2063,13 @@ define('xdialog', function (require, exports) {
                   else if (meta.code === 401
                       && meta.errorType === 'authenticate_timeout') {
 
-                      if (signed) {
-                        var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                        $('#app-tmp').append($d);
-                        var authorization = Store.get('authorization');
-                        token = authorization.token;
-                        $d.trigger('click.dialog.data-api', {callback: function () { _setPassword(signed, token, user, stpwd); }});
-                      }
+                    if (signed) {
+                      var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                      $('#app-tmp').append($d);
+                      var authorization = Store.get('authorization');
+                      token = authorization.token;
+                      $d.trigger('click.dialog.data-api', {callback: function () { _setPassword(signed, token, user, stpwd); }});
+                    }
                   }
                 }
               );
@@ -2098,11 +2100,11 @@ define('xdialog', function (require, exports) {
                         && meta.code === 401
                         && meta.errorType === 'authenticate_timeout') {
 
-                        var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                        $('#app-tmp').append($d);
-                        var authorization = Store.get('authorization');
-                        token = authorization.token;
-                        $d.trigger('click.dialog.data-api', {callback: function () { _resetPassword(signed, token, user, stpwd); }});
+                      var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                      $('#app-tmp').append($d);
+                      var authorization = Store.get('authorization');
+                      token = authorization.token;
+                      $d.trigger('click.dialog.data-api', {callback: function () { _resetPassword(signed, token, user, stpwd); }});
                     }
                   }
               );
@@ -2253,6 +2255,8 @@ define('xdialog', function (require, exports) {
             return;
           }
 
+          var authorization;
+
           Api.request(api_url,
             {
               type: 'POST',
@@ -2261,7 +2265,7 @@ define('xdialog', function (require, exports) {
             function (data) {
 
               if (page === 'resolve') {
-                var authorization = Store.get('authorization');
+                authorization = Store.get('authorization');
                 if (!authorization) {
                   Store.set('authorization', data.authorization);
                   Store.set('user', that._browsing_user);
@@ -2276,7 +2280,7 @@ define('xdialog', function (require, exports) {
                 }
               }
               else {
-                var authorization = data.authorization
+                authorization = data.authorization
                 Bus.emit('app:user:signin:after', function () {
                   window.location.href = '/';
                 });
@@ -2368,24 +2372,24 @@ define('xdialog', function (require, exports) {
         // abort ajax
         if (this._oauth_) {
           this._oauth_.abort();
-	  this._oauth_ = null;
+	        this._oauth_ = null;
         }
         this.destory();
       },
 
       events: {
         'click .authorize': function () {
-            this._oauth_ = $.ajax({
-              url: '/OAuth/Authenticate?provider=twitter',
-              type: 'POST',
-              dataType: 'JSON',
-              success: function (data) {
-                var code = data.meta.code;
-                if (code === 200) {
-                  window.location.href = data.response.redirect;
-                }
+          this._oauth_ = $.ajax({
+            url: '/OAuth/Authenticate?provider=twitter',
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (data) {
+              var code = data.meta.code;
+              if (code === 200) {
+                window.location.href = data.response.redirect;
               }
-            });
+            }
+          });
         }
       },
 
@@ -2468,10 +2472,7 @@ define('xdialog', function (require, exports) {
               token = authorization.token,
               browsing_token = this._token,
               identity = this._identity,
-              postData = {
-                browsing_identity_token: browsing_token,
-                identity_ids: '[' + identity.id + ']'
-              };
+              postData = { browsing_identity_token: browsing_token, identity_ids: '[' + identity.id + ']' };
           Api.request('mergeIdentities'
             , {
               type: 'POST',

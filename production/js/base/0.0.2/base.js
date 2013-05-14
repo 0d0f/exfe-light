@@ -1,4 +1,6 @@
+/*jshint -W116*/
 define('base', function (require) {
+  'use strict';
   // Thanks to:
   //
   // - https://github.com/mootools/mootools-core/blob/master/Source/Class/Class.Extras.js
@@ -46,10 +48,6 @@ define('base', function (require) {
     }
 
     return receiver;
-  }
-
-  function isFunction (f) {
-    return typeof f === 'function';
   }
 
   // Convert `onChangeTitle` to `changeTitle`

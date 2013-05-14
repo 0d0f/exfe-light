@@ -1,3 +1,5 @@
+/*jshint -W015*/
+
 /**
  * Exfe's DatePanel Widget.
  * 日期控件
@@ -311,27 +313,27 @@ define('datepanel', function (require/*, exports, module*/) {
           , kc = e.keyCode;
 
         switch (kc) {
-          case 9: // tab
+        case 9: // tab
+          e.preventDefault();
+          // ct: calendarTable
+          component.emit('tmt-ct');
+          break;
+        case 13:
+          e.preventDefault();
+          component.emit('save', trim(this.$element.val()));
+          break;
+        case 40: // down
+          // if the cursor in the last, tab to PlacesList
+          var v = this.$element.val()
+            , l = v.length
+            , ele = this.$element[0]
+            , end = selectionEnd(ele);
+          if (l === end) {
             e.preventDefault();
             // ct: calendarTable
             component.emit('tmt-ct');
-            break;
-          case 13:
-            e.preventDefault();
-            component.emit('save', trim(this.$element.val()));
-            break;
-          case 40: // down
-            // if the cursor in the last, tab to PlacesList
-            var v = this.$element.val()
-              , l = v.length
-              , ele = this.$element[0]
-              , end = selectionEnd(ele);
-            if (l === end) {
-              e.preventDefault();
-              // ct: calendarTable
-              component.emit('tmt-ct');
-            }
-            break;
+          }
+          break;
         }
       }
 
@@ -352,19 +354,19 @@ define('datepanel', function (require/*, exports, module*/) {
         e.stopPropagation();
         e.preventDefault();
         switch (e.keyCode) {
-          case  9: // tab
-          case 13: // enter
-          case 16: // shift
-          case 17: // ctrl
-          case 18: // alt
-          case 27: // escape
-          case 37: // left
-          case 38: // up
-          case 39: // right
-          case 40: // down
-            break;
-          default:
-            this.lookup();
+        case  9: // tab
+        case 13: // enter
+        case 16: // shift
+        case 17: // ctrl
+        case 18: // alt
+        case 27: // escape
+        case 37: // left
+        case 38: // up
+        case 39: // right
+        case 40: // down
+          break;
+        default:
+          this.lookup();
         }
       }
 
@@ -546,52 +548,52 @@ define('datepanel', function (require/*, exports, module*/) {
           , component = this.component
           , kc = e.keyCode;
         switch (kc) {
-          case 9: // tab
-            e.preventDefault();
-            component.emit('tmt-di');
-            break;
-          case 37: // left
-            e.preventDefault();
-            self.move('left');
-            break;
-          case 38: // top
-            e.preventDefault();
-            self.move('top');
-            break;
-          case 39: // right
-            e.preventDefault();
-            self.move('right');
-            break;
-          case 40: // down
-            e.preventDefault();
-            self.move('down');
-            break;
-          case 33: // page up:    mac fn + ↑
-            e.preventDefault();
-            self.move('pageUp');
-            break;
-          case 34: // page down:  mac fn + ↓
-            e.preventDefault();
-            self.move('pageDown');
-            break;
-          case 13: // enter
-            e.preventDefault();
-            break;
-          case 32: // spacing
-            e.preventDefault();
-            self.spacing();
-            break;
-          case 68: // d
-            e.preventDefault();
-            self.refresh(datefun(self.getSelectedDate()));
-            break;
-          case 84: // t
-            e.preventDefault();
-            self.refresh(self.today);
-            break;
-          case 35: // end:        mac fn + →
-          case 36: // home:       mac fn + ←
-            break;
+        case 9: // tab
+          e.preventDefault();
+          component.emit('tmt-di');
+          break;
+        case 37: // left
+          e.preventDefault();
+          self.move('left');
+          break;
+        case 38: // top
+          e.preventDefault();
+          self.move('top');
+          break;
+        case 39: // right
+          e.preventDefault();
+          self.move('right');
+          break;
+        case 40: // down
+          e.preventDefault();
+          self.move('down');
+          break;
+        case 33: // page up:    mac fn + ↑
+          e.preventDefault();
+          self.move('pageUp');
+          break;
+        case 34: // page down:  mac fn + ↓
+          e.preventDefault();
+          self.move('pageDown');
+          break;
+        case 13: // enter
+          e.preventDefault();
+          break;
+        case 32: // spacing
+          e.preventDefault();
+          self.spacing();
+          break;
+        case 68: // d
+          e.preventDefault();
+          self.refresh(datefun(self.getSelectedDate()));
+          break;
+        case 84: // t
+          e.preventDefault();
+          self.refresh(self.today);
+          break;
+        case 35: // end:        mac fn + →
+        case 36: // home:       mac fn + ←
+          break;
         }
       }
 
@@ -793,7 +795,7 @@ define('datepanel', function (require/*, exports, module*/) {
         this.$trs.eq(--this.len).remove();
         this.$trs.eq(--this.len).remove();
       }
-  };
+    };
 
 
   /**
@@ -858,10 +860,11 @@ define('datepanel', function (require/*, exports, module*/) {
             , m = d.getMinutes()
             , n = Math.round(h / 15) * 15
             , t;
-            d.setMinutes(n);
-            this.selectedTime = lead0(h) + ':' + lead0(m);
-            this.$selected = this.$tc
-              .find('[data-time="' + this.selectedTime + '"]').eq(0);
+
+          d.setMinutes(n);
+          this.selectedTime = lead0(h) + ':' + lead0(m);
+          this.$selected = this.$tc
+            .find('[data-time="' + this.selectedTime + '"]').eq(0);
 
           if (0 === this.$selected.length) {
             this.$selected = this.createNormalItem(h, m, Math.floor((h + m / 60) * this.h * (60 / 15)));
@@ -992,9 +995,9 @@ define('datepanel', function (require/*, exports, module*/) {
       }
 
     , meTW: function () {
-      this.$cursor.removeClass('hide');
-      this.$ft.removeClass('hide');
-    }
+        this.$cursor.removeClass('hide');
+        this.$ft.removeClass('hide');
+      }
 
     , mlTW: function (e) {
         var $c = this.$cursor;
@@ -1090,7 +1093,7 @@ define('datepanel', function (require/*, exports, module*/) {
           .addClass('hide');
       }
 
-  };
+    };
 
 
   // Helper:

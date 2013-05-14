@@ -1,4 +1,5 @@
-define('humantime', function (require, exports, module) {
+/*jshint -W003*/
+
 /**
  * Humantime.js
  * Relative/absolute time.
@@ -21,11 +22,9 @@ var ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/
   , ISO8601_TIME = /^\d{2}:\d{2}:\d{2}$/;
 
 var N2 = 0.2
-  , N9 = 0.9999
+  //, N9 = 0.9999
   , N6 = 6e4
   , D = 8.64e7;
-
-var DATEOUTPUTFORMATS = [];
 
 var EN = {
     monthsShort: 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')
@@ -153,9 +152,29 @@ var HumanTime = function (t, s, type, c) {
   return output;
 };
 
+/*
+  Converts ISO8601 datetime to locale datetime.
+  ES5 supprots ISO8601 datetime:
+      1. var d0 = '2012-08-06T23:30:00+08:00'
+      2. var d1 = '2012-08-06T23:30:00+0800'
+  The moden browsers supports Date.parse(datetime), but opera-v12 not supports 1, must be 2
+  */
+var parseISO = HumanTime.parseISO = function (s) {
+  return new Date(Date.parse(s));
+};
+
+// Normal datetime => ISO8601 datetime
+// "2012-09-12 09:51:04 +0000" => "2012-09-12T09:51:04+00:00"
+var toISO = HumanTime.toISO = function (s) {
+  return s.replace(/\s/, 'T').replace(/\s/, '')
+    .replace(/([+\-]\d\d)(?::?)(\d\d)/, '$1:$2');
+};
+
+/*
 var SETTINGS = HumanTime.settings = {
   weekStartAt: 1
 };
+*/
 
 HumanTime.locale = 'en';
 
@@ -363,24 +382,6 @@ HumanTime.distanceOfTime = function (t, s) {
     };
 };
 
-/*
-  Converts ISO8601 datetime to locale datetime.
-  ES5 supprots ISO8601 datetime:
-      1. var d0 = '2012-08-06T23:30:00+08:00'
-      2. var d1 = '2012-08-06T23:30:00+0800'
-  The moden browsers supports Date.parse(datetime), but opera-v12 not supports 1, must be 2
-  */
-var parseISO = HumanTime.parseISO = function (s) {
-  return new Date(Date.parse(s));
-};
-
-// Normal datetime => ISO8601 datetime
-// "2012-09-12 09:51:04 +0000" => "2012-09-12T09:51:04+00:00"
-var toISO = HumanTime.toISO = function (s) {
-  return s.replace(/\s/, 'T').replace(/\s/, '')
-    .replace(/([+\-]\d\d)(?::?)(\d\d)/, '$1:$2');
-};
-
 // converts the eftime to the locale Date
 HumanTime.toLocaleDate = function (eft) {
   var opf = eft.outputformat
@@ -461,11 +462,8 @@ var FUNS = {
 HumanTime.printEFTime = function (eft, type, funs) {
   var opt = eft.outputformat,
       ba = eft.begin_at,
-      isX = 'X' === type,
-      output = {
-        title: '',
-        content: ''
-      },
+      isX = ('X' === type),
+      output = { title: '', content: '' },
       now = new Date(),
       origin, t, d, tz, ctz;
 
@@ -569,19 +567,19 @@ var getTimezoneAbbreviation = function (date) {
 
 HumanTime.createEFTime = function () {
   return {
-      begin_at: {
-          date_word: ''
-        , date: ''
-        , time_word: ''
-        , time: ''
-        , timezone: ''
-        , id: 0
-        , type: 'EFTime'
-      }
-    , origin: ''
-    , outputformat: 1
-    , id: 0
-    , type: 'CrossTime'
+    begin_at: {
+      date_word: '',
+      date: '',
+      time_word: '',
+      time: '',
+      timezone: '',
+      id: 0,
+      type: 'EFTime'
+    },
+    origin: '',
+    outputformat: 1,
+    id: 0,
+    type: 'CrossTime'
   };
 };
 
@@ -645,5 +643,8 @@ var lead0 = HumanTime.lead0 = function (n, p) {
     return n - n % 1;
   };
 
-return HumanTime;
-});
+if (typeof define === 'function') {
+  define('humantime', function () {
+    return HumanTime;
+  });
+}

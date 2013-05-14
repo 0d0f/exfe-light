@@ -1093,18 +1093,18 @@ define('mnemosyne', function (require) {
               e.preventDefault();
               var keyCode = e.keyCode;
               switch (keyCode) {
-                case 39: // right
-                case 40: // bottom
-                  slideshow.next();
-                  break;
-                case 38:  // up
-                case 37: // left
-                  slideshow.prev();
-                  break;
-                case 27: // esc
-                  e.stopPropagation();
-                  self.emit('exit-slideshow');
-                  break;
+              case 39: // right
+              case 40: // bottom
+                slideshow.next();
+                break;
+              case 38:  // up
+              case 37: // left
+                slideshow.prev();
+                break;
+              case 27: // esc
+                e.stopPropagation();
+                self.emit('exit-slideshow');
+                break;
               }
             });
 

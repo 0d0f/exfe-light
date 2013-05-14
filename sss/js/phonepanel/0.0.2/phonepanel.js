@@ -2,19 +2,15 @@ define('phonepanel', function (require) {
   "use strict";
 
   var $ = require('jquery'),
-      proxy = $.proxy,
-      extend = $.extend,
       Api    = require('api'),
-      SPLITTER = /[\r\n]+/g,
-      CR = '\r',
-      $win = $(window),
-      isIE = $.browser.msie,
       rawPhone  = '',
       curCntry  = 0,
+      /*
       objPhone  = {
         'country_code' : '',
         'phone_number' : ''
       },
+      */
       last_get  = '',
       avatar    = '',
       areaInfos = require('countrycodes');
@@ -137,7 +133,6 @@ define('phonepanel', function (require) {
 
     , init: function () {
         var self    = this,
-            options = this.options,
             element;
         this.render();
         element = this.element;
@@ -265,14 +260,14 @@ define('phonepanel', function (require) {
                 cmpltList.scrollTop(curCellTop + celHeight - maxHeight + 1);
             }
         });
-        element.on('blur.phonepanel', '.countrycode', function(e) {
+        element.on('blur.phonepanel', '.countrycode', function() {
             chooseCountry(curCntry);
         });
-        element.on('focus.phonepanel', '.countrycode', function(e) {
+        element.on('focus.phonepanel', '.countrycode', function() {
             $(this).css('z-index', '1');
             element.find('.phonenumber').css('z-index', '0');
         });
-        element.on('focus.phonepanel', '.phonenumber', function (e) {
+        element.on('focus.phonepanel', '.phonenumber', function () {
             element.find('.phonenumber').val(rawPhone);
             element.find('.complete-list').html('');
             element.find('.tips-area').show();
@@ -281,7 +276,7 @@ define('phonepanel', function (require) {
             $(this).css('z-index', '1');
             element.find('.countrycode').css('z-index', '0');
         });
-        element.on('blur.phonepanel', '.phonenumber', function (e) {
+        element.on('blur.phonepanel', '.phonenumber', function () {
             var strPhone = element.find('.phonenumber').val().replace(/\-|\(|\)|\ /g, '');
             if (/^[0-9]*$/.test(strPhone)) {
                 rawPhone = strPhone;
@@ -292,11 +287,11 @@ define('phonepanel', function (require) {
             checkPhone();
             $(this).prop('tabindex', '5');
         });
-        element.on('mouseover.phonepanel', '.complete-list li', function (e) {
+        element.on('mouseover.phonepanel', '.complete-list li', function () {
             $(this).siblings().filter('.selected').toggleClass('selected', false);
             $(this).toggleClass('selected', true);
         });
-        element.on('click.phonepanel', '.complete-list li', function (e) {
+        element.on('click.phonepanel', '.complete-list li', function () {
             var selected = $(this);
             var countryCode = ~~selected.attr('country-code');
             if (typeof areaInfos[countryCode]) {
@@ -305,7 +300,7 @@ define('phonepanel', function (require) {
                 element.find('.complete-list').slideUp();
             }
         });
-        element.on('keyup.phonepanel', '.name', function(e) {
+        element.on('keyup.phonepanel', '.name', function() {
             element.find('.complete-list').html('');
             element.find('.tips-area').show();
             element.find('.complete-list').slideUp();
@@ -327,7 +322,7 @@ define('phonepanel', function (require) {
             }
             checkPhone();
         });
-        element.on('click.phonepanel', '.add', function(e) {
+        element.on('click.phonepanel', '.add', function() {
             var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
             var name        = element.find('.name').val();
             self.add({
@@ -352,7 +347,6 @@ define('phonepanel', function (require) {
         if (srcNode) {
           var offset  = srcNode.offset(),
               element = self.element,
-              width   = element.outerWidth(),
               height  = srcNode.outerHeight();
           element.css({
             left: this.oleft = offset.left,

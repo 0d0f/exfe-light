@@ -5,7 +5,7 @@ define('photox', function (require) {
       R = require('rex'),
       Bus = require('bus'),
       request = require('api').request,
-      PVS = window._ENV_.photo_providers,
+      //PVS = window._ENV_.photo_providers,
       Dialog = require('dialog'),
       Store = require('store'),
       dialogs = require('xdialog').dialogs,
@@ -23,31 +23,6 @@ define('photox', function (require) {
   Handlebars.registerHelper('px_imported', function (imported) {
     return imported > 0 ? imported : '<i class="ix-selected"></i>';
   });
-
-  var errorHandler = function (data) {
-    if (data && data.meta) {
-      switch (data.meta) {
-        case 400:
-          // param_error
-          // 参数错误，需要重新提交
-          return;
-        case 401:
-          // invalid_auth
-          // 第三方权限错误，提示用户重新验证该身份的权限
-          return;
-        case 403:
-          // not_authorized
-          // 服务器权限错误，不允许此操作
-          return;
-        case 404:
-          // photo_not_found
-          // 对象不存在或已经被删除
-          return;
-      }
-    }
-    // unknow error
-    // 处理未知错误
-  };
 
   // NOTE: photox_id === cross_id
   var DataCenter = {
@@ -210,7 +185,8 @@ define('photox', function (require) {
     }
   };
 
-  
+
+  /*
   var XCache = {
     _: {}
   };
@@ -228,6 +204,7 @@ define('photox', function (require) {
 
   XCache.del = function (type, photo) {
   };
+  */
 
 
   /**
@@ -467,7 +444,7 @@ define('photox', function (require) {
   proto.showAlbums = function () {
     var $albums = this.$albums,
         liAlbumTmp = this.liAlbumTmp,
-        liPhotoTmp = this.liPhotoTmp,
+        //liPhotoTmp = this.liPhotoTmp,
         composition = this.composition,
         self = this,
         q = composition.q;
@@ -553,19 +530,17 @@ define('photox', function (require) {
     return this.startUL + ah + ph + this.endUL;
   };
 
-  proto.showPhotos = function (data, imported) {
-    var i = data.albums.length | data.photos.length, $e;
-    //if (i) {
-      $e = $(this.generate(data));
-      this.$albums.append($e);
-      $e.removeClass('hide');
-      this.$parent.append($e);
+  proto.showPhotos = function (data) {
+    var $e;
+    $e = $(this.generate(data));
+    this.$albums.append($e);
+    $e.removeClass('hide');
+    this.$parent.append($e);
       /*
       if (imported) {
         $e.find('.badge').removeClass('hide');
       }
       */
-    //}
   };
 
   proto.toggleBadge = function ($t, status) {
@@ -785,7 +760,7 @@ define('photox', function (require) {
           if (imported !== 0 && imported !== -2) {
             DataCenter.delAlbum(
               cid, p, eaid, null,
-              function (data) {
+              function () {
                 $t.attr('data-imported', '0');
 
                 // todo: 优化
@@ -797,7 +772,7 @@ define('photox', function (require) {
           }
 
           // add
-          var cb = function (data) {
+          var cb = function () {
             $t.attr('data-imported', '-1');
 
             // todo: 优化
@@ -820,7 +795,7 @@ define('photox', function (require) {
 
         }, 987);
 
-        $t.on('mouseup.photox', function (e) {
+        $t.on('mouseup.photox', function () {
           clearTimeout(timer);
           $t.off('mouseup.photox');
           if (status) {
@@ -967,9 +942,7 @@ define('photox', function (require) {
         thumbnails.showAllAlbums();
       });
 
-      self.on('update-tabs-bage', function (provider, n) {
-        tabs.updateBadge(provider, n);
-      });
+      //self.on('update-tabs-bage', function (provider, n) { tabs.updateBadge(provider, n); });
 
       self.on('toggle-loading', function (b) {
         $loading[(b ? 'remove' : 'add') + 'Class']('hide');

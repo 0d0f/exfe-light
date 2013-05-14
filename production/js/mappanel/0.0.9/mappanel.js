@@ -1,3 +1,5 @@
+/*jshint -W015*/
+
 /**
  * Exfe's MatePanel Widget.
  * 日期控件

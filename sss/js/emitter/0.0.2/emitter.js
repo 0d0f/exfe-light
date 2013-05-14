@@ -1,4 +1,6 @@
-define('emitter', function (require, exports, module) {
+/*jshint -W116*/
+define('emitter', function () {
+  'use strict';
 
  /**
   * Emitter
@@ -33,7 +35,7 @@ define('emitter', function (require, exports, module) {
 
   Emitter.prototype.on = function (events, fn, ctx) {
     var callbacks, event, list;
-    if (!fn) return this;
+    if (!fn) { return this; }
     events = events.split(EVENT_SPLITTER);
 
     callbacks = this.__callbacks || (this.__callbacks = {});
