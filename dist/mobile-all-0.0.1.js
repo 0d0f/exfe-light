@@ -1,4 +1,4 @@
-/*! EXFE.COM mobile-all@0.0.1 2013-05-13 11:05:56 */
+/*! EXFE.COM mobile-all@0.0.1 2013-05-14 01:05:39 */
 (function(t) {
     "use strict";
     function e(t, e, i) {
@@ -655,7 +655,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     String.prototype.trim === t && (String.prototype.trim = function() {
         return this.replace(/^\s+|\s+$/g, "");
     }), Array.prototype.reduce === t && (Array.prototype.reduce = function(e) {
-        if (void 0 === this || null === this) throw new TypeError();
+        if (this === void 0 || null === this) throw new TypeError();
         var n, i = Object(this), r = i.length >>> 0, s = 0;
         if ("function" != typeof e) throw new TypeError();
         if (0 == r && 1 == arguments.length) throw new TypeError();
@@ -1865,14 +1865,14 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                 }
                 var n = this, i = [ 0 ], r = [ null ], s = [], a = this.table, o = "", c = 0, u = 0, l = 0;
                 this.lexer.setInput(t), this.lexer.yy = this.yy, this.yy.lexer = this.lexer, this.yy.parser = this, 
-                void 0 === this.lexer.yylloc && (this.lexer.yylloc = {});
+                this.lexer.yylloc === void 0 && (this.lexer.yylloc = {});
                 var h = this.lexer.yylloc;
                 s.push(h);
                 var d = this.lexer.options && this.lexer.options.ranges;
                 "function" == typeof this.yy.parseError && (this.parseError = this.yy.parseError);
                 for (var p, f, m, v, g, y, b, w, k, x = {}; ;) {
-                    if (m = i[i.length - 1], this.defaultActions[m] ? v = this.defaultActions[m] : ((null === p || void 0 === p) && (p = e()), 
-                    v = a[m] && a[m][p]), void 0 === v || !v.length || !v[0]) {
+                    if (m = i[i.length - 1], this.defaultActions[m] ? v = this.defaultActions[m] : ((null === p || p === void 0) && (p = e()), 
+                    v = a[m] && a[m][p]), v === void 0 || !v.length || !v[0]) {
                         var _ = "";
                         if (!l) {
                             k = [];
@@ -1902,9 +1902,10 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                             first_column: s[s.length - (b || 1)].first_column,
                             last_column: s[s.length - 1].last_column
                         }, d && (x._$.range = [ s[s.length - (b || 1)].range[0], s[s.length - 1].range[1] ]), 
-                        g = this.performAction.call(x, o, u, c, this.yy, v[1], r, s), void 0 !== g) return g;
-                        b && (i = i.slice(0, -2 * b), r = r.slice(0, -1 * b), s = s.slice(0, -1 * b)), i.push(this.productions_[v[1]][0]), 
-                        r.push(x.$), s.push(x._$), w = a[i[i.length - 2]][i[i.length - 1]], i.push(w);
+                        g = this.performAction.call(x, o, u, c, this.yy, v[1], r, s), g !== void 0) return g;
+                        b && (i = i.slice(0, 2 * -1 * b), r = r.slice(0, -1 * b), s = s.slice(0, -1 * b)), 
+                        i.push(this.productions_[v[1]][0]), r.push(x.$), s.push(x._$), w = a[i[i.length - 2]][i[i.length - 1]], 
+                        i.push(w);
                         break;
 
                       case 3:
@@ -1997,7 +1998,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                 },
                 lex: function() {
                     var t = this.next();
-                    return void 0 !== t ? t : this.lex();
+                    return t !== void 0 ? t : this.lex();
                 },
                 begin: function(t) {
                     this.conditionStack.push(t);
@@ -2015,7 +2016,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                     this.begin(t);
                 }
             };
-            return t.options = {}, t.performAction = function(t, e, n) {
+            return t.options = {}, t.performAction = function(t, e, n, i) {
                 switch (n) {
                   case 0:
                     if ("\\" !== e.yytext.slice(-1) && this.begin("mu"), "\\" === e.yytext.slice(-1) && (e.yytext = e.yytext.substr(0, e.yyleng - 1), 
@@ -2125,7 +2126,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
         }();
         return e.lexer = n, t.prototype = e, e.Parser = t, new t();
     }();
-    return void 0 !== t && void 0 !== e && (e.parser = i, e.Parser = i.Parser, e.parse = function() {
+    return t !== void 0 && e !== void 0 && (e.parser = i, e.Parser = i.Parser, e.parse = function() {
         return i.parse.apply(i, arguments);
     }, e.main = function(n) {
         if (!n[1]) throw Error("Usage: " + n[0] + " FILE");
@@ -2133,7 +2134,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
         return i = "undefined" != typeof process ? t("fs").readFileSync(t("path").resolve(n[1]), "utf8") : t("file").path(t("file").cwd()).join(n[1]).read({
             charset: "utf-8"
         }), e.parser.parse(i);
-    }, void 0 !== n && t.main === n && e.main("undefined" != typeof process ? process.argv.slice(1) : t("system").args)), 
+    }, n !== void 0 && t.main === n && e.main("undefined" != typeof process ? process.argv.slice(1) : t("system").args)), 
     Handlebars.Parser = i, Handlebars.parse = function(t) {
         return Handlebars.Parser.yy = Handlebars.AST, Handlebars.Parser.parse(t);
     }, Handlebars.print = function(t) {
@@ -2209,7 +2210,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
                 return t instanceof Handlebars.SafeString ? "" + t : null == t || t === !1 ? "" : n.test(t) ? t.replace(e, i) : t;
             },
             isEmpty: function(t) {
-                return void 0 === t ? !0 : null === t ? !0 : t === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(t) && 0 === t.length ? !0 : !1;
+                return t === void 0 ? !0 : null === t ? !0 : t === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(t) && 0 === t.length ? !0 : !1;
             }
         };
     }(), Handlebars.Compiler = function() {}, Handlebars.JavaScriptCompiler = function() {}, 
@@ -2671,7 +2672,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     if (s.disabled = !1, s.set = function() {}, s.get = function() {}, s.remove = function() {}, 
     s.clear = function() {}, s.transact = function(t, e, n) {
         var i = s.get(t);
-        null == n && (n = e, e = null), void 0 === i && (i = e || {}), n(i), s.set(t, i);
+        null == n && (n = e, e = null), i === void 0 && (i = e || {}), n(i), s.set(t, i);
     }, s.getAll = function() {}, s.serialize = function(t) {
         return JSON.stringify(t);
     }, s.deserialize = function(t) {
@@ -2921,17 +2922,17 @@ TWEEN.Tween = function(t) {
         In: function(t) {
             var e, n = .1, i = .4;
             return 0 === t ? 0 : 1 === t ? 1 : (!n || 1 > n ? (n = 1, e = i / 4) : e = i * Math.asin(1 / n) / (2 * Math.PI), 
-            -(n * Math.pow(2, 10 * (t -= 1)) * Math.sin(2 * (t - e) * Math.PI / i)));
+            -(n * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - e) * 2 * Math.PI / i)));
         },
         Out: function(t) {
             var e, n = .1, i = .4;
             return 0 === t ? 0 : 1 === t ? 1 : (!n || 1 > n ? (n = 1, e = i / 4) : e = i * Math.asin(1 / n) / (2 * Math.PI), 
-            n * Math.pow(2, -10 * t) * Math.sin(2 * (t - e) * Math.PI / i) + 1);
+            n * Math.pow(2, -10 * t) * Math.sin((t - e) * 2 * Math.PI / i) + 1);
         },
         InOut: function(t) {
             var e, n = .1, i = .4;
             return 0 === t ? 0 : 1 === t ? 1 : (!n || 1 > n ? (n = 1, e = i / 4) : e = i * Math.asin(1 / n) / (2 * Math.PI), 
-            1 > (t *= 2) ? -.5 * n * Math.pow(2, 10 * (t -= 1)) * Math.sin(2 * (t - e) * Math.PI / i) : .5 * n * Math.pow(2, -10 * (t -= 1)) * Math.sin(2 * (t - e) * Math.PI / i) + 1);
+            1 > (t *= 2) ? -.5 * n * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - e) * 2 * Math.PI / i) : .5 * n * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - e) * 2 * Math.PI / i) + 1);
         }
     },
     Back: {
@@ -3173,7 +3174,7 @@ HumanTime.locale = "en", HumanTime.locales = {
     r = floor(u / 60 + N2)) : 43200 > u ? (l.token = 12, e = 3 > d ? d : floor((u + 1439) / 1440), 
     a = o.getDay()) : (l.token = 13, i = floor(u / 525949), n = floor(u % 525949 / 43829 + N2), 
     12 === n && (n = 0, i++)), i && (h.years = i), n && (h.months = n), e && (h.days = e), 
-    r && (h.hours = r), s && (h.minutes = s), void 0 !== a && (h.day = a), l;
+    r && (h.hours = r), s && (h.minutes = s), a !== void 0 && (h.day = a), l;
 }, HumanTime.distanceOfTime = function(t, e) {
     t ? "number" == typeof t ? t = new Date(t) : "string" == typeof t && (t = parseISO(toISO(t))) : t = new Date(), 
     e ? "number" == typeof e ? e = new Date(e) : "string" == typeof e && (e = parseISO(toISO(e))) : e = new Date(), 
@@ -3654,7 +3655,7 @@ var lead0 = HumanTime.lead0 = function(t, e) {
             this.live = !1;
         }
     }, _ = function() {
-        if (void 0 === window.DeviceMotionEvent) return null;
+        if (window.DeviceMotionEvent === void 0) return null;
         var t = 50, e = 0, n = 0, i = 0, r = 0, s = 0, a = 0;
         window.addEventListener("devicemotion", function(t) {
             e = t.accelerationIncludingGravity.x, n = t.accelerationIncludingGravity.y, i = t.accelerationIncludingGravity.z;

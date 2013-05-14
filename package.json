@@ -148,10 +148,6 @@
         "version": "0.0.5"
       },
       {
-        "name": "photox",
-        "version": "0.0.2"
-      },
-      {
         "name": "filehtml5",
         "version": "0.0.1"
       },
@@ -162,14 +158,6 @@
       {
         "name": "phonepanel",
         "version": "0.0.2"
-      },
-      {
-        "name": "photoxwidget",
-        "version": "0.0.1"
-      },
-      {
-        "name": "mnemosyne",
-        "version": "0.0.1"
       },
       {
         "name": "uploader",
