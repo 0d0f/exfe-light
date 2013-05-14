@@ -8,12 +8,12 @@ var DESKTOP_META = PKG.desktop.dependencies;
 
 var DESKTOP_CONCAT = {
   src: [],
-  dest: 'dist/all-<%= pkg.desktop.version %>.js'
+  dest: 'production/js/all-<%= pkg.desktop.version %>.js'
 };
 
 var MOBILE_CONCAT = {
   src: [],
-  dest: 'dist/mobile-all-<%= pkg.mobile.version %>.js'
+  dest: 'production/js/mobile-all-<%= pkg.mobile.version %>.js'
 };
 
 // mobile (移动)
@@ -50,7 +50,7 @@ DESKTOP_META.forEach(function (v) {
   JSHINT.desktop.push(p);
   JSHINT[v.name + '_'] = p;
   PUBLISH[v.name] = path.join('src', v.name);
-  DESKTOP_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
+  DESKTOP_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
 });
 
 DESKTOP_OTHERS.forEach(function (v) {
@@ -65,13 +65,13 @@ MOBILE_META.forEach(function (v) {
   JSHINT.mobile.push(p);
   JSHINT[v.name + '_'] = p;
   PUBLISH[v.name] = path.join('src', v.name);
-  MOBILE_CONCAT.src.push(path.join('dist', v.name, v.version, v.name + '.js'));
+  MOBILE_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
 });
 
-JSHINT.DESKTOP = path.join('dist', 'all-' + PKG.desktop.version + '.js');
-JSHINT.DESKTOP_MIN = path.join('dist', 'all-' + PKG.desktop.version + '.min.js');
-JSHINT.MOBILE = path.join('dist', 'mobile-all-' + PKG.mobile.version + '.js');
-JSHINT.MOBILE_MIN = path.join('dist', 'mobile-all-' + PKG.mobile.version + '.min.js');
+JSHINT.DESKTOP = path.join('production/js', 'all-' + PKG.desktop.version + '.js');
+JSHINT.DESKTOP_MIN = path.join('production/js', 'all-' + PKG.desktop.version + '.min.js');
+JSHINT.MOBILE = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.js');
+JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.min.js');
 // }}}
 
 module.exports = function (grunt) {
