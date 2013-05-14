@@ -112,7 +112,7 @@ module.exports = function (grunt) {
         },
         //beautify: true,
         //width: 80,
-        banner: '/*! EXFE.COM <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! EXFE.COM <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
       desktop: {
         files: {
