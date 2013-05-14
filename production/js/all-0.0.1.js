@@ -1,4 +1,4 @@
-/*! EXFE.COM all@0.0.1 2013-05-14 01:05:12 */
+/*! EXFE.COM all@0.0.1 2013-05-14 02:05:50 */
 (function(e) {
     "use strict";
     function t(e, t, n) {
@@ -309,9 +309,9 @@
     }, h.isRegex = function(e) {
         return !(!(e && e.test && e.exec) || !e.ignoreCase && e.ignoreCase !== !1);
     }, h.isUndefined = function(e) {
-        return void 0 === e;
+        return e === void 0;
     }, h.isDefined = function(e) {
-        return void 0 !== e;
+        return e !== void 0;
     }, h.isNaN = function(e) {
         return e !== e;
     }, h.isNull = function(e) {
@@ -823,7 +823,7 @@
             } else for (;s > r && i.call(e[r], r, e[r++]) !== !1; ) ;
             return e;
         },
-        trim: Z && !Z.call(" ") ? function(e) {
+        trim: Z && !Z.call("﻿ ") ? function(e) {
             return null == e ? "" : Z.call(e);
         } : function(e) {
             return null == e ? "" : (e + "").replace(it, "");
@@ -1255,13 +1255,16 @@
         },
         val: function(e) {
             var i, n, a, r = this[0];
-            return arguments.length ? (a = J.isFunction(e), this.each(function(n) {
-                var r, s = J(this);
-                1 === this.nodeType && (r = a ? e.call(this, n, s.val()) : e, null == r ? r = "" : "number" == typeof r ? r += "" : J.isArray(r) && (r = J.map(r, function(e) {
-                    return null == e ? "" : e + "";
-                })), i = J.valHooks[this.type] || J.valHooks[this.nodeName.toLowerCase()], i && "set" in i && i.set(this, r, "value") !== t || (this.value = r));
-            })) : r ? (i = J.valHooks[r.type] || J.valHooks[r.nodeName.toLowerCase()], i && "get" in i && (n = i.get(r, "value")) !== t ? n : (n = r.value, 
-            "string" == typeof n ? n.replace(xt, "") : null == n ? "" : n)) : void 0;
+            {
+                if (arguments.length) return a = J.isFunction(e), this.each(function(n) {
+                    var r, s = J(this);
+                    1 === this.nodeType && (r = a ? e.call(this, n, s.val()) : e, null == r ? r = "" : "number" == typeof r ? r += "" : J.isArray(r) && (r = J.map(r, function(e) {
+                        return null == e ? "" : e + "";
+                    })), i = J.valHooks[this.type] || J.valHooks[this.nodeName.toLowerCase()], i && "set" in i && i.set(this, r, "value") !== t || (this.value = r));
+                });
+                if (r) return i = J.valHooks[r.type] || J.valHooks[r.nodeName.toLowerCase()], i && "get" in i && (n = i.get(r, "value")) !== t ? n : (n = r.value, 
+                "string" == typeof n ? n.replace(xt, "") : null == n ? "" : n);
+            }
         }
     }), J.extend({
         valHooks: {
@@ -1292,11 +1295,11 @@
         attrFn: {},
         attr: function(e, i, n, a) {
             var r, s, o, l = e.nodeType;
-            return e && 3 !== l && 8 !== l && 2 !== l ? a && J.isFunction(J.fn[i]) ? J(e)[i](n) : e.getAttribute === t ? J.prop(e, i, n) : (o = 1 !== l || !J.isXMLDoc(e), 
+            if (e && 3 !== l && 8 !== l && 2 !== l) return a && J.isFunction(J.fn[i]) ? J(e)[i](n) : e.getAttribute === t ? J.prop(e, i, n) : (o = 1 !== l || !J.isXMLDoc(e), 
             o && (i = i.toLowerCase(), s = J.attrHooks[i] || (Et.test(i) ? yt : vt)), n !== t ? null === n ? (J.removeAttr(e, i), 
             t) : s && "set" in s && o && (r = s.set(e, n, i)) !== t ? r : (e.setAttribute(i, n + ""), 
             n) : s && "get" in s && o && null !== (r = s.get(e, i)) ? r : (r = e.getAttribute(i), 
-            null === r ? t : r)) : void 0;
+            null === r ? t : r));
         },
         removeAttr: function(e, t) {
             var i, n, a, r, s = 0;
@@ -1337,8 +1340,8 @@
         },
         prop: function(e, i, n) {
             var a, r, s, o = e.nodeType;
-            return e && 3 !== o && 8 !== o && 2 !== o ? (s = 1 !== o || !J.isXMLDoc(e), s && (i = J.propFix[i] || i, 
-            r = J.propHooks[i]), n !== t ? r && "set" in r && (a = r.set(e, n, i)) !== t ? a : e[i] = n : r && "get" in r && null !== (a = r.get(e, i)) ? a : e[i]) : void 0;
+            if (e && 3 !== o && 8 !== o && 2 !== o) return s = 1 !== o || !J.isXMLDoc(e), s && (i = J.propFix[i] || i, 
+            r = J.propHooks[i]), n !== t ? r && "set" in r && (a = r.set(e, n, i)) !== t ? a : e[i] = n : r && "get" in r && null !== (a = r.get(e, i)) ? a : e[i];
         },
         propHooks: {
             tabIndex: {
@@ -3192,13 +3195,13 @@
             top: 0,
             left: 0
         }, c = this[0], u = c && c.ownerDocument;
-        return u ? (n = u.body) === c ? J.offset.bodyOffset(c) : (i = u.documentElement, 
+        if (u) return (n = u.body) === c ? J.offset.bodyOffset(c) : (i = u.documentElement, 
         J.contains(i, c) ? (c.getBoundingClientRect !== t && (d = c.getBoundingClientRect()), 
         a = H(u), r = i.clientTop || n.clientTop || 0, s = i.clientLeft || n.clientLeft || 0, 
         o = a.pageYOffset || i.scrollTop, l = a.pageXOffset || i.scrollLeft, {
             top: d.top + o - r,
             left: d.left + l - s
-        }) : d) : void 0;
+        }) : d);
     }, J.offset = {
         bodyOffset: function(e) {
             var t = e.offsetTop, i = e.offsetLeft;
@@ -3270,10 +3273,10 @@
     }), e.jQuery = e.$ = J, "function" == typeof define && define.amd && define.amd.jQuery && define("jquery", [], function() {
         return J;
     });
-}(window), define(function() {
+}(window), define(function(e) {
     "use strict";
-    var e = require("jquery");
-    e.fn.focusend = function() {
+    var t = e("jquery");
+    t.fn.focusend = function() {
         if (this[0]) {
             var e = this[0], t = e.value.length;
             e.focus();
@@ -3574,17 +3577,17 @@ TWEEN.Tween = function(e) {
         In: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            -(i * Math.pow(2, 10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n)));
+            -(i * Math.pow(2, 10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n)));
         },
         Out: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            i * Math.pow(2, -10 * e) * Math.sin(2 * (e - t) * Math.PI / n) + 1);
+            i * Math.pow(2, -10 * e) * Math.sin((e - t) * 2 * Math.PI / n) + 1);
         },
         InOut: function(e) {
             var t, i = .1, n = .4;
             return 0 === e ? 0 : 1 === e ? 1 : (!i || 1 > i ? (i = 1, t = n / 4) : t = n * Math.asin(1 / i) / (2 * Math.PI), 
-            1 > (e *= 2) ? -.5 * i * Math.pow(2, 10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n) : .5 * i * Math.pow(2, -10 * (e -= 1)) * Math.sin(2 * (e - t) * Math.PI / n) + 1);
+            1 > (e *= 2) ? -.5 * i * Math.pow(2, 10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n) : .5 * i * Math.pow(2, -10 * (e -= 1)) * Math.sin((e - t) * 2 * Math.PI / n) + 1);
         }
     },
     Back: {
@@ -3672,112 +3675,112 @@ TWEEN.Tween = function(e) {
         request: i,
         cancel: n
     };
-}), function() {
-    function e() {
+}), define("store", function(e, t) {
+    (function() {
+        function e() {
+            try {
+                return d in o && o[d];
+            } catch (e) {
+                return !1;
+            }
+        }
+        function i() {
+            try {
+                return c in o && o[c] && o[c][o.location.hostname];
+            } catch (e) {
+                return !1;
+            }
+        }
+        function n(e) {
+            return function() {
+                var t = Array.prototype.slice.call(arguments, 0);
+                t.unshift(r), h.appendChild(r), r.addBehavior("#default#userData"), r.load(d);
+                var i = e.apply(s, t);
+                return h.removeChild(r), i;
+            };
+        }
+        function a(e) {
+            return e.replace(m, "___");
+        }
+        var r, s = {}, o = window, l = o.document, d = "localStorage", c = "globalStorage", u = "__storejs__";
+        if (s.disabled = !1, s.set = function() {}, s.get = function() {}, s.remove = function() {}, 
+        s.clear = function() {}, s.transact = function(e, t, i) {
+            var n = s.get(e);
+            null == i && (i = t, t = null), n === void 0 && (n = t || {}), i(n), s.set(e, n);
+        }, s.getAll = function() {}, s.serialize = function(e) {
+            return JSON.stringify(e);
+        }, s.deserialize = function(e) {
+            if ("string" != typeof e) return void 0;
+            try {
+                return JSON.parse(e);
+            } catch (t) {
+                return e || void 0;
+            }
+        }, e()) r = o[d], s.set = function(e, t) {
+            return void 0 === t ? s.remove(e) : (r.setItem(e, s.serialize(t)), t);
+        }, s.get = function(e) {
+            return s.deserialize(r.getItem(e));
+        }, s.remove = function(e) {
+            r.removeItem(e);
+        }, s.clear = function() {
+            r.clear();
+        }, s.getAll = function() {
+            for (var e = {}, t = 0; r.length > t; ++t) {
+                var i = r.key(t);
+                e[i] = s.get(i);
+            }
+            return e;
+        }; else if (i()) r = o[c][o.location.hostname], s.set = function(e, t) {
+            return void 0 === t ? s.remove(e) : (r[e] = s.serialize(t), t);
+        }, s.get = function(e) {
+            return s.deserialize(r[e] && r[e].value);
+        }, s.remove = function(e) {
+            delete r[e];
+        }, s.clear = function() {
+            for (var e in r) delete r[e];
+        }, s.getAll = function() {
+            for (var e = {}, t = 0; r.length > t; ++t) {
+                var i = r.key(t);
+                e[i] = s.get(i);
+            }
+            return e;
+        }; else if (l.documentElement.addBehavior) {
+            var h, p;
+            try {
+                p = new ActiveXObject("htmlfile"), p.open(), p.write('<script>document.w=window</script><iframe src="/favicon.ico"></frame>'), 
+                p.close(), h = p.w.frames[0].document, r = h.createElement("div");
+            } catch (f) {
+                r = l.createElement("div"), h = l.body;
+            }
+            var m = RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g");
+            s.set = n(function(e, t, i) {
+                return t = a(t), void 0 === i ? s.remove(t) : (e.setAttribute(t, s.serialize(i)), 
+                e.save(d), i);
+            }), s.get = n(function(e, t) {
+                return t = a(t), s.deserialize(e.getAttribute(t));
+            }), s.remove = n(function(e, t) {
+                t = a(t), e.removeAttribute(t), e.save(d);
+            }), s.clear = n(function(e) {
+                var t = e.XMLDocument.documentElement.attributes;
+                e.load(d);
+                for (var i, n = 0; i = t[n]; n++) e.removeAttribute(i.name);
+                e.save(d);
+            }), s.getAll = n(function(e) {
+                var t = e.XMLDocument.documentElement.attributes;
+                e.load(d);
+                for (var i, n = {}, a = 0; i = t[a]; ++a) n[i] = s.get(i);
+                return n;
+            });
+        }
         try {
-            return l in s && s[l];
-        } catch (e) {
-            return !1;
+            s.set(u, u), s.get(u) != u && (s.disabled = !0), s.remove(u);
+        } catch (f) {
+            s.disabled = !0;
         }
-    }
-    function t() {
-        try {
-            return d in s && s[d] && s[d][s.location.hostname];
-        } catch (e) {
-            return !1;
-        }
-    }
-    function i(e) {
-        return function() {
-            var t = Array.prototype.slice.call(arguments, 0);
-            t.unshift(a), u.appendChild(a), a.addBehavior("#default#userData"), a.load(l);
-            var i = e.apply(r, t);
-            return u.removeChild(a), i;
-        };
-    }
-    function n(e) {
-        return e.replace(f, "___");
-    }
-    var a, r = {}, s = window, o = s.document, l = "localStorage", d = "globalStorage", c = "__storejs__";
-    if (r.disabled = !1, r.set = function() {}, r.get = function() {}, r.remove = function() {}, 
-    r.clear = function() {}, r.transact = function(e, t, i) {
-        var n = r.get(e);
-        null == i && (i = t, t = null), void 0 === n && (n = t || {}), i(n), r.set(e, n);
-    }, r.getAll = function() {}, r.serialize = function(e) {
-        return JSON.stringify(e);
-    }, r.deserialize = function(e) {
-        if ("string" != typeof e) return void 0;
-        try {
-            return JSON.parse(e);
-        } catch (t) {
-            return e || void 0;
-        }
-    }, e()) a = s[l], r.set = function(e, t) {
-        return void 0 === t ? r.remove(e) : (a.setItem(e, r.serialize(t)), t);
-    }, r.get = function(e) {
-        return r.deserialize(a.getItem(e));
-    }, r.remove = function(e) {
-        a.removeItem(e);
-    }, r.clear = function() {
-        a.clear();
-    }, r.getAll = function() {
-        for (var e = {}, t = 0; a.length > t; ++t) {
-            var i = a.key(t);
-            e[i] = r.get(i);
-        }
-        return e;
-    }; else if (t()) a = s[d][s.location.hostname], r.set = function(e, t) {
-        return void 0 === t ? r.remove(e) : (a[e] = r.serialize(t), t);
-    }, r.get = function(e) {
-        return r.deserialize(a[e] && a[e].value);
-    }, r.remove = function(e) {
-        delete a[e];
-    }, r.clear = function() {
-        for (var e in a) delete a[e];
-    }, r.getAll = function() {
-        for (var e = {}, t = 0; a.length > t; ++t) {
-            var i = a.key(t);
-            e[i] = r.get(i);
-        }
-        return e;
-    }; else if (o.documentElement.addBehavior) {
-        var u, h;
-        try {
-            h = new ActiveXObject("htmlfile"), h.open(), h.write('<script>document.w=window</script><iframe src="/favicon.ico"></frame>'), 
-            h.close(), u = h.w.frames[0].document, a = u.createElement("div");
-        } catch (p) {
-            a = o.createElement("div"), u = o.body;
-        }
-        var f = RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g");
-        r.set = i(function(e, t, i) {
-            return t = n(t), void 0 === i ? r.remove(t) : (e.setAttribute(t, r.serialize(i)), 
-            e.save(l), i);
-        }), r.get = i(function(e, t) {
-            return t = n(t), r.deserialize(e.getAttribute(t));
-        }), r.remove = i(function(e, t) {
-            t = n(t), e.removeAttribute(t), e.save(l);
-        }), r.clear = i(function(e) {
-            var t = e.XMLDocument.documentElement.attributes;
-            e.load(l);
-            for (var i, n = 0; i = t[n]; n++) e.removeAttribute(i.name);
-            e.save(l);
-        }), r.getAll = i(function(e) {
-            var t = e.XMLDocument.documentElement.attributes;
-            e.load(l);
-            for (var i, n = {}, a = 0; i = t[a]; ++a) n[i] = r.get(i);
-            return n;
-        });
-    }
-    try {
-        r.set(c, c), r.get(c) != c && (r.disabled = !0), r.remove(c);
-    } catch (p) {
-        r.disabled = !0;
-    }
-    r.enabled = !r.disabled, "undefined" != typeof module && "function" != typeof module ? module.exports = r : "function" == typeof define && define.amd ? define(r) : this.store = r, 
-    "function" == typeof define && define("store", function() {
-        return r;
-    });
-}(), define("marked", function(e, t, i) {
+        s.enabled = !s.disabled, t !== void 0 && "function" != typeof t ? t.exports = s : "function" == typeof define && define.amd ? define(s) : this.store = s;
+    })();
+}), define("marked", function(e, t, i) {
+    "use strict";
     (function() {
         function e(e, t) {
             return "!" !== e[0][0] ? '<a href="' + s(t.href) + '"' + (t.title ? ' title="' + s(t.title) + '"' : "") + ">" + f.lexer(e[1]) + "</a>" : '<img src="' + s(t.href) + '" alt="' + s(e[1]) + '"' + (t.title ? ' title="' + s(t.title) + '"' : "") + ">";
@@ -4014,7 +4017,7 @@ TWEEN.Tween = function(e) {
             return h(t), r(e);
         }, u.lexer = function(e, t) {
             return h(t), p.lexer(e);
-        }, u.parse = u, void 0 !== i ? i.exports = u : this.marked = u;
+        }, u.parse = u, i !== void 0 ? i.exports = u : this.marked = u;
     }).call(function() {
         return this || ("undefined" != typeof window ? window : global);
     }());
@@ -4784,14 +4787,14 @@ TWEEN.Tween = function(e) {
                 }
                 var i = this, n = [ 0 ], a = [ null ], r = [], s = this.table, o = "", l = 0, d = 0, c = 0;
                 this.lexer.setInput(e), this.lexer.yy = this.yy, this.yy.lexer = this.lexer, this.yy.parser = this, 
-                void 0 === this.lexer.yylloc && (this.lexer.yylloc = {});
+                this.lexer.yylloc === void 0 && (this.lexer.yylloc = {});
                 var u = this.lexer.yylloc;
                 r.push(u);
                 var h = this.lexer.options && this.lexer.options.ranges;
                 "function" == typeof this.yy.parseError && (this.parseError = this.yy.parseError);
                 for (var p, f, m, g, v, y, _, b, x, w = {}; ;) {
-                    if (m = n[n.length - 1], this.defaultActions[m] ? g = this.defaultActions[m] : ((null === p || void 0 === p) && (p = t()), 
-                    g = s[m] && s[m][p]), void 0 === g || !g.length || !g[0]) {
+                    if (m = n[n.length - 1], this.defaultActions[m] ? g = this.defaultActions[m] : ((null === p || p === void 0) && (p = t()), 
+                    g = s[m] && s[m][p]), g === void 0 || !g.length || !g[0]) {
                         var k = "";
                         if (!c) {
                             x = [];
@@ -4821,9 +4824,10 @@ TWEEN.Tween = function(e) {
                             first_column: r[r.length - (_ || 1)].first_column,
                             last_column: r[r.length - 1].last_column
                         }, h && (w._$.range = [ r[r.length - (_ || 1)].range[0], r[r.length - 1].range[1] ]), 
-                        v = this.performAction.call(w, o, d, l, this.yy, g[1], a, r), void 0 !== v) return v;
-                        _ && (n = n.slice(0, -2 * _), a = a.slice(0, -1 * _), r = r.slice(0, -1 * _)), n.push(this.productions_[g[1]][0]), 
-                        a.push(w.$), r.push(w._$), b = s[n[n.length - 2]][n[n.length - 1]], n.push(b);
+                        v = this.performAction.call(w, o, d, l, this.yy, g[1], a, r), v !== void 0) return v;
+                        _ && (n = n.slice(0, 2 * -1 * _), a = a.slice(0, -1 * _), r = r.slice(0, -1 * _)), 
+                        n.push(this.productions_[g[1]][0]), a.push(w.$), r.push(w._$), b = s[n[n.length - 2]][n[n.length - 1]], 
+                        n.push(b);
                         break;
 
                       case 3:
@@ -4916,7 +4920,7 @@ TWEEN.Tween = function(e) {
                 },
                 lex: function() {
                     var e = this.next();
-                    return void 0 !== e ? e : this.lex();
+                    return e !== void 0 ? e : this.lex();
                 },
                 begin: function(e) {
                     this.conditionStack.push(e);
@@ -4934,7 +4938,7 @@ TWEEN.Tween = function(e) {
                     this.begin(e);
                 }
             };
-            return e.options = {}, e.performAction = function(e, t, i) {
+            return e.options = {}, e.performAction = function(e, t, i, n) {
                 switch (i) {
                   case 0:
                     if ("\\" !== t.yytext.slice(-1) && this.begin("mu"), "\\" === t.yytext.slice(-1) && (t.yytext = t.yytext.substr(0, t.yyleng - 1), 
@@ -5044,7 +5048,7 @@ TWEEN.Tween = function(e) {
         }();
         return t.lexer = i, e.prototype = t, t.Parser = e, new e();
     }();
-    return void 0 !== e && void 0 !== t && (t.parser = n, t.Parser = n.Parser, t.parse = function() {
+    return e !== void 0 && t !== void 0 && (t.parser = n, t.Parser = n.Parser, t.parse = function() {
         return n.parse.apply(n, arguments);
     }, t.main = function(i) {
         if (!i[1]) throw Error("Usage: " + i[0] + " FILE");
@@ -5052,7 +5056,7 @@ TWEEN.Tween = function(e) {
         return n = "undefined" != typeof process ? e("fs").readFileSync(e("path").resolve(i[1]), "utf8") : e("file").path(e("file").cwd()).join(i[1]).read({
             charset: "utf-8"
         }), t.parser.parse(n);
-    }, void 0 !== i && e.main === i && t.main("undefined" != typeof process ? process.argv.slice(1) : e("system").args)), 
+    }, i !== void 0 && e.main === i && t.main("undefined" != typeof process ? process.argv.slice(1) : e("system").args)), 
     Handlebars.Parser = n, Handlebars.parse = function(e) {
         return Handlebars.Parser.yy = Handlebars.AST, Handlebars.Parser.parse(e);
     }, Handlebars.print = function(e) {
@@ -5128,7 +5132,7 @@ TWEEN.Tween = function(e) {
                 return e instanceof Handlebars.SafeString ? "" + e : null == e || e === !1 ? "" : i.test(e) ? e.replace(t, n) : e;
             },
             isEmpty: function(e) {
-                return void 0 === e ? !0 : null === e ? !0 : e === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(e) && 0 === e.length ? !0 : !1;
+                return e === void 0 ? !0 : null === e ? !0 : e === !1 ? !0 : "[object Array]" === Object.prototype.toString.call(e) && 0 === e.length ? !0 : !1;
             }
         };
     }(), Handlebars.Compiler = function() {}, Handlebars.JavaScriptCompiler = function() {}, 
@@ -5734,7 +5738,7 @@ HumanTime.locale = "en", HumanTime.locales = {
     a = floor(d / 60 + N2)) : 43200 > d ? (c.token = 12, t = 3 > h ? h : floor((d + 1439) / 1440), 
     s = o.getDay()) : (c.token = 13, n = floor(d / 525949), i = floor(d % 525949 / 43829 + N2), 
     12 === i && (i = 0, n++)), n && (u.years = n), i && (u.months = i), t && (u.days = t), 
-    a && (u.hours = a), r && (u.minutes = r), void 0 !== s && (u.day = s), c;
+    a && (u.hours = a), r && (u.minutes = r), s !== void 0 && (u.day = s), c;
 }, HumanTime.distanceOfTime = function(e, t) {
     e ? "number" == typeof e ? e = new Date(e) : "string" == typeof e && (e = parseISO(toISO(e))) : e = new Date(), 
     t ? "number" == typeof t ? t = new Date(t) : "string" == typeof t && (t = parseISO(toISO(t))) : t = new Date(), 
@@ -8026,7 +8030,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
             e.stopPropagation(), e.preventDefault();
             var t = this.y;
             this.px = e.pageX, this.py = e.pageY, this.x = this.px - this.ox, this.y = this.py - this.oy + this.st - this.hh, 
-            this.y = Math.max(0, Math.min(this.y, 12 * (this.l - 1) * this.h)), t !== this.y && (this.hoverItem(), 
+            this.y = Math.max(0, Math.min(this.y, 4 * 3 * (this.l - 1) * this.h)), t !== this.y && (this.hoverItem(), 
             this.showFuzzyTime(e.pageY));
         },
         clickCT: function(e) {
@@ -8717,7 +8721,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
         n.show(e);
     });
     var m = s.get("identities");
-    !m && (m = []), u.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
+    m || (m = []), u.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
         var t = a(this);
         t.data("typeahead") || (e.preventDefault(), t.data("typeahead", new c({
             options: {
@@ -11528,7 +11532,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
 }), define("phonepanel", function(e) {
     "use strict";
     var t = e("jquery"), i = e("api"), n = "", a = 0, r = "", s = "", o = e("countrycodes"), l = e("panel"), d = function(e, i) {
-        void 0 !== o[e] && (a = e, i || t("#phone-panel .countrycode").val("+" + o[a].country_code), 
+        o[e] !== void 0 && (a = e, i || t("#phone-panel .countrycode").val("+" + o[a].country_code), 
         t(".tips-area .ta-countrycode").html(o[a].short_name), c(), u());
     }, c = function() {
         o[a].format_long && o[a].format_reg && o[a].format_str && n.length === o[a].format_long ? t("#phone-panel .phonenumber").val(n.replace(o[a].format_reg, o[a].format_str)) : t("#phone-panel .phonenumber").val(n);
@@ -13485,14 +13489,14 @@ var lead0 = HumanTime.lead0 = function(e, t) {
     function t(e) {
         var t, i = s("#app-user-menu"), n = s("#app-user-name"), a = n.find("span"), r = i.find(".dropdown-wrapper"), o = r.find(".user-panel"), l = "/#" + c.printExtUserName(e.identities[0]);
         s("#app-browsing-identity").remove(), n.attr("href", l), a.text(e.name || e.nickname).removeClass("browsing-identity"), 
-        t = h.compile(m.normal), o.size() && o.remove(), e.profileLink = l, e.verifying = 1 === e.identities.length && "VERIFYING" === e.identities[0].status, 
+        t = h.compile(m.normal), o.length && o.remove(), e.profileLink = l, e.verifying = 1 === e.identities.length && "VERIFYING" === e.identities[0].status, 
         r.append(t(e)), delete e.profileLink, delete e.verifying;
     }
     function i(e) {
         var t, i = s("#app-user-menu"), n = s("#app-user-name"), a = n.find("span"), r = i.find(".dropdown-wrapper"), o = r.find(".user-panel"), l = e.browsing;
         e.browsing.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity").attr("data-token-type", e.tokenType).attr("data-token", e.originToken).attr("data-page", e.page).attr("data-action", e.action).attr("data-read-only", e.readOnly)), 
         n.attr("href", location.href), a.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
-        t = h.compile(m.browsing_identity), o.size() && o.remove(), r.append(t(e)), s("#app-user-menu").find(".set-up").data("source", {
+        t = h.compile(m.browsing_identity), o.length && o.remove(), r.append(t(e)), s("#app-user-menu").find(".set-up").data("source", {
             browsing_user: l,
             identity: l.identities[0],
             originToken: e.originToken,
@@ -14475,7 +14479,7 @@ var lead0 = HumanTime.lead0 = function(e, t) {
             if (e = ExfeUtilities.trim(e)) {
                 var t = e.split(":");
                 if (2 === t.length) {
-                    var i = 3600 * parseInt(t[0], 10), n = 60 * parseInt(t[1], 10);
+                    var i = 60 * 60 * parseInt(t[0], 10), n = 60 * parseInt(t[1], 10);
                     return i + (i > 0 ? n : -n);
                 }
             }

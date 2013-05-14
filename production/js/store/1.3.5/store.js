@@ -1,3 +1,4 @@
+define('store', function (require, module) {
 /* Copyright (c) 2010-2012 Marcus Westin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -198,8 +199,5 @@
 	else if (typeof define === 'function' && define.amd) { define(store) }
 	else { this.store = store }
 
-  if (typeof define === 'function') {
-    define('store', function () { return store; });
-  }
-
 })();
+});
