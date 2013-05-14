@@ -1588,5 +1588,5 @@ window.Zepto = Zepto
 })(Zepto)
 
 if ( typeof define === "function") {
-  define( "zepot", function () { return Zepto; } );
+  define( "zepto", function () { return Zepto; } );
 }

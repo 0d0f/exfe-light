@@ -1,4 +1,4 @@
-/*! EXFE.COM mobile-all@0.0.1 2013-05-14 02:05:47 */
+/*! EXFE.COM mobile-all@0.0.1 2013-05-14 03:05:04 */
 (function(t) {
     "use strict";
     function e(t, e, i) {
@@ -1097,7 +1097,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
             return this.bind(e, t);
         };
     });
-}(Zepto), "function" == typeof define && define("zepot", function() {
+}(Zepto), "function" == typeof define && define("zepto", function() {
     return Zepto;
 }), define("handlebars", function(t, e, n) {
     this.Handlebars = {}, function(t) {
