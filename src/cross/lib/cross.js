@@ -2277,6 +2277,7 @@ define(function (require, exports, module) {
         if (Cross_id > 0) {
             GetCross(Cross_id);
             // NOTE: `PhotoXWidget`
+            /*
             var pxw = new (require('photoxwidget'))({
               options: {
                 crossId: Cross_id,
@@ -2284,6 +2285,7 @@ define(function (require, exports, module) {
               }
             });
             pxw.show();
+            */
         } else if (Cross_id === null) {
             if (browsingIdentity) {
                 curIdentity = browsingIdentity;
