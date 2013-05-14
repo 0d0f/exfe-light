@@ -140,42 +140,53 @@ module.exports = function (grunt) {
           width: 80,
           banner: '/*! EXFE.COM mobile-all@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
         },
-        files: {
+            files: {
           '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
         }
       }
     },
 
     copy: {
+      deploy: {
+        expand: true,
+        cwd: 'production',
+        src: ['**'],
+        dest: '<%= dirs.deploy %>'
+      },
+      deploy_meta: {
+        expand: true,
+        src: ['package.json'],
+        dest: 'production'
+      },
       deploy_js: {
         expand: true,
         cwd: '<%= dirs.dist %>',
         src: ['**'],
-        dest: '/exfe/exfelight/js/'
+        dest: 'production/js/'
       },
       deploy_css: {
         expand: true,
         cwd: 'production/css',
         src: ['**'],
-        dest: '/exfe/exfelight/css/'
+        dest: '<%= dirs.deploy %>/css/'
       },
       deploy_img: {
         expand: true,
         cwd: 'production/img',
         src: ['**'],
-        dest: '/exfe/exfelight/img/'
+        dest: '<%= dirs.deploy %>/img/'
       },
       deploy_font: {
         expand: true,
         cwd: 'production/font',
         src: ['**'],
-        dest: '/exfe/exfelight/font/'
+        dest: '<%= dirs.deploy %>/font/'
       },
       deploy_views: {
         expand: true,
         cwd: 'production/views',
         src: ['**'],
-        dest: '/exfe/exfelight/views/'
+        dest: '<%= dirs.deploy %>/views/'
       }
     },
 
@@ -251,11 +262,14 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('deploy', 'Deploy Static Files.', function (name, tag) {
+  grunt.registerTask('deploy', 'Deploy Static Files.', function (name, tp, tag) {
     var len = arguments.length;
+    console.dir(arguments);
     if (0 === len) {
     } else {
-      var dir = '/exfe/exfelight', jsdir, cssdir, imgdir, fontdir, viewsdir;
+      var dir = tp || '/exfe/exfelight', jsdir, cssdir, imgdir, fontdir, viewsdir;
+      console.log(tp, dir);
+      grunt.config.set('dirs.deploy', dir);
       if (!grunt.file.exists(dir)) { grunt.file.mkdir(dir); }
       if (!grunt.file.exists(jsdir = dir + '/js')) { grunt.file.mkdir(jsdir); }
       if (!grunt.file.exists(cssdir = dir + '/css')) { grunt.file.mkdir(cssdir); }
@@ -265,8 +279,8 @@ module.exports = function (grunt) {
 
       switch (name) {
       case 'js':
-        var dist = grunt.config.get('dirs.dist') + '/';
         grunt.task.run('copy:deploy_js');
+        //var dist = grunt.config.get('dirs.dist') + '/';
         //grunt.file.copy(dist + grunt.config.get('dirs.desktop'), jsdir + '/' + grunt.config.get('dirs.desktop'));
         //grunt.file.copy(dist + grunt.config.get('dirs.desktop_min'), jsdir + '/' + grunt.config.get('dirs.desktop_min'));
         //grunt.file.copy(dist + grunt.config.get('dirs.mobile'), jsdir + '/' + grunt.config.get('dirs.mobile'));
@@ -290,6 +304,7 @@ module.exports = function (grunt) {
         break;
 
       case 'build':
+        grunt.task.run('copy:deploy');
         grunt.config.set('git.tag', tag);
         grunt.task.run('shell:git');
         break;
