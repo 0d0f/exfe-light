@@ -388,6 +388,7 @@ define('photox', function (require) {
   };
 
   proto.toggle = function (status, iid) {
+    /*jshint -W030*/
     status ? this.show(iid) : this.hide();
   };
 

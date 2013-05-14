@@ -1,4 +1,5 @@
 /*jshint -W015*/
+/*jshint -W030*/
 
 /**
  * Exfe's MatePanel Widget.

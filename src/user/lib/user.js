@@ -332,7 +332,7 @@ define('user', function (require) {
 
     tplFun = Handlebars.compile(userMenuTpls.normal);
 
-    $userPanel.size() && $userPanel.remove();
+    if ($userPanel.length) { $userPanel.remove(); }
 
     user.profileLink = profileLink;
 
@@ -379,7 +379,9 @@ define('user', function (require) {
 
     tplFun = Handlebars.compile(userMenuTpls.browsing_identity);
 
-    $userPanel.size() && $userPanel.remove();
+    if ($userPanel.length) {
+      $userPanel.remove();
+    }
 
     $dropdownWrapper.append(tplFun(data));
 

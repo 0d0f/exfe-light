@@ -88,6 +88,8 @@
         "unescape",
         "google",
         "App",
-        "Cross"
+        "Cross",
+        "alert",
+        "prompt"
     ]
 }

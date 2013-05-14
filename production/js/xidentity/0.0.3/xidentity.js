@@ -1,4 +1,5 @@
 /*jshint -W116*/
+/*jshint -W030*/
 
 define('xidentity', function (require) {
   'use strict';

@@ -1,4 +1,5 @@
 /*jshint -W116*/
+/*jshint -W030*/
 
 define('xdialog', function (require, exports) {
   "use strict";
