@@ -264,7 +264,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('deploy', 'Deploy Static Files.', function (name, tp, tag) {
     var len = arguments.length;
-    console.dir(arguments);
     if (0 === len) {
     } else {
       switch (name) {
