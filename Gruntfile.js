@@ -305,6 +305,7 @@ module.exports = function (grunt) {
 
       case 'build':
         grunt.task.run('copy:deploy');
+        grunt.task.run('copy:deploy_meta');
         grunt.config.set('git.tag', tag);
         grunt.task.run('shell:git');
         break;
