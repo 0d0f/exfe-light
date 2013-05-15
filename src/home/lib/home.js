@@ -1,4 +1,7 @@
+/* jshint -W116 */
 define(function (require) {
+  'use strict';
+
   var $ = require('jquery');
 
   $(function () {
@@ -27,7 +30,7 @@ define(function (require) {
       , t_w = TOY.width()
       //, t_h = TOY.height()
       // 图片最小占原来的 80%
-      , proportion = .8
+      , proportion = 0.8
       // 图片新边长
       , nt_w
       , t_position

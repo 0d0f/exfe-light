@@ -1,6 +1,6 @@
-/*jshint -W030 */
-/*jshint strict: false */
 define('class', function () {
+  'use strict';
+
 /*
  * Class
  * @author cfddream@gmail.com
@@ -89,7 +89,7 @@ define('class', function () {
   }
 
   // Shared empty constructor function to aid in prototype-chain creation.
-  function ctor() {}
+  function Ctor() {}
 
   // See: http://jsperf.com/object-create-vs-new-ctor
   var createProto = Object.__proto__ ?
@@ -97,8 +97,8 @@ define('class', function () {
       return { __proto__: proto };
     } :
     function (proto) {
-      ctor.prototype = proto;
-      return new ctor();
+      Ctor.prototype = proto;
+      return new Ctor();
     };
 
   function implement(properties) {

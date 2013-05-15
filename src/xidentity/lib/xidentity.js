@@ -1,5 +1,5 @@
-/*jshint -W116*/
-/*jshint -W030*/
+/* jshint -W116 */
+/* jshint -W030 */
 
 define('xidentity', function (require) {
   'use strict';
@@ -105,7 +105,7 @@ define('xidentity', function (require) {
       delay: 200,
       extraParams: {},
       autoClearResults: false,
-      dataType: "JSON",
+      dataType: 'JSON',
       minLength: 1,
 
       viewData: {

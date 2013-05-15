@@ -1,7 +1,10 @@
+module.exports = function (grunt) {
+  'use strict';
+
 var fs = require('fs');
 var path = require('path');
 
-var PKG = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8').replace(/\/{2}[^\n]+\n/g, ''));
+var PKG = grunt.file.readJSON('package.json');
 
 // desktop (桌面)
 var DESKTOP_META = PKG.desktop.dependencies;
@@ -19,51 +22,102 @@ var MOBILE_CONCAT = {
 // mobile (移动)
 var MOBILE_META = PKG.mobile.dependencies;
 
-var IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
+var JSHINT_IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
 
 
 // publish {{{
 var PUBLISH = {};
 // }}}
 
+// UGLIFY {{{
+var UGLIFY = {
+  options: {
+    //report : 'gzip',
+    compress: {
+      global_defs: {
+        "DEBUG": false
+      },
+      dead_code: true
+    }
+  },
+  desktop: {
+    options: {
+      banner: '<%= meta.banner %>\n/* !desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+    },
+    files: {
+      '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
+    }
+  },
+  desktop_beautify: {
+    options: {
+      banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
+      //sourceMap: '<%= dirs.dist %>/all-source-map.js'
+      beautify: {
+        indent_level: 2,
+        width: 80,
+        beautify: true
+      }
+    },
+    files: {
+      '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
+    }
+  },
+  mobile: {
+    options: {
+      banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+    },
+    files: {
+      '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
+    }
+  },
+  mobile_beautify: {
+    options: {
+      banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
+      beautify: {
+        indent_level: 2,
+        width: 80,
+        beautify: true
+      }
+    },
+    files: {
+      '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
+    }
+  }
+};
+// }}}
+
 
 // JSHint {{{
-var JSHINT_OPTIONS = JSON.parse(fs.readFileSync(__dirname + '/tools/jshintrc', 'utf8').replace(/\/{2}[^\n]+\n/g, ''));
-
 var JSHINT = {
-  /*
   options: {
-    jshintrc: 'tools/jshintrc'
+    jshintrc: '.jshintrc'
   },
-  */
-  options: JSHINT_OPTIONS,
 
-  desktop: [],
-  mobile: []
-
+  DESKTOP: [],
+  MOBILE: []
 };
 
 var DESKTOP_OTHERS = ['home', 'newbieguide'];
 
 DESKTOP_META.forEach(function (v) {
   var p = path.join('src', v.name, 'lib', v.name + '.js');
-  JSHINT.desktop.push(p);
-  JSHINT[v.name + '_'] = p;
+  JSHINT.DESKTOP.push(p);
+  JSHINT[v.name] = p;
   PUBLISH[v.name] = path.join('src', v.name);
   DESKTOP_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
 });
 
 DESKTOP_OTHERS.forEach(function (v) {
   var p = path.join('src', v, 'lib', v + '.js');
-  JSHINT.desktop.push(p);
-  JSHINT[v + '_'] = p;
+  JSHINT.DESKTOP.push(p);
+  JSHINT[v] = p;
   PUBLISH[v] = path.join('src', v);
 });
 
 MOBILE_META.forEach(function (v) {
   var p = path.join('src', v.name, 'lib', v.name + '.js');
-  JSHINT.mobile.push(p);
-  JSHINT[v.name + '_'] = p;
+  JSHINT.MOBILE.push(p);
+  JSHINT[v.name] = p;
   PUBLISH[v.name] = path.join('src', v.name);
   MOBILE_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
 });
@@ -74,12 +128,12 @@ JSHINT.MOBILE = path.join('production/js', 'mobile-all-' + PKG.mobile.version + 
 JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.min.js');
 // }}}
 
-module.exports = function (grunt) {
-  'use strict';
-
   // Project configuration.
   grunt.initConfig({
     pkg: PKG,
+    meta: {
+      banner: '/*! EXFE.COM */'
+    },
     dirs: {
       dist: 'production/js',
       desktop: 'all-<%= pkg.desktop.version %>.js',
@@ -101,54 +155,7 @@ module.exports = function (grunt) {
       mobile: MOBILE_CONCAT
     },
 
-    uglify: {
-      options: {
-        //report : 'gzip',
-        compress: {
-          global_defs: {
-            "DEBUG": false
-          },
-          dead_code: true
-        },
-        //beautify: true,
-        //width: 80,
-        banner: '/*! EXFE.COM <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
-      },
-      desktop: {
-        options: {
-          banner: '/*! EXFE.COM desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
-        },
-        files: {
-          '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
-        }
-      },
-      desktop_beautify: {
-        options: {
-          beautify: true,
-          width: 80
-        },
-        files: {
-          '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
-        }
-      },
-      mobile: {
-        options: {
-          banner: '/*! EXFE.COM mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
-        },
-        files: {
-          '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
-        }
-      },
-      mobile_beautify: {
-        options: {
-          beautify: true,
-          width: 80
-        },
-        files: {
-          '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
-        }
-      }
-    },
+    uglify: UGLIFY,
 
     copy: {
       deploy: {
@@ -239,12 +246,12 @@ module.exports = function (grunt) {
 
     if (name === 'all') {
       DESKTOP_META.forEach(function (v) {
-        if (IGNORE.indexOf(v.name) === -1) {
+        if (JSHINT_IGNORE.indexOf(v.name) === -1) {
           grunt.task.run('publish:' + v.name);
         }
       });
       MOBILE_META.forEach(function (v) {
-        if (IGNORE.indexOf(v.name) === -1) {
+        if (JSHINT_IGNORE.indexOf(v.name) === -1) {
           grunt.task.run('publish:' + v.name);
         }
       });
@@ -253,7 +260,7 @@ module.exports = function (grunt) {
       var pkg = JSON.parse(fs.readFileSync(path.join(p, 'package.json')));
       var dp = path.join('production/js', name);
       grunt.log.writeln(name);
-      grunt.task.run('jshint:' + name + '_');
+      grunt.task.run('jshint:' + name);
       if (!grunt.file.exists(dp)) {
         grunt.file.mkdir(dp);
       }
@@ -316,6 +323,23 @@ module.exports = function (grunt) {
         grunt.task.run('shell:git');
         break;
       }
+    }
+  });
+
+  grunt.registerTask('uglifymulti', 'Uglify multi files.', function (modules) {
+    var len = modules.length;
+    if (0 === len) {
+      grunt.log.error('Input A Module.');
+    } else {
+      modules = modules.split(/\s|,/);
+      modules.forEach(function (v, i) {
+        var m = v.split('@'),
+            name = m[0],
+            version = m[1];
+        if (!version) {
+        }
+        console.log(name, version);
+      });
     }
   });
 

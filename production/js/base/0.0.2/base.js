@@ -1,4 +1,5 @@
-/*jshint -W116*/
+/* jshint -W116 */
+
 define('base', function (require) {
   'use strict';
   // Thanks to:

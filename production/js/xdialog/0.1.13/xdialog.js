@@ -1,8 +1,9 @@
-/*jshint -W116*/
-/*jshint -W030*/
+/* jshint -W116 */
+/* jshint -W030 */
 
 define('xdialog', function (require, exports) {
-  "use strict";
+  'use strict';
+
   var $ = require('jquery'),
     R = require('rex'),
     Bus = require('bus'),

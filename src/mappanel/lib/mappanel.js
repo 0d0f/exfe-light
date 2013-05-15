@@ -1,12 +1,12 @@
-/*jshint -W015*/
-/*jshint -W030*/
+/* jshint -W015 */
+/* jshint -W030 */
 
 /**
  * Exfe's MatePanel Widget.
  * 日期控件
  */
 define('mappanel', function (require) {
-  "use strict";
+  'use strict';
 
   var $ = require('jquery'),
       proxy = $.proxy,
@@ -792,7 +792,7 @@ define('mappanel', function (require) {
         this.hasPlace = hasPlace;
 
         try {
-          GMaps = this.GMaps = google.maps;
+          GMaps = this.GMaps = window.google.maps;
           GCP = GMaps.ControlPosition;
 
           // center latlng
@@ -909,7 +909,7 @@ define('mappanel', function (require) {
                     cb = function (results, status) {
                       if (self._timer
                           && cb.id === self.cbid
-                          && status === google.maps.GeocoderStatus.OK
+                          && status === window.google.maps.GeocoderStatus.OK
                           && results.length) {
                         clearTimeout(self._timer);
                         self.hasPlace = true;
@@ -1040,14 +1040,15 @@ define('mappanel', function (require) {
     , createIcons: function () {
         var GMaps = this.GMaps
           , url = site_url + '/static/img/icons.png'
-          , gSize = GMaps.Size
-          , gPoint = GMaps.Point;
+          , GSize = GMaps.Size
+          , GPoint = GMaps.Point
+          , MarkerImage = GMaps.MarkerImage;
         // blue-icon 26 * 36
-        this.bicon = new GMaps.MarkerImage(url, new gSize(26, 36), new gPoint(0, 78));
+        this.bicon = new MarkerImage(url, new GSize(26, 36), new GPoint(0, 78));
         // red-icon 26 * 36
-        this.ricon = new GMaps.MarkerImage(url, new gSize(26, 36), new gPoint(26, 78));
+        this.ricon = new MarkerImage(url, new GSize(26, 36), new GPoint(26, 78));
         // small-blue-icon 12 * 14
-        this.sbicon = new GMaps.MarkerImage(url, new gSize(12, 14), new gPoint(52, 100));
+        this.sbicon = new MarkerImage(url, new GSize(12, 14), new GPoint(52, 100));
       }
 
     , saveMarker: function (i) {

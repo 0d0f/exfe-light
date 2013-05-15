@@ -1,9 +1,9 @@
 define('api', function (require) {
-  "use strict";
+  'use strict';
 
   // import $.ajax
   var $ = require('jquery'),
-      Deferred = $.Deferred,
+      deferred = $.Deferred,
       ajax = $.ajax,
       param = $.param,
       _ENV_ = window._ENV_;
@@ -242,7 +242,7 @@ define('api', function (require) {
 
     _extend(o, options);
 
-    dfd = Deferred();
+    dfd = deferred();
     promise = dfd.promise();
 
     jqXHR = ajax(o)

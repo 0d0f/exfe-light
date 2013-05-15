@@ -1,6 +1,7 @@
-/*jshint -W030*/
+/* jshint -W030 */
 define('util', function () {
-  "use strict";
+  'use strict';
+
   var trimLeft = /^\s+/,
       trimRight = /\s+$/,
       zh_CN = /[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g,
@@ -39,11 +40,11 @@ define('util', function () {
         } else if (c <= 0xdbff) { // high-surrogate code
           c = s.charCodeAt(++i);
           if (c < 0xdc00 || 0xdfff < c) {// Is trailing char low-surrogate code?
-            throw "Error: Invalid UTF-16 sequence. Missing low-surrogate code.";
+            throw 'Error: Invalid UTF-16 sequence. Missing low-surrogate code.';
           }
           u8len += 4;
         } else /*if (c <= 0xdfff)*/ { // low-surrogate code
-          throw "Error: Invalid UTF-16 sequence. Missing high-surrogate code.";
+          throw 'Error: Invalid UTF-16 sequence. Missing high-surrogate code.';
         }
       }
       return u8len;

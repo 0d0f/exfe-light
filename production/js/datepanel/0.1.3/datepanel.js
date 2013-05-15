@@ -1,12 +1,12 @@
-/*jshint -W015*/
-/*jshint -W030*/
+/* jshint -W015 */
+/* jshint -W030 */
 
 /**
  * Exfe's DatePanel Widget.
  * 日期控件
  */
 define('datepanel', function (require/*, exports, module*/) {
-  "use strict";
+  'use strict';
 
   var $ = require('jquery')
     , isIE = $.browser.msie

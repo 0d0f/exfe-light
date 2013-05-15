@@ -1,4 +1,4 @@
-/*jshint -W116*/
+/* jshint -W116 */
 define('emitter', function () {
   'use strict';
 

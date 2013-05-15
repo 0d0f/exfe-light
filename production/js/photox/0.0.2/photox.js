@@ -1,5 +1,5 @@
 define('photox', function (require) {
-  "use strict";
+  'use strict';
 
   var $ = require('jquery'),
       R = require('rex'),
@@ -176,7 +176,7 @@ define('photox', function (require) {
           resources   : { photox_id : photox_id },
           data        : {
             provider    : provider,
-            photo_ids   : photo_ids 
+            photo_ids   : photo_ids
           },
           beforeSend: bcb
         },
@@ -346,7 +346,7 @@ define('photox', function (require) {
         identity = R.find(identities, function (v) {
           if (v.id === iid) { return true; }
         });
-    this.$element.append(this.generate(iid, '', identity.name + "'s Dropbox"));
+    this.$element.append(this.generate(iid, '', identity.name + '\'s Dropbox'));
     this.initstatus = 0;
   };
 

@@ -1,6 +1,6 @@
 /*jshint -W030*/
 define('widget', function (require) {
-  "use strict";
+  'use strict';
 
   // Widget
   // ------
