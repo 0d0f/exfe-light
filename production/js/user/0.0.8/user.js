@@ -1,7 +1,7 @@
-/*jshint -W003*/
+/* jshint -W003 */
 
 define('user', function (require) {
-  "use strict";
+  'use strict';
 
   var $ = require('jquery'),
       R = require('rex'),

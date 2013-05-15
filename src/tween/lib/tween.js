@@ -10,7 +10,6 @@
  * @author egraether / http://egraether.com/
  * @author endel / http://endel.me
  */
-
 var TWEEN = TWEEN || ( function () {
 
 	var _tweens = [];
@@ -691,6 +690,6 @@ TWEEN.Interpolation = {
 
 };
 
-if ( typeof define === "function") {
-  define( "tween", function () { return TWEEN; } );
+if (typeof define === 'function') {
+  define('tween', function (){ return TWEEN; });
 }

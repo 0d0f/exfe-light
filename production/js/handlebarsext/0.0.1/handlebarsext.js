@@ -2,10 +2,10 @@
  * A collection of helpers for Handlebars.js
  */
 define(function (require) {
-  "use strict";
+  'use strict';
 
-  var R = require('rex');
-  var Handlebars = require('handlebars');
+  var R = require('rex'),
+      Handlebars = require('handlebars');
 
   // String
   // -----------------------------
@@ -21,8 +21,7 @@ define(function (require) {
 
 
   Handlebars.registerHelper('printIdentityNameFromInvitations', function (identity_id, invitations) {
-    var invitation = getInvitationById(identity_id, invitations)
-      , s = '';
+    var invitation = getInvitationById(identity_id, invitations), s = '';
     if (invitation) {
       s = invitation.identity.name;
     }

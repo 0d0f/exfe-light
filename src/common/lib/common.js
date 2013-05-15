@@ -1,4 +1,5 @@
-/*jslint evil: true */
+/* jshint evil: true */
+
 /*!
  * https://github.com/cfddream/odof
  * License MIT

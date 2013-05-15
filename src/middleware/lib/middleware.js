@@ -1,5 +1,5 @@
 define('middleware', function (require, exports, module) {
-  "use strict";
+  'use strict';
 
   var Bus = require('bus')
     , Store = require('store')

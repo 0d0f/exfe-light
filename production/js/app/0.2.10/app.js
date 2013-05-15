@@ -2,7 +2,7 @@
  * X webapp Bootstrap!
  */
 define(function (require) {
-  "use strict";
+  'use strict';
 
   var _ENV_ = window._ENV_
     , Handlebars = require('handlebars');
