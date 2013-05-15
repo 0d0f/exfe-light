@@ -21,7 +21,7 @@
     "grunt-shell": "~0.2.2"
   },
   "desktop": {
-    "version": "0.0.1",
+    "version": "2a.1",
     "files": {
       "dev": "all-{{version}}.js",
       "pro": "all-{{version}}.min.js"
@@ -194,7 +194,7 @@
     ]
   },
   "mobile": {
-    "version": "0.0.1",
+    "version": "2a.1",
     "files": {
       "dev": "mobile-all-{{version}}.js",
       "pro": "mobile-all-{{version}}.min.js"
