@@ -132,7 +132,8 @@ JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.versio
   grunt.initConfig({
     pkg: PKG,
     meta: {
-      banner: '/*! EXFE.COM */'
+      // /*! EXFE.COM\nAwesome! We're hunting talents like you. Please drop us your CV to work@exfe.com. */
+      banner: '/*! EXFE.COM\nQXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg==*/'
     },
     dirs: {
       dist: 'production/js',
