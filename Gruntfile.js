@@ -133,7 +133,7 @@ JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.versio
     pkg: PKG,
     meta: {
       // /*! EXFE.COM Awesome! We're hunting talents like you. Please drop us your CV to work@exfe.com. */
-      banner: '/*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg==*/'
+      banner: '/*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */'
     },
     dirs: {
       dist: 'production/js',
