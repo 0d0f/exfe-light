@@ -898,15 +898,21 @@ define('xdialog', function (require, exports) {
           $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
         'click .xbtn-forgotpwd': function (e) {
-          var user = Store.get('user')
-            , identities = user.identities
-            , ids = [];
+          var user = Store.get('user'),
+              identities = user.identities,
+              len = identities.length,
+              ids = [];
 
-          R.each(identities, function (v) {
-            if (v.status === 'CONNECTED') {
-              ids.push(v);
-            }
-          });
+          if (1 === len) {
+            ids.push(identities[0]);
+          } else {
+            R.each(identities, function (v) {
+              var s = v.status;
+              if ((s === 'CONNECTED' || s === 'REVOKED')) {
+                ids.push(v);
+              }
+            });
+          }
           $(e.currentTarget).data('source', ids);
         },
         'click .xbtn-success': function (e) {
@@ -914,7 +920,7 @@ define('xdialog', function (require, exports) {
           var cppwd = that.$('#cppwd').val();
           var cpnpwd = that.$('#cp-npwd').val();
 
-          // note: 暂时先用 alert
+          // @note: 暂时先用 alert
           if (!cppwd || !cpnpwd) {
             if (!cppwd) {
               alert('Please input current password.');
