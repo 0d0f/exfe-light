@@ -1,3 +1,7 @@
+* v0.0.9 2013-05-16T15:27:00 UTC+0800
+  * Bugs fix
+    - refresh localstorge `identities`
+
 * v0.0.8 2013-03-18T14:15:00 UTC+0800
   * Changes
     - browsing-identity

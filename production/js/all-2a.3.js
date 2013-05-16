@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.3 2013-05-16 03:05:44 */
+/*! desktop@2a.3 2013-05-16 03:05:32 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -13517,11 +13517,11 @@ TWEEN.Tween = function(e) {
   }
   function r(e) {
     var t = u.get("identities") || [], i = t.slice(0);
-    0 === e.length ? t = e : o.each(e, function(e) {
-      var n = o.find(i, function(t) {
-        return t.id === e.id ? !0 : void 0;
+    0 === e.length ? t = e : o.each(e, function(e, n) {
+      var a = o.find(i, function(i) {
+        return i.external_username === e.external_username ? (t[n] = i, !0) : void 0;
       });
-      n || t.push(e);
+      a || t.push(e);
     }), u.set("identities", t);
   }
   var s = e("jquery"), o = e("rex"), l = e("api"), d = e("bus"), c = e("util"), u = e("store"), h = e("handlebars"), p = function(e, t, i, n) {
