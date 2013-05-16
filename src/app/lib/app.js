@@ -13,7 +13,7 @@ define(function (require) {
   var lightsaber = require('lightsaber');
 
   // Create App   ***********************************
-  var app = lightsaber();
+  var app = window.App = lightsaber();
 
   var Widget = require('widget');
   app.widgetCaches = Widget.caches;
@@ -107,6 +107,4 @@ define(function (require) {
   // app running
   app.run();
 
-  // global
-  window.App = app;
 });
