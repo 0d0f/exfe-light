@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.2 2013-05-16 04:05:09 */
+/*! mobile@2a.2 2013-05-16 04:05:52 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4659,7 +4659,7 @@ TWEEN.Tween = function(t) {
   d.controllers = {}, d.controllers.footer = new o({
     App: d
   }), d.get(/^\/+(?:\?)?#{0,}$/, a.index), d.get(/^\/+(?:\?)?#live\/?$/, a.live), 
-  d.get(/^\?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
+  d.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
     var n = function() {
       var t, e = document.getElementsByTagName("head")[0], n = document.getElementsByName("sms-token")[0];
       return n && (t = JSON.parse(n.content), e.removeChild(n)), t;
