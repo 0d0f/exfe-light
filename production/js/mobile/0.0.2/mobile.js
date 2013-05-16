@@ -26,7 +26,7 @@ define(function (require) {
   var lightsaber = require('lightsaber');
 
   // Create App   ***********************************
-  var app = lightsaber();
+  var app = window.App = lightsaber();
   app.use(middleware.setHtmlHeight);
   //app.use(middleware.checkSMSToken);
   app.use(middleware.cleanup);
@@ -134,8 +134,4 @@ define(function (require) {
   app.run();
 
   //window.pageshow = function () {};
-
-  // global
-  window.App = app;
-
 });

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.2 2013-05-16 04:05:15 */
+/*! mobile@2a.2 2013-05-16 05:05:21 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3985,8 +3985,7 @@ TWEEN.Tween = function(t) {
         var n = function() {
           t.error = !0, e.redirect("/");
         };
-        i.removeClass("hide"), $("#app-body").css("height", "100%"), App.controllers.footer.emit("reset-position"), 
-        $.ajax({
+        i.removeClass("hide"), $("#app-body").css("height", "100%"), $.ajax({
           type: "POST",
           url: o + "/Users/" + r.user_id + "?token=" + r.token,
           data: {
@@ -4000,7 +3999,7 @@ TWEEN.Tween = function(t) {
           error: function() {
             n();
           }
-        });
+        }), App.controllers.footer.emit("reset-position");
       });
     }
   }), e.HomeController = C.extend({
@@ -4654,7 +4653,7 @@ TWEEN.Tween = function(t) {
     return new Date().getTime();
   }, u = c(), l = function(t) {
     App.set("tryRedirectAt", c()), window.location = "exfe://crosses/" + (t || "");
-  }, h = t("lightsaber"), d = h();
+  }, h = t("lightsaber"), d = window.App = h();
   d.use(s.setHtmlHeight), d.use(s.cleanup), d.initRouter(), d.use(s.errorHandler), 
   d.controllers = {}, d.controllers.footer = new o({
     App: d
@@ -4686,5 +4685,5 @@ TWEEN.Tween = function(t) {
       u = t;
     }, 500);
     d.set("tryTimer", s), t();
-  }), d.run(), window.App = d;
+  }), d.run();
 });
