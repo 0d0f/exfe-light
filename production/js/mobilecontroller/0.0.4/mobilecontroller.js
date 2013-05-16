@@ -478,7 +478,6 @@ define('mobilecontroller', function (require, exports, module) {
         };
         element.removeClass('hide');
         $('#app-body').css('height', '100%');
-        App.controllers.footer.emit('reset-position');
 
         $.ajax({
           type: 'POST',
@@ -497,6 +496,8 @@ define('mobilecontroller', function (require, exports, module) {
             cb();
           }
         });
+
+        App.controllers.footer.emit('reset-position');
       });
     }
   });
