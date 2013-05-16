@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.3 2013-05-16 04:05:36 */
+/*! desktop@2a.3 2013-05-16 06:05:50 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -14287,7 +14287,7 @@ define("lightsaber", function(e, t, i) {
   };
 }), define(function(e) {
   "use strict";
-  var t = window._ENV_, i = e("handlebars"), n = e("middleware"), a = e("routes"), r = e("lightsaber"), s = r(), o = e("widget");
+  var t = window._ENV_, i = e("handlebars"), n = e("middleware"), a = e("routes"), r = e("lightsaber"), s = window.App = r(), o = e("widget");
   s.widgetCaches = o.caches, s.use(n.fixedFaceBookURL), s.use(n.basicAuth), s.use(n.cleanupAppTmp), 
   s.initRouter(), s.use(n.errorHandler), s.set("timestamp", t.timestamp), s.set("view cache", !0), 
   s.set("view engine", i), s.set("views", "/static/views"), s.get(/^\/+(?:\?)?(?:ipad)?#{0,}$/, a.index), 
@@ -14306,5 +14306,5 @@ define("lightsaber", function(e, t, i) {
   s.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
   s.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
   s.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, a.invalid), s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, a.signout), 
-  s.run(), window.App = s;
+  s.run();
 });
