@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.3 2013-05-16 03:05:32 */
+/*! desktop@2a.3 2013-05-16 04:05:30 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15437,7 +15437,7 @@ define("lightsaber", function(e, t, i) {
   s.widgetCaches = o.caches, s.use(n.fixedFaceBookURL), s.use(n.basicAuth), s.use(n.cleanupAppTmp), 
   s.initRouter(), s.use(n.errorHandler), s.set("timestamp", t.timestamp), s.set("view cache", !0), 
   s.set("view engine", i), s.set("views", "/static/views"), s.get(/^\/+(?:\?)?(?:ipad)?#{0,}$/, a.index), 
-  s.get(/^\?t=([a-zA-Z0-9]{3,})$/, function(e, t, i) {
+  s.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function(e, t, i) {
     var n = function() {
       var e = document.getElementsByTagName("head")[0], t = document.getElementsByName("sms-token")[0], i = null;
       return t && (i = JSON.parse(t.content), e.removeChild(t)), i;
