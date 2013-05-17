@@ -1,5 +1,7 @@
+/* jshint -W003 */
+
 define('user', function (require) {
-  "use strict";
+  'use strict';
 
   var $ = require('jquery'),
       R = require('rex'),
@@ -105,6 +107,7 @@ define('user', function (require) {
   // Get User
   Bus.on('app:api:getuser', getUser);
 
+  /*
   function getCrossList(token, user_id, done, fail) {
     Api.request('crosslist',
       {
@@ -156,9 +159,9 @@ define('user', function (require) {
             var beginAt = v.time.begin_at,
                 dt = new Date(beginAt.date.replace(/\-/g, '/') + ' ' + beginAt.time).getTime();
 
-              if (now <= dt && dt <= threeDays) {
-                return true;
-              }
+            if (now <= dt && dt <= threeDays) {
+              return true;
+            }
           });
 
           if (0 === list.length) { return; }
@@ -199,6 +202,7 @@ define('user', function (require) {
       , fail || function () {}
     );
   }
+  */
 
 
   // --------------------------------------------------------------------------
@@ -297,7 +301,7 @@ define('user', function (require) {
           + '<div class="footer">'
           + '</div>'
         + '</div>'
-  };
+    };
 
   /**
    *
@@ -328,7 +332,7 @@ define('user', function (require) {
 
     tplFun = Handlebars.compile(userMenuTpls.normal);
 
-    $userPanel.size() && $userPanel.remove();
+    if ($userPanel.length) { $userPanel.remove(); }
 
     user.profileLink = profileLink;
 
@@ -375,7 +379,9 @@ define('user', function (require) {
 
     tplFun = Handlebars.compile(userMenuTpls.browsing_identity);
 
-    $userPanel.size() && $userPanel.remove();
+    if ($userPanel.length) {
+      $userPanel.remove();
+    }
 
     $dropdownWrapper.append(tplFun(data));
 

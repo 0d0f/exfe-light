@@ -1,8 +1,10 @@
+/* jshint -W030 */
+
 /**
  * Routes
  */
 define('routes', function (require, exports, module) {
-  "use strict";
+  'use strict';
 
   var R = require('rex'),
       Api = require('api'),
@@ -35,8 +37,10 @@ define('routes', function (require, exports, module) {
         .append($img);
       $img.load(function () {
 
-        $.ajax({ dataType: 'script', cache: true,
-          url: "/static/js/home/0.0.3/home.js?t=" + req.app.set('timestamp')
+        $.ajax({
+          dataType: 'script',
+          cache: true,
+          url: '/static/js/home/0.0.3/home.js?t=' + req.app.set('timestamp')
         });
       });
     });

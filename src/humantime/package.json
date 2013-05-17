@@ -1,0 +1,9 @@
+{
+  "name": "humantime",
+  "version": "0.0.8",
+  "description": "Human Time: relative or absolute time.",
+  "homepage": "https://exfe.com/",
+  "author": "cfd",
+  "date": "2013-04-10T14:43:00 UTC+0800",
+  "hint": true
+}

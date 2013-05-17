@@ -1,0 +1,277 @@
+{
+  "name": "light",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "mkdirp": "0.3.5",
+    "less": "1.3.3",
+    "recess": "1.1.6",
+    "uglify-js": "1.3.4"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-lib-contrib": "~0.6.1",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "grunt-contrib-watch": "~0.4.3",
+    "grunt-contrib-compress": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-shell": "~0.2.2",
+    "semver": "~1.1.4",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-livereload": "~0.1.2",
+    "grunt-regarde": "~0.1.1"
+  },
+  "desktop": {
+    "version": "2a.4",
+    "files": {
+      "dev": "all-{{version}}.js",
+      "pro": "all-{{version}}.min.js"
+    },
+    "dependencies": [
+      {
+        "name": "common",
+        "version": "0.0.3"
+      },
+      {
+        "name": "class",
+        "version": "0.0.1"
+      },
+      {
+        "name": "emitter",
+        "version": "0.0.2"
+      },
+      {
+        "name": "base",
+        "version": "0.0.2"
+      },
+      {
+        "name": "bus",
+        "version": "0.0.2"
+      },
+      {
+        "name": "rex",
+        "version": "0.0.2"
+      },
+      {
+        "name": "jquery",
+        "version": "1.8.2"
+      },
+      {
+        "name": "jqfocusend",
+        "version": "0.0.2"
+      },
+      {
+        "name": "jqoffset",
+        "version": "0.0.2"
+      },
+      {
+        "name": "jqmousewheel",
+        "version": "3.1.3"
+      },
+      {
+        "name": "jqdndsortable",
+        "version": "0.0.2"
+      },
+      {
+        "name": "jqresize",
+        "version": "0.0.1"
+      },
+      {
+        "name": "tween",
+        "version": "10.0.0"
+      },
+      {
+        "name": "af",
+        "version": "0.0.1"
+      },
+      {
+        "name": "store",
+        "version": "1.3.5"
+      },
+      {
+        "name": "marked",
+        "version": "0.2.5"
+      },
+      {
+        "name": "handlebars",
+        "version": "1.0.7"
+      },
+      {
+        "name": "handlebarsext",
+        "version": "0.0.1"
+      },
+      {
+        "name": "util",
+        "version": "0.2.6"
+      },
+      {
+        "name": "humantime",
+        "version": "0.0.8"
+      },
+      {
+        "name": "api",
+        "version": "0.0.10"
+      },
+      {
+        "name": "widget",
+        "version": "0.0.4"
+      },
+      {
+        "name": "dialog",
+        "version": "0.0.4"
+      },
+      {
+        "name": "typeahead",
+        "version": "0.0.2"
+      },
+      {
+        "name": "panel",
+        "version": "0.0.2"
+      },
+      {
+        "name": "xidentity",
+        "version": "0.0.3"
+      },
+      {
+        "name": "xdialog",
+        "version": "0.1.14"
+      },
+      {
+        "name": "datepanel",
+        "version": "0.1.3"
+      },
+      {
+        "name": "mappanel",
+        "version": "0.0.9"
+      },
+      {
+        "name": "global",
+        "version": "0.0.5"
+      },
+      {
+        "name": "filehtml5",
+        "version": "0.0.1"
+      },
+      {
+        "name": "countrycodes",
+        "version": "0.0.1"
+      },
+      {
+        "name": "phonepanel",
+        "version": "0.0.2"
+      },
+      {
+        "name": "uploader",
+        "version": "0.0.4"
+      },
+      {
+        "name": "profile",
+        "version": "0.1.19"
+      },
+      {
+        "name": "user",
+        "version": "0.0.9"
+      },
+      {
+        "name": "cross",
+        "version": "0.0.1"
+      },
+      {
+        "name": "lightsaber",
+        "version": "0.0.5"
+      },
+      {
+        "name": "middleware",
+        "version": "0.0.10"
+      },
+      {
+        "name": "routes",
+        "version": "0.3.13"
+      },
+      {
+        "name": "app",
+        "version": "0.2.10"
+      }
+    ]
+  },
+  "mobile": {
+    "version": "2a.2",
+    "files": {
+      "dev": "mobile-all-{{version}}.js",
+      "pro": "mobile-all-{{version}}.min.js"
+    },
+    "dependencies": [
+      {
+        "name": "common",
+        "version": "0.0.3"
+      },
+      {
+        "name": "class",
+        "version": "0.0.1"
+      },
+      {
+        "name": "emitter",
+        "version": "0.0.2"
+      },
+      {
+        "name": "base",
+        "version": "0.0.2"
+      },
+      {
+        "name": "zepto",
+        "version": "1.0.0"
+      },
+      {
+        "name": "handlebars",
+        "version": "1.0.7"
+      },
+      {
+        "name": "store",
+        "version": "1.3.5"
+      },
+      {
+        "name": "tween",
+        "version": "10.0.0"
+      },
+      {
+        "name": "af",
+        "version": "0.0.1"
+      },
+      {
+        "name": "util",
+        "version": "0.2.6"
+      },
+      {
+        "name": "humantime",
+        "version": "0.0.8"
+      },
+      {
+        "name": "lightsaber",
+        "version": "0.0.5"
+      },
+      {
+        "name": "live",
+        "version": "0.0.2"
+      },
+      {
+        "name": "mobilemiddleware",
+        "version": "0.0.1"
+      },
+      {
+        "name": "mobilecontroller",
+        "version": "0.0.4"
+      },
+      {
+        "name": "mobileroutes",
+        "version": "0.0.3"
+      },
+      {
+        "name": "mobile",
+        "version": "0.0.2"
+      }
+    ]
+  }
+}
