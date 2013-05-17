@@ -529,7 +529,7 @@ define('routes', function (require, exports, module) {
   };
 
 
-  var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, accept, mute) {
+  var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, rsvp) {
     var session = req.session,
         authorization = session.authorization,
         user = session.user;
@@ -560,8 +560,8 @@ define('routes', function (require, exports, module) {
               .empty()
               .append(tpl);
             Bus.emit('xapp:cross:main');
-            Bus.emit('xapp:cross', null, browsing_identity, cross, read_only, cat || ctoken, !!accept);
-            if (mute) {
+            Bus.emit('xapp:cross', null, browsing_identity, cross, read_only, cat || ctoken, rsvp);
+            if (rsvp === 'mute') {
               var d = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
               d.data('source', cross);
               d.appendTo($('#app-tmp'));
@@ -637,9 +637,7 @@ define('routes', function (require, exports, module) {
       , authorization = session.authorization
       , authToken = authorization && authorization.token
       , ctoken = req.params[0]
-      , crossAction = req.params[1]
-      , accept = crossAction === 'accept'
-      , mute = crossAction === 'mute'
+      , rsvp = req.params[1]
       , cats = Store.get('cats')
       // cat = cross_access_token
       , cat
@@ -659,7 +657,7 @@ define('routes', function (require, exports, module) {
       data.cross_access_token = cat;
     }
 
-    _crosstoken(res, req, next, params, data, cats, cat, ctoken, accept, mute);
+    _crosstoken(res, req, next, params, data, cats, cat, ctoken, rsvp);
   };
 
   routes.crossPhoneToken = function (req, res, next) {
@@ -668,9 +666,7 @@ define('routes', function (require, exports, module) {
         authToken = authorization && authorization.token,
         cross_id = req.params[0],
         ctoken = req.params[1],
-        crossAction = req.params[2],
-        accept = crossAction === 'accept',
-        mute = crossAction === 'mute',
+        rsvp = req.params[2] || '',
         cats = Store.get('cats'),
         params = {},
         cat, data;
@@ -691,7 +687,7 @@ define('routes', function (require, exports, module) {
       data.cross_access_token = cat;
     }
 
-    _crosstoken(res, req, next, params, data, cats, cat, ctoken, accept, mute);
+    _crosstoken(res, req, next, params, data, cats, cat, ctoken, rsvp);
   };
 
 
