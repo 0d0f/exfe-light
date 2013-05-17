@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-23 11:05:55 */
+/*! desktop@2a.6 2013-05-23 11:05:35 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -13983,16 +13983,11 @@ define("lightsaber", function(e, t, i) {
   var c = i.exports = {};
   c.index = function(e, t) {
     return e.session.authorization ? (n(e, t), void 0) : (s.emit("app:page:home", !0), 
-    t.render("index.html", function(t) {
-      var i = $("#app-main");
-      i.append(t);
-      var n = i.find("div.page-main"), a = $('<img class="exfe-toy" id="js-exfe-toy" src="/static/img/exfe.png" alt="" />');
-      n.append(a), a.load(function() {
-        $.ajax({
-          dataType: "script",
-          cache: !0,
-          url: "/static/js/home/0.0.3/home.js?t=" + e.app.set("timestamp")
-        });
+    t.render("home.html", function(t) {
+      $("#app-main").append(t), $.ajax({
+        dataType: "script",
+        cache: !0,
+        url: "/static/js/newhome/0.0.1/newhome.js?t=" + e.app.set("timestamp")
       });
     }), void 0);
   }, c.gather = function(e, t) {
