@@ -2272,7 +2272,7 @@ define(function (require, exports, module) {
         window.convTimer     = null;
     });
     // init event
-    bus.on('xapp:cross', function(Cross_id, browsingIdentity, cross, read_only, invitation_token, accepted) {
+    bus.on('xapp:cross', function(Cross_id, browsingIdentity, cross, read_only, invitation_token, rsvp_action) {
         // get cross
         if (Cross_id > 0) {
             GetCross(Cross_id);
@@ -2292,9 +2292,14 @@ define(function (require, exports, module) {
                 Api.setToken(invitation_token);
             }
             UpdateCross(cross, read_only);
-            if (accepted) {
-                ExfeeWidget.rsvpMe('ACCEPTED');
-                ShowRsvp();
+            switch (rsvp_action) {
+                case 'accept':
+                    ExfeeWidget.rsvpMe('ACCEPTED');
+                    ShowRsvp();
+                    break;
+                case 'decline':
+                    ExfeeWidget.rsvpMe('DECLINED');
+                    ShowRsvp();
             }
         } else {
             NewCross();
