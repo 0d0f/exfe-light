@@ -18,10 +18,14 @@
     "grunt-contrib-compress": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-shell": "~0.2.2"
+    "grunt-shell": "~0.2.2",
+    "semver": "~1.1.4",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-livereload": "~0.1.2",
+    "grunt-regarde": "~0.1.1"
   },
   "desktop": {
-    "version": "2a.3",
+    "version": "2a.4",
     "files": {
       "dev": "all-{{version}}.js",
       "pro": "all-{{version}}.min.js"
@@ -185,7 +189,7 @@
       },
       {
         "name": "routes",
-        "version": "0.3.12"
+        "version": "0.3.13"
       },
       {
         "name": "app",
