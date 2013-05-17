@@ -28,20 +28,12 @@ define('routes', function (require, exports, module) {
     // is `home`
     Bus.emit('app:page:home', true);
 
-    res.render('index.html', function (tpl) {
-      var $appMain = $('#app-main');
-      $appMain.append(tpl);
-      var $pageMain = $appMain.find('div.page-main');
-      var $img = $('<img class="exfe-toy" id="js-exfe-toy" src="/static/img/exfe.png" alt="" />');
-      $pageMain
-        .append($img);
-      $img.load(function () {
-
-        $.ajax({
-          dataType: 'script',
-          cache: true,
-          url: '/static/js/home/0.0.3/home.js?t=' + req.app.set('timestamp')
-        });
+    res.render('home.html', function (tpl) {
+      $('#app-main').append(tpl);
+      $.ajax({
+        dataType: 'script',
+        cache: true,
+        url: '/static/js/newhome/0.0.1/newhome.js?t=' + req.app.set('timestamp')
       });
     });
   };
