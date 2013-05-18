@@ -7833,16 +7833,13 @@ body {
   position: absolute;
   left: 0;
   z-index: 233;
-  width: 100%;
+  min-width: 880px;
+  text-align: center;
 }
 
 .home .xbtn-start {
-  position: relative;
-  left: -70px;
-  display: block;
   width: 140px;
   height: 36px;
-  margin-left: 50%;
   font-size: 20px;
   font-style: italic!important;
   font-weight: 200;
