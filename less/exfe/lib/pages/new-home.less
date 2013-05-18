@@ -11,6 +11,16 @@
   background-size: cover;
 }
 
+@maxHeight: 680px;
+@media all and (max-height: @maxHeight) {
+  .hbg {
+    -webkit-background-size: 100% @maxHeight;
+    -moz-background-size: 100% @maxHeight;
+    -o-background-size: 100% @maxHeight;
+    background-size: 100% @maxHeight;
+  }
+}
+
 .home {
   position: relative;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
