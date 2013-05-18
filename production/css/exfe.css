@@ -7797,6 +7797,7 @@ body {
 
 .home header {
   position: relative;
+  z-index: 1;
   text-align: center;
   opacity: 0;
   filter: alpha(opacity=0);
