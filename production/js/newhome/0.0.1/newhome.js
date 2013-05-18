@@ -35,38 +35,31 @@ define(function (require) {
 
     $w.off('*.home')
       .on('scroll.home', function () {
-        var st = $w.scrollTop(), pt = st;
-        if (st > 200) { pt = 200; }
-        pt /= 200;
+        var st = $w.scrollTop(),
+            pt = Math.min(st, 200) / 200,
+            bounding = $s[0].getBoundingClientRect(), top;
+
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
-
-        var bounding = $s[0].getBoundingClientRect();
-
         $tb.toggleClass('hide', st <= 0);
 
-        if (Math.floor(st + t) <= Math.floor(h - t - 36 - 30)) {
-          s = 0;
-          $s.css({
-            position: 'absolute',
-            top: h - t - 36 - 30
-          });
-        } else if ( bounding.top <= 60) {
+        if (bounding.top < (top = 60)) {
           s = 1;
-          $s.css({
-            position: 'fixed',
-            top: 60
-          });
+          $s.css({ position: 'fixed', top: top });
+        } else if (bounding.top === 60 && Math.floor(st) <= (top = Math.floor(h - t - 36 - 30)) - 60) {
+          s = 0;
+          $s.css({ position: 'absolute', top: top });
         }
       })
       .on('resize.home', function () {
+        $w.trigger('scroll.home');
         d = calculate($w.height(), 0);
         h = d[0];
         t = d[1];
         $tb.css('height', t + 130);
         $h.css('top', t);
         $e.css('top', (h - 600) / 2);
-        if (!s) { $s.css('top', h - t - 36 - 30); }
+        if (!s) { $s.css('top', Math.floor(h - t - 36 - 30)); }
         $i.css('top', h - 30);
       });
 

@@ -33,7 +33,7 @@ define('routes', function (require, exports, module) {
       $.ajax({
         dataType: 'script',
         cache: true,
-        url: '/static/js/newhome/0.0.1/newhome.js?t=' + req.app.set('timestamp')
+        url: '/static/js/newhome/0.0.1/newhome.min.js?t=' + req.app.set('timestamp')
       });
     });
   };
