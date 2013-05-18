@@ -24,10 +24,10 @@ define(function (require) {
   $(function () {
     var $w = $(window),
         $d = $(document),
-        $tb = $('.topbar'),
+        mask = $('.top-mask')[0],
         $h = $('.home header'),
         $e = $('.exfe-logo'),
-        $s = $('.xbtn-start'),
+        $s = $('.login'),
         $i = $('.intros'),
         $it = $('.introduction'),
         $its = $i.find('.intro').not($it),
@@ -41,7 +41,7 @@ define(function (require) {
 
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
-        $tb.toggleClass('hide', st <= 0);
+        mask.setAttribute('class', 'top-mask' + (st <= 0 ? ' hide' : ''));
 
         if (bounding.top < (top = 60)) {
           s = 1;
@@ -56,7 +56,6 @@ define(function (require) {
         d = calculate($w.height(), 0);
         h = d[0];
         t = d[1];
-        $tb.css('height', t + 130);
         $h.css('top', t);
         $e.css('top', (h - 600) / 2);
         if (!s) { $s.css('top', Math.floor(h - t - 36 - 30)); }
