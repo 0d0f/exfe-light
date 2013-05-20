@@ -25,7 +25,7 @@
     "grunt-regarde": "~0.1.1"
   },
   "desktop": {
-    "version": "2a.4",
+    "version": "2a.5",
     "files": {
       "dev": "all-{{version}}.js",
       "pro": "all-{{version}}.min.js"
@@ -137,7 +137,7 @@
       },
       {
         "name": "xdialog",
-        "version": "0.1.14"
+        "version": "0.1.15"
       },
       {
         "name": "datepanel",
@@ -210,7 +210,7 @@
     ]
   },
   "mobile": {
-    "version": "2a.2",
+    "version": "2a.3",
     "files": {
       "dev": "mobile-all-{{version}}.js",
       "pro": "mobile-all-{{version}}.min.js"
@@ -278,7 +278,7 @@
       },
       {
         "name": "mobileroutes",
-        "version": "0.0.3"
+        "version": "0.0.4"
       },
       {
         "name": "mobile",
