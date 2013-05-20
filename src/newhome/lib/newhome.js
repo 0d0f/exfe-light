@@ -21,6 +21,8 @@ define(function (require) {
     return [h, t];
   };
 
+  var floor = Math.floor, min = Math.min;
+
   $(function () {
     var $w = $(window),
         $d = $(document),
@@ -28,6 +30,7 @@ define(function (require) {
         $h = $('.home header'),
         $e = $('.exfe-logo'),
         $s = $('.login'),
+        sStyle = $s[0].style,
         $i = $('.intros'),
         $it = $('.introduction'),
         $its = $i.find('.intro').not($it),
@@ -36,7 +39,7 @@ define(function (require) {
     $w.off('*.home')
       .on('scroll.home', function () {
         var st = $w.scrollTop(),
-            pt = Math.min(st, 200) / 200,
+            pt = min(st, 200) / 200,
             bd = $s[0].getBoundingClientRect(),
             top;
 
@@ -55,10 +58,12 @@ define(function (require) {
 
         if (bd.top < (top = 60)) {
           s = 1;
-          $s.css({ position: 'fixed', top: top });
-        } else if (bd.top === 60 && Math.floor(st) <= (top = Math.floor(h - t - 36 - 30)) - 60) {
+          sStyle.position = 'fixed';
+          sStyle.top = top + 'px';
+        } else if (bd.top === 60 && floor(st) <= (top = floor(h - t - 36 - 30)) - 60) {
           s = 0;
-          $s.css({ position: 'absolute', top: top });
+          sStyle.position = 'absolute';
+          sStyle.top = top + 'px';
         }
       })
       .on('resize.home', function () {
