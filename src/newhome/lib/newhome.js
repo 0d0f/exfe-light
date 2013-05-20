@@ -46,21 +46,20 @@ define(function (require) {
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
 
+        // 直接改变 css#opacity 颜色会跳，使用 svg#fill-opacity 代替
         if (st < ms[0]) {
-          $mask
-            .css('opacity', 0)
-            .attr('class', 'top-mask hide');
-        } else if (st >= ms[0]) {
-          $mask
-            .css('opacity', (Math.min(st, ms[1]) - ms[0]) / (ms[1] - ms[0]))
-            .attr('class', 'top-mask');
+          $mask.attr('class', 'top-mask hide');
+          $mask[0].style.fillOpacity = 0;
+        } else if (ms[0] <= st) {
+          $mask.attr('class', 'top-mask');
+          $mask[0].style.fillOpacity = (min(st, ms[1]) - ms[0]) / (ms[1] - ms[0]);
         }
 
-        if (bd.top < (top = 60)) {
+        if (bd.top < (top = 50)) {
           s = 1;
           sStyle.position = 'fixed';
           sStyle.top = top + 'px';
-        } else if (bd.top === 60 && floor(st) <= (top = floor(h - t - 36 - 30)) - 60) {
+        } else if (bd.top === 50 && floor(st) <= (top = floor(h - t - 36 - 30)) - 50) {
           s = 0;
           sStyle.position = 'absolute';
           sStyle.top = top + 'px';
@@ -70,7 +69,7 @@ define(function (require) {
         d = calculate($w.height(), 0);
         h = d[0];
         t = d[1];
-        var et = (h - 600) / 2, st = Math.floor(h - t - 36 - 30);
+        var et = (h - 600) / 2, st = floor(h - t - 36 - 30);
         $h.css('top', t);
         $e.css('top', et);
         if (!s) { $s.css('top', st); }
