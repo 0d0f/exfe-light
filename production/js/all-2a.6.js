@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-23 11:05:26 */
+/*! desktop@2a.6 2013-05-23 11:05:33 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6554,7 +6554,7 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-large modal-wc",
         title: "Welcome",
-        body: '<div class="shadow title"></div><div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div><p class="center">A utility for gathering with friends.</p><div class="modal-content"><p>We save you from calling up every one RSVP, losing in endless emails and messages off the point.</p><p><span class="x">·X·</span> (cross) is a gathering of people, for any purpose. When you get an idea to call up friends to do something together, just <span class="oblique">Gather a <span class="x">·X·</span></span>.</p><p><span class="x-sign">EXFE</span> your friends.</p><p class="provider-email hide" style="color: #191919;">*A welcome email has been sent to your mailbox. Please check to verify your address.*</p><div class="provider-other hide">&nbsp;&nbsp;<span class="underline why">why?</span><label class="pull-left checkbox pointer"><input type="checkbox" id="follow" value="1" checked />Follow @<span class="x-sign">EXFE</span> on Twitter.</label><p class="pull-left answer hidden">So we could send you invitation PRIVATELY through Direct Message. We hate spam, will NEVER disappoint your trust.</p></div></div>',
+        body: '<div class="shadow title"></div><div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div><p class="center">The group utility for gathering.</p><div class="modal-content"><p>We save you from calling up every one RSVP, losing in endless emails and messages off the point.</p><p><span class="x">·X·</span> (cross) is a gathering of people, for any purpose. When you get an idea to call up friends to do something together, just <span class="oblique">Gather a <span class="x">·X·</span></span>.</p><p><span class="x-sign">EXFE</span> your friends.</p><p class="provider-email hide" style="color: #191919;">*A welcome email has been sent to your mailbox. Please check to verify your address.*</p><div class="provider-other hide">&nbsp;&nbsp;<span class="underline why">why?</span><label class="pull-left checkbox pointer"><input type="checkbox" id="follow" value="1" checked />Follow @<span class="x-sign">EXFE</span> on Twitter.</label><p class="pull-left answer hidden">So we could send you invitation PRIVATELY through Direct Message. We hate spam, will NEVER disappoint your trust.</p></div></div>',
         footer: '<button class="pull-right xbtn-white xbtn-go">GO</button>'
       }
     }
