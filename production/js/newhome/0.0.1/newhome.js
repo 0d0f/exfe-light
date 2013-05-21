@@ -137,6 +137,7 @@ define(function (require) {
             onShowAfter: function () {
               var $e = this.element;
               $e.css({top: $w.height() / 2 + $w.scrollTop(), marginTop: - $e.height() / 2});
+              $e.find('#identity').focusend();
             },
             onHideAfter: function () {
               this.$('.modal-body').eq(0).css('opacity', 1);
