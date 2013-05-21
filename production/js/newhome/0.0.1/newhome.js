@@ -129,7 +129,7 @@ define(function (require) {
         });
       })
       .on('click.home', '.introduction img', function () {
-        $('html, body').animate({scrollTop: '+=50'}, 233);
+        $('html, body').animate({scrollTop: '+=100'}, 233);
       })
       .on('click.home', '#logo, .xbtn-start', function () {
         var settings = {

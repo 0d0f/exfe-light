@@ -4590,12 +4590,16 @@ img:-moz-broken {
      -moz-border-radius: 0 0 5px 5px;
           border-radius: 0 0 5px 5px;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffe6e6e6', GradientType=0);
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
      -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   -webkit-background-clip: padding-box;
      -moz-background-clip: padding-box;
           background-clip: padding-box;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
 
 .modal.fade {
@@ -7864,11 +7868,11 @@ body {
   -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
           transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-  -webkit-transition: background-color 0.05s ease-in-out, opacity 1s ease-in-out;
-     -moz-transition: background-color 0.05s ease-in-out, opacity 1s ease-in-out;
-      -ms-transition: background-color 0.05s ease-in-out, opacity 1s ease-in-out;
-       -o-transition: background-color 0.05s ease-in-out, opacity 1s ease-in-out;
-          transition: background-color 0.05s ease-in-out, opacity 1s ease-in-out;
+  -webkit-transition: background-color 233ms ease-in-out, opacity 1s ease-in-out;
+     -moz-transition: background-color 233ms ease-in-out, opacity 1s ease-in-out;
+      -ms-transition: background-color 233ms ease-in-out, opacity 1s ease-in-out;
+       -o-transition: background-color 233ms ease-in-out, opacity 1s ease-in-out;
+          transition: background-color 233ms ease-in-out, opacity 1s ease-in-out;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 }
