@@ -6,10 +6,12 @@ define(function (require) {
   // window height
   var minHeight = 680, maxHeight = 1200, distHeight = maxHeight - minHeight;
 
+  var minW = 200, maxW = 220, distW = maxW - minW;
+
   // header (70 ~ 120) & start (100 ~ 150)
   var minTop = 70, maxTop = 120, distTop = maxTop - minTop;
 
-  var calculate = function (h, t) {
+  var calculate = function (h, t, s) {
     if (minHeight > h) {
       h = minHeight;
     } else if (h > maxHeight) {
@@ -17,8 +19,9 @@ define(function (require) {
     }
 
     t = minTop + distTop * (h - minHeight) / distHeight;
+    s = (minW + distW * (h - minHeight) / distHeight) / maxW;
 
-    return [h, t];
+    return [h, t, s];
   };
 
   var floor = Math.floor, min = Math.min;
@@ -34,7 +37,8 @@ define(function (require) {
         $i = $('.intros'),
         $it = $('.introduction'),
         $its = $i.find('.intro').not($it),
-        d, h, t, s, ms;
+        $bloom = $('#bloom'),
+        d, h, t, scale, s, ms, cx, cy, cr, dx, dy, tx, ty/*, rx, ry*/;
 
     $w.off('*.home')
       .on('scroll.home', function () {
@@ -69,20 +73,65 @@ define(function (require) {
         d = calculate($w.height(), 0);
         h = d[0];
         t = d[1];
-        var et = (h - 600) / 2, st = floor(h - t - 36 - 30);
+        scale = d[2];
+        var et = (h - 460) / 2, st = floor(h - t - 36 - 30);
         $h.css('top', t);
         $e.css('top', et);
         if (!s) { $s.css('top', st); }
         $i.css('top', h - 30);
-        ms = [et + 600 - (600 - 200) / 2, st];
+        ms = [et + 460 - (460 - 220) / 2, st];
+
+        var matrix3d = 'matrix3d(' + scale + ', 0, 0, 0, 0, ' + scale + ', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1)';
+
+        $e.css({
+          '-webkit-transform': matrix3d,
+          '-moz-transform':    matrix3d,
+          '-ms-transform':     matrix3d,
+          '-o-transform':      matrix3d,
+          'transform':         matrix3d
+        });
+
+        var o = $e.offset();
+        cx = o.left + 220;
+        cy = o.top + 220;
+        cr = min(cx, cy);
+
         $w.trigger('scroll.home');
       });
 
     $d.off('*.home')
+      .on('mousemove.home touchstart.home touchmove.home', function (e) {
+        e.preventDefault();
+        var type = e.type, px, py;
+        if (type === 'touchmove' || type === 'touchstart') {
+          var touch = e.originalEvent.touches[0];
+          px = touch.pageX;
+          py = touch.pageY;
+        } else {
+          px = e.pageX;
+          py = e.pageY;
+        }
+
+        dx = px - cx;
+        dy = py - cy;
+
+        tx = (dx < 0 ? 1 : -1) * min(Math.abs(dx), cr) / cr * 4;
+        ty = (dy < 0 ? 1 : -1) * min(Math.abs(dy), cr) / cr * 4;
+
+        var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + tx + ', ' + ty + ', 1, 1)';
+
+        $bloom.css({
+          '-webkit-transform': matrix3d,
+          '-moz-transform':    matrix3d,
+          '-ms-transform':     matrix3d,
+          '-o-transform':      matrix3d,
+          'transform':         matrix3d
+        });
+      })
       .on('click.home', '.introduction img', function () {
         $('html, body').animate({scrollTop: '+=50'}, 233);
       })
-      .on('click.home', '.exfe-logo, .xbtn-start', function () {
+      .on('click.home', '#logo, .xbtn-start', function () {
         var settings = {
           options: {
             onShowAfter: function () {
