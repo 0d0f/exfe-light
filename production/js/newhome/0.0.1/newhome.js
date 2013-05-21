@@ -136,7 +136,7 @@ define(function (require) {
           options: {
             onShowAfter: function () {
               var $e = this.element;
-              $e.css({top: $w.height() / 2 + $w.scrollTop(), marginTop: - $e.height() / 2});
+              $e.css({top:  (h - 460) / 2});
               $e.find('#identity').focusend();
             },
             onHideAfter: function () {
