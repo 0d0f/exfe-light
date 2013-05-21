@@ -101,7 +101,6 @@ define(function (require) {
 
     $d.off('*.home')
       .on('mousemove.home touchstart.home touchmove.home', function (e) {
-        e.preventDefault();
         var type = e.type, px, py;
         if (type === 'touchmove' || type === 'touchstart') {
           var touch = e.originalEvent.touches[0];
@@ -128,10 +127,10 @@ define(function (require) {
           'transform':         matrix3d
         });
       })
-      .on('click.home', '.introduction img', function () {
+      .on('click.home touchstart.home', '.introduction img', function () {
         $('html, body').animate({scrollTop: '+=100'}, 233);
       })
-      .on('click.home', '#logo, .xbtn-start', function () {
+      .on('click.home touchstart.home', '#logo, .xbtn-start', function () {
         var settings = {
           options: {
             onShowAfter: function () {
