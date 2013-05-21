@@ -7891,12 +7891,12 @@ body {
 
 .home .exfe-logo {
   position: absolute;
-  left: 120px;
+  left: 50%;
   width: auto;
-  width: 640px;
-  height: 600px;
+  width: 460px;
+  height: 460px;
+  margin-left: -230px;
   text-align: center;
-  background: url("/static/img/exfe_corona_test@2x.png") center center no-repeat;
   opacity: 0;
   filter: alpha(opacity=0);
   -webkit-transition: opacity 0.5s ease-in-out;
@@ -7904,6 +7904,69 @@ body {
       -ms-transition: opacity 0.5s ease-in-out;
        -o-transition: opacity 0.5s ease-in-out;
           transition: opacity 0.5s ease-in-out;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.home .exfe-logo img {
+  position: absolute;
+  left: 50%;
+  display: block;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+          transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.home .exfe-logo #light {
+  top: 10px;
+  left: 10px;
+  -webkit-transition: all 233ms ease-out 0s;
+     -moz-transition: all 233ms ease-out 0s;
+      -ms-transition: all 233ms ease-out 0s;
+       -o-transition: all 233ms ease-out 0s;
+          transition: all 233ms ease-out 0s;
+}
+
+.home .exfe-logo #bloom {
+  top: 120px;
+  left: 120px;
+}
+
+.home .exfe-logo #highlight {
+  top: 120px;
+  left: 120px;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: all 233ms ease-out 0s;
+     -moz-transition: all 233ms ease-out 0s;
+      -ms-transition: all 233ms ease-out 0s;
+       -o-transition: all 233ms ease-out 0s;
+          transition: all 233ms ease-out 0s;
+}
+
+.home .exfe-logo #logo {
+  top: 120px;
+  left: 120px;
+  z-index: 5;
+}
+
+.home .exfe-logo #logo:hover ~ #light {
+  -webkit-transform: matrix3d(1.06, 0, 0, 0, 0, 1.06, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+     -moz-transform: matrix3d(1.06, 0, 0, 0, 0, 1.06, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+      -ms-transform: matrix3d(1.06, 0, 0, 0, 0, 1.06, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+       -o-transform: matrix3d(1.06, 0, 0, 0, 0, 1.06, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+          transform: matrix3d(1.06, 0, 0, 0, 0, 1.06, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+}
+
+.home .exfe-logo #logo:hover ~ #highlight {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -webkit-transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+     -moz-transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+      -ms-transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+       -o-transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+          transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
 }
 
 .home .intros {
