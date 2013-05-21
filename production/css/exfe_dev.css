@@ -7744,6 +7744,11 @@ body {
   color: #7f7f7f;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 .hbg {
   position: relative;
   background-attachment: fixed;
@@ -7771,6 +7776,19 @@ body {
        -moz-background-size: 100% 680px;
          -o-background-size: 100% 680px;
             background-size: 100% 680px;
+  }
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1) {
+  .hbg .container {
+    width: 768px;
+  }
+  .hbg .home .intro {
+    padding: 0 24px 180px;
+  }
+  .hbg .home .intro .desc {
+    width: 440px;
+    padding-left: 20px;
   }
 }
 
@@ -7980,7 +7998,7 @@ body {
 
 .home .intro {
   position: relative;
-  margin: 0 60px 180px;
+  padding: 0 60px 180px;
   color: #fff;
   text-align: left;
   opacity: 0.2;
