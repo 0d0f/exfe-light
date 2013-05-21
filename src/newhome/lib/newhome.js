@@ -81,7 +81,7 @@ define(function (require) {
         $i.css('top', h - 30);
         ms = [et + 460 - (460 - 220) / 2, st];
 
-        var matrix3d = 'matrix3d(' + scale + ', 0, 0, 0, 0, ' + scale + ', 0, 0, 0, 0, 1, 0, 1, 1, 1, 1)';
+        var matrix3d = 'matrix3d(' + scale + ', 0, 0, 0, 0, ' + scale + ', 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)';
 
         $e.css({
           '-webkit-transform': matrix3d,
