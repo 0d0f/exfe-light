@@ -1,3 +1,5 @@
+html,body {height: 100%;}
+
 .hbg {
   position: relative;
   background-size: cover;
@@ -22,6 +24,25 @@
     -moz-background-size: 100% @maxHeight;
     -o-background-size: 100% @maxHeight;
     background-size: 100% @maxHeight;
+  }
+}
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait)
+and (-webkit-min-device-pixel-ratio: 1) {
+  .hbg .container {
+    width: 768px;
+  }
+
+  .hbg .home .intro {
+    padding: 0 24px 180px;
+  }
+
+  .hbg .home .intro .desc {
+    width: 440px;
+    padding-left: 20px;
   }
 }
 
@@ -229,7 +250,7 @@
 
   .intro {
     position: relative;
-    margin: 0 60px 180px;
+    padding: 0 60px 180px;
     color: #fff;
     text-align: left;
     .opacity(20);
