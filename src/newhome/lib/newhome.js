@@ -3,6 +3,24 @@ define(function (require) {
 
   var $ = require('jquery');
 
+  var iPad = {
+    content: 'width=device-width, initial-scale=0.87, user-scalable=no, maximum-scale=1',
+    media: 'only screen and (min-device-width: 768px) and (max-device-width: 1024px)'
+  };
+  var iPhone = {
+    content: 'width=device-width, initial-scale=0.35, user-scalable=no, maximum-scale=1',
+    media: 'only screen and (min-device-width: 320px) and (max-device-width: 568px)'
+  };
+
+  var viewport = document.getElementById('viewport');
+  if (navigator.userAgent.match(/iPhone/i)) {
+    viewport.setAttribute('content', iPhone.content);
+    viewport.setAttribute('media', iPhone.media);
+  } else if (navigator.userAgent.match(/iPad/i)) {
+    viewport.setAttribute('content', iPad.content);
+    viewport.setAttribute('media', iPad.media);
+  }
+
   // window height
   var minHeight = 680, maxHeight = 1200, distHeight = maxHeight - minHeight;
 
