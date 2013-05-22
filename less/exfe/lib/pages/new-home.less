@@ -17,35 +17,6 @@ html,body {height: 100%;}
   background-size: cover;
 }
 
-@maxHeight: 680px;
-@media all and (max-height: @maxHeight) {
-  .hbg {
-    -webkit-background-size: 100% @maxHeight;
-    -moz-background-size: 100% @maxHeight;
-    -o-background-size: 100% @maxHeight;
-    background-size: 100% @maxHeight;
-  }
-}
-
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1024px)
-and (orientation : portrait)
-and (-webkit-min-device-pixel-ratio: 1) {
-  .hbg .container {
-    width: 768px;
-  }
-
-  .hbg .home .intro {
-    padding: 0 24px 180px;
-  }
-
-  .hbg .home .intro .desc {
-    width: 440px;
-    padding-left: 20px;
-  }
-}
-
 .home {
   position: relative;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
@@ -324,5 +295,39 @@ and (-webkit-min-device-pixel-ratio: 1) {
     .intros {
       .opacity(100);
     }
+  }
+}
+
+@maxHeight: 680px;
+@media all and (max-height: @maxHeight) {
+  .hbg {
+    -webkit-background-size: 100% @maxHeight;
+    -moz-background-size: 100% @maxHeight;
+    -o-background-size: 100% @maxHeight;
+    background-size: 100% @maxHeight;
+  }
+}
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+  .html {
+    -webkit-text-size-adjust: none;
+  }
+  .container {
+    // 320 / .35
+    width: 915px;
+  }
+}
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px) {
+  .html {
+    -webkit-text-size-adjust: none;
+  }
+  .container {
+    // 768 / .87
+    width: 882.7px;
   }
 }
