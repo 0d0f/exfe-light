@@ -1,3 +1,7 @@
+* v0.1.4 2013-05-22T10:47:00 UTC+0800
+  - Bugs Fix
+    * fix `Uncaught TypeError: Converting circular structure to JSON` when clicked `date-submit`
+
 * v0.1.3 2013-04-29T15:11:00 UTC+0800
   - Fixed Bugs
     * if `eftime#outputformat` = 1, `timeline` scroll to 9AM
