@@ -1293,7 +1293,7 @@ define(function (require, exports, module) {
                     data      : JSON.stringify(post)
                 },
                 function(data) {
-                    lastConvUpdate = data.post.updated_at;
+                    lastConvUpdate = data.post.created_at;
                     $('.cross-opts .saving').hide();
                     ShowMessage(data.post);
                     bus.emit('app:cross:edited');
@@ -1888,6 +1888,8 @@ define(function (require, exports, module) {
 
     var lastConvUpdate = '';
 
+    var messageIds     = {};
+
     var ShowTimeline = function(timeline, notification) {
         Timeline = timeline;
         for (var i = Timeline.length - 1; i >= 0; i--) {
@@ -1900,6 +1902,10 @@ define(function (require, exports, module) {
 
 
     var ShowMessage = function(message, notification) {
+        if (typeof messageIds[message.id] !== 'undefined') {
+            return;
+        }
+        messageIds[message.id] = true;
         var txtMessage = ExfeUtilities.escape(message.content).replace(/\r\n|\n\r|\r|\n/g, "\n");
         var strMessage = '<div class="avatar-comment">'
                        +   '<span class="pull-left avatar">'
@@ -2066,6 +2072,8 @@ define(function (require, exports, module) {
         }
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
+        lastConvUpdate = '';
+        messageIds     = {};
         RawGetTimeline();
         convTimer = setInterval(RtGetTimeline, 233 * 1000);
     };
@@ -2272,7 +2280,7 @@ define(function (require, exports, module) {
         window.convTimer     = null;
     });
     // init event
-    bus.on('xapp:cross', function(Cross_id, browsingIdentity, cross, read_only, invitation_token, accepted) {
+    bus.on('xapp:cross', function(Cross_id, browsingIdentity, cross, read_only, invitation_token, rsvp_action) {
         // get cross
         if (Cross_id > 0) {
             GetCross(Cross_id);
@@ -2292,9 +2300,14 @@ define(function (require, exports, module) {
                 Api.setToken(invitation_token);
             }
             UpdateCross(cross, read_only);
-            if (accepted) {
-                ExfeeWidget.rsvpMe('ACCEPTED');
-                ShowRsvp();
+            switch (rsvp_action) {
+                case 'accept':
+                    ExfeeWidget.rsvpMe('ACCEPTED');
+                    ShowRsvp();
+                    break;
+                case 'decline':
+                    ExfeeWidget.rsvpMe('DECLINED');
+                    ShowRsvp();
             }
         } else {
             NewCross();
