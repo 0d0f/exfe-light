@@ -47,7 +47,6 @@ define(function (require) {
   $(function () {
     var $w = $(window),
         $d = $(document),
-        $mask = $('.top-mask'),
         $h = $('.home header'),
         $e = $('.exfe-logo'),
         $s = $('.login'),
@@ -67,15 +66,6 @@ define(function (require) {
 
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
-
-        // 直接改变 css#opacity 颜色会跳，使用 svg#fill-opacity 代替
-        if (st < ms[0]) {
-          $mask.attr('class', 'top-mask hide');
-          $mask[0].style.fillOpacity = 0;
-        } else if (ms[0] <= st) {
-          $mask.attr('class', 'top-mask');
-          $mask[0].style.fillOpacity = (min(st, ms[1]) - ms[0]) / (ms[1] - ms[0]);
-        }
 
         if (bd.top < (top = 50)) {
           s = 1;
