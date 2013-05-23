@@ -138,7 +138,7 @@ define(function (require) {
       })
       .on('click.home touchstart.home', '.introduction img', function (e) {
         e.stopPropagation();
-        $('html, body').animate({scrollTop: floor(h - t - 36 - 30)}, 233);
+        $('html, body').animate({scrollTop: h - 30 - 150}, 233);
       })
       .on('click.home touchstart.home', 'body', function () {
         if (scrollTop <= 0 && !$(this).hasClass('shake')) { $(this).addClass('shake'); }
