@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-23 11:05:35 */
+/*! desktop@2a.6 2013-05-23 11:05:24 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -14189,8 +14189,8 @@ define("lightsaber", function(e, t, i) {
       404 === e.meta.code && t.location("/404");
     });
   };
-  var d = function(e, t, i, n, a, o, c, d, u, h) {
-    var p = t.session, f = p.authorization, m = p.user;
+  var d = function(e, t, i, n, a, o, c, d, u) {
+    var h = t.session, p = h.authorization, f = h.user;
     r.request("getCrossByInvitationToken", {
       type: "POST",
       params: n,
@@ -14198,24 +14198,24 @@ define("lightsaber", function(e, t, i) {
     }, function(t) {
       function i() {
         e.render("x.html", function(e) {
-          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, a, f, v, c || d, !!u), 
-          h) {
+          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, a, p, g, c || d, u), 
+          "mute" === u) {
             var t = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
-            t.data("source", f), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
+            t.data("source", p), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
           }
         });
       }
-      var n = t.authorization, a = t.browsing_identity, r = t.action, f = t.cross, g = t.cross_access_token, v = t.read_only;
-      if (!1 === v && g && (o || (o = {}), o[d] = g, l.set("cats", o)), s.emit("app:page:home", !1), 
+      var n = t.authorization, a = t.browsing_identity, r = t.action, p = t.cross, m = t.cross_access_token, g = t.read_only;
+      if (!1 === g && m && (o || (o = {}), o[d] = m, l.set("cats", o)), s.emit("app:page:home", !1), 
       s.emit("app:page:usermenu", !0), n || !a) {
-        if (!p.initMenuBar) {
+        if (!h.initMenuBar) {
           if (n) return s.once("app:user:signin:after", function() {
-            e.redirect("/#!" + f.id);
+            e.redirect("/#!" + p.id);
           }), s.emit("app:user:signin", n.token, n.user_id), void 0;
-          e.redirect("/#!" + f.id);
+          e.redirect("/#!" + p.id);
         }
       } else a && s.emit("app:usermenu:updatebrowsing", {
-        normal: m,
+        normal: f,
         browsing: {
           identities: [ a ],
           name: a.name
@@ -14225,26 +14225,26 @@ define("lightsaber", function(e, t, i) {
         originToken: d,
         tokenType: "cross",
         page: "cross",
-        readOnly: v
+        readOnly: g
       }, "browsing_identity");
       i();
     }, function(t) {
-      var i = t && t.meta && t.meta.code, n = !!f;
-      403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", m), 
-      s.emit("app:usermenu:crosslist", f.token, f.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === i && e.location("/404");
+      var i = t && t.meta && t.meta.code, n = !!p;
+      403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", f), 
+      s.emit("app:usermenu:crosslist", p.token, p.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === i && e.location("/404");
     });
   };
   c.crossToken = function(e, t, i) {
-    var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = "accept" === u, p = "mute" === u, f = l.get("cats"), m = {};
-    o && (m.token = o), f && (n = f[c]), a = {
+    var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = l.get("cats"), p = {};
+    o && (p.token = o), h && (n = h[c]), a = {
       invitation_token: c
-    }, n && (a.cross_access_token = n), d(t, e, i, m, a, f, n, c, h, p);
+    }, n && (a.cross_access_token = n), d(t, e, i, p, a, h, n, c, u);
   }, c.crossPhoneToken = function(e, t, i) {
-    var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = e.params[2], p = "accept" === h, f = "mute" === h, m = l.get("cats"), g = {};
-    o && (g.token = o), m && (n = m[u]), a = {
+    var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = e.params[2] || "", p = l.get("cats"), f = {};
+    o && (f.token = o), p && (n = p[u]), a = {
       invitation_token: u,
       cross_id: c
-    }, n && (a.cross_access_token = n), d(t, e, i, g, a, m, n, u, p, f);
+    }, n && (a.cross_access_token = n), d(t, e, i, f, a, p, n, u, h);
   }, c.profile = function(e, t) {
     var i = e.session, n = i.authorization, a = i.user, r = i.browsing_authorization, c = i.browsing_user, d = i.action, u = i.oauth;
     s.emit("app:page:home", !1);
@@ -14308,9 +14308,9 @@ define("lightsaber", function(e, t, i) {
   }, a.resolveShow), s.get(/^\/+(?:\?)?(?:ipad)?#gather\/?$/, a.refreshAuthUser, a.gather), 
   s.get(/^\/+(?:\?)?(?:ipad)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken, a.resolveRequest, a.resolveShow), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/?$/, a.refreshAuthUser, a.cross), s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{3})\/?$/, a.refreshAuthUser, a.crossInvitation), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})(?:\/(accept|mute))?\/?$/, a.refreshAuthUser, a.crossPhoneToken), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})(?:\/(accept|mute|decline))?\/?$/, a.refreshAuthUser, a.crossPhoneToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/?$/, a.refreshAuthUser, a.crossToken), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/(accept|mute)\/?$/, a.refreshAuthUser, a.crossToken), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/(accept|mute|decline)\/?$/, a.refreshAuthUser, a.crossToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
   s.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
   s.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, a.invalid), s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, a.signout), 
