@@ -7761,7 +7761,7 @@ body {
   background-image: -moz-linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   background-image: -o-linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   background-image: -webkit-gradient(linear, left bottom, left top, from(#aee1f8), color-stop(0.035, #69b4df), color-stop(0.08, #3c8cbd), color-stop(0.125, #206da3), color-stop(0.183, #185282), color-stop(0.227, #15426d), color-stop(0.295, #0b365e), color-stop(0.751, #021e3b), to(#01172f));
-  background-image: linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
+  background-image: linear-gradient(0, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   background-position: center center;
   -webkit-background-size: cover;
      -moz-background-size: cover;
@@ -7861,7 +7861,7 @@ body {
   background-image: -moz-linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   background-image: -o-linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   background-image: -webkit-gradient(linear, left bottom, left top, from(#aee1f8), color-stop(0.035, #69b4df), color-stop(0.08, #3c8cbd), color-stop(0.125, #206da3), color-stop(0.183, #185282), color-stop(0.227, #15426d), color-stop(0.295, #0b365e), color-stop(0.751, #021e3b), to(#01172f));
-  background-image: linear-gradient(90deg, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
+  background-image: linear-gradient(0, #aee1f8 0%, #69b4df 3.5%, #3c8cbd 8%, #206da3 12.5%, #185282 18.3%, #15426d 22.7%, #0b365e 29.5%, #021e3b 75.1%, #01172f 100%);
   -webkit-background-size: cover;
      -moz-background-size: cover;
        -o-background-size: cover;
@@ -7958,7 +7958,7 @@ body {
   background: -moz-linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0.81) 100%) transparent;
   background: -o-linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0.81) 100%) transparent;
   background: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.95)), to(rgba(255, 255, 255, 0.81))) transparent;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0.81) 100%) transparent;
+  background: linear-gradient(0, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0.81) 100%) transparent;
   border-style: none;
   border-radius: 18px;
   opacity: 0;
