@@ -55,14 +55,15 @@ define(function (require) {
         $it = $('.introduction'),
         $its = $i.find('.intro').not($it),
         $bloom = $('#bloom'),
+        scrollTop = 0,
         d, h, t, scale, s, ms, cx, cy, cr, dx, dy, tx, ty/*, rx, ry*/;
 
     $w.off('*.home')
       .on('scroll.home', function () {
-        var st = $w.scrollTop(),
-            pt = min(st, 200) / 200,
-            bd = $s[0].getBoundingClientRect(),
-            top;
+        scrollTop = $w.scrollTop();
+        var pt = min(scrollTop, 200) / 200,
+          bd = $s[0].getBoundingClientRect(),
+          top;
 
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
@@ -71,7 +72,7 @@ define(function (require) {
           s = 1;
           sStyle.position = 'fixed';
           sStyle.top = top + 'px';
-        } else if (bd.top === 50 && floor(st) <= (top = floor(h - t - 36 - 30)) - 50) {
+        } else if (bd.top === 50 && floor(scrollTop) <= (top = floor(h - t - 36 - 30)) - 50) {
           s = 0;
           sStyle.position = 'absolute';
           sStyle.top = top + 'px';
@@ -135,8 +136,15 @@ define(function (require) {
           'transform':         matrix3d
         });
       })
-      .on('click.home touchstart.home', '.introduction img', function () {
-        $('html, body').animate({scrollTop: '+=100'}, 233);
+      .on('click.home touchstart.home', '.introduction img', function (e) {
+        e.stopPropagation();
+        $('html, body').animate({scrollTop: floor(h - t - 36 - 30)}, 233);
+      })
+      .on('click.home touchstart.home', 'body', function () {
+        if (scrollTop <= 0 && !$(this).hasClass('shake')) { $(this).addClass('shake'); }
+      })
+      .on('webkitAnimationEnd.home oanimationend.home MSAnimationEnd.home animationend.home', 'body', function () {
+        $(this).removeClass('shake');
       })
       .on('click.home touchstart.home', '#logo, .xbtn-start', function () {
         var settings = {

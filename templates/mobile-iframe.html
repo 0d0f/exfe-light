@@ -1,39 +1,48 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>大众点评网手机应用中转页面</title>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>EXFE - The group utility for gathering.</title>
+  <meta name="author" content="EXFE Inc." />
+  <meta name="robots" content="index, follow" />
+  <meta name="keywords" content="EXFE, ·X·, cross, exfee, gather, Gather a ·X·, hangout, gathering, invite, RSVP" />
+  <meta name="description" content="EXFE, the group utility for gathering." />
+  <meta name="copyright" content="Copyright &copy; 2013 EXFE Inc" />
+  <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 <body>
-<h3>正在转向相关页面...</h3>
-<iframe id="mobileFrame" frameborder="0" src="" style="display:none"></iframe>
+  <h3>正在转向相关页面...</h3>
+  <iframe id="f" frameborder="0" src="" style="display:none"></iframe>
 </body>
-<script type="text/javascript">
-var frame = document.getElementById('mobileFrame');
-var startTime = new Date().getTime();
-var cok = "luid=926457738";
+<script>
+  var frame = document.getElementById('f');
+  var startTime = new Date().getTime();
+  var cok = "luid=926457738";
 
-function openDPUrl() {
-    var current = new Date().getTime();
-    if(current - startTime < 500)
-    {
-        window.location = "http://wap.dianping.com/wap2/RsDetail.aspx?id=4101193";
+  function openDPUrl() {
+      var current = new Date().getTime();
+      if(current - startTime < 500)
+      {
+          window.location = "http://wap.dianping.com/wap2/RsDetail.aspx?id=4101193";
 
-    }
-}
-
-
-
-window.onload = function() {
+      }
+  }
 
 
-var cur = "";
-    if(document.cookie.match('luid=\\d+')) {
-        cur = document.cookie.match('luid=\\d+')[0];
-    }
-    if(cur != cok) {
-        document.cookie = cok;
-        frame.src = "dianping://shopinfo?id=4101193";
-        startTime = new Date().getTime();
-        setTimeout(openDPUrl, 400);
-    }
-};
+
+  window.onload = function() {
+
+
+  var cur = "";
+      if(document.cookie.match('luid=\\d+')) {
+          cur = document.cookie.match('luid=\\d+')[0];
+      }
+      if(cur != cok) {
+          document.cookie = cok;
+          frame.src = "dianping://shopinfo?id=4101193";
+          startTime = new Date().getTime();
+          setTimeout(openDPUrl, 400);
+      }
+  };
 </script>
 </html>
