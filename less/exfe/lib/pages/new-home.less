@@ -35,8 +35,6 @@ html,body {height: 100%;}
     pointer-events: none;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   }
 
   header {
@@ -85,8 +83,6 @@ html,body {height: 100%;}
     text-align: center;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   }
 
   .xbtn-start {
@@ -112,8 +108,6 @@ html,body {height: 100%;}
     transition: ~"@{bc}" 233ms ease-in-out, opacity 1s ease-in-out;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
 
     &:hover {
       background-color: #fff;
@@ -297,6 +291,19 @@ html,body {height: 100%;}
       .opacity(100);
     }
   }
+
+  .copy-right p {
+    font-size: 11px;
+    line-height: 15px;
+    margin: 0 0 25px;
+    .opacity(80);
+  }
+
+ .exfe-logo, svg.top-mask, header, .login, .xbtn-start {
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  }
+
 }
 
 @maxHeight: 680px;
