@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-23 11:05:24 */
+/*! desktop@2a.6 2013-05-23 11:05:26 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -13987,7 +13987,7 @@ define("lightsaber", function(e, t, i) {
       $("#app-main").append(t), $.ajax({
         dataType: "script",
         cache: !0,
-        url: "/static/js/newhome/0.0.1/newhome.js?t=" + e.app.set("timestamp")
+        url: "/static/js/newhome/0.0.1/newhome.min.js?t=" + e.app.set("timestamp")
       });
     }), void 0);
   }, c.gather = function(e, t) {
