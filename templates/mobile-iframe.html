@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>大众点评网手机应用中转页面</title>
+</head>
+<body>
+<h3>正在转向相关页面...</h3>
+<iframe id="mobileFrame" frameborder="0" src="" style="display:none"></iframe>
+</body>
+<script type="text/javascript">
+var frame = document.getElementById('mobileFrame');
+var startTime = new Date().getTime();
+var cok = "luid=926457738";
+
+function openDPUrl() {
+    var current = new Date().getTime();
+    if(current - startTime < 500)
+    {
+        window.location = "http://wap.dianping.com/wap2/RsDetail.aspx?id=4101193";
+
+    }
+}
+
+
+
+window.onload = function() {
+
+
+var cur = "";
+    if(document.cookie.match('luid=\\d+')) {
+        cur = document.cookie.match('luid=\\d+')[0];
+    }
+    if(cur != cok) {
+        document.cookie = cok;
+        frame.src = "dianping://shopinfo?id=4101193";
+        startTime = new Date().getTime();
+        setTimeout(openDPUrl, 400);
+    }
+};
+</script>
+</html>
