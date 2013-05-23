@@ -12,76 +12,39 @@ html,body {height: 100%;}
   backface-visibility: hidden;
   .hbg-gradient();
 }
+  @-webkit-keyframes shake {
+    0% { top: 0; }
+    41% { top: -100px; }
+    58% { top: -100px; }
+    100% { top: 0px; }
+  }
 
   @-moz-keyframes shake {
-    0% {
-      -moz-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-    41% {
-      -moz-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    58% {
-      -moz-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 100, 1, 1);
-    }
-    100% {
-      -moz-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
+    0% { top: 0; }
+    41% { top: -100px; }
+    58% { top: -100px; }
+    100% { top: 0px; }
   }
-  @-webkit-keyframes shake {
-    0% {
-      -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-    41% {
-      -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    58% {
-      -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    100% {
-      -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-  }
+
   @-ms-keyframes shake {
-    0% {
-      -ms-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-    41% {
-      -ms-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    58% {
-      -ms-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    100% {
-      -ms-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
+    0% { top: 0; }
+    41% { top: -100px; }
+    58% { top: -100px; }
+    100% { top: 0px; }
   }
+
   @-o-keyframes shake {
-    0% {
-      -o-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-    41% {
-      -o-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    58% {
-      -o-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    100% {
-      -o-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
+    0% { top: 0; }
+    41% { top: -100px; }
+    58% { top: -100px; }
+    100% { top: 0px; }
   }
+
   @keyframes shake {
-    0% {
-      transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
-    41% {
-      transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    58% {
-      transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -100, 1, 1);
-    }
-    100% {
-      transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
-    }
+    0% { top: 0; }
+    41% { top: -100px; }
+    58% { top: -100px; }
+    100% { top: 0px; }
   }
 
   .shake {
@@ -401,8 +364,6 @@ html,body {height: 100%;}
     .opacity(80);
   }
 
-}
-
  .hbg, .exfe-logo, svg.top-mask, header, .login, .xbtn-start {
     -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
     -moz-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
@@ -411,6 +372,7 @@ html,body {height: 100%;}
     transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
   }
 
+}
 
 @maxHeight: 680px;
 @media all and (max-height: @maxHeight) {
