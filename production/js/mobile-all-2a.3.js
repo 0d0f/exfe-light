@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.3 2013-05-24 01:05:52 */
+/*! mobile@2a.3 2013-05-24 04:05:56 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4494,7 +4494,7 @@ TWEEN.Tween = function(t) {
             background: "default.jpg",
             read_only: !!h.read_only
           }, m = p.time;
-          m && m.begin_at && m.begin_at.origin && m.begin_at.timezone ? f.time = a(m) : f.time.tobe = "tobe";
+          m && m.begin_at && m.begin_at.timezone ? f.time = a(m) : f.time.tobe = "tobe";
           var v = p.place;
           v && v.title && (f.place = {
             title: v.title,
