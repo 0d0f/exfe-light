@@ -1,0 +1,109 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Home</title>
+  <meta name="description" content="" />
+  <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet/less" href="../less/exfe/lib/exfe_dev.less" />
+
+  <!-- Include less.js -->
+  <script src="../src/less/lib/less.js"></script>
+</head>
+<body class="hbg">
+
+  <!-- container -->
+  <div class="container">
+
+    <div role="main">
+      <section class="home hidden">
+        <svg class="top-mask">
+          <defs>
+            <linearGradient gradientUnits="objectBoundingBox" id="g" x2="0" y2="1">
+              <stop stop-color="#fff" stop-opacity="1" offset="0"/>
+              <stop stop-color="#fff" stop-opacity="1" offset="45%"/>
+              <stop stop-color="#fff" stop-opacity="0" offset="1"/>
+            </linearGradient>
+            <mask id="mask">
+              <rect width="100%" height="300" x="0" y="0" fill="url(#g)" />
+            </mask>
+          </defs>
+          <foreignObject class="hbg-gradient" width="100%" height="100%" style="mask:url(#mask);"></foreignObject>
+        </svg>
+
+        <header>
+          <h1><span class="exfe-title">EXFE</span> <small>[‘ɛksfi]</small></h1>
+          <p>The group utility for gathering.</p>
+        </header>
+
+        <div class="exfe-logo">
+          <img id="logo" alt="" src="/production/img/exfe_220@2x.png" width="220" height="220" />
+          <img id="light" alt="" src="/production/img/exfe_light@1.5x.png" width="440" height="440" />
+          <img id="bloom" alt="" src="/production/img/exfe_bloom@2x.png" width="220" height="220" />
+          <img id="highlight" alt="" src="/production/img/exfe_bloom@2x.png" width="220" height="220" />
+        </div>
+
+        <div class="login">
+          <button class="xbtn-start x">Start</button>
+        </div>
+
+        <div class="intros">
+          <div class="clearfix intro introduction">
+            <img alt="" src="/production/img/home_intro@2x.png" width="486" height="201" />
+              <p>Time, place, attendees status, conversation…</p>
+              <p class="pb">All in a nutshell.</p>
+              <p>Save yourself from calling every one RSVP repeatedly, or losing in endless emails messages off-the-point.</p>
+          </div>
+
+          <div class="clearfix intro invitation">
+            <img alt="" src="/production/img/home_invitation@2x.png" width="253" height="190" align="right" />
+            <div class="desc">
+              <p class="pb">Private by default, invite-only access.</p>
+              <p>Forget privileges. Set RSVP response for friends, update time and place details collaboratively.</p>
+            </div>
+          </div>
+
+          <div class="clearfix intro connected">
+            <img alt="" src="/production/img/home_connected@2x.png" width="225" height="380" align="left" />
+            <div class="pull-right desc">
+              <p class="pb">Connect across contact methods. Email, Message, Facebook, Twitter, even calendar and more to come.</p>
+              <p>Leverage your handiest tool for gathering. Keep updated, stay cool.</p>
+            </div>
+          </div>
+
+          <div class="clearfix intro rocket">
+            <img alt="" src="/production/img/home_rocket@2x.png" width="156" height="680" align="right" />
+            <div class="desc">
+              <p class="pb">Start-n-Play straightaway.</p>
+              <p>No sign-up, no group set-up, no friend requests or annoying viral invites… no forced app download.</p>
+              <p><a href="http://itunes.apple.com/app/exfe/id514026604" target="_blank" class="detail">(well… iPhone app is <span class="underline">available</span> though ;)</a></p>
+            </div>
+          </div>
+
+          <div class="clearfix intro emails">
+            <img alt="" src="/production/img/home_emails@2x.png" width="234" height="340" align="left" />
+            <div class="pull-right desc">
+              <p class="pb">Simply cc <a class="x-email" href="mailto:x@exfe.com">x@exfe.com</a>. Well done.</p>
+              <p>Say hello to digest email clear and updated, appointments in calendar, final reminding, and discover more…</p>
+            </div>
+          </div>
+
+          <div class="copy-right">
+            <p>Copyright © 2013 EXFE</p>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+  </div>
+
+  <script>
+    window._ENV_ = {};
+  </script>
+  <script src="../production/js/all-2a.6.js"></script>
+  <script src="../src/newhome/lib/newhome.js"></script>
+
+</body>
+</html>

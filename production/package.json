@@ -137,7 +137,7 @@
       },
       {
         "name": "xdialog",
-        "version": "0.1.14"
+        "version": "0.1.15"
       },
       {
         "name": "datepanel",
@@ -193,12 +193,12 @@
       },
       {
         "name": "app",
-        "version": "0.2.10"
+        "version": "0.2.11"
       }
     ]
   },
   "mobile": {
-    "version": "2a.2",
+    "version": "2a.3",
     "files": {
       "dev": "mobile-all-{{version}}.js",
       "pro": "mobile-all-{{version}}.min.js"
@@ -266,7 +266,7 @@
       },
       {
         "name": "mobileroutes",
-        "version": "0.0.3"
+        "version": "0.0.4"
       },
       {
         "name": "mobile",

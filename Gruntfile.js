@@ -1,132 +1,144 @@
 module.exports = function (grunt) {
   'use strict';
 
-var fs = require('fs');
-var path = require('path');
+  var fs = require('fs');
+  var path = require('path');
+  var semver = require('semver');
 
-var PKG = grunt.file.readJSON('package.json');
+  var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+  var folderMount = function folderMount(connect, point) {
+    return connect.static(path.resolve(point));
+  };
 
-// desktop (桌面)
-var DESKTOP_META = PKG.desktop.dependencies;
+  var PKG = grunt.file.readJSON('package.json');
 
-var DESKTOP_CONCAT = {
-  src: [],
-  dest: 'production/js/all-<%= pkg.desktop.version %>.js'
-};
+  // desktop (桌面)
+  var DESKTOP_META = PKG.desktop.dependencies;
 
-var MOBILE_CONCAT = {
-  src: [],
-  dest: 'production/js/mobile-all-<%= pkg.mobile.version %>.js'
-};
+  var DESKTOP_CONCAT = {
+    src: [],
+    dest: 'production/js/all-<%= pkg.desktop.version %>.js'
+  };
 
-// mobile (移动)
-var MOBILE_META = PKG.mobile.dependencies;
+  var MOBILE_CONCAT = {
+    src: [],
+    dest: 'production/js/mobile-all-<%= pkg.mobile.version %>.js'
+  };
 
-var JSHINT_IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
+  // mobile (移动)
+  var MOBILE_META = PKG.mobile.dependencies;
+
+  var JSHINT_IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
 
 
-// publish {{{
-var PUBLISH = {};
-// }}}
+  // publish {{{
+  var PUBLISH = {};
+  // }}}
 
-// UGLIFY {{{
-var UGLIFY = {
-  options: {
-    //report : 'gzip',
-    compress: {
-      global_defs: {
-        "DEBUG": false
+  // UGLIFY {{{
+  var UGLIFY = {
+    options: {
+      report : 'gzip',
+      compress: {
+        global_defs: {
+          "DEBUG": false
+        },
+        dead_code: true
+      }
+    },
+    desktop: {
+      options: {
+        banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
-      dead_code: true
-    }
-  },
-  desktop: {
-    options: {
-      banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
-    },
-    files: {
-      '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
-    }
-  },
-  desktop_beautify: {
-    options: {
-      banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
-      //sourceMap: '<%= dirs.dist %>/all-source-map.js'
-      beautify: {
-        indent_level: 2,
-        width: 80,
-        beautify: true
+      files: {
+        '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    files: {
-      '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
-    }
-  },
-  mobile: {
-    options: {
-      banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
-    },
-    files: {
-      '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
-    }
-  },
-  mobile_beautify: {
-    options: {
-      banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
-      beautify: {
-        indent_level: 2,
-        width: 80,
-        beautify: true
+    desktop_beautify: {
+      options: {
+        banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
+        //sourceMap: '<%= dirs.dist %>/all-source-map.js'
+        beautify: {
+          indent_level: 2,
+          width: 80,
+          beautify: true
+        }
+      },
+      files: {
+        '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    files: {
-      '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
+    mobile: {
+      options: {
+        banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+      },
+      files: {
+        '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
+      }
+    },
+    mobile_beautify: {
+      options: {
+        banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
+        beautify: {
+          indent_level: 2,
+          width: 80,
+          beautify: true
+        }
+      },
+      files: {
+        '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
+      }
     }
-  }
-};
-// }}}
+  };
+  // }}}
 
 
-// JSHint {{{
-var JSHINT = {
-  options: {
-    jshintrc: '.jshintrc'
-  },
+  // JSHint {{{
+  var JSHINT = {
+    options: {
+      jshintrc: '.jshintrc'
+    },
 
-  DESKTOP: [],
-  MOBILE: []
-};
+    DESKTOP: [],
+    MOBILE: []
+  };
 
-var DESKTOP_OTHERS = ['home', 'newbieguide'];
+  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome'];
 
-DESKTOP_META.forEach(function (v) {
-  var p = path.join('src', v.name, 'lib', v.name + '.js');
-  JSHINT.DESKTOP.push(p);
-  JSHINT[v.name] = p;
-  PUBLISH[v.name] = path.join('src', v.name);
-  DESKTOP_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
-});
+  var __DESKTOP__ = [];
+  var __MOBILE__ = [];
 
-DESKTOP_OTHERS.forEach(function (v) {
-  var p = path.join('src', v, 'lib', v + '.js');
-  JSHINT.DESKTOP.push(p);
-  JSHINT[v] = p;
-  PUBLISH[v] = path.join('src', v);
-});
+  DESKTOP_META.forEach(function (v) {
+    var p = path.join('src', v.name, 'lib', v.name + '.js');
+    JSHINT.DESKTOP.push(p);
+    __DESKTOP__.push(v.name);
+    JSHINT[v.name] = p;
+    PUBLISH[v.name] = path.join('src', v.name);
+    DESKTOP_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
+  });
 
-MOBILE_META.forEach(function (v) {
-  var p = path.join('src', v.name, 'lib', v.name + '.js');
-  JSHINT.MOBILE.push(p);
-  JSHINT[v.name] = p;
-  PUBLISH[v.name] = path.join('src', v.name);
-  MOBILE_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
-});
+  DESKTOP_OTHERS.forEach(function (v) {
+    var p = path.join('src', v, 'lib', v + '.js');
+    JSHINT.DESKTOP.push(p);
+    __DESKTOP__.push(v.name);
+    JSHINT[v] = p;
+    PUBLISH[v] = path.join('src', v);
+  });
 
-JSHINT.DESKTOP = path.join('production/js', 'all-' + PKG.desktop.version + '.js');
-JSHINT.DESKTOP_MIN = path.join('production/js', 'all-' + PKG.desktop.version + '.min.js');
-JSHINT.MOBILE = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.js');
-JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.min.js');
-// }}}
+  MOBILE_META.forEach(function (v) {
+    var p = path.join('src', v.name, 'lib', v.name + '.js');
+    JSHINT.MOBILE.push(p);
+    JSHINT[v.name] = p;
+    __MOBILE__.push(v.name);
+    PUBLISH[v.name] = path.join('src', v.name);
+    MOBILE_CONCAT.src.push(path.join('production/js', v.name, v.version, v.name + '.js'));
+  });
+
+  JSHINT.DESKTOP = path.join('production/js', 'all-' + PKG.desktop.version + '.js');
+  JSHINT.DESKTOP_MIN = path.join('production/js', 'all-' + PKG.desktop.version + '.min.js');
+  JSHINT.MOBILE = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.js');
+  JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.version + '.min.js');
+  // }}}
 
   // Project configuration.
   grunt.initConfig({
@@ -210,14 +222,57 @@ JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.versio
           'git commit -am "<%= git.tag %>" || echo "";'
         ].join('&&')
       }
+    },
+
+    livereload: {
+      port: 35729 // Default livereload listening port.
+    },
+
+    watch: {
+      options: {
+        livereload: true,
+        nospawn: true
+      },
+      less: {
+        files: ['less/exfe/lib/*.less', 'less/exfe/lib/pages/*.less']
+      },
+      html: {
+        files: ['templates/*.html']
+      },
+      css: {
+        files: []
+      }
+    },
+
+    regarde: {
+      fred: {
+        files: ['less/exfe/lib/*.less', 'less/exfe/lib/pages/*.less', 'templates/*.html'],
+        tasks: ['livereload']
+      }
+    },
+
+    connect: {
+      server: {
+        options: {
+          port: 8964,
+          keepalive: true,
+          middleware: function(connect, options) {
+            return [lrSnippet, folderMount(connect, options.base)];
+          }
+        }
+      }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-regarde');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-livereload');
   grunt.loadNpmTasks('grunt-shell');
 
   // Default task(s).
@@ -271,7 +326,7 @@ JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.versio
       }
       grunt.file.copy(path.join(p, 'lib', name + '.js'), path.join(vdp, name + '.js'));
     } else {
-      grunt.log.error('Not Found A Module.');
+      grunt.log.error('Not Found ', name, ' Module.');
     }
   });
 
@@ -332,17 +387,48 @@ JSHINT.MOBILE_MIN = path.join('production/js', 'mobile-all-' + PKG.mobile.versio
     if (0 === len) {
       grunt.log.error('Input A Module.');
     } else {
+      if (modules === 'DESKTOP') {
+        grunt.task.run('uglifymulti:' + __DESKTOP__.join(' '));
+        return;
+      } else if (modules === 'MOBILE') {
+        grunt.task.run('uglifymulti:' + __MOBILE__.join(' '));
+        return;
+      }
       modules = modules.split(/\s|,/);
       modules.forEach(function (v, i) {
         var m = v.split('@'),
-            name = m[0],
-            version = m[1];
-        if (!version) {
+            name = m[0].trim(),
+            pattern = m[1];
+        if (name && (!pattern || semver.valid(pattern))) {
+          if (fs.existsSync(path.join('src', name))) {
+            var pkg = grunt.file.readJSON(path.join('src', name, 'package.json'));
+            pattern = pkg.version;
+          } else {
+            grunt.log.error('Not Found ', name, ' Module.');
+            return;
+          }
         }
-        console.log(name, version);
+        var mp = path.join('production/js', name);
+        if (fs.existsSync(mp)) {
+          var files = fs.readdirSync(mp);
+          var status = false;
+          files.forEach(function (dir, j) {
+            if (grunt.file.isDir(path.join(mp, dir))) {
+              if (semver.satisfies(dir, pattern)) {
+                status = true;
+                grunt.config.set('uglify.' + name + '.files.' + grunt.config.escape(path.join(mp, dir, name + '.min.js')), path.join(mp, dir, name + '.js'));
+              }
+            }
+          });
+          if (status) {
+            grunt.task.run('uglify:' + name);
+          }
+        }
       });
     }
   });
+
+  grunt.registerTask('server', [ 'livereload-start', 'connect', 'watch', 'regarde']);
 
   grunt.registerTask('default', 'Log some stuff.', function() {
     grunt.log.write('Logging some stuff...').ok();

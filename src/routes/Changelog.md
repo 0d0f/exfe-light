@@ -1,6 +1,10 @@
 * v0.3.13 2013-05-17T14:11:00 UTC+0800
+  - Changes
+    * rsvp
   - Bugs Fix
     * use `ctoken` when `cat` is null
+  - New Features
+    * new home
 
 * v0.3.12 2013-03-19T17:25:00 UTC+0800
   - Changes

@@ -213,6 +213,7 @@
     var centerX, centerY, pageX, pageY
       , $exfe = $('#exfe')
       , $bubble = $('#bubble')
+      , min = Math.min
       , w = 340 , centre = w / 2
       , offset = $exfe.offset()
       , dx , dy , tx = 0 , ty = 0
@@ -242,11 +243,11 @@
       dx = pageX - centerX;
       dy = pageY - centerY;
 
-      tx = -dx / centerX * 5;
-      ty = -dy / centerY * 5;
+      tx = -min(dx, centerX) / centerX * 5;
+      ty = -min(dy, centerY) / centerY * 5;
 
-      rx = dx / centerX * 8;
-      ry = -dy / centerY * 8;
+      rx = min(dx, centerX) / centerX * 8;
+      ry = -min(dy, centerY) / centerY * 8;
 
       sr = 'rotateY(' + rx + 'deg) rotateX(' + ry + 'deg)';
       sr2 = 'rotateY(' + -rx + 'deg) rotateX(' + -ry + 'deg)';

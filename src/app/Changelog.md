@@ -1,3 +1,7 @@
+* v0.2.11 2013-05-18T02:55:00 UTC+0800
+  - Changes
+    * add `decline` rsvp status
+
 * v0.2.10 2013-05-10T16:42:07 UTC+0800
   - Changes
     * `window._ENV_` in exchange for `require('config')`
