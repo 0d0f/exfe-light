@@ -141,7 +141,7 @@ define(function (require) {
         $('html, body').animate({scrollTop: h - 30 - 150}, 233);
       })
       .on('click.home touchstart.home', 'body', function (e) {
-        if (scrollTop <= 0 && !$(this).hasClass('shake') && !$.contains($('.modal')[0], e.target)) { $(this).addClass('shake'); }
+        if (scrollTop <= 0 && !$(this).hasClass('shake') && ($('.modal').length && !$.contains($('.modal')[0], e.target))) { $(this).addClass('shake'); }
       })
       .on('webkitAnimationEnd.home oanimationend.home MSAnimationEnd.home animationend.home', 'body', function () {
         $(this).removeClass('shake');
