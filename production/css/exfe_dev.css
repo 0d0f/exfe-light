@@ -11604,8 +11604,8 @@ ol.complete-list {
   position: relative;
   display: block;
   float: left;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 3px;
 }
 
@@ -11613,16 +11613,19 @@ ol.complete-list {
   position: relative;
   display: block;
   float: left;
-  width: 150px;
-  height: 40px;
+  width: 220px;
+  height: 28px;
+  margin-left: 8px;
   overflow: hidden;
   font-size: 16px;
-  line-height: 40px;
+  line-height: 28px;
+  text-align: center;
   text-indent: 10px;
+  border: 1px solid rgba(127, 127, 127, 0.33);
 }
 
 #phone-panel .name {
-  width: 178px;
+  width: 248px;
   height: 26px;
   padding: 0 5px 0 5px;
   margin: 0;
@@ -11631,16 +11634,14 @@ ol.complete-list {
 }
 
 #phone-panel .add {
+  float: right;
   width: 58px;
-  height: 20px;
+  height: 24px;
   padding: 0;
+  margin-top: 10px;
   margin-left: 10px;
   font-size: 14px;
   line-height: 20px;
-}
-
-#phone-panel .add.match {
-  margin-top: 10px;
 }
 
 .name-area {
