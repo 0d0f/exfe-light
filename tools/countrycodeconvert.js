@@ -16,7 +16,7 @@ var trim = function(string) {
 function CSVToArray( strData, strDelimiter ){
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
-    strDelimiter = (strDelimiter || ","); 
+    strDelimiter = (strDelimiter || ",");
     // Create a regular expression to parse the CSV values.
     var objPattern = new RegExp(
         (
@@ -78,7 +78,7 @@ function CSVToArray( strData, strDelimiter ){
 
 // read source csv file
 // process.argv
-var fileCsv = '/Users/leask/Documents/Working/exfe/wiki/wiki/data/country_codes.csv';
+var fileCsv = '/Users/leask/Documents/Working/exfe/exfewiki/wiki/data/country_codes.csv';
 var csv = fs.readFileSync(fileCsv, 'utf-8');
 if (!csv) {
     console.log('Error reading source csv file.');
@@ -150,6 +150,6 @@ for (var i = 1; i < csv.length; i++) {
 // output
 var doc = "define('countrycodes', function () { return "
         + JSON.stringify(resCsv, null, 4) + ";});";
-fs.writeFileSync('jslib/countrycodes/lib/countrycodes.js', doc);
+fs.writeFileSync('src/countrycodes/lib/countrycodes.js', doc);
 console.log('Done: ' + resCsv.length);
 process.exit();

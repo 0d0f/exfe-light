@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-22 10:05:47 */
+/*! desktop@2a.6 2013-05-24 03:05:40 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -569,7 +569,7 @@
       for (var n = (Qi[t] || []).concat(Qi["*"]), a = 0, r = n.length; r > a; a++) if (n[a].call(e, t, i)) return;
     });
   }
-  function P(e, t, i) {
+  function D(e, t, i) {
     var n, a = 0, r = Ji.length, s = J.Deferred().always(function() {
       delete o.elem;
     }), o = function() {
@@ -596,14 +596,14 @@
         return t ? s.resolveWith(e, [ l, t ]) : s.rejectWith(e, [ l, t ]), this;
       }
     }), d = l.props;
-    for (D(d, l.opts.specialEasing); r > a; a++) if (n = Ji[a].call(l, e, d, l.opts)) return n;
+    for (P(d, l.opts.specialEasing); r > a; a++) if (n = Ji[a].call(l, e, d, l.opts)) return n;
     return A(l, d), J.isFunction(l.opts.start) && l.opts.start.call(e, l), J.fx.timer(J.extend(o, {
       anim: l,
       queue: l.opts.queue,
       elem: e
     })), l.progress(l.opts.progress).done(l.opts.done, l.opts.complete).fail(l.opts.fail).always(l.opts.always);
   }
-  function D(e, t) {
+  function P(e, t) {
     var i, n, a, r, s;
     for (i in e) if (n = J.camelCase(i), a = t[n], r = e[i], J.isArray(r) && (a = r[1], 
     r = e[i] = r[0]), i !== n && (e[n] = r, delete e[i]), s = J.cssHooks[n], s && "expand" in s) {
@@ -1419,7 +1419,7 @@
       }
     });
   });
-  var $t = /^(?:textarea|input|select)$/i, Mt = /^([^\.]*|)(?:\.(.+)|)$/, St = /(?:^|\s)hover(\.\S+|)\b/, It = /^key/, Nt = /^(?:mouse|contextmenu)|click/, At = /^(?:focusinfocus|focusoutblur)$/, Pt = function(e) {
+  var $t = /^(?:textarea|input|select)$/i, Mt = /^([^\.]*|)(?:\.(.+)|)$/, St = /(?:^|\s)hover(\.\S+|)\b/, It = /^key/, Nt = /^(?:mouse|contextmenu)|click/, At = /^(?:focusinfocus|focusoutblur)$/, Dt = function(e) {
     return J.event.special.hover ? e : e.replace(St, "mouseenter$1 mouseleave$1");
   };
   J.event = {
@@ -1429,7 +1429,7 @@
         for (n.handler && (f = n, n = f.handler, r = f.selector), n.guid || (n.guid = J.guid++), 
         l = s.events, l || (s.events = l = {}), o = s.handle, o || (s.handle = o = function(e) {
           return J === t || e && J.event.triggered === e.type ? t : J.event.dispatch.apply(o.elem, arguments);
-        }, o.elem = e), i = J.trim(Pt(i)).split(" "), d = 0; i.length > d; d++) c = Mt.exec(i[d]) || [], 
+        }, o.elem = e), i = J.trim(Dt(i)).split(" "), d = 0; i.length > d; d++) c = Mt.exec(i[d]) || [], 
         u = c[1], h = (c[2] || "").split(".").sort(), g = J.event.special[u] || {}, u = (r ? g.delegateType : g.bindType) || u, 
         g = J.event.special[u] || {}, p = J.extend({
           type: u,
@@ -1450,7 +1450,7 @@
     remove: function(e, t, i, n, a) {
       var r, s, o, l, d, c, u, h, p, f, m, g = J.hasData(e) && J._data(e);
       if (g && (h = g.events)) {
-        for (t = J.trim(Pt(t || "")).split(" "), r = 0; t.length > r; r++) if (s = Mt.exec(t[r]) || [], 
+        for (t = J.trim(Dt(t || "")).split(" "), r = 0; t.length > r; r++) if (s = Mt.exec(t[r]) || [], 
         o = l = s[1], d = s[2], o) {
           for (p = J.event.special[o] || {}, o = (n ? p.delegateType : p.bindType) || o, f = h[o] || [], 
           c = f.length, d = d ? RegExp("(^|\\.)" + d.split(".").sort().join("\\.(?:.*\\.|)") + "(\\.|$)") : null, 
@@ -1793,13 +1793,13 @@
       return t ? o.length : o ? i.error(e) : q(e, l).slice(0);
     }
     function l(e, t, i) {
-      var n = t.dir, a = i && "parentNode" === t.dir, r = D++;
+      var n = t.dir, a = i && "parentNode" === t.dir, r = P++;
       return t.first ? function(t, i, r) {
         for (;t = t[n]; ) if (a || 1 === t.nodeType) return e(t, i, r);
       } : function(t, i, s) {
         if (s) {
           for (;t = t[n]; ) if ((a || 1 === t.nodeType) && e(t, i, s)) return t;
-        } else for (var o, l = P + " " + r + " ", d = l + v; t = t[n]; ) if (a || 1 === t.nodeType) {
+        } else for (var o, l = D + " " + r + " ", d = l + v; t = t[n]; ) if (a || 1 === t.nodeType) {
           if ((o = t[S]) === d) return t.sizset;
           if ("string" == typeof o && 0 === o.indexOf(l)) {
             if (t.sizset) return t;
@@ -1849,14 +1849,14 @@
     }
     function p(e, t) {
       var n = t.length > 0, a = e.length > 0, r = function(s, o, l, d, u) {
-        var h, p, f, m = [], g = 0, y = "0", b = s && [], x = null != u, w = T, k = s || a && _.find.TAG("*", u && o.parentNode || o), C = P += null == w ? 1 : Math.E;
+        var h, p, f, m = [], g = 0, y = "0", b = s && [], x = null != u, w = T, k = s || a && _.find.TAG("*", u && o.parentNode || o), C = D += null == w ? 1 : Math.E;
         for (x && (T = o !== N && o, v = r.el); null != (h = k[y]); y++) {
           if (a && h) {
             for (p = 0; f = e[p]; p++) if (f(h, o, l)) {
               d.push(h);
               break;
             }
-            x && (P = C, v = ++r.el);
+            x && (D = C, v = ++r.el);
           }
           n && ((h = !f && h) && g--, s && b.push(h));
         }
@@ -1868,7 +1868,7 @@
           }
           O.apply(d, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(d);
         }
-        return x && (P = C, T = w), b;
+        return x && (D = C, T = w), b;
       };
       return r.el = 0, n ? R(r) : r;
     }
@@ -1892,7 +1892,7 @@
       return k(e, u)(n, t, a, i, nt.test(e)), i;
     }
     function g() {}
-    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, A = N.documentElement, P = 0, D = 0, z = [].pop, O = [].push, L = [].slice, H = [].indexOf || function(e) {
+    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, A = N.documentElement, D = 0, P = 0, z = [].pop, O = [].push, L = [].slice, H = [].indexOf || function(e) {
       for (var t = 0, i = this.length; i > t; t++) if (this[t] === e) return t;
       return -1;
     }, R = function(e, t) {
@@ -2269,7 +2269,7 @@
     i.attr = J.attr, J.find = i, J.expr = i.selectors, J.expr[":"] = J.expr.pseudos, 
     J.unique = i.uniqueSort, J.text = i.getText, J.isXMLDoc = i.isXML, J.contains = i.contains;
   }(e);
-  var Dt = /Until$/, zt = /^(?:parents|prev(?:Until|All))/, Ot = /^.[^:#\[\.,]*$/, Lt = J.expr.match.needsContext, Ht = {
+  var Pt = /Until$/, zt = /^(?:parents|prev(?:Until|All))/, Ot = /^.[^:#\[\.,]*$/, Lt = J.expr.match.needsContext, Ht = {
     children: !0,
     contents: !0,
     next: !0,
@@ -2364,7 +2364,7 @@
   }, function(e, t) {
     J.fn[e] = function(i, n) {
       var a = J.map(this, t, i);
-      return Dt.test(e) || (n = i), n && "string" == typeof n && (a = J.filter(n, a)), 
+      return Pt.test(e) || (n = i), n && "string" == typeof n && (a = J.filter(n, a)), 
       a = this.length > 1 && !Ht[e] ? J.unique(a) : a, this.length > 1 && zt.test(e) && (a = a.reverse()), 
       this.pushStack(a, e, Y.call(arguments).join(","));
     };
@@ -2786,13 +2786,13 @@
     }); else for (n in e) k(n, e[n], i, r);
     return a.join("&").replace(_i, "+");
   };
-  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Ai = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Pi = /([?&])_=[^&]*/, Di = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, zi = J.fn.load, Oi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
+  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Ai = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Di = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, zi = J.fn.load, Oi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
   try {
     Ei = q.href;
   } catch (Ri) {
     Ei = j.createElement("a"), Ei.href = "", Ei = Ei.href;
   }
-  Ci = Di.exec(Ei.toLowerCase()) || [], J.fn.load = function(e, i, n) {
+  Ci = Pi.exec(Ei.toLowerCase()) || [], J.fn.load = function(e, i, n) {
     if ("string" != typeof e && zi) return zi.apply(this, arguments);
     if (!this.length) return this;
     var a, r, s, o = this, l = e.indexOf(" ");
@@ -2916,13 +2916,13 @@
         }
         return this;
       }, h.url = ((e || h.url) + "").replace(Ti, "").replace(Ii, Ci[1] + "//"), h.dataTypes = J.trim(h.dataType || "*").toLowerCase().split(tt), 
-      null == h.crossDomain && (d = Di.exec(h.url.toLowerCase()) || !1, h.crossDomain = d && d.join(":") + (d[3] ? "" : "http:" === d[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
+      null == h.crossDomain && (d = Pi.exec(h.url.toLowerCase()) || !1, h.crossDomain = d && d.join(":") + (d[3] ? "" : "http:" === d[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
       h.data && h.processData && "string" != typeof h.data && (h.data = J.param(h.data, h.traditional)), 
       E(Oi, h, i, w), 2 === b) return w;
       if (c = h.global, h.type = h.type.toUpperCase(), h.hasContent = !Si.test(h.type), 
       c && 0 === J.active++ && J.event.trigger("ajaxStart"), !h.hasContent && (h.data && (h.url += (Ni.test(h.url) ? "&" : "?") + h.data, 
       delete h.data), a = h.url, h.cache === !1)) {
-        var k = J.now(), C = h.url.replace(Pi, "$1_=" + k);
+        var k = J.now(), C = h.url.replace(Di, "$1_=" + k);
         h.url = C + (C === h.url ? (Ni.test(h.url) ? "&" : "?") + "_=" + k : "");
       }
       (h.data && h.hasContent && h.contentType !== !1 || i.contentType) && w.setRequestHeader("Content-Type", h.contentType), 
@@ -3067,7 +3067,7 @@
       return a;
     } ]
   };
-  J.Animation = J.extend(P, {
+  J.Animation = J.extend(D, {
     tweener: function(e, t) {
       J.isFunction(e) ? (t = e, e = [ "*" ]) : e = e.split(" ");
       for (var i, n = 0, a = e.length; a > n; n++) i = e[n], Qi[i] = Qi[i] || [], Qi[i].unshift(t);
@@ -3119,7 +3119,7 @@
     },
     animate: function(e, t, i, n) {
       var a = J.isEmptyObject(e), r = J.speed(t, i, n), s = function() {
-        var t = P(this, J.extend({}, e), r);
+        var t = D(this, J.extend({}, e), r);
         a && t.stop(!0);
       };
       return a || r.queue === !1 ? this.each(s) : this.queue(r.queue, s);
@@ -10452,9 +10452,9 @@ TWEEN.Tween = function(e) {
     format_str: ""
   }, {
     country_code: "44",
-    country_name: "United Kingdom of Great Britain and Northern Ireland",
+    country_name: "United Kingdom UK of Great Britain and Northern Ireland",
     short_name: "GB",
-    search_index: "44 united kingdom of great britain and northern ireland gb 大不列颠及北爱尔兰联合王国",
+    search_index: "44 united kingdom uk of great britain and northern ireland gb 大不列颠及北爱尔兰联合王国",
     support: [ "iMessage" ],
     regular: "^\\+44",
     format_long: 0,
@@ -11891,7 +11891,7 @@ TWEEN.Tween = function(e) {
         id: e
       }
     }, t, i);
-  }, P = function(e, t, i) {
+  }, D = function(e, t, i) {
     return N("photox_like", {
       type: "POST",
       data: {
@@ -11899,7 +11899,7 @@ TWEEN.Tween = function(e) {
         LIKE: !1
       }
     }, t, i);
-  }, D = function(e, t, i, n) {
+  }, P = function(e, t, i, n) {
     return N("photox_getPhotoX", {
       resources: {
         photox_id: e
@@ -12281,7 +12281,7 @@ TWEEN.Tween = function(e) {
       }).on("click.mnemosyne", ".surface .btn-like", function(e) {
         e.preventDefault(), e.stopPropagation();
         var t = E(this), i = t.parent(), n = +i.data("id"), a = +i.attr("data-liked");
-        return -2 !== a ? (i.attr("data-liked", -2), 1 === a ? (P(n, function() {
+        return -2 !== a ? (i.attr("data-liked", -2), 1 === a ? (D(n, function() {
           i.attr("data-liked", 0), t.addClass("ix-unlike").removeClass("ix-like");
         }, function() {
           i.attr("data-liked", 1);
@@ -12422,7 +12422,7 @@ TWEEN.Tween = function(e) {
     },
     getPhotos: function() {
       var e = this, t = this.userId;
-      D(e.crossId, null, function(i) {
+      P(e.crossId, null, function(i) {
         var n = i.likes, a = i.photox.photos;
         $.each(a, function(e) {
           var i = n[e.id];
@@ -14197,11 +14197,11 @@ TWEEN.Tween = function(e) {
         exfee: JSON.stringify(Exfee)
       }
     }, function() {
-      t(".cross-opts .saving").hide(), e ? window.location.href = "/" : Y.emit("app:cross:edited");
+      t(".cross-opts .saving").hide(), e ? window.location.href = "/" : G.emit("app:cross:edited");
     }, function(e) {
       t(".cross-opts .saving").hide();
       var i = !e.meta || 401 !== e.meta.code && 403 !== e.meta.code ? "" : "no_permission";
-      Y.emit("app:cross:edited", {
+      G.emit("app:cross:edited", {
         error: i
       });
     }));
@@ -14227,11 +14227,11 @@ TWEEN.Tween = function(e) {
         type: "POST",
         data: JSON.stringify(i)
       }, function(e) {
-        $ = e.post.updated_at, t(".cross-opts .saving").hide(), S(e.post), Y.emit("app:cross:edited");
+        $ = e.post.created_at, t(".cross-opts .saving").hide(), I(e.post), G.emit("app:cross:edited");
       }, function(e) {
         t(".cross-opts .saving").hide();
         var i = !e.meta || 401 !== e.meta.code && 403 !== e.meta.code ? "" : "no_permission";
-        Y.emit("app:cross:edited", {
+        G.emit("app:cross:edited", {
           error: i
         });
       });
@@ -14241,7 +14241,7 @@ TWEEN.Tween = function(e) {
       window.location = "/";
     }), t("#cross-form-gather").bind("click", function() {
       if (t("body").trigger("click"), curIdentity) t(this).hasClass("disabled") || (t(this).prop("disabled", !0).toggleClass("disabled", !0), 
-      j()); else {
+      q()); else {
         var e = t.trim(t("#gather-title").val());
         0 === e.length ? (t(".choose-identity .placeholder").addClass("text-error"), t(".add-identity").addClass("hide"), 
         t(".please-identity").removeClass("hide")) : t(".choose-identity .placeholder").trigger("click");
@@ -14266,13 +14266,13 @@ TWEEN.Tween = function(e) {
       var n = Editing, a = i ? i.target : null, r = {
         title: [ function() {
           t(".cross-title").removeAttr("editable"), t(".cross-title .show").show(), v(t(".cross-title .edit").val(), "cross"), 
-          t(".cross-title .edit").hide(), B();
+          t(".cross-title .edit").hide(), W();
         }, function() {
           t(".cross-title").attr("editable", !0), t(".cross-title .show").hide(), t(".cross-title .edit").show().focus();
         } ],
         description: [ function() {
           t(".cross-description-outer").removeAttr("editable"), t(".cross-description .show").show(), 
-          t(".cross-description .edit").hide(), y(t(".cross-description .edit").val()), B();
+          t(".cross-description .edit").hide(), y(t(".cross-description .edit").val()), W();
         }, function() {
           t(".cross-description-outer").attr("editable", !0), t(".cross-description .show").hide(), 
           t(".cross-description .xbtn-more").hide(), t(".cross-description .edit").show().focus();
@@ -14281,7 +14281,7 @@ TWEEN.Tween = function(e) {
           var e = t("#date-panel");
           if (e.size()) {
             var i = e.data("widget-id"), a = App.widgetCaches[i];
-            t.trim(t("#date-string").data("date")), ("date-panel" === n || "time" === n) && B(), 
+            t.trim(t("#date-string").data("date")), ("date-panel" === n || "time" === n) && W(), 
             a && a.hide();
           }
           t(".cross-date").removeAttr("editable");
@@ -14303,7 +14303,7 @@ TWEEN.Tween = function(e) {
           var e = t("#map-panel");
           if (e.size()) {
             var i = e.data("widget-id"), a = App.widgetCaches[i];
-            ("map-panel" === n || "place" === n) && (Cross.place = a.place, B()), a && a.hide();
+            ("map-panel" === n || "place" === n) && (Cross.place = a.place, W()), a && a.hide();
           }
         }, function() {
           var i = t("#map-panel");
@@ -14315,16 +14315,16 @@ TWEEN.Tween = function(e) {
                 place: Cross.place
               },
               update: function(e) {
-                C(e), A(e);
+                C(e), D(e);
               }
             });
             a.show(), t(".cross-place").attr("editable", !0);
           }
         } ],
         rsvp: [ function() {
-          N();
+          A();
         }, function() {
-          N(!0);
+          A(!0);
         } ],
         background: [ function() {}, function() {
           !i || "dblclick" !== i.type || !n && Cross.id || m(i ? i.shiftKey : !1);
@@ -14388,11 +14388,11 @@ TWEEN.Tween = function(e) {
         t(".cross-rsvp .show .by").hide();
       }
     }), t(".cross-rsvp .edit .accept").bind("click", function() {
-      ExfeeWidget.rsvpMe("ACCEPTED"), N();
+      ExfeeWidget.rsvpMe("ACCEPTED"), A();
     }), t(".cross-rsvp .edit .decline").bind("click", function() {
-      ExfeeWidget.rsvpMe("DECLINED"), N();
+      ExfeeWidget.rsvpMe("DECLINED"), A();
     }), t(".cross-rsvp .edit .interested").bind("click", function() {
-      ExfeeWidget.rsvpMe("INTERESTED"), N();
+      ExfeeWidget.rsvpMe("INTERESTED"), A();
     }), t(".cross-place .edit").bind("keydown", function(e) {
       e.shiftKey && 13 === e.which && (e.which = 4);
     }), t(".cross-place .xbtn-more").bind("click", function(e) {
@@ -14412,7 +14412,7 @@ TWEEN.Tween = function(e) {
   }, p = function() {
     Cross.title.length || (Cross.title = curIdentity ? "Meet " + curIdentity.name : "Gather a ·X·");
   }, f = function() {
-    var e = new Date(), i = X.formatDate(e.getFullYear() + "-" + (e.getMonth() + 1) + "-" + e.getDate());
+    var e = new Date(), i = Y.formatDate(e.getFullYear() + "-" + (e.getMonth() + 1) + "-" + e.getDate());
     Cross.time = {
       begin_at: {
         date_word: "",
@@ -14475,7 +14475,7 @@ TWEEN.Tween = function(e) {
     t(".cross-description .xbtn-more").toggleClass("xbtn-less", !0))) : t(".cross-description .xbtn-more").hide(), 
     t(".cross-description .edit").val(Cross.description), Editing && "rsvp" !== Editing || Cross.description || !Cross.id ? t(".cross-description").show() : t(".cross-description").hide();
   }, w = function() {
-    k(), I();
+    k(), N();
   }, k = function() {
     function e(e) {
       if (e = ExfeUtilities.trim(e)) {
@@ -14490,7 +14490,7 @@ TWEEN.Tween = function(e) {
     var i = e(Cross.time.begin_at.timezone), n = e(ExfeUtilities.getTimezone()), a = (i === n && window._ENV_.timevalid, 
     ""), r = "", s = "Pick a time.", o = !1;
     if (Cross.time.origin) {
-      var l = X.printEFTime(Cross.time, "X");
+      var l = Y.printEFTime(Cross.time, "X");
       a = l.content, r = l.title;
     } else a = s, r = "Sometime", o = !0;
     t(".cross-date h2").html(r), t(".cross-time").html(a).toggleClass("gray", o);
@@ -14505,18 +14505,21 @@ TWEEN.Tween = function(e) {
   }, T = function() {
     for (var e = 0; Cross.widget.length > e && "Background" !== Cross.widget[e].type; e++) ;
     t(".x-gather").toggleClass("no-bg", !1), t(".cross-background").css("background-image", "url(/static/img/xbg/" + (Cross.widget[e].image ? Cross.widget[e].image : "default.jpg") + ")");
-  }, $ = "", M = function(e, t) {
+  }, $ = "", M = {}, S = function(e, t) {
     i = e;
-    for (var n = i.length - 1; n >= 0; n--) n || ($ = i[n].created_at), S(i[n], t);
-  }, S = function(e, i) {
-    var n = ExfeUtilities.escape(e.content).replace(/\r\n|\n\r|\r|\n/g, "\n"), a = '<div class="avatar-comment"><span class="pull-left avatar"><img alt="" src="' + e.by_identity.avatar_filename + '" width="40" height="40" />' + "</span>" + '<div class="comment">' + "<p>" + '<span class="author"><strong>' + e.by_identity.name + "</strong>:&nbsp;</span>" + ExfeUtilities.escape(e.content).replace(/\r\n|\n\r|\r|\n/g, "<br>") + '<span class="pull-right date">' + '<time data-iso-time="' + X.toISO(e.created_at) + '"></time>' + "</span>" + "</p>" + "</div>" + "</div>";
-    t(".conversation-timeline").prepend(a), i && window.webkitNotifications && 0 === window.webkitNotifications.checkPermission() && window.webkitNotifications.createNotification(null, "EXFE - " + Cross.title, e.by_identity.name + ": " + n).show();
-  }, I = function() {
+    for (var n = i.length - 1; n >= 0; n--) n || ($ = i[n].created_at), I(i[n], t);
+  }, I = function(e, i) {
+    if (void 0 === M[e.id]) {
+      M[e.id] = !0;
+      var n = ExfeUtilities.escape(e.content).replace(/\r\n|\n\r|\r|\n/g, "\n"), a = '<div class="avatar-comment"><span class="pull-left avatar"><img alt="" src="' + e.by_identity.avatar_filename + '" width="40" height="40" />' + "</span>" + '<div class="comment">' + "<p>" + '<span class="author"><strong>' + e.by_identity.name + "</strong>:&nbsp;</span>" + ExfeUtilities.escape(e.content).replace(/\r\n|\n\r|\r|\n/g, "<br>") + '<span class="pull-right date">' + '<time data-iso-time="' + Y.toISO(e.created_at) + '"></time>' + "</span>" + "</p>" + "</div>" + "</div>";
+      t(".conversation-timeline").prepend(a), i && window.webkitNotifications && 0 === window.webkitNotifications.checkPermission() && window.webkitNotifications.createNotification(null, "EXFE - " + Cross.title, e.by_identity.name + ": " + n).show();
+    }
+  }, N = function() {
     t("time[data-iso-time]").each(function() {
       var e = t(this);
-      e.text(X(e.data("iso-time")));
+      e.text(Y(e.data("iso-time")));
     });
-  }, N = function(e) {
+  }, A = function(e) {
     var i = ExfeeWidget.getMyInvitation();
     if (i) {
       var n = i.by_identity ? i.by_identity : curIdentity, a = i.identity.id === n.id;
@@ -14548,7 +14551,7 @@ TWEEN.Tween = function(e) {
       }
     }
     t(".cross-rsvp .show").hide(), t(".cross-rsvp .edit").hide();
-  }, A = function(e) {
+  }, D = function(e) {
     function i(i) {
       var n = i.coords;
       a = a.replace(/\{\{lat\}\}/gi, n.latitude).replace(/\{\{lng\}\}/gi, n.longitude).replace(/\{\{title\}\}/gi, ("" === e.provider ? n.latitude + "," + n.longitude + " " : "") + encodeURIComponent(e.title)), 
@@ -14563,8 +14566,8 @@ TWEEN.Tween = function(e) {
       }
     });
   }, P = function() {
-    b(), x(), C(Cross.place), E(), T(), N(), A(Cross.place);
-  }, D = function(e) {
+    b(), x(), C(Cross.place), E(), T(), A(), D(Cross.place);
+  }, z = function(e) {
     var t = {
       resources: {
         exfee_id: Exfee.id
@@ -14573,39 +14576,39 @@ TWEEN.Tween = function(e) {
     $ && (t.params = {
       updated_at: $
     }), Api.request("conversation", t, function(t) {
-      M(t.conversation, e);
+      S(t.conversation, e);
     });
-  }, z = function() {
-    D(!0);
   }, O = function() {
+    z(!0);
+  }, L = function() {
     readOnly ? t("#conversation-form").hide() : (t("#conversation-form span.avatar img").attr("src", curIdentity.avatar_filename), 
     t("#conversation-form").show()), t(".conversation-timeline").html(""), t(".cross-conversation").slideDown(233), 
-    D(), convTimer = setInterval(z, 233e3);
-  }, L = function(e, i) {
+    $ = "", M = {}, z(), convTimer = setInterval(O, 233e3);
+  }, H = function(e, i) {
     Cross.id = e.id, Cross.title = e.title, Cross.description = e.description, Cross.time = e.time, 
     Cross.place = e.place, Cross.widget = e.widget, Cross.exfee_id = e.exfee.id, Exfee = e.exfee, 
-    readOnly = i, G = U(), void 0 === Cross.time || void 0 === Cross.time.begin_at || Cross.time.begin_at.timezone || (Cross.time.begin_at.timezone = ExfeUtilities.getTimezone()), 
+    readOnly = i, V = B(), void 0 === Cross.time || void 0 === Cross.time.begin_at || Cross.time.begin_at.timezone || (Cross.time.begin_at.timezone = ExfeUtilities.getTimezone()), 
     t(".cross-date  .edit").val(Cross.time.origin), t(".cross-place .edit").val(Cross.place.title + (Cross.place.description ? "\n" + Cross.place.description : ""));
     for (var n = 0; Exfee.invitations.length > n; n++) if (ExfeeWidget.isMyIdentity(Exfee.invitations[n].identity)) {
       curIdentity = ExfeUtilities.clone(Exfee.invitations[n].identity);
       break;
     }
-    P(), O();
-  }, H = function(e) {
+    P(), L();
+  }, R = function(e) {
     Api.request("getCross", {
       resources: {
         cross_id: e
       }
     }, function(e) {
-      L(e.cross, !1);
+      H(e.cross, !1);
     }, function() {
-      Y.emit("app:cross:forbidden", e);
+      G.emit("app:cross:forbidden", e);
     });
-  }, R = function() {
-    window.Cross = ExfeUtilities.clone(n), window.Exfee = ExfeUtilities.clone(a);
   }, F = function() {
-    readOnly = !1, R(), m(), p(), f(), g(), P(), W();
+    window.Cross = ExfeUtilities.clone(n), window.Exfee = ExfeUtilities.clone(a);
   }, j = function() {
+    readOnly = !1, F(), m(), p(), f(), g(), P(), X();
+  }, q = function() {
     t(".cross-opts .saving").show();
     var e = ExfeUtilities.clone(Cross);
     e.exfee = ExfeUtilities.clone(Exfee), e.by_identity = {
@@ -14618,7 +14621,7 @@ TWEEN.Tween = function(e) {
     }, function() {
       t(".cross-opts .saving").hide(), t("#cross-form-gather").prop("disabled", !1).toggleClass("disabled", !1);
     });
-  }, q = function() {
+  }, U = function() {
     t(".cross-opts .saving").show();
     var e = ExfeUtilities.clone(Cross);
     e.by_identity = {
@@ -14630,15 +14633,15 @@ TWEEN.Tween = function(e) {
       },
       data: JSON.stringify(e)
     }, function() {
-      t(".cross-opts .saving").hide(), Y.emit("app:cross:edited");
+      t(".cross-opts .saving").hide(), G.emit("app:cross:edited");
     }, function(e) {
       t(".cross-opts .saving").hide();
       var i = !e.meta || 401 !== e.meta.code && 403 !== e.meta.code ? "" : "no_permission";
-      Y.emit("app:cross:edited", {
+      G.emit("app:cross:edited", {
         error: i
       });
     });
-  }, U = function() {
+  }, B = function() {
     return JSON.stringify({
       id: Cross.id,
       title: Cross.title,
@@ -14653,27 +14656,27 @@ TWEEN.Tween = function(e) {
       },
       background: Cross.widget[0].image
     });
-  }, B = function() {
+  }, W = function() {
     if (Cross.id) {
-      var e = U();
-      G !== e && (q(), G = e);
+      var e = B();
+      V !== e && (U(), V = e);
     }
-  }, W = function(e) {
+  }, X = function(e) {
     e ? (t(".cross-form").slideUp(233), t(".cross-edit").show(233)) : (_(), t(".cross-form").slideDown(233), 
     t(".cross-edit").hide(233), t("#gather-title").select(), t("#gather-title").focus());
   };
   window.Store = e("store"), window.Api = e("api"), window.webkitNotifications && window.webkitNotifications.requestPermission(function() {});
-  var X = e("humantime");
+  var Y = e("humantime");
   window.curIdentity = null, window.readOnly = !1;
-  var Y = e("bus"), G = "";
-  Y.on("xapp:cross:main", function() {
+  var G = e("bus"), V = "";
+  G.on("xapp:cross:main", function() {
     var t = Store.get("authorization");
     window.User = t ? Store.get("user") : null, User && (Api.setToken(t.token), curIdentity = ExfeUtilities.clone(User.identities[0])), 
-    R(), o(), d(), c(), Editing = "", h(), Marked = e("marked"), window.ExfeePanel = e("exfeepanel"), 
+    F(), o(), d(), c(), Editing = "", h(), Marked = e("marked"), window.ExfeePanel = e("exfeepanel"), 
     window.showtimeTimer = setInterval(w, 50), window.convTimer = null;
-  }), Y.on("xapp:cross", function(i, n, a, r, s, o) {
+  }), G.on("xapp:cross", function(i, n, a, r, s, o) {
     if (i > 0) {
-      H(i);
+      R(i);
       var l = new (e("photoxwidget"))({
         options: {
           crossId: i,
@@ -14681,15 +14684,22 @@ TWEEN.Tween = function(e) {
         }
       });
       l.show();
-    } else null === i ? (n && (curIdentity = n, Api.setToken(s)), L(a, r), o && (ExfeeWidget.rsvpMe("ACCEPTED"), 
-    N())) : F();
-  }), Y.on("app:user:signin:after", function() {
+    } else if (null === i) switch (n && (curIdentity = n, Api.setToken(s)), H(a, r), 
+    o) {
+     case "accept":
+      ExfeeWidget.rsvpMe("ACCEPTED"), A();
+      break;
+
+     case "decline":
+      ExfeeWidget.rsvpMe("DECLINED"), A();
+    } else j();
+  }), G.on("app:user:signin:after", function() {
     if (window.Cross && !window.Cross.id) {
       var e = Store.get("authorization");
       window.User = e ? Store.get("user") : null, User && (Api.setToken(e.token), curIdentity = ExfeUtilities.clone(User.identities[0]), 
       _(), g());
     }
-  }), Y.on("xapp:cross:end", function() {
+  }), G.on("xapp:cross:end", function() {
     clearTimeout(window.showtimeTimer), clearTimeout(window.convTimer);
   }), t(document.body).on("hover", "div.lock-tag", function(e) {
     var i = e.type, n = t(this).offset();
@@ -14754,7 +14764,7 @@ var MD5 = function(e) {
     }
     return t;
   }
-  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, A = 4, P = 11, D = 16, z = 23, O = 6, L = 10, H = 15, R = 21;
+  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, A = 4, D = 11, P = 16, z = 23, O = 6, L = 10, H = 15, R = 21;
   for (e = p(e), k = u(e), _ = 1732584193, b = 4023233417, x = 2562383102, w = 271733878, 
   f = 0; k.length > f; f += 16) m = _, g = b, v = x, y = w, _ = o(_, b, x, w, k[f + 0], C, 3614090360), 
   w = o(w, _, b, x, k[f + 1], E, 3905402710), x = o(x, w, _, b, k[f + 2], T, 606105819), 
@@ -14773,13 +14783,13 @@ var MD5 = function(e) {
   b = l(b, x, w, _, k[f + 8], N, 1163531501), _ = l(_, b, x, w, k[f + 13], M, 2850285829), 
   w = l(w, _, b, x, k[f + 2], S, 4243563512), x = l(x, w, _, b, k[f + 7], I, 1735328473), 
   b = l(b, x, w, _, k[f + 12], N, 2368359562), _ = d(_, b, x, w, k[f + 5], A, 4294588738), 
-  w = d(w, _, b, x, k[f + 8], P, 2272392833), x = d(x, w, _, b, k[f + 11], D, 1839030562), 
+  w = d(w, _, b, x, k[f + 8], D, 2272392833), x = d(x, w, _, b, k[f + 11], P, 1839030562), 
   b = d(b, x, w, _, k[f + 14], z, 4259657740), _ = d(_, b, x, w, k[f + 1], A, 2763975236), 
-  w = d(w, _, b, x, k[f + 4], P, 1272893353), x = d(x, w, _, b, k[f + 7], D, 4139469664), 
+  w = d(w, _, b, x, k[f + 4], D, 1272893353), x = d(x, w, _, b, k[f + 7], P, 4139469664), 
   b = d(b, x, w, _, k[f + 10], z, 3200236656), _ = d(_, b, x, w, k[f + 13], A, 681279174), 
-  w = d(w, _, b, x, k[f + 0], P, 3936430074), x = d(x, w, _, b, k[f + 3], D, 3572445317), 
+  w = d(w, _, b, x, k[f + 0], D, 3936430074), x = d(x, w, _, b, k[f + 3], P, 3572445317), 
   b = d(b, x, w, _, k[f + 6], z, 76029189), _ = d(_, b, x, w, k[f + 9], A, 3654602809), 
-  w = d(w, _, b, x, k[f + 12], P, 3873151461), x = d(x, w, _, b, k[f + 15], D, 530742520), 
+  w = d(w, _, b, x, k[f + 12], D, 3873151461), x = d(x, w, _, b, k[f + 15], P, 530742520), 
   b = d(b, x, w, _, k[f + 2], z, 3299628645), _ = c(_, b, x, w, k[f + 0], O, 4096336452), 
   w = c(w, _, b, x, k[f + 7], L, 1126891415), x = c(x, w, _, b, k[f + 14], H, 2878612391), 
   b = c(b, x, w, _, k[f + 5], R, 4237533241), _ = c(_, b, x, w, k[f + 12], O, 1700485571), 
