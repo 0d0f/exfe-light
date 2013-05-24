@@ -38,7 +38,7 @@ module.exports = function (grunt) {
   // UGLIFY {{{
   var UGLIFY = {
     options: {
-      report : 'gzip',
+      report : 'min',
       compress: {
         global_defs: {
           "DEBUG": false
