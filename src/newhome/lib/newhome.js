@@ -146,7 +146,8 @@ define(function (require) {
       .on('webkitAnimationEnd.home oanimationend.home MSAnimationEnd.home animationend.home', 'body', function () {
         $(this).removeClass('shake');
       })
-      .on('click.home touchstart.home', '#logo, .xbtn-start', function () {
+      .on('click.home touchstart.home', '#logo, .xbtn-start', function (e) {
+        e.stopPropagation();
         var settings = {
           options: {
             onShowAfter: function () {
