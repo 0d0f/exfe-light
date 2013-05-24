@@ -1694,9 +1694,9 @@ define('countrycodes', function () { return [
     },
     {
         "country_code": "44",
-        "country_name": "United Kingdom of Great Britain and Northern Ireland",
+        "country_name": "United Kingdom UK of Great Britain and Northern Ireland",
         "short_name": "GB",
-        "search_index": "44 united kingdom of great britain and northern ireland gb 大不列颠及北爱尔兰联合王国",
+        "search_index": "44 united kingdom uk of great britain and northern ireland gb 大不列颠及北爱尔兰联合王国",
         "support": [
             "iMessage"
         ],
