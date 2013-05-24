@@ -53,7 +53,6 @@ define('mobileroutes', function (require, exports, module) {
             var time = originCross.time;
             if (time
               && time.begin_at
-              && time.begin_at.origin
               && time.begin_at.timezone) {
               cross.time = renderCrossTime(time);
             } else {
