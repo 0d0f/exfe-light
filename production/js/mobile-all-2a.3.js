@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.3 2013-05-24 04:05:33 */
+/*! mobile@2a.3 2013-05-24 04:05:22 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4060,7 +4060,7 @@ TWEEN.Tween = function(t) {
       this.render(), this.listen();
     },
     render: function() {
-      $("#app-cross").length || this.element.appendTo($("#app-body"));
+      $("#app-cross").length || this.element.appendTo($("#app-body")), $("#app-cross").removeClass("hide");
     },
     listen: function() {
       var t = this, e = this.element, n = this.token, i = this.cross, r = t.$(".rsvp_toolbar");

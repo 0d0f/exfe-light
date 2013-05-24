@@ -651,6 +651,7 @@ define('mobilecontroller', function (require, exports, module) {
       if (!$('#app-cross').length) {
         this.element.appendTo($('#app-body'));
       }
+      $('#app-cross').removeClass('hide');
     },
 
     listen: function () {
