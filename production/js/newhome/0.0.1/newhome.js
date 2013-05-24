@@ -47,7 +47,6 @@ define(function (require) {
   $(function () {
     var $w = $(window),
         $d = $(document),
-        $mask = $('.top-mask'),
         $h = $('.home header'),
         $e = $('.exfe-logo'),
         $s = $('.login'),
@@ -56,32 +55,24 @@ define(function (require) {
         $it = $('.introduction'),
         $its = $i.find('.intro').not($it),
         $bloom = $('#bloom'),
+        scrollTop = 0,
         d, h, t, scale, s, ms, cx, cy, cr, dx, dy, tx, ty/*, rx, ry*/;
 
     $w.off('*.home')
       .on('scroll.home', function () {
-        var st = $w.scrollTop(),
-            pt = min(st, 200) / 200,
-            bd = $s[0].getBoundingClientRect(),
-            top;
+        scrollTop = $w.scrollTop();
+        var pt = min(scrollTop, 200) / 200,
+          bd = $s[0].getBoundingClientRect(),
+          top;
 
         $it.css('opacity', 0.5 + 0.5 * pt);
         $its.css('opacity', 0.2 + 0.8 * pt);
-
-        // 直接改变 css#opacity 颜色会跳，使用 svg#fill-opacity 代替
-        if (st < ms[0]) {
-          $mask.attr('class', 'top-mask hide');
-          $mask[0].style.fillOpacity = 0;
-        } else if (ms[0] <= st) {
-          $mask.attr('class', 'top-mask');
-          $mask[0].style.fillOpacity = (min(st, ms[1]) - ms[0]) / (ms[1] - ms[0]);
-        }
 
         if (bd.top < (top = 50)) {
           s = 1;
           sStyle.position = 'fixed';
           sStyle.top = top + 'px';
-        } else if (bd.top === 50 && floor(st) <= (top = floor(h - t - 36 - 30)) - 50) {
+        } else if (bd.top === 50 && floor(scrollTop) <= (top = floor(h - t - 36 - 30)) - 50) {
           s = 0;
           sStyle.position = 'absolute';
           sStyle.top = top + 'px';
@@ -99,7 +90,7 @@ define(function (require) {
         $i.css('top', h - 30);
         ms = [et + 460 - (460 - 220) / 2, st];
 
-        var matrix3d = 'scale(' + scale + ')';
+        var matrix3d = 'matrix3d(' + scale + ', 0, 0, 0, 0, ' + scale + ', 0, 0, 0, 0, 1, 0, 0, 0, 1, 1)';
 
         $e.css({
           '-webkit-transform': matrix3d,
@@ -145,10 +136,18 @@ define(function (require) {
           'transform':         matrix3d
         });
       })
-      .on('click.home touchstart.home', '.introduction img', function () {
-        $('html, body').animate({scrollTop: '+=100'}, 233);
+      .on('click.home touchstart.home', '.introduction img', function (e) {
+        e.stopPropagation();
+        $('html, body').animate({scrollTop: h - 30 - 150}, 233);
       })
-      .on('click.home touchstart.home', '#logo, .xbtn-start', function () {
+      .on('click.home touchstart.home', 'body', function () {
+        if (scrollTop <= 0 && !$(this).hasClass('shake')) { $(this).addClass('shake'); }
+      })
+      .on('webkitAnimationEnd.home oanimationend.home MSAnimationEnd.home animationend.home', 'body', function () {
+        $(this).removeClass('shake');
+      })
+      .on('click.home touchstart.home', '#logo, .xbtn-start', function (e) {
+        e.stopPropagation();
         var settings = {
           options: {
             onShowAfter: function () {
