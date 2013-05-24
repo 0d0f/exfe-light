@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.6 2013-05-24 03:05:40 */
+/*! desktop@2a.7 2013-05-24 03:05:15 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
