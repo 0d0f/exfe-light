@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.7 2013-05-24 03:05:15 */
+/*! desktop@2a.7 2013-05-26 10:05:00 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -3301,6 +3301,7 @@
     };
   }
 }), define(function(e) {
+  "use strict";
   function t(e) {
     var t, r = e || window.event, s = [].slice.call(arguments, 1), o = 0, l = 0, d = 0, c = 0, u = 0;
     return e = a.event.fix(r), e.type = "mousewheel", r.wheelDelta && (o = r.wheelDelta), 
@@ -3678,6 +3679,7 @@ TWEEN.Tween = function(e) {
     cancel: n
   };
 }), define("store", function(e, t, i) {
+  "use strict";
   (function() {
     function e() {
       try {
