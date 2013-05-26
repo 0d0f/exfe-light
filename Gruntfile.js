@@ -303,7 +303,7 @@ module.exports = function (grunt) {
     if (name === 'all') {
       DESKTOP_META.forEach(function (v) {
         //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
-          //grunt.task.run('publish:' + v.name);
+        grunt.task.run('publish:' + v.name);
         //}
       });
       MOBILE_META.forEach(function (v) {
