@@ -302,14 +302,14 @@ module.exports = function (grunt) {
 
     if (name === 'all') {
       DESKTOP_META.forEach(function (v) {
-        if (JSHINT_IGNORE.indexOf(v.name) === -1) {
-          grunt.task.run('publish:' + v.name);
-        }
+        //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
+          //grunt.task.run('publish:' + v.name);
+        //}
       });
       MOBILE_META.forEach(function (v) {
-        if (JSHINT_IGNORE.indexOf(v.name) === -1) {
+        //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
           grunt.task.run('publish:' + v.name);
-        }
+        //}
       });
     } else if (name in grunt.config.get('publish')) {
       var p = path.join('src', name);
