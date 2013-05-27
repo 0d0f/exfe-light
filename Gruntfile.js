@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         dead_code: true
       }
     },
-    desktop: {
+    DESKTOP: {
       options: {
         banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    desktop_beautify: {
+    DESKTOP_beautify: {
       options: {
         banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
         //sourceMap: '<%= dirs.dist %>/all-source-map.js'
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    mobile: {
+    MOBILE: {
       options: {
         banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
       }
     },
-    mobile_beautify: {
+    MOBILE_beautify: {
       options: {
         banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
         beautify: {
@@ -103,7 +103,7 @@ module.exports = function (grunt) {
     MOBILE: []
   };
 
-  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome'];
+  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome', 'mobiledirector'];
 
   var __DESKTOP__ = [];
   var __MOBILE__ = [];
@@ -153,7 +153,7 @@ module.exports = function (grunt) {
       desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
       mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
       mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js',
-      deploy: '/exfe/exfelight_release'
+      deploy: '/exfe/exfelight'
     },
 
     jshint: JSHINT,
@@ -164,8 +164,8 @@ module.exports = function (grunt) {
       options: {
         separator: "\n"
       },
-      desktop: DESKTOP_CONCAT,
-      mobile: MOBILE_CONCAT
+      DESKTOP: DESKTOP_CONCAT,
+      MOBILE: MOBILE_CONCAT
     },
 
     uglify: UGLIFY,
@@ -303,7 +303,7 @@ module.exports = function (grunt) {
     if (name === 'all') {
       DESKTOP_META.forEach(function (v) {
         //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
-        grunt.task.run('publish:' + v.name);
+          grunt.task.run('publish:' + v.name);
         //}
       });
       MOBILE_META.forEach(function (v) {
