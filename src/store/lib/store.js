@@ -1,5 +1,6 @@
+/* jshint -W015 */
+
 define('store', function (require, exports, module) {
-  'use strict';
 
 /* Copyright (c) 2010-2012 Marcus Westin
  *
