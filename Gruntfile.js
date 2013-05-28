@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         dead_code: true
       }
     },
-    desktop: {
+    DESKTOP: {
       options: {
         banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    desktop_beautify: {
+    DESKTOP_beautify: {
       options: {
         banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
         //sourceMap: '<%= dirs.dist %>/all-source-map.js'
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
       }
     },
-    mobile: {
+    MOBILE: {
       options: {
         banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
       },
@@ -76,7 +76,7 @@ module.exports = function (grunt) {
         '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
       }
     },
-    mobile_beautify: {
+    MOBILE_beautify: {
       options: {
         banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
         beautify: {
@@ -164,8 +164,8 @@ module.exports = function (grunt) {
       options: {
         separator: "\n"
       },
-      desktop: DESKTOP_CONCAT,
-      mobile: MOBILE_CONCAT
+      DESKTOP: DESKTOP_CONCAT,
+      MOBILE: MOBILE_CONCAT
     },
 
     uglify: UGLIFY,

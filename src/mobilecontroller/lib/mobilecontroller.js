@@ -31,7 +31,6 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       launchApp = function (args) {
-        App.set('tryRedirectAt', now());
         window.location = 'exfe://crosses/' + (args || '');
       },
 
@@ -149,7 +148,6 @@ define('mobilecontroller', function (require, exports, module) {
   exports.FooterController = Controller.extend({
 
     countDown: 5,
-    //countDown: 500000,
 
     element: $('#app-footer'),
 
@@ -188,9 +186,12 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'relative',
           top:  top + 'px'
         });
+        /*
         if (this.enableTimer) {
           this.emit('start-redirect');
         }
+        */
+        this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
@@ -260,7 +261,6 @@ define('mobilecontroller', function (require, exports, module) {
             $r.addClass('hide');
             self.emit('stop-redirect');
             launchApp(args);
-            //$('.actions .error-info').hide();
           }
         }, 1000));
       });
@@ -523,8 +523,6 @@ define('mobilecontroller', function (require, exports, module) {
           element = this.element;
 
       element.on('touchstart.home', '#home-card', function () {
-        clearInterval(App.set('tryTimer'));
-        App.set('tryTimer', void 0);
 
         self.stopAnimate();
 
