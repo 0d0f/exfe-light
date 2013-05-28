@@ -1,3 +1,7 @@
+* v0.3.14 2013-05-28T14:50:00 UTC+0800
+  - Bugs Fix
+    * `session#originToken`
+
 * v0.3.13 2013-05-17T14:11:00 UTC+0800
   - Changes
     * rsvp
