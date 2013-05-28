@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.8 2013-05-27 06:05:54 */
+/*! desktop@2a.8 2013-05-28 02:05:53 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6563,7 +6563,7 @@ TWEEN.Tween = function(e) {
   }, c.forgotpassword = {
     updateIdentity: function(e) {
       var t = e.provider, i = this.$(".context-identity");
-      this.$(".tab").addClass("hide"), "email" === t ? (this.$(".tab1").removeClass("hide"), 
+      this.$(".tab").addClass("hide"), this.$(".xbtn-done").addClass("hide"), "email" === t ? (this.$(".tab1").removeClass("hide"), 
       this.$(".xbtn-send").data("identity", e)) : (this.$(".tab2").removeClass("hide"), 
       this.$(".authenticate").data("identity", e)), i.find(".avatar img").attr("src", e.avatar_filename), 
       i.find(".provider").attr("class", "provider icon16-identity-" + e.provider), i.find(".identity").text(e.eun);
@@ -6587,6 +6587,9 @@ TWEEN.Tween = function(e) {
             },
             beforeSend: function() {
               t.$(".send-before").removeClass("hide"), t.$(".send-after").addClass("hide"), n.addClass("disabled");
+            },
+            complete: function() {
+              n.removeClass("disabled");
             }
           }, function(e) {
             "REDIRECT" === e.action && (window.location.href = e.url);
@@ -15153,7 +15156,7 @@ define("lightsaber", function(e, t, i) {
     s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), n ? i() : t.redirect("/#invalid/token=" + n);
   }, d.inspectResolveToken = function(e, t, i, n, a) {
     var r = e.session, d = r.user, c = r.authorization;
-    r.resolveData = n;
+    r.originToken = a, r.resolveData = n;
     var u, h = n.token, p = n.user_id, f = n.user_name, m = null, g = n.token_type, v = n.action;
     !m && (c && c.user_id === p || !c && "VERIFY" === g && "VERIFIED" === v) ? (c = {
       token: h,

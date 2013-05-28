@@ -137,7 +137,7 @@
       },
       {
         "name": "xdialog",
-        "version": "0.1.15"
+        "version": "0.1.16"
       },
       {
         "name": "datepanel",
@@ -201,7 +201,7 @@
       },
       {
         "name": "routes",
-        "version": "0.3.13"
+        "version": "0.3.14"
       },
       {
         "name": "app",
