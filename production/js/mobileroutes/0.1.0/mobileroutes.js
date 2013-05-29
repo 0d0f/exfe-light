@@ -317,11 +317,9 @@ define('mobileroutes', function (require, exports, module) {
           var action = session.resolveToken.action;
           if (action === 'VERIFIED') {
             routes.verify(req, res);
-            //res.redirect('/#verify');
           } else if (action === 'INPUT_NEW_PASSWORD') {
             session.resolveToken.origin_token = originToken;
             routes.setPassword(req, res);
-            //res.redirect('/#set_password');
           }
         } else {
           cb(req, res);
