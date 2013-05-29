@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-03 11:06:31 */
+/*! mobile@2a.4 2013-06-03 11:06:37 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4485,7 +4485,8 @@ TWEEN.Tween = function(t) {
           description: "To be decided"
         },
         background: "default.jpg",
-        read_only: !!h.read_only
+        read_only: !!h.read_only,
+        change_name: !1
       }, m = p.time;
       m && m.begin_at && m.begin_at.timezone ? f.time = o(m) : f.time.tobe = "tobe";
       var v = p.place;
@@ -4530,7 +4531,7 @@ TWEEN.Tween = function(t) {
       var L = "";
       _ && (C ? (L = f.id + "?user_id=" + _ + "&token=" + C.token + "&identity_id=" + E, 
       c = C.token, r.set("authorization", C)) : (C = r.get("authorization"), C && C.user_id === _ && (L = f.id + "?user_id=" + _ + "&token=" + C.token + "&identity_id=" + E, 
-      c = C.token)));
+      c = C.token))), f.identity.isphone && c && (f.change_name = !0);
       var R = t.app, F = R.controllers, z = F.cross;
       z && z.destory();
       var B = s.compile($("#cross-tmpl").html());
