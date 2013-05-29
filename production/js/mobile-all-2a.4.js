@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-03 11:06:13 */
+/*! mobile@2a.4 2013-06-03 11:06:31 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3754,7 +3754,7 @@ TWEEN.Tween = function(t) {
   }, f = Date.now || function() {
     return new Date().getTime();
   }, m = function() {
-    window.location = "itms://itunes.apple.com/us/app/exfe/id514026604";
+    window.location = "https://itunes.apple.com/us/app/exfe/id514026604";
   }, v = function(t) {
     window.location = "exfe://crosses/" + (t || "");
   }, g = "webkitTransform" in document.body.style, y = function(t, e) {

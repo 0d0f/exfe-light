@@ -27,7 +27,7 @@ define('mobilecontroller', function (require, exports, module) {
       now = Date.now || function () { return new Date().getTime(); },
 
       showAppInStore = function() {
-        window.location = 'itms://itunes.apple.com/us/app/exfe/id514026604';
+        window.location = 'https://itunes.apple.com/us/app/exfe/id514026604';
       },
 
       launchApp = function (args) {
