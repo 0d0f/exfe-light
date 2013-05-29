@@ -125,6 +125,7 @@ define('mobileroutes', function (require, exports, module) {
         for (var i = 0, len = originInvitations.length; i < len; ++i) {
           var invitation = originInvitations[i];
           var style = 'pending', rsvp_status = invitation.rsvp_status;
+          if (rsvp_status === 'NOTIFICATION') { continue; }
           if (rsvp_status === 'ACCEPTED') {
             style = 'accepted';
           } else if (rsvp_status === 'DECLINED') {
