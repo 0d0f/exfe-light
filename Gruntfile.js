@@ -103,7 +103,7 @@ module.exports = function (grunt) {
     MOBILE: []
   };
 
-  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome'];
+  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome', 'mobiledirector'];
 
   var __DESKTOP__ = [];
   var __MOBILE__ = [];
@@ -313,6 +313,7 @@ module.exports = function (grunt) {
       });
     } else if (name in grunt.config.get('publish')) {
       var p = path.join('src', name);
+      console.log(path.join(p, 'package.json'))
       var pkg = JSON.parse(fs.readFileSync(path.join(p, 'package.json')));
       var dp = path.join('production/js', name);
       grunt.log.writeln(name);
