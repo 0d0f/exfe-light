@@ -40,7 +40,8 @@ define('mobileroutes', function (require, exports, module) {
             description: 'To be decided'
           },
           background: 'default.jpg',
-          read_only: !!response.read_only
+          read_only: !!response.read_only,
+          change_name: false
         };
 
         // time
@@ -191,6 +192,10 @@ define('mobileroutes', function (require, exports, module) {
               token = authorization.token;
             }
           }
+        }
+
+        if (cross.identity.isphone && token) {
+          cross.change_name = true;
         }
 
         // cross
