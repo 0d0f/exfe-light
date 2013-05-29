@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-05-29 01:05:38 */
+/*! mobile@2a.4 2013-05-29 04:05:11 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3844,7 +3844,7 @@ TWEEN.Tween = function(t) {
           position: "absolute",
           top: t + "px"
         }), h && this.$(".web-version").removeClass("hide");
-      }), this.on("show-from-cross", function(t, e, n, i) {
+      }), this.on("show-from-cross", function(t, e, n, i, r) {
         this.element.css({
           position: "relative",
           top: 0
@@ -3852,22 +3852,20 @@ TWEEN.Tween = function(t) {
           exfee_id: t,
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
-        n && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), i && this.enableTimer ? this.emit("start-redirect", i) : (this.$(".get-button").removeClass("hide"), 
+        n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
+        $("#app-footer").addClass("ft-bg"), r && this.enableTimer ? this.emit("start-redirect", r) : (this.$(".get-button").removeClass("hide"), 
         $(".redirect").addClass("hide")), h && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-resolve-token", function() {
         this.emit("stop-redirect"), 1 > this.countDown ? ($(".redirecting").removeClass("hide"), 
         v()) : this.emit("start-redirect");
       }), this.on("start-redirect", function(e) {
-        this.$(".get-button").addClass("hide");
-        var n, i = $(".redirecting").removeClass("hide"), r = i.find(".sec"), s = t.countDown;
+        var n, i = $(".app-body .redirecting").removeClass("hide"), r = ~~i.find(".sec") || 5, s = t.countDown;
         r.text(n = s), this.App.set("redirectTimer", setInterval(function() {
           t.countDown = n -= 1, n >= 1 ? r.text(n) : (i.addClass("hide"), t.emit("stop-redirect"), 
           v(e));
         }, 1e3));
       }), this.on("stop-redirect", function() {
-        this.enableTimer = !1, this.$(".get-button").removeClass("hide"), $(".redirecting").addClass("hide"), 
-        this.App.set("redirectTimer", clearInterval(this.App.set("redirectTimer")));
+        this.enableTimer = !1, $(".app-body .redirecting").addClass("hide"), this.App.set("redirectTimer", clearInterval(this.App.set("redirectTimer")));
       });
     },
     addNotificationIdentity: function(t, e, n) {
@@ -3894,7 +3892,7 @@ TWEEN.Tween = function(t) {
       this.render(), this.listen();
     },
     render: function() {
-      $("#app-verify").length || this.element.appendTo($("#app-body"));
+      $("#app-verify").remove(), this.element.appendTo($("#app-body"));
     },
     listen: function() {
       var t = this, e = this.resolveToken;
@@ -3937,7 +3935,7 @@ TWEEN.Tween = function(t) {
       this.render(), this.listen();
     },
     render: function() {
-      $("#app-setpassword").length || this.element.appendTo($("#app-body"));
+      $("#app-setpassword").remove(), this.element.appendTo($("#app-body"));
     },
     submitPassword: function() {
       var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = s.val();
@@ -4059,7 +4057,7 @@ TWEEN.Tween = function(t) {
       this.render(), this.listen();
     },
     render: function() {
-      $("#app-cross").length || this.element.appendTo($("#app-body")), $("#app-cross").removeClass("hide");
+      $("#app-cross").remove(), this.element.appendTo($("#app-body"));
     },
     listen: function() {
       var t = this, e = this.element, n = this.token, i = this.cross, r = t.$(".rsvp_toolbar");
@@ -4543,7 +4541,7 @@ TWEEN.Tween = function(t) {
         cross: f,
         exfee_id: p.exfee.id,
         token: c
-      }), z.emit("show"), R.controllers.footer.emit("show-from-cross", p.exfee.id, c, f.identity.isphone, L);
+      }), z.emit("show"), R.controllers.footer.emit("show-from-cross", p.exfee.id, c, f.identity.isphone, f.read_only, L);
     } else t.error = {
       code: 404
     }, e.redirect("/");
