@@ -213,7 +213,7 @@ define('mobileroutes', function (require, exports, module) {
 
         crossCont.emit('show');
 
-        app.controllers.footer.emit('show-from-cross', originCross.exfee.id, token, cross.identity.isphone, args);
+        app.controllers.footer.emit('show-from-cross', originCross.exfee.id, token, cross.identity.isphone, cross.read_only, args);
       } else {
         req.error = {
           code: 404

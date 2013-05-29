@@ -2120,6 +2120,10 @@ button .exfe {
   text-indent: 2px;
 }
 
+.subscribe-title {
+  margin-left: 15px;
+}
+
 .subscribe-frame {
   position: relative;
   width: 290px;
@@ -2141,6 +2145,9 @@ button .exfe {
   background-color: transparent;
   border: 0;
   outline: none;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .subscribe-frame .email:-moz-placeholder,
