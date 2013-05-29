@@ -26,7 +26,6 @@ define(function (require) {
   // Create App   ***********************************
   var app = window.App = lightsaber();
   app.use(middleware.setHtmlHeight);
-  //app.use(middleware.checkSMSToken);
   app.use(middleware.cleanup);
   app.initRouter();
   app.use(middleware.errorHandler);
@@ -66,23 +65,15 @@ define(function (require) {
       var action = smsToken.action;
       req.session.resolveToken = smsToken;
       if ('VERIFIED' === action) {
-
-        res.redirect('/#verify');
-
+        routes.verify(req, res);
       } else if ('INPUT_NEW_PASSWORD' === action) {
-
-        res.redirect('/#set_password');
-
+        routes.setPassword(req, res);
       }
     } else {
       req.error = { code: 404 };
       req.redirect('/');
     }
   });
-  app.get(/^\/+(?:\?)?#verify\/?$/, routes.verify);
-
-  // `set-password`
-  app.get(/^\/+(?:\?)?#set_password\/?$/, routes.setPassword);
 
   // resolve-token - `/#token=5c9a628f2b4f863435bc8d599a857c21`
   app.get(/^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/, routes.resolveToken);

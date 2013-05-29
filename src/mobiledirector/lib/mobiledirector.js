@@ -17,6 +17,7 @@
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
+        , smsToken: /^\/+\?t=([a-zA-Z0-9]{3,})$/,
         , resolveToken: /^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/
         , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
@@ -216,8 +217,9 @@
     mframe.className = '';
     delete _ENV_._data_;
     var params;
-    if (routes.home.test(url)) {
+    if (routes.home.test(url) || url.match(routes.smsToken))) {
       handle();
+
     } else if ((params = url.match(routes.resolveToken))) {
       request({
           url: apiUrl + '/Users/ResolveToken'
@@ -225,7 +227,7 @@
         , data: { token :  params[1] }
         , done: function (data) {
             _ENV_._data_ = data;
-            if (data.meta && data.meta.code === 200) {
+            if (params[1] && data.meta && data.meta.code === 200) {
               handle();
             } else {
               window.location = '/';
