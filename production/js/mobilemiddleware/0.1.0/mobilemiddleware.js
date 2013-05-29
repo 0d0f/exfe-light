@@ -1,21 +1,7 @@
 define('mobilemiddleware', function (require, exports, module) {
   'use strict';
 
-  var getSMSTokenFromHead = function () {
-    var header = document.getElementsByTagName('head')[0],
-        meta = document.getElementsByName('sms-token')[0],
-        smsToken = null;
-
-    if (meta) {
-      smsToken = JSON.parse(meta.content);
-      header.removeChild(meta);
-    }
-
-    return smsToken;
-  },
-
-  iPhone = navigator.userAgent.match(/iPhone/);
-
+  var iPhone = navigator.userAgent.match(/iPhone/);
 
   module.exports = {
 
@@ -65,28 +51,6 @@ define('mobilemiddleware', function (require, exports, module) {
         }
       } catch(err) {
         alert('EXFE cannot be used in private browsing mode.');
-      }
-
-      next();
-    },
-
-    // check `sms-token`
-    checkSMSToken: function (req, res, next) {
-      var smsToken = getSMSTokenFromHead();
-
-      if (smsToken) {
-        var action = smsToken.action;
-        req.resolveToken = smsToken;
-        if ('VERIFIED' === action) {
-
-          res.redirect('/#verify');
-
-        } else if ('INPUT_NEW_PASSWORD' === action) {
-
-          res.redirect('/#set_password');
-
-        }
-        return;
       }
 
       next();

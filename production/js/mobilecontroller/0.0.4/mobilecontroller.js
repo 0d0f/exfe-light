@@ -231,8 +231,6 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-
-      //this.on('start-redirect', function (args) {
       this.on('redirect', function (args) {
         launchApp(args);
       });
