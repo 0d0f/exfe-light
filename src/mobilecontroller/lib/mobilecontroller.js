@@ -191,6 +191,7 @@ define('mobilecontroller', function (require, exports, module) {
           this.emit('start-redirect');
         }
         */
+        this.$('.action').addClass('hide');
         this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
@@ -205,6 +206,8 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'absolute',
           top:  top + 'px'
         });
+        this.$('.action').addClass('hide');
+        this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
@@ -228,12 +231,14 @@ define('mobilecontroller', function (require, exports, module) {
         }
         this.element.removeClass('hide');
         $('#app-footer').addClass('ft-bg');
+        this.$('.get-button').removeClass('hide');
+        /*
         if (args && this.enableTimer) {
           this.emit('start-redirect', args);
         } else {
-          this.$('.get-button').removeClass('hide');
           $('.redirect').addClass('hide');
         }
+        */
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }

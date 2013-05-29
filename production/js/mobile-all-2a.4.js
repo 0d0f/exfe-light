@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-05-29 06:05:55 */
+/*! mobile@2a.4 2013-05-29 06:05:03 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3836,15 +3836,16 @@ TWEEN.Tween = function(t) {
         this.element.removeClass("hide"), this.element.css({
           position: "relative",
           top: r + "px"
-        }), this.$(".get-button").removeClass("hide"), h && this.$(".web-version").removeClass("hide"), 
-        this.$(".error-info").toggleClass("hide", !i);
+        }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
+        h && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
       }), this.on("reset-position", function() {
         var t = App.screen.height - 96;
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
-        }), h && this.$(".web-version").removeClass("hide");
-      }), this.on("show-from-cross", function(t, e, n, i, r) {
+        }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
+        h && this.$(".web-version").removeClass("hide");
+      }), this.on("show-from-cross", function(t, e, n, i) {
         this.element.css({
           position: "relative",
           top: 0
@@ -3853,8 +3854,7 @@ TWEEN.Tween = function(t) {
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), r && this.enableTimer ? this.emit("start-redirect", r) : (this.$(".get-button").removeClass("hide"), 
-        $(".redirect").addClass("hide")), h && this.$(".web-version").removeClass("hide");
+        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), h && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-resolve-token", function() {
         this.emit("stop-redirect"), 1 > this.countDown ? ($(".redirecting").removeClass("hide"), 
         v()) : this.emit("start-redirect");
