@@ -161,7 +161,7 @@ define('mobilecontroller', function (require, exports, module) {
       var self = this,
           element = self.element;
       element
-        .on('click.footer', '.redirecting, .web-version', function () {
+        .on('click.footer', '.web-version', function () {
           window.location.href = '/?ipad' + location.hash;
         })
         .on('click.footer', '.get-button button', function () {
@@ -186,11 +186,6 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'relative',
           top:  top + 'px'
         });
-        /*
-        if (this.enableTimer) {
-          this.emit('start-redirect');
-        }
-        */
         this.$('.action').addClass('hide');
         this.$('.get-button').removeClass('hide');
         if (iPad) {
@@ -218,7 +213,6 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'relative',
           top: 0
         });
-        this.emit('stop-redirect');
         this.element.addClass('ft-bg');
         this.cross = {
           exfee_id: exfee_id,
@@ -232,49 +226,15 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.removeClass('hide');
         $('#app-footer').addClass('ft-bg');
         this.$('.get-button').removeClass('hide');
-        /*
-        if (args && this.enableTimer) {
-          this.emit('start-redirect', args);
-        } else {
-          $('.redirect').addClass('hide');
-        }
-        */
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
       });
 
-      this.on('show-from-resolve-token', function () {
-        this.emit('stop-redirect');
-        if (this.countDown < 1) {
-          $('.redirecting').removeClass('hide');
-          launchApp();
-        } else {
-          this.emit('start-redirect');
-        }
-      });
 
-      this.on('start-redirect', function (args) {
-        //this.$('.get-button').addClass('hide');
-        var $r = $('.app-body .redirecting').removeClass('hide'), $s = ~~$r.find('.sec') || 5, countDown = self.countDown, si;
-        $s.text(si = countDown);
-        this.App.set('redirectTimer', setInterval(function() {
-          self.countDown = si -= 1;
-          if (si >= 1) {
-            $s.text(si);
-          } else {
-            $r.addClass('hide');
-            self.emit('stop-redirect');
-            launchApp(args);
-          }
-        }, 1000));
-      });
-
-      this.on('stop-redirect', function () {
-        this.enableTimer = false;
-        //this.$('.get-button').removeClass('hide');
-        $('.app-body .redirecting').addClass('hide');
-        this.App.set('redirectTimer', clearInterval(this.App.set('redirectTimer')));
+      //this.on('start-redirect', function (args) {
+      this.on('redirect', function (args) {
+        launchApp(args);
       });
     },
 
@@ -348,7 +308,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  App.controllers.footer.emit('show-from-resolve-token');
+                  App.controllers.footer.emit('redirect');
                   break;
                 }
               }
@@ -414,7 +374,7 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('show-from-resolve-token');
+              App.controllers.footer.emit('redirect');
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
@@ -535,8 +495,6 @@ define('mobilecontroller', function (require, exports, module) {
       })
 
       this.on('goto-live', function () {
-        App.controllers.footer.emit('stop-redirect');
-
         App.request.switchPageCallback = function () {
           element.addClass('hide');
         };

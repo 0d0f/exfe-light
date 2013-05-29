@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-05-29 09:05:36 */
+/*! mobile@2a.4 2013-05-29 10:05:22 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -167,7 +167,7 @@ var Zepto = function() {
     return "number" == typeof t.length;
   }
   function c(t) {
-    return A.call(t, function(t) {
+    return P.call(t, function(t) {
       return null != t;
     });
   }
@@ -185,7 +185,7 @@ var Zepto = function() {
   }
   function p(t) {
     var e, n;
-    return I[t] || (e = P.createElement(t), P.body.appendChild(e), n = M(e, "").getPropertyValue("display"), 
+    return I[t] || (e = A.createElement(t), A.body.appendChild(e), n = M(e, "").getPropertyValue("display"), 
     e.parentNode.removeChild(e), "none" == n && (n = "block"), I[t] = n), I[t];
   }
   function f(t) {
@@ -222,7 +222,7 @@ var Zepto = function() {
     e(t);
     for (var n in t.childNodes) k(t.childNodes[n], e);
   }
-  var x, _, E, C, S, T, $ = [], N = $.slice, A = $.filter, P = window.document, I = {}, O = {}, M = P.defaultView.getComputedStyle, H = {
+  var x, _, E, C, S, T, $ = [], N = $.slice, P = $.filter, A = window.document, I = {}, O = {}, M = A.defaultView.getComputedStyle, H = {
     "column-count": 1,
     columns: 1,
     "font-weight": 1,
@@ -230,15 +230,15 @@ var Zepto = function() {
     opacity: 1,
     "z-index": 1,
     zoom: 1
-  }, D = /^\s*<(\w+|!)[^>]*>/, j = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, L = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = P.createElement("table"), B = P.createElement("tr"), q = {
-    tr: P.createElement("tbody"),
+  }, D = /^\s*<(\w+|!)[^>]*>/, j = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, L = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = A.createElement("table"), B = A.createElement("tr"), q = {
+    tr: A.createElement("tbody"),
     tbody: z,
     thead: z,
     tfoot: z,
     td: B,
     th: B,
-    "*": P.createElement("div")
-  }, U = /complete|loaded|interactive/, V = /^\.([\w-]+)$/, W = /^#([\w-]*)$/, Z = /^[\w-]+$/, J = {}, G = J.toString, Y = {}, X = P.createElement("div");
+    "*": A.createElement("div")
+  }, U = /complete|loaded|interactive/, V = /^\.([\w-]+)$/, W = /^#([\w-]*)$/, Z = /^[\w-]+$/, J = {}, G = J.toString, Y = {}, X = A.createElement("div");
   return Y.matches = function(t, e) {
     if (!t || 1 !== t.nodeType) return !1;
     var n = t.webkitMatchesSelector || t.mozMatchesSelector || t.oMatchesSelector || t.matchesSelector;
@@ -251,7 +251,7 @@ var Zepto = function() {
       return e ? e.toUpperCase() : "";
     });
   }, T = function(t) {
-    return A.call(t, function(e, n) {
+    return P.call(t, function(e, n) {
       return t.indexOf(e) == n;
     });
   }, Y.fragment = function(t, e, n) {
@@ -269,13 +269,13 @@ var Zepto = function() {
     return t instanceof Y.Z;
   }, Y.init = function(t, n) {
     if (t) {
-      if (e(t)) return E(P).ready(t);
+      if (e(t)) return E(A).ready(t);
       if (Y.isZ(t)) return t;
       var i;
       if (a(t)) i = c(t); else if (r(t)) i = [ s(t) ? E.extend({}, t) : t ], t = null; else if (D.test(t)) i = Y.fragment(t.trim(), RegExp.$1, n), 
       t = null; else {
         if (n !== x) return E(n).find(t);
-        i = Y.qsa(P, t);
+        i = Y.qsa(A, t);
       }
       return Y.Z(i, t);
     }
@@ -313,7 +313,7 @@ var Zepto = function() {
     } else for (i in t) if (e.call(t[i], i, t[i]) === !1) return t;
     return t;
   }, E.grep = function(t, e) {
-    return A.call(t, e);
+    return P.call(t, e);
   }, window.JSON && (E.parseJSON = JSON.parse), E.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(t, e) {
     J["[object " + e + "]"] = e.toLowerCase();
   }), E.fn = {
@@ -332,7 +332,7 @@ var Zepto = function() {
       return E(N.apply(this, arguments));
     },
     ready: function(t) {
-      return U.test(P.readyState) ? t(E) : P.addEventListener("DOMContentLoaded", function() {
+      return U.test(A.readyState) ? t(E) : A.addEventListener("DOMContentLoaded", function() {
         t(E);
       }, !1), this;
     },
@@ -356,7 +356,7 @@ var Zepto = function() {
       }), this;
     },
     filter: function(t) {
-      return e(t) ? this.not(this.not(t)) : E(A.call(this, function(e) {
+      return e(t) ? this.not(this.not(t)) : E(P.call(this, function(e) {
         return Y.matches(e, t);
       }));
     },
@@ -431,7 +431,7 @@ var Zepto = function() {
     },
     siblings: function(t) {
       return v(this.map(function(t, e) {
-        return A.call(f(e.parentNode), function(t) {
+        return P.call(f(e.parentNode), function(t) {
           return t !== e;
         });
       }), t);
@@ -619,7 +619,7 @@ var Zepto = function() {
     },
     offsetParent: function() {
       return this.map(function() {
-        for (var t = this.offsetParent || P.body; t && !L.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
+        for (var t = this.offsetParent || A.body; t && !L.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
         return t;
       });
     }
@@ -3819,7 +3819,7 @@ TWEEN.Tween = function(t) {
     enableTimer: !0,
     listen: function() {
       var t = this, e = t.element;
-      e.on("click.footer", ".redirecting, .web-version", function() {
+      e.on("click.footer", ".web-version", function() {
         window.location.href = "/?ipad" + location.hash;
       }).on("click.footer", ".get-button button", function() {
         m();
@@ -3849,23 +3849,14 @@ TWEEN.Tween = function(t) {
         this.element.css({
           position: "relative",
           top: 0
-        }), this.emit("stop-redirect"), this.element.addClass("ft-bg"), this.cross = {
+        }), this.element.addClass("ft-bg"), this.cross = {
           exfee_id: t,
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
         $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), h && this.$(".web-version").removeClass("hide");
-      }), this.on("show-from-resolve-token", function() {
-        this.emit("stop-redirect"), 1 > this.countDown ? ($(".redirecting").removeClass("hide"), 
-        v()) : this.emit("start-redirect");
-      }), this.on("start-redirect", function(e) {
-        var n, i = $(".app-body .redirecting").removeClass("hide"), r = ~~i.find(".sec") || 5, s = t.countDown;
-        r.text(n = s), this.App.set("redirectTimer", setInterval(function() {
-          t.countDown = n -= 1, n >= 1 ? r.text(n) : (i.addClass("hide"), t.emit("stop-redirect"), 
-          v(e));
-        }, 1e3));
-      }), this.on("stop-redirect", function() {
-        this.enableTimer = !1, $(".app-body .redirecting").addClass("hide"), this.App.set("redirectTimer", clearInterval(this.App.set("redirectTimer")));
+      }), this.on("redirect", function(t) {
+        v(t);
       });
     },
     addNotificationIdentity: function(t, e, n) {
@@ -3915,7 +3906,7 @@ TWEEN.Tween = function(t) {
             if (i && 200 === i.code) for (var s = n.response.user, a = s.identities, o = 0, c = a.length; c > o; ++o) {
               var u = a[o];
               if (u.id === e.identity_id) {
-                t.showIdentity(u), t.$(".done-info").removeClass("hide"), App.controllers.footer.emit("show-from-resolve-token");
+                t.showIdentity(u), t.$(".done-info").removeClass("hide"), App.controllers.footer.emit("redirect");
                 break;
               }
             } else r();
@@ -3950,7 +3941,7 @@ TWEEN.Tween = function(t) {
         success: function(e) {
           var a = e.meta;
           a && 200 === a.code ? (r.blur(), s.blur(), t.$(".done-info").removeClass("hide"), 
-          i.html("").addClass("hide"), n.parent().addClass("hide"), App.controllers.footer.emit("show-from-resolve-token")) : n.removeClass("disabled").prop("disabled", !0), 
+          i.html("").addClass("hide"), n.parent().addClass("hide"), App.controllers.footer.emit("redirect")) : n.removeClass("disabled").prop("disabled", !0), 
           n.removeClass("disabled").prop("disabled", !0);
         },
         error: function() {
@@ -4012,7 +4003,7 @@ TWEEN.Tween = function(t) {
       e.on("touchstart.home", "#home-card", function() {
         t.stopAnimate(), t.emit("goto-live");
       }), this.on("goto-live", function() {
-        App.controllers.footer.emit("stop-redirect"), App.request.switchPageCallback = function() {
+        App.request.switchPageCallback = function() {
           e.addClass("hide");
         }, App.response.redirect("/#live");
       }), this.on("show", function(t, n) {
@@ -4515,18 +4506,18 @@ TWEEN.Tween = function(t) {
         NORESPONSE: [],
         IGNORED: [],
         DECLINED: []
-      }, A = 0, P = S.length; P > A; ++A) {
-        var I = S[A], O = "pending", M = I.rsvp_status;
+      }, P = 0, A = S.length; A > P; ++P) {
+        var I = S[P], O = "pending", M = I.rsvp_status;
         "NOTIFICATION" !== M && ("ACCEPTED" === M ? O = "accepted" : "DECLINED" === M && (O = "declined"), 
         I.rsvp_style = O, _ && _ === I.identity.connected_user_id || E === I.identity.id ? (I.is_me = !0, 
         E = I.identity.id, E !== I.invited_by.id && (f.inviter = I.invited_by), I.identity.isphone = "phone" === I.identity.provider, 
         f.identity = I.identity, N.ACCEPTED.unshift(I)) : I.rsvp_status in N && N[I.rsvp_status].push(I));
       }
       T = [].concat(N.ACCEPTED, N.INTERESTED, N.NORESPONSE, N.IGNORED, N.DECLINED), f.invitations = [], 
-      P = T.length;
-      for (var H = 0; P > H; ) f.invitations.push(T.splice(0, 5)), H += 5;
-      P = f.invitations.length;
-      var D = f.invitations[P - 1], j = D.length;
+      A = T.length;
+      for (var H = 0; A > H; ) f.invitations.push(T.splice(0, 5)), H += 5;
+      A = f.invitations.length;
+      var D = f.invitations[A - 1], j = D.length;
       if (j && 5 > j) for (;5 - j++; ) D.push(void 0);
       var L = "";
       _ && (C ? (L = f.id + "?user_id=" + _ + "&token=" + C.token + "&identity_id=" + E, 
