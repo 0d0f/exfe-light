@@ -1,9 +1,8 @@
 {
   "name": "middleware",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "lightsaber's middleware",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-03-25T14:53:10 UTC+0800",
-  "hint": true
+  "date": "2013-05-30T22:07:10 UTC+0800"
 }

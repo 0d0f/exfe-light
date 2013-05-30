@@ -209,8 +209,10 @@ ExfeeWidget = {
                     case 'mouseenter':
                         $('#' + dom_id + ' .total').css('visibility', 'visible');
                         $('#' + dom_id + ' .avatar .rb').show();
+                        /*
                         if (!readOnly) {
                         }
+                        */
                         break;
                     case 'mouseleave':
                         if (!ExfeeWidget.focus[dom_id + '-input']
@@ -943,7 +945,8 @@ define('exfeepanel', function (require, exports, module) {
                          +          '<div class="by">by <span class="name"></span></div>'
                          +        '</div>'
                          +        '<div class="pull-right pointer underline setto">'
-                         +          (readOnly ? '' : '<span>set to</span> <i class="icon-rsvp-declined-red"></i>')
+                         //+          (readOnly ? '' : '<span>set to</span> <i class="icon-rsvp-declined-red"></i>')
+                         +          '<span>set to</span> <i class="icon-rsvp-declined-red"></i>'
                          +        '</div>'
                          +      '</div>'
                          +     '</div>'
@@ -954,11 +957,17 @@ define('exfeepanel', function (require, exports, module) {
                          +           '<span class="oblique identity">'
                          +             ExfeeWidget.displayIdentity(invitation.identity, true)
                          +           '</span>'
+                         /*
                          +           (readOnly ? '' : (
                                      '<div class="identity-btn delete">'
                          +             '<i class="icon-minus-red"></i>'
                          +             '<button class="btn-leave">Leave</button>'
                          +           '</div>'))
+                        */
+                         +           '<div class="identity-btn delete">'
+                         +             '<i class="icon-minus-red"></i>'
+                         +             '<button class="btn-leave">Leave</button>'
+                         +           '</div>'
                          +         '</li>'
                          +       '</ul>'
                          +       '<div class="identity-actions">'
@@ -2062,14 +2071,17 @@ define(function (require, exports, module) {
     }
 
     var GetTimeline = function() {
+        /*
         if (readOnly) {
             $('#conversation-form').hide();
         } else {
-            $('#conversation-form span.avatar img').attr(
-                'src', curIdentity.avatar_filename
-            );
             $('#conversation-form').show();
         }
+        */
+        $('#conversation-form .avatar img').attr(
+            'src', curIdentity.avatar_filename
+        );
+        $('#conversation-form').removeClass('hide');
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
         lastConvUpdate = '';

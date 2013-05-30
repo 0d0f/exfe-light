@@ -1,6 +1,8 @@
-* v0.1.15 2013-05-20T14:43:00 UTC+0800
+* v0.1.17 2013-05-29T16:43:00 UTC+0800
   - Bugs Fix
-    * `forgotPassword` dialog switch identities
+    * redirect to profile or home when clicked `setpassword` dialog
+
+* v0.1.16 2013-05-20T14:43:00 UTC+0800
 
 * v0.1.15 2013-05-20T14:43:00 UTC+0800
   - Changes
