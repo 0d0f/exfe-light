@@ -1,3 +1,7 @@
+* v0.0.11 2013-05-30T22:07:10 UTC+0800
+  - Changes
+    * tweaks `cleanupAppTmp`
+
 * v0.0.10 2013-03-25T14:53:10 UTC+0800
   - Changes
     * `res.redirect` instead of `window.location`

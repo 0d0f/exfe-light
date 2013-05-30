@@ -1,3 +1,7 @@
+* v0.0.10 2013-05-30T23:26:00 UTC+0800
+  * Bugs fix
+    - tweaks `refreshIdentities`
+
 * v0.0.9 2013-05-16T15:27:00 UTC+0800
   * Bugs fix
     - refresh localstorge `identities`
