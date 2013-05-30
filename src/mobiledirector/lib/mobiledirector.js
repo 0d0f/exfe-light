@@ -319,8 +319,8 @@
       alert('Sorry. Your link is invalid or expired. Requested page was not found.');
       removeError();
     }
-    var url = location.hash;
-    Director.dispatch('/' + url, e);
+    var hash = location.hash, search = location.search;
+    Director.dispatch('/' + search + hash, e);
   };
 
   Director.start = function () {
