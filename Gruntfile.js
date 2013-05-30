@@ -313,7 +313,6 @@ module.exports = function (grunt) {
       });
     } else if (name in grunt.config.get('publish')) {
       var p = path.join('src', name);
-      console.log(path.join(p, 'package.json'))
       var pkg = JSON.parse(fs.readFileSync(path.join(p, 'package.json')));
       var dp = path.join('production/js', name);
       grunt.log.writeln(name);
