@@ -12,15 +12,6 @@ define(function (require) {
       FooterController = require('mobilecontroller').FooterController,
       routes = require('mobileroutes');
 
-  /**- Helpers -**/
-      /*
-  var now = Date.now || function () { return new Date().getTime(); },
-
-      launchApp = function (args) {
-        window.location = 'exfe://crosses/' + (args || '');
-      };
-      */
-
   var lightsaber = require('lightsaber');
 
   // Create App   ***********************************
@@ -47,31 +38,13 @@ define(function (require) {
   // sms token
   // ?t=2345
   app.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function (req, res) {
-    var getSMSTokenFromHead = function () {
-      var header = document.getElementsByTagName('head')[0],
-          meta = document.getElementsByName('sms-token')[0],
-          smsToken;
-
-      if (meta) {
-        smsToken = JSON.parse(meta.content);
-        header.removeChild(meta);
-      }
-
-      return smsToken;
-    };
-    var smsToken = getSMSTokenFromHead();
-
-    if (smsToken) {
-      var action = smsToken.action;
-      req.session.resolveToken = smsToken;
-      if ('VERIFIED' === action) {
-        routes.verify(req, res);
-      } else if ('INPUT_NEW_PASSWORD' === action) {
-        routes.setPassword(req, res);
-      }
-    } else {
-      req.error = { code: 404 };
-      req.redirect('/');
+    var smsToken = window._ENV_._data_
+      , action = smsToken.action;
+    req.session.resolveToken = smsToken;
+    if ('VERIFIED' === action) {
+      routes.verify(req, res);
+    } else if ('INPUT_NEW_PASSWORD' === action) {
+      routes.setPassword(req, res);
     }
   });
 

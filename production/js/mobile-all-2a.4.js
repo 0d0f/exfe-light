@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-05-29 11:05:20 */
+/*! mobile@2a.4 2013-05-30 12:05:06 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4585,16 +4585,8 @@ TWEEN.Tween = function(t) {
     App: c
   }), c.get(/^\/+(?:\?)?#{0,}$/, a.index), c.get(/^\/+(?:\?)?#live\/?$/, a.live), 
   c.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
-    var n = function() {
-      var t, e = document.getElementsByTagName("head")[0], n = document.getElementsByName("sms-token")[0];
-      return n && (t = JSON.parse(n.content), e.removeChild(n)), t;
-    }, i = n();
-    if (i) {
-      var r = i.action;
-      t.session.resolveToken = i, "VERIFIED" === r ? a.verify(t, e) : "INPUT_NEW_PASSWORD" === r && a.setPassword(t, e);
-    } else t.error = {
-      code: 404
-    }, t.redirect("/");
+    var n = window._ENV_._data_, i = n.action;
+    t.session.resolveToken = n, "VERIFIED" === i ? a.verify(t, e) : "INPUT_NEW_PASSWORD" === i && a.setPassword(t, e);
   }), c.get(/^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken), c.get(/^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, a.crossPhoneToken), 
   c.get(/^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/, a.crossToken), c.on("launched", function() {
     function t() {

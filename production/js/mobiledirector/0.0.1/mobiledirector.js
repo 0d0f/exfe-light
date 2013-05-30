@@ -17,6 +17,7 @@
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
+        , smsToken: /^\/+\?t=([a-zA-Z0-9]{3,})$/
         , resolveToken: /^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/
         , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
@@ -35,6 +36,19 @@
           }
         }
       }, 400);
+    },
+
+    getSMSTokenFromHead = function () {
+      var header = document.getElementsByTagName('head')[0],
+          meta = document.getElementsByName('sms-token')[0],
+          smsToken;
+
+      if (meta) {
+        smsToken = JSON.parse(meta.content);
+        header.removeChild(meta);
+      }
+
+      return smsToken;
     },
 
     launchApp = function (url, cb) {
@@ -141,6 +155,18 @@
       return xhr;
     },
 
+    getError = function () {
+      return !!localStorage.getItem('error');
+    },
+
+    setError = function (error) {
+      localStorage.setItem('error', JSON.stringify(error));
+    },
+
+    removeError = function () {
+      localStorage.removeItem('error');
+    },
+
     crossCallback = function (response) {
       var cross = response.cross;
       // user_id
@@ -187,6 +213,11 @@
       return args;
     },
 
+    redirectByError = function (errorMeta) {
+      setError(errorMeta);
+      window.location = '/';
+    },
+
     crossFunc = function (data) {
       request({
           url: apiUrl + '/Crosses/GetCrossByInvitationToken'
@@ -199,12 +230,11 @@
                 handle();
               });
             } else {
-              window.location = '/';
+              redirectByError(data.meta);
             }
           }
         , fail: function (data) {
-            _ENV_._data_ = data;
-            window.location = '/';
+            redirectByError(data.meta);
           }
         });
     };
@@ -218,6 +248,16 @@
     var params;
     if (routes.home.test(url)) {
       handle();
+
+    } else if (url.match(routes.smsToken)) {
+      var smsToken = getSMSTokenFromHead();
+      if (smsToken) {
+        _ENV_._data_ = smsToken;
+        handle();
+      } else {
+        redirectByError(data.meta);
+      }
+
     } else if ((params = url.match(routes.resolveToken))) {
       request({
           url: apiUrl + '/Users/ResolveToken'
@@ -225,29 +265,28 @@
         , data: { token :  params[1] }
         , done: function (data) {
             _ENV_._data_ = data;
-            if (data.meta && data.meta.code === 200) {
+            if (params[1] && data.meta && data.meta.code === 200) {
               handle();
             } else {
-              window.location = '/';
+              redirectByError(data.meta);
             }
           }
         , fail: function (data) {
-            _ENV_._data_ = data;
-            handle();
+            redirectByError(data.meta);
           }
         });
     } else if ((params = url.match(routes.crossTokenForPhone))) {
+      /* jshint -W003 */
       var cross_id = params[1]
         , ctoken = params[2]
         , cats = localStorage.cats
-        , token
-        , data = {};
+        , token;
 
       if (cats) {
         cats = JSON.parse(cats);
       }
 
-      data = {
+      var data = {
         invitation_token: ctoken,
         cross_id: cross_id
       };
@@ -276,6 +315,10 @@
   };
 
   Director.handle = function (e) {
+    if (getError()) {
+      alert('Sorry. Your link is invalid or expired. Requested page was not found.');
+      removeError();
+    }
     var url = location.hash;
     Director.dispatch('/' + url, e);
   };
