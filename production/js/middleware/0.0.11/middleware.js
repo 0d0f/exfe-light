@@ -114,6 +114,8 @@ define('middleware', function (require, exports, module) {
     var appTmp = $('#app-tmp');
     appTmp.find('[data-widget-id]').trigger('destory.widget');
     appTmp.children().off().remove();
+    // @note: 销毁元素
+    $('.x-tmp').off().remove();
     next();
   };
 

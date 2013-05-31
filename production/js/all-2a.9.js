@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-05-31 03:05:46 */
+/*! desktop@2a.9 2013-05-31 03:05:31 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15094,7 +15094,7 @@ define("lightsaber", function(e, t, i) {
   }, o.cleanupAppTmp = function(e, t, i) {
     var n = s("#app-tmp");
     n.find("[data-widget-id]").trigger("destory.widget"), n.children().off().remove(), 
-    i();
+    s(".x-tmp").off().remove(), i();
   }, o.fixedFaceBookURL = function(e, t, i) {
     "#_=_" === window.location.hash && (window.location.hash = "", e.updateUrl(), s.browser.mozilla) || i();
   };
