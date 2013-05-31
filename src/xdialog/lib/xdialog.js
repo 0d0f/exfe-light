@@ -577,7 +577,7 @@ define('xdialog', function (require, exports) {
         this._token = data.token;
         this._following = data.following;
 
-        title.text('Hi, ' + identity.name + ' Exfer.');
+        title.text('Hi, ' + identity.name + '.');
         if (identity.provider === 'email') {
           this.$('.provider-email').removeClass('hide');
         } else if (identity.provider === 'twitter') {

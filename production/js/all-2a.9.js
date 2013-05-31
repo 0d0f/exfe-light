@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-05-31 03:05:31 */
+/*! desktop@2a.9 2013-05-31 04:05:43 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6547,7 +6547,7 @@ TWEEN.Tween = function(e) {
       onShowBefore: function(e) {
         var t = e.identity, i = this.$(".title").eq(0);
         this._provider = t.provider, this._identity_id = t.id, this._token = e.token, this._following = e.following, 
-        i.text("Hi, " + t.name + " Exfer."), "email" === t.provider ? this.$(".provider-email").removeClass("hide") : "twitter" === t.provider && (this.$(".provider-other").removeClass("hide"), 
+        i.text("Hi, " + t.name + "."), "email" === t.provider ? this.$(".provider-email").removeClass("hide") : "twitter" === t.provider && (this.$(".provider-other").removeClass("hide"), 
         this.$("#follow").prop("checked", this._following));
       },
       onHideAfter: function() {
