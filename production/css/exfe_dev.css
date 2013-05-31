@@ -5094,9 +5094,16 @@ img:-moz-broken {
 .popmenu li {
   height: 24px;
   padding: 0 3px;
-  font-style: oblique;
   line-height: 24px;
   cursor: pointer;
+}
+
+.popmenu .eun {
+  font-style: oblique;
+}
+
+.popmenu .provider {
+  color: #7f7f7f;
 }
 
 .popmenu .active {
@@ -6946,7 +6953,12 @@ body {
 }
 
 .navbar .user-panel .body .identity .oblique {
-  padding-left: 7px;
+  display: inline-block;
+  max-width: 140px;
+  margin-left: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .navbar .user-panel .body .set-up > a,

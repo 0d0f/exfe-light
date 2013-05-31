@@ -25,7 +25,7 @@
     "grunt-regarde": "~0.1.1"
   },
   "desktop": {
-    "version": "2a.8",
+    "version": "2a.9",
     "files": {
       "dev": "all-{{version}}.js",
       "pro": "all-{{version}}.min.js"
@@ -133,11 +133,11 @@
       },
       {
         "name": "xidentity",
-        "version": "0.0.3"
+        "version": "0.0.4"
       },
       {
         "name": "xdialog",
-        "version": "0.1.16"
+        "version": "0.1.17"
       },
       {
         "name": "datepanel",
@@ -181,11 +181,11 @@
       },
       {
         "name": "profile",
-        "version": "0.1.19"
+        "version": "0.1.20"
       },
       {
         "name": "user",
-        "version": "0.0.9"
+        "version": "0.0.10"
       },
       {
         "name": "cross",
@@ -197,7 +197,7 @@
       },
       {
         "name": "middleware",
-        "version": "0.0.10"
+        "version": "0.0.11"
       },
       {
         "name": "routes",

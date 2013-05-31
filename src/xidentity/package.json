@@ -1,10 +1,8 @@
 {
   "name": "xidentity",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "identity check",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-03-14T19:44:15 UTC+0800",
-  "hint": true
+  "date": "2013-05-30T23:34:15 UTC+0800"
 }
-

@@ -1,9 +1,8 @@
 {
   "name": "xdialog",
-  "version": "0.1.16",
-  "description": "dialogs",
+  "version": "0.1.17",
+  "description": "dialogs settings",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-05-28T14:52:00 UTC+0800",
-  "hint": true
+  "date": "2013-05-29T16:42:00 UTC+0800"
 }
