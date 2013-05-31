@@ -618,7 +618,27 @@ ExfeeWidget = {
          && tryPhonePanel
          && !ExfeeWidget.complete_exfee.length
          && !$('#phone-panel').length
-         && /^\+?[0-9]{5,15}$/.test(phone)) {
+         && /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(phone)) {
+            var fullWidthCharts = {
+                '＋' : '+',
+                '０' : '0',
+                '１' : '1',
+                '２' : '2',
+                '３' : '3',
+                '４' : '4',
+                '５' : '5',
+                '６' : '6',
+                '７' : '7',
+                '８' : '8',
+                '９' : '9'
+            };
+            var arrPhone = phone.split('');
+            phone = '';
+            for (i = 0; i < arrPhone.length; i++) {
+                phone += typeof fullWidthCharts[arrPhone[i]] === 'undefined'
+                       ? arrPhone[i] : fullWidthCharts[arrPhone[i]];
+            }
+            objInput.val(phone);
             var PhonePanel = require('phonepanel');
             var phonepanel = new PhonePanel({
                 options: {
@@ -748,7 +768,7 @@ ExfeeWidget = {
         } else {
             this.showLimitWarning(false);
         }
-        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^\+?[0-9]{5,15}$/.test(strTail);
+        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(strTail);
         objInput.parent().find('.pointer').toggleClass(
             'icon16-exfee-plus-blue', bolCorrect
         ).toggleClass(
