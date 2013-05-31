@@ -10,13 +10,7 @@
         <!-- Cross-Container -->
         <div class="cross-container">
           <h1>Invalid Link</h1>
-          <p>Sorry, your link is invalid or expired.</p>
-          <button id="invalid-ok" class="xbtn xbtn-ok">OK</button>
-          <script>
-            $('#invalid-ok')
-              .one('click.invalid', function () {
-                window.location.href = '/';
-              });
-          </script>
+          <p>Sorry. Your link is invalid or expired. Requested page was not found.</p>
+          <a id="invalid-ok" class="xbtn xbtn-ok" href="/">OK</a>
         </div>
       </section>
