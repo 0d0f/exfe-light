@@ -255,7 +255,7 @@
         _ENV_._data_ = smsToken;
         handle();
       } else {
-        redirectByError(data.meta);
+        redirectByError({ code: 400 });
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
