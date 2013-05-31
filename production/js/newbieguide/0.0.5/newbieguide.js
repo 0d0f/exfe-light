@@ -6,14 +6,14 @@ define(function (require) {
   // Profile Page, Newbie Guide
 
   var newbieGuide = [
-    '<div class="newbie nbg-0">Gather a <span class="x">·X·</span> here</div>',
+    '<div class="x-tmp newbie nbg-0">Gather a <span class="x">·X·</span> here</div>',
 
-    '<div class="newbie nbg-1">'
+    '<div class="x-tmp newbie nbg-1">'
       + '<div class="newbie-close"><i class="icon14-clear"></i></div>'
       + '<p>Here lists your contacts (a.k.a. identities). Email, mobile number and your accounts on Facebook, Twitter, <span class="strike">Google, etc</span> (to be supported). Add more identities to participate gathering as particular one you want, or use them to receive notification.</p>'
     + '</div>',
 
-    '<div class="newbie nbg-2">'
+    '<div class="x-tmp newbie nbg-2">'
       + '<div class="newbie-close"><i class="icon14-clear"></i></div>'
       + '<h4>List of <span class="x">·X·</span> <small>(cross)</small></h4>'
       + '<p><span class="x">·X·</span> is a gathering, for things to do together.</p>'
@@ -22,7 +22,7 @@ define(function (require) {
       + '<div class="nbg-f"><span class="pointer gatherax"><span class="bb">Gather a </span><span class="bb x">·X·</span></span> now!</div>'
     + '</div>',
 
-    '<div class="newbie nbg-3 hide">'
+    '<div class="x-tmp newbie nbg-3 hide">'
       + '<div class="newbie-close"><i class="icon14-clear"></i></div>'
       + '<p>No invitation for you,<br /> yet.</p>'
     + '</div>'
