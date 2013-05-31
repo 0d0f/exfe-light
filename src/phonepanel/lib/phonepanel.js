@@ -45,7 +45,7 @@ define('phonepanel', function (require) {
 
   var checkPhone = function() {
     getIdentity();
-    if ($('#phone-panel .countrycode').val() 
+    if ($('#phone-panel .countrycode').val()
      && $('#phone-panel .name').val()
      && rawPhone) {
         $('#phone-panel .add').prop('disabled', false);
@@ -89,7 +89,7 @@ define('phonepanel', function (require) {
                     $('#phone-panel .identity-avatar').hide();
                     $('#phone-panel .identity-name').hide();
                     $('#phone-panel .name').val('').show();
-                    $('#phone-panel .add').toggleClass('match', false); 
+                    $('#phone-panel .add').toggleClass('match', false);
                 }
             }
         );
@@ -151,15 +151,15 @@ define('phonepanel', function (require) {
           if ($p.length
             && $p[0] !== e.target
             && !$.contains($p[0], e.target)) {
-            self.hide();
             $(document.body).off('click.phonepanel');
+            self.hide();
             return;
           }
         });
       }
 
     , listen: function () {
-        var self    = this, 
+        var self    = this,
             element = this.element;
         element.on('keyup.phonepanel', '.countrycode', function(e) {
             var makeItem = function(idx) {
@@ -217,7 +217,7 @@ define('phonepanel', function (require) {
             }
             element.find('.complete-list').html(found);
             if (found) {
-                element.find('.tips-area').hide(); 
+                element.find('.tips-area').hide();
                 element.find('.complete-list').slideDown();
                 element.find('.complete-list li').eq(0).toggleClass('selected', true);
                 chooseCountry(match, true);

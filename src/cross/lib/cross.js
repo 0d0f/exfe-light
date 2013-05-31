@@ -225,7 +225,8 @@ ExfeeWidget = {
         $('#' + this.dom_id + ' .input-xlarge').bind(
             'focus keydown blur', this.inputEvent
         );
-        $('#' + this.dom_id + ' .pointer').bind('click', function() {
+        $('#' + this.dom_id + ' .pointer').bind('click', function(e) {
+            e.stopPropagation();
             ExfeeWidget.checkInput($('#' + dom_id + ' .input-xlarge'), true);
         });
         $(document).on('mousedown', '#' + this.dom_id + ' .thumbnails > li.identity > .avatar', function (e) {
@@ -747,7 +748,7 @@ ExfeeWidget = {
         } else {
             this.showLimitWarning(false);
         }
-        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail);
+        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^\+?[0-9]{5,15}$/.test(strTail);
         objInput.parent().find('.pointer').toggleClass(
             'icon16-exfee-plus-blue', bolCorrect
         ).toggleClass(
