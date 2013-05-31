@@ -461,7 +461,7 @@ define(function (require) {
       s.id = 'js-newbieguide';
       s.type = 'text/javascript';
       s.async = true;
-      s.src = '/static/js/newbieguide/0.0.4/newbieguide.min.js?t=' + _ENV_.timestamp;
+      s.src = '/static/js/newbieguide/0.0.5/newbieguide.min.js?t=' + _ENV_.timestamp;
       document.getElementById('app-tmp').appendChild(s);
     }
   }

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-05-31 12:05:59 */
+/*! desktop@2a.9 2013-05-31 04:05:43 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6557,7 +6557,7 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-large modal-wc",
         title: "Welcome",
-        body: '<div class="shadow title"></div><div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div><p class="center">The group utility for gathering.</p><div class="modal-content"><p>We save you from calling up every one RSVP, losing in endless emails and messages off the point.</p><p><span class="x">·X·</span> (cross) is a gathering of people, for any purpose. When you get an idea to call up friends to do something together, just <span class="oblique">Gather a <span class="x">·X·</span></span>.</p><p><span class="x-sign">EXFE</span> your friends.</p><p class="provider-email hide" style="color: #191919;">*A welcome email has been sent to your mailbox. Please check to verify your address.*</p><div class="provider-other hide">&nbsp;&nbsp;<span class="underline why">why?</span><label class="pull-left checkbox pointer"><input type="checkbox" id="follow" value="1" checked />Follow @<span class="x-sign">EXFE</span> on Twitter.</label><p class="pull-left answer hidden">So we could send you invitation PRIVATELY through Direct Message. We hate spam, will NEVER disappoint your trust.</p></div></div>',
+        body: '<div class="shadow title"></div><div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div><p class="center">A utility for gathering with friends.</p><div class="modal-content"><p>Save yourself from calling every one RSVP repeatedly, losing in endless emails messages off-the-point.</p><p><span class="x">·X·</span> (cross) is a gathering, for things to do together. <span class="x-sign">EXFE</span> friends for meetings, parties, sports, trips, etc. Anything you want to gather friends to do.</p><p><span class="x-sign">EXFE</span> your friends, Gather a <span class="x">·X·</span>.</p><p class="provider-email hide" style="color: #191919;">*A welcome email has been sent to your email. Please check to verify your address.*</p><div class="provider-other hide">&nbsp;&nbsp;<span class="underline why">why?</span><label class="pull-left checkbox pointer"><input type="checkbox" id="follow" value="1" checked />Follow @<span class="x-sign">EXFE</span> on Twitter.</label><p class="pull-left answer hidden">So we could send you invitation PRIVATELY through Direct Message. We hate spam, will NEVER disappoint your trust.</p></div></div>',
         footer: '<button class="pull-right xbtn-white xbtn-go">GO</button>'
       }
     }
@@ -13240,7 +13240,7 @@ TWEEN.Tween = function(e) {
     var a = e.user_id, r = ~~t(".user-xstats > .attended").text(), s = i.get("newbie_guide:" + a);
     if (3 >= r && !s && 0 === t("#js-newbieguide").length) {
       var o = document.createElement("script");
-      o.id = "js-newbieguide", o.type = "text/javascript", o.async = !0, o.src = "/static/js/newbieguide/0.0.4/newbieguide.min.js?t=" + n.timestamp, 
+      o.id = "js-newbieguide", o.type = "text/javascript", o.async = !0, o.src = "/static/js/newbieguide/0.0.5/newbieguide.min.js?t=" + n.timestamp, 
       document.getElementById("app-tmp").appendChild(o);
     }
   }, m = function() {
@@ -15094,7 +15094,7 @@ define("lightsaber", function(e, t, i) {
   }, o.cleanupAppTmp = function(e, t, i) {
     var n = s("#app-tmp");
     n.find("[data-widget-id]").trigger("destory.widget"), n.children().off().remove(), 
-    i();
+    s(".x-tmp").off().remove(), i();
   }, o.fixedFaceBookURL = function(e, t, i) {
     "#_=_" === window.location.hash && (window.location.hash = "", e.updateUrl(), s.browser.mozilla) || i();
   };
