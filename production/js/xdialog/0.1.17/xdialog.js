@@ -21,9 +21,9 @@ define('xdialog', function (require, exports) {
     options: {
 
       errors: {
-        'failed': 'Password incorrect.',
-        'no_password': 'Password incorrect.',
-        'no_external_id': 'Set up this new identity.'
+        '400': 'Username incorrect.',
+        '403': 'Password incorrect.',
+        '500': 'Set up this new identity.'
       },
 
       onCheckUser: function () {
@@ -362,18 +362,10 @@ define('xdialog', function (require, exports) {
                 }
               }
               , function (data) {
-                var meta = data && data.meta
-                  , errorType = meta && meta.errorType || ''
-                  , errorDetail = meta && meta.errorDetail || '';
-                if (errorType === 'no_password' || errorType === 'failed') {
-                  that.$('[for="password"]')
-                    .addClass('label-error')
-                    .find('span').text(errorDetail || that.options.errors[errorType]);
-                } else if (errorType === 'no_external_id') {
-                  that.$('#name')
-                    .nextAll('.xalert-info')
-                    .removeClass('hide');
-                }
+                var code = data.meta && data.meta.code || 400;
+                that.$('[for="password"]')
+                  .addClass('label-error')
+                  .find('span').text(that.options.errors[code]);
               }
             );
           }
@@ -2209,6 +2201,10 @@ define('xdialog', function (require, exports) {
       },
 
       events: {
+
+        'click [data-dismiss="dialog"]': function () {
+          window.location.href = '/';
+        },
 
         'blur #name': function (e) {
           var val = Util.trim($(e.currentTarget).val());

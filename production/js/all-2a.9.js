@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-03 02:06:37 */
+/*! desktop@2a.9 2013-06-03 02:06:19 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6349,9 +6349,9 @@ TWEEN.Tween = function(e) {
   t.dialogs = d, d.identification = {
     options: {
       errors: {
-        failed: "Password incorrect.",
-        no_password: "Password incorrect.",
-        no_external_id: "Set up this new identity."
+        "400": "Username incorrect.",
+        "403": "Password incorrect.",
+        "500": "Set up this new identity."
       },
       onCheckUser: function() {
         var e = o.get("lastIdentity"), t = o.get("last_external_username");
@@ -6492,8 +6492,8 @@ TWEEN.Tween = function(e) {
                 });
               }
             }, function(e) {
-              var t = e && e.meta, i = t && t.errorType || "", a = t && t.errorDetail || "";
-              "no_password" === i || "failed" === i ? n.$('[for="password"]').addClass("label-error").find("span").text(a || n.options.errors[i]) : "no_external_id" === i && n.$("#name").nextAll(".xalert-info").removeClass("hide");
+              var t = e.meta && e.meta.code || 400;
+              n.$('[for="password"]').addClass("label-error").find("span").text(n.options.errors[t]);
             });
           }
         }
@@ -7280,6 +7280,9 @@ TWEEN.Tween = function(e) {
         this.destory();
       },
       events: {
+        'click [data-dismiss="dialog"]': function() {
+          window.location.href = "/";
+        },
         "blur #name": function(e) {
           var t = s.trim(i(e.currentTarget).val()), n = this.$('[for="name"]'), a = n.find("span");
           t ? s.utf8length(t) > 30 ? (a.text("Too long."), n.addClass("label-error")) : s.zh_CN.test(t) ? (n.addClass("label-error"), 
