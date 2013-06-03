@@ -423,7 +423,7 @@ define('xdialog', function (require, exports) {
 
                   + '<div class="form-title d d02 hide">Welcome! Please set up your new account.<span class="pull-right form-title-bd"></span></div>'
                   + '<div class="control-group d d02 hide">'
-                    + '<label class="control-label" for="name">Display name: <span></span></label>'
+                    + '<label class="control-label" for="name">Full name: <span></span></label>'
                     + '<div class="controls">'
                       + '<input type="text" class="input-large" id="name" autocomplete="off" placeholder="Desired recognizable name" />'
                     + '</div>'
@@ -2327,7 +2327,7 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>For easier further use, please set up account of your identity underneath. Otherwise, <span class="underline">sign in</span> your existing account to merge with this identity.</legend>'
+              + '<legend>Please set up your EXFE account.</legend>'
 
                 + '<div class="clearfix control-group">'
                   + '<div class="pull-right user-identity">'
@@ -2338,16 +2338,16 @@ define('xdialog', function (require, exports) {
                 + '</div>'
 
                 + '<div class="control-group">'
-                  + '<label class="control-label" for="name">Display name: <span></span></label>'
+                  + '<label class="control-label" for="name">Full name: <span></span></label>'
                   + '<div class="controls">'
-                    + '<input type="text" class="input-large" id="name" autocomplete="off" placeholder="Your recognizable name" />'
+                    + '<input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" />'
                   + '</div>'
                 + '</div>'
 
                 + '<div class="control-group">'
                   + '<label class="control-label" for="password">Password: <span></span></label>'
                   + '<div class="controls">'
-                    + '<input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set EXFE password" />'
+                    + '<input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" />'
                     + '<i class="help-inline icon16-pass-hide pointer" id="password-eye"></i>'
                   + '</div>'
                 + '</div>'
