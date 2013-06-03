@@ -210,7 +210,8 @@
           }
         }
       }
-      return args;
+      // 手机暂时必需要有 token
+      return [token, args];
     },
 
     redirectByError = function (errorMeta) {
@@ -226,9 +227,14 @@
         , done: function (data) {
             _ENV_._data_ = data;
             if (data.meta && data.meta.code === 200) {
-              launchApp(app_url + crossCallback(data.response), function () {
+              var c = crossCallback(data.response);
+              if (c[0] && c[1]) {
+                launchApp(app_url + c[1], function () {
+                  handle();
+                });
+              } else {
                 handle();
-              });
+              }
             } else {
               redirectByError(data.meta);
             }
