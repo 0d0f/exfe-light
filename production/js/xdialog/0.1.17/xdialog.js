@@ -247,6 +247,7 @@ define('xdialog', function (require, exports) {
 
             this.resetInputs();
 
+            this.$('.phone-tip').addClass('hide');
             this.$('.user-identity').addClass('hide');
 
             // 清楚user 缓存
@@ -413,6 +414,10 @@ define('xdialog', function (require, exports) {
                         + '<span class="xalert-fail">Please directly authenticate identity above.</span><br />To enable password sign-in for this identity, set an <span class="x-sign">EXFE</span> password first in your profile page.'
                       + '</div>'
 
+                      + '<div class="xalert phone-tip hide" style="padding: 5px;">'
+                        + 'Please format phone number with country<br /> code prefix, e.g.: +1 555 450 0303'
+                      + '</div>'
+
                     + '</div>'
                   + '</div>'
 
@@ -440,13 +445,6 @@ define('xdialog', function (require, exports) {
                       + '</label>'
                     + '</div>'
                   + '</div>'
-
-                  + '<div class="control-group phone-tip hide">'
-                    + '<div class="xalert">'
-                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
-                    + '</div>'
-                  + '</div>'
-
 
                   + '<div class="verify-before d d04 hide">'
                     + '<span class="xalert-fail">This identity requires verification before using.</span><br />'
