@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-03 03:06:45 */
+/*! desktop@2a.9 2013-06-03 05:06:57 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7242,17 +7242,18 @@ TWEEN.Tween = function(e) {
                 o.set("authorization", e.authorization), s && s.hide(), window.location.href = "/";
               }, function(r) {
                 s && s.hide();
-                var l = r.meta;
-                if (l && 401 === l.code && "authenticate_timeout" === l.errorType) {
-                  var d = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  i("#app-tmp").append(d);
-                  var c = o.get("authorization");
-                  t = c.token, d.trigger("click.dialog.data-api", {
+                var l = r.meta, d = l && l.code, c = l.errorType;
+                if (401 === d && "authenticate_timeout" === c) {
+                  var u = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                  i("#app-tmp").append(u);
+                  var h = o.get("authorization");
+                  t = h.token, u.trigger("click.dialog.data-api", {
                     callback: function() {
                       p(e, t, n, a);
                     }
                   });
-                }
+                } else 401 === d && "invalid_token" === c && (i(".token-expired").prev().addClass("hide"), 
+                i(".token-expired").removeClass("hide"));
               });
               s && (s.befer = l);
             };
@@ -15230,7 +15231,7 @@ define("lightsaber", function(e, t, i) {
     }), void 0;
     if ("INPUT_NEW_PASSWORD" === m) {
       var v;
-      g = "forgot_password.html", t.render(g, function(e) {
+      "SET_PASSWORD" === p && (g = "forgot_password.html"), t.render(g, function(e) {
         if ($("#app-main").append(e), l && !d) {
           var t = a.find(o.identities, function(e) {
             return e.id === h ? !0 : void 0;
@@ -15259,7 +15260,7 @@ define("lightsaber", function(e, t, i) {
           token: u.setup ? d.token : r,
           setup: u.setup
         }), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api"));
-        $(".modal-su, .modal-sp, .modal-bi").css("top", 230);
+        $(".modal-su, .modal-sp, .modal-bi").css("top", 250);
       });
     }
     delete i.browsing_authorization, delete i.resolveData, delete i.originToken;

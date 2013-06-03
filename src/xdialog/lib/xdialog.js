@@ -2119,8 +2119,8 @@ define('xdialog', function (require, exports) {
                       $d.trigger('click.dialog.data-api', {callback: function () { _resetPassword(signed, token, user, stpwd); }});
                     } else if (code === 401
                       && errorType === 'invalid_token') {
-
-                      $('.token-expried').removeClass('hide');
+                      $('.token-expired').prev().addClass('hide');
+                      $('.token-expired').removeClass('hide');
                     }
                   }
               );
