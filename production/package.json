@@ -165,7 +165,7 @@
       },
       {
         "name": "phonepanel",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       {
         "name": "photoxwidget",
@@ -185,11 +185,11 @@
       },
       {
         "name": "user",
-        "version": "0.0.10"
+        "version": "0.0.11"
       },
       {
         "name": "cross",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       {
         "name": "lightsaber",
