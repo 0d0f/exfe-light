@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-03 05:06:57 */
+/*! desktop@2a.9 2013-06-03 06:06:40 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7335,7 +7335,7 @@ TWEEN.Tween = function(e) {
         if (t) {
           var n = t.identity;
           this._browsing_user = t.browsing_user, this._tokenType = t.tokenType, this._originToken = t.originToken, 
-          this._forward = t.forward || "/", this._page = t.page, this.$("#name").val(t.user_name || ""), 
+          this._forward = t.forward || "/", this._page = t.page, this.$("#name").val(n.name), 
           this.$(".identity").text(s.printExtUserName(n)), this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
           this.$(".xbtn-siea").data("source", s.printExtUserName(n));
         }

@@ -2370,7 +2370,7 @@ define('xdialog', function (require, exports) {
         this._originToken = data.originToken;
         this._forward = data.forward || '/';
         this._page = data.page;
-        this.$('#name').val(data.user_name || '');
+        this.$('#name').val(identity.name);
         this.$('.identity').text(Util.printExtUserName(identity));
         this.$('.avatar')
           .attr('src', identity.avatar_filename)
