@@ -27,11 +27,10 @@ define('mobilecontroller', function (require, exports, module) {
       now = Date.now || function () { return new Date().getTime(); },
 
       showAppInStore = function() {
-        window.location = 'itms://itunes.apple.com/us/app/exfe/id514026604';
+        window.location = 'https://itunes.apple.com/us/app/exfe/id514026604';
       },
 
       launchApp = function (args) {
-        App.set('tryRedirectAt', now());
         window.location = 'exfe://crosses/' + (args || '');
       },
 
@@ -149,7 +148,6 @@ define('mobilecontroller', function (require, exports, module) {
   exports.FooterController = Controller.extend({
 
     countDown: 5,
-    //countDown: 500000,
 
     element: $('#app-footer'),
 
@@ -163,7 +161,7 @@ define('mobilecontroller', function (require, exports, module) {
       var self = this,
           element = self.element;
       element
-        .on('click.footer', '.redirecting, .web-version', function () {
+        .on('click.footer', '.web-version', function () {
           window.location.href = '/?ipad' + location.hash;
         })
         .on('click.footer', '.get-button button', function () {
@@ -188,9 +186,8 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'relative',
           top:  top + 'px'
         });
-        if (this.enableTimer) {
-          this.emit('start-redirect');
-        }
+        this.$('.action').addClass('hide');
+        this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
@@ -209,12 +206,11 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-      this.on('show-from-cross', function (exfee_id, token, isphone, args) {
+      this.on('show-from-cross', function (exfee_id, token, isphone, read_only, args) {
         this.element.css({
           position: 'relative',
           top: 0
         });
-        this.emit('stop-redirect');
         this.element.addClass('ft-bg');
         this.cross = {
           exfee_id: exfee_id,
@@ -222,54 +218,19 @@ define('mobilecontroller', function (require, exports, module) {
         };
         this.$('.actions').addClass('action-cross')
         this.$('.action').addClass('hide');
-        if (isphone) {
+        if (isphone && !read_only) {
           this.$('.subscribe').removeClass('hide')
         }
         this.element.removeClass('hide');
         $('#app-footer').addClass('ft-bg');
-        if (args && this.enableTimer) {
-          this.emit('start-redirect', args);
-        } else {
-          this.$('.get-button').removeClass('hide');
-          $('.redirect').addClass('hide');
-        }
+        this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
       });
 
-      this.on('show-from-resolve-token', function () {
-        this.emit('stop-redirect');
-        if (this.countDown < 1) {
-          $('.redirecting').removeClass('hide');
-          launchApp();
-        } else {
-          this.emit('start-redirect');
-        }
-      });
-
-      this.on('start-redirect', function (args) {
-        this.$('.get-button').addClass('hide');
-        var $r = $('.redirecting').removeClass('hide'), $s = $r.find('.sec'), countDown = self.countDown, si;
-        $s.text(si = countDown);
-        this.App.set('redirectTimer', setInterval(function() {
-          self.countDown = si -= 1;
-          if (si >= 1) {
-            $s.text(si);
-          } else {
-            $r.addClass('hide');
-            self.emit('stop-redirect');
-            launchApp(args);
-            //$('.actions .error-info').hide();
-          }
-        }, 1000));
-      });
-
-      this.on('stop-redirect', function () {
-        this.enableTimer = false;
-        this.$('.get-button').removeClass('hide');
-        $('.redirecting').addClass('hide');
-        this.App.set('redirectTimer', clearInterval(this.App.set('redirectTimer')));
+      this.on('redirect', function (args) {
+        launchApp(args);
       });
     },
 
@@ -310,9 +271,8 @@ define('mobilecontroller', function (require, exports, module) {
     },
 
     render: function () {
-      if (!$('#app-verify').length) {
-        this.element.appendTo($('#app-body'));
-      }
+      $('#app-verify').remove();
+      this.element.appendTo($('#app-body'));
     },
 
     listen: function () {
@@ -344,7 +304,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  App.controllers.footer.emit('show-from-resolve-token');
+                  App.controllers.footer.emit('redirect');
                   break;
                 }
               }
@@ -376,9 +336,8 @@ define('mobilecontroller', function (require, exports, module) {
     },
 
     render: function () {
-      if (!$('#app-setpassword').length) {
-        this.element.appendTo($('#app-body'));
-      }
+      $('#app-setpassword').remove();
+      this.element.appendTo($('#app-body'));
     },
 
     submitPassword: function () {
@@ -411,7 +370,7 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('show-from-resolve-token');
+              App.controllers.footer.emit('redirect');
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
@@ -523,8 +482,6 @@ define('mobilecontroller', function (require, exports, module) {
           element = this.element;
 
       element.on('touchstart.home', '#home-card', function () {
-        clearInterval(App.set('tryTimer'));
-        App.set('tryTimer', void 0);
 
         self.stopAnimate();
 
@@ -534,8 +491,6 @@ define('mobilecontroller', function (require, exports, module) {
       })
 
       this.on('goto-live', function () {
-        App.controllers.footer.emit('stop-redirect');
-
         App.request.switchPageCallback = function () {
           element.addClass('hide');
         };
@@ -648,10 +603,8 @@ define('mobilecontroller', function (require, exports, module) {
     },
 
     render: function () {
-      if (!$('#app-cross').length) {
-        this.element.appendTo($('#app-body'));
-      }
-      $('#app-cross').removeClass('hide');
+      $('#app-cross').remove();
+      this.element.appendTo($('#app-body'));
     },
 
     listen: function () {

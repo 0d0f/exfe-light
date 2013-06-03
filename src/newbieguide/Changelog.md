@@ -1,3 +1,7 @@
+* v0.0.5 2013-05-31T12:58:05 UTC+0800
+  - Changes
+    * tweaks some text
+
 * v0.0.4 2013-04-29T16:01:05 UTC+0800
   - Changes
     * tweaks some text

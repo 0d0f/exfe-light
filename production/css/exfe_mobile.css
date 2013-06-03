@@ -1225,6 +1225,7 @@ body {
 .set-button button {
   width: 290px;
   height: 44px;
+  padding: 0;
   margin: 0 auto;
   font: 800 18px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
   font-weight: bold;
@@ -1757,15 +1758,14 @@ button .exfe {
 .inf_area {
   width: 29 0;
   height: 100%;
-  padding: 15px;
-  padding-top: 8px;
+  padding: 0 15px 15px;
   background-color: #fafafa;
 }
 
 .description {
   position: relative;
   width: 290px;
-  margin-top: 10px;
+  margin-top: 16px;
   overflow: hidden;
   font-size: 14px;
   line-height: 17px;
@@ -1990,8 +1990,7 @@ button .exfe {
   z-index: 10;
   width: 286px;
   height: 50px;
-  margin: 0 auto;
-  margin-top: 10px;
+  margin: 16px auto 0;
   background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.499, rgba(255, 255, 255, 0)), color-stop(0.5, rgba(255, 255, 255, 0.05)), to(rgba(255, 255, 255, 0.1))), -webkit-gradient(linear, left bottom, left top, from(#000000), to(#7f7f7f));
   background-image: -moz-linear-gradient(90deg, rgba(255, 255, 255, 0) 49.9%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.1) 100%), -moz-linear-gradient(90deg, #000000 0%, #8e8e8e 100%);
   border-radius: 6px;
@@ -2120,6 +2119,10 @@ button .exfe {
   text-indent: 2px;
 }
 
+.subscribe-title {
+  margin-left: 15px;
+}
+
 .subscribe-frame {
   position: relative;
   width: 290px;
@@ -2141,6 +2144,9 @@ button .exfe {
   background-color: transparent;
   border: 0;
   outline: none;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .subscribe-frame .email:-moz-placeholder,

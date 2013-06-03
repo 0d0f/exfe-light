@@ -1,3 +1,11 @@
+* v0.0.11 2013-06-63T13:57:00 UTC+0800
+  * Bugsfix
+    - 如果本地 token 过期，退出返回首页
+
+* v0.0.10 2013-05-30T23:26:00 UTC+0800
+  * Bugs fix
+    - tweaks `refreshIdentities`
+
 * v0.0.9 2013-05-16T15:27:00 UTC+0800
   * Bugs fix
     - refresh localstorge `identities`

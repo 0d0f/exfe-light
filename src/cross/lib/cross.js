@@ -768,7 +768,7 @@ ExfeeWidget = {
         } else {
             this.showLimitWarning(false);
         }
-        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(strTail);
+        var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^\+?[0-9]{5,15}$/.test(strTail);
         objInput.parent().find('.pointer').toggleClass(
             'icon16-exfee-plus-blue', bolCorrect
         ).toggleClass(
