@@ -860,6 +860,12 @@ ExfeeWidget = {
             case 'blur':
                 ExfeeWidget.focus[event.target.id] = false;
                 ExfeeWidget.displayCompletePanel(objInput, false);
+                if (objInput.parent().find('.pointer').hasClass('icon16-exfee-plus-blue')) {
+                    objInput.parent().toggleClass('a-bounce');
+                    setTimeout(function() {
+                        objInput.parent().toggleClass('a-bounce', false);
+                    }, 1000);
+                }
         }
     },
 
