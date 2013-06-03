@@ -2105,16 +2105,22 @@ define('xdialog', function (require, exports) {
                 }
                 , function (data) {
                     that && that.hide();
-                    var meta = data.meta;
-                    if (meta
-                        && meta.code === 401
-                        && meta.errorType === 'authenticate_timeout') {
+                    var meta = data.meta
+                      , code = meta && meta.code
+                      , errorType = meta.errorType;
+
+                    if (code === 401
+                      && errorType === 'authenticate_timeout') {
 
                       var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
                       $('#app-tmp').append($d);
                       var authorization = Store.get('authorization');
                       token = authorization.token;
                       $d.trigger('click.dialog.data-api', {callback: function () { _resetPassword(signed, token, user, stpwd); }});
+                    } else if (code === 401
+                      && errorType === 'invalid_token') {
+                      $('.token-expired').prev().addClass('hide');
+                      $('.token-expired').removeClass('hide');
                     }
                   }
               );

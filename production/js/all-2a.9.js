@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-03 03:06:41 */
+/*! desktop@2a.9 2013-06-03 05:06:10 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7241,17 +7241,18 @@ TWEEN.Tween = function(e) {
                 o.set("authorization", e.authorization), s && s.hide(), window.location.href = "/";
               }, function(r) {
                 s && s.hide();
-                var l = r.meta;
-                if (l && 401 === l.code && "authenticate_timeout" === l.errorType) {
-                  var c = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  i("#app-tmp").append(c);
-                  var d = o.get("authorization");
-                  t = d.token, c.trigger("click.dialog.data-api", {
+                var l = r.meta, c = l && l.code, d = l.errorType;
+                if (401 === c && "authenticate_timeout" === d) {
+                  var u = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                  i("#app-tmp").append(u);
+                  var h = o.get("authorization");
+                  t = h.token, u.trigger("click.dialog.data-api", {
                     callback: function() {
                       p(e, t, n, a);
                     }
                   });
-                }
+                } else 401 === c && "invalid_token" === d && (i(".token-expired").prev().addClass("hide"), 
+                i(".token-expired").removeClass("hide"));
               });
               s && (s.befer = l);
             };
@@ -12858,7 +12859,10 @@ TWEEN.Tween = function(e) {
         break;
 
        case "blur":
-        ExfeeWidget.focus[e.target.id] = !1, ExfeeWidget.displayCompletePanel(t, !1);
+        ExfeeWidget.focus[e.target.id] = !1, ExfeeWidget.displayCompletePanel(t, !1), t.parent().find(".pointer").hasClass("icon16-exfee-plus-blue") && (t.parent().toggleClass("a-bounce"), 
+        setTimeout(function() {
+          t.parent().toggleClass("a-bounce", !1);
+        }, 1e3));
       }
     }
   };
