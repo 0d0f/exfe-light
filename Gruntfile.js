@@ -184,9 +184,9 @@ module.exports = function (grunt) {
       },
       deploy_js: {
         expand: true,
-        cwd: '<%= dirs.dist %>',
+        cwd: 'production/js',
         src: ['**'],
-        dest: 'production/js/'
+        dest: '<%= dirs.deploy %>/js/'
       },
       deploy_css: {
         expand: true,
