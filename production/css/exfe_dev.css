@@ -10595,6 +10595,10 @@ body {
   margin: 0;
 }
 
+.x-forbidden .token-expired {
+  color: #E52E53;
+}
+
 .x-forbidden .title {
   padding: 40px 0 20px;
   font-size: 34px;
