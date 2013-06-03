@@ -153,7 +153,7 @@ module.exports = function (grunt) {
       desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
       mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
       mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js',
-      deploy: '/exfe/exfelight'
+      deploy: '/exfe/exfelight_release'
     },
 
     jshint: JSHINT,
