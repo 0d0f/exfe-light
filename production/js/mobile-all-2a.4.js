@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-04 07:06:38 */
+/*! mobile@2a.4 2013-06-04 07:06:07 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3744,7 +3744,7 @@ TWEEN.Tween = function(t) {
   }, m = function() {
     window.location = "https://itunes.apple.com/us/app/exfe/id514026604";
   }, v = function(t) {
-    window.location = "exfe://crosses/" + (t || "");
+    window.location = a + "://crosses/" + (t || "");
   }, g = "webkitTransform" in document.body.style, y = function(t, e) {
     var n = 6 === e.length ? "" : "3d";
     t.style[g ? "webkitTransform" : "transform"] = "matrix" + n + "(" + e.join(",") + ")";
