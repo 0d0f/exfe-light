@@ -287,14 +287,16 @@ define('mobilecontroller', function (require, exports, module) {
           // error getting identity informations
           req.error = true;
           res.redirect('/');
-        };
+        },
+        user_id = resolveToken.user_id,
+        token = resolveToken.token;
         this.element.removeClass('hide');
         $('#app-body').css('height', '100%');
         App.controllers.footer.emit('reset-position');
         $.ajax({
           type: 'POST',
-          url: api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
-          data: { token : resolveToken.token },
+          url: api_url + '/Users/' + user_id + '?token=' + token,
+          data: { token : token },
           success: function (data) {
             var meta = data.meta;
             if (meta && meta.code === 200) {
@@ -305,7 +307,10 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  App.controllers.footer.emit('redirect', '?token=' + resolveToken.token);
+                  if (user_id && token) {
+                    var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
+                    App.controllers.footer.emit('redirect', args);
+                  }
                   break;
                 }
               }
@@ -344,6 +349,7 @@ define('mobilecontroller', function (require, exports, module) {
     submitPassword: function () {
       var self = this,
           token = this.token,
+          user_id = this.resolveToken && this.resolveToken.user_id,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
           $name = this.$('#name'),
@@ -371,7 +377,9 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('redirect', '?token=' + token);
+              if (user_id && token) {
+                App.controllers.footer.emit('redirect', '?token=' + token + '&user_id=' + user_id);
+              }
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
