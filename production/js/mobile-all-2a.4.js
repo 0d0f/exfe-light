@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-04 08:06:40 */
+/*! mobile@2a.4 2013-06-04 09:06:01 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4500,7 +4500,7 @@ TWEEN.Tween = function(t) {
       "NOTIFICATION" !== I && ("ACCEPTED" === I ? A = "accepted" : "DECLINED" === I && (A = "declined"), 
       P.rsvp_style = A, k && k === P.identity.connected_user_id || x === P.identity.id ? (P.is_me = !0, 
       x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), P.identity.isphone = "phone" === P.identity.provider, 
-      h.identity = P.identity, S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
+      h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === I, S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
     }
     C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), h.invitations = [], 
     N = C.length;
