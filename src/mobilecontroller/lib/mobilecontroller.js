@@ -5,6 +5,7 @@ define('mobilecontroller', function (require, exports, module) {
       Store = require('store'),
       TWEEN = require('tween'),
       api_url = window._ENV_.api_url,
+      app_scheme = window._ENV_.app_scheme,
       Handlebars = require('handlebars'),
 
       util   = require('util'),
@@ -31,7 +32,7 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       launchApp = function (args) {
-        window.location = api_url + '://crosses/' + (args || '');
+        window.location = app_scheme + '://crosses/' + (args || '');
       },
 
       hasWebkitTransform = ('webkitTransform' in document.body.style),
