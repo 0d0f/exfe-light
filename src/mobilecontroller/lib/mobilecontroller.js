@@ -31,7 +31,7 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       launchApp = function (args) {
-        window.location = 'exfe://crosses/' + (args || '');
+        window.location = api_url + '://crosses/' + (args || '');
       },
 
       hasWebkitTransform = ('webkitTransform' in document.body.style),
