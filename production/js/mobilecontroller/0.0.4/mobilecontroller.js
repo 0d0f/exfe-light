@@ -306,7 +306,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  App.controllers.footer.emit('redirect');
+                  App.controllers.footer.emit('redirect', '?token=' + resolveToken.token);
                   break;
                 }
               }
@@ -372,7 +372,7 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('redirect');
+              App.controllers.footer.emit('redirect', '?token=' + token);
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }

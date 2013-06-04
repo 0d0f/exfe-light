@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-03 03:06:03 */
+/*! mobile@2a.4 2013-06-04 07:06:38 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3894,7 +3894,7 @@ TWEEN.Tween = function(t) {
             if (i && 200 === i.code) for (var s = n.response.user, a = s.identities, o = 0, c = a.length; c > o; ++o) {
               var u = a[o];
               if (u.id === e.identity_id) {
-                t.showIdentity(u), t.$(".done-info").removeClass("hide"), App.controllers.footer.emit("redirect");
+                t.showIdentity(u), t.$(".done-info").removeClass("hide"), App.controllers.footer.emit("redirect", "?token=" + e.token);
                 break;
               }
             } else r();
@@ -3926,10 +3926,10 @@ TWEEN.Tween = function(t) {
           name: name,
           password: o
         },
-        success: function(e) {
-          var a = e.meta;
-          a && 200 === a.code ? (r.blur(), s.blur(), t.$(".done-info").removeClass("hide"), 
-          i.html("").addClass("hide"), n.parent().addClass("hide"), App.controllers.footer.emit("redirect")) : n.removeClass("disabled").prop("disabled", !0), 
+        success: function(a) {
+          var o = a.meta;
+          o && 200 === o.code ? (r.blur(), s.blur(), t.$(".done-info").removeClass("hide"), 
+          i.html("").addClass("hide"), n.parent().addClass("hide"), App.controllers.footer.emit("redirect", "?token=" + e)) : n.removeClass("disabled").prop("disabled", !0), 
           n.removeClass("disabled").prop("disabled", !0);
         },
         error: function() {
