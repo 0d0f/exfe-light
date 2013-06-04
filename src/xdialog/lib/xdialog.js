@@ -2002,7 +2002,10 @@ define('xdialog', function (require, exports) {
 
       events: {
         'click [data-dismiss="dialog"]': function () {
-          window.location.href = '/';
+          var srcNode = this.srcNode;
+          if (srcNode && srcNode.data('redirect')) {
+            window.location.href = '/';
+          }
         },
         'submit .modal-form': function () {
           this.$('.xbtn-success').click();
@@ -2207,7 +2210,10 @@ define('xdialog', function (require, exports) {
       events: {
 
         'click [data-dismiss="dialog"]': function () {
-          window.location.href = '/';
+          var srcNode = this.srcNode;
+          if (srcNode && srcNode.data('redirect')) {
+            window.location.href = '/';
+          }
         },
 
         'blur #name': function (e) {
