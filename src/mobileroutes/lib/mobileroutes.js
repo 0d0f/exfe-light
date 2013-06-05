@@ -217,7 +217,7 @@ define('mobileroutes', function (require, exports, module) {
 
       crossCont.emit('show');
 
-      app.controllers.footer.emit('show-from-cross', originCross.exfee.id, token, cross.identity.isphone, cross.read_only, args);
+      app.controllers.footer.emit('show-from-cross', originCross.exfee.id, token, cross.read_only, args);
     };
 
   var routes = module.exports = {
