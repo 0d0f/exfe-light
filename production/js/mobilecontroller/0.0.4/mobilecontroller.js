@@ -28,10 +28,6 @@ define('mobilecontroller', function (require, exports, module) {
 
       now = Date.now || function () { return new Date().getTime(); },
 
-      showAppInStore = function() {
-        window.location = 'https://itunes.apple.com/us/app/exfe/id514026604';
-      },
-
       launchApp = function (args) {
         window.location = app_scheme + '://crosses/' + (args || '');
       },
@@ -164,7 +160,7 @@ define('mobilecontroller', function (require, exports, module) {
         .on('click.footer', '.web-version', function () {
           window.location.href = '/?ipad' + location.hash;
         })
-        .on('click.footer', '.get-button button', function () {
+        .on('click.footer', '.get-button button', function (e) {
           e.preventDefault();
           openExfe();
           return false;

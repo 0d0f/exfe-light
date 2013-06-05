@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-05 03:06:35 */
+/*! mobile@2a.4 2013-06-05 04:06:59 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3735,19 +3735,19 @@ TWEEN.Tween = function(t) {
       }, e.redirect("/");
     }
   };
-}), define("mobilecontroller", function(t, n, i) {
+}), define("mobilecontroller", function(t, e, n) {
   "use strict";
-  var r = t("base"), s = t("store"), a = t("tween"), o = window._ENV_.api_url, c = window._ENV_.app_scheme, u = window.openExfe, l = t("handlebars"), h = t("util"), p = h.trim, d = h.parseId, f = navigator.userAgent.match(/iPad/), m = t("live"), v = function(t, e) {
+  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = window.openExfe, u = t("handlebars"), l = t("util"), h = l.trim, p = l.parseId, d = navigator.userAgent.match(/iPad/), f = t("live"), m = function(t, e) {
     return t.replace(e ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }, g = Date.now || function() {
+  }, v = Date.now || function() {
     return new Date().getTime();
-  }, y = function(t) {
-    window.location = c + "://crosses/" + (t || "");
-  }, b = "webkitTransform" in document.body.style, w = function(t, e) {
+  }, g = function(t) {
+    window.location = o + "://crosses/" + (t || "");
+  }, y = "webkitTransform" in document.body.style, b = function(t, e) {
     var n = 6 === e.length ? "" : "3d";
-    t.style[b ? "webkitTransform" : "transform"] = "matrix" + n + "(" + e.join(",") + ")";
-  }, k = function() {
-    var t = s.get("livecard");
+    t.style[y ? "webkitTransform" : "transform"] = "matrix" + n + "(" + e.join(",") + ")";
+  }, w = function() {
+    var t = r.get("livecard");
     if (!t) {
       var e = {
         id: "",
@@ -3763,18 +3763,18 @@ TWEEN.Tween = function(t) {
         accuracy: "",
         traits: []
       };
-      var n = s.get("user");
+      var n = r.get("user");
       n && (e.name = n.name, e.avatar = n.avatar_filename, e.bio = n.bio, e.identities = n.identities), 
-      s.set("livecard", t);
+      r.set("livecard", t);
     }
     return t.card.id = "", t;
-  }, x = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ], _ = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 28, 0, 1 ], E = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 0, 0, 1 ], C = 0, S = function() {
-    return "Controller-" + C++;
+  }, k = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ], x = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 28, 0, 1 ], _ = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 128, 0, 0, 1 ], E = 0, C = function() {
+    return "Controller-" + E++;
   };
-  n = i.exports = {};
-  var T = r.extend({
+  e = n.exports = {};
+  var S = i.extend({
     initialize: function(t) {
-      this.cid = S(), this.initOptions(t), this.parseElement(), this.init(), T.caches[this.cid] = this;
+      this.cid = C(), this.initOptions(t), this.parseElement(), this.init(), S.caches[this.cid] = this;
     },
     parseElement: function() {
       var t = this.element, e = this.options.template;
@@ -3790,31 +3790,31 @@ TWEEN.Tween = function(t) {
       this.element.off(), this._destory();
     },
     _destory: function() {
-      delete T.caches[this.cid], T.superclass.destory.call(this);
+      delete S.caches[this.cid], S.superclass.destory.call(this);
     },
     $: function(t) {
       return this.element.find(t);
     }
   });
-  T.caches = [], n.FooterController = T.extend({
+  S.caches = [], e.FooterController = S.extend({
     element: $("#app-footer"),
     init: function() {
       this.listen();
     },
     enableTimer: !0,
     listen: function() {
-      var t = this, n = t.element;
-      n.on("click.footer", ".web-version", function() {
+      var t = this, e = t.element;
+      e.on("click.footer", ".web-version", function() {
         window.location.href = "/?ipad" + location.hash;
-      }).on("click.footer", ".get-button button", function() {
-        return e.preventDefault(), u(), !1;
+      }).on("click.footer", ".get-button button", function(t) {
+        return t.preventDefault(), c(), !1;
       }).on("keydown.footer", "#email", function(e) {
         if (13 === e.keyCode) {
           var n = t.$("#email").val();
           t.addNotificationIdentity(n);
         }
       }).on("click.footer", ".subscribe .btn_mail", function() {
-        var e = p(t.$("#email").val());
+        var e = h(t.$("#email").val());
         t.addNotificationIdentity(e);
       }), this.on("show", function(t, e, n, i) {
         var r = t.height - 96 - (e ? 60 : 0);
@@ -3822,14 +3822,14 @@ TWEEN.Tween = function(t) {
           position: "relative",
           top: r + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        f && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
+        d && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
       }), this.on("reset-position", function() {
         var t = App.screen.height - 96;
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        f && this.$(".web-version").removeClass("hide");
+        d && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-cross", function(t, e, n, i) {
         this.element.css({
           position: "relative",
@@ -3839,18 +3839,18 @@ TWEEN.Tween = function(t) {
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), f && this.$(".web-version").removeClass("hide");
+        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), d && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(t) {
-        y(t);
+        g(t);
       });
     },
     addNotificationIdentity: function(t, e, n) {
       e = this.cross.exfee_id, n = this.cross.token;
-      var i = d(t);
+      var i = p(t);
       return i && "email" !== i.provider ? ($("#email.email").attr("placeholder", "Bad email Address."), 
       void 0) : ($.ajax({
         type: "POST",
-        url: o + "/Exfee/" + e + "/AddNotificationIdentity" + "?token=" + n,
+        url: a + "/Exfee/" + e + "/AddNotificationIdentity" + "?token=" + n,
         data: {
           provider: i.provider,
           external_username: i.external_username
@@ -3863,7 +3863,7 @@ TWEEN.Tween = function(t) {
         }
       }), void 0);
     }
-  }), n.VerifyController = T.extend({
+  }), e.VerifyController = S.extend({
     init: function() {
       this.render(), this.listen();
     },
@@ -3878,21 +3878,21 @@ TWEEN.Tween = function(t) {
         }, 14);
         var r = function() {
           n.error = !0, i.redirect("/");
-        }, s = e.user_id, a = e.token;
+        }, s = e.user_id, o = e.token;
         this.element.removeClass("hide"), $("#app-body").css("height", "100%"), App.controllers.footer.emit("reset-position"), 
         $.ajax({
           type: "POST",
-          url: o + "/Users/" + s + "?token=" + a,
+          url: a + "/Users/" + s + "?token=" + o,
           data: {
-            token: a
+            token: o
           },
           success: function(n) {
             var i = n.meta;
-            if (i && 200 === i.code) for (var o = n.response.user, c = o.identities, u = 0, l = c.length; l > u; ++u) {
+            if (i && 200 === i.code) for (var a = n.response.user, c = a.identities, u = 0, l = c.length; l > u; ++u) {
               var h = c[u];
               if (h.id === e.identity_id) {
-                if (t.showIdentity(h), t.$(".done-info").removeClass("hide"), s && a) {
-                  var p = "?token=" + a + "&user_id=" + s + "&identity_id=" + h.id;
+                if (t.showIdentity(h), t.$(".done-info").removeClass("hide"), s && o) {
+                  var p = "?token=" + o + "&user_id=" + s + "&identity_id=" + h.id;
                   App.controllers.footer.emit("redirect", p);
                 }
                 break;
@@ -3909,7 +3909,7 @@ TWEEN.Tween = function(t) {
       var e = this.$(".identity");
       e.find(".name").text(t.name), e.find(".avatar").attr("src", t.avatar_filename);
     }
-  }), n.SetPasswordController = T.extend({
+  }), e.SetPasswordController = S.extend({
     init: function() {
       this.render(), this.listen();
     },
@@ -3917,14 +3917,14 @@ TWEEN.Tween = function(t) {
       $("#app-setpassword").remove(), this.element.appendTo($("#app-body"));
     },
     submitPassword: function() {
-      var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), a = s.val();
-      a.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
+      var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = s.val();
+      o.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
         type: "POST",
-        url: o + "/Users/ResetPassword",
+        url: a + "/Users/ResetPassword",
         data: {
           token: e,
           name: name,
-          password: a
+          password: o
         },
         success: function(e) {
           var a = e.meta;
@@ -3944,11 +3944,11 @@ TWEEN.Tween = function(t) {
     listen: function() {
       var t, e, n = this, i = this.element, r = this.resolveToken;
       i.on("touchstart.setpassword", ".pass", function() {
-        e && (clearTimeout(e), e = void 0), t = g();
+        e && (clearTimeout(e), e = void 0), t = v();
         var n = $(this).prev();
         n.prop("type", "password");
       }).on("touchend.setpassword", ".pass", function(n) {
-        if (g() - t > 300) {
+        if (v() - t > 300) {
           var i = $(this).prev();
           i.prop("type", "text"), e = setTimeout(function() {
             i.prop("type", "password");
@@ -3968,7 +3968,7 @@ TWEEN.Tween = function(t) {
         };
         i.removeClass("hide"), $("#app-body").css("height", "100%"), $.ajax({
           type: "POST",
-          url: o + "/Users/" + r.user_id + "?token=" + r.token,
+          url: a + "/Users/" + r.user_id + "?token=" + r.token,
           data: {
             token: r.token
           },
@@ -3983,7 +3983,7 @@ TWEEN.Tween = function(t) {
         }), App.controllers.footer.emit("reset-position");
       });
     }
-  }), n.HomeController = T.extend({
+  }), e.HomeController = S.extend({
     init: function() {
       this.render(), this.listen();
     },
@@ -4001,7 +4001,7 @@ TWEEN.Tween = function(t) {
       }), this.on("show", function(t, n) {
         var i = t.height;
         this.$(".logo-box .inner").css("top", (i - 300) / 2 + "px"), e.removeClass("hide"), 
-        E[13] = (i - 64) / 2, this.setHomeCard(E), n = !(!n || 404 !== n.code);
+        _[13] = (i - 64) / 2, this.setHomeCard(_), n = !(!n || 404 !== n.code);
         var r = this.$(".title");
         r.find(".normal").removeClass("hide"), n && setTimeout(function() {
           alert("Sorry. Your link is invalid or expired. Requested page was not found.");
@@ -4009,8 +4009,8 @@ TWEEN.Tween = function(t) {
       });
     },
     setHomeCard: function(t) {
-      var e = k(), n = e.card, i = n.name, r = n.avatar, s = this.$("#home-card");
-      w(s[0], t), n && (i || r) ? (r || (r = i ? o + "/avatar/default?name=" + i : "/static/img/portrait_default.png"), 
+      var e = w(), n = e.card, i = n.name, r = n.avatar, s = this.$("#home-card");
+      b(s[0], t), n && (i || r) ? (r || (r = i ? a + "/avatar/default?name=" + i : "/static/img/portrait_default.png"), 
       r = "url(" + r + ")") : r = "", s.find(".avatar").css("background-image", r);
     },
     aopts: {
@@ -4020,11 +4020,11 @@ TWEEN.Tween = function(t) {
       var t = this.aopts, e = document.getElementById("big-logo"), n = document.getElementById("home-card"), i = function() {
         e.style.opacity = t.o, n.style.opacity = 1 - t.o;
       };
-      this._a = new a.Tween(t).delay(1377).to({
+      this._a = new s.Tween(t).delay(1377).to({
         o: 0
-      }, 1377).easing(a.Easing.Cubic.InOut).onUpdate(i), this._b = new a.Tween(t).delay(1377).to({
+      }, 1377).easing(s.Easing.Cubic.InOut).onUpdate(i), this._b = new s.Tween(t).delay(1377).to({
         o: 1
-      }, 1377).easing(a.Easing.Cubic.InOut).onUpdate(i);
+      }, 1377).easing(s.Easing.Cubic.InOut).onUpdate(i);
     },
     startAnimate: function() {
       this._a || this._b || this.createAnimate(), this._a.chain(this._b), this._b.chain(this._a), 
@@ -4035,7 +4035,7 @@ TWEEN.Tween = function(t) {
       this._a.chain(), this._b.chain(), this._b.stop(), this._a.stop(), t.o = e.style.opacity = 1, 
       n.style.opacity = 0;
     }
-  }), n.CrossController = T.extend({
+  }), e.CrossController = S.extend({
     init: function() {
       this.render(), this.listen();
     },
@@ -4050,12 +4050,12 @@ TWEEN.Tween = function(t) {
         var e = prompt("Change my display name:");
         e ? $.ajax({
           type: "POST",
-          url: o + "/Identities/" + i.identity.id + "/Update" + "?token=" + n,
+          url: a + "/Identities/" + i.identity.id + "/Update" + "?token=" + n,
           data: {
             name: e
           },
           success: function(e) {
-            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(v(e.response.identity.name));
+            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(m(e.response.identity.name));
           },
           error: function() {
             alert("Failed, please retry later.");
@@ -4099,7 +4099,7 @@ TWEEN.Tween = function(t) {
       }
       $.ajax({
         type: "post",
-        url: o + "/Exfee/" + n + "/Rsvp?token=" + i,
+        url: a + "/Exfee/" + n + "/Rsvp?token=" + i,
         data: {
           rsvp: JSON.stringify(r)
         },
@@ -4109,7 +4109,7 @@ TWEEN.Tween = function(t) {
         }
       });
     }
-  }), n.LiveController = T.extend({
+  }), e.LiveController = S.extend({
     init: function() {
       this.render(), this.listen();
     },
@@ -4126,16 +4126,16 @@ TWEEN.Tween = function(t) {
         t.stopPropagation(), $(t.target).hasClass("live-form") && (i.find(".input-item").blur(), 
         App.response.redirect("/"));
       }).on("keydown.live", "#card-name", function(t) {
-        var e = t.keyCode, i = p(this.value);
+        var e = t.keyCode, i = h(this.value);
         i && 13 === e && n.addEmailOrPhone(this, i);
       }).on("blur.live", "#card-name", function() {
-        var t = p(this.value);
+        var t = h(this.value);
         t ? n.addEmailOrPhone(this, t) : n.setCardName(this);
       }).on("keydown.live blur.live", "#add-identity", function(t) {
-        var e = t.keyCode, i = p(this.value);
+        var e = t.keyCode, i = h(this.value);
         (i && 13 === e || "blur" === t.type) && (n.addEmailOrPhone(this, i, !0), this.value = "");
       }).on("keydown.live blur.live", "#facebook-identity", function(t) {
-        var e = t.keyCode, i = p(this.value);
+        var e = t.keyCode, i = h(this.value);
         (i && 13 === e || "blur" === t.type) && (i += "@facebook", n.addFacebook(this, i) && $("#add-identity-facebook").addClass("hide"), 
         this.value = "");
       }).on("touchstart.live", ".list .input-item", function() {
@@ -4143,8 +4143,8 @@ TWEEN.Tween = function(t) {
       }).on("blur.live", ".list .input-item", function() {
         $(this).next().addClass("hidden"), n.updateIdentityLi(this);
       }).on("touchstart.live", ".list .delete", function() {
-        var t, e = $(this).prev()[0], i = p(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
-        s && (i += "@facebook"), t = d(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
+        var t, e = $(this).prev()[0], i = h(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
+        s && (i += "@facebook"), t = p(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
         s && n.emit("show-add-facebook");
       }).on("touchstart.live", ".btn-start", function() {
         var t = $(".list .input-item");
@@ -4153,7 +4153,7 @@ TWEEN.Tween = function(t) {
         });
         var e = document.getElementById("card-name");
         e.blur();
-        var i = p(e.value);
+        var i = h(e.value);
         i ? n.liveCard.card.name = i : n.setCardName(e), setTimeout(function() {
           n.inspectFields() && (n.emit("post-card"), n.emit("live-gather"));
         }, 23);
@@ -4168,16 +4168,16 @@ TWEEN.Tween = function(t) {
           s.querySelector("ul").innerHTML = a;
           var d = s.clientHeight, f = ~~r[12] - 68, m = ~~r[13] - (6 + d), v = 93;
           0 > f ? f = 10 : f + 200 >= 320 && (f = 110), (10 === f || 110 === f) && (v = ~~r[12] + 32 - 7 - f), 
-          r[12] = f, r[13] = m - 5, r[14] = 7, w(s, r), s.querySelector(".ang").style.left = v + "px", 
+          r[12] = f, r[13] = m - 5, r[14] = 7, b(s, r), s.querySelector(".ang").style.left = v + "px", 
           s.querySelector(".bio").innerText = n.bio, s.className = "card-tip";
         }
       }).on("touchstart.live", ".live-gather .card .avatar", function(n) {
         var i = $(this), r = 250, s = n.touches.length;
-        e = g(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
+        e = v(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
           i.trigger("hold:live");
         }, r));
       }).on("touchend.live", ".live-gather .card .avatar", function() {
-        if (t && (clearTimeout(t), t = void 0), 250 > g() - e) {
+        if (t && (clearTimeout(t), t = void 0), 250 > v() - e) {
           var n = $(this).parent();
           n.hasClass("card-me") || n.toggleClass("selected");
         }
@@ -4199,15 +4199,15 @@ TWEEN.Tween = function(t) {
       }), this.on("show-add-facebook", function() {
         this.$('.list input[data-provider="facebook"]').length || this.$("#add-identity-facebook").removeClass("hide");
       }), this.on("show", function(t) {
-        m.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
+        f.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
         var e = t.height;
-        E[13] = (e - 64) / 2, w(this.$("#icard")[0], E), this.$(".live-form, .live-gahter").css("min-height", e), 
+        _[13] = (e - 64) / 2, b(this.$("#icard")[0], _), this.$(".live-form, .live-gahter").css("min-height", e), 
         this.$(".live-form").removeClass("hide"), this.$("#live-discover").css("opacity", 0), 
         this.$("#card-form").css({
           opacity: 0,
           "min-height": 100 * ((e - 100) / e) + "%"
         }), this.measurePositions(t.width, t.height - 10, 32, 32), this.MAPS = this._MAPS.slice(0), 
-        this.$(".identities .list").empty(), this.liveCard = k(), this.updateMyCardForm(), 
+        this.$(".identities .list").empty(), this.liveCard = w(), this.updateMyCardForm(), 
         this.startAnimate();
       }), this.on("post-card", function() {
         this.postMyCard();
@@ -4221,10 +4221,10 @@ TWEEN.Tween = function(t) {
       });
     },
     updateIdentityLi: function(t) {
-      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = p(t.value), o = !1, c = !1, u = !1;
-      if (a) if ("facebook" === i && (a += "@facebook"), e = d(a), e && e.provider) {
-        var l = this.findIdentity(e), h = e.provider === i && e.external_username === n;
-        l && !h && (t.value = s), l || h || (u = !0, o = !0);
+      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = h(t.value), o = !1, c = !1, u = !1;
+      if (a) if ("facebook" === i && (a += "@facebook"), e = p(a), e && e.provider) {
+        var l = this.findIdentity(e), d = e.provider === i && e.external_username === n;
+        l && !d && (t.value = s), l || d || (u = !0, o = !0);
       } else c = !0, o = !0; else c = !0, o = !0;
       c && (t.setAttribute("data-name", s), t.setAttribute("data-external-username", s), 
       t.setAttribute("data-provider", s), setTimeout(function() {
@@ -4244,26 +4244,26 @@ TWEEN.Tween = function(t) {
     },
     updateCardName: function(t) {
       t.name && (this.liveCard.card.name = document.getElementById("card-name").value = t.name, 
-      s.set("livecard", this.liveCard));
+      r.set("livecard", this.liveCard));
     },
     updateMe: function(t) {
       var e, n = document.getElementById("icard"), i = n.getAttribute("data-url");
-      i !== t.avatar && (e = t.avatar, e || (e = t.name ? o + "/avatar/default?name=" + t.name : "/static/img/portrait_default.png"), 
+      i !== t.avatar && (e = t.avatar, e || (e = t.name ? a + "/avatar/default?name=" + t.name : "/static/img/portrait_default.png"), 
       i !== e && (n.querySelector(".avatar").style.backgroundImage = "url(" + e + ")", 
       n.setAttribute("data-url", e)));
       var r = document.getElementById("card-bio");
       t.bio && (r.innerText = t.bio), r.className = t.bio ? "" : "hide";
     },
     postMyCard: function() {
-      s.set("livecard", this.liveCard);
+      r.set("livecard", this.liveCard);
       var t = this.liveCard.card;
-      t.name && t.identities.length && m.init(t, $.proxy(this.liveCallback, this));
+      t.name && t.identities.length && f.init(t, $.proxy(this.liveCallback, this));
     },
     state: 1,
     liveCallback: function(t) {
       var e = this.liveCard, n = t.me;
-      1 === this.state && n && n.name && n.identities.length && (g() - n.timestamp > 6e4 && this.updateCardName(n), 
-      this.updateMe(e.card = n), s.set("livecard", e)), this._others = t.others, this.updateOthers();
+      1 === this.state && n && n.name && n.identities.length && (v() - n.timestamp > 6e4 && this.updateCardName(n), 
+      this.updateMe(e.card = n), r.set("livecard", e)), this._others = t.others, this.updateOthers();
     },
     updateMyCardForm: function() {
       var t, e = this.liveCard, n = e.card, i = n.identities;
@@ -4274,7 +4274,7 @@ TWEEN.Tween = function(t) {
       } else this.emit("disabled-live-btn", !0);
     },
     resetLiveCard: function() {
-      this.emit("disabled-live-btn", !0), s.clear("livecard"), this.liveCard = k();
+      this.emit("disabled-live-btn", !0), r.clear("livecard"), this.liveCard = w();
     },
     findIdentity: function(t) {
       var e = this.liveCard.card, n = e.identities, i = n.length;
@@ -4285,18 +4285,18 @@ TWEEN.Tween = function(t) {
       return !1;
     },
     updateLiveCard: function(t, e, n) {
-      var i = this.liveCard.card, r = i.identities;
-      if ("+" === e) r.push(t); else {
-        for (var a = 0, o = r.length; o > a; ++a) {
-          var c = r[a];
+      var i = this.liveCard.card, s = i.identities;
+      if ("+" === e) s.push(t); else {
+        for (var a = 0, o = s.length; o > a; ++a) {
+          var c = s[a];
           if (c.provider === t.provider && c.external_username === t.external_username) {
-            r.splice(a, 1);
+            s.splice(a, 1);
             break;
           }
         }
-        n || 0 !== r.length || this.resetLiveCard();
+        n || 0 !== s.length || this.resetLiveCard();
       }
-      s.set("livecard", this.liveCard);
+      r.set("livecard", this.liveCard);
     },
     setCardName: function(t) {
       var e = this.packedIdentities();
@@ -4307,13 +4307,13 @@ TWEEN.Tween = function(t) {
       }
     },
     addFacebook: function(t, e) {
-      var n = d(e), i = n.provider;
+      var n = p(e), i = n.provider;
       return i && "facebook" === i && !this.existsByIdentity(n) ? (this.addIdentity(n), 
       !0) : !1;
     },
     addEmailOrPhone: function(t, e, n) {
       n = !n;
-      var i = d(e), r = i.provider;
+      var i = p(e), r = i.provider;
       !r || "email" !== r && "phone" !== r || this.existsByIdentity(i) || (this.addIdentity(i), 
       n && this.setCardName(t)), n && (this.emit("show-add-email"), this.emit("show-add-facebook")), 
       this.emit("post-card");
@@ -4323,7 +4323,7 @@ TWEEN.Tween = function(t) {
       t;
     },
     genIdentity: function(t) {
-      var e = l.compile($("#live-li-identity-tmpl").html()), n = t.provider;
+      var e = u.compile($("#live-li-identity-tmpl").html()), n = t.provider;
       n = this.aliasProvider(n);
       var i = $(e({
         provider_alias: n,
@@ -4349,8 +4349,8 @@ TWEEN.Tween = function(t) {
     },
     packedIdentities: function() {
       for (var t, e, n, i, r, s = this.$(".identities .list").find("input"), a = 0, o = s.length, c = []; o > a; ++a) t = s.eq(a), 
-      e = t.attr("data-provider"), n = p(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
-      i = d(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
+      e = t.attr("data-provider"), n = h(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
+      i = p(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
       return c;
     },
     existsByIdentity: function(t) {
@@ -4372,7 +4372,7 @@ TWEEN.Tween = function(t) {
       r[3][2] = [ .625 * t - n, .22 * e - i ], r[3][3] = [ .875 * t - n, .22 * e + 40 - i ];
     },
     genCard: function(t, e, n, i, r, s) {
-      var a = l.compile($("#live-card-tmpl").html()), o = x.slice(0);
+      var a = u.compile($("#live-card-tmpl").html()), o = k.slice(0);
       o[12] = e[0], o[13] = e[1];
       var c = $(a({
         g: n,
@@ -4386,35 +4386,35 @@ TWEEN.Tween = function(t) {
     addCard: function(t) {
       var e = this.MAPS;
       if (!e || 0 === e.length) return !1;
-      var n = e.shift(), i = n[0], r = n[1], s = this.coords[i][r], o = this.genCard(t, s, i, r, !1, this.screen.ios), c = o[0], u = c.style, l = x.slice(0);
-      l[0] = l[5] = 0, l[12] = s[0], l[13] = s[1], o.data("card", t), this.$(".live-gather").append(o), 
-      new a.Tween({
+      var n = e.shift(), i = n[0], r = n[1], a = this.coords[i][r], o = this.genCard(t, a, i, r, !1, this.screen.ios), c = o[0], u = c.style, l = k.slice(0);
+      l[0] = l[5] = 0, l[12] = a[0], l[13] = a[1], o.data("card", t), this.$(".live-gather").append(o), 
+      new s.Tween({
         o: 0
       }).to({
         o: 1
-      }, 250).easing(a.Easing.Bounce.In).onStart(function() {
-        w(c, l), o.removeClass("hide");
+      }, 250).easing(s.Easing.Bounce.In).onStart(function() {
+        b(c, l), o.removeClass("hide");
       }).onUpdate(function() {
-        u.opacity = this.o, l[0] = l[5] = this.o, w(c, l);
+        u.opacity = this.o, l[0] = l[5] = this.o, b(c, l);
       }).onComplete(function() {
-        a.remove(this);
+        s.remove(this);
       }).start();
     },
     delCard: function(t) {
-      var e = this.MAPS, n = t.getAttribute("data-g"), i = t.getAttribute("data-i"), r = x.slice(0), s = this.coords[n][i], o = t.style;
-      r[12] = s[0], r[13] = s[1], new a.Tween({
+      var e = this.MAPS, n = t.getAttribute("data-g"), i = t.getAttribute("data-i"), r = k.slice(0), a = this.coords[n][i], o = t.style;
+      r[12] = a[0], r[13] = a[1], new s.Tween({
         o: 1
       }).to({
         o: 0
-      }, 250).easing(a.Easing.Bounce.Out).onUpdate(function() {
-        o.opacity = this.o, w(t, r);
+      }, 250).easing(s.Easing.Bounce.Out).onUpdate(function() {
+        o.opacity = this.o, b(t, r);
       }).onComplete(function() {
-        e.unshift([ n, i ]), t.parentNode.removeChild(t), a.remove(this);
+        e.unshift([ n, i ]), t.parentNode.removeChild(t), s.remove(this);
       }).start();
     },
     updateCard: function(t, e) {
       var n = t.getAttribute("data-url"), i = "";
-      n && n === e.avatar || (i = e.avatar, i || (i = e.name ? o + "/avatar/default?name=" + e.name : "/static/img/portrait_default.png"), 
+      n && n === e.avatar || (i = e.avatar, i || (i = e.name ? a + "/avatar/default?name=" + e.name : "/static/img/portrait_default.png"), 
       n !== i && (t.querySelector(".avatar").style.backgroundImage = "url(" + i + ")", 
       t.setAttribute("data-url", i))), t.querySelector(".name").innerText = e.name, $(t).data("card", e);
     },
@@ -4424,14 +4424,14 @@ TWEEN.Tween = function(t) {
       for (n in r) i = r[n], t = document.getElementById(i.id), t ? this.updateCard(t, i) : this.addCard(i);
     },
     createAnimate: function() {
-      var t = this.$("#icard")[0], e = this.$("#card-form")[0], n = this.$("#live-discover")[0], i = E[13], r = _[13], s = E.slice(0);
-      this.a = new a.Tween({
+      var t = this.$("#icard")[0], e = this.$("#card-form")[0], n = this.$("#live-discover")[0], i = _[13], r = x[13], a = _.slice(0);
+      this.a = new s.Tween({
         o: 0
       }).to({
         o: 1
-      }, 500).easing(a.Easing.Cubic.In).onUpdate(function() {
-        n.style.opacity = this.o, s[13] = (i - r) * (1 - this.o) + r, w(t, s);
-      }), this.b = new a.Tween({
+      }, 500).easing(s.Easing.Cubic.In).onUpdate(function() {
+        n.style.opacity = this.o, a[13] = (i - r) * (1 - this.o) + r, b(t, a);
+      }), this.b = new s.Tween({
         o: 0
       }).delay(250).to({
         o: 1

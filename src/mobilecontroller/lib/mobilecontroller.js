@@ -6,6 +6,7 @@ define('mobilecontroller', function (require, exports, module) {
       TWEEN = require('tween'),
       api_url = window._ENV_.api_url,
       app_scheme = window._ENV_.app_scheme,
+      openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
       util   = require('util'),
@@ -26,10 +27,6 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       now = Date.now || function () { return new Date().getTime(); },
-
-      showAppInStore = function() {
-        window.location = 'https://itunes.apple.com/us/app/exfe/id514026604';
-      },
 
       launchApp = function (args) {
         window.location = app_scheme + '://crosses/' + (args || '');
@@ -148,8 +145,6 @@ define('mobilecontroller', function (require, exports, module) {
   // `app-footer` controller
   exports.FooterController = Controller.extend({
 
-    countDown: 5,
-
     element: $('#app-footer'),
 
     init: function () {
@@ -165,8 +160,10 @@ define('mobilecontroller', function (require, exports, module) {
         .on('click.footer', '.web-version', function () {
           window.location.href = '/?ipad' + location.hash;
         })
-        .on('click.footer', '.get-button button', function () {
-          showAppInStore();
+        .on('click.footer', '.get-button button', function (e) {
+          e.preventDefault();
+          openExfe();
+          return false;
         })
 
         .on('keydown.footer', '#email', function (e) {
