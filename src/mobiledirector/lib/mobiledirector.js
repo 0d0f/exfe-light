@@ -22,7 +22,14 @@
         , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
       }
+    , itunes = 'https://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
+
+  window.openExfe = function () {
+    launchApp('', function () {
+      alert(123)
+    })
+  };
 
   var failBack = function (cb) {
       failTimeout = setTimeout(function () {
