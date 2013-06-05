@@ -12,7 +12,6 @@
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , mframe = document.getElementById('mframe')
     , xframe = document.getElementById('xframe')
     , app_url = app_scheme + '://crosses/'
     , routes = {
@@ -22,7 +21,14 @@
         , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
       }
+    , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
+
+  window.openExfe = function () {
+    launchApp('', function () {
+      xframe.src = itunes;
+    })
+  };
 
   var failBack = function (cb) {
       failTimeout = setTimeout(function () {
@@ -35,7 +41,7 @@
             window.location = '/';
           }
         }
-      }, 400);
+      }, 200);
     },
 
     getSMSTokenFromHead = function () {
@@ -96,11 +102,13 @@
     },
 
     handle = function () {
+      var url = Director.getPath();
+      if ('/' !== url && url === Director.url) { return; }
       inject(function () {
-        mframe.className = 'hide';
         App.request.updateUrl();
         App.handle(App.request, App.response);
       });
+      Director.url = url;
     },
 
     serialize = function (data) {
@@ -249,7 +257,6 @@
 
   Director.dispatch = function (url) {
     /* jshint -W004 */
-    mframe.className = '';
     delete _ENV_._data_;
     var params;
     if (routes.home.test(url)) {
@@ -320,13 +327,17 @@
     }
   };
 
+  Director.getPath = function () {
+    return '/' + location.search + location.hash;
+  };
+
   Director.handle = function (e) {
     if (getError()) {
       alert('Sorry. Your link is invalid or expired. Requested page was not found.');
       removeError();
     }
-    var hash = location.hash, search = location.search;
-    Director.dispatch('/' + search + hash, e);
+    var url = Director.getPath();
+    Director.dispatch(url, e);
   };
 
   Director.start = function () {
