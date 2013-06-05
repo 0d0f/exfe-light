@@ -373,6 +373,7 @@ define('mobilecontroller', function (require, exports, module) {
             if (meta && meta.code === 200) {
               $name.blur();
               $pass.blur();
+              self.$('.password').addClass('hide');
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-05 12:06:49 */
+/*! mobile@2a.4 2013-06-05 02:06:39 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3931,8 +3931,8 @@ TWEEN.Tween = function(t) {
         success: function(e) {
           var a = e.meta;
           if (a && 200 === a.code) {
-            r.blur(), s.blur(), t.$(".done-info").removeClass("hide"), i.html("").addClass("hide"), 
-            n.parent().addClass("hide");
+            r.blur(), s.blur(), t.$(".password").addClass("hide"), t.$(".done-info").removeClass("hide"), 
+            i.html("").addClass("hide"), n.parent().addClass("hide");
             var o = e.response.authorization;
             o && App.controllers.footer.emit("redirect", "?token=" + o.token + "&user_id=" + o.user_id);
           } else n.removeClass("disabled").prop("disabled", !0);
