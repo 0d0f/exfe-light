@@ -96,11 +96,14 @@
     },
 
     handle = function () {
+      var url = Director.getPath();
+      if ('/' !== url && url === Director.url) { return; }
       inject(function () {
         mframe.className = 'hide';
         App.request.updateUrl();
         App.handle(App.request, App.response);
       });
+      Director.url = url;
     },
 
     serialize = function (data) {
@@ -320,13 +323,17 @@
     }
   };
 
+  Director.getPath = function () {
+    return '/' + location.search + location.hash;
+  };
+
   Director.handle = function (e) {
     if (getError()) {
       alert('Sorry. Your link is invalid or expired. Requested page was not found.');
       removeError();
     }
-    var hash = location.hash, search = location.search;
-    Director.dispatch('/' + search + hash, e);
+    var url = Director.getPath();
+    Director.dispatch(url, e);
   };
 
   Director.start = function () {
