@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-03 06:06:44 */
+/*! desktop@2a.9 2013-06-04 01:06:05 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7171,7 +7171,8 @@ TWEEN.Tween = function(e) {
       },
       events: {
         'click [data-dismiss="dialog"]': function() {
-          window.location.href = "/";
+          var e = this.srcNode;
+          e && e.data("redirect") && (window.location.href = "/");
         },
         "submit .modal-form": function() {
           return this.$(".xbtn-success").click(), !1;
@@ -7283,7 +7284,8 @@ TWEEN.Tween = function(e) {
       },
       events: {
         'click [data-dismiss="dialog"]': function() {
-          window.location.href = "/";
+          var e = this.srcNode;
+          e && e.data("redirect") && (window.location.href = "/");
         },
         "blur #name": function(e) {
           var t = s.trim(i(e.currentTarget).val()), n = this.$('[for="name"]'), a = n.find("span");
@@ -8718,15 +8720,10 @@ TWEEN.Tween = function(e) {
       if (n.size() && ("" === t || "nota" === t && "user" === l)) return e.stopImmediatePropagation(), 
       e.stopPropagation(), e.preventDefault(), n.trigger("click"), !1;
     }
-  });
-  var f = 2;
-  r.on("app:cross:edited", function(e) {
-    if (0 !== f) {
-      f--;
-      var t = a("#app-browsing-identity"), i = t.data("settings"), n = a("#app-read-only"), r = t.data("action");
-      e ? e && "no_permission" === e.error && (n.size() || a("#app-main").append(n = a('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>').data("settings", i && i.browsing || s.get("user"))), 
-      n.trigger("click")) : "setup" === r && a('[data-user-action="' + r + '"]').trigger("click");
-    }
+  }), r.on("app:cross:edited", function(e) {
+    var t = a("#app-browsing-identity"), i = t.data("settings"), n = a("#app-read-only");
+    e && "no_permission" === e.error && (n.size() || a("#app-main").append(n = a('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>').data("settings", i && i.browsing || s.get("user"))), 
+    n.trigger("click"));
   }), u.on("click.dialog.data-api", '[data-widget="dialog"]', function(e) {
     var t, i = a(this), n = i.data("dialog"), r = i.data("dialog-type"), s = i.data("dialog-tab"), c = i.data("dialog-from"), h = i.data("dialog-settings");
     e.preventDefault(), n || r && (t = l[r], h && (t = a.extend(!0, {}, t, h)), n = new ("identification" === r ? d : o)(t), 
@@ -8734,12 +8731,12 @@ TWEEN.Tween = function(e) {
     u.find('[data-dialog-type="' + r + '"]').not(i).data("dialog", n)), s && n.switchTab(s), 
     n.show(e);
   });
-  var m = s.get("identities");
-  m || (m = []), u.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
+  var f = s.get("identities");
+  f || (f = []), u.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
     var t = a(this);
     t.data("typeahead") || (e.preventDefault(), t.data("typeahead", new c({
       options: {
-        source: m,
+        source: f,
         useCache: !0,
         target: t,
         onNothing: function() {
@@ -15236,14 +15233,14 @@ define("lightsaber", function(e, t, i) {
           var t = a.find(o.identities, function(e) {
             return e.id === h ? !0 : void 0;
           });
-          "VERIFY" === p ? (v = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">'), 
+          "VERIFY" === p ? (v = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">'), 
           v.data("source", {
             browsing_user: o,
             identity: t,
             originToken: r,
             user_name: u.user_name,
             tokenType: "user"
-          })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">'), 
+          })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
           v.data("source", {
             user: o,
             token: u.setup ? l.token : r,
@@ -15254,7 +15251,7 @@ define("lightsaber", function(e, t, i) {
           e.data("source", {
             identity: c.identities[0]
           }), e.appendTo($("#app-tmp")), e.trigger("click.dialog.data-api");
-        }), $("#app-user-menu").find(".set-up").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">'), 
+        }), $("#app-user-menu").find(".set-up").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
         v.data("source", {
           user: c,
           token: u.setup ? d.token : r,
@@ -15413,7 +15410,7 @@ define("lightsaber", function(e, t, i) {
       var t = $.Deferred(), r = $.Event("click.dialog.data-api");
       t.resolve(n), s.emit("app:profile:show", t), u ? ("connected" !== u.identity_status && (r.following = u.following, 
       r.identity = u.identity, r.token = n.token, $('<div id="app-oauth-welcome" class="hide" data-widget="dialog" data-dialog-type="welcome" data-destory="true"></div>').appendTo($("#app-tmp")).trigger(r)), 
-      l.remove("oauth"), delete i.oauth) : i.verification_token && ($('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>').data("token", i.verification_token).appendTo($("#app-tmp")).trigger(r), 
+      l.remove("oauth"), delete i.oauth) : i.verification_token && ($('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true" data-redirect="false"></div>').data("token", i.verification_token).appendTo($("#app-tmp")).trigger(r), 
       delete i.verification_token);
     })) : r ? ($(document.body).attr("data-browsing"), s.emit("app:usermenu:updatebrowsing", {
       normal: a,

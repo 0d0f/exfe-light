@@ -252,7 +252,9 @@ define('routes', function (require, exports, module) {
 
     if (action === 'INPUT_NEW_PASSWORD') {
       var d;
-      tplUrl = 'forgot_password.html';
+      if (token_type === 'SET_PASSWORD') {
+        tplUrl = 'forgot_password.html';
+      }
       res.render(tplUrl, function (tpl) {
         $('#app-main').append(tpl);
         if (authorization && !browsing_authorization) {
@@ -262,7 +264,7 @@ define('routes', function (require, exports, module) {
             }
           });
           if (token_type === 'VERIFY') {
-            d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">');
+            d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">');
             d.data('source', {
               browsing_user: user,
               identity: identity,
@@ -272,7 +274,7 @@ define('routes', function (require, exports, module) {
             });
           }
           else if (token_type === 'SET_PASSWORD') {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: user,
               token: resolveData.setup ? authorization.token : originToken,
@@ -295,7 +297,7 @@ define('routes', function (require, exports, module) {
             $('#app-user-menu').find('.set-up').trigger('click.dialog.data-api');
           }
           else {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: browsing_user,
               token: resolveData.setup ? browsing_authorization.token : originToken,
@@ -305,7 +307,7 @@ define('routes', function (require, exports, module) {
             d.trigger('click.dialog.data-api');
           }
         }
-        $('.modal-su, .modal-sp, .modal-bi').css('top', 230);
+        $('.modal-su, .modal-sp, .modal-bi').css('top', 250);
       });
     }
 
@@ -758,7 +760,7 @@ define('routes', function (require, exports, module) {
             Store.remove('oauth');
             delete session.oauth;
           } else if (session.verification_token) {
-            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>')
+            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true" data-redirect="false"></div>')
             .data('token', session.verification_token)
             .appendTo($('#app-tmp'))
               .trigger(e);

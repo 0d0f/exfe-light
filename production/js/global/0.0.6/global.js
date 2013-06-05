@@ -195,25 +195,14 @@ define(function (require) {
     }
   });
 
-  // 只弹两次
-  var LIMIT = 2;
   Bus.on('app:cross:edited', function (data) {
-    if (0 === LIMIT) {
-      return;
-    }
-    LIMIT--;
     var $db = $('#app-browsing-identity')
       , settings = $db.data('settings')
-      , $readOnly = $('#app-read-only')
-      , action = $db.data('action');
+      , $readOnly = $('#app-read-only');
 
-    if (!data) {
-      if (action === 'setup') {
-        $('[data-user-action="' + action + '"]').trigger('click');
-      }
     // read-only
     // data = {error : 'no_permission'}
-    } else if (data && data.error === 'no_permission') {
+    if (data && data.error === 'no_permission') {
       if (!$readOnly.size()) {
         $('#app-main').append(
           $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
@@ -224,8 +213,6 @@ define(function (require) {
     }
   });
 
-/* MODAL DATA-API
-  * -------------- */
   $BODY.on('click.dialog.data-api', '[data-widget="dialog"]', function (e) {
     var $this = $(this)
       , data = $this.data('dialog')
@@ -263,7 +250,6 @@ define(function (require) {
     data.show(e);
 
   });
-//});
 
   var identities = Store.get('identities');
   if (!identities) { identities = []; }
@@ -289,9 +275,6 @@ define(function (require) {
         'onAutocomplete:finish': function (data) {
           var identity;
           if (data && (identity = data.identity)) {
-            //if (identity['avatar_filename'] === 'default.png') {
-              //identity['avatar_filename'] = '/img/default_portraituserface_20.png';
-            //}
             this.target
               .prev()
               .attr('src', identity.avatar_filename)

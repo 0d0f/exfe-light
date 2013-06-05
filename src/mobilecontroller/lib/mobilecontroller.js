@@ -5,6 +5,8 @@ define('mobilecontroller', function (require, exports, module) {
       Store = require('store'),
       TWEEN = require('tween'),
       api_url = window._ENV_.api_url,
+      app_scheme = window._ENV_.app_scheme,
+      openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
       util   = require('util'),
@@ -26,12 +28,8 @@ define('mobilecontroller', function (require, exports, module) {
 
       now = Date.now || function () { return new Date().getTime(); },
 
-      showAppInStore = function() {
-        window.location = 'https://itunes.apple.com/us/app/exfe/id514026604';
-      },
-
       launchApp = function (args) {
-        window.location = 'exfe://crosses/' + (args || '');
+        window.location = app_scheme + '://crosses/' + (args || '');
       },
 
       hasWebkitTransform = ('webkitTransform' in document.body.style),
@@ -147,8 +145,6 @@ define('mobilecontroller', function (require, exports, module) {
   // `app-footer` controller
   exports.FooterController = Controller.extend({
 
-    countDown: 5,
-
     element: $('#app-footer'),
 
     init: function () {
@@ -164,8 +160,10 @@ define('mobilecontroller', function (require, exports, module) {
         .on('click.footer', '.web-version', function () {
           window.location.href = '/?ipad' + location.hash;
         })
-        .on('click.footer', '.get-button button', function () {
-          showAppInStore();
+        .on('click.footer', '.get-button button', function (e) {
+          e.preventDefault();
+          openExfe();
+          return false;
         })
 
         .on('keydown.footer', '#email', function (e) {
@@ -288,14 +286,16 @@ define('mobilecontroller', function (require, exports, module) {
           // error getting identity informations
           req.error = true;
           res.redirect('/');
-        };
+        },
+        user_id = resolveToken.user_id,
+        token = resolveToken.token;
         this.element.removeClass('hide');
         $('#app-body').css('height', '100%');
         App.controllers.footer.emit('reset-position');
         $.ajax({
           type: 'POST',
-          url: api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
-          data: { token : resolveToken.token },
+          url: api_url + '/Users/' + user_id + '?token=' + token,
+          data: { token : token },
           success: function (data) {
             var meta = data.meta;
             if (meta && meta.code === 200) {
@@ -306,7 +306,10 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
-                  App.controllers.footer.emit('redirect');
+                  if (user_id && token) {
+                    var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
+                    App.controllers.footer.emit('redirect', args);
+                  }
                   break;
                 }
               }
@@ -369,10 +372,14 @@ define('mobilecontroller', function (require, exports, module) {
             if (meta && meta.code === 200) {
               $name.blur();
               $pass.blur();
+              self.$('.password').addClass('hide');
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              App.controllers.footer.emit('redirect');
+              var authorization = data.response.authorization;
+              if (authorization) {
+                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id);
+              }
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
