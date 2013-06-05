@@ -12,7 +12,6 @@
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , mframe = document.getElementById('mframe')
     , xframe = document.getElementById('xframe')
     , app_url = app_scheme + '://crosses/'
     , routes = {
@@ -106,7 +105,6 @@
       var url = Director.getPath();
       if ('/' !== url && url === Director.url) { return; }
       inject(function () {
-        mframe.className = 'hide';
         App.request.updateUrl();
         App.handle(App.request, App.response);
       });
@@ -259,14 +257,12 @@
 
   Director.dispatch = function (url) {
     /* jshint -W004 */
-    mframe.className = 'hide';
     delete _ENV_._data_;
     var params;
     if (routes.home.test(url)) {
       handle();
 
     } else if (url.match(routes.smsToken)) {
-      mframe.className = '';
       var smsToken = getSMSTokenFromHead();
       if (smsToken) {
         _ENV_._data_ = smsToken;
@@ -276,7 +272,6 @@
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
-      mframe.className = '';
       request({
           url: apiUrl + '/Users/ResolveToken'
         , type: 'POST'
@@ -294,7 +289,6 @@
           }
         });
     } else if ((params = url.match(routes.crossTokenForPhone))) {
-      mframe.className = '';
       /* jshint -W003 */
       var cross_id = params[1]
         , ctoken = params[2]
@@ -317,7 +311,6 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.crossToken))) {
-      mframe.className = '';
       var ctoken = params[1]
         , cats = localStorage.cats
         , data = { invitation_token: ctoken }
