@@ -83,13 +83,13 @@ define('phonepanel', function (require) {
                     $('#phone-panel .identity-avatar').attr('src', avatar).show();
                     $('#phone-panel .identity-name').html(escape(data.identities[0].name)).show();
                     $('#phone-panel .name').val(data.identities[0].name).hide();
-                    $('#phone-panel .add').toggleClass('match', true);
+                    $('#phone-panel .add').prop('disabled', false);
                 } else {
                     avatar = '';
                     $('#phone-panel .identity-avatar').hide();
                     $('#phone-panel .identity-name').hide();
                     $('#phone-panel .name').val('').show();
-                    $('#phone-panel .add').toggleClass('match', false);
+                    $('#phone-panel .add').prop('disabled', true);
                 }
             }
         );
