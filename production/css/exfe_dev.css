@@ -5776,10 +5776,10 @@ body {
     -webkit-transform: translateY(0);
   }
   40% {
-    -webkit-transform: translateY(-30px);
+    -webkit-transform: translateY(-15px);
   }
   60% {
-    -webkit-transform: translateY(-15px);
+    -webkit-transform: translateY(-7px);
   }
 }
 
@@ -5792,10 +5792,10 @@ body {
     -moz-transform: translateY(0);
   }
   40% {
-    -moz-transform: translateY(-30px);
+    -moz-transform: translateY(-15px);
   }
   60% {
-    -moz-transform: translateY(-15px);
+    -moz-transform: translateY(-7px);
   }
 }
 
@@ -5808,10 +5808,10 @@ body {
     -o-transform: translateY(0);
   }
   40% {
-    -o-transform: translateY(-30px);
+    -o-transform: translateY(-15px);
   }
   60% {
-    -o-transform: translateY(-15px);
+    -o-transform: translateY(-7px);
   }
 }
 
@@ -5824,10 +5824,10 @@ body {
     transform: translateY(0);
   }
   40% {
-    transform: translateY(-30px);
+    transform: translateY(-15px);
   }
   60% {
-    transform: translateY(-15px);
+    transform: translateY(-7px);
   }
 }
 
@@ -11653,7 +11653,6 @@ ol.complete-list {
   font-size: 16px;
   line-height: 28px;
   text-align: center;
-  text-indent: 10px;
   border: 1px solid rgba(127, 127, 127, 0.33);
 }
 

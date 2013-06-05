@@ -568,9 +568,9 @@ ExfeeWidget = {
 
 
     showCompleteItems : function(objInput, key, identities, tryPhonePanel) {
-        key = key.replace(/^\+/, '');
+        // key = key.replace(/^\+/, '');
         var highlight = function(string) {
-            var objRe = new RegExp('(' + key + ')');
+            var objRe = new RegExp('(' + key.replace(/^\+/, '') + ')');
             return string ? string.replace(objRe, '<span class="highlight">$1</span>') : '';
         };
         var objCompleteList  = $('.ids-popmenu > ol'),
