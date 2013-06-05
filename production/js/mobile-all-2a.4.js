@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-05 02:06:39 */
+/*! mobile@2a.4 2013-06-05 04:06:08 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3737,12 +3737,10 @@ TWEEN.Tween = function(t) {
   };
 }), define("mobilecontroller", function(t, e, n) {
   "use strict";
-  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = t("handlebars"), u = t("util"), l = u.trim, h = u.parseId, p = navigator.userAgent.match(/iPad/), d = t("live"), f = function(t, e) {
+  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = window.openExfe, u = t("handlebars"), l = t("util"), h = l.trim, p = l.parseId, d = navigator.userAgent.match(/iPad/), f = t("live"), m = function(t, e) {
     return t.replace(e ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }, m = Date.now || function() {
+  }, v = Date.now || function() {
     return new Date().getTime();
-  }, v = function() {
-    window.location = "https://itunes.apple.com/us/app/exfe/id514026604";
   }, g = function(t) {
     window.location = o + "://crosses/" + (t || "");
   }, y = "webkitTransform" in document.body.style, b = function(t, e) {
@@ -3799,7 +3797,6 @@ TWEEN.Tween = function(t) {
     }
   });
   S.caches = [], e.FooterController = S.extend({
-    countDown: 5,
     element: $("#app-footer"),
     init: function() {
       this.listen();
@@ -3809,15 +3806,15 @@ TWEEN.Tween = function(t) {
       var t = this, e = t.element;
       e.on("click.footer", ".web-version", function() {
         window.location.href = "/?ipad" + location.hash;
-      }).on("click.footer", ".get-button button", function() {
-        v();
+      }).on("click.footer", ".get-button button", function(t) {
+        return t.preventDefault(), c(), !1;
       }).on("keydown.footer", "#email", function(e) {
         if (13 === e.keyCode) {
           var n = t.$("#email").val();
           t.addNotificationIdentity(n);
         }
       }).on("click.footer", ".subscribe .btn_mail", function() {
-        var e = l(t.$("#email").val());
+        var e = h(t.$("#email").val());
         t.addNotificationIdentity(e);
       }), this.on("show", function(t, e, n, i) {
         var r = t.height - 96 - (e ? 60 : 0);
@@ -3825,13 +3822,13 @@ TWEEN.Tween = function(t) {
           position: "relative",
           top: r + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        p && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
+        d && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
       }), this.on("reset-position", function() {
         var t = App.screen.height - 96;
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
-        }), p && this.$(".web-version").removeClass("hide");
+        }), d && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-cross", function(t, e, n, i) {
         this.element.css({
           position: "relative",
@@ -3841,14 +3838,14 @@ TWEEN.Tween = function(t) {
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), p && this.$(".web-version").removeClass("hide");
+        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), d && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(t) {
         g(t);
       });
     },
     addNotificationIdentity: function(t, e, n) {
       e = this.cross.exfee_id, n = this.cross.token;
-      var i = h(t);
+      var i = p(t);
       return i && "email" !== i.provider ? ($("#email.email").attr("placeholder", "Bad email Address."), 
       void 0) : ($.ajax({
         type: "POST",
@@ -3946,11 +3943,11 @@ TWEEN.Tween = function(t) {
     listen: function() {
       var t, e, n = this, i = this.element, r = this.resolveToken;
       i.on("touchstart.setpassword", ".pass", function() {
-        e && (clearTimeout(e), e = void 0), t = m();
+        e && (clearTimeout(e), e = void 0), t = v();
         var n = $(this).prev();
         n.prop("type", "password");
       }).on("touchend.setpassword", ".pass", function(n) {
-        if (m() - t > 300) {
+        if (v() - t > 300) {
           var i = $(this).prev();
           i.prop("type", "text"), e = setTimeout(function() {
             i.prop("type", "password");
@@ -4057,7 +4054,7 @@ TWEEN.Tween = function(t) {
             name: e
           },
           success: function(e) {
-            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(f(e.response.identity.name));
+            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(m(e.response.identity.name));
           },
           error: function() {
             alert("Failed, please retry later.");
@@ -4128,16 +4125,16 @@ TWEEN.Tween = function(t) {
         t.stopPropagation(), $(t.target).hasClass("live-form") && (i.find(".input-item").blur(), 
         App.response.redirect("/"));
       }).on("keydown.live", "#card-name", function(t) {
-        var e = t.keyCode, i = l(this.value);
+        var e = t.keyCode, i = h(this.value);
         i && 13 === e && n.addEmailOrPhone(this, i);
       }).on("blur.live", "#card-name", function() {
-        var t = l(this.value);
+        var t = h(this.value);
         t ? n.addEmailOrPhone(this, t) : n.setCardName(this);
       }).on("keydown.live blur.live", "#add-identity", function(t) {
-        var e = t.keyCode, i = l(this.value);
+        var e = t.keyCode, i = h(this.value);
         (i && 13 === e || "blur" === t.type) && (n.addEmailOrPhone(this, i, !0), this.value = "");
       }).on("keydown.live blur.live", "#facebook-identity", function(t) {
-        var e = t.keyCode, i = l(this.value);
+        var e = t.keyCode, i = h(this.value);
         (i && 13 === e || "blur" === t.type) && (i += "@facebook", n.addFacebook(this, i) && $("#add-identity-facebook").addClass("hide"), 
         this.value = "");
       }).on("touchstart.live", ".list .input-item", function() {
@@ -4145,8 +4142,8 @@ TWEEN.Tween = function(t) {
       }).on("blur.live", ".list .input-item", function() {
         $(this).next().addClass("hidden"), n.updateIdentityLi(this);
       }).on("touchstart.live", ".list .delete", function() {
-        var t, e = $(this).prev()[0], i = l(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
-        s && (i += "@facebook"), t = h(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
+        var t, e = $(this).prev()[0], i = h(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
+        s && (i += "@facebook"), t = p(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
         s && n.emit("show-add-facebook");
       }).on("touchstart.live", ".btn-start", function() {
         var t = $(".list .input-item");
@@ -4155,7 +4152,7 @@ TWEEN.Tween = function(t) {
         });
         var e = document.getElementById("card-name");
         e.blur();
-        var i = l(e.value);
+        var i = h(e.value);
         i ? n.liveCard.card.name = i : n.setCardName(e), setTimeout(function() {
           n.inspectFields() && (n.emit("post-card"), n.emit("live-gather"));
         }, 23);
@@ -4175,11 +4172,11 @@ TWEEN.Tween = function(t) {
         }
       }).on("touchstart.live", ".live-gather .card .avatar", function(n) {
         var i = $(this), r = 250, s = n.touches.length;
-        e = m(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
+        e = v(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
           i.trigger("hold:live");
         }, r));
       }).on("touchend.live", ".live-gather .card .avatar", function() {
-        if (t && (clearTimeout(t), t = void 0), 250 > m() - e) {
+        if (t && (clearTimeout(t), t = void 0), 250 > v() - e) {
           var n = $(this).parent();
           n.hasClass("card-me") || n.toggleClass("selected");
         }
@@ -4201,7 +4198,7 @@ TWEEN.Tween = function(t) {
       }), this.on("show-add-facebook", function() {
         this.$('.list input[data-provider="facebook"]').length || this.$("#add-identity-facebook").removeClass("hide");
       }), this.on("show", function(t) {
-        d.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
+        f.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
         var e = t.height;
         _[13] = (e - 64) / 2, b(this.$("#icard")[0], _), this.$(".live-form, .live-gahter").css("min-height", e), 
         this.$(".live-form").removeClass("hide"), this.$("#live-discover").css("opacity", 0), 
@@ -4223,10 +4220,10 @@ TWEEN.Tween = function(t) {
       });
     },
     updateIdentityLi: function(t) {
-      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = l(t.value), o = !1, c = !1, u = !1;
-      if (a) if ("facebook" === i && (a += "@facebook"), e = h(a), e && e.provider) {
-        var p = this.findIdentity(e), d = e.provider === i && e.external_username === n;
-        p && !d && (t.value = s), p || d || (u = !0, o = !0);
+      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = h(t.value), o = !1, c = !1, u = !1;
+      if (a) if ("facebook" === i && (a += "@facebook"), e = p(a), e && e.provider) {
+        var l = this.findIdentity(e), d = e.provider === i && e.external_username === n;
+        l && !d && (t.value = s), l || d || (u = !0, o = !0);
       } else c = !0, o = !0; else c = !0, o = !0;
       c && (t.setAttribute("data-name", s), t.setAttribute("data-external-username", s), 
       t.setAttribute("data-provider", s), setTimeout(function() {
@@ -4259,12 +4256,12 @@ TWEEN.Tween = function(t) {
     postMyCard: function() {
       r.set("livecard", this.liveCard);
       var t = this.liveCard.card;
-      t.name && t.identities.length && d.init(t, $.proxy(this.liveCallback, this));
+      t.name && t.identities.length && f.init(t, $.proxy(this.liveCallback, this));
     },
     state: 1,
     liveCallback: function(t) {
       var e = this.liveCard, n = t.me;
-      1 === this.state && n && n.name && n.identities.length && (m() - n.timestamp > 6e4 && this.updateCardName(n), 
+      1 === this.state && n && n.name && n.identities.length && (v() - n.timestamp > 6e4 && this.updateCardName(n), 
       this.updateMe(e.card = n), r.set("livecard", e)), this._others = t.others, this.updateOthers();
     },
     updateMyCardForm: function() {
@@ -4309,13 +4306,13 @@ TWEEN.Tween = function(t) {
       }
     },
     addFacebook: function(t, e) {
-      var n = h(e), i = n.provider;
+      var n = p(e), i = n.provider;
       return i && "facebook" === i && !this.existsByIdentity(n) ? (this.addIdentity(n), 
       !0) : !1;
     },
     addEmailOrPhone: function(t, e, n) {
       n = !n;
-      var i = h(e), r = i.provider;
+      var i = p(e), r = i.provider;
       !r || "email" !== r && "phone" !== r || this.existsByIdentity(i) || (this.addIdentity(i), 
       n && this.setCardName(t)), n && (this.emit("show-add-email"), this.emit("show-add-facebook")), 
       this.emit("post-card");
@@ -4325,7 +4322,7 @@ TWEEN.Tween = function(t) {
       t;
     },
     genIdentity: function(t) {
-      var e = c.compile($("#live-li-identity-tmpl").html()), n = t.provider;
+      var e = u.compile($("#live-li-identity-tmpl").html()), n = t.provider;
       n = this.aliasProvider(n);
       var i = $(e({
         provider_alias: n,
@@ -4351,8 +4348,8 @@ TWEEN.Tween = function(t) {
     },
     packedIdentities: function() {
       for (var t, e, n, i, r, s = this.$(".identities .list").find("input"), a = 0, o = s.length, c = []; o > a; ++a) t = s.eq(a), 
-      e = t.attr("data-provider"), n = l(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
-      i = h(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
+      e = t.attr("data-provider"), n = h(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
+      i = p(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
       return c;
     },
     existsByIdentity: function(t) {
@@ -4374,16 +4371,16 @@ TWEEN.Tween = function(t) {
       r[3][2] = [ .625 * t - n, .22 * e - i ], r[3][3] = [ .875 * t - n, .22 * e + 40 - i ];
     },
     genCard: function(t, e, n, i, r, s) {
-      var a = c.compile($("#live-card-tmpl").html()), o = k.slice(0);
+      var a = u.compile($("#live-card-tmpl").html()), o = k.slice(0);
       o[12] = e[0], o[13] = e[1];
-      var u = $(a({
+      var c = $(a({
         g: n,
         i: i,
         matrix: o.join(","),
         "class": (r ? "card-me" : "card-other hide") + ("iphone4" === s ? " card-iphone4" : ""),
         card: t
       }));
-      return u.data("card", t), u;
+      return c.data("card", t), c;
     },
     addCard: function(t) {
       var e = this.MAPS;

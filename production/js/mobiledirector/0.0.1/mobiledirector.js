@@ -22,7 +22,14 @@
         , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
       }
+    , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
+
+  window.openExfe = function () {
+    launchApp('', function () {
+      xframe.src = itunes;
+    })
+  };
 
   var failBack = function (cb) {
       failTimeout = setTimeout(function () {
@@ -35,7 +42,7 @@
             window.location = '/';
           }
         }
-      }, 400);
+      }, 200);
     },
 
     getSMSTokenFromHead = function () {
