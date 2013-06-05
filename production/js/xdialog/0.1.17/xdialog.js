@@ -591,7 +591,7 @@ define('xdialog', function (require, exports) {
         body: ''
           + '<div class="shadow title"></div>'
           + '<div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div>'
-          + '<p class="center">A utility for gathering with friends.</p>'
+          + '<p class="center">The group utility for gathering.</p>'
           + '<div class="modal-content">'
             + '<p>Save yourself from calling every one RSVP repeatedly, losing in endless emails messages off-the-point.</p>'
             + '<p><span class="x">·X·</span> (cross) is a gathering, for things to do together. <span class="x-sign">EXFE</span> friends for meetings, parties, sports, trips, etc. Anything you want to gather friends to do.</p>'
