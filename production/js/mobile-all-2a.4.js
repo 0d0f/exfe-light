@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-04 09:06:01 */
+/*! mobile@2a.4 2013-06-05 11:06:25 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3920,25 +3920,29 @@ TWEEN.Tween = function(t) {
       $("#app-setpassword").remove(), this.element.appendTo($("#app-body"));
     },
     submitPassword: function() {
-      var t = this, e = this.token, n = this.resolveToken && this.resolveToken.user_id, i = this.$(".set-button button"), r = this.$(".error-info"), s = this.$("#name"), o = this.$("#password"), c = o.val();
-      c.length >= 4 ? (i.addClass("disabled").prop("disabled", !0), $.ajax({
+      var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = s.val();
+      o.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
         type: "POST",
         url: a + "/Users/ResetPassword",
         data: {
           token: e,
           name: name,
-          password: c
+          password: o
         },
-        success: function(a) {
-          var c = a.meta;
-          c && 200 === c.code ? (s.blur(), o.blur(), t.$(".done-info").removeClass("hide"), 
-          r.html("").addClass("hide"), i.parent().addClass("hide"), n && e && App.controllers.footer.emit("redirect", "?token=" + e + "&user_id=" + n)) : i.removeClass("disabled").prop("disabled", !0), 
-          i.removeClass("disabled").prop("disabled", !0);
+        success: function(e) {
+          var a = e.meta;
+          if (a && 200 === a.code) {
+            r.blur(), s.blur(), t.$(".done-info").removeClass("hide"), i.html("").addClass("hide"), 
+            n.parent().addClass("hide");
+            var o = e.response.authorization;
+            o && App.controllers.footer.emit("redirect", "?token=" + o.token + "&user_id=" + o.user_id);
+          } else n.removeClass("disabled").prop("disabled", !0);
+          n.removeClass("disabled").prop("disabled", !0);
         },
         error: function() {
-          r.html("Failed to set password. Please try later.").removeClass("hide"), i.removeClass("disabled").prop("disabled", !1);
+          i.html("Failed to set password. Please try later.").removeClass("hide"), n.removeClass("disabled").prop("disabled", !1);
         }
-      })) : r.html("Password must be longer than four!").removeClass("hide");
+      })) : i.html("Password must be longer than four!").removeClass("hide");
     },
     listen: function() {
       var t, e, n = this, i = this.element, r = this.resolveToken;

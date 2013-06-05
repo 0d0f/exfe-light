@@ -351,7 +351,6 @@ define('mobilecontroller', function (require, exports, module) {
     submitPassword: function () {
       var self = this,
           token = this.token,
-          user_id = this.resolveToken && this.resolveToken.user_id,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
           $name = this.$('#name'),
@@ -379,8 +378,9 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              if (user_id && token) {
-                App.controllers.footer.emit('redirect', '?token=' + token + '&user_id=' + user_id);
+              var authorization = data.response.authorization;
+              if (authorization) {
+                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id);
               }
             } else {
               $button.removeClass('disabled').prop('disabled', true);
