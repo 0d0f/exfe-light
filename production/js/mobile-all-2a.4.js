@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-05 05:06:22 */
+/*! mobile@2a.4 2013-06-05 09:06:22 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3830,7 +3830,7 @@ TWEEN.Tween = function(t) {
           top: t + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
         d && this.$(".web-version").removeClass("hide");
-      }), this.on("show-from-cross", function(t, e, n, i) {
+      }), this.on("show-from-cross", function(t, e, n) {
         this.element.css({
           position: "relative",
           top: 0
@@ -3838,7 +3838,7 @@ TWEEN.Tween = function(t) {
           exfee_id: t,
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
-        n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
+        n || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
         $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), d && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(t) {
         g(t);
@@ -4523,7 +4523,7 @@ TWEEN.Tween = function(t) {
       cross: h,
       exfee_id: l.exfee.id,
       token: c
-    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.identity.isphone, h.read_only, D);
+    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, D);
   }, m = n.exports = {
     index: function(t) {
       var e = t.error, n = t.app, i = n.controllers, r = i.home, s = i.footer, a = n.screen;
