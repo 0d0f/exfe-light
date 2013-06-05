@@ -195,6 +195,8 @@ ExfeeWidget = {
 
     hard_limit       : 50,
 
+    blur             : true,
+
 
     make : function(dom_id, editable, callback) {
         this.dom_id   = dom_id;
@@ -225,9 +227,16 @@ ExfeeWidget = {
         $('#' + this.dom_id + ' .input-xlarge').bind(
             'focus keydown blur', this.inputEvent
         );
-        $('#' + this.dom_id + ' .pointer').bind('click', function(e) {
+        $('#' + this.dom_id + ' .pointer').bind('mousedown', function(e) {
+            e.preventDefault();
             e.stopPropagation();
             ExfeeWidget.checkInput($('#' + dom_id + ' .input-xlarge'), true);
+            ExfeeWidget.blur = false;
+            return false;
+        }).bind('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         });
         $(document).on('mousedown', '#' + this.dom_id + ' .thumbnails > li.identity > .avatar', function (e) {
             ExfeeWidget.showPanel(this.parentNode);
@@ -798,6 +807,7 @@ ExfeeWidget = {
 
     inputEvent : function(event) {
         var objInput = $(event.target);
+        ExfeeWidget.blur = true;
         switch (event.type) {
             case 'focus':
                 ExfeeWidget.focus[event.target.id] = true;
@@ -817,6 +827,7 @@ ExfeeWidget = {
                         } else {
                             ExfeeWidget.checkInput(objInput, true);
                         }
+                        ExfeeWidget.blur  = false;
                         break;
                     case 27: // esc
                         if (ExfeeWidget.completing) {
@@ -860,12 +871,21 @@ ExfeeWidget = {
             case 'blur':
                 ExfeeWidget.focus[event.target.id] = false;
                 ExfeeWidget.displayCompletePanel(objInput, false);
-                if (objInput.parent().find('.pointer').hasClass('icon16-exfee-plus-blue')) {
-                    objInput.parent().toggleClass('a-bounce');
-                    setTimeout(function() {
-                        objInput.parent().toggleClass('a-bounce', false);
-                    }, 1000);
-                }
+                console.log(ExfeeWidget.blur)
+                var cb = function () {
+                    if (objInput.parent().find('.pointer').hasClass('icon16-exfee-plus-blue')) {
+                        objInput.parent().toggleClass('a-bounce');
+                        setTimeout(function() {
+                            objInput.parent().toggleClass('a-bounce', false);
+                        }, 1000);
+                    }
+                };
+                setTimeout(function() {
+                    if (ExfeeWidget.blur) {
+                        cb();
+                    }
+                    ExfeeWidget.blur  = true;
+                }, 50);
         }
     },
 
