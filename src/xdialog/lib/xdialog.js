@@ -1049,7 +1049,7 @@ define('xdialog', function (require, exports) {
 
       events: {
         'submit .modal-form': function () {
-          this.$('.xbtn-add, .xbtn-done').not('.hide').trigger('click');
+          this.$('.xbtn-add').trigger('click');
           return false;
         },
         'click .xbtn-cancel': function () {
@@ -1115,6 +1115,7 @@ define('xdialog', function (require, exports) {
           } else {
             that.$('.oauth > a[data-oauth="' + provider + '"]').trigger('click');
           }
+          this.$('.xbtn-done').focus();
         },
         'click .xbtn-done': function () {
           this.hide();
