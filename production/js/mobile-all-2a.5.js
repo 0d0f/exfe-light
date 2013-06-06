@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-06 10:06:26 */
+/*! mobile@2a.5 2013-06-06 01:06:34 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4498,9 +4498,9 @@ TWEEN.Tween = function(t) {
     }, T = 0, N = E.length; N > T; ++T) {
       var P = E[T], A = k && k === P.identity.connected_user_id || x === P.identity.id, I = k && k === P.identity.connected_user_id && x === P.identity.id, O = "pending", M = P.rsvp_status;
       (I || "NOTIFICATION" !== M) && ("ACCEPTED" === M ? O = "accepted" : "DECLINED" === M && (O = "declined"), 
-      P.rsvp_style = O, A ? (P.is_me = !0, I && (x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
+      P.rsvp_style = O, A ? (P.is_me = !0, x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
       P.identity.isphone = "phone" === P.identity.provider, h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === M, 
-      S.ACCEPTED.unshift(P))) : P.rsvp_status in S && S[P.rsvp_status].push(P));
+      S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
     }
     C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), h.invitations = [], 
     N = C.length;
