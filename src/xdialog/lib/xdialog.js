@@ -1424,7 +1424,9 @@ define('xdialog', function (require, exports) {
               .removeClass('hide')
               .find('img').attr('src', identity.avatar_filename)
               .next().attr('class', 'provider icon16-identity-' + identity.provider);
-          } else {
+          }
+
+          if (!identity) {
             that.reset();
           }
           that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
