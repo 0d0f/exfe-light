@@ -1075,15 +1075,15 @@ define('xdialog', function (require, exports) {
             , user = Store.get('user')
             , identities = user.identities;
 
-          // 如果该身份已经添加过，则不再重复添加
-          if (R.find(identities, function (v) {
-                if (v.provider === provider && v.external_username === external_username) { return true; }
-              })) {
-            that.destory();
-            return;
-          }
-
           if (flag !== 'AUTHENTICATE') {
+            // 如果该身份已经添加过，则不再重复添加
+            if (R.find(identities, function (v) {
+                  if (v.provider === provider && v.external_username === external_username) { return true; }
+                })) {
+              that.destory();
+              return;
+            }
+
             var addIdentity = that.addIdentity;
             /*
             var addIdentity = function (external_username, provider, that) {
@@ -1400,8 +1400,8 @@ define('xdialog', function (require, exports) {
     },
 
     reset: function () {
-      this.$('#identity').val('');
       this.result = null;
+      this.$('#identity').val('').focus();
     },
 
     //availability: false,
@@ -1414,15 +1414,16 @@ define('xdialog', function (require, exports) {
         var r = that.result = data;
         that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('hide');
         if (r) {
-          if (r.identity.avatar_filename) {
+          var identity = r.identity;
+          if (identity && identity.avatar_filename) {
             that.$('.user-identity')
               .removeClass('hide')
-              .find('img').attr('src', data.identity.avatar_filename)
-              .next().attr('class', 'provider icon16-identity-' + data.identity.provider);
+              .find('img').attr('src', identity.avatar_filename)
+              .next().attr('class', 'provider icon16-identity-' + identity.provider);
           } else {
             that.reset();
           }
-          that.$('.phone-tip').toggleClass('hide', r.identity.provider !== 'phone');
+          that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
         }
         //that.registration_flag = data.registration_flag;
         /*
