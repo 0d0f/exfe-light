@@ -1048,6 +1048,10 @@ define('xdialog', function (require, exports) {
       backdrop: false,
 
       events: {
+        'submit .modal-form': function () {
+          this.$('.xbtn-add, .xbtn-done').not('.hide').click();
+          return false;
+        },
         'click .xbtn-cancel': function () {
           this.destory();
         },
@@ -1085,53 +1089,6 @@ define('xdialog', function (require, exports) {
             }
 
             var addIdentity = that.addIdentity;
-            /*
-            var addIdentity = function (external_username, provider, that) {
-              var authorization = Store.get('authorization')
-                , token = authorization.token;
-              var defer = Api.request('addIdentity',
-                {
-                  type: 'POST',
-                  params: { token: token },
-                  data: {
-                    external_username: external_username,
-                    provider: provider
-                  }
-                },
-                function (data) {
-                  var identity = data.identity;
-                  identities.push(identity);
-                  Store.set('user', user);
-                  var s = Handlebars.compile($('#jst-identity-item').html());
-                  var h = s(data.identity);
-                  $('.identity-list').append(h);
-                  var $ai = $('.modal-ai');
-                  $ai.find('#identity').prop('disabled', true);
-                  $ai.find('.xbtn-add').addClass('hide');
-                  $ai.find('.xbtn-done').removeClass('hide');
-                  $ai.find('.phone-tip').addClass('hide');
-                  $ai.find('.success-tip').removeClass('hide');
-                  //that && that.destory();
-                },
-                function (data) {
-                  var meta = data && data.meta;
-                  if (meta
-                      && meta.code === 401
-                      && meta.errorType === 'authenticate_timeout') {
-
-                    that && that.destory();
-                    var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                    $('#app-tmp').append($d);
-                    var e = $.Event('click.dialog.data-api');
-                    e._data = {callback: function () { addIdentity(external_username, provider)}};
-                    $d.trigger(e);
-                  }
-                }
-              );
-              that && (that.defer = defer);
-            }
-            addIdentity(external_username, provider, that);
-            */
             addIdentity(
               {
                 external_username: external_username,
@@ -1172,69 +1129,23 @@ define('xdialog', function (require, exports) {
         'click .oauth > a': function (e) {
           e.preventDefault();
           var result = this.result
-            , identity = result.identity
-            , provider = identity.provider
-            , external_username = identity.external_username
-            , that = this;
+            , external_username = ''
+            , that = this
+            , provider;
+
+          if (result) {
+            var identity = result.identity;
+            provider = identity.provider
+            external_username = identity.external_username;
+          } else {
+            provider = $(e.target).data('oauth');
+          }
 
           that.$('.authentication')
             .find('.oauth-provider')
             .text(provider);
 
           var addIdentity = that.addIdentity;
-
-          /*
-          function addIdentity(external_username, provider, that) {
-            var authorization = Store.get('authorization')
-              , token = authorization.token;
-            var defer = Api.request('addIdentity',
-              {
-                type: 'POST',
-                params: { token: token },
-                data: {
-                  refere: window.location.href,
-                  external_username: external_username,
-                  provider: provider
-                },
-                beforeSend: function () {
-                  that.$('.modal-body').eq(0).css('opacity', 0);
-                  that.switchTab('d1');
-                  that.$('.authentication')
-                    .find('img')
-                    .removeClass('hide');
-
-                  that.$('.authentication')
-                    .find('.redirecting')
-                    .removeClass('hide');
-
-                  that.$('.authentication')
-                    .find('.xalert-fail')
-                    .addClass('hide');
-                }
-              },
-              function (data) {
-                window.location.href = data.url;
-                that && that.destory();
-              },
-              function (data) {
-                var meta = data && data.meta;
-                if (meta
-                    && meta.code === 401
-                    && meta.errorType === 'authenticate_timeout') {
-
-                  that && that.destory();
-                  var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  $('#app-tmp').append($d);
-                  var e = $.Event('click.dialog.data-api');
-                  e._data = {callback: function () { addIdentity(external_username, provider)}};
-                  $d.trigger(e);
-                }
-              }
-            );
-            that && (that.defer = defer);
-          }
-          addIdentity(external_username, provider, that);
-          */
           addIdentity(
             {
               refere: window.location.href,
@@ -1424,7 +1335,9 @@ define('xdialog', function (require, exports) {
               .removeClass('hide')
               .find('img').attr('src', identity.avatar_filename)
               .next().attr('class', 'provider icon16-identity-' + identity.provider);
-          } else {
+          }
+
+          if (!identity) {
             that.reset();
           }
           that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
