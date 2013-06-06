@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-06 09:06:36 */
+/*! mobile@2a.4 2013-06-06 10:06:50 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4522,7 +4522,7 @@ TWEEN.Tween = function(t) {
       cross: h,
       exfee_id: l.exfee.id,
       token: c
-    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.identity.isphone, h.read_only, D);
+    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, D);
   }, m = n.exports = {
     index: function(t) {
       var e = t.error, n = t.app, i = n.controllers, r = i.home, s = i.footer, a = n.screen;
