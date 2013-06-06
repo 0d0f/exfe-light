@@ -147,7 +147,7 @@ define('mobileroutes', function (require, exports, module) {
           if (myIdId !== invitation.invited_by.id) {
             cross.inviter = invitation.invited_by;
           }
-          if (myIdId === invitation.by_identity.id) {
+          if (myIdId !== invitation.by_identity.id) {
             hide_rsvp = false;
           }
           invitation.identity.isphone = invitation.identity.provider === 'phone';
