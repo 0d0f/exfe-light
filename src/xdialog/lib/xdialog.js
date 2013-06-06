@@ -634,7 +634,7 @@ define('xdialog', function (require, exports) {
       } else {
         this.tab = 'tab2';
         this.$('.tab2').eq(0).removeClass('hide');
-        this.$('.authenticate').data('identity', identity);
+        this.$('.authenticate').removeClass('hide').data('identity', identity);
         this.$('.provider-text').text(provider.substr(0, 1).toUpperCase() + provider.substr(1));
       }
       $identity.find('.avatar img').attr('src', identity.avatar_filename);
