@@ -1068,7 +1068,7 @@ define('xdialog', function (require, exports) {
             return false;
           }
 
-          var flag = result.flag
+          var flag = result.registration_flag
             , identity = result.identity
             , provider = identity.provider
             , external_username = identity.external_username
@@ -1171,8 +1171,10 @@ define('xdialog', function (require, exports) {
         },
         'click .oauth > a': function (e) {
           e.preventDefault();
-          var external_username = ''
-            , provider = $(e.currentTarget).data('oauth')
+          var result = this.result
+            , identity = result.identity
+            , provider = identity.provider
+            , external_username = identity.external_username
             , that = this;
 
           that.$('.authentication')
