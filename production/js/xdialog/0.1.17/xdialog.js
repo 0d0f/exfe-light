@@ -1112,10 +1112,10 @@ define('xdialog', function (require, exports) {
                 $ai.find('.success-tip').removeClass('hide');
               }
             );
+            this.$('.xbtn-done').focus();
           } else {
             that.$('.oauth > a[data-oauth="' + provider + '"]').trigger('click');
           }
-          this.$('.xbtn-done').focus();
         },
         'click .xbtn-done': function () {
           this.hide();
