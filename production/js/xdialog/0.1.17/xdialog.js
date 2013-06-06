@@ -1167,6 +1167,7 @@ define('xdialog', function (require, exports) {
           this.$('.user-identity').addClass('hide');
           $(e.target).addClass('hide');
           this.reset();
+          this.$('#identity').val('').focus();
         },
         'click .oauth > a': function (e) {
           e.preventDefault();
@@ -1403,7 +1404,6 @@ define('xdialog', function (require, exports) {
 
     reset: function () {
       this.result = null;
-      this.$('#identity').val('').focus();
     },
 
     //availability: false,
