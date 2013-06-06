@@ -591,7 +591,7 @@ define('xdialog', function (require, exports) {
         body: ''
           + '<div class="shadow title"></div>'
           + '<div class="center shadow title" style="margin-bottom: 0;">Thanks for using <span class="x-sign">EXFE</span>.</div>'
-          + '<p class="center">A utility for gathering with friends.</p>'
+          + '<p class="center">The group utility for gathering.</p>'
           + '<div class="modal-content">'
             + '<p>Save yourself from calling every one RSVP repeatedly, losing in endless emails messages off-the-point.</p>'
             + '<p><span class="x">·X·</span> (cross) is a gathering, for things to do together. <span class="x-sign">EXFE</span> friends for meetings, parties, sports, trips, etc. Anything you want to gather friends to do.</p>'
@@ -1048,6 +1048,13 @@ define('xdialog', function (require, exports) {
       backdrop: false,
 
       events: {
+        'submit .modal-form': function () {
+          this.$('.xbtn-add').trigger('click');
+          return false;
+        },
+        'click .xbtn-cancel': function () {
+          this.destory();
+        },
         'click #password-eye': function (e) {
           var $e = $(e.currentTarget);
           var $input = $e.prev();
@@ -1056,301 +1063,115 @@ define('xdialog', function (require, exports) {
           });
           $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
-        'click .xbtn-forgotpwd': function (e) {
-          var $btn = $(e.currentTarget)
-            , disabled = $btn.hasClass('disabled');
-
-          if (disabled) {
-            e.stopPropagation();
-            return false;
-          }
-        },
-        'click .xbtn-startover': function () {
-          this.$('.d1, d2, d3').addClass('hide');
-          this.$('.d0').removeClass('hide');
-          this.$('#identity').val('').focus();
-        },
         'click .xbtn-add': function (e) {
           e.preventDefault();
           var that = this
-          var flag = that.registration_flag;
-          var od = that._identity
-          if (!od) {
+            , result = that.result;
+
+          if (!result) {
             return false;
           }
 
-          var provider = od.provider
-            , external_username = od.external_username || ''
-            , user = Store.get('user');
+          var flag = result.registration_flag
+            , identity = result.identity
+            , provider = identity.provider
+            , external_username = identity.external_username
+            , user = Store.get('user')
+            , identities = user.identities;
 
-          // 如果该身份已经添加过，则不再重复添加
-          if (R.find(user.identities, function (v) {
-                if (v.provider === provider && v.external_username === external_username) { return true; }
-              })) {
-            that.destory();
-            return;
-          }
-
-          if (flag === 'SIGN_IN') {
-            var password = $.trim(that.$('#password').val());
-            var successe = false;
-            var btoken = '';
-            var defer = Api.request('signin'
-              , {
-                type: 'POST',
-                data: {
-                  external_username: od.external_username,
-                  provider: od.provider,
-                  password: password,
-                  name: od.name || '',
-                  auto_signin:  false
-                }
-              }
-              , function (data) {
-                  successe = true;
-                  btoken = data.token;
-                  that.$('[for="password"]')
-                    .removeClass('label-error')
-                    .find('span').text('');
-                  that.$('#name')
-                    .nextAll('.xalert-info')
-                    .addClass('hide');
-                }
-              , function (data) {
-                var errorType = data.meta.errorType,
-                    errorDetail = data.meta.errorDetail;
-                if (errorType === 'no_password' || errorType === 'failed') {
-                  that.$('[for="password"]')
-                    .addClass('label-error')
-                    .find('span').text(errorDetail || that.options.errors[errorType]);
-                } else if (errorType === 'no_external_id') {
-                  that.$('#name')
-                    .nextAll('.xalert-info')
-                    .removeClass('hide');
-                }
-              }
-            );
-            defer.done(function (){
-              if (successe) {
-                var authorization = Store.get('authorization')
-                  , token = authorization.token
-                  , id = od.id;
-                that.defer = Api.request('mergeIdentities',
-                  {
-                    type: 'POST',
-                    params: { token: token },
-                    data: {
-                      browsing_identity_token: btoken,
-                      identity_ids: '[' + id + ']'
-                    }
-                  },
-                  function (data) {
-                    var identity = data.status[id];
-                    if (identity) {
-                      var user = Store.get('user'),
-                          identities = user.identities,
-                          s, h;
-                      identities.push(identity);
-                      Store.set('user', user);
-                      s = Handlebars.compile($('#jst-identity-item').html());
-                      h = s(identity);
-                      $('.identity-list').append(h);
-                      that && that.destory();
-                    }
-                  }
-                );
-              }
-            });
-            that.defer = defer;
-          }
-          else if (flag === 'SIGN_UP') {
-            var addIdentity = function (external_username, provider, that) {
-              var authorization = Store.get('authorization')
-                , token = authorization.token;
-              var defer = Api.request('addIdentity',
-                {
-                  type: 'POST',
-                  params: { token: token },
-                  data: {
-                    external_username: external_username,
-                    provider: provider
-                  }
-                },
-                function (data) {
-                  var identity = data.identity
-                    , user = Store.get('user')
-                    , identities = user.identities;
-                  identities.push(identity);
-                  Store.set('user', user);
-                  var s = Handlebars.compile($('#jst-identity-item').html());
-                  var h = s(data.identity);
-                  $('.identity-list').append(h);
-                  that && that.destory();
-                },
-                function (data) {
-                  var meta = data && data.meta;
-                  if (meta
-                      && meta.code === 401
-                      && meta.errorType === 'authenticate_timeout') {
-
-                    that && that.destory();
-                    var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                    $('#app-tmp').append($d);
-                    var e = $.Event('click.dialog.data-api');
-                    e._data = {callback: function () { addIdentity(external_username, provider)}};
-                    $d.trigger(e);
-                  }
-                }
-              );
-              that && (that.defer = defer);
+          if (flag !== 'AUTHENTICATE') {
+            // 如果该身份已经添加过，则不再重复添加
+            if (R.find(identities, function (v) {
+                  if (v.provider === provider && v.external_username === external_username) { return true; }
+                })) {
+              that.destory();
+              return;
             }
-            addIdentity(external_username, provider, that);
-          }
-          else if (flag === 'AUTHENTICATE') {
-            that.$('.oauth > a[data-oauth="' + od.provider + '"]').trigger('click');
-          }
-        },
-        'click .xbtn-verify': function (e) {
-          e.preventDefault();
-          var that = this,
-              od = that._identity;
 
-          var $e = $(e.currentTarget);
-          if ($e.hasClass('xbtn-success')) {
-            that.$('.verify-after').addClass('hide');
-            that.hide();
-            return false;
-          }
-          if (!od) {
-            return false;
-          }
-
-          var provider = od.provider,
-              external_username = od.external_username || '',
-              user = Store.get('user');
-
-          // 如果该身份已经添加过，则不再重复添加
-          if (R.find(user.identities, function (v) {
-                if (v.provider === provider && v.external_username === external_username) { return true; }
-              })) {
-            that.destory();
-            return;
-          }
-
-          function addIdentity(external_username, provider, that) {
-            var authorization = Store.get('authorization')
-              , token = authorization.token;
-            var defer = Api.request('addIdentity',
+            var addIdentity = that.addIdentity;
+            addIdentity(
               {
-                type: 'POST',
-                params: { token: token },
-                data: {
-                  external_username: external_username,
-                  provider: provider
-                }
+                external_username: external_username,
+                provider: provider
               },
+              that,
+              null,
               function (data) {
-                var identity = data.identity
-                  , user = Store.get('user')
-                  , identities = user.identities;
+                var identity = data.identity;
                 identities.push(identity);
                 Store.set('user', user);
                 var s = Handlebars.compile($('#jst-identity-item').html());
                 var h = s(data.identity);
                 $('.identity-list').append(h);
-                that && that.$('.verify-before').addClass('hide');
-                that && that.$('.verify-after').removeClass('hide');
-                that && that.$('.xbtn-verify').addClass('hide');
-                that && that.$('.xbtn-done').removeClass('hide');
-              },
-              function (data) {
-                if (that) {
-                  that.$('.verify-before').removeClass('hide');
-                  that.$('.verify-after').addClass('hide');
-                  that.$('.xbtn-verify').removeClass('hide');
-                  that.$('.xbtn-done').addClass('hide');
-                }
-                var meta = data && data.meta;
-                if (meta
-                    && meta.code === 401
-                    && meta.errorType === 'authenticate_timeout') {
-
-                  that && that.destory();
-                  var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  $('#app-tmp').append($d);
-                  var e = $.Event('click.dialog.data-api');
-                  e._data = {callback: function () { addIdentity(external_username, provider)}};
-                  $d.trigger(e);
-                }
+                var $ai = $('.modal-ai');
+                $ai.find('#identity').prop('disabled', true);
+                $ai.find('.xbtn-add').addClass('hide');
+                $ai.find('.help-subject').addClass('hide');
+                $ai.find('.phone-tip').addClass('hide');
+                $ai.find('.success-tip').removeClass('hide');
+                $ai.find('.xbtn-done').removeClass('hide').focus();
               }
             );
-            that && (that.defer = defer);
+          } else {
+            that.$('.oauth > a[data-oauth="' + provider + '"]').trigger('click');
           }
-          addIdentity(external_username, provider, that);
         },
         'click .xbtn-done': function () {
           this.hide();
         },
+        'click .help-subject': function (e) {
+          e.preventDefault();
+          this.$('.user-identity').addClass('hide');
+          $(e.target).addClass('hide');
+          this.reset();
+          this.$('#identity').val('').focus();
+        },
         'click .oauth > a': function (e) {
           e.preventDefault();
-          var external_username = ''
-            , provider = $(e.currentTarget).data('oauth')
-            , that = this;
+          var result = this.result
+            , external_username = ''
+            , that = this
+            , provider;
+
+          if (result) {
+            var identity = result.identity;
+            provider = identity.provider
+            external_username = identity.external_username;
+          } else {
+            provider = $(e.target).data('oauth');
+          }
 
           that.$('.authentication')
             .find('.oauth-provider')
             .text(provider);
 
-          function addIdentity(external_username, provider, that) {
-            var authorization = Store.get('authorization')
-              , token = authorization.token;
-            var defer = Api.request('addIdentity',
-              {
-                type: 'POST',
-                params: { token: token },
-                data: {
-                  refere: window.location.href,
-                  external_username: external_username,
-                  provider: provider
-                },
-                beforeSend: function () {
-                  that.$('.modal-body').eq(0).css('opacity', 0);
-                  that.switchTab('d05');
-                  that.$('.authentication')
-                    .find('img')
-                    .removeClass('hide');
+          var addIdentity = that.addIdentity;
+          addIdentity(
+            {
+              refere: window.location.href,
+              external_username: external_username,
+              provider: provider
+            },
+            that,
+            function beforeSend() {
+              that.$('.modal-body').eq(0).css('opacity', 0);
+              that.switchTab('d1');
+              that.$('.authentication')
+                .find('img')
+                .removeClass('hide');
 
-                  that.$('.authentication')
-                    .find('.redirecting')
-                    .removeClass('hide');
+              that.$('.authentication')
+                .find('.redirecting')
+                .removeClass('hide');
 
-                  that.$('.authentication')
-                    .find('.xalert-fail')
-                    .addClass('hide');
-                }
-              },
-              function (data) {
-                window.location.href = data.url;
-                that && that.destory();
-              },
-              function (data) {
-                var meta = data && data.meta;
-                if (meta
-                    && meta.code === 401
-                    && meta.errorType === 'authenticate_timeout') {
-
-                  that && that.destory();
-                  var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  $('#app-tmp').append($d);
-                  var e = $.Event('click.dialog.data-api');
-                  e._data = {callback: function () { addIdentity(external_username, provider)}};
-                  $d.trigger(e);
-                }
-              }
-            );
-            that && (that.defer = defer);
-          }
-          addIdentity(external_username, provider, that);
+              that.$('.authentication')
+                .find('.xalert-fail')
+                .addClass('hide');
+            },
+            function done(data) {
+              window.location.href = data.url;
+              that && that.destory();
+            });
           return false;
         }
       },
@@ -1389,7 +1210,7 @@ define('xdialog', function (require, exports) {
             + '<div class="orspliter">or</div>'
             + '<form class="modal-form">'
               + '<fieldset>'
-                + '<legend>Use your online identity:</legend>'
+                + '<legend>Enter identity manually:</legend>'
 
                   + '<div class="clearfix control-group">'
                     + '<label class="control-label" for="identity">Identity: <span class="xalert-message"></span></label>'
@@ -1401,7 +1222,7 @@ define('xdialog', function (require, exports) {
                     + '</div>'
                     + '<div class="controls">'
                       + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
-                      + '<i class="help-subject"></i>'
+                      + '<i class="help-subject icon14-clear hide"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
 
@@ -1409,47 +1230,29 @@ define('xdialog', function (require, exports) {
                         + '<span class="xalert-fail">Please directly authenticate identity above.</span><br />To enable password sign-in for this identity, set an <span class="x-sign">EXFE</span> password first in your profile page.'
                       + '</div>'
 
+                      + '<div class="xalert phone-tip hide" style="padding: 5px;">'
+                        + 'Please format phone number with country<br /> code prefix, e.g.: +1 555 450 0303'
+                      + '</div>'
+
+                      + '<div class="xalert success-tip hide" style="padding: 5px;">'
+                        + 'Add identity request is sent, it should arrive in minutes. Please check your email for instructions.'
+                      + '</div>'
+
                     + '</div>'
-                  + '</div>'
-
-                  + '<div class="control-group d d0">'
-                    + '<label class="control-label" for="password">Password: <span></span></label>'
-                    + '<div class="controls">'
-                      + '<input type="password" class="input-large" id="password" autocomplete="off" placeholder="Identity\'s EXFE password" />'
-                      + '<i class="help-inline icon16-pass-hide pointer" id="password-eye"></i>'
-                    + '</div>'
-                  + '</div>'
-
-                  + '<div class="control-group phone-tip hide">'
-                    + '<div class="xalert">'
-                      + 'Please include country code prefix, e.g.: +1 555 450 0303'
-                    + '</div>'
-                  + '</div>'
-
-                  + '<div class="verify-before d d1 hide">'
-                    + '<span class="xalert-fail">This identity requires verification before using.</span><br />'
-                    + 'Confirm sending verification to your mailbox?'
-                  + '</div>'
-
-                  + '<div class="verify-after d2 hide">'
-                    + 'Verification sent, it should arrive in minutes. Please check your mailbox and follow the instruction.'
                   + '</div>'
 
               + '</fieldset>'
             + '</form>',
 
         footer: ''
-          + '<button class="xbtn-white xbtn-startover d d1 hide">Start Over</button>'
-          + '<button class="xbtn-white xbtn-forgotpwd d d0 disabled" data-dialog-from="addidentity" data-widget="dialog" data-dialog-type="forgotpassword">Forgot Password...</button>'
           + '<button class="pull-right xbtn-blue xbtn-add d d0">Add</button>'
-          + '<button class="pull-right xbtn-blue xbtn-verify d d1 hide">Verify</button>'
-          + '<button class="pull-right xbtn-white xbtn-done d d2 hide">Done</button>',
+          + '<button class="pull-right xbtn-white xbtn-done d d0 hide">Done</button>'
+          + '<a class="pull-right xbtn-cancel d d0">Cancel</a>',
 
         others: ''
-          + '<div class="authentication d d05 hide">'
+          + '<div class="authentication d d1 hide">'
             + '<div class="modal-body">'
               + '<div class="shadow title">Authentication</div>'
-              //+ '<div class="center shadow title">through Twitter</div>'
               + '<div class="content">'
                 + '<img class="hide" src="/static/img/loading.gif" width="32" height="32" />'
                 + '<p class="redirecting hide">Redirecting to <span class="oauth-provider"></span>…</p>'
@@ -1459,6 +1262,46 @@ define('xdialog', function (require, exports) {
           + '</div>'
       }
 
+    },
+
+    addIdentity: function addIdentity(pdata, that, beforeSend, done) {
+      var authorization = Store.get('authorization')
+        , token = authorization.token;
+      var defer = Api.request('addIdentity',
+        {
+          type: 'POST',
+          params: { token: token },
+          data: pdata,
+          beforeSend: function () {
+            beforeSend && beforeSend();
+          }
+        },
+        function (data) {
+          done && done(data);
+        },
+        function (data) {
+          var meta = data && data.meta;
+          if (meta
+              && meta.code === 401
+              && meta.errorType === 'authenticate_timeout') {
+
+            var $d = $('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+            $('#app-tmp').append($d);
+            var e = $.Event('click.dialog.data-api');
+            e._data = {
+              callback: function () {
+                addIdentity({
+                  external_username: pdata.external_username,
+                  provider: pdata.provider
+                });
+              }
+            };
+            that && that.destory();
+            $d.trigger(e);
+          }
+        }
+      );
+      that && (that.defer = defer);
     },
 
     switchTab: function (t) {
@@ -1472,13 +1315,35 @@ define('xdialog', function (require, exports) {
       this.switchTabType = t;
     },
 
-    availability: false,
+    reset: function () {
+      this.result = null;
+    },
+
+    //availability: false,
 
     init: function () {
       var that = this;
-      that.registration_flag = '';
+      //that.registration_flag = '';
       Bus.off('widget-dialog-identification-auto');
       Bus.on('widget-dialog-identification-auto', function (data) {
+        var r = that.result = data;
+        that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('hide');
+        if (r) {
+          var identity = r.identity;
+          if (identity && identity.avatar_filename) {
+            that.$('.user-identity')
+              .removeClass('hide')
+              .find('img').attr('src', identity.avatar_filename)
+              .next().attr('class', 'provider icon16-identity-' + identity.provider);
+          }
+
+          if (!identity) {
+            that.reset();
+          }
+          that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
+        }
+        //that.registration_flag = data.registration_flag;
+        /*
         if (data) {
           if (data.identity && data.identity.avatar_filename) {
             that._identity = data.identity;
@@ -1490,9 +1355,7 @@ define('xdialog', function (require, exports) {
             that._identity = null;
           }
 
-          if (data.identity.provider === 'phone') {
-            that.$('.phone-tip').toggleClass('hide', /\+/.test(that.$('#identity').val()));
-          }
+          that.$('.phone-tip').toggleClass('hide', data.identity.provider !== 'phone');
 
           var registration_flag = data.registration_flag;
           that.registration_flag = registration_flag || '';
@@ -1500,7 +1363,7 @@ define('xdialog', function (require, exports) {
           if (registration_flag === 'SIGN_IN') {
             that.$('.d1, .d2, .d3').addClass('hide');
             that.$('.d0').removeClass('hide');
-            that.$('.xbtn-forgotpwd').removeClass('disabled').data('source', [that._identity]);
+            //that.$('.xbtn-forgotpwd').removeClass('disabled').data('source', [that._identity]);
           }
           // SIGN_UP 新身份
           else if (registration_flag === 'SIGN_UP') {
@@ -1527,12 +1390,11 @@ define('xdialog', function (require, exports) {
           that.$('.phone-tip').addClass('hide');
           that.$('.xbtn-forgotpwd').addClass('disabled').data('source', null);
         }
-
-
+        */
       });
       Bus.off('widget-dialog-identification-nothing');
       Bus.on('widget-dialog-identification-nothing', function () {
-        that.$('.control-group.d').removeClass('hide');
+        //that.$('.control-group.d').removeClass('hide');
         that.$('.phone-tip').addClass('hide');
       });
     }
@@ -2542,9 +2404,9 @@ define('xdialog', function (require, exports) {
         title: 'Browsing Identity',
 
         body: ''
-          + '<div class="shadow title">Browsing Identity</div>'
+          + '<div class="shadow title">Merge Identity?</div>'
           + '<div class="user hide">'
-            + '<div>You’re currently signed in account underneath, you can continue with this account.</div>'
+            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>.<span class="error-detial">Do NOT merge if it’s not you!</span></div>'
             + '<div class="clearfix context-user">'
               + '<div class="pull-left avatar">'
                 + '<img width="40" height="40" alt="" src="" />'

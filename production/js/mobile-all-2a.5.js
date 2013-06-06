@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.4 2013-06-06 09:06:34 */
+/*! mobile@2a.5 2013-06-06 01:06:22 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -180,10 +180,10 @@ var Zepto = function() {
   function h(t) {
     return t in O ? O[t] : O[t] = RegExp("(^|\\s)" + t + "(\\s|$)");
   }
-  function p(t, e) {
+  function d(t, e) {
     return "number" != typeof e || H[l(t)] ? e : e + "px";
   }
-  function d(t) {
+  function p(t) {
     var e, n;
     return I[t] || (e = A.createElement(t), A.body.appendChild(e), n = M(e, "").getPropertyValue("display"), 
     e.parentNode.removeChild(e), "none" == n && (n = "block"), I[t] = n), I[t];
@@ -448,7 +448,7 @@ var Zepto = function() {
     },
     show: function() {
       return this.each(function() {
-        "none" == this.style.display && (this.style.display = null), "none" == M(this, "").getPropertyValue("display") && (this.style.display = d(this.nodeName));
+        "none" == this.style.display && (this.style.display = null), "none" == M(this, "").getPropertyValue("display") && (this.style.display = p(this.nodeName));
       });
     },
     replaceWith: function(t) {
@@ -559,9 +559,9 @@ var Zepto = function() {
     css: function(e, n) {
       if (2 > arguments.length && "string" == typeof e) return this[0] && (this[0].style[S(e)] || M(this[0], "").getPropertyValue(e));
       var i = "";
-      if ("string" == t(e)) n || 0 === n ? i = l(e) + ":" + p(e, n) : this.each(function() {
+      if ("string" == t(e)) n || 0 === n ? i = l(e) + ":" + d(e, n) : this.each(function() {
         this.style.removeProperty(l(e));
-      }); else for (_ in e) e[_] || 0 === e[_] ? i += l(_) + ":" + p(_, e[_]) + ";" : this.each(function() {
+      }); else for (_ in e) e[_] || 0 === e[_] ? i += l(_) + ":" + d(_, e[_]) + ";" : this.each(function() {
         this.style.removeProperty(l(_));
       });
       return this.each(function() {
@@ -673,11 +673,11 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
   });
 }(), function(t) {
   function e(t) {
-    return t._zid || (t._zid = d++);
+    return t._zid || (t._zid = p++);
   }
   function n(t, n, s, a) {
     if (n = i(n), n.ns) var o = r(n.ns);
-    return (p[e(t)] || []).filter(function(t) {
+    return (d[e(t)] || []).filter(function(t) {
       return !(!t || n.e && t.e != n.e || n.ns && !o.test(t.ns) || s && e(t.fn) !== e(s) || a && t.sel != a);
     });
   }
@@ -703,7 +703,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     return m[t] || t;
   }
   function c(n, r, c, u, l, h) {
-    var d = e(n), f = p[d] || (p[d] = []);
+    var p = e(n), f = d[p] || (d[p] = []);
     s(r, c, function(e, r) {
       var s = i(e);
       s.fn = r, s.sel = u, s.e in m && (r = function(e) {
@@ -721,7 +721,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     var l = e(t);
     s(i || "", r, function(e, i) {
       n(t, e, i, c).forEach(function(e) {
-        delete p[l][e.i], t.removeEventListener(o(e.e), e.proxy, a(e, u));
+        delete d[l][e.i], t.removeEventListener(o(e.e), e.proxy, a(e, u));
       });
     });
   }
@@ -745,7 +745,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
       };
     }
   }
-  var p = (t.zepto.qsa, {}), d = 1, f = {}, m = {
+  var d = (t.zepto.qsa, {}), p = 1, f = {}, m = {
     mouseenter: "mouseover",
     mouseleave: "mouseout"
   };
@@ -883,11 +883,11 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
   function h(t, e) {
     return (t + "&" + e).replace(/[&?]{1,2}/, "?");
   }
-  function p(e) {
+  function d(e) {
     e.processData && e.data && "string" != t.type(e.data) && (e.data = t.param(e.data, e.traditional)), 
     !e.data || e.type && "GET" != e.type.toUpperCase() || (e.url = h(e.url, e.data));
   }
-  function d(e, n, i, r) {
+  function p(e, n, i, r) {
     var s = !t.isFunction(n);
     return {
       url: e,
@@ -945,16 +945,16 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     var n = t.extend({}, e || {});
     for (m in t.ajaxSettings) void 0 === n[m] && (n[m] = t.ajaxSettings[m]);
     i(n), n.crossDomain || (n.crossDomain = /^([\w-]+:)?\/\/([^\/]+)/.test(n.url) && RegExp.$2 != window.location.host), 
-    n.url || (n.url = "" + window.location), p(n), n.cache === !1 && (n.url = h(n.url, "_=" + Date.now()));
+    n.url || (n.url = "" + window.location), d(n), n.cache === !1 && (n.url = h(n.url, "_=" + Date.now()));
     var r = n.dataType, c = /=\?/.test(n.url);
     if ("jsonp" == r || c) return c || (n.url = h(n.url, "callback=?")), t.ajaxJSONP(n);
-    var d, f = n.accepts[r], g = {}, y = /^([\w-]+:)\/\//.test(n.url) ? RegExp.$1 : window.location.protocol, b = n.xhr();
+    var p, f = n.accepts[r], g = {}, y = /^([\w-]+:)\/\//.test(n.url) ? RegExp.$1 : window.location.protocol, b = n.xhr();
     n.crossDomain || (g["X-Requested-With"] = "XMLHttpRequest"), f && (g.Accept = f, 
     f.indexOf(",") > -1 && (f = f.split(",", 2)[0]), b.overrideMimeType && b.overrideMimeType(f)), 
     (n.contentType || n.contentType !== !1 && n.data && "GET" != n.type.toUpperCase()) && (g["Content-Type"] = n.contentType || "application/x-www-form-urlencoded"), 
     n.headers = t.extend(g, n.headers || {}), b.onreadystatechange = function() {
       if (4 == b.readyState) {
-        b.onreadystatechange = u, clearTimeout(d);
+        b.onreadystatechange = u, clearTimeout(p);
         var e, i = !1;
         if (b.status >= 200 && 300 > b.status || 304 == b.status || 0 == b.status && "file:" == y) {
           r = r || l(b.getResponseHeader("content-type")), e = b.responseText;
@@ -970,20 +970,20 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     var w = "async" in n ? n.async : !0;
     b.open(n.type, n.url, w);
     for (v in n.headers) b.setRequestHeader(v, n.headers[v]);
-    return s(b, n) === !1 ? (b.abort(), !1) : (n.timeout > 0 && (d = setTimeout(function() {
+    return s(b, n) === !1 ? (b.abort(), !1) : (n.timeout > 0 && (p = setTimeout(function() {
       b.onreadystatechange = u, b.abort(), o(null, "timeout", b, n);
     }, n.timeout)), b.send(n.data ? n.data : null), b);
   }, t.get = function() {
-    return t.ajax(d.apply(null, arguments));
+    return t.ajax(p.apply(null, arguments));
   }, t.post = function() {
-    var e = d.apply(null, arguments);
+    var e = p.apply(null, arguments);
     return e.type = "POST", t.ajax(e);
   }, t.getJSON = function() {
-    var e = d.apply(null, arguments);
+    var e = p.apply(null, arguments);
     return e.dataType = "json", t.ajax(e);
   }, t.fn.load = function(e, n, i) {
     if (!this.length) return this;
-    var r, s = this, a = e.split(/\s/), o = d(e, n, i), c = o.success;
+    var r, s = this, a = e.split(/\s/), o = p(e, n, i), c = o.success;
     return a.length > 1 && (o.url = a[0], r = a[1]), o.success = function(e) {
       s.html(r ? t("<div>").html(e.replace(b, "")).find(r) : e), c && c.apply(s, arguments);
     }, t.ajax(o), this;
@@ -1076,11 +1076,11 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
   }
   var a, o, c, u, l = {}, h = 750;
   t(document).ready(function() {
-    var p, d;
+    var d, p;
     t(document.body).bind("touchstart", function(n) {
-      p = Date.now(), d = p - (l.last || p), l.el = t(e(n.touches[0].target)), a && clearTimeout(a), 
-      l.x1 = n.touches[0].pageX, l.y1 = n.touches[0].pageY, d > 0 && 250 >= d && (l.isDoubleTap = !0), 
-      l.last = p, u = setTimeout(i, h);
+      d = Date.now(), p = d - (l.last || d), l.el = t(e(n.touches[0].target)), a && clearTimeout(a), 
+      l.x1 = n.touches[0].pageX, l.y1 = n.touches[0].pageY, p > 0 && 250 >= p && (l.isDoubleTap = !0), 
+      l.last = d, u = setTimeout(i, h);
     }).bind("touchmove", function(t) {
       r(), l.x2 = t.touches[0].pageX, l.y2 = t.touches[0].pageY, Math.abs(l.x1 - l.x2) > 10 && t.preventDefault();
     }).bind("touchend", function() {
@@ -1870,30 +1870,30 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
         this.lexer.yylloc === void 0 && (this.lexer.yylloc = {});
         var h = this.lexer.yylloc;
         s.push(h);
-        var p = this.lexer.options && this.lexer.options.ranges;
+        var d = this.lexer.options && this.lexer.options.ranges;
         "function" == typeof this.yy.parseError && (this.parseError = this.yy.parseError);
-        for (var d, f, m, v, g, y, b, w, k, x = {}; ;) {
-          if (m = i[i.length - 1], this.defaultActions[m] ? v = this.defaultActions[m] : ((null === d || d === void 0) && (d = e()), 
-          v = a[m] && a[m][d]), v === void 0 || !v.length || !v[0]) {
+        for (var p, f, m, v, g, y, b, w, k, x = {}; ;) {
+          if (m = i[i.length - 1], this.defaultActions[m] ? v = this.defaultActions[m] : ((null === p || p === void 0) && (p = e()), 
+          v = a[m] && a[m][p]), v === void 0 || !v.length || !v[0]) {
             var _ = "";
             if (!l) {
               k = [];
               for (y in a[m]) this.terminals_[y] && y > 2 && k.push("'" + this.terminals_[y] + "'");
-              _ = this.lexer.showPosition ? "Parse error on line " + (c + 1) + ":\n" + this.lexer.showPosition() + "\nExpecting " + k.join(", ") + ", got '" + (this.terminals_[d] || d) + "'" : "Parse error on line " + (c + 1) + ": Unexpected " + (1 == d ? "end of input" : "'" + (this.terminals_[d] || d) + "'"), 
+              _ = this.lexer.showPosition ? "Parse error on line " + (c + 1) + ":\n" + this.lexer.showPosition() + "\nExpecting " + k.join(", ") + ", got '" + (this.terminals_[p] || p) + "'" : "Parse error on line " + (c + 1) + ": Unexpected " + (1 == p ? "end of input" : "'" + (this.terminals_[p] || p) + "'"), 
               this.parseError(_, {
                 text: this.lexer.match,
-                token: this.terminals_[d] || d,
+                token: this.terminals_[p] || p,
                 line: this.lexer.yylineno,
                 loc: h,
                 expected: k
               });
             }
           }
-          if (v[0] instanceof Array && v.length > 1) throw Error("Parse Error: multiple actions possible at state: " + m + ", token: " + d);
+          if (v[0] instanceof Array && v.length > 1) throw Error("Parse Error: multiple actions possible at state: " + m + ", token: " + p);
           switch (v[0]) {
            case 1:
-            i.push(d), r.push(this.lexer.yytext), s.push(this.lexer.yylloc), i.push(v[1]), d = null, 
-            f ? (d = f, f = null) : (u = this.lexer.yyleng, o = this.lexer.yytext, c = this.lexer.yylineno, 
+            i.push(p), r.push(this.lexer.yytext), s.push(this.lexer.yylloc), i.push(v[1]), p = null, 
+            f ? (p = f, f = null) : (u = this.lexer.yyleng, o = this.lexer.yytext, c = this.lexer.yylineno, 
             h = this.lexer.yylloc, l > 0 && l--);
             break;
 
@@ -1903,7 +1903,7 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
               last_line: s[s.length - 1].last_line,
               first_column: s[s.length - (b || 1)].first_column,
               last_column: s[s.length - 1].last_column
-            }, p && (x._$.range = [ s[s.length - (b || 1)].range[0], s[s.length - 1].range[1] ]), 
+            }, d && (x._$.range = [ s[s.length - (b || 1)].range[0], s[s.length - 1].range[1] ]), 
             g = this.performAction.call(x, o, u, c, this.yy, v[1], r, s), g !== void 0) return g;
             b && (i = i.slice(0, 2 * -1 * b), r = r.slice(0, -1 * b), s = s.slice(0, -1 * b)), 
             i.push(this.productions_[v[1]][0]), r.push(x.$), s.push(x._$), w = a[i[i.length - 2]][i[i.length - 1]], 
@@ -2663,9 +2663,9 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
     function i(t) {
       return function() {
         var e = Array.prototype.slice.call(arguments, 0);
-        e.unshift(s), p.appendChild(s), s.addBehavior("#default#userData"), s.load(u);
+        e.unshift(s), d.appendChild(s), s.addBehavior("#default#userData"), s.load(u);
         var n = t.apply(a, e);
-        return p.removeChild(s), n;
+        return d.removeChild(s), n;
       };
     }
     function r(t) {
@@ -2714,12 +2714,12 @@ window.Zepto = Zepto, "$" in window || (window.$ = Zepto), function(t) {
       }
       return t;
     }; else if (c.documentElement.addBehavior) {
-      var p, d;
+      var d, p;
       try {
-        d = new ActiveXObject("htmlfile"), d.open(), d.write('<script>document.w=window</script><iframe src="/favicon.ico"></frame>'), 
-        d.close(), p = d.w.frames[0].document, s = p.createElement("div");
+        p = new ActiveXObject("htmlfile"), p.open(), p.write('<script>document.w=window</script><iframe src="/favicon.ico"></frame>'), 
+        p.close(), d = p.w.frames[0].document, s = d.createElement("div");
       } catch (f) {
-        s = c.createElement("div"), p = c.body;
+        s = c.createElement("div"), d = c.body;
       }
       var m = RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g");
       a.set = i(function(t, e, n) {
@@ -2779,12 +2779,12 @@ var TWEEN = TWEEN || function() {
 }();
 
 TWEEN.Tween = function(t) {
-  var e = t, n = {}, i = {}, r = {}, s = 1e3, a = 0, o = 0, c = null, u = TWEEN.Easing.Linear.None, l = TWEEN.Interpolation.Linear, h = [], p = null, d = !1, f = null, m = null;
+  var e = t, n = {}, i = {}, r = {}, s = 1e3, a = 0, o = 0, c = null, u = TWEEN.Easing.Linear.None, l = TWEEN.Interpolation.Linear, h = [], d = null, p = !1, f = null, m = null;
   for (var v in t) n[v] = parseFloat(t[v], 10);
   this.to = function(t, e) {
     return void 0 !== e && (s = e), i = t, this;
   }, this.start = function(t) {
-    TWEEN.add(this), d = !1, c = void 0 !== t ? t : void 0 !== window.performance && void 0 !== window.performance.now ? window.performance.now() : Date.now(), 
+    TWEEN.add(this), p = !1, c = void 0 !== t ? t : void 0 !== window.performance && void 0 !== window.performance.now ? window.performance.now() : Date.now(), 
     c += o;
     for (var s in i) {
       if (i[s] instanceof Array) {
@@ -2807,14 +2807,14 @@ TWEEN.Tween = function(t) {
   }, this.chain = function() {
     return h = arguments, this;
   }, this.onStart = function(t) {
-    return p = t, this;
+    return d = t, this;
   }, this.onUpdate = function(t) {
     return f = t, this;
   }, this.onComplete = function(t) {
     return m = t, this;
   }, this.update = function(t) {
     if (c > t) return !0;
-    d === !1 && (null !== p && p.call(e), d = !0);
+    p === !1 && (null !== d && d.call(e), p = !0);
     var v = (t - c) / s;
     v = v > 1 ? 1 : v;
     var g = u(v);
@@ -3054,14 +3054,14 @@ TWEEN.Tween = function(t) {
         h.provider = "facebook"; else if (l = u.match(e)) h.name = l[1] || l[2], h.external_username = h.name, 
         h.provider = "twitter"; else if (a.test(u)) h.name = r.cut30length(u.split("@")[0]), 
         h.external_username = u, h.provider = "email"; else if (o.test(u)) {
-          var p = u.indexOf("<");
-          h.name = r.cut30length(u.substring(0, p).replace(/^"|^'|"$|'$/g, "")), h.external_username = h.name, 
+          var d = u.indexOf("<");
+          h.name = r.cut30length(u.substring(0, d).replace(/^"|^'|"$|'$/g, "")), h.external_username = h.name, 
           h.provider = "email";
         } else if (l = u.replace(/[\s\-\(\)\_]/g, "").match(c)) {
-          var d, f, m = l[1];
-          h.provider = "phone", m ? l[3] && l[4] ? (d = l[3], f = l[4], h.name = h.external_username = m + d + f) : l[5] && l[6] ? (d = l[5], 
-          f = l[6], h.name = h.external_username = m + d + f) : (h.name = u, h.provider = null) : (m = "+", 
-          l[4] ? (d = "86", f = l[4]) : (d = "1", f = l[2]), h.name = h.external_username = m + d + f);
+          var p, f, m = l[1];
+          h.provider = "phone", m ? l[3] && l[4] ? (p = l[3], f = l[4], h.name = h.external_username = m + p + f) : l[5] && l[6] ? (p = l[5], 
+          f = l[6], h.name = h.external_username = m + p + f) : (h.name = u, h.provider = null) : (m = "+", 
+          l[4] ? (p = "86", f = l[4]) : (p = "1", f = l[2]), h.name = h.external_username = m + p + f);
         } else h.name = u, h.provider = null;
         return h;
       };
@@ -3163,18 +3163,18 @@ TWEEN.Tween = function(t) {
     var n, i = e[t.token], r = t.type, s = t.date;
     return n = "function" == typeof i ? i(s, r) : i, v(n, s);
   }, o.diff = function(t) {
-    var e, n, s, a, o, c, u = t.target, l = t.distance, h = g(l / r), p = {
+    var e, n, s, a, o, c, u = t.target, l = t.distance, h = g(l / r), d = {
       date: {}
-    }, d = p.date, f = t.days;
-    return d.isToday = t.isToday, u._isToday ? p.token = -1 : -43199 > h ? (p.token = 0, 
-    s = g(-h / 525949), n = g(-h % 525949 / 43829 + i)) : -1439 > h ? (p.token = 1, 
-    e = 3 > -f ? -f : g((-h + 1439) / 1440)) : -107 > h ? (p.token = 2, a = g(-h / 60 + i)) : -81 > h ? p.token = 3 : -59 > h ? p.token = 4 : -29 > h ? (p.token = 5, 
-    o = -h) : 0 > h ? (p.token = 6, o = -h) : 0 === h ? p.token = 7 : 60 > h ? (p.token = 8, 
-    o = h) : 82 > h ? p.token = 9 : 108 > h ? p.token = 10 : 1440 > h ? (p.token = 11, 
-    a = g(h / 60 + i)) : 43200 > h ? (p.token = 12, e = 3 > f ? f : g((h + 1439) / 1440), 
-    c = u.getDay()) : (p.token = 13, s = g(h / 525949), n = g(h % 525949 / 43829 + i), 
-    12 === n && (n = 0, s++)), s && (d.years = s), n && (d.months = n), e && (d.days = e), 
-    a && (d.hours = a), o && (d.minutes = o), c !== void 0 && (d.day = c), p;
+    }, p = d.date, f = t.days;
+    return p.isToday = t.isToday, u._isToday ? d.token = -1 : -43199 > h ? (d.token = 0, 
+    s = g(-h / 525949), n = g(-h % 525949 / 43829 + i)) : -1439 > h ? (d.token = 1, 
+    e = 3 > -f ? -f : g((-h + 1439) / 1440)) : -107 > h ? (d.token = 2, a = g(-h / 60 + i)) : -81 > h ? d.token = 3 : -59 > h ? d.token = 4 : -29 > h ? (d.token = 5, 
+    o = -h) : 0 > h ? (d.token = 6, o = -h) : 0 === h ? d.token = 7 : 60 > h ? (d.token = 8, 
+    o = h) : 82 > h ? d.token = 9 : 108 > h ? d.token = 10 : 1440 > h ? (d.token = 11, 
+    a = g(h / 60 + i)) : 43200 > h ? (d.token = 12, e = 3 > f ? f : g((h + 1439) / 1440), 
+    c = u.getDay()) : (d.token = 13, s = g(h / 525949), n = g(h % 525949 / 43829 + i), 
+    12 === n && (n = 0, s++)), s && (p.years = s), n && (p.months = n), e && (p.days = e), 
+    a && (p.hours = a), o && (p.minutes = o), c !== void 0 && (p.day = c), d;
   }, o.distanceOfTime = function(t, e) {
     t ? "number" == typeof t ? t = new Date(t) : "string" == typeof t && (t = c(u(t))) : t = new Date(), 
     e ? "number" == typeof e ? e = new Date(e) : "string" == typeof e && (e = c(u(e))) : e = new Date(), 
@@ -3188,13 +3188,13 @@ TWEEN.Tween = function(t) {
       isToday: n === a && i === o && r === l
     };
   }, o.toLocaleDate = function(t) {
-    var e, n, i, r = t.outputformat, s = new Date(), a = s.getFullYear() + "-" + d(s.getMonth() + 1) + "-" + d(s.getDate()), o = !1, u = !1;
+    var e, n, i, r = t.outputformat, s = new Date(), a = s.getFullYear() + "-" + p(s.getMonth() + 1) + "-" + p(s.getDate()), o = !1, u = !1;
     if (r) e = s, i = a, o = !0; else {
-      var l = t.begin_at, h = l.date, p = l.time, v = l.timezone, g = "";
-      h ? (g = f(h), p ? g += "T" + m(p) : (u = !0, o = g === a)) : (g = a, p && (g += "T" + m(p))), 
-      h && p && v && (g += "Z"), e = c(g), u && (e.setHours(0), e.setMinutes(0), e.setSeconds(0), 
-      e.setMilliseconds(0)), n = i = e.getFullYear() + "-" + d(e.getMonth() + 1) + "-" + d(e.getDate()), 
-      i += p ? " " + d(e.getHours()) + ":" + d(e.getMinutes()) + ":" + d(e.getSeconds()) : "";
+      var l = t.begin_at, h = l.date, d = l.time, v = l.timezone, g = "";
+      h ? (g = f(h), d ? g += "T" + m(d) : (u = !0, o = g === a)) : (g = a, d && (g += "T" + m(d))), 
+      h && d && v && (g += "Z"), e = c(g), u && (e.setHours(0), e.setMinutes(0), e.setSeconds(0), 
+      e.setMilliseconds(0)), n = i = e.getFullYear() + "-" + p(e.getMonth() + 1) + "-" + p(e.getDate()), 
+      i += d ? " " + p(e.getHours()) + ":" + p(e.getMinutes()) + ":" + p(e.getSeconds()) : "";
     }
     return e._isToday = o, e._reTime = u, {
       date: e,
@@ -3207,23 +3207,23 @@ TWEEN.Tween = function(t) {
       return r.weekdaysShort[i] + ", " + r.monthsShort[e] + " " + n;
     },
     time: function(t, e) {
-      var n = t > 12 ? t - 12 : t, i = n + ":" + d(e);
+      var n = t > 12 ? t - 12 : t, i = n + ":" + p(e);
       return i += t >= 12 ? "PM" : "AM";
     }
   };
   o.printEFTime = function(t, e, n) {
-    var i, r, s, a, c, u = t.outputformat, d = t.begin_at, f = "X" === e, m = {
+    var i, r, s, a, c, u = t.outputformat, p = t.begin_at, f = "X" === e, m = {
       title: "",
       content: ""
     }, v = new Date();
     if (u) i = t.origin.replace(/^['"‘’“”“”‚„]+/, "").replace(/['"‘’“”“”‚„]+$/, ""), 
-    m.title = i, f || (m.content = i, d.date && (t.outputformat = 0, r = o.toLocaleDate(t), 
-    m.content = o(r.date, v), t.outputformat = 1)); else if (n || (n = l), d && (d.date || d.time ? (r = o.toLocaleDate(t), 
-    s = r.date, d.date ? (m.title = o(r.date, v, "X"), m.content = d.time_word + (d.time_word && d.time ? " " : "") + (d.time ? n.time(s.getHours(), s.getMinutes()) : "") + (d.time || d.time_word ? d.time ? " " : ", " : "") + n.date(s.getFullYear(), s.getMonth(), s.getDate(), s.getDay()) + (d.date_word ? " " : "") + d.date_word) : d.time && (m.content = m.title = d.time_word + (d.time_word ? " " : "") + n.time(s.getHours(), s.getMinutes()) + (d.date_word ? ", " : "") + d.date_word), 
-    s.getFullYear() !== v.getFullYear() && (m.content += " " + s.getFullYear())) : (d.date_word || d.time_word) && (m.content = m.title = d.time_word + (d.time_word ? ", " : "") + d.date_word), 
-    d.timezone && (a = d.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, "$1"), c = h(v), 
+    m.title = i, f || (m.content = i, p.date && (t.outputformat = 0, r = o.toLocaleDate(t), 
+    m.content = o(r.date, v), t.outputformat = 1)); else if (n || (n = l), p && (p.date || p.time ? (r = o.toLocaleDate(t), 
+    s = r.date, p.date ? (m.title = o(r.date, v, "X"), m.content = p.time_word + (p.time_word && p.time ? " " : "") + (p.time ? n.time(s.getHours(), s.getMinutes()) : "") + (p.time || p.time_word ? p.time ? " " : ", " : "") + n.date(s.getFullYear(), s.getMonth(), s.getDate(), s.getDay()) + (p.date_word ? " " : "") + p.date_word) : p.time && (m.content = m.title = p.time_word + (p.time_word ? " " : "") + n.time(s.getHours(), s.getMinutes()) + (p.date_word ? ", " : "") + p.date_word), 
+    s.getFullYear() !== v.getFullYear() && (m.content += " " + s.getFullYear())) : (p.date_word || p.time_word) && (m.content = m.title = p.time_word + (p.time_word ? ", " : "") + p.date_word), 
+    p.timezone && (a = p.timezone.replace(/^([+\-]\d\d:\d\d)[\w\W]*$/, "$1"), c = h(v), 
     a !== c))) {
-      var g = p(v);
+      var g = d(v);
       m.content += " (" + c + (g && " " + g) + ")";
     }
     return m;
@@ -3236,8 +3236,8 @@ TWEEN.Tween = function(t) {
   var h = o.getTimezone = function(t) {
     var e, n, i, r;
     return t || (t = new Date()), e = t.getTimezoneOffset(), r = 0 >= e ? "+" : "-", 
-    e = Math.abs(e), n = g(e / 60), i = e - 60 * n, r + d(n) + ":" + d(i);
-  }, p = function(t) {
+    e = Math.abs(e), n = g(e / 60), i = e - 60 * n, r + p(n) + ":" + p(i);
+  }, d = function(t) {
     var e;
     return t || (t = new Date()), e = ("" + t).replace(/^.*:\d\d( GMT[+-]\d+)? \(?([A-Za-z ]+)\)?\d*$/, "$2").replace(/[a-z ]/g, ""), 
     3 === e.length ? e : "";
@@ -3259,16 +3259,16 @@ TWEEN.Tween = function(t) {
       type: "CrossTime"
     };
   };
-  var d = o.lead0 = function(t, e) {
+  var p = o.lead0 = function(t, e) {
     for (t = "" + t, e || (e = 2); e > t.length; ) t = "0" + t;
     return t;
   }, f = o.formatDate = function(t) {
     var n;
-    return e.test(t) ? n = t : (n = t.split("-"), n[1] = d(n[1]), n[2] = d(n[2]), n = n.join("-")), 
+    return e.test(t) ? n = t : (n = t.split("-"), n[1] = p(n[1]), n[2] = p(n[2]), n = n.join("-")), 
     n;
   }, m = o.formatTime = function(t) {
     var e;
-    return n.test(t) ? e = t : (e = t.split(":"), e[0] = d(e[0]), e[1] = d(e[1]), e[2] = d(e[2]), 
+    return n.test(t) ? e = t : (e = t.split(":"), e[0] = p(e[0]), e[1] = p(e[1]), e[2] = p(e[2]), 
     e = e.join(":")), e;
   }, v = function(e, n) {
     var i, r, s, a, o = e.match(t), c = 0;
@@ -3318,14 +3318,14 @@ TWEEN.Tween = function(t) {
   function h() {
     return ++h.id;
   }
-  function p(t, e, n) {
+  function d(t, e, n) {
     var i = t.length;
     if (!i) return -1;
     if (n || (n = 0), n > i) return -1;
     for (0 > n && (n = Math.max(0, i + n)); i > n; ++n) if (n in t && t[n] === e) return n;
     return -1;
   }
-  function d(t, e, n, i, r) {
+  function p(t, e, n, i, r) {
     return w.get(e, function(e) {
       var s, a = e;
       "html" !== r && (s = t.compile(e), a = s(n)), i(a);
@@ -3395,7 +3395,7 @@ TWEEN.Tween = function(t) {
     return this.set(t, !1);
   }, S.configure = function(t, e) {
     var n = "all", i = [].slice.call(arguments);
-    return e = i.pop(), i.length && (n = i), ("all" === n || ~p(n, this.settings.env)) && e.call(this), 
+    return e = i.pop(), i.length && (n = i), ("all" === n || ~d(n, this.settings.env)) && e.call(this), 
     this;
   }, S.render = function(t, e, n) {
     var i, r = {}, s = this.cache;
@@ -3497,17 +3497,17 @@ TWEEN.Tween = function(t) {
         s(t._route_index + 1, e);
       }
       function u(e) {
-        g = 0, v = m[a++], d = v && t.params[v.name], p = v && i[v.name];
+        g = 0, v = m[a++], p = v && t.params[v.name], d = v && i[v.name];
         try {
-          "route" === e ? c() : e ? (a = 0, h(e)) : p && void 0 !== d ? l() : v ? u() : (a = 0, 
+          "route" === e ? c() : e ? (a = 0, h(e)) : d && void 0 !== p ? l() : v ? u() : (a = 0, 
           h());
         } catch (e) {
           u(e);
         }
       }
       function l(n) {
-        var i = p[g++];
-        return n || !i ? u(n) : (i(t, e, l, d, v.name), void 0);
+        var i = d[g++];
+        return n || !i ? u(n) : (i(t, e, l, p, v.name), void 0);
       }
       function h(n) {
         var i = f.callbacks[a++];
@@ -3520,7 +3520,7 @@ TWEEN.Tween = function(t) {
           h(n);
         }
       }
-      var p, d, f, m, v, g = 0;
+      var d, p, f, m, v, g = 0;
       return t.route = f = r.matchRequest(t, a), f ? (t.params = f.params, m = f.keys, 
       a = 0, u(o), void 0) : n(o);
     })(0);
@@ -3545,7 +3545,7 @@ TWEEN.Tween = function(t) {
   }, S = u.prototype, S.lookup = function(t) {
     return this.root + "/" + t + "?t=" + this.timestamp;
   }, S.render = function(t, e) {
-    return d(this.engine, this.path, t, e, this.ext);
+    return p(this.engine, this.path, t, e, this.ext);
   }, h.id = 0;
   var T = Array.isArray;
   T || (T = function(t) {
@@ -3558,14 +3558,14 @@ TWEEN.Tween = function(t) {
   }
   function n() {
     N = navigator.geolocation.watchPosition(function(t) {
-      t && t.coords && t.coords.latitude && t.coords.longitude && t.coords.accuracy && (p.latitude = "" + t.coords.latitude, 
-      p.longitude = "" + t.coords.longitude, p.accuracy = "" + t.coords.accuracy, c = o - 5, 
-      g("Location update: lat = " + p.latitude + ", " + "lng = " + p.longitude + ", " + "acu = " + p.accuracy));
+      t && t.coords && t.coords.latitude && t.coords.longitude && t.coords.accuracy && (d.latitude = "" + t.coords.latitude, 
+      d.longitude = "" + t.coords.longitude, d.accuracy = "" + t.coords.accuracy, c = o - 5, 
+      g("Location update: lat = " + d.latitude + ", " + "lng = " + d.longitude + ", " + "acu = " + d.accuracy));
     });
   }
   var i = window._ENV_, r = i.streaming_api_url, s = i.api_url;
   t("store");
-  var a = "", o = 30, c = o, u = !1, l = null, h = "", p = {
+  var a = "", o = 30, c = o, u = !1, l = null, h = "", d = {
     card: {
       id: "",
       name: "",
@@ -3578,7 +3578,7 @@ TWEEN.Tween = function(t) {
     longitude: "",
     accuracy: "",
     traits: []
-  }, d = Date.now || function() {
+  }, p = Date.now || function() {
     return new Date().getTime();
   }, r = r, f = null, m = null, v = null, g = function(t, e) {
     if (u) {
@@ -3590,11 +3590,11 @@ TWEEN.Tween = function(t) {
     c = 0, g("Breathe with" + (a ? " token: " + a : "out token")), f && f.abort(), f = $.ajax({
       type: "post",
       url: r + "/v3/live/cards" + (a ? "?token=" + a : ""),
-      data: JSON.stringify(p),
+      data: JSON.stringify(d),
       success: function(t) {
         var e = t;
         e && e.length && (c = 0, a !== e[0] && (g("Got new token: " + e[0] + ", id: " + e[1]), 
-        x.live && (x.kill(), g("Close current stream")), c = o), a = e[0], p.card.id = e[1]);
+        x.live && (x.kill(), g("Close current stream")), c = o), a = e[0], d.card.id = e[1]);
       },
       error: function(t) {
         t.status && t.status >= 400 && 499 >= t.status ? (a && g("Repeal token: " + a), 
@@ -3606,11 +3606,11 @@ TWEEN.Tween = function(t) {
       var e = JSON.parse(t[t.length - 1]);
       if (e && e.length) {
         var n = {};
-        for (var i in e) e[i].id && (e[i].id === p.card.id ? (p.card.name = e[i].name, p.card.avatar = e[i].avatar, 
-        p.card.bio = e[i].bio, p.card.identities = e[i].identities, p.card.timestamp = e[i].timestamp) : (e[i].avatar || (e[i].avatar = encodeURI(s + "/avatar/default?name=" + e[i].name)), 
+        for (var i in e) e[i].id && (e[i].id === d.card.id ? (d.card.name = e[i].name, d.card.avatar = e[i].avatar, 
+        d.card.bio = e[i].bio, d.card.identities = e[i].identities, d.card.timestamp = e[i].timestamp) : (e[i].avatar || (e[i].avatar = encodeURI(s + "/avatar/default?name=" + e[i].name)), 
         n[e[i].id] = e[i]));
         var r = {
-          me: S(p.card),
+          me: S(d.card),
           others: n
         }, a = JSON.stringify(r);
         g("Streaming pops: " + a, n), l && h !== a && (g("Callback"), l(r), h = a);
@@ -3619,7 +3619,7 @@ TWEEN.Tween = function(t) {
   }, w = function() {
     g("Streaming is dead");
   }, k = function() {
-    C(p.card) && ++c >= o && y();
+    C(d.card) && ++c >= o && y();
   }, x = {
     prvLen: null,
     nxtIdx: null,
@@ -3682,8 +3682,8 @@ TWEEN.Tween = function(t) {
     return e;
   }, T = {
     init: function(t, e) {
-      C(t) ? (x.kill(), p.card.name = t.name, p.card.avatar = t.avatar, p.card.bio = t.bio, 
-      p.card.identities = S(t.identities), p.card.timestamp = d(), g("Set my card: " + JSON.stringify(p.card))) : g("Card error"), 
+      C(t) ? (x.kill(), d.card.name = t.name, d.card.avatar = t.avatar, d.card.bio = t.bio, 
+      d.card.identities = S(t.identities), d.card.timestamp = p(), g("Set my card: " + JSON.stringify(d.card))) : g("Card error"), 
       e && (l = e, g("Set callback function")), c = o;
     },
     shake: function(t, e) {
@@ -3737,7 +3737,7 @@ TWEEN.Tween = function(t) {
   };
 }), define("mobilecontroller", function(t, e, n) {
   "use strict";
-  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = window.openExfe, u = t("handlebars"), l = t("util"), h = l.trim, p = l.parseId, d = navigator.userAgent.match(/iPad/), f = t("live"), m = function(t, e) {
+  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = window.openExfe, u = t("handlebars"), l = t("util"), h = l.trim, d = l.parseId, p = navigator.userAgent.match(/iPad/), f = t("live"), m = function(t, e) {
     return t.replace(e ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }, v = Date.now || function() {
     return new Date().getTime();
@@ -3822,14 +3822,14 @@ TWEEN.Tween = function(t) {
           position: "relative",
           top: r + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        d && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
+        p && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
       }), this.on("reset-position", function() {
         var t = App.screen.height - 96;
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        d && this.$(".web-version").removeClass("hide");
+        p && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-cross", function(t, e, n) {
         this.element.css({
           position: "relative",
@@ -3839,14 +3839,14 @@ TWEEN.Tween = function(t) {
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), d && this.$(".web-version").removeClass("hide");
+        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), p && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(t) {
         g(t);
       });
     },
     addNotificationIdentity: function(t, e, n) {
       e = this.cross.exfee_id, n = this.cross.token;
-      var i = p(t);
+      var i = d(t);
       return i && "email" !== i.provider ? ($("#email.email").attr("placeholder", "Bad email Address."), 
       void 0) : ($.ajax({
         type: "POST",
@@ -3892,8 +3892,8 @@ TWEEN.Tween = function(t) {
               var h = c[u];
               if (h.id === e.identity_id) {
                 if (t.showIdentity(h), t.$(".done-info").removeClass("hide"), s && o) {
-                  var p = "?token=" + o + "&user_id=" + s + "&identity_id=" + h.id;
-                  App.controllers.footer.emit("redirect", p);
+                  var d = "?token=" + o + "&user_id=" + s + "&identity_id=" + h.id;
+                  App.controllers.footer.emit("redirect", d);
                 }
                 break;
               }
@@ -4144,7 +4144,7 @@ TWEEN.Tween = function(t) {
         $(this).next().addClass("hidden"), n.updateIdentityLi(this);
       }).on("touchstart.live", ".list .delete", function() {
         var t, e = $(this).prev()[0], i = h(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
-        s && (i += "@facebook"), t = p(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
+        s && (i += "@facebook"), t = d(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
         s && n.emit("show-add-facebook");
       }).on("touchstart.live", ".btn-start", function() {
         var t = $(".list .input-item");
@@ -4161,12 +4161,12 @@ TWEEN.Tween = function(t) {
         var t = this, e = t.parentNode, n = $(e).data("card"), i = e.style.transform || e.style.webkitTransform, r = i.match(/([\-\d\.]+)/g).slice(1), s = document.getElementById("card-tip"), a = "";
         if (n && n.identities) {
           for (var o = 0, c = n.identities.length; c > o; ++o) {
-            var u = n.identities[o], l = u.provider, h = u.external_username, p = "";
+            var u = n.identities[o], l = u.provider, h = u.external_username, d = "";
             "email" !== l && "phone" !== l && (l = l.substr(0, 1).toUpperCase() + l.substr(1), 
-            p = '<span class="provider">' + l + "</span>"), a += '<li><span class="external-username' + (p ? "" : " normal") + '">' + h + "</span>" + p + "</li>";
+            d = '<span class="provider">' + l + "</span>"), a += '<li><span class="external-username' + (d ? "" : " normal") + '">' + h + "</span>" + d + "</li>";
           }
           s.querySelector("ul").innerHTML = a;
-          var d = s.clientHeight, f = ~~r[12] - 68, m = ~~r[13] - (6 + d), v = 93;
+          var p = s.clientHeight, f = ~~r[12] - 68, m = ~~r[13] - (6 + p), v = 93;
           0 > f ? f = 10 : f + 200 >= 320 && (f = 110), (10 === f || 110 === f) && (v = ~~r[12] + 32 - 7 - f), 
           r[12] = f, r[13] = m - 5, r[14] = 7, b(s, r), s.querySelector(".ang").style.left = v + "px", 
           s.querySelector(".bio").innerText = n.bio, s.className = "card-tip";
@@ -4222,9 +4222,9 @@ TWEEN.Tween = function(t) {
     },
     updateIdentityLi: function(t) {
       var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = h(t.value), o = !1, c = !1, u = !1;
-      if (a) if ("facebook" === i && (a += "@facebook"), e = p(a), e && e.provider) {
-        var l = this.findIdentity(e), d = e.provider === i && e.external_username === n;
-        l && !d && (t.value = s), l || d || (u = !0, o = !0);
+      if (a) if ("facebook" === i && (a += "@facebook"), e = d(a), e && e.provider) {
+        var l = this.findIdentity(e), p = e.provider === i && e.external_username === n;
+        l && !p && (t.value = s), l || p || (u = !0, o = !0);
       } else c = !0, o = !0; else c = !0, o = !0;
       c && (t.setAttribute("data-name", s), t.setAttribute("data-external-username", s), 
       t.setAttribute("data-provider", s), setTimeout(function() {
@@ -4307,13 +4307,13 @@ TWEEN.Tween = function(t) {
       }
     },
     addFacebook: function(t, e) {
-      var n = p(e), i = n.provider;
+      var n = d(e), i = n.provider;
       return i && "facebook" === i && !this.existsByIdentity(n) ? (this.addIdentity(n), 
       !0) : !1;
     },
     addEmailOrPhone: function(t, e, n) {
       n = !n;
-      var i = p(e), r = i.provider;
+      var i = d(e), r = i.provider;
       !r || "email" !== r && "phone" !== r || this.existsByIdentity(i) || (this.addIdentity(i), 
       n && this.setCardName(t)), n && (this.emit("show-add-email"), this.emit("show-add-facebook")), 
       this.emit("post-card");
@@ -4350,7 +4350,7 @@ TWEEN.Tween = function(t) {
     packedIdentities: function() {
       for (var t, e, n, i, r, s = this.$(".identities .list").find("input"), a = 0, o = s.length, c = []; o > a; ++a) t = s.eq(a), 
       e = t.attr("data-provider"), n = h(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
-      i = p(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
+      i = d(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
       return c;
     },
     existsByIdentity: function(t) {
@@ -4451,7 +4451,7 @@ TWEEN.Tween = function(t) {
   var i = window._ENV_, r = t("store"), s = t("handlebars"), a = t("humantime"), o = function(t) {
     var e = a.printEFTime(t, "X");
     return e;
-  }, c = t("mobilecontroller"), u = c.HomeController, l = c.SetPasswordController, h = c.VerifyController, p = c.CrossController, d = c.LiveController, f = function(t, e, n, i, a, c) {
+  }, c = t("mobilecontroller"), u = c.HomeController, l = c.SetPasswordController, h = c.VerifyController, d = c.CrossController, p = c.LiveController, f = function(t, e, n, i, a, c) {
     i || (i = {});
     var u = n.response, l = u.cross, h = {
       id: l.id,
@@ -4468,8 +4468,8 @@ TWEEN.Tween = function(t) {
       background: "default.jpg",
       read_only: !!u.read_only,
       change_name: !1
-    }, d = l.time;
-    d && d.begin_at && d.begin_at.timezone ? h.time = o(d) : h.time.tobe = "tobe";
+    }, p = l.time;
+    p && p.begin_at && p.begin_at.timezone ? h.time = o(p) : h.time.tobe = "tobe";
     var f = l.place;
     f && f.title && (h.place = {
       title: f.title,
@@ -4497,33 +4497,33 @@ TWEEN.Tween = function(t) {
       IGNORED: [],
       DECLINED: []
     }, T = 0, N = E.length; N > T; ++T) {
-      var P = E[T], A = "pending", I = P.rsvp_status;
-      "NOTIFICATION" !== I && ("ACCEPTED" === I ? A = "accepted" : "DECLINED" === I && (A = "declined"), 
-      P.rsvp_style = A, k && k === P.identity.connected_user_id || x === P.identity.id ? (P.is_me = !0, 
-      x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), P.identity.isphone = "phone" === P.identity.provider, 
-      h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === I, S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
+      var P = E[T], A = k && k === P.identity.connected_user_id || x === P.identity.id, I = k && k === P.identity.connected_user_id && x === P.identity.id, O = "pending", M = P.rsvp_status;
+      (I || "NOTIFICATION" !== M) && ("ACCEPTED" === M ? O = "accepted" : "DECLINED" === M && (O = "declined"), 
+      P.rsvp_style = O, A ? (P.is_me = !0, x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
+      P.identity.isphone = "phone" === P.identity.provider, h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === M, 
+      S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
     }
     C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), h.invitations = [], 
     N = C.length;
-    for (var O = 0; N > O; ) h.invitations.push(C.splice(0, 5)), O += 5;
+    for (var H = 0; N > H; ) h.invitations.push(C.splice(0, 5)), H += 5;
     N = h.invitations.length;
-    var M = h.invitations[N - 1], H = M.length;
-    if (H && 5 > H) for (;5 - H++; ) M.push(void 0);
-    var D = "";
-    k && (_ ? (D = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
-    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (D = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
-    c = _.token))), h.identity.isphone && c && (h.change_name = !0);
-    var j = t.app, L = j.controllers, R = L.cross;
-    R && R.destory();
-    var F = s.compile($("#cross-tmpl").html());
-    R = j.controllers.cross = new p({
+    var D = h.invitations[N - 1], j = D.length;
+    if (j && 5 > j) for (;5 - j++; ) D.push(void 0);
+    var L = "";
+    k && (_ ? (L = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (L = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    c = _.token))), c && h.identity.isphone && (h.change_name = !0);
+    var R = t.app, F = R.controllers, z = F.cross;
+    z && z.destory();
+    var B = s.compile($("#cross-tmpl").html());
+    z = R.controllers.cross = new d({
       options: {
-        template: F(h)
+        template: B(h)
       },
       cross: h,
       exfee_id: l.exfee.id,
       token: c
-    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, D);
+    }), z.emit("show"), R.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, L);
   }, m = n.exports = {
     index: function(t) {
       var e = t.error, n = t.app, i = n.controllers, r = i.home, s = i.footer, a = n.screen;
@@ -4574,7 +4574,7 @@ TWEEN.Tween = function(t) {
     },
     live: function(t) {
       var e = t.app, n = e.controllers, i = n.live;
-      i && i.destory(), i = e.controllers.live = new d({
+      i && i.destory(), i = e.controllers.live = new p({
         options: {
           template: $("#live-tmpl").html()
         }

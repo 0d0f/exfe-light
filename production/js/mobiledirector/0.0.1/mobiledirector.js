@@ -27,7 +27,7 @@
   window.openExfe = function () {
     launchApp('', function () {
       xframe.src = itunes;
-    })
+    });
   };
 
   var failBack = function (cb) {

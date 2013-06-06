@@ -4538,6 +4538,7 @@ img:-moz-broken {
 
 .hide-inline {
   display: none;
+  display: none !important;
 }
 
 .hidden {
@@ -6876,6 +6877,7 @@ body {
 
 .navbar .nav > li.hide {
   display: none;
+  display: none !important;
 }
 
 .navbar .brand,
@@ -8708,6 +8710,7 @@ body {
 
 .no-bg .cross-background .cross-background-blur {
   display: none;
+  display: none !important;
 }
 
 .no-bg .cross-container {
@@ -9107,6 +9110,7 @@ body {
   bottom: -4px;
   left: -4px;
   display: none;
+  display: none !important;
   border: 4px solid #abc5e1;
   -webkit-border-radius: 7px;
      -moz-border-radius: 7px;
@@ -9121,6 +9125,7 @@ body {
   bottom: -2px;
   left: -2px;
   display: none;
+  display: none !important;
   border: 2px solid #abc5e1;
   -webkit-border-radius: 7px;
      -moz-border-radius: 7px;
@@ -9889,6 +9894,7 @@ body {
 
 .settings-panel .user-infos .identity-list .icon-move {
   display: none;
+  display: none !important;
 }
 
 .settings-panel .user-infos .identity-list .editing .mkdef {
@@ -9897,7 +9903,6 @@ body {
 
 .settings-panel .user-infos .identity-list .over,
 .settings-panel .user-infos .identity-list .dragme {
-  margin-left: -15px;
   background: #eff6f9;
 }
 
@@ -9942,6 +9947,7 @@ body {
 
 .settings-panel .user-infos .identity-list .mkdef {
   display: none;
+  display: none !important;
   color: #7f7f7f;
   text-decoration: underline;
 }
@@ -10014,6 +10020,7 @@ body {
 
 .settings-panel .identities-trash .removed {
   display: none;
+  display: none !important;
 }
 
 .settings-panel .identities-trash .trash-message {
@@ -10035,6 +10042,7 @@ body {
 
 .settings-panel .identities-trash.over .draged {
   display: none;
+  display: none !important;
 }
 
 .settings-panel .identities-trash.over .removed {
@@ -10286,6 +10294,7 @@ body {
   top: -5px;
   right: -3px;
   display: none;
+  display: none !important;
   font: 0/0 a;
   color: transparent;
   -webkit-box-shadow: none;
@@ -10300,6 +10309,7 @@ body {
   /*margin-top: -8px;*/
 
   display: none;
+  display: none !important;
 }
 
 .invitations .cross-box .xbtn-accept:before {
@@ -10334,6 +10344,7 @@ body {
 
 .updates .cross-tip {
   display: none;
+  display: none !important;
   padding: 10px 0;
   line-height: 18px;
   color: #7f7f7f;
@@ -12327,4 +12338,8 @@ ol.complete-list {
 
 #app-main {
   margin-bottom: 100px;
+}
+
+.hide {
+  display: none !important;
 }
