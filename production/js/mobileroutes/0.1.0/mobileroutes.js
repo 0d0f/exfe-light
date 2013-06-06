@@ -121,17 +121,22 @@ define('mobileroutes', function (require, exports, module) {
       };
       // current identity rsvp
       for (var i = 0, len = originInvitations.length; i < len; ++i) {
-        var invitation = originInvitations[i];
-        var style = 'pending', rsvp_status = invitation.rsvp_status;
-        if (rsvp_status === 'NOTIFICATION') { continue; }
+        var invitation = originInvitations[i]
+          , is_me = (user_id && user_id === invitation.identity.connected_user_id)
+              || myIdId === invitation.identity.id
+          , style = 'pending'
+          , rsvp_status = invitation.rsvp_status;
+
+        if (!is_me && rsvp_status === 'NOTIFICATION') { continue; }
+
         if (rsvp_status === 'ACCEPTED') {
           style = 'accepted';
         } else if (rsvp_status === 'DECLINED') {
           style = 'declined';
         }
+
         invitation.rsvp_style = style;
-        if ((user_id && user_id === invitation.identity.connected_user_id)
-              || myIdId === invitation.identity.id) {
+        if (is_me) {
           invitation.is_me = true;
           myIdId = invitation.identity.id;
           if (myIdId !== invitation.invited_by.id) {
@@ -194,7 +199,7 @@ define('mobileroutes', function (require, exports, module) {
         }
       }
 
-      if (cross.identity.isphone && token) {
+      if (token && cross.identity.isphone) {
         cross.change_name = true;
       }
 
