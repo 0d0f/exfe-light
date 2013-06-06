@@ -1106,13 +1106,12 @@ define('xdialog', function (require, exports) {
                 var $ai = $('.modal-ai');
                 $ai.find('#identity').prop('disabled', true);
                 $ai.find('.xbtn-add').addClass('hide');
-                $ai.find('.xbtn-done').removeClass('hide');
                 $ai.find('.help-subject').addClass('hide');
                 $ai.find('.phone-tip').addClass('hide');
                 $ai.find('.success-tip').removeClass('hide');
+                $ai.find('.xbtn-done').removeClass('hide').focus();
               }
             );
-            this.$('.xbtn-done').focus();
           } else {
             that.$('.oauth > a[data-oauth="' + provider + '"]').trigger('click');
           }
