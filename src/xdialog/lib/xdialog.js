@@ -616,21 +616,29 @@ define('xdialog', function (require, exports) {
 
   dialogs.forgotpassword = {
 
+    tab: '',
+
     updateIdentity: function (identity) {
       var provider = identity.provider;
       var $identity = this.$('.context-identity');
       this.$('.tab').addClass('hide');
       this.$('.xbtn-done').addClass('hide');
       if (provider === 'email') {
-        this.$('.tab1').removeClass('hide');
-        this.$('.xbtn-send').data('identity', identity);
-      }
-      else {
-        this.$('.tab2').removeClass('hide');
+        this.tab = 'tab0';
+        this.$('.tab0').eq(0).removeClass('hide');
+        this.$('.xbtn-send').removeClass('hide').data('identity', identity);
+      } else if (provider === 'phone') {
+        this.tab = 'tab1';
+        this.$('.tab1').eq(0).removeClass('hide');
+        this.$('.xbtn-send').removeClass('hide').data('identity', identity);
+      } else {
+        this.tab = 'tab2';
+        this.$('.tab2').eq(0).removeClass('hide');
         this.$('.authenticate').data('identity', identity);
+        this.$('.provider-text').text(provider.substr(0, 1).toUpperCase() + provider.substr(1));
       }
       $identity.find('.avatar img').attr('src', identity.avatar_filename);
-      $identity.find('.provider').attr('class', 'provider icon16-identity-' + identity.provider);
+      $identity.find('.provider').attr('class', 'provider icon16-identity-' + provider);
       $identity.find('.identity').text(identity.eun);
     },
 
@@ -666,8 +674,7 @@ define('xdialog', function (require, exports) {
                   external_username: i.external_username
                 },
                 beforeSend: function () {
-                  that.$('.send-before').removeClass('hide');
-                  that.$('.send-after').addClass('hide');
+                  that.$('.authenticate-before.tab2').removeClass('hide');
                   $e.addClass('disabled');
                 },
                 complete: function () {
@@ -717,8 +724,6 @@ define('xdialog', function (require, exports) {
             , index = $(e.currentTarget).data('index');
 
           this.updateIdentity(ids[index]);
-          // TODO: 优化
-          //this.$('.dropdown-toggle').removeClass('open');
         },
 
         'click .xbtn-cancel': function () {
@@ -739,6 +744,7 @@ define('xdialog', function (require, exports) {
 
         'click .xbtn-send': function (e) {
           var that = this;
+          var tab = that.tab;
           var $e = $(e.currentTarget);
           if ($e.hasClass('disabled')) {
             return;
@@ -753,11 +759,13 @@ define('xdialog', function (require, exports) {
                   external_username: i.external_username
                 },
                 beforeSend: function () {
-                  that.$('.send-before').removeClass('hide');
-                  that.$('.send-after').addClass('hide');
+                  that.$('.send-before.' + tab).removeClass('hide');
+                  that.$('.send-after.' + tab).addClass('hide');
                   $e.addClass('disabled');
                 },
                 complete: function () {
+                  that.$('.send-before.' + tab).addClass('hide');
+                  that.$('.send-after.' + tab).removeClass('hide');
                   $e.removeClass('disabled');
                 }
               }
@@ -767,8 +775,8 @@ define('xdialog', function (require, exports) {
                   that.$('.identity').next().removeClass('hide');
                   $e.addClass('hide');
                   that.$('.xbtn-done').removeClass('hide');
-                  that.$('.send-before').addClass('hide');
-                  that.$('.send-after').removeClass('hide');
+                  that.$('.send-before.' + tab).addClass('hide');
+                  that.$('.send-after.' + tab).removeClass('hide');
                 }
               }
               //, function (data) {}
@@ -781,6 +789,7 @@ define('xdialog', function (require, exports) {
         var that = this,
             ids = $(e.currentTarget).data('source'),
             l, first, eun;
+
         if (ids && (l = ids.length)) {
           first = ids[0];
           eun = first.external_username;
@@ -831,19 +840,21 @@ define('xdialog', function (require, exports) {
             + '</div>'
           + '</div>'
           + '<div class="alert-label">'
-            + '<div class="send-before tab tab1 hide">Confirm sending reset token to your mailbox?</div>'
-            + '<div class="send-after tab hide">Verification sent, it should arrive in minutes. Please check your mailbox and follow the instruction.</div>'
+            + '<div class="send-before tab tab0 hide">Confirm sending reset token to your mailbox?</div>'
+            + '<div class="send-after tab tab0 hide">Verification sent, it should arrive in minutes. Please check your mailbox and follow the instruction.</div>'
+            + '<div class="send-before tab tab1 hide">Confirm sending reset token to your phone?</div>'
+            + '<div class="send-after tab tab1 hide">Verification sent, it should arrive in minutes.</div>'
             + '<div class="xalert-error tab hide">'
               + '<p>Requested too much, hold on awhile.</p>'
               + '<p>Receive no verification email? It might be mistakenly filtered as spam, please check and un-spam. Alternatively, use ‘Manual Verification’.</p>'
             + '</div>'
 
-            + '<div class="authenticate-before tab tab2 hide">You will be directed to Twitter website to authenticate identity above, you can reset password then.</div>'
+            + '<div class="authenticate-before tab tab2 hide">You will be directed to <span class="provider-text"></span> website to authenticate identity above, you can reset password then.</div>'
           + '</div>',
 
         footer: ''
           + '<button class="pull-right xbtn-white xbtn-done hide">Done</button>'
-          + '<button class="pull-right xbtn-blue xbtn-send tab tab1 hide">Send</button>'
+          + '<button class="pull-right xbtn-blue xbtn-send tab tab0 tab1 hide">Send</button>'
           + '<button class="pull-right xbtn-blue authenticate tab tab2 hide">Authenticate</button>'
           + '<a class="pull-right xbtn-cancel">Cancel</a>'
 
@@ -1316,7 +1327,7 @@ define('xdialog', function (require, exports) {
       Bus.off('widget-dialog-identification-auto');
       Bus.on('widget-dialog-identification-auto', function (data) {
         var r = that.result = data;
-        that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('im-hide');
+        that && that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('im-hide');
         if (r) {
           var identity = r.identity;
           if (identity && identity.avatar_filename) {
