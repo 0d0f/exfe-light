@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-06 10:06:23 */
+/*! mobile@2a.5 2013-06-06 10:06:53 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -4496,33 +4496,33 @@ TWEEN.Tween = function(t) {
       IGNORED: [],
       DECLINED: []
     }, T = 0, N = E.length; N > T; ++T) {
-      var P = E[T], A = "pending", I = P.rsvp_status;
-      "NOTIFICATION" !== I && ("ACCEPTED" === I ? A = "accepted" : "DECLINED" === I && (A = "declined"), 
-      P.rsvp_style = A, k && k === P.identity.connected_user_id || x === P.identity.id ? (P.is_me = !0, 
-      x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), P.identity.isphone = "phone" === P.identity.provider, 
-      h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === I, S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
+      var P = E[T], A = k && k === P.identity.connected_user_id || x === P.identity.id, I = "pending", O = P.rsvp_status;
+      (A || "NOTIFICATION" !== O) && ("ACCEPTED" === O ? I = "accepted" : "DECLINED" === O && (I = "declined"), 
+      P.rsvp_style = I, A ? (P.is_me = !0, x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
+      P.identity.isphone = "phone" === P.identity.provider, h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === O, 
+      S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
     }
     C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), h.invitations = [], 
     N = C.length;
-    for (var O = 0; N > O; ) h.invitations.push(C.splice(0, 5)), O += 5;
+    for (var M = 0; N > M; ) h.invitations.push(C.splice(0, 5)), M += 5;
     N = h.invitations.length;
-    var M = h.invitations[N - 1], H = M.length;
-    if (H && 5 > H) for (;5 - H++; ) M.push(void 0);
-    var D = "";
-    k && (_ ? (D = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
-    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (D = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
-    c = _.token))), h.identity.isphone && c && (h.change_name = !0);
-    var j = t.app, L = j.controllers, R = L.cross;
-    R && R.destory();
-    var F = s.compile($("#cross-tmpl").html());
-    R = j.controllers.cross = new p({
+    var H = h.invitations[N - 1], D = H.length;
+    if (D && 5 > D) for (;5 - D++; ) H.push(void 0);
+    var j = "";
+    k && (_ ? (j = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (j = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    c = _.token))), c && h.identity.isphone && (h.change_name = !0);
+    var L = t.app, R = L.controllers, F = R.cross;
+    F && F.destory();
+    var z = s.compile($("#cross-tmpl").html());
+    F = L.controllers.cross = new p({
       options: {
-        template: F(h)
+        template: z(h)
       },
       cross: h,
       exfee_id: l.exfee.id,
       token: c
-    }), R.emit("show"), j.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, D);
+    }), F.emit("show"), L.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, j);
   }, m = n.exports = {
     index: function(t) {
       var e = t.error, n = t.app, i = n.controllers, r = i.home, s = i.footer, a = n.screen;
