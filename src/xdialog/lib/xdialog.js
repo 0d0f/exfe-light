@@ -1055,14 +1055,6 @@ define('xdialog', function (require, exports) {
         'click .xbtn-cancel': function () {
           this.destory();
         },
-        'click #password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          var $input = $e.prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
-        },
         'click .xbtn-add': function (e) {
           e.preventDefault();
           var that = this
@@ -1106,7 +1098,7 @@ define('xdialog', function (require, exports) {
                 var $ai = $('.modal-ai');
                 $ai.find('#identity').prop('disabled', true);
                 $ai.find('.xbtn-add').addClass('hide');
-                $ai.find('.help-subject').addClass('hide');
+                $ai.find('.help-subject').addClass('im-hide');
                 $ai.find('.phone-tip').addClass('hide');
                 $ai.find('.success-tip').removeClass('hide');
                 $ai.find('.xbtn-done').removeClass('hide').focus();
@@ -1122,7 +1114,7 @@ define('xdialog', function (require, exports) {
         'click .help-subject': function (e) {
           e.preventDefault();
           this.$('.user-identity').addClass('hide');
-          $(e.target).addClass('hide');
+          this.$('.help-subject').addClass('im-hide');
           this.reset();
           this.$('#identity').val('').focus();
         },
@@ -1222,7 +1214,7 @@ define('xdialog', function (require, exports) {
                     + '</div>'
                     + '<div class="controls">'
                       + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
-                      + '<i class="help-subject icon14-clear hide"></i>'
+                      + '<i class="help-subject icon14-clear im-hide"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
 
@@ -1319,15 +1311,12 @@ define('xdialog', function (require, exports) {
       this.result = null;
     },
 
-    //availability: false,
-
     init: function () {
       var that = this;
-      //that.registration_flag = '';
       Bus.off('widget-dialog-identification-auto');
       Bus.on('widget-dialog-identification-auto', function (data) {
         var r = that.result = data;
-        that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('hide');
+        that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('im-hide');
         if (r) {
           var identity = r.identity;
           if (identity && identity.avatar_filename) {
@@ -1342,59 +1331,9 @@ define('xdialog', function (require, exports) {
           }
           that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
         }
-        //that.registration_flag = data.registration_flag;
-        /*
-        if (data) {
-          if (data.identity && data.identity.avatar_filename) {
-            that._identity = data.identity;
-            that.$('.user-identity').removeClass('hide')
-              .find('img').attr('src', data.identity.avatar_filename)
-              .next().attr('class', 'provider icon16-identity-' + data.identity.provider);
-          } else {
-            that.$('.user-identity').addClass('hide');
-            that._identity = null;
-          }
-
-          that.$('.phone-tip').toggleClass('hide', data.identity.provider !== 'phone');
-
-          var registration_flag = data.registration_flag;
-          that.registration_flag = registration_flag || '';
-          // SIGN_IN
-          if (registration_flag === 'SIGN_IN') {
-            that.$('.d1, .d2, .d3').addClass('hide');
-            that.$('.d0').removeClass('hide');
-            //that.$('.xbtn-forgotpwd').removeClass('disabled').data('source', [that._identity]);
-          }
-          // SIGN_UP 新身份
-          else if (registration_flag === 'SIGN_UP') {
-            that._identity = Util.parseId(that.$('#identity').val());
-            that.$('.d0, .d1, .d3').addClass('hide');
-            that.$('.xbtn-add').removeClass('hide');
-          }
-          // AUTHENTICATE
-          else if (registration_flag === 'AUTHENTICATE') {
-            that._identity = Util.parseId(that.$('#identity').val());
-            that.$('.d1, .d2').addClass('hide');
-            that.$('.d0, .d3').removeClass('hide');
-            that.$('label[for="password"]').parent().addClass('hide');
-          }
-          // VERIFY
-          else if (registration_flag === 'VERIFY') {
-            that.$('.d0, .d2, .d3').addClass('hide');
-            that.$('.d1').removeClass('hide');
-          }
-
-          that.$('.xbtn-success').removeClass('disabled');
-        } else {
-          that.$('.xbtn-success').addClass('disabled');
-          that.$('.phone-tip').addClass('hide');
-          that.$('.xbtn-forgotpwd').addClass('disabled').data('source', null);
-        }
-        */
       });
       Bus.off('widget-dialog-identification-nothing');
       Bus.on('widget-dialog-identification-nothing', function () {
-        //that.$('.control-group.d').removeClass('hide');
         that.$('.phone-tip').addClass('hide');
       });
     }
