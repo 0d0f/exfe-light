@@ -119,6 +119,8 @@ define('mobileroutes', function (require, exports, module) {
         IGNORED: [],
         DECLINED: []
       };
+
+      var hide_rsvp = true;
       // current identity rsvp
       for (var i = 0, len = originInvitations.length; i < len; ++i) {
         var invitation = originInvitations[i]
@@ -139,15 +141,17 @@ define('mobileroutes', function (require, exports, module) {
 
         invitation.rsvp_style = style;
         if (is_me) {
+          hide_rsvp = rsvp_status === 'ACCEPTED';
           invitation.is_me = true;
           myIdId = invitation.identity.id;
           if (myIdId !== invitation.invited_by.id) {
             cross.inviter = invitation.invited_by;
           }
-          //invitations.unshift(invitation);
+          if (myIdId === invitation.by_identity.id) {
+            hide_rsvp = false;
+          }
           invitation.identity.isphone = invitation.identity.provider === 'phone';
           cross.identity = invitation.identity;
-          cross.identity.is_accepted = rsvp_status === 'ACCEPTED';
           orderRSVP.ACCEPTED.unshift(invitation);
         } else {
           //invitations.push(invitation);
@@ -156,6 +160,8 @@ define('mobileroutes', function (require, exports, module) {
           }
         }
       }
+
+      cross.hide_rsvp = hide_rsvp;
 
       invitations = [].concat(
         orderRSVP.ACCEPTED,
