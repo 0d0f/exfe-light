@@ -10001,6 +10001,11 @@ body {
   text-decoration: underline;
 }
 
+.settings-panel .user-infos .exfe-app {
+  font-size: 12px;
+  color: #7f7f7f;
+}
+
 .settings-panel .identities-trash {
   position: relative;
   width: 120px;
