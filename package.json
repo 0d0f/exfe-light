@@ -210,7 +210,7 @@
     ]
   },
   "mobile": {
-    "version": "2a.4",
+    "version": "2a.5",
     "files": {
       "dev": "mobile-all-{{version}}.js",
       "pro": "mobile-all-{{version}}.min.js"
