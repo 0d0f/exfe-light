@@ -124,10 +124,12 @@ define('mobileroutes', function (require, exports, module) {
         var invitation = originInvitations[i]
           , is_me = (user_id && user_id === invitation.identity.connected_user_id)
               || myIdId === invitation.identity.id
+          , is_curr_id = (user_id && user_id === invitation.identity.connected_user_id)
+              && myIdId === invitation.identity.id
           , style = 'pending'
           , rsvp_status = invitation.rsvp_status;
 
-        if (!is_me && rsvp_status === 'NOTIFICATION') { continue; }
+        if (!is_curr_id && rsvp_status === 'NOTIFICATION') { continue; }
 
         if (rsvp_status === 'ACCEPTED') {
           style = 'accepted';
@@ -138,15 +140,17 @@ define('mobileroutes', function (require, exports, module) {
         invitation.rsvp_style = style;
         if (is_me) {
           invitation.is_me = true;
-          myIdId = invitation.identity.id;
-          if (myIdId !== invitation.invited_by.id) {
-            cross.inviter = invitation.invited_by;
+          if (is_curr_id) {
+            myIdId = invitation.identity.id;
+            if (myIdId !== invitation.invited_by.id) {
+              cross.inviter = invitation.invited_by;
+            }
+            //invitations.unshift(invitation);
+            invitation.identity.isphone = invitation.identity.provider === 'phone';
+            cross.identity = invitation.identity;
+            cross.identity.is_accepted = rsvp_status === 'ACCEPTED';
+            orderRSVP.ACCEPTED.unshift(invitation);
           }
-          //invitations.unshift(invitation);
-          invitation.identity.isphone = invitation.identity.provider === 'phone';
-          cross.identity = invitation.identity;
-          cross.identity.is_accepted = rsvp_status === 'ACCEPTED';
-          orderRSVP.ACCEPTED.unshift(invitation);
         } else {
           //invitations.push(invitation);
           if (invitation.rsvp_status in orderRSVP) {
