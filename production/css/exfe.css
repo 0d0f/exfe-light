@@ -5865,6 +5865,7 @@ body {
 .xbtn-white {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: none;
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(top, #fafafa, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#e6e6e6));
@@ -5959,6 +5960,7 @@ body {
   line-height: 12px;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: none;
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(top, #fafafa, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#e6e6e6));
@@ -6125,10 +6127,10 @@ body {
   position: absolute;
   right: 20px;
   bottom: 15px;
-  height: 16px;
+  height: 22px;
   padding: 0 10px;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 20px;
   color: #ffffff;
   color: #4c4c4c;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -6327,6 +6329,7 @@ body {
 
 [class^="xbtn-"],
 [class*=" xbtn-"] {
+  text-shadow: none;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
      -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
        -o-transition: border linear 0.2s, box-shadow linear 0.2s;
