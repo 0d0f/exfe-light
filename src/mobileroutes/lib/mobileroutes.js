@@ -120,7 +120,7 @@ define('mobileroutes', function (require, exports, module) {
         DECLINED: []
       };
 
-      var hide_rsvp = true;
+      var display_rsvp = false;
       // current identity rsvp
       for (var i = 0, len = originInvitations.length; i < len; ++i) {
         var invitation = originInvitations[i]
@@ -141,14 +141,14 @@ define('mobileroutes', function (require, exports, module) {
 
         invitation.rsvp_style = style;
         if (is_me) {
-          hide_rsvp = rsvp_status === 'ACCEPTED';
+          display_rsvp = style === 'pending';
           invitation.is_me = true;
           myIdId = invitation.identity.id;
           if (myIdId !== invitation.invited_by.id) {
             cross.inviter = invitation.invited_by;
           }
           if (myIdId !== invitation.by_identity.id) {
-            hide_rsvp = false;
+            display_rsvp = true;
           }
           invitation.identity.isphone = invitation.identity.provider === 'phone';
           cross.identity = invitation.identity;
@@ -161,7 +161,7 @@ define('mobileroutes', function (require, exports, module) {
         }
       }
 
-      cross.hide_rsvp = hide_rsvp;
+      cross.hide_rsvp = !display_rsvp;
 
       invitations = [].concat(
         orderRSVP.ACCEPTED,
