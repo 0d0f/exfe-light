@@ -1,4 +1,5 @@
 /*jshint -W030*/
+
 define('mobileroutes', function (require, exports, module) {
   'use strict';
 
@@ -139,6 +140,7 @@ define('mobileroutes', function (require, exports, module) {
           //invitations.unshift(invitation);
           invitation.identity.isphone = invitation.identity.provider === 'phone';
           cross.identity = invitation.identity;
+          cross.identity.is_accepted = rsvp_status === 'ACCEPTED';
           orderRSVP.ACCEPTED.unshift(invitation);
         } else {
           //invitations.push(invitation);
