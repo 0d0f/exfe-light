@@ -1150,6 +1150,7 @@ define('xdialog', function (require, exports) {
                 $ai.find('#identity').prop('disabled', true);
                 $ai.find('.xbtn-add').addClass('hide');
                 $ai.find('.xbtn-done').removeClass('hide');
+                $ai.find('.help-subject').addClass('hide');
                 $ai.find('.phone-tip').addClass('hide');
                 $ai.find('.success-tip').removeClass('hide');
               }
@@ -1162,6 +1163,7 @@ define('xdialog', function (require, exports) {
           this.hide();
         },
         'click .help-subject': function (e) {
+          e.preventDefault();
           this.$('.user-identity').addClass('hide');
           $(e.target).addClass('hide');
           this.reset();
