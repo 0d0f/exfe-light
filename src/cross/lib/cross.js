@@ -871,7 +871,6 @@ ExfeeWidget = {
             case 'blur':
                 ExfeeWidget.focus[event.target.id] = false;
                 ExfeeWidget.displayCompletePanel(objInput, false);
-                console.log(ExfeeWidget.blur)
                 var cb = function () {
                     if (objInput.parent().find('.pointer').hasClass('icon16-exfee-plus-blue')) {
                         objInput.parent().toggleClass('a-bounce');
@@ -1687,6 +1686,7 @@ define(function (require, exports, module) {
                         break;
                     case 'mousedown':
                         ExfeeWidget.useCompleteItem($(this).index());
+                        $('.exfee-input').val('');
                 }
             }
         );
