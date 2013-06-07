@@ -244,7 +244,7 @@
                 } else {
                   window.launchApp(app_url + c[1], function () {
                     setTimeout(function () {
-                      window.location = '/?noapp' + location.hash;
+                      window.location = '/?redirect' + location.hash;
                     }, 200)
                   });
                 }
@@ -282,7 +282,6 @@
 
     } else if ((params = url.match(routes.resolveToken))) {
       window.noExfeApp = !!params[1];
-      alert(window.noExfeApp)
       var token = params[2];
       request({
           url: apiUrl + '/Users/ResolveToken'
@@ -290,8 +289,6 @@
         , data: { token :  token }
         , done: function (data) {
             _ENV_._data_ = data;
-              console.dir(data);
-              alert(232)
             if (token && data.meta && data.meta.code === 200) {
               handle();
             } else {

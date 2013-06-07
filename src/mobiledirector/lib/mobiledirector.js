@@ -244,7 +244,7 @@
                 } else {
                   window.launchApp(app_url + c[1], function () {
                     setTimeout(function () {
-                      window.location = '/?noapp' + location.hash;
+                      window.location = '/?redirect' + location.hash;
                     }, 200)
                   });
                 }
