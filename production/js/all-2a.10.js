@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-08 12:06:23 */
+/*! desktop@2a.10 2013-06-08 12:06:50 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15350,10 +15350,10 @@ define("lightsaber", function(e, t, i) {
         c && (y.tokenType = "cross", y.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", y);
       }
       v();
-    }, function() {
-      var t = a && a.meta && a.meta.code, i = !!p;
-      403 === t ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", i), i && (s.emit("app:usermenu:updatenormal", f), 
-      s.emit("app:usermenu:crosslist", p.token, p.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === t && e.location("/404");
+    }, function(t) {
+      var i = t && t.meta && t.meta.code, n = !!p;
+      403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", f), 
+      s.emit("app:usermenu:crosslist", p.token, p.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === i && e.location("/404");
     });
   };
   c.crossToken = function(e, t, i) {

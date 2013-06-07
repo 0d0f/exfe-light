@@ -541,7 +541,7 @@ define('routes', function (require, exports, module) {
     Api.request(
         'getCrossByInvitationToken'
       , {
-          type: 'POST'
+            type: 'POST'
           , params: params
           , data: data
         }
@@ -654,7 +654,7 @@ define('routes', function (require, exports, module) {
           render();
         }
 
-      , function (d) {
+      , function (data) {
           var status = data && data.meta && data.meta.code
             , hasAuth = !!authorization;
           if (403 === status) {
