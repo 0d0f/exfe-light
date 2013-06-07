@@ -41,6 +41,7 @@
   var failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
         currentTime = now();
+        // 时间摄长点，避免两次弹窗
         if (currentTime - startTime < 1000) {
           if (cb) {
             cb();
