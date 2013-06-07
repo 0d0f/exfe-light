@@ -9894,6 +9894,7 @@ body {
 
 .settings-panel .user-infos .identity-list .over,
 .settings-panel .user-infos .identity-list .dragme {
+  margin-left: -15px;
   background: #eff6f9;
 }
 
