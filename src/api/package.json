@@ -1,9 +1,9 @@
 {
   "name": "api",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "API",
   "homepage": "https://exfe.com/",
   "author": "cfd",
-  "date": "2013-03-27T12:07:07 UTC+0800",
+  "date": "2013-06-07T23:37:07 UTC+0800",
   "hint": true
 }

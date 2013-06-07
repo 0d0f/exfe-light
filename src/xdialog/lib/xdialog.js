@@ -1058,9 +1058,14 @@ define('xdialog', function (require, exports) {
 
       backdrop: false,
 
+      submitStatus: true,
+
       events: {
         'submit .modal-form': function () {
-          this.$('.xbtn-add').trigger('click');
+          if (this.submitStatus) {
+            this.$('.xbtn-add').trigger('click');
+            this.submitStatus = false;
+          }
           return false;
         },
         'click .xbtn-cancel': function () {
@@ -2300,22 +2305,24 @@ define('xdialog', function (require, exports) {
 
       events: {
 
-        'click .xbtn-go': function () {
-          window.location.href = '/';
+        'click .xbtn-dnm': function () {
+          $('[data-user-action="' + this._settings.action + '"]').trigger('click');
         },
 
         'click .xbtn-merge': function () {
-          var that = this,
-              authorization = Store.get('authorization'),
-              token = authorization.token,
-              browsing_token = this._token,
-              identity = this._identity,
-              postData = { browsing_identity_token: browsing_token, identity_ids: '[' + identity.id + ']' };
+          var that = this
+            , token = that._settings.token
+            , invitation_token = that._settings.invitation_token;
+
+          // 调用 mergeidentities [OPTION C]
           Api.request('mergeIdentities'
             , {
               type: 'POST',
               params: { token: token },
-              data: postData
+              data: { invitation_token: invitation_token },
+              beforeSend: function () {
+                $('.modal-footer').find('button').prop('disabled', true);
+              }
             }
             , function (data) {
                 that.hide();
@@ -2339,6 +2346,9 @@ define('xdialog', function (require, exports) {
                   window.location.href = '/';
                 }
               }
+            , function () {
+              // @todo
+            }
           );
         }
 
@@ -2355,21 +2365,9 @@ define('xdialog', function (require, exports) {
 
         body: ''
           + '<div class="shadow title">Merge Identity?</div>'
-          + '<div class="user hide">'
-            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>.<span class="error-detial">Do NOT merge if it’s not you!</span></div>'
-            + '<div class="clearfix context-user">'
-              + '<div class="pull-left avatar">'
-                + '<img width="40" height="40" alt="" src="" />'
-              + '</div>'
-              + '<div class="pull-left username"></div>'
-            + '</div>'
-            + '<div class="clearfix">'
-              + '<button class="pull-right xbtn-white xbtn-go">Go</button>'
-              + '<a class="pull-right xbtn-cancel" data-dismiss="dialog">Cancel</a>'
-            + '</div>'
-            + '<div class="spliterline"></div>'
+          + '<div class="user">'
+            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span>NOT</span> merge if it’s not you!</div>'
           + '</div>'
-          + '<div class="browsing-tips"><span class="tip-0 hide">Otherwise, you’re</span><span class="tip-1 hide">You’re</span> currently browsing this page as identity underneath, please choose an option to continue.</div>'
           + '<div class="context-identity">'
             + '<div class="pull-right avatar">'
               + '<img width="40" height="40" alt="" src="" />'
@@ -2378,76 +2376,46 @@ define('xdialog', function (require, exports) {
             + '<div class="clearfix">'
               + '<div class="pull-left box identity"></div>'
             + '</div>'
+          + '</div>'
+          + '<div class="clearfix context-user">'
+            + '<div class="pull-left avatar">'
+              + '<img width="40" height="40" alt="" src="" />'
+            + '</div>'
+            + '<div class="pull-left username"></div>'
           + '</div>',
 
         footer: ''
-          ////+ '<button class="pull-right xbtn-blue xbtn-merge hide">Merge into account above</button>'
-          + '<button class="xbtn-white xbtn-sias hide" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In and Switch</button>'
-          + '<button class="xbtn-white xbtn-sui hide" data-widget="dialog" data-dialog-type="setup_email">Set Up Identity</button>'
+          + '<button class="pull-right xbtn-blue xbtn-merge">Merge and Go</button>'
+          + '<button class="pull-right xbtn-white xbtn-dnm">Do NOT Merge</button>'
+          //+ '<button class="pull-right xbtn-white xbtn-dnm" data-widget="dialog" data-dialog-type="setup_email">Do NOT Merge</button>'
 
       },
 
       onShowBefore: function (e) {
         var settings = $(e.currentTarget).data('settings');
         if (!settings) { return; }
-        var user = settings.normal
-          , browsing_user = settings.browsing
-          , setup = settings.setup
-          , action = settings.action;
+        this._settings = settings;
+        var user = settings.user
+          , browsing = settings.browsing
+          , bidentities = browsing.identities
+          , bidentity = bidentities[0]
+          , beun = Util.printExtUserName(bidentity);
 
-        this._token = settings.originToken;
-        this._user = user;
-        this._browsing_user = browsing_user;
-        this._setup = setup;
-        this._action = action;
-        this._tokenType = settings.tokenType;
-
-        if (this._user) {
-          this.$('.user')
-            .removeClass('hide')
-            .find('img')
-            .attr('src', user.avatar_filename)
-            .parent()
-            .next().text(user.name || user.nickname);
-          this.$('.xbtn-merge').removeClass('hide');
-          this.$('.browsing-tips').find('.tip-0').removeClass('hide');
-        }
-        else {
-          this.$('.xbtn-sias, .xbtn-sui').addClass('pull-right');
-          this.$('.browsing-tips').find('.tip-1').removeClass('hide');
-        }
-
-        this.$('browsing-tips').find('span').eq(this._user ? 0 : 1).removeClass('hide')
-
-        // browsing default identity
-        var bdidentity = browsing_user.identities[0];
-        this._identity = bdidentity;
-        var beun = Util.printExtUserName(bdidentity);
+        this.$('.merge-info')
+          .find('.identity').text(beun);
+        this.$('.merge-info')
+          .find('.user-name').text(user.name);
 
         this.$('.context-identity')
-          .find('img')
-          .attr('src', bdidentity.avatar_filename)
-          .next().addClass('icon16-identity-' + bdidentity.provider)
+          .find('.avatar img').attr('src', bidentity.avatar_filename)
+          .next().addClass('icon16-identity-' + bidentity.provider)
         this.$('.context-identity')
           .find('.identity').text(beun);
 
-        //if (!this._setup) { // test
-        if (this._setup) {
-          this.$('.xbtn-sui')
-            .removeClass('hide')
-            .attr('data-dialog-type', 'setup_' + bdidentity.provider)
-            .data('source', {
-              identity: bdidentity,
-              originToken: settings.originToken,
-              tokenType: settings.tokenType
-            }
-          );
-        }
-        else {
-          this.$('.xbtn-sias')
-            .removeClass('hide')
-            .data('source', beun);
-        }
+        this.$('.context-user')
+          .find('.avatar img').attr('src', user.avatar_filename);
+        this.$('.context-user')
+          .find('.username').text(user.name);
       }
 
     }
@@ -2474,8 +2442,8 @@ define('xdialog', function (require, exports) {
         title: 'Read-only Browsing',
 
         body: ''
-          + '<div class="shadow title">Read-only Browsing</div>'
-          + '<div>You’re browsing this page in read-only mode as <span></span> underneath. To change anything on this page, please <span class="underline">sign in</span> first.</div>'
+          + '<div class="shadow title">Authentication</div>'
+          + '<div>You’re browsing this page in read-only mode as identity underneath. To change anything on this page, please authenticate first.</div>'
           + '<div class="clearfix context-user hide">'
             + '<div class="pull-left avatar">'
               + '<img src="" alt="" width="40" height="40" />'
@@ -2492,7 +2460,7 @@ define('xdialog', function (require, exports) {
           + '</div>',
 
         footer: ''
-          + '<button class="pull-right xbtn-blue" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In...</button>'
+          + '<button class="pull-right xbtn-blue" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Authenticate</button>'
           + '<a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
 

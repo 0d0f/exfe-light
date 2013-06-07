@@ -22,64 +22,73 @@ define('middleware', function (require, exports, module) {
       , user = Store.get('user');
 
     // Step 2
-    var authMeta = getAuthFromHeader();
+    var meta = getAuthFromHeader()
+      , auth = meta && meta.authorization
+      , data = meta && meta.data
+      , event = meta && meta.event;
 
-    if (authorization && (!authMeta || (authMeta && !authMeta.authorization))) {
+    if (authorization && (!meta || !auth)) {
       session.authorization = authorization;
       session.user = user;
     }
 
-    else if (!authorization && authMeta && authMeta.authorization && authMeta.data && !authMeta.event) {
-      Store.set('oauth', session.oauth = {
-        identity: authMeta.data.identity,
-        following: authMeta.data.identity.provider === 'twitter' ? !!authMeta.data.twitter_following : false,
+    else if (!authorization && auth && data && !event) {
+      Store.set('oauth',
+        session.oauth = {
+          identity: data.identity
+        , following: data.identity.provider === 'twitter' ? !!data.twitter_following : false
+        , identity_status: data.identity_status
         // status: connected, new, revoked
-        identity_status: authMeta.data.identity_status
-      });
+        }
+      );
 
       delete session.user;
       Store.remove('user');
-      Store.set('authorization', session.authorization = authMeta.authorization);
+      Store.set('authorization', session.authorization = auth);
     }
 
-    else if (authorization && authMeta && authMeta.authorization && authMeta.data && !authMeta.event) {
-      if (authorization.user_id === authMeta.authorization.user_id
-         && authorization.token !== authMeta.authorization.token
+    else if (authorization && auth && data && !event) {
+      if (authorization.user_id === auth.user_id
+         && authorization.token !== auth.token
          ) {
-        authorization.token = authMeta.authorization.token;
+
+        authorization.token = auth.token;
         Store.set('authorization', session.authorization = authorization);
-      }
-      else if (authorization.user_id !== authMeta.authorization.user_id
-          && authorization.token !== authMeta.authorization.token
-          && authMeta.identity
+
+      } else if (authorization.user_id !== auth.user_id
+          && authorization.token !== auth.token
+          && data.identity
           ) {
-        Store.set('oauth', session.oauth = {
-          identity: authMeta.data.identity,
-          following: authMeta.data.identity.provider === 'twitter' ? !!authMeta.data.twitter_following : false,
+
+        Store.set('oauth',
+          session.oauth = {
+            identity: data.identity
+          , following: data.identity.provider === 'twitter' ? !!data.twitter_following : false
+          , identity_status: data.identity_status
           // status: connected, new, revoked
-          identity_status: authMeta.data.identity_status
-        });
+          }
+        );
 
         delete session.user;
         Store.remove('user');
-        Store.set('authorization', session.authorization = authMeta.authorization);
+        Store.set('authorization', session.authorization = auth);
       }
     }
 
-    if (authMeta) {
+    if (meta) {
 
       // 保存回调事件
-      if (authMeta.event) {
-        session.event = JSON.parse(authMeta.event);
-        session.event.data = authMeta.data
+      if (event) {
+        session.event = JSON.parse(event);
+        session.event.data = data
       }
 
-      if (authMeta.verification_token) {
-        session.verification_token = authMeta.verification_token;
+      if (meta.verification_token) {
+        session.verification_token = meta.verification_token;
       }
 
-      if (authMeta.refere && authMeta.refere !== window.location.protocol + '//' + window.location.hostname + '/') {
-        res.redirect(authMeta.refere || '/');
+      if (meta.refere && meta.refere !== window.location.protocol + '//' + window.location.hostname + '/') {
+        res.redirect(meta.refere || '/');
       }
     }
 

@@ -533,6 +533,135 @@ define('routes', function (require, exports, module) {
 
 
   var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, rsvp) {
+    var session = req.session
+      , authorization = session.authorization
+      , user = session.user
+      , user_id = authorization && authorization.user_id || 0;
+
+    Api.request(
+        'getCrossByInvitationToken'
+      , {
+          type: 'POST'
+          , params: params
+          , data: data
+        }
+      , function (d) {
+          console.dir(d);
+          var auth = d.authorization
+            , browsing_identity = d.browsing_identity
+            , browsing_user_id = browsing_identity && browsing_identity.connected_user_id
+            , cross_access_token = d.cross_access_token
+            , read_only = d.read_only
+            , action = d.action
+            , cross = d.cross;
+
+          Bus.emit('app:page:home', false);
+
+          Bus.emit('app:page:usermenu', true);
+
+          if (false === read_only && cross_access_token) {
+            cats || (cats = {});
+            cat = cats[ctoken] = cross_access_token;
+            Store.set('cats', cats);
+          }
+
+          //
+          var render = function () {
+            res.render('x.html', function (tpl) {
+              $('#app-main')
+                .empty()
+                .append(tpl);
+              Bus.emit('xapp:cross:main');
+              Bus.emit('xapp:cross', null, browsing_identity, cross, read_only, cat || ctoken, rsvp);
+              if (rsvp === 'mute') {
+                var d = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
+                d.data('source', cross);
+                d.appendTo($('#app-tmp'));
+                d.trigger('click.dialog.data-api');
+              }
+            });
+          }
+
+          /**
+           * browser-code
+           *  0 -- 正常登录
+           *  1 -- 只读浏览
+           *  2 -- 浏览身份登录
+           */
+
+          /** 正常登录
+           *  TRUE    (any)   正常登录      M50D3           正常操作
+           *  FALSE   TRUE    正常登录      M50D3           正常操作
+           */
+
+          if (
+            (((authorization && user_id === browsing_user_id)
+              || (auth && (authorization = auth)))
+            && browsing_user_id > 0
+            || !action)) {
+            //Store.set('authorization', session.authorization = authorization);
+            Bus.once('app:user:signin:after', function () {
+              res.redirect('/#!' + cross.id);
+            });
+            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
+            return;
+          }
+
+          /** 只读浏览
+           *  (any)   FALSE   只读浏览      M50D5(SIGN_IN)  只读，拦截页面操作弹出M75D3 跳转后保持原有登录状态
+           */
+
+          else if (!auth && read_only) {
+            Bus.emit('app:usermenu:updatebrowsing', {
+              browsing: {
+                identities: [browsing_identity],
+                name: browsing_identity.name
+              },
+              action: action,
+              readOnly: read_only,
+              page: 'cross',
+              code: 1
+            });
+          }
+
+          /** 浏览身份登录
+           *  (any)   TRUE    浏览身份登录   M50D4 （SET_UP）  跳转时弹出M75D1或D2，若已登录先弹M75D4
+           *  TRUE    TRUE    浏览身份登录   M50D5 跳转时弹出M75D4
+           */
+
+          else if (!read_only && (cat || auth)) {
+            var data = {
+              browsing: {
+                user_id: browsing_identity.connected_user_id,
+                identities: [browsing_identity],
+                name: browsing_identity.name
+              },
+              invitation_token: ctoken,
+              action: action,
+              readOnly: read_only,
+              tokenType: 'invitation',
+              setup: action === 'SETUP',
+              page: 'cross',
+              code: 2
+            };
+            if (cat) {
+              data.tokenType = 'cross';
+              data.cross_access_token = cat;
+            }
+            Bus.emit('app:usermenu:updatebrowsing', data);
+          }
+
+          render();
+        }
+
+      , function (d) {
+          //console.dir(d);
+        }
+      );
+    };
+
+  /*
+  var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, rsvp) {
     var session = req.session,
         authorization = session.authorization,
         user = session.user;
@@ -633,19 +762,19 @@ define('routes', function (require, exports, module) {
       }
     );
   };
+  */
 
   // cross-token
   routes.crossToken = function (req, res, next) {
     var session = req.session
       , authorization = session.authorization
       , authToken = authorization && authorization.token
+      // ctoken = invitation_token
       , ctoken = req.params[0]
       , rsvp = req.params[1]
       , cats = Store.get('cats')
-      // cat = cross_access_token
-      , cat
       , params = {}
-      , data;
+      , cat, data;
 
     if (authToken) {
       params.token = authToken;
@@ -664,15 +793,16 @@ define('routes', function (require, exports, module) {
   };
 
   routes.crossPhoneToken = function (req, res, next) {
-    var session = req.session,
-        authorization = session.authorization,
-        authToken = authorization && authorization.token,
-        cross_id = req.params[0],
-        ctoken = req.params[1],
-        rsvp = req.params[2] || '',
-        cats = Store.get('cats'),
-        params = {},
-        cat, data;
+    var session = req.session
+      , authorization = session.authorization
+      , authToken = authorization && authorization.token
+      , cross_id = req.params[0]
+      // ctoken = invitation_token
+      , ctoken = req.params[1]
+      , rsvp = req.params[2] || ''
+      , cats = Store.get('cats')
+      , params = {}
+      , cat, data;
 
     if (authToken) {
       params.token = authToken;
@@ -683,9 +813,10 @@ define('routes', function (require, exports, module) {
     }
 
     data = {
-      invitation_token: ctoken,
-      cross_id: cross_id
+      invitation_token: ctoken
+    , cross_id: cross_id
     };
+
     if (cat) {
       data.cross_access_token = cat;
     }

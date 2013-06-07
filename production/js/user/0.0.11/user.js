@@ -114,104 +114,6 @@ define('user', function (require) {
   // Get User
   Bus.on('app:api:getuser', getUser);
 
-  /*
-  function getCrossList(token, user_id, done, fail) {
-    Api.request('crosslist',
-      {
-        params: { token: token },
-        resources: { user_id: user_id }
-      }
-      , done || function (data) {
-          var crosses = data.crosses
-            , len = crosses.length;
-
-          if (0 === len) { return; }
-
-            // 显示最近5个已确认的 `x`
-          var limit = 5
-            , list;
-
-          R.map(crosses, function (v) {
-            if (v.exfee
-                && v.exfee.invitations
-                && v.exfee.invitations.length) {
-              var t = R.filter(v.exfee.invitations, function (v2) {
-                if ('ACCEPTED' === v2.rsvp_status
-                    && user_id === v2.identity.connected_user_id) {
-                  return true;
-                }
-              });
-
-              if (t.length) {
-                // lazy
-                !list && (list = []);
-                list.push(v);
-              }
-            }
-          });
-
-          if (!list) { return; }
-
-          list = list.slice(0, limit);
-
-          if (0 === list.length) { return; }
-
-          var now = +new Date()
-            , threeDays = now + 3 * 24 * 60 * 60 * 1000
-            , n3 = now + 3 * 60 * 60 * 1000
-            , n24 = now + 24 * 60 * 60 * 1000;
-
-
-          list = R.filter(list, function (v) {
-            var beginAt = v.time.begin_at,
-                dt = new Date(beginAt.date.replace(/\-/g, '/') + ' ' + beginAt.time).getTime();
-
-            if (now <= dt && dt <= threeDays) {
-              return true;
-            }
-          });
-
-          if (0 === list.length) { return; }
-
-          list.reverse();
-
-          Handlebars.registerHelper('upcoming', function () {
-            var s = '<li>'
-              , beginAt = this.time.begin_at
-              , dt = new Date(beginAt.date.replace(/\-/g, '/') + ' ' + beginAt.time).getTime();
-
-            if (now <= dt && dt < n3) {
-              s = '<li class="tag"><i class="icon10-now"></i>';
-            } else if (n3 <= dt && dt < n24) {
-              s = '<li class="tag"><i class="icon10-24hr"></i>';
-            }
-
-            s += '<a data-link data-id="'
-                  + this.id +
-                '" href="/#!'
-                  + this.id +
-                '">' + Handlebars.Utils.escapeExpression(this.title)
-                  + '</a></li>'
-
-            return new Handlebars.SafeString(s);
-          });
-
-          var tpl = '<div>Upcoming:</div>'
-                + '<ul class="unstyled crosses">'
-                + '{{#each this}}'
-                + '{{upcoming}}'
-                + '{{/each}}'
-                + '</ul>'
-
-          var html = Handlebars.compile(tpl)(list);
-          $('#app-user-menu .user-panel .body').append(html);
-        }
-      , fail || function () {}
-    );
-  }
-  */
-
-
   // --------------------------------------------------------------------------
   // update user menu
   Bus.on('app:usermenu:updatenormal', updateNormalUserMenu);
@@ -235,7 +137,7 @@ define('user', function (require) {
           + '</div>'
           + '<div class="body">'
             + '{{#unless password}}'
-            + '<div class="merge set-up" data-widget="dialog" data-dialog-type="setpassword">'
+            + '<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword">'
               + '<a href="#">Set Up</a> your <span class="x-sign">EXFE</span> password'
             + '</div>'
             + '{{/unless}}'
@@ -272,8 +174,8 @@ define('user', function (require) {
               + '<span class="oblique">{{identities.[0].external_username}}</span>'
             + '</div>'
             + '{{#if ../setup}}'
-            //+ '<div class="merge set-up" data-source="{{identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d02">'
-            + '<div class="merge set-up" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_{{identities.[0].provider}}">'
+            //+ '<div class="merge setup" data-source="{{identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d02">'
+            + '<div class="merge setup" data-user-action="SETUP" data-widget="dialog" data-dialog-type="setup_{{identities.[0].provider}}">'
               + '<h5>Start</h5>'
               + 'new account with this identity'
             + '</div>'
@@ -298,7 +200,7 @@ define('user', function (require) {
             //+ '{{/if}}'
             + '{{#unless setup}}'
             + '<div class="orspliter hide">or</div>'
-            + '<div class="merge" data-user-action="signin" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">'
+            + '<div class="merge signin" data-user-action="SIGNIN" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">'
               + '<h5>Authenticate</h5>'
               + 'to continue with this identity'
             + '</div>'
@@ -369,11 +271,11 @@ define('user', function (require) {
         .data('settings', data)
         .attr('data-widget', 'dialog')
         .attr('data-dialog-type', 'browsing_identity')
-        .attr('data-token-type', data.tokenType)
-        .attr('data-token', data.originToken)
-        .attr('data-page', data.page)
-        .attr('data-action', data.action)
-        .attr('data-read-only', data.readOnly)
+        //.attr('data-token-type', data.tokenType)
+        //.attr('data-token', data.originToken)
+        //.attr('data-page', data.page)
+        //.attr('data-action', data.action)
+        //.attr('data-read-only', data.readOnly)
     );
 
 
@@ -392,7 +294,7 @@ define('user', function (require) {
     $dropdownWrapper.append(tplFun(data));
 
     $('#app-user-menu')
-      .find('.set-up')
+      .find('.setup')
       .data('source', {
         browsing_user: browsing_user,
         identity: browsing_user.identities[0],
