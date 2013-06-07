@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 07:06:28 */
+/*! mobile@2a.5 2013-06-07 07:06:57 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3952,12 +3952,12 @@ TWEEN.Tween = function(t) {
               var t = window.search.substr(1);
               t && (t = "&" + t), window.location = "/?redirect" + t + window.location.hash;
             });
-          } else 401 === a.code && i.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass("hide"), 
-          n.removeClass("disabled").prop("disabled", !0);
-          n.removeClass("disabled").prop("disabled", !0);
+          } else 401 === a.code && (i.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass("hide"), 
+          s.prop("disabled", !0), n.parent().addClass("hide"));
+          n.prop("disabled", !0);
         },
         error: function() {
-          i.html("Failed to set password. Please try later.").removeClass("hide"), n.removeClass("disabled").prop("disabled", !1);
+          i.html("Failed to set password. Please try later.").removeClass("hide"), n.prop("disabled", !1);
         }
       })) : i.html("Password must be longer than four!").removeClass("hide");
     },
