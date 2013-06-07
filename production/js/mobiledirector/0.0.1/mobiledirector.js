@@ -272,9 +272,20 @@
 
     } else if (url.match(routes.smsToken)) {
       window.noExfeApp = !!params[1];
-      var smsToken = getSMSTokenFromHead();
-      if (smsToken) {
-        _ENV_._data_ = smsToken;
+
+      var __t;
+      if (window.noExfeApp) {
+        __t = localStorage.getItem('tmp-token');
+        if (__t) {
+          __t = JSON.parse(__t);
+        }
+      } else {
+        __t = getSMSTokenFromHead();
+        localStorage.setItem('tmp-token', __t);
+      }
+
+      if (__t) {
+        _ENV_._data_ = __t;
         handle();
       } else {
         redirectByError({ code: 400 });
@@ -282,23 +293,37 @@
 
     } else if ((params = url.match(routes.resolveToken))) {
       window.noExfeApp = !!params[1];
-      var token = params[2];
-      request({
-          url: apiUrl + '/Users/ResolveToken'
-        , type: 'POST'
-        , data: { token :  token }
-        , done: function (data) {
-            _ENV_._data_ = data;
-            if (token && data.meta && data.meta.code === 200) {
-              handle();
-            } else {
+      var __t;
+      if (window.noExfeApp) {
+        __t = localStorage.getItem('tmp-token');
+        if (__t) {
+          __t = JSON.parse(__t);
+        }
+      }
+
+      if (__t) {
+        _ENV_._data_ = __t;
+        handle();
+      } else {
+        var token = params[2];
+        request({
+            url: apiUrl + '/Users/ResolveToken'
+          , type: 'POST'
+          , data: { token :  token }
+          , done: function (data) {
+              if (token && data.meta && data.meta.code === 200) {
+                __t = _ENV_._data_ = data.response;
+                localStorage.setItem('tmp-token', __t);
+                handle();
+              } else {
+                redirectByError(data.meta);
+              }
+            }
+          , fail: function (data) {
               redirectByError(data.meta);
             }
-          }
-        , fail: function (data) {
-            redirectByError(data.meta);
-          }
-        });
+          });
+      }
     } else if ((params = url.match(routes.crossTokenForPhone))) {
       window.noExfeApp = !!params[1];
       /* jshint -W003 */

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 02:06:37 */
+/*! mobile@2a.5 2013-06-07 02:06:09 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3953,7 +3953,7 @@ TWEEN.Tween = function(t) {
               var t = window.search.substr(1);
               t && (t = "&" + t), window.location = "/?redirect" + t + window.location.hash;
             });
-          } else n.removeClass("disabled").prop("disabled", !0);
+          } else alert(2), i.removeClass("hide"), n.removeClass("disabled").prop("disabled", !0);
           n.removeClass("disabled").prop("disabled", !0);
         },
         error: function() {

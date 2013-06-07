@@ -414,6 +414,8 @@ define('mobilecontroller', function (require, exports, module) {
                 });
               }
             } else {
+              alert(2)
+              $error.removeClass('hide');
               $button.removeClass('disabled').prop('disabled', true);
             }
             $button.removeClass('disabled').prop('disabled', true);
