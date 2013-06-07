@@ -16,16 +16,24 @@
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
-        , smsToken: /^\/+\?t=([a-zA-Z0-9]{3,})$/
-        , resolveToken: /^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/
-        , crossTokenForPhone: /^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
-        , crossToken: /^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/
+        , smsToken: /^\/+\?(?:(redirect)?&)?t=([a-zA-Z0-9]{3,})$/
+        , resolveToken: /^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/
+        , crossTokenForPhone: /^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
+        , crossToken: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
+  window.launchApp = function (url, cb) {
+    url = url || app_url;
+    startTime = now();
+    xframe.src = url;
+    failBack(cb);
+  };
+
+
   window.openExfe = function () {
-    launchApp('', function () {
+    window.launchApp('', function () {
       xframe.src = itunes;
     });
   };
@@ -55,12 +63,6 @@
       }
 
       return smsToken;
-    },
-
-    launchApp = function (url, cb) {
-      startTime = now();
-      xframe.src = url || app_url;
-      failBack(cb);
     },
 
     checkNodeExsits = function (id) {
@@ -237,9 +239,15 @@
             if (data.meta && data.meta.code === 200) {
               var c = crossCallback(data.response);
               if (c[0] && c[1]) {
-                launchApp(app_url + c[1], function () {
+                if (window.noExfeApp) {
                   handle();
-                });
+                } else {
+                  window.launchApp(app_url + c[1], function () {
+                    setTimeout(function () {
+                      window.location = '/?noapp' + location.hash;
+                    }, 200)
+                  });
+                }
               } else {
                 handle();
               }
@@ -263,6 +271,7 @@
       handle();
 
     } else if (url.match(routes.smsToken)) {
+      window.noExfeApp = !!params[1];
       var smsToken = getSMSTokenFromHead();
       if (smsToken) {
         _ENV_._data_ = smsToken;
@@ -272,13 +281,15 @@
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
+      window.noExfeApp = !!params[1];
+      var token = params[2];
       request({
           url: apiUrl + '/Users/ResolveToken'
         , type: 'POST'
-        , data: { token :  params[1] }
+        , data: { token :  token }
         , done: function (data) {
             _ENV_._data_ = data;
-            if (params[1] && data.meta && data.meta.code === 200) {
+            if (token && data.meta && data.meta.code === 200) {
               handle();
             } else {
               redirectByError(data.meta);
@@ -289,9 +300,10 @@
           }
         });
     } else if ((params = url.match(routes.crossTokenForPhone))) {
+      window.noExfeApp = !!params[1];
       /* jshint -W003 */
-      var cross_id = params[1]
-        , ctoken = params[2]
+      var cross_id = params[2]
+        , ctoken = params[3]
         , cats = localStorage.cats
         , token;
 
@@ -311,7 +323,8 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.crossToken))) {
-      var ctoken = params[1]
+      window.noExfeApp = !!params[1];
+      var ctoken = params[2]
         , cats = localStorage.cats
         , data = { invitation_token: ctoken }
         , token;
