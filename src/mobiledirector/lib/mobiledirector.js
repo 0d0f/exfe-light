@@ -326,7 +326,7 @@
       /* jshint -W003 */
       var cross_id = params[2]
         , ctoken = params[3]
-        , cats = localStorage.cats
+        , cats = localStorage.getItem('cats')
         , token;
 
       if (cats) {
@@ -346,9 +346,13 @@
 
     } else if ((params = url.match(routes.crossToken))) {
       var ctoken = params[2]
-        , cats = localStorage.cats
+        , cats = localStorage.getItem('cats')
         , data = { invitation_token: ctoken }
         , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
 
       if (cats && (token = cats[ctoken])) {
         data.cross_access_token = token;
