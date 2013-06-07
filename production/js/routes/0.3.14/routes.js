@@ -147,6 +147,7 @@ define('routes', function (require, exports, module) {
           else {
             forwardUrl = '/#' + eun;
           }
+
           Bus.emit('app:usermenu:updatebrowsing',
             {   normal: user
               , browsing: new_user
@@ -154,6 +155,7 @@ define('routes', function (require, exports, module) {
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken
               , tokenType: 'user'
+              , user_token: target_token
               , page: 'resolve'
               , readOnly: true
               , user_name: target_user_name || new_user.name
@@ -252,7 +254,9 @@ define('routes', function (require, exports, module) {
 
     if (action === 'INPUT_NEW_PASSWORD') {
       var d;
-      tplUrl = 'forgot_password.html';
+      if (token_type === 'SET_PASSWORD') {
+        tplUrl = 'forgot_password.html';
+      }
       res.render(tplUrl, function (tpl) {
         $('#app-main').append(tpl);
         if (authorization && !browsing_authorization) {
@@ -262,17 +266,16 @@ define('routes', function (require, exports, module) {
             }
           });
           if (token_type === 'VERIFY') {
-            d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">');
+            d = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">');
             d.data('source', {
               browsing_user: user,
-              identity: identity,
               originToken: originToken,
               user_name: resolveData.user_name,
               tokenType: 'user'
             });
           }
           else if (token_type === 'SET_PASSWORD') {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: user,
               token: resolveData.setup ? authorization.token : originToken,
@@ -292,10 +295,10 @@ define('routes', function (require, exports, module) {
               d2.appendTo($('#app-tmp'));
               d2.trigger('click.dialog.data-api');
             });
-            $('#app-user-menu').find('.set-up').trigger('click.dialog.data-api');
+            $('#app-user-menu').find('.setup').trigger('click.dialog.data-api');
           }
           else {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: browsing_user,
               token: resolveData.setup ? browsing_authorization.token : originToken,
@@ -305,7 +308,7 @@ define('routes', function (require, exports, module) {
             d.trigger('click.dialog.data-api');
           }
         }
-        $('.modal-su, .modal-sp, .modal-bi').css('top', 230);
+        $('.modal-su, .modal-sp, .modal-bi').css('top', 250);
       });
     }
 
@@ -544,7 +547,6 @@ define('routes', function (require, exports, module) {
           , data: data
         }
       , function (d) {
-          console.dir(d);
           var auth = d.authorization
             , browsing_identity = d.browsing_identity
             , browsing_user_id = browsing_identity && browsing_identity.connected_user_id
@@ -587,29 +589,11 @@ define('routes', function (require, exports, module) {
            *  2 -- 浏览身份登录
            */
 
-          /** 正常登录
-           *  TRUE    (any)   正常登录      M50D3           正常操作
-           *  FALSE   TRUE    正常登录      M50D3           正常操作
-           */
-
-          if (
-            (((authorization && user_id === browsing_user_id)
-              || (auth && (authorization = auth)))
-            && browsing_user_id > 0
-            || !action)) {
-            //Store.set('authorization', session.authorization = authorization);
-            Bus.once('app:user:signin:after', function () {
-              res.redirect('/#!' + cross.id);
-            });
-            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
-            return;
-          }
-
           /** 只读浏览
            *  (any)   FALSE   只读浏览      M50D5(SIGN_IN)  只读，拦截页面操作弹出M75D3 跳转后保持原有登录状态
            */
 
-          else if (!auth && read_only) {
+          if (!auth && read_only) {
             Bus.emit('app:usermenu:updatebrowsing', {
               browsing: {
                 identities: [browsing_identity],
@@ -620,6 +604,29 @@ define('routes', function (require, exports, module) {
               page: 'cross',
               code: 1
             });
+          }
+
+
+          /** 正常登录
+           *  TRUE    (any)   正常登录      M50D3           正常操作
+           *  FALSE   TRUE    正常登录      M50D3           正常操作
+           */
+
+          else if (
+              (
+                (authorization && user_id === browsing_user_id)
+                ||
+                (!authorization && (authorization = auth))
+              )
+              && browsing_user_id > 0
+            ) {
+
+            Store.set('authorization', session.authorization = authorization);
+            Bus.once('app:user:signin:after', function () {
+              res.redirect('/#!' + cross.id);
+            });
+            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
+            return;
           }
 
           /** 浏览身份登录
@@ -904,7 +911,7 @@ define('routes', function (require, exports, module) {
             Store.remove('oauth');
             delete session.oauth;
           } else if (session.verification_token) {
-            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>')
+            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true" data-redirect="false"></div>')
             .data('token', session.verification_token)
             .appendTo($('#app-tmp'))
               .trigger(e);

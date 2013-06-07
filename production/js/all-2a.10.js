@@ -1,5 +1,9 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
+<<<<<<< HEAD
 /*! desktop@2a.10 2013-06-08 09:06:17 */
+=======
+/*! desktop@2a.10 2013-06-08 12:06:04 */
+>>>>>>> 6f055d4... imporved dialogs
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7120,9 +7124,15 @@ TWEEN.Tween = function(e) {
                   l.removeClass("disabled loading");
                 }
               }, function(e) {
+<<<<<<< HEAD
                 o.set("authorization", e), r.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
                 i("#app-user-menu").find(".setup").remove(), d && d.hide();
               }, function(r) {
+=======
+                o.set("authorization", e), a.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
+                i("#app-user-menu").find(".setup").remove(), d && d.hide();
+              }, function(a) {
+>>>>>>> 6f055d4... imporved dialogs
                 d && d.hide();
                 var a = r.meta;
                 if (403 === a.code) {
@@ -7237,6 +7247,7 @@ TWEEN.Tween = function(e) {
             s ? (u.token = r, d.identity_id = n.browsing.identities[0].id) : d.invitation_token = r, 
             t.defer = a.request(c, {
               type: "POST",
+<<<<<<< HEAD
               params: u,
               data: d
             }, function(n) {
@@ -7253,6 +7264,19 @@ TWEEN.Tween = function(e) {
                 var a = t.$('[for="password"]'), s = a.find("span");
                 a.addClass("label-error"), s.text(h[n].errorType);
               }
+=======
+              data: l
+            }, function(t) {
+              if ("resolve" === n) if (c = o.get("authorization")) {
+                i("#app-user-menu").find(".setup").remove();
+                var r = i("#app-browsing-identity"), s = r.data("settings");
+                s.setup = !1, s.originToken = t.authorization.token, r.data("settings", s).trigger("click.data-api");
+              } else o.set("authorization", t.authorization), o.set("user", e._browsing_user), 
+              window.location.href = "/"; else c = t.authorization, a.once("app:user:signin:after", function() {
+                window.location.href = "/";
+              }), a.emit("app:user:signin", c.token, c.user_id);
+              e.hide();
+>>>>>>> 6f055d4... imporved dialogs
             });
           }
         }
@@ -7261,16 +7285,27 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-su",
         title: "Set Up Account",
+<<<<<<< HEAD
         body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your <span class="x-sign">EXFE</span> account.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
+=======
+        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Full name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
+>>>>>>> 6f055d4... imporved dialogs
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("source");
         if (t) {
+<<<<<<< HEAD
           this._settings = t;
           var n = t.browsing.identities[0], r = t.forward;
           !r && (t.forward = "/"), this.$("#name").val(n.name), this.$(".identity").text(s.printExtUserName(n)), 
           this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
+=======
+          var n = t.identity;
+          this._browsing = t.browsing, this._tokenType = t.tokenType, this._originToken = t.originToken, 
+          this._forward = t.forward || "/", this._page = t.page, this.$("#name").val(n.name), 
+          this.$(".identity").text(s.printExtUserName(n)), this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
+>>>>>>> 6f055d4... imporved dialogs
           this.$(".xbtn-siea").data("source", s.printExtUserName(n));
         }
       }
@@ -12320,11 +12355,21 @@ TWEEN.Tween = function(e) {
     a.append(t(e)), delete e.profileLink, delete e.verifying;
   }
   function i(e) {
+<<<<<<< HEAD
     var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.browsing;
     l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
     n.attr("href", location.href), r.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
     t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
       browsing: l,
+=======
+    var t, i = s("#app-user-menu"), n = s("#app-user-name"), a = n.find("span"), r = i.find(".dropdown-wrapper"), o = r.find(".user-panel"), l = e.browsing;
+    l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
+    n.attr("href", location.href), a.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
+    t = h.compile(m.browsing_identity), o.length && o.remove(), r.append(t(e)), console.dir(e), 
+    s("#app-user-menu").find(".setup").data("source", {
+      browsing: l,
+      identity: l.identities[0],
+>>>>>>> 6f055d4... imporved dialogs
       originToken: e.invitation_token,
       tokenType: e.tokenType,
       forward: e.forward,
@@ -14184,10 +14229,16 @@ define("lightsaber", function(e, t, i) {
       params: n,
       data: r
     }, function(t) {
+<<<<<<< HEAD
       console.dir(t);
       var i = t.authorization, n = t.browsing_identity, r = n && n.connected_user_id, a = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
       s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && a && (o || (o = {}), 
       c = o[d] = a, l.set("cats", o));
+=======
+      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
+      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && r && (o || (o = {}), 
+      c = o[d] = r, l.set("cats", o));
+>>>>>>> 6f055d4... imporved dialogs
       var v = function() {
         e.render("x.html", function(e) {
           if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, n, g, h, c || d, u), 
