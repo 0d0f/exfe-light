@@ -307,7 +307,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            var search = window.search.substr(1);
+            var search = window.location.search.substr(1);
             if (search) {
               search = '&' + search;
             }
