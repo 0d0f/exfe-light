@@ -27,8 +27,8 @@
   window.launchApp = function (url, cb, ttl) {
     url = url || app_url;
     startTime = now();
-    xframe.src = url;
     failBack(cb, ttl);
+    xframe.src = url;
   };
 
 
@@ -40,15 +40,15 @@
 
   var failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
-        clearTimeout(failTimeout);
         currentTime = now();
-        if (currentTime - startTime < 500) {
+        if (currentTime - startTime < 1000) {
           if (cb) {
             cb();
           } else {
             window.location = '/';
           }
         }
+        //clearTimeout(failTimeout);
       }, ttl || 200);
     },
 
@@ -244,7 +244,7 @@
                 } else {
                   window.launchApp(app_url + c[1], function () {
                     window.location = '/?redirect' + location.hash;
-                  }, 400);
+                  }, 500);
                 }
               } else {
                 handle();
@@ -264,12 +264,12 @@
   Director.dispatch = function (url) {
     /* jshint -W004 */
     delete _ENV_._data_;
+    window.noExfeApp = !!url.match(/\?redirect/);
     var params;
     if (routes.home.test(url)) {
       handle();
 
     } else if (url.match(routes.smsToken)) {
-      window.noExfeApp = !!params[1];
 
       var __t;
       if (window.noExfeApp) {
@@ -290,7 +290,6 @@
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
-      window.noExfeApp = !!params[1];
       var __t;
       if (window.noExfeApp) {
         __t = localStorage.getItem('tmp-token');
@@ -323,7 +322,6 @@
           });
       }
     } else if ((params = url.match(routes.crossTokenForPhone))) {
-      window.noExfeApp = !!params[1];
       /* jshint -W003 */
       var cross_id = params[2]
         , ctoken = params[3]
@@ -346,7 +344,6 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.crossToken))) {
-      window.noExfeApp = !!params[1];
       var ctoken = params[2]
         , cats = localStorage.cats
         , data = { invitation_token: ctoken }
