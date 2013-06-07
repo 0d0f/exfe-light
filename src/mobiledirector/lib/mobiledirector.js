@@ -243,10 +243,8 @@
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
-                    setTimeout(function () {
-                      window.location = '/?redirect' + location.hash;
-                    }, 200)
-                  });
+                    window.location = '/?redirect' + location.hash;
+                  }, 400);
                 }
               } else {
                 handle();
