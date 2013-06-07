@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 07:06:51 */
+/*! mobile@2a.5 2013-06-07 07:06:39 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3952,7 +3952,8 @@ TWEEN.Tween = function(t) {
               var t = window.search.substr(1);
               t && (t = "&" + t), window.location = "/?redirect" + t + window.location.hash;
             });
-          } else n.removeClass("disabled").prop("disabled", !0);
+          } else 401 === a.code ? (i.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass("hide"), 
+          n.parent().addClass("hide")) : n.removeClass("disabled").prop("disabled", !0);
           n.removeClass("disabled").prop("disabled", !0);
         },
         error: function() {
