@@ -7490,14 +7490,6 @@ body {
 }
 */
 
-.modal-bi .xbtn-go {
-  margin-left: 18px;
-}
-
-.modal-bi .browsing-tips {
-  padding-bottom: 15px;
-}
-
 .modal-bi .bidentity {
   width: 278px;
   height: 26px;
@@ -7512,6 +7504,11 @@ body {
 
 .modal-bi .xbtn-merge {
   padding: 0 5px;
+  margin-left: 8px;
+}
+
+.modal-bi .xbtn-dnm {
+  color: #E52E53;
 }
 
 .modal-su .cancel,

@@ -2109,14 +2109,14 @@ define(function (require, exports, module) {
     }
 
     var GetTimeline = function() {
-        if (readOnly) {
-            $('#conversation-form').hide();
-        } else {
+        // if (readOnly) {
+        //     $('#conversation-form').hide();
+        // } else {
             $('#conversation-form span.avatar img').attr(
                 'src', curIdentity.avatar_filename
             );
             $('#conversation-form').show();
-        }
+        // }
         $('.conversation-timeline').html('');
         $('.cross-conversation').slideDown(233);
         lastConvUpdate = '';
