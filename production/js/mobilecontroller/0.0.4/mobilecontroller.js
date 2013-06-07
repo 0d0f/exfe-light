@@ -416,10 +416,8 @@ define('mobilecontroller', function (require, exports, module) {
             } else {
               if (meta.code === 401) {
                 $error.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass('hide');
-                $button.parent().addClass('hide');
-              } else {
-                $button.removeClass('disabled').prop('disabled', true);
               }
+              $button.removeClass('disabled').prop('disabled', true);
             }
             $button.removeClass('disabled').prop('disabled', true);
           },
