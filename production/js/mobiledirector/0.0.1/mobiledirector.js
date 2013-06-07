@@ -281,7 +281,7 @@
         }
       } else {
         __t = getSMSTokenFromHead();
-        localStorage.setItem('tmp-token', __t);
+        localStorage.setItem('tmp-token', JSON.stringify(__t));
       }
 
       if (__t) {
@@ -313,7 +313,7 @@
           , done: function (data) {
               if (token && data.meta && data.meta.code === 200) {
                 __t = _ENV_._data_ = data.response;
-                localStorage.setItem('tmp-token', __t);
+                localStorage.setItem('tmp-token', JSON.stringify(__t));
                 handle();
               } else {
                 redirectByError(data.meta);

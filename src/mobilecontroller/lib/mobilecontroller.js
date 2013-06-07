@@ -377,7 +377,7 @@ define('mobilecontroller', function (require, exports, module) {
           $error = this.$('.error-info'),
           $name = this.$('#name'),
           $pass = this.$('#password'),
-          //name = trim($name.val()),
+          name = trim($name.val()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
@@ -404,7 +404,7 @@ define('mobilecontroller', function (require, exports, module) {
               var authorization = data.response.authorization;
               if (authorization) {
                 App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
-                  var search = window.search.substr(1);
+                  var search = window.location.search.substr(1);
                   if (search) {
                     search = '&' + search;
                   }
