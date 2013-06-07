@@ -260,10 +260,10 @@ define('user', function (require) {
       , $nameSpan = $appUserName.find('span')
       , $dropdownWrapper = $appUserMenu.find('.dropdown-wrapper')
       , $userPanel = $dropdownWrapper.find('.user-panel')
-      , browsing_user = data.browsing
+      , browsing = data.browsing
       , tplFun;
 
-    data.browsing.isBrowsing = true;
+    browsing.isBrowsing = true;
 
     $('#app-browsing-identity').remove();
     $('#app-tmp').append(
@@ -271,18 +271,13 @@ define('user', function (require) {
         .data('settings', data)
         .attr('data-widget', 'dialog')
         .attr('data-dialog-type', 'browsing_identity')
-        //.attr('data-token-type', data.tokenType)
-        //.attr('data-token', data.originToken)
-        //.attr('data-page', data.page)
-        //.attr('data-action', data.action)
-        //.attr('data-read-only', data.readOnly)
     );
 
 
     $appUserName.attr('href', location.href);
 
     $nameSpan
-      .html('Browsing as: <em>' + (browsing_user.name || browsing_user.nickname) + '</em>')
+      .html('Browsing as: <em>' + (browsing.name || browsing.nickname) + '</em>')
       .addClass('browsing-identity');
 
     tplFun = Handlebars.compile(userMenuTpls.browsing_identity);
@@ -293,14 +288,15 @@ define('user', function (require) {
 
     $dropdownWrapper.append(tplFun(data));
 
+    console.dir(data)
+
     $('#app-user-menu')
       .find('.setup')
       .data('source', {
-        browsing_user: browsing_user,
-        identity: browsing_user.identities[0],
-        originToken: data.originToken,
+        browsing: browsing,
+        identity: browsing.identities[0],
+        originToken: data.invitation_token,
         tokenType: data.tokenType,
-        user_name: data.user_name,
         forward: data.forward,
         page: data.page
       }

@@ -1878,7 +1878,7 @@ define('xdialog', function (require, exports) {
                     .data('dialog', null)
                     .data('dialog-type', 'changepassword')
                     .find('span').text('Change Password...');
-                  $('.set-up').remove();
+                  $('#app-user-menu').find('.setup').remove();
                   that && that.hide();
                 }
                 , function (data) {
@@ -2114,7 +2114,7 @@ define('xdialog', function (require, exports) {
                   Store.set('user', that._browsing_user);
                   window.location.href = '/';
                 } else {
-                  $('#app-user-menu').find('.set-up').remove();
+                  $('#app-user-menu').find('.setup').remove();
                   var $bi = $('#app-browsing-identity');
                   var settings = $bi.data('settings');
                   settings.setup = false;
@@ -2124,7 +2124,7 @@ define('xdialog', function (require, exports) {
               }
               else {
                 authorization = data.authorization
-                Bus.emit('app:user:signin:after', function () {
+                Bus.once('app:user:signin:after', function () {
                   window.location.href = '/';
                 });
                 Bus.emit('app:user:signin', authorization.token, authorization.user_id);
@@ -2150,7 +2150,7 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>Please set up your EXFE account.</legend>'
+              + '<legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend>'
 
                 + '<div class="clearfix control-group">'
                   + '<div class="pull-right user-identity">'
@@ -2188,7 +2188,7 @@ define('xdialog', function (require, exports) {
         var data = $(e.currentTarget).data('source');
         if (!data) return;
         var identity = data.identity;
-        this._browsing_user = data.browsing_user;
+        this._browsing = data.browsing;
         this._tokenType = data.tokenType;
         this._originToken = data.originToken;
         this._forward = data.forward || '/';

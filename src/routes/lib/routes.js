@@ -546,7 +546,6 @@ define('routes', function (require, exports, module) {
           , data: data
         }
       , function (d) {
-          console.dir(d);
           var auth = d.authorization
             , browsing_identity = d.browsing_identity
             , browsing_user_id = browsing_identity && browsing_identity.connected_user_id
