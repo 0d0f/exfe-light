@@ -24,11 +24,11 @@
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
-  window.launchApp = function (url, cb) {
+  window.launchApp = function (url, cb, ttl) {
     url = url || app_url;
     startTime = now();
     xframe.src = url;
-    failBack(cb);
+    failBack(cb, ttl);
   };
 
 
@@ -38,7 +38,7 @@
     });
   };
 
-  var failBack = function (cb) {
+  var failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
         clearTimeout(failTimeout);
         currentTime = now();
@@ -49,7 +49,7 @@
             window.location = '/';
           }
         }
-      }, 200);
+      }, ttl || 200);
     },
 
     getSMSTokenFromHead = function () {
