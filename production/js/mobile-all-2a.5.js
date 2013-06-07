@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 03:06:56 */
+/*! mobile@2a.5 2013-06-07 03:06:06 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3934,14 +3934,14 @@ TWEEN.Tween = function(t) {
       $("#app-setpassword").remove(), this.element.appendTo($("#app-body"));
     },
     submitPassword: function() {
-      var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = s.val();
-      o.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
+      var t = this, e = this.token, n = this.$(".set-button button"), i = this.$(".error-info"), r = this.$("#name"), s = this.$("#password"), o = d(r.val()), c = s.val();
+      c.length >= 4 ? (n.addClass("disabled").prop("disabled", !0), $.ajax({
         type: "POST",
         url: a + "/Users/ResetPassword",
         data: {
           token: e,
-          name: name,
-          password: o
+          name: o,
+          password: c
         },
         success: function(e) {
           var a = e.meta;
@@ -3950,7 +3950,7 @@ TWEEN.Tween = function(t) {
             i.html("").addClass("hide"), n.parent().addClass("hide");
             var o = e.response.authorization;
             o && App.controllers.footer.emit("redirect", "?token=" + o.token + "&user_id=" + o.user_id, function() {
-              var t = window.search.substr(1);
+              var t = window.location.search.substr(1);
               t && (t = "&" + t), window.location = "/?redirect" + t + window.location.hash;
             });
           } else 401 === a.code && (i.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass("hide"), 
@@ -4615,12 +4615,12 @@ TWEEN.Tween = function(t) {
   c.controllers = {}, c.controllers.footer = new s({
     App: c
   }), c.get(/^\/+(?:\?)?#{0,}$/, a.index), c.get(/^\/+(?:\?)?#live\/?$/, a.live), 
-  c.get(/^\/+\?(?:(redirect)&)?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
+  c.get(/^\/+\?(?:(?:redirect)&)?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
     var n = window._ENV_._data_, i = n.action;
     t.session.resolveToken = n, "VERIFIED" === i ? a.verify(t, e) : "INPUT_NEW_PASSWORD" === i && a.setPassword(t, e);
-  }), c.get(/^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken), 
-  c.get(/^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, a.crossPhoneToken), 
-  c.get(/^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, a.crossToken), c.on("launched", function() {
+  }), c.get(/^\/+(?:\?(?:redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken), 
+  c.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, a.crossPhoneToken), 
+  c.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, a.crossToken), c.on("launched", function() {
     function t() {
       i(t), e.update();
     }
