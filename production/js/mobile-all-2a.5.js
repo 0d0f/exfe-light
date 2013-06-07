@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 07:06:03 */
+/*! mobile@2a.5 2013-06-07 07:06:51 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3873,37 +3873,50 @@ TWEEN.Tween = function(t) {
         setTimeout(function() {
           window.scrollTo(0, 0);
         }, 14);
-        var r = function() {
+        var s = function() {
           n.error = !0, i.redirect("/");
-        }, s = e.user_id, o = e.token;
-        this.element.removeClass("hide"), $("#app-body").css("height", "100%"), App.controllers.footer.emit("reset-position");
-        var c = function(t) {
+        };
+        this.element.removeClass("hide"), $("#app-body").css("height", "100%");
+        var o = r.get("tmp-user");
+        if (o) {
+          for (var c = o.identities, u = 0, l = c.length; l > u; ++u) {
+            var h = c[u];
+            if (h.id === e.identity_id) {
+              t.showIdentity(h), t.$(".done-info").removeClass("hide");
+              break;
+            }
+          }
+          return r.remove("tmp-user"), r.remove("tmp-token"), App.controllers.footer.emit("reset-position"), 
+          void 0;
+        }
+        var d = function(t) {
           App.controllers.footer.emit("redirect", t, function() {
             var t = window.search.substr(1);
             t && (t = "&" + t), window.location = "/?redirect" + t + window.location.hash;
           });
-        };
+        }, p = e.user_id, f = e.token;
         $.ajax({
           type: "POST",
-          url: a + "/Users/" + s + "?token=" + o,
+          url: a + "/Users/" + p + "?token=" + f,
           data: {
-            token: o
+            token: f
           },
           success: function(n) {
             var i = n.meta;
-            if (i && 200 === i.code) for (var a = n.response.user, u = a.identities, l = 0, h = u.length; h > l; ++l) {
-              var d = u[l];
-              if (d.id === e.identity_id) {
-                if (t.showIdentity(d), t.$(".done-info").removeClass("hide"), s && o) {
-                  var p = "?token=" + o + "&user_id=" + s + "&identity_id=" + d.id;
-                  c(p);
+            if (i && 200 === i.code) for (var a = n.response.user, o = a.identities, c = 0, u = o.length; u > c; ++c) {
+              var l = o[c];
+              if (l.id === e.identity_id) {
+                if (t.showIdentity(l), t.$(".done-info").removeClass("hide"), r.set("tmp-user", a), 
+                App.controllers.footer.emit("reset-position"), p && f) {
+                  var h = "?token=" + f + "&user_id=" + p + "&identity_id=" + l.id;
+                  d(h);
                 }
                 break;
               }
-            } else r();
+            } else s();
           },
           error: function() {
-            r();
+            s();
           }
         });
       });
@@ -3948,7 +3961,7 @@ TWEEN.Tween = function(t) {
       })) : i.html("Password must be longer than four!").removeClass("hide");
     },
     listen: function() {
-      var t, e, n = this, i = this.element, r = this.resolveToken;
+      var t, e, n = this, i = this.element, s = this.resolveToken;
       i.on("touchstart.setpassword", ".pass", function() {
         e && (clearTimeout(e), e = void 0), t = g();
         var n = $(this).prev();
@@ -3972,23 +3985,27 @@ TWEEN.Tween = function(t) {
         var n = function() {
           t.error = !0, e.redirect("/");
         };
-        i.removeClass("hide"), $("#app-body").css("height", "100%"), $.ajax({
+        i.removeClass("hide"), $("#app-body").css("height", "100%");
+        var o = r.get("tmp-user");
+        return o ? ($(".identity .avatar").attr("src", o.avatar_filename), $(".identity .name").html(o.name), 
+        window.noExfeApp && ($(".password").addClass("hide"), $(".set-button").addClass("hide"), 
+        $(".done-info").removeClass("hide")), App.controllers.footer.emit("reset-position"), 
+        r.remove("tmp-user"), r.remove("tmp-token"), void 0) : ($.ajax({
           type: "POST",
-          url: a + "/Users/" + r.user_id + "?token=" + r.token,
+          url: a + "/Users/" + s.user_id + "?token=" + s.token,
           data: {
-            token: r.token
+            token: s.token
           },
           success: function(t) {
             var e = t.response.user;
             return t && t.meta && 200 === t.meta.code ? ($(".identity .avatar").attr("src", e.avatar_filename), 
-            $(".identity .name").html(e.name), window.noExfeApp && ($(".password").addClass("hide"), 
-            $(".set-button").addClass("hide"), $(".done-info").removeClass("hide")), void 0) : (n(), 
-            void 0);
+            $(".identity .name").html(e.name), r.set("tmp-user", e), App.controllers.footer.emit("reset-position"), 
+            void 0) : (n(), void 0);
           },
           error: function() {
             n();
           }
-        }), App.controllers.footer.emit("reset-position");
+        }), void 0);
       });
     }
   }), e.HomeController = S.extend({
@@ -4567,7 +4584,7 @@ TWEEN.Tween = function(t) {
     },
     resolveToken: function(t, e) {
       var n = t.app, r = t.params[0], s = t._data_ = i._data_, a = t.session;
-      a.resolveToken = s.response;
+      a.resolveToken = s;
       var o = a.resolveToken.action;
       "VERIFIED" === o ? m.verify(t, e) : "INPUT_NEW_PASSWORD" === o && (a.resolveToken.origin_token = r, 
       m.setPassword(t, e)), n.currPageName = "RESOLVE_TOKEN";
