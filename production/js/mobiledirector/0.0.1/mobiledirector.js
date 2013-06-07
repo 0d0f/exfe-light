@@ -397,4 +397,9 @@
   };
 
   Director.start();
+
+  /**
+   * 跳 App 逻辑
+   * 由于当前 App 还不支持 read-only 跳转, 此时不跳
+   */
 })();
