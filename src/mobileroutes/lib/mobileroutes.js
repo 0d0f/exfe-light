@@ -301,7 +301,7 @@ define('mobileroutes', function (require, exports, module) {
 
       // todo: rename
       var session = req.session;
-      session.resolveToken = data.response;
+      session.resolveToken = data;
       var action = session.resolveToken.action;
       if (action === 'VERIFIED') {
         routes.verify(req, res);

@@ -283,17 +283,40 @@ define('mobilecontroller', function (require, exports, module) {
           // error getting identity informations
           req.error = true;
           res.redirect('/');
-        },
-        user_id = resolveToken.user_id,
-        token = resolveToken.token;
+        };
+
         this.element.removeClass('hide');
         $('#app-body').css('height', '100%');
-        App.controllers.footer.emit('reset-position');
+
+        var user = Store.get('tmp-user');
+        if (user) {
+          var identities = user.identities;
+          for (var i = 0, len = identities.length; i < len; ++i) {
+            var identity = identities[i];
+            if (identity.id === resolveToken.identity_id) {
+              self.showIdentity(identity);
+              self.$('.done-info').removeClass('hide');
+              break;
+            }
+          }
+          Store.remove('tmp-user');
+          Store.remove('tmp-token');
+          App.controllers.footer.emit('reset-position');
+          return;
+        }
+
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            window.location = '/?redirect' + window.location.hash;
+            var search = window.search.substr(1);
+            if (search) {
+              search = '&' + search;
+            }
+            window.location = '/?redirect' +search + window.location.hash;
           });
         };
+
+        var user_id = resolveToken.user_id,
+        token = resolveToken.token;
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + user_id + '?token=' + token,
@@ -308,6 +331,8 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
+                  Store.set('tmp-user', user);
+                  App.controllers.footer.emit('reset-position');
                   if (user_id && token) {
                     var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
                     done(args);
@@ -381,7 +406,11 @@ define('mobilecontroller', function (require, exports, module) {
               var authorization = data.response.authorization;
               if (authorization) {
                 App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
-                  window.location = '/?redirect&' + window.location.search.substr(1);
+                  var search = window.search.substr(1);
+                  if (search) {
+                    search = '&' + search;
+                  }
+                  window.location = '/?redirect' +search + window.location.hash;
                 });
               }
             } else {
@@ -389,8 +418,7 @@ define('mobilecontroller', function (require, exports, module) {
             }
             $button.removeClass('disabled').prop('disabled', true);
           },
-          error: function (data) {
-            console.dir(data);
+          error: function () {
             $error.html('Failed to set password. Please try later.').removeClass('hide');
             $button.removeClass('disabled').prop('disabled', false);
           }
@@ -452,6 +480,21 @@ define('mobilecontroller', function (require, exports, module) {
         element.removeClass('hide');
         $('#app-body').css('height', '100%');
 
+        var user = Store.get('tmp-user');
+        if (user) {
+          $('.identity .avatar').attr('src', user.avatar_filename);
+          $('.identity .name').html(user.name);
+          if (window.noExfeApp) {
+            $('.password').addClass('hide');
+            $('.set-button').addClass('hide');
+            $('.done-info').removeClass('hide');
+          }
+          App.controllers.footer.emit('reset-position');
+          Store.remove('tmp-user');
+          Store.remove('tmp-token');
+          return;
+        }
+
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
@@ -461,11 +504,8 @@ define('mobilecontroller', function (require, exports, module) {
             if (data && data.meta && data.meta.code === 200) {
               $('.identity .avatar').attr('src', user.avatar_filename);
               $('.identity .name').html(user.name);
-              if (window.noExfeApp) {
-                $('.password').addClass('hide');
-                $('.set-button').addClass('hide');
-                $('.done-info').removeClass('hide');
-              }
+              Store.set('tmp-user', user);
+              App.controllers.footer.emit('reset-position');
               return;
             }
             cb();
@@ -474,8 +514,6 @@ define('mobilecontroller', function (require, exports, module) {
             cb();
           }
         });
-
-        App.controllers.footer.emit('reset-position');
       });
     }
   });
