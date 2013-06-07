@@ -6,6 +6,7 @@ define('mobilecontroller', function (require, exports, module) {
       TWEEN = require('tween'),
       api_url = window._ENV_.api_url,
       app_scheme = window._ENV_.app_scheme,
+      app_prefix_url = app_scheme + '://crosses/',
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -27,10 +28,6 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       now = Date.now || function () { return new Date().getTime(); },
-
-      launchApp = function (args) {
-        window.location = app_scheme + '://crosses/' + (args || '');
-      },
 
       hasWebkitTransform = ('webkitTransform' in document.body.style),
       setCSSMatrix = function (e, m) {
@@ -229,8 +226,8 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-      this.on('redirect', function (args) {
-        launchApp(args);
+      this.on('redirect', function (args, cb) {
+        window.launchApp(app_prefix_url + args, cb);
       });
     },
 
@@ -292,6 +289,11 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.removeClass('hide');
         $('#app-body').css('height', '100%');
         App.controllers.footer.emit('reset-position');
+        var done = function (args) {
+          App.controllers.footer.emit('redirect', args, function () {
+            window.location = '/?redirect' + window.location.hash;
+          });
+        };
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + user_id + '?token=' + token,
@@ -308,7 +310,7 @@ define('mobilecontroller', function (require, exports, module) {
                   self.$('.done-info').removeClass('hide');
                   if (user_id && token) {
                     var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
-                    App.controllers.footer.emit('redirect', args);
+                    done(args);
                   }
                   break;
                 }
@@ -378,14 +380,17 @@ define('mobilecontroller', function (require, exports, module) {
               $button.parent().addClass('hide');
               var authorization = data.response.authorization;
               if (authorization) {
-                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id);
+                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
+                  window.location = '/?redirect&' + window.location.search.substr(1);
+                });
               }
             } else {
               $button.removeClass('disabled').prop('disabled', true);
             }
             $button.removeClass('disabled').prop('disabled', true);
           },
-          error: function () {
+          error: function (data) {
+            console.dir(data);
             $error.html('Failed to set password. Please try later.').removeClass('hide');
             $button.removeClass('disabled').prop('disabled', false);
           }
@@ -456,6 +461,11 @@ define('mobilecontroller', function (require, exports, module) {
             if (data && data.meta && data.meta.code === 200) {
               $('.identity .avatar').attr('src', user.avatar_filename);
               $('.identity .name').html(user.name);
+              if (window.noExfeApp) {
+                $('.password').addClass('hide');
+                $('.set-button').addClass('hide');
+                $('.done-info').removeClass('hide');
+              }
               return;
             }
             cb();

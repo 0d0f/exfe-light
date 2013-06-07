@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-06 01:06:22 */
+/*! mobile@2a.5 2013-06-07 12:06:54 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -167,7 +167,7 @@ var Zepto = function() {
     return "number" == typeof t.length;
   }
   function c(t) {
-    return P.call(t, function(t) {
+    return A.call(t, function(t) {
       return null != t;
     });
   }
@@ -185,7 +185,7 @@ var Zepto = function() {
   }
   function p(t) {
     var e, n;
-    return I[t] || (e = A.createElement(t), A.body.appendChild(e), n = M(e, "").getPropertyValue("display"), 
+    return I[t] || (e = P.createElement(t), P.body.appendChild(e), n = M(e, "").getPropertyValue("display"), 
     e.parentNode.removeChild(e), "none" == n && (n = "block"), I[t] = n), I[t];
   }
   function f(t) {
@@ -222,7 +222,7 @@ var Zepto = function() {
     e(t);
     for (var n in t.childNodes) k(t.childNodes[n], e);
   }
-  var x, _, E, C, S, T, $ = [], N = $.slice, P = $.filter, A = window.document, I = {}, O = {}, M = A.defaultView.getComputedStyle, H = {
+  var x, _, E, C, S, T, $ = [], N = $.slice, A = $.filter, P = window.document, I = {}, O = {}, M = P.defaultView.getComputedStyle, H = {
     "column-count": 1,
     columns: 1,
     "font-weight": 1,
@@ -230,15 +230,15 @@ var Zepto = function() {
     opacity: 1,
     "z-index": 1,
     zoom: 1
-  }, D = /^\s*<(\w+|!)[^>]*>/, j = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, L = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = A.createElement("table"), B = A.createElement("tr"), q = {
-    tr: A.createElement("tbody"),
+  }, D = /^\s*<(\w+|!)[^>]*>/, j = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, L = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = P.createElement("table"), B = P.createElement("tr"), q = {
+    tr: P.createElement("tbody"),
     tbody: z,
     thead: z,
     tfoot: z,
     td: B,
     th: B,
-    "*": A.createElement("div")
-  }, U = /complete|loaded|interactive/, V = /^\.([\w-]+)$/, W = /^#([\w-]*)$/, Z = /^[\w-]+$/, J = {}, G = J.toString, Y = {}, X = A.createElement("div");
+    "*": P.createElement("div")
+  }, U = /complete|loaded|interactive/, V = /^\.([\w-]+)$/, W = /^#([\w-]*)$/, Z = /^[\w-]+$/, J = {}, G = J.toString, Y = {}, X = P.createElement("div");
   return Y.matches = function(t, e) {
     if (!t || 1 !== t.nodeType) return !1;
     var n = t.webkitMatchesSelector || t.mozMatchesSelector || t.oMatchesSelector || t.matchesSelector;
@@ -251,7 +251,7 @@ var Zepto = function() {
       return e ? e.toUpperCase() : "";
     });
   }, T = function(t) {
-    return P.call(t, function(e, n) {
+    return A.call(t, function(e, n) {
       return t.indexOf(e) == n;
     });
   }, Y.fragment = function(t, e, n) {
@@ -269,13 +269,13 @@ var Zepto = function() {
     return t instanceof Y.Z;
   }, Y.init = function(t, n) {
     if (t) {
-      if (e(t)) return E(A).ready(t);
+      if (e(t)) return E(P).ready(t);
       if (Y.isZ(t)) return t;
       var i;
       if (a(t)) i = c(t); else if (r(t)) i = [ s(t) ? E.extend({}, t) : t ], t = null; else if (D.test(t)) i = Y.fragment(t.trim(), RegExp.$1, n), 
       t = null; else {
         if (n !== x) return E(n).find(t);
-        i = Y.qsa(A, t);
+        i = Y.qsa(P, t);
       }
       return Y.Z(i, t);
     }
@@ -313,7 +313,7 @@ var Zepto = function() {
     } else for (i in t) if (e.call(t[i], i, t[i]) === !1) return t;
     return t;
   }, E.grep = function(t, e) {
-    return P.call(t, e);
+    return A.call(t, e);
   }, window.JSON && (E.parseJSON = JSON.parse), E.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(t, e) {
     J["[object " + e + "]"] = e.toLowerCase();
   }), E.fn = {
@@ -332,7 +332,7 @@ var Zepto = function() {
       return E(N.apply(this, arguments));
     },
     ready: function(t) {
-      return U.test(A.readyState) ? t(E) : A.addEventListener("DOMContentLoaded", function() {
+      return U.test(P.readyState) ? t(E) : P.addEventListener("DOMContentLoaded", function() {
         t(E);
       }, !1), this;
     },
@@ -356,7 +356,7 @@ var Zepto = function() {
       }), this;
     },
     filter: function(t) {
-      return e(t) ? this.not(this.not(t)) : E(P.call(this, function(e) {
+      return e(t) ? this.not(this.not(t)) : E(A.call(this, function(e) {
         return Y.matches(e, t);
       }));
     },
@@ -431,7 +431,7 @@ var Zepto = function() {
     },
     siblings: function(t) {
       return v(this.map(function(t, e) {
-        return P.call(f(e.parentNode), function(t) {
+        return A.call(f(e.parentNode), function(t) {
           return t !== e;
         });
       }), t);
@@ -619,7 +619,7 @@ var Zepto = function() {
     },
     offsetParent: function() {
       return this.map(function() {
-        for (var t = this.offsetParent || A.body; t && !L.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
+        for (var t = this.offsetParent || P.body; t && !L.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
         return t;
       });
     }
@@ -3737,12 +3737,10 @@ TWEEN.Tween = function(t) {
   };
 }), define("mobilecontroller", function(t, e, n) {
   "use strict";
-  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = window.openExfe, u = t("handlebars"), l = t("util"), h = l.trim, d = l.parseId, p = navigator.userAgent.match(/iPad/), f = t("live"), m = function(t, e) {
+  var i = t("base"), r = t("store"), s = t("tween"), a = window._ENV_.api_url, o = window._ENV_.app_scheme, c = o + "://crosses/", u = window.openExfe, l = t("handlebars"), h = t("util"), d = h.trim, p = h.parseId, f = navigator.userAgent.match(/iPad/), m = t("live"), v = function(t, e) {
     return t.replace(e ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  }, v = Date.now || function() {
+  }, g = Date.now || function() {
     return new Date().getTime();
-  }, g = function(t) {
-    window.location = o + "://crosses/" + (t || "");
   }, y = "webkitTransform" in document.body.style, b = function(t, e) {
     var n = 6 === e.length ? "" : "3d";
     t.style[y ? "webkitTransform" : "transform"] = "matrix" + n + "(" + e.join(",") + ")";
@@ -3807,14 +3805,14 @@ TWEEN.Tween = function(t) {
       e.on("click.footer", ".web-version", function() {
         window.location.href = "/?ipad" + location.hash;
       }).on("click.footer", ".get-button button", function(t) {
-        return t.preventDefault(), c(), !1;
+        return t.preventDefault(), u(), !1;
       }).on("keydown.footer", "#email", function(e) {
         if (13 === e.keyCode) {
           var n = t.$("#email").val();
           t.addNotificationIdentity(n);
         }
       }).on("click.footer", ".subscribe .btn_mail", function() {
-        var e = h(t.$("#email").val());
+        var e = d(t.$("#email").val());
         t.addNotificationIdentity(e);
       }), this.on("show", function(t, e, n, i) {
         var r = t.height - 96 - (e ? 60 : 0);
@@ -3822,14 +3820,14 @@ TWEEN.Tween = function(t) {
           position: "relative",
           top: r + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        p && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
+        f && this.$(".web-version").removeClass("hide"), this.$(".error-info").toggleClass("hide", !i);
       }), this.on("reset-position", function() {
         var t = App.screen.height - 96;
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
         }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
-        p && this.$(".web-version").removeClass("hide");
+        f && this.$(".web-version").removeClass("hide");
       }), this.on("show-from-cross", function(t, e, n) {
         this.element.css({
           position: "relative",
@@ -3839,14 +3837,14 @@ TWEEN.Tween = function(t) {
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
         n || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
-        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), p && this.$(".web-version").removeClass("hide");
-      }), this.on("redirect", function(t) {
-        g(t);
+        $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), f && this.$(".web-version").removeClass("hide");
+      }), this.on("redirect", function(t, e) {
+        window.launchApp(c + t, e);
       });
     },
     addNotificationIdentity: function(t, e, n) {
       e = this.cross.exfee_id, n = this.cross.token;
-      var i = d(t);
+      var i = p(t);
       return i && "email" !== i.provider ? ($("#email.email").attr("placeholder", "Bad email Address."), 
       void 0) : ($.ajax({
         type: "POST",
@@ -3879,7 +3877,12 @@ TWEEN.Tween = function(t) {
         var r = function() {
           n.error = !0, i.redirect("/");
         }, s = e.user_id, o = e.token;
-        this.element.removeClass("hide"), $("#app-body").css("height", "100%"), App.controllers.footer.emit("reset-position"), 
+        this.element.removeClass("hide"), $("#app-body").css("height", "100%"), App.controllers.footer.emit("reset-position");
+        var c = function(t) {
+          App.controllers.footer.emit("redirect", t, function() {
+            window.location = "/?redirect" + window.location.hash;
+          });
+        };
         $.ajax({
           type: "POST",
           url: a + "/Users/" + s + "?token=" + o,
@@ -3888,12 +3891,12 @@ TWEEN.Tween = function(t) {
           },
           success: function(n) {
             var i = n.meta;
-            if (i && 200 === i.code) for (var a = n.response.user, c = a.identities, u = 0, l = c.length; l > u; ++u) {
-              var h = c[u];
-              if (h.id === e.identity_id) {
-                if (t.showIdentity(h), t.$(".done-info").removeClass("hide"), s && o) {
-                  var d = "?token=" + o + "&user_id=" + s + "&identity_id=" + h.id;
-                  App.controllers.footer.emit("redirect", d);
+            if (i && 200 === i.code) for (var a = n.response.user, u = a.identities, l = 0, h = u.length; h > l; ++l) {
+              var d = u[l];
+              if (d.id === e.identity_id) {
+                if (t.showIdentity(d), t.$(".done-info").removeClass("hide"), s && o) {
+                  var p = "?token=" + o + "&user_id=" + s + "&identity_id=" + d.id;
+                  c(p);
                 }
                 break;
               }
@@ -3932,23 +3935,26 @@ TWEEN.Tween = function(t) {
             r.blur(), s.blur(), t.$(".password").addClass("hide"), t.$(".done-info").removeClass("hide"), 
             i.html("").addClass("hide"), n.parent().addClass("hide");
             var o = e.response.authorization;
-            o && App.controllers.footer.emit("redirect", "?token=" + o.token + "&user_id=" + o.user_id);
+            o && App.controllers.footer.emit("redirect", "?token=" + o.token + "&user_id=" + o.user_id, function() {
+              window.location = "/?redirect&" + window.location.search.substr(1);
+            });
           } else n.removeClass("disabled").prop("disabled", !0);
           n.removeClass("disabled").prop("disabled", !0);
         },
-        error: function() {
-          i.html("Failed to set password. Please try later.").removeClass("hide"), n.removeClass("disabled").prop("disabled", !1);
+        error: function(t) {
+          console.dir(t), i.html("Failed to set password. Please try later.").removeClass("hide"), 
+          n.removeClass("disabled").prop("disabled", !1);
         }
       })) : i.html("Password must be longer than four!").removeClass("hide");
     },
     listen: function() {
       var t, e, n = this, i = this.element, r = this.resolveToken;
       i.on("touchstart.setpassword", ".pass", function() {
-        e && (clearTimeout(e), e = void 0), t = v();
+        e && (clearTimeout(e), e = void 0), t = g();
         var n = $(this).prev();
         n.prop("type", "password");
       }).on("touchend.setpassword", ".pass", function(n) {
-        if (v() - t > 300) {
+        if (g() - t > 300) {
           var i = $(this).prev();
           i.prop("type", "text"), e = setTimeout(function() {
             i.prop("type", "password");
@@ -3975,7 +3981,9 @@ TWEEN.Tween = function(t) {
           success: function(t) {
             var e = t.response.user;
             return t && t.meta && 200 === t.meta.code ? ($(".identity .avatar").attr("src", e.avatar_filename), 
-            $(".identity .name").html(e.name), void 0) : (n(), void 0);
+            $(".identity .name").html(e.name), window.noExfeApp && ($(".password").addClass("hide"), 
+            $(".set-button").addClass("hide"), $(".done-info").removeClass("hide")), void 0) : (n(), 
+            void 0);
           },
           error: function() {
             n();
@@ -4055,7 +4063,7 @@ TWEEN.Tween = function(t) {
             name: e
           },
           success: function(e) {
-            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(m(e.response.identity.name));
+            e && e.meta && 200 === e.meta.code && t.$(".name_me").html(v(e.response.identity.name));
           },
           error: function() {
             alert("Failed, please retry later.");
@@ -4126,16 +4134,16 @@ TWEEN.Tween = function(t) {
         t.stopPropagation(), $(t.target).hasClass("live-form") && (i.find(".input-item").blur(), 
         App.response.redirect("/"));
       }).on("keydown.live", "#card-name", function(t) {
-        var e = t.keyCode, i = h(this.value);
+        var e = t.keyCode, i = d(this.value);
         i && 13 === e && n.addEmailOrPhone(this, i);
       }).on("blur.live", "#card-name", function() {
-        var t = h(this.value);
+        var t = d(this.value);
         t ? n.addEmailOrPhone(this, t) : n.setCardName(this);
       }).on("keydown.live blur.live", "#add-identity", function(t) {
-        var e = t.keyCode, i = h(this.value);
+        var e = t.keyCode, i = d(this.value);
         (i && 13 === e || "blur" === t.type) && (n.addEmailOrPhone(this, i, !0), this.value = "");
       }).on("keydown.live blur.live", "#facebook-identity", function(t) {
-        var e = t.keyCode, i = h(this.value);
+        var e = t.keyCode, i = d(this.value);
         (i && 13 === e || "blur" === t.type) && (i += "@facebook", n.addFacebook(this, i) && $("#add-identity-facebook").addClass("hide"), 
         this.value = "");
       }).on("touchstart.live", ".list .input-item", function() {
@@ -4143,8 +4151,8 @@ TWEEN.Tween = function(t) {
       }).on("blur.live", ".list .input-item", function() {
         $(this).next().addClass("hidden"), n.updateIdentityLi(this);
       }).on("touchstart.live", ".list .delete", function() {
-        var t, e = $(this).prev()[0], i = h(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
-        s && (i += "@facebook"), t = d(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
+        var t, e = $(this).prev()[0], i = d(e.value), r = e.getAttribute("data-provider"), s = "facebook" === r;
+        s && (i += "@facebook"), t = p(i), $(this).parent().remove(), t && t.provider && n.removeIdentity(t), 
         s && n.emit("show-add-facebook");
       }).on("touchstart.live", ".btn-start", function() {
         var t = $(".list .input-item");
@@ -4153,7 +4161,7 @@ TWEEN.Tween = function(t) {
         });
         var e = document.getElementById("card-name");
         e.blur();
-        var i = h(e.value);
+        var i = d(e.value);
         i ? n.liveCard.card.name = i : n.setCardName(e), setTimeout(function() {
           n.inspectFields() && (n.emit("post-card"), n.emit("live-gather"));
         }, 23);
@@ -4173,11 +4181,11 @@ TWEEN.Tween = function(t) {
         }
       }).on("touchstart.live", ".live-gather .card .avatar", function(n) {
         var i = $(this), r = 250, s = n.touches.length;
-        e = v(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
+        e = g(), t && (clearTimeout(t), t = void 0), 1 === s && s >= 1 && (t = setTimeout(function() {
           i.trigger("hold:live");
         }, r));
       }).on("touchend.live", ".live-gather .card .avatar", function() {
-        if (t && (clearTimeout(t), t = void 0), 250 > v() - e) {
+        if (t && (clearTimeout(t), t = void 0), 250 > g() - e) {
           var n = $(this).parent();
           n.hasClass("card-me") || n.toggleClass("selected");
         }
@@ -4199,7 +4207,7 @@ TWEEN.Tween = function(t) {
       }), this.on("show-add-facebook", function() {
         this.$('.list input[data-provider="facebook"]').length || this.$("#add-identity-facebook").removeClass("hide");
       }), this.on("show", function(t) {
-        f.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
+        m.startGeo(), this.screen = t, $("#app-footer").addClass("hide"), this.element.removeClass("hide");
         var e = t.height;
         _[13] = (e - 64) / 2, b(this.$("#icard")[0], _), this.$(".live-form, .live-gahter").css("min-height", e), 
         this.$(".live-form").removeClass("hide"), this.$("#live-discover").css("opacity", 0), 
@@ -4221,10 +4229,10 @@ TWEEN.Tween = function(t) {
       });
     },
     updateIdentityLi: function(t) {
-      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = h(t.value), o = !1, c = !1, u = !1;
-      if (a) if ("facebook" === i && (a += "@facebook"), e = d(a), e && e.provider) {
-        var l = this.findIdentity(e), p = e.provider === i && e.external_username === n;
-        l && !p && (t.value = s), l || p || (u = !0, o = !0);
+      var e, n = t.getAttribute("data-external-username"), i = t.getAttribute("data-provider"), r = t.getAttribute("data-name"), s = "", a = d(t.value), o = !1, c = !1, u = !1;
+      if (a) if ("facebook" === i && (a += "@facebook"), e = p(a), e && e.provider) {
+        var l = this.findIdentity(e), h = e.provider === i && e.external_username === n;
+        l && !h && (t.value = s), l || h || (u = !0, o = !0);
       } else c = !0, o = !0; else c = !0, o = !0;
       c && (t.setAttribute("data-name", s), t.setAttribute("data-external-username", s), 
       t.setAttribute("data-provider", s), setTimeout(function() {
@@ -4257,12 +4265,12 @@ TWEEN.Tween = function(t) {
     postMyCard: function() {
       r.set("livecard", this.liveCard);
       var t = this.liveCard.card;
-      t.name && t.identities.length && f.init(t, $.proxy(this.liveCallback, this));
+      t.name && t.identities.length && m.init(t, $.proxy(this.liveCallback, this));
     },
     state: 1,
     liveCallback: function(t) {
       var e = this.liveCard, n = t.me;
-      1 === this.state && n && n.name && n.identities.length && (v() - n.timestamp > 6e4 && this.updateCardName(n), 
+      1 === this.state && n && n.name && n.identities.length && (g() - n.timestamp > 6e4 && this.updateCardName(n), 
       this.updateMe(e.card = n), r.set("livecard", e)), this._others = t.others, this.updateOthers();
     },
     updateMyCardForm: function() {
@@ -4307,13 +4315,13 @@ TWEEN.Tween = function(t) {
       }
     },
     addFacebook: function(t, e) {
-      var n = d(e), i = n.provider;
+      var n = p(e), i = n.provider;
       return i && "facebook" === i && !this.existsByIdentity(n) ? (this.addIdentity(n), 
       !0) : !1;
     },
     addEmailOrPhone: function(t, e, n) {
       n = !n;
-      var i = d(e), r = i.provider;
+      var i = p(e), r = i.provider;
       !r || "email" !== r && "phone" !== r || this.existsByIdentity(i) || (this.addIdentity(i), 
       n && this.setCardName(t)), n && (this.emit("show-add-email"), this.emit("show-add-facebook")), 
       this.emit("post-card");
@@ -4323,7 +4331,7 @@ TWEEN.Tween = function(t) {
       t;
     },
     genIdentity: function(t) {
-      var e = u.compile($("#live-li-identity-tmpl").html()), n = t.provider;
+      var e = l.compile($("#live-li-identity-tmpl").html()), n = t.provider;
       n = this.aliasProvider(n);
       var i = $(e({
         provider_alias: n,
@@ -4349,8 +4357,8 @@ TWEEN.Tween = function(t) {
     },
     packedIdentities: function() {
       for (var t, e, n, i, r, s = this.$(".identities .list").find("input"), a = 0, o = s.length, c = []; o > a; ++a) t = s.eq(a), 
-      e = t.attr("data-provider"), n = h(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
-      i = d(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
+      e = t.attr("data-provider"), n = d(s.eq(a).val()), n && ("facebook" === e && (n += "@facebook"), 
+      i = p(n), r = i.provider, !r || "email" !== r && "phone" !== r && "facebook" !== r || c.push(i));
       return c;
     },
     existsByIdentity: function(t) {
@@ -4372,7 +4380,7 @@ TWEEN.Tween = function(t) {
       r[3][2] = [ .625 * t - n, .22 * e - i ], r[3][3] = [ .875 * t - n, .22 * e + 40 - i ];
     },
     genCard: function(t, e, n, i, r, s) {
-      var a = u.compile($("#live-card-tmpl").html()), o = k.slice(0);
+      var a = l.compile($("#live-card-tmpl").html()), o = k.slice(0);
       o[12] = e[0], o[13] = e[1];
       var c = $(a({
         g: n,
@@ -4496,34 +4504,34 @@ TWEEN.Tween = function(t) {
       NORESPONSE: [],
       IGNORED: [],
       DECLINED: []
-    }, T = 0, N = E.length; N > T; ++T) {
-      var P = E[T], A = k && k === P.identity.connected_user_id || x === P.identity.id, I = k && k === P.identity.connected_user_id && x === P.identity.id, O = "pending", M = P.rsvp_status;
-      (I || "NOTIFICATION" !== M) && ("ACCEPTED" === M ? O = "accepted" : "DECLINED" === M && (O = "declined"), 
-      P.rsvp_style = O, A ? (P.is_me = !0, x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
-      P.identity.isphone = "phone" === P.identity.provider, h.identity = P.identity, h.identity.is_accepted = "ACCEPTED" === M, 
-      S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
+    }, T = !1, N = 0, A = E.length; A > N; ++N) {
+      var P = E[N], I = k && k === P.identity.connected_user_id || x === P.identity.id, O = k && k === P.identity.connected_user_id && x === P.identity.id, M = "pending", H = P.rsvp_status;
+      (O || "NOTIFICATION" !== H) && ("ACCEPTED" === H ? M = "accepted" : "DECLINED" === H && (M = "declined"), 
+      P.rsvp_style = M, I ? (T = "pending" === M, P.is_me = !0, x = P.identity.id, x !== P.invited_by.id && (h.inviter = P.invited_by), 
+      x !== P.by_identity.id && (T = !0), P.identity.isphone = "phone" === P.identity.provider, 
+      h.identity = P.identity, S.ACCEPTED.unshift(P)) : P.rsvp_status in S && S[P.rsvp_status].push(P));
     }
-    C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), h.invitations = [], 
-    N = C.length;
-    for (var H = 0; N > H; ) h.invitations.push(C.splice(0, 5)), H += 5;
-    N = h.invitations.length;
-    var D = h.invitations[N - 1], j = D.length;
-    if (j && 5 > j) for (;5 - j++; ) D.push(void 0);
-    var L = "";
-    k && (_ ? (L = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
-    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (L = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    h.hide_rsvp = !T, C = [].concat(S.ACCEPTED, S.INTERESTED, S.NORESPONSE, S.IGNORED, S.DECLINED), 
+    h.invitations = [], A = C.length;
+    for (var D = 0; A > D; ) h.invitations.push(C.splice(0, 5)), D += 5;
+    A = h.invitations.length;
+    var j = h.invitations[A - 1], L = j.length;
+    if (L && 5 > L) for (;5 - L++; ) j.push(void 0);
+    var R = "";
+    k && (_ ? (R = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
+    c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (R = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
     c = _.token))), c && h.identity.isphone && (h.change_name = !0);
-    var R = t.app, F = R.controllers, z = F.cross;
-    z && z.destory();
-    var B = s.compile($("#cross-tmpl").html());
-    z = R.controllers.cross = new d({
+    var F = t.app, z = F.controllers, B = z.cross;
+    B && B.destory();
+    var q = s.compile($("#cross-tmpl").html());
+    B = F.controllers.cross = new d({
       options: {
-        template: B(h)
+        template: q(h)
       },
       cross: h,
       exfee_id: l.exfee.id,
       token: c
-    }), z.emit("show"), R.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, L);
+    }), B.emit("show"), F.controllers.footer.emit("show-from-cross", l.exfee.id, c, h.read_only, R);
   }, m = n.exports = {
     index: function(t) {
       var e = t.error, n = t.app, i = n.controllers, r = i.home, s = i.footer, a = n.screen;
@@ -4565,11 +4573,11 @@ TWEEN.Tween = function(t) {
       m.setPassword(t, e)), n.currPageName = "RESOLVE_TOKEN";
     },
     crossPhoneToken: function(t, e) {
-      var n = t.app, s = t.params, a = s[1], o = r.get("cats"), c = o && o[a], u = t._data_ = i._data_;
+      var n = t.app, s = t.params, a = s[2], o = r.get("cats"), c = o && o[a], u = t._data_ = i._data_;
       f(t, e, u, o, a, c), n.currPageName = "CROSS";
     },
     crossToken: function(t, e) {
-      var n = t.app, s = t.params[0], a = r.get("cats"), o = t._data_ = i._data_, c = a && a[s];
+      var n = t.app, s = t.params[1], a = r.get("cats"), o = t._data_ = i._data_, c = a && a[s];
       f(t, e, o, a, s, c), n.currPageName = "CROSS";
     },
     live: function(t) {
@@ -4588,11 +4596,12 @@ TWEEN.Tween = function(t) {
   c.controllers = {}, c.controllers.footer = new s({
     App: c
   }), c.get(/^\/+(?:\?)?#{0,}$/, a.index), c.get(/^\/+(?:\?)?#live\/?$/, a.live), 
-  c.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
+  c.get(/^\/+\?(?:(redirect)&)?t=([a-zA-Z0-9]{3,})$/, function(t, e) {
     var n = window._ENV_._data_, i = n.action;
     t.session.resolveToken = n, "VERIFIED" === i ? a.verify(t, e) : "INPUT_NEW_PASSWORD" === i && a.setPassword(t, e);
-  }), c.get(/^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken), c.get(/^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, a.crossPhoneToken), 
-  c.get(/^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/, a.crossToken), c.on("launched", function() {
+  }), c.get(/^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/, a.resolveToken), 
+  c.get(/^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, a.crossPhoneToken), 
+  c.get(/^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, a.crossToken), c.on("launched", function() {
     function t() {
       i(t), e.update();
     }

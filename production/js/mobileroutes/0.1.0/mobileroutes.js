@@ -319,7 +319,7 @@ define('mobileroutes', function (require, exports, module) {
     crossPhoneToken: function (req, res) {
       var app = req.app,
           params = req.params,
-          ctoken = params[1],
+          ctoken = params[2],
           cats = Store.get('cats'),
           token = cats && cats[ctoken],
           data = req._data_ = _ENV_._data_;
@@ -332,7 +332,7 @@ define('mobileroutes', function (require, exports, module) {
     // `cross-token`
     crossToken: function (req, res) {
       var app = req.app,
-          ctoken = req.params[0],
+          ctoken = req.params[1],
           cats = Store.get('cats'),
           data = req._data_ = _ENV_._data_,
           token = cats && cats[ctoken];
