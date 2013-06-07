@@ -227,7 +227,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('redirect', function (args, cb) {
-        window.launchApp(app_prefix_url + args, cb, 400);
+        window.launchApp(app_prefix_url + args, cb, 500);
       });
     },
 
