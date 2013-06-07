@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-08 12:06:37 */
+/*! desktop@2a.10 2013-06-08 12:06:23 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15301,14 +15301,14 @@ define("lightsaber", function(e, t, i) {
     });
   };
   var d = function(e, t, i, n, a, o, c, d, u) {
-    var h = t.session, p = h.authorization, f = (h.user, p && p.user_id || 0);
+    var h = t.session, p = h.authorization, f = h.user, m = p && p.user_id || 0;
     r.request("getCrossByInvitationToken", {
       type: "POST",
       params: n,
       data: a
     }, function(t) {
       console.dir(t);
-      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, m = t.action, g = t.cross;
+      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
       s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && r && (o || (o = {}), 
       c = o[d] = r, l.set("cats", o));
       var v = function() {
@@ -15320,7 +15320,7 @@ define("lightsaber", function(e, t, i) {
           }
         });
       };
-      if ((p && f === a || i && (p = i)) && a > 0 || !m) return s.once("app:user:signin:after", function() {
+      if ((p && m === a || i && (p = i)) && a > 0 || !f) return s.once("app:user:signin:after", function() {
         e.redirect("/#!" + g.id);
       }), s.emit("app:user:signin", p.token, p.user_id), void 0;
       if (!i && h) s.emit("app:usermenu:updatebrowsing", {
@@ -15328,7 +15328,7 @@ define("lightsaber", function(e, t, i) {
           identities: [ n ],
           name: n.name
         },
-        action: m,
+        action: f,
         readOnly: h,
         page: "cross",
         code: 1
@@ -15340,17 +15340,21 @@ define("lightsaber", function(e, t, i) {
             name: n.name
           },
           invitation_token: d,
-          action: m,
+          action: f,
           readOnly: h,
           tokenType: "invitation",
-          setup: "SETUP" === m,
+          setup: "SETUP" === f,
           page: "cross",
           code: 2
         };
         c && (y.tokenType = "cross", y.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", y);
       }
       v();
-    }, function() {});
+    }, function() {
+      var t = a && a.meta && a.meta.code, i = !!p;
+      403 === t ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", i), i && (s.emit("app:usermenu:updatenormal", f), 
+      s.emit("app:usermenu:crosslist", p.token, p.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === t && e.location("/404");
+    });
   };
   c.crossToken = function(e, t, i) {
     var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = l.get("cats"), p = {};
