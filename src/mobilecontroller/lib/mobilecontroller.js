@@ -416,14 +416,15 @@ define('mobilecontroller', function (require, exports, module) {
             } else {
               if (meta.code === 401) {
                 $error.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass('hide');
+                $pass.prop('disabled', true);
+                $button.parent().addClass('hide')
               }
-              $button.removeClass('disabled').prop('disabled', true);
             }
-            $button.removeClass('disabled').prop('disabled', true);
+            $button.prop('disabled', true);
           },
           error: function () {
             $error.html('Failed to set password. Please try later.').removeClass('hide');
-            $button.removeClass('disabled').prop('disabled', false);
+            $button.prop('disabled', false);
           }
         });
       } else {
