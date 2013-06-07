@@ -653,7 +653,22 @@ define('routes', function (require, exports, module) {
         }
 
       , function (d) {
-          //console.dir(d);
+          var status = data && data.meta && data.meta.code
+            , hasAuth = !!authorization;
+          if (403 === status) {
+            Bus.emit('app:page:home', false);
+            Bus.emit('app:page:usermenu', hasAuth);
+            if (hasAuth) {
+              Bus.emit('app:usermenu:updatenormal', user);
+              Bus.emit('app:usermenu:crosslist'
+                , authorization.token
+                , authorization.user_id
+              );
+            }
+            Bus.emit('app:cross:forbidden', null, null);
+          } else if (404 === status) {
+            res.location('/404');
+          }
         }
       );
     };
