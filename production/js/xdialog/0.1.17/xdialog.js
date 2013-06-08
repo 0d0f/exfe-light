@@ -2017,9 +2017,9 @@ define('xdialog', function (require, exports) {
   };
 
 
-  // Set Up Account
+  // Set Up Verification
   // --------------------------------------------------------------------------
-  dialogs.setup_email = {
+  dialogs.setup_verification = {
 
     errors: {
         '400': {
@@ -2246,8 +2246,8 @@ define('xdialog', function (require, exports) {
   };
 
 
-  // Set Up Twitter
-  dialogs.setup_twitter = {
+  // Set Up Authenticate
+  dialogs.setup_authenticate = {
 
     options: {
 
@@ -2261,9 +2261,10 @@ define('xdialog', function (require, exports) {
       },
 
       events: {
-        'click .authorize': function () {
+        'click .xbtn-blue': function () {
+          var provider = this._settings.browsing.identities[0].provider;
           this._oauth_ = $.ajax({
-            url: '/OAuth/Authenticate?provider=twitter',
+            url: '/OAuth/Authenticate?provider=' + provider,
             type: 'POST',
             dataType: 'JSON',
             success: function (data) {
@@ -2289,7 +2290,7 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>You’re browsing as identity underneath, please authorize through Twitter to set up your <span class="x-sign">EXFE</span> account.</legend>'
+              + '<legend>Please authenticate following identity to continue.</legend>'
 
                 + '<div class="clearfix control-group">'
                   + '<div class="pull-right user-identity">'
@@ -2298,29 +2299,22 @@ define('xdialog', function (require, exports) {
                   + '</div>'
                   + '<div class="box identity"></div>'
                 + '</div>'
-
-                + '<div class="clearfix">'
-                  + '<button class="pull-right xbtn-blue authorize">Authorize</button>'
-                  + '<a class="pull-right underline pointer cancel" data-dismiss="dialog">Cancel</a>'
-                + '</div>'
-
-                ////+ '<div class="spliterline"></div>'
-
-                ////+ '<div>Otherwise, sign in your existing <span class="x-sign">EXFE</span> account to merge with this identity.</div>'
-
             + '</fieldset>'
           + '</form>',
 
         footer: ''
-          ////+ '<button class="pull-right xbtn-white xbtn-siea" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In and Add…</button>'
+          + '<button class="pull-right xbtn-blue">Authenticate</button>'
+          + '<a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
 
       onShowBefore: function (e) {
         var data = $(e.currentTarget).data('source');
         if (!data) return;
-        var identity = data.identity;
-        this._tokenType = data.tokenType;
-        this._originToken = data.originToken;
+        this._settings = data;
+        var identity = data.browsing.identities[0]
+          , forward = data.forward;
+        !forward && (data.forward = '/');
+
         this.$('.identity').text(Util.printExtUserName(identity));
         this.$('.avatar')
           .attr('src', identity.avatar_filename)
@@ -2344,7 +2338,6 @@ define('xdialog', function (require, exports) {
       },
 
       events: {
-
         'click .xbtn-dnm': function () {
           var action = this._settings.action;
           if (action === 'SETUP') {
@@ -2397,7 +2390,7 @@ define('xdialog', function (require, exports) {
                   $('.modal-mi').css('top', 230);
                 }
                 else {
-                  window.location.href = '/';
+                  window.location.reload();
                 }
               }
             , function () {
@@ -2461,12 +2454,12 @@ define('xdialog', function (require, exports) {
         $mi.find('.identity').text(beun);
         $mi.find('.user-name').text(user.name);
 
-        $ci = this.$('.context-identity');
+        var $ci = this.$('.context-identity');
         $ci.find('.avatar img').attr('src', bidentity.avatar_filename)
           .next().addClass('icon16-identity-' + provider);
         $ci.find('.identity').text(beun);
 
-        $cu = this.$('.context-user');
+        var $cu = this.$('.context-user');
         $cu.find('.avatar img').attr('src', user.avatar_filename);
         $cu.find('.username').text(user.name);
       }
