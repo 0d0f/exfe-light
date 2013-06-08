@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 02:06:48 */
+/*! desktop@2a.10 2013-06-09 03:06:37 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7071,16 +7071,6 @@ TWEEN.Tween = function(e) {
         this.$(".xalert-" + l.provider).removeClass("hide");
       }
     }
-  }, d.verification_phone = {
-    options: {
-      events: {},
-      backdrop: !1,
-      viewData: {
-        cls: "mblack modal-ve",
-        title: "Verification",
-        body: '<div class="shadow title">Identity Verification</div><div>Identity to verify:</div>'
-      }
-    }
   }, d.setpassword = {
     errors: {
       "400": {
@@ -7341,15 +7331,15 @@ TWEEN.Tween = function(e) {
           "SETUP" === e ? (i('[data-user-action="' + e + '"]').trigger("click"), this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
-          var e = this, t = e._settings.token, r = e._settings.invitation_token;
-          a.request("mergeIdentities", {
+          var e = this, t = e._settings.token, r = e._settings.invitation_token, s = this.provider, l = {
+            invitation_token: r
+          };
+          "email" !== s && "phone" !== s && (l.refere = window.location.href), a.request("mergeIdentities", {
             type: "POST",
             params: {
               token: t
             },
-            data: {
-              invitation_token: r
-            },
+            data: l,
             beforeSend: function() {
               i(".modal-footer").find("button").prop("disabled", !0);
             }
@@ -7371,18 +7361,18 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-bi",
         title: "Browsing Identity",
-        body: '<div class="shadow title">Merge Identity?</div><div class="user"><div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span>NOT</span> merge if it’s not you!</div></div><div class="context-identity"><div class="pull-right avatar"><img width="40" height="40" alt="" src="" /><i class="provider"></i></div><div class="clearfix"><div class="pull-left box identity"></div></div></div><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div>',
+        body: '<div class="shadow title">Merge Identity?</div><div class="user"><div class="merge-info">You’re browsing this page as <span class="buser-name"></span> <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span class="not">NOT</span> merge if it’s not you!</div></div><div class="context-identity"><div class="pull-right avatar"><img width="40" height="40" alt="" src="" /><i class="provider"></i></div><div class="clearfix"><div class="pull-left box identity"></div></div></div><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div>',
         footer: '<button class="pull-right xbtn-blue xbtn-merge">Merge and Go</button><button class="pull-right xbtn-white xbtn-dnm">Do NOT Merge</button>'
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("settings");
         if (t) {
           this._settings = t;
-          var n = t.user, r = t.browsing, a = r.identities, o = a[0], l = s.printExtUserName(o);
-          this.$(".merge-info").find(".identity").text(l), this.$(".merge-info").find(".user-name").text(n.name), 
-          this.$(".context-identity").find(".avatar img").attr("src", o.avatar_filename).next().addClass("icon16-identity-" + o.provider), 
-          this.$(".context-identity").find(".identity").text(l), this.$(".context-user").find(".avatar img").attr("src", n.avatar_filename), 
-          this.$(".context-user").find(".username").text(n.name);
+          var n = t.user, r = t.browsing, a = r.identities, o = a[0], l = s.printExtUserName(o), c = this.provider = o.provider, d = this.$(".merge-info");
+          d.find(".buser-name").text(r.name), d.find(".identity").text(l), d.find(".user-name").text(n.name), 
+          $ci = this.$(".context-identity"), $ci.find(".avatar img").attr("src", o.avatar_filename).next().addClass("icon16-identity-" + c), 
+          $ci.find(".identity").text(l), $cu = this.$(".context-user"), $cu.find(".avatar img").attr("src", n.avatar_filename), 
+          $cu.find(".username").text(n.name);
         }
       }
     }
