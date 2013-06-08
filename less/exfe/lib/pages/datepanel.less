@@ -415,7 +415,7 @@
       #tlPosition {
         .core (@index) {
           .topX (@index) when (@index > 0) {
-            (~".time-label:nth-child(@{index})") {
+            .time-label:nth-child(@{index}) {
               top: (@index - 1) * 5 * 12px;
             }
             .topX(@index - 1);
