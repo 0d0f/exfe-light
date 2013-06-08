@@ -1,9 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-<<<<<<< HEAD
-/*! desktop@2a.10 2013-06-08 09:06:17 */
-=======
-/*! desktop@2a.10 2013-06-08 12:06:04 */
->>>>>>> 6f055d4... imporved dialogs
+/*! desktop@2a.10 2013-06-08 09:06:49 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -399,7 +395,7 @@
       var n = J.grep(e, function(e) {
         return 1 === e.nodeType;
       });
-      if (Lt.test(t)) return J.filter(t, n, !i);
+      if (zt.test(t)) return J.filter(t, n, !i);
       t = J.filter(t, n);
     }
     return J.grep(e, function(e) {
@@ -499,7 +495,7 @@
   }
   function E(e, i, n, r, a, s) {
     a = a || i.dataTypes[0], s = s || {}, s[a] = !0;
-    for (var o, l = e[a], c = 0, d = l ? l.length : 0, u = e === Li; d > c && (u || !o); c++) o = l[c](i, n, r), 
+    for (var o, l = e[a], c = 0, d = l ? l.length : 0, u = e === zi; d > c && (u || !o); c++) o = l[c](i, n, r), 
     "string" == typeof o && (!u || s[o] ? o = t : (i.dataTypes.unshift(o), o = E(e, i, n, r, o, s)));
     return !u && o || s["*"] || (o = E(e, i, n, r, "*", s)), o;
   }
@@ -642,10 +638,10 @@
     }), n = 0; s > n; n++) r = f[n], l = u.createTween(r, m ? o[r] : 0), p[r] = o[r] || J.style(e, r), 
     r in o || (o[r] = l.start, m && (l.end = l.start, l.start = "width" === r || "height" === r ? 1 : 0));
   }
-  function L(e, t, i, n, r) {
-    return new L.prototype.init(e, t, i, n, r);
+  function z(e, t, i, n, r) {
+    return new z.prototype.init(e, t, i, n, r);
   }
-  function z(e, t) {
+  function L(e, t) {
     var i, n = {
       height: e
     }, r = 0;
@@ -1751,8 +1747,8 @@
         } else if (t.ownerDocument && (a = t.ownerDocument.getElementById(o)) && w(t, a) && a.id === o) return i.push(a), 
         i;
       } else {
-        if (r[2]) return L.apply(i, z.call(t.getElementsByTagName(e), 0)), i;
-        if ((o = r[3]) && ht && t.getElementsByClassName) return L.apply(i, z.call(t.getElementsByClassName(o), 0)), 
+        if (r[2]) return z.apply(i, L.call(t.getElementsByTagName(e), 0)), i;
+        if ((o = r[3]) && ht && t.getElementsByClassName) return z.apply(i, L.call(t.getElementsByClassName(o), 0)), 
         i;
       }
       return m(e.replace(Z, "$1"), t, i, n, s);
@@ -1831,7 +1827,7 @@
           var c, u, h, p = [], m = [], g = s.length, v = a || f(t || "*", o.nodeType ? [ o ] : o, [], a), y = !e || !a && t ? v : d(v, p, e, o, l), _ = i ? r || (a ? e : g || n) ? [] : s : y;
           if (i && i(y, _, o, l), n) for (h = d(_, m), n(h, [], o, l), c = h.length; c--; ) (u = h[c]) && (_[m[c]] = !(y[m[c]] = u));
           if (a) for (c = e && _.length; c--; ) (u = _[c]) && (a[p[c]] = !(s[p[c]] = u)); else _ = d(_ === s ? _.splice(g, _.length) : _), 
-          r ? r(null, s, _, l) : L.apply(s, _);
+          r ? r(null, s, _, l) : z.apply(s, _);
         }
       });
     }
@@ -1870,7 +1866,7 @@
             if (g > 0) for (;y--; ) b[y] || m[y] || (m[y] = O.call(c));
             m = d(m);
           }
-          L.apply(c, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(c);
+          z.apply(c, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(c);
         }
         return x && (A = C, T = w), b;
       };
@@ -1888,7 +1884,7 @@
           e = e.slice(s.shift().length);
         }
         for (a = ot.POS.test(e) ? -1 : s.length - 1; a >= 0 && (l = s[a], !_.relative[c = l.type]); a--) if ((d = _.find[c]) && (n = d(l.matches[0].replace(st, ""), nt.test(s[0].type) && t.parentNode || t, r))) {
-          if (s.splice(a, 1), e = n.length && s.join(""), !e) return L.apply(i, z.call(n, 0)), 
+          if (s.splice(a, 1), e = n.length && s.join(""), !e) return z.apply(i, L.call(n, 0)), 
           i;
           break;
         }
@@ -1896,7 +1892,7 @@
       return k(e, u)(n, t, r, i, nt.test(e)), i;
     }
     function g() {}
-    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, D = N.documentElement, A = 0, P = 0, O = [].pop, L = [].push, z = [].slice, H = [].indexOf || function(e) {
+    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, D = N.documentElement, A = 0, P = 0, O = [].pop, z = [].push, L = [].slice, H = [].indexOf || function(e) {
       for (var t = 0, i = this.length; i > t; t++) if (this[t] === e) return t;
       return -1;
     }, R = function(e, t) {
@@ -1943,9 +1939,9 @@
       return y = !N.getElementById(S), D.removeChild(e), t;
     });
     try {
-      z.call(D.childNodes, 0)[0].nodeType;
+      L.call(D.childNodes, 0)[0].nodeType;
     } catch (ft) {
-      z = function(e) {
+      L = function(e) {
         for (var t, i = []; t = this[e]; e++) i.push(t);
         return i;
       };
@@ -2251,7 +2247,7 @@
             p = nt.test(e) && i.parentNode || i, f = c.join(",");
           }
           if (f) try {
-            return L.apply(r, z.call(p.querySelectorAll(f), 0)), r;
+            return z.apply(r, L.call(p.querySelectorAll(f), 0)), r;
           } catch (m) {} finally {
             u || i.removeAttribute("id");
           }
@@ -2273,7 +2269,7 @@
     i.attr = J.attr, J.find = i, J.expr = i.selectors, J.expr[":"] = J.expr.pseudos, 
     J.unique = i.uniqueSort, J.text = i.getText, J.isXMLDoc = i.isXML, J.contains = i.contains;
   }(e);
-  var Pt = /Until$/, Ot = /^(?:parents|prev(?:Until|All))/, Lt = /^.[^:#\[\.,]*$/, zt = J.expr.match.needsContext, Ht = {
+  var Pt = /Until$/, Ot = /^(?:parents|prev(?:Until|All))/, zt = /^.[^:#\[\.,]*$/, Lt = J.expr.match.needsContext, Ht = {
     children: !0,
     contents: !0,
     next: !0,
@@ -2305,10 +2301,10 @@
       return this.pushStack(c(this, e, !0), "filter", e);
     },
     is: function(e) {
-      return !!e && ("string" == typeof e ? zt.test(e) ? J(e, this.context).index(this[0]) >= 0 : J.filter(e, this).length > 0 : this.filter(e).length > 0);
+      return !!e && ("string" == typeof e ? Lt.test(e) ? J(e, this.context).index(this[0]) >= 0 : J.filter(e, this).length > 0 : this.filter(e).length > 0);
     },
     closest: function(e, t) {
-      for (var i, n = 0, r = this.length, a = [], s = zt.test(e) || "string" != typeof e ? J(e, t || this.context) : 0; r > n; n++) for (i = this[n]; i && i.ownerDocument && i !== t && 11 !== i.nodeType; ) {
+      for (var i, n = 0, r = this.length, a = [], s = Lt.test(e) || "string" != typeof e ? J(e, t || this.context) : 0; r > n; n++) for (i = this[n]; i && i.ownerDocument && i !== t && 11 !== i.nodeType; ) {
         if (s ? s.index(i) > -1 : J.find.matchesSelector(i, e)) {
           a.push(i);
           break;
@@ -2790,7 +2786,7 @@
     }); else for (n in e) k(n, e[n], i, a);
     return r.join("&").replace(_i, "+");
   };
-  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Di = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Ai = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, Oi = J.fn.load, Li = {}, zi = {}, Hi = [ "*/" ] + [ "*" ];
+  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Di = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Ai = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, Oi = J.fn.load, zi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
   try {
     Ei = q.href;
   } catch (Ri) {
@@ -2871,8 +2867,8 @@
         url: !0
       }
     },
-    ajaxPrefilter: C(Li),
-    ajaxTransport: C(zi),
+    ajaxPrefilter: C(zi),
+    ajaxTransport: C(Li),
     ajax: function(e, i) {
       function n(e, i, n, s) {
         var c, u, y, _, x, k = i;
@@ -2922,7 +2918,7 @@
       }, h.url = ((e || h.url) + "").replace(Ti, "").replace(Ii, Ci[1] + "//"), h.dataTypes = J.trim(h.dataType || "*").toLowerCase().split(tt), 
       null == h.crossDomain && (c = Pi.exec(h.url.toLowerCase()) || !1, h.crossDomain = c && c.join(":") + (c[3] ? "" : "http:" === c[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
       h.data && h.processData && "string" != typeof h.data && (h.data = J.param(h.data, h.traditional)), 
-      E(Li, h, i, w), 2 === b) return w;
+      E(zi, h, i, w), 2 === b) return w;
       if (d = h.global, h.type = h.type.toUpperCase(), h.hasContent = !Si.test(h.type), 
       d && 0 === J.active++ && J.event.trigger("ajaxStart"), !h.hasContent && (h.data && (h.url += (Ni.test(h.url) ? "&" : "?") + h.data, 
       delete h.data), r = h.url, h.cache === !1)) {
@@ -2940,7 +2936,7 @@
         error: 1,
         complete: 1
       }) w[u](h[u]);
-      if (o = E(zi, h, i, w)) {
+      if (o = E(Li, h, i, w)) {
         w.readyState = 1, d && f.trigger("ajaxSend", [ w, h ]), h.async && h.timeout > 0 && (l = setTimeout(function() {
           w.abort("timeout");
         }, h.timeout));
@@ -3079,23 +3075,23 @@
     prefilter: function(e, t) {
       t ? Ji.unshift(e) : Ji.push(e);
     }
-  }), J.Tween = L, L.prototype = {
-    constructor: L,
+  }), J.Tween = z, z.prototype = {
+    constructor: z,
     init: function(e, t, i, n, r, a) {
       this.elem = e, this.prop = i, this.easing = r || "swing", this.options = t, this.start = this.now = this.cur(), 
       this.end = n, this.unit = a || (J.cssNumber[i] ? "" : "px");
     },
     cur: function() {
-      var e = L.propHooks[this.prop];
-      return e && e.get ? e.get(this) : L.propHooks._default.get(this);
+      var e = z.propHooks[this.prop];
+      return e && e.get ? e.get(this) : z.propHooks._default.get(this);
     },
     run: function(e) {
-      var t, i = L.propHooks[this.prop];
+      var t, i = z.propHooks[this.prop];
       return this.pos = t = this.options.duration ? J.easing[this.easing](e, this.options.duration * e, 0, 1, this.options.duration) : e, 
       this.now = (this.end - this.start) * t + this.start, this.options.step && this.options.step.call(this.elem, this.now, this), 
-      i && i.set ? i.set(this) : L.propHooks._default.set(this), this;
+      i && i.set ? i.set(this) : z.propHooks._default.set(this), this;
     }
-  }, L.prototype.init.prototype = L.prototype, L.propHooks = {
+  }, z.prototype.init.prototype = z.prototype, z.propHooks = {
     _default: {
       get: function(e) {
         var t;
@@ -3106,14 +3102,14 @@
         J.fx.step[e.prop] ? J.fx.step[e.prop](e) : e.elem.style && (null != e.elem.style[J.cssProps[e.prop]] || J.cssHooks[e.prop]) ? J.style(e.elem, e.prop, e.now + e.unit) : e.elem[e.prop] = e.now;
       }
     }
-  }, L.propHooks.scrollTop = L.propHooks.scrollLeft = {
+  }, z.propHooks.scrollTop = z.propHooks.scrollLeft = {
     set: function(e) {
       e.elem.nodeType && e.elem.parentNode && (e.elem[e.prop] = e.now);
     }
   }, J.each([ "toggle", "show", "hide" ], function(e, t) {
     var i = J.fn[t];
     J.fn[t] = function(n, r, a) {
-      return null == n || "boolean" == typeof n || !e && J.isFunction(n) && J.isFunction(r) ? i.apply(this, arguments) : this.animate(z(t, !0), n, r, a);
+      return null == n || "boolean" == typeof n || !e && J.isFunction(n) && J.isFunction(r) ? i.apply(this, arguments) : this.animate(L(t, !0), n, r, a);
     };
   }), J.fn.extend({
     fadeTo: function(e, t, i, n) {
@@ -3143,9 +3139,9 @@
       });
     }
   }), J.each({
-    slideDown: z("show"),
-    slideUp: z("hide"),
-    slideToggle: z("toggle"),
+    slideDown: L("show"),
+    slideUp: L("hide"),
+    slideToggle: L("toggle"),
     fadeIn: {
       opacity: "show"
     },
@@ -3176,7 +3172,7 @@
     swing: function(e) {
       return .5 - Math.cos(e * Math.PI) / 2;
     }
-  }, J.timers = [], J.fx = L.prototype.init, J.fx.tick = function() {
+  }, J.timers = [], J.fx = z.prototype.init, J.fx.tick = function() {
     for (var e, t = J.timers, i = 0; t.length > i; i++) e = t[i], e() || t[i] !== e || t.splice(i--, 1);
     t.length || J.fx.stop();
   }, J.fx.timer = function(e) {
@@ -5885,6 +5881,7 @@ TWEEN.Tween = function(e) {
     deleteIdentity: "/Users/deleteIdentity",
     setDefaultIdentity: "/Users/setDefaultIdentity",
     mergeIdentities: "/Users/mergeIdentities",
+    setup: "/users/setup",
     getIdentityById: "/Identities/:identity_id",
     complete: "/Identities/complete",
     getIdentity: "/Identities/get",
@@ -7124,15 +7121,9 @@ TWEEN.Tween = function(e) {
                   l.removeClass("disabled loading");
                 }
               }, function(e) {
-<<<<<<< HEAD
                 o.set("authorization", e), r.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
                 i("#app-user-menu").find(".setup").remove(), d && d.hide();
               }, function(r) {
-=======
-                o.set("authorization", e), a.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
-                i("#app-user-menu").find(".setup").remove(), d && d.hide();
-              }, function(a) {
->>>>>>> 6f055d4... imporved dialogs
                 d && d.hide();
                 var a = r.meta;
                 if (403 === a.code) {
@@ -7247,7 +7238,6 @@ TWEEN.Tween = function(e) {
             s ? (u.token = r, d.identity_id = n.browsing.identities[0].id) : d.invitation_token = r, 
             t.defer = a.request(c, {
               type: "POST",
-<<<<<<< HEAD
               params: u,
               data: d
             }, function(n) {
@@ -7264,19 +7254,6 @@ TWEEN.Tween = function(e) {
                 var a = t.$('[for="password"]'), s = a.find("span");
                 a.addClass("label-error"), s.text(h[n].errorType);
               }
-=======
-              data: l
-            }, function(t) {
-              if ("resolve" === n) if (c = o.get("authorization")) {
-                i("#app-user-menu").find(".setup").remove();
-                var r = i("#app-browsing-identity"), s = r.data("settings");
-                s.setup = !1, s.originToken = t.authorization.token, r.data("settings", s).trigger("click.data-api");
-              } else o.set("authorization", t.authorization), o.set("user", e._browsing_user), 
-              window.location.href = "/"; else c = t.authorization, a.once("app:user:signin:after", function() {
-                window.location.href = "/";
-              }), a.emit("app:user:signin", c.token, c.user_id);
-              e.hide();
->>>>>>> 6f055d4... imporved dialogs
             });
           }
         }
@@ -7285,27 +7262,16 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-su",
         title: "Set Up Account",
-<<<<<<< HEAD
         body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your <span class="x-sign">EXFE</span> account.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
-=======
-        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Full name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
->>>>>>> 6f055d4... imporved dialogs
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("source");
         if (t) {
-<<<<<<< HEAD
           this._settings = t;
           var n = t.browsing.identities[0], r = t.forward;
           !r && (t.forward = "/"), this.$("#name").val(n.name), this.$(".identity").text(s.printExtUserName(n)), 
           this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
-=======
-          var n = t.identity;
-          this._browsing = t.browsing, this._tokenType = t.tokenType, this._originToken = t.originToken, 
-          this._forward = t.forward || "/", this._page = t.page, this.$("#name").val(n.name), 
-          this.$(".identity").text(s.printExtUserName(n)), this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
->>>>>>> 6f055d4... imporved dialogs
           this.$(".xbtn-siea").data("source", s.printExtUserName(n));
         }
       }
@@ -8689,31 +8655,31 @@ TWEEN.Tween = function(e) {
     var t = r(this), i = o.get("authorization"), n = i && i.user_id, a = i && i.token, s = o.get("user"), l = t.data("link"), c = (t.data("event-ignore"), 
     r("#app-browsing-identity")), d = c.length;
     if (d) {
-      var u = c.data(), h = u.settings, p = h.action, f = h.code, g = h.invitation_token, v = h.readOnly, y = h.browsing;
+      var u = c.data(), h = u.settings, p = h.action, f = h.code, g = h.invitation_token, v = h.tokenType, y = h.readOnly, _ = h.browsing;
       if (1 === f) {
         e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
-        var _ = r('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only">></div>');
-        return _.data("settings", y), r("#app-tmp").append(_), _.trigger("click"), !1;
+        var b = r('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
+        return b.data("settings", _), r("#app-tmp").append(b), b.trigger("click"), !1;
       }
       if (2 === f) {
-        var b = y.user_id;
-        if ("SIGNIN" === p && n && n !== b) {
-          if (!l) return e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault(), 
-          m(a, g, function() {
+        var x = _.user_id;
+        if ("SIGNIN" === p && n && n !== x) {
+          if (!l && "cross" !== v) return e.stopImmediatePropagation(), e.stopPropagation(), 
+          e.preventDefault(), m(a, g, function() {
             var e = r('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
             e.data("settings", {
-              browsing: y,
+              browsing: _,
               user: s,
               token: a,
               action: p,
               invitation_token: g
             }), r("#app-tmp").append(e), e.trigger("click");
           }), !1;
-        } else if ("SETUP" === p && !v && !l) return e.stopImmediatePropagation(), e.stopPropagation(), 
-        e.preventDefault(), n && n !== b ? m(a, g, function() {
+        } else if ("SETUP" === p && !y && !l) return e.stopImmediatePropagation(), e.stopPropagation(), 
+        e.preventDefault(), n && n !== x ? m(a, g, function() {
           var e = r('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
           e.data("settings", {
-            browsing: y,
+            browsing: _,
             user: s,
             token: a,
             action: p,
@@ -12355,21 +12321,11 @@ TWEEN.Tween = function(e) {
     a.append(t(e)), delete e.profileLink, delete e.verifying;
   }
   function i(e) {
-<<<<<<< HEAD
     var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.browsing;
     l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
     n.attr("href", location.href), r.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
     t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
       browsing: l,
-=======
-    var t, i = s("#app-user-menu"), n = s("#app-user-name"), a = n.find("span"), r = i.find(".dropdown-wrapper"), o = r.find(".user-panel"), l = e.browsing;
-    l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
-    n.attr("href", location.href), a.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
-    t = h.compile(m.browsing_identity), o.length && o.remove(), r.append(t(e)), console.dir(e), 
-    s("#app-user-menu").find(".setup").data("source", {
-      browsing: l,
-      identity: l.identities[0],
->>>>>>> 6f055d4... imporved dialogs
       originToken: e.invitation_token,
       tokenType: e.tokenType,
       forward: e.forward,
@@ -13473,12 +13429,12 @@ TWEEN.Tween = function(e) {
     }), Api.request("conversation", t, function(t) {
       S(t.conversation, e);
     });
-  }, L = function() {
-    O(!0);
   }, z = function() {
+    O(!0);
+  }, L = function() {
     t("#conversation-form span.avatar img").attr("src", curIdentity.avatar_filename), 
     t("#conversation-form").show(), t(".conversation-timeline").html(""), t(".cross-conversation").slideDown(233), 
-    $ = "", M = {}, O(), convTimer = setInterval(L, 233e3);
+    $ = "", M = {}, O(), convTimer = setInterval(z, 233e3);
   }, H = function(e, i) {
     Cross.id = e.id, Cross.title = e.title, Cross.description = e.description, Cross.time = e.time, 
     Cross.place = e.place, Cross.widget = e.widget, Cross.exfee_id = e.exfee.id, Exfee = e.exfee, 
@@ -13488,7 +13444,7 @@ TWEEN.Tween = function(e) {
       curIdentity = ExfeUtilities.clone(Exfee.invitations[n].identity);
       break;
     }
-    P(), z();
+    P(), L();
   }, R = function(e) {
     Api.request("getCross", {
       resources: {
@@ -13650,7 +13606,7 @@ var MD5 = function(e) {
     }
     return t;
   }
-  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, D = 4, A = 11, P = 16, O = 23, L = 6, z = 10, H = 15, R = 21;
+  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, D = 4, A = 11, P = 16, O = 23, z = 6, L = 10, H = 15, R = 21;
   for (e = p(e), k = u(e), _ = 1732584193, b = 4023233417, x = 2562383102, w = 271733878, 
   f = 0; k.length > f; f += 16) m = _, g = b, v = x, y = w, _ = o(_, b, x, w, k[f + 0], C, 3614090360), 
   w = o(w, _, b, x, k[f + 1], E, 3905402710), x = o(x, w, _, b, k[f + 2], T, 606105819), 
@@ -13676,14 +13632,14 @@ var MD5 = function(e) {
   w = c(w, _, b, x, k[f + 0], A, 3936430074), x = c(x, w, _, b, k[f + 3], P, 3572445317), 
   b = c(b, x, w, _, k[f + 6], O, 76029189), _ = c(_, b, x, w, k[f + 9], D, 3654602809), 
   w = c(w, _, b, x, k[f + 12], A, 3873151461), x = c(x, w, _, b, k[f + 15], P, 530742520), 
-  b = c(b, x, w, _, k[f + 2], O, 3299628645), _ = d(_, b, x, w, k[f + 0], L, 4096336452), 
-  w = d(w, _, b, x, k[f + 7], z, 1126891415), x = d(x, w, _, b, k[f + 14], H, 2878612391), 
-  b = d(b, x, w, _, k[f + 5], R, 4237533241), _ = d(_, b, x, w, k[f + 12], L, 1700485571), 
-  w = d(w, _, b, x, k[f + 3], z, 2399980690), x = d(x, w, _, b, k[f + 10], H, 4293915773), 
-  b = d(b, x, w, _, k[f + 1], R, 2240044497), _ = d(_, b, x, w, k[f + 8], L, 1873313359), 
-  w = d(w, _, b, x, k[f + 15], z, 4264355552), x = d(x, w, _, b, k[f + 6], H, 2734768916), 
-  b = d(b, x, w, _, k[f + 13], R, 1309151649), _ = d(_, b, x, w, k[f + 4], L, 4149444226), 
-  w = d(w, _, b, x, k[f + 11], z, 3174756917), x = d(x, w, _, b, k[f + 2], H, 718787259), 
+  b = c(b, x, w, _, k[f + 2], O, 3299628645), _ = d(_, b, x, w, k[f + 0], z, 4096336452), 
+  w = d(w, _, b, x, k[f + 7], L, 1126891415), x = d(x, w, _, b, k[f + 14], H, 2878612391), 
+  b = d(b, x, w, _, k[f + 5], R, 4237533241), _ = d(_, b, x, w, k[f + 12], z, 1700485571), 
+  w = d(w, _, b, x, k[f + 3], L, 2399980690), x = d(x, w, _, b, k[f + 10], H, 4293915773), 
+  b = d(b, x, w, _, k[f + 1], R, 2240044497), _ = d(_, b, x, w, k[f + 8], z, 1873313359), 
+  w = d(w, _, b, x, k[f + 15], L, 4264355552), x = d(x, w, _, b, k[f + 6], H, 2734768916), 
+  b = d(b, x, w, _, k[f + 13], R, 1309151649), _ = d(_, b, x, w, k[f + 4], z, 4149444226), 
+  w = d(w, _, b, x, k[f + 11], L, 3174756917), x = d(x, w, _, b, k[f + 2], H, 718787259), 
   b = d(b, x, w, _, k[f + 9], R, 3951481745), _ = i(_, m), b = i(b, g), x = i(x, v), 
   w = i(w, y);
   var F = h(_) + h(b) + h(x) + h(w);
@@ -14050,14 +14006,15 @@ define("lightsaber", function(e, t, i) {
       if (a.resolveData.setup = "INPUT_NEW_PASSWORD" === v && "VERIFY" === g && t.password === !1, 
       u) {
         a.browsing_user = t;
-        var n, h = o.printExtUserName(t.identities[0]);
-        n = d ? "/#" + h + "/token=" + r : "/#" + h, s.emit("app:usermenu:updatebrowsing", {
+        var n, p = o.printExtUserName(t.identities[0]);
+        n = d ? "/#" + p + "/token=" + r : "/#" + p, s.emit("app:usermenu:updatebrowsing", {
           normal: c,
           browsing: t,
           action: v,
           setup: "INPUT_NEW_PASSWORD" === v && "VERIFY" === g && t.password === !1,
           originToken: r,
           tokenType: "user",
+          user_token: h,
           page: "resolve",
           readOnly: !0,
           user_name: f || t.name,
@@ -14108,36 +14065,31 @@ define("lightsaber", function(e, t, i) {
     }), void 0;
     if ("INPUT_NEW_PASSWORD" === m) {
       var v;
-      g = "forgot_password.html", t.render(g, function(e) {
-        if ($("#app-main").append(e), l && !c) {
-          var t = r.find(o.identities, function(e) {
-            return e.id === h ? !0 : void 0;
-          });
-          "VERIFY" === p ? (v = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">'), 
-          v.data("source", {
-            browsing_user: o,
-            identity: t,
-            originToken: a,
-            user_name: u.user_name,
-            tokenType: "user"
-          })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">'), 
-          v.data("source", {
-            user: o,
-            token: u.setup ? l.token : a,
-            setup: u.setup
-          })), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api");
-        } else "VERIFY" === p ? (s.once("app:user:signin:after", function() {
+      "SET_PASSWORD" === p && (g = "forgot_password.html"), t.render(g, function(e) {
+        $("#app-main").append(e), l && !c ? (r.find(o.identities, function(e) {
+          return e.id === h ? !0 : void 0;
+        }), "VERIFY" === p ? (v = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">'), 
+        v.data("source", {
+          browsing_user: o,
+          originToken: a,
+          user_name: u.user_name,
+          tokenType: "user"
+        })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
+        v.data("source", {
+          user: o,
+          token: u.setup ? l.token : a,
+          setup: u.setup
+        })), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api")) : "VERIFY" === p ? (s.once("app:user:signin:after", function() {
           var e = $('<div class="addidentity" data-destory="true" data-widget="dialog" data-dialog-type="addIdentityAfterSignIn">');
           e.data("source", {
             identity: d.identities[0]
           }), e.appendTo($("#app-tmp")), e.trigger("click.dialog.data-api");
-        }), $("#app-user-menu").find(".set-up").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">'), 
+        }), $("#app-user-menu").find(".setup").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
         v.data("source", {
           user: d,
           token: u.setup ? c.token : a,
           setup: u.setup
-        }), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api"));
-        $(".modal-su, .modal-sp, .modal-bi").css("top", 230);
+        }), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api")), $(".modal-su, .modal-sp, .modal-bi").css("top", 250);
       });
     }
     delete i.browsing_authorization, delete i.resolveData, delete i.originToken;
@@ -14229,55 +14181,51 @@ define("lightsaber", function(e, t, i) {
       params: n,
       data: r
     }, function(t) {
-<<<<<<< HEAD
-      console.dir(t);
-      var i = t.authorization, n = t.browsing_identity, r = n && n.connected_user_id, a = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
-      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && a && (o || (o = {}), 
+      var i = t.authorization, n = t.browsing_identity, r = n && n.connected_user_id, a = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
+      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === f && a && (o || (o = {}), 
       c = o[d] = a, l.set("cats", o));
-=======
-      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
-      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && r && (o || (o = {}), 
-      c = o[d] = r, l.set("cats", o));
->>>>>>> 6f055d4... imporved dialogs
-      var v = function() {
+      var y = function() {
         e.render("x.html", function(e) {
-          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, n, g, h, c || d, u), 
+          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, n, v, f, c || d, u), 
           "mute" === u) {
             var t = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
-            t.data("source", g), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
+            t.data("source", v), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
           }
         });
       };
-      if ((p && m === r || i && (p = i)) && r > 0 || !f) return s.once("app:user:signin:after", function() {
-        e.redirect("/#!" + g.id);
-      }), s.emit("app:user:signin", p.token, p.user_id), void 0;
-      if (!i && h) s.emit("app:usermenu:updatebrowsing", {
+      if (!i && f) s.emit("app:usermenu:updatebrowsing", {
         browsing: {
           identities: [ n ],
           name: n.name
         },
-        action: f,
-        readOnly: h,
+        action: g,
+        readOnly: f,
         page: "cross",
         code: 1
-      }); else if (!h && (c || i)) {
-        var y = {
-          browsing: {
-            user_id: n.connected_user_id,
-            identities: [ n ],
-            name: n.name
-          },
-          invitation_token: d,
-          action: f,
-          readOnly: h,
-          tokenType: "invitation",
-          setup: "SETUP" === f,
-          page: "cross",
-          code: 2
-        };
-        c && (y.tokenType = "cross", y.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", y);
+      }); else {
+        if ((p && m === r || !p && (p = i)) && r > 0) return l.set("authorization", h.authorization = p), 
+        s.once("app:user:signin:after", function() {
+          e.redirect("/#!" + v.id);
+        }), s.emit("app:user:signin", p.token, p.user_id), void 0;
+        if (!f && (c || i)) {
+          var _ = {
+            browsing: {
+              user_id: n.connected_user_id,
+              identities: [ n ],
+              name: n.name
+            },
+            invitation_token: d,
+            action: g,
+            readOnly: f,
+            tokenType: "invitation",
+            setup: "SETUP" === g,
+            page: "cross",
+            code: 2
+          };
+          c && (_.tokenType = "cross", _.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", _);
+        }
       }
-      v();
+      y();
     }, function(t) {
       var i = t && t.meta && t.meta.code, n = !!p;
       403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", f), 
@@ -14307,7 +14255,7 @@ define("lightsaber", function(e, t, i) {
       var t = $.Deferred(), a = $.Event("click.dialog.data-api");
       t.resolve(n), s.emit("app:profile:show", t), u ? ("connected" !== u.identity_status && (a.following = u.following, 
       a.identity = u.identity, a.token = n.token, $('<div id="app-oauth-welcome" class="hide" data-widget="dialog" data-dialog-type="welcome" data-destory="true"></div>').appendTo($("#app-tmp")).trigger(a)), 
-      l.remove("oauth"), delete i.oauth) : i.verification_token && ($('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>').data("token", i.verification_token).appendTo($("#app-tmp")).trigger(a), 
+      l.remove("oauth"), delete i.oauth) : i.verification_token && ($('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true" data-redirect="false"></div>').data("token", i.verification_token).appendTo($("#app-tmp")).trigger(a), 
       delete i.verification_token);
     })) : a ? ($(document.body).attr("data-browsing"), s.emit("app:usermenu:updatebrowsing", {
       normal: r,
