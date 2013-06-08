@@ -350,7 +350,9 @@ define('xdialog', function (require, exports) {
 
                 that.hide();
                 if (t === 'd01' || t === 'd02') {
-                  Bus.emit('app:user:signin', data.token, data.user_id, false, true);
+                  // @note: 强制刷新
+                  window.location.reload();
+                  //Bus.emit('app:user:signin', data.token, data.user_id, false, true);
                 } else {
                   var d = new Dialog(dialogs.welcome);
                   d.render();

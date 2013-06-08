@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 12:06:02 */
+/*! desktop@2a.10 2013-06-09 12:06:56 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6465,15 +6465,15 @@ TWEEN.Tween = function(e) {
         "click .x-signin": function(e) {
           var t = i(e.currentTarget);
           if (!t.hasClass("disabled")) {
-            var n = this, l = this.switchTabType, u = this.getFormData(l);
-            n.$("#password").trigger("blur"), "d02" === l && n.$("#name").trigger("blur"), u.password && ("d02" !== l || u.name) && ("d01" === l || "d02" === l) && a.request("signin", {
+            var n = this, r = this.switchTabType, l = this.getFormData(r);
+            n.$("#password").trigger("blur"), "d02" === r && n.$("#name").trigger("blur"), l.password && ("d02" !== r || l.name) && ("d01" === r || "d02" === r) && a.request("signin", {
               type: "POST",
               data: {
-                external_username: u.external_username,
-                provider: u.provider,
-                password: u.password,
-                name: u.name || "",
-                auto_signin: !!u.auto_signin
+                external_username: l.external_username,
+                provider: l.provider,
+                password: l.password,
+                name: l.name || "",
+                auto_signin: !!l.auto_signin
               },
               beforeSend: function() {
                 t.addClass("disabled loading");
@@ -6483,13 +6483,13 @@ TWEEN.Tween = function(e) {
               }
             }, function(e) {
               if (delete App.request.session.browsing_authorization, delete App.request.session.browsing_user, 
-              o.set("authorization", e), o.set("last_external_username", s.printExtUserName(u)), 
-              n.hide(), "d01" === l || "d02" === l) r.emit("app:user:signin", e.token, e.user_id, !1, !0); else {
+              o.set("authorization", e), o.set("last_external_username", s.printExtUserName(l)), 
+              n.hide(), "d01" === r || "d02" === r) window.location.reload(); else {
                 var t = new c(d.welcome);
                 t.render(), t.show({
                   identity: {
-                    name: u.name,
-                    provider: u.provider
+                    name: l.name,
+                    provider: l.provider
                   }
                 });
               }
@@ -12342,7 +12342,7 @@ TWEEN.Tween = function(e) {
     n.attr("href", location.href), r.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
     t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
       browsing: l,
-      originToken: e.invitation_token,
+      originToken: e.originToken,
       tokenType: e.tokenType,
       forward: e.forward,
       page: e.page
@@ -14230,7 +14230,7 @@ define("lightsaber", function(e, t, i) {
               identities: [ n ],
               name: n.name
             },
-            invitation_token: d,
+            originToken: d,
             action: g,
             readOnly: f,
             tokenType: "invitation",
