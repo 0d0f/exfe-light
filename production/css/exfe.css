@@ -7074,7 +7074,17 @@ body {
   white-space: nowrap;
 }
 
-.navbar .user-panel .body .set-up > a,
+.navbar .user-panel .body .setup,
+.navbar .user-panel .body .merge {
+  text-align: center;
+}
+
+.navbar .user-panel .body .setup h5,
+.navbar .user-panel .body .merge h5 {
+  margin: 0;
+}
+
+.navbar .user-panel .body .setup > a,
 .navbar .user-panel .body .merge > a {
   display: inline;
   font-weight: bold;
