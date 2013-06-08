@@ -792,6 +792,8 @@ define('xdialog', function (require, exports) {
             ids = $(e.currentTarget).data('source'),
             l, first, eun;
 
+        var providers = 'email phone facebook twitter';
+
         if (ids && (l = ids.length)) {
           first = ids[0];
           eun = first.external_username;
@@ -803,8 +805,12 @@ define('xdialog', function (require, exports) {
             that.$('.context-identity').addClass('switcher');
             var s = '';
             for (var i = 0; i < l; i++) {
+              var p = ids[i].provider;
+
+              if (providers.search(p) < 0) { continue; }
+
               eun = ids[i].external_username;
-              s += '<li data-index="' + i + '"><i class="pull-right icon16-identity-' + ids[i].provider + '"></i>';
+              s += '<li data-index="' + i + '"><i class="pull-right icon16-identity-' + p + '"></i>';
               if (ids[i].provider === 'twitter') {
                 eun = '@' + ids[i].external_username;
               }

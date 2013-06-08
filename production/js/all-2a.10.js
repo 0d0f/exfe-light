@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 12:06:08 */
+/*! desktop@2a.10 2013-06-09 12:06:44 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6647,15 +6647,18 @@ TWEEN.Tween = function(e) {
         }
       },
       onShowBefore: function(e) {
-        var t, n, a, r = this, s = i(e.currentTarget).data("source");
+        var t, n, a, r = this, s = i(e.currentTarget).data("source"), o = "email phone facebook twitter";
         if (s && (t = s.length)) {
           if (n = s[0], a = n.external_username, "twitter" === n.provider && (a = "@" + n.external_username), 
           n.eun = a, t > 1) {
             r.$(".context-identity").addClass("switcher");
-            for (var o = "", l = 0; t > l; l++) a = s[l].external_username, o += '<li data-index="' + l + '"><i class="pull-right icon16-identity-' + s[l].provider + '"></i>', 
-            "twitter" === s[l].provider && (a = "@" + s[l].external_username), s[l].eun = a, 
-            o += "<span>" + a + "</span>", o += "</li>";
-            r.$(".dropdown-menu").html(o).data("identities", s);
+            for (var l = "", c = 0; t > c; c++) {
+              var d = s[c].provider;
+              0 > o.search(d) || (a = s[c].external_username, l += '<li data-index="' + c + '"><i class="pull-right icon16-identity-' + d + '"></i>', 
+              "twitter" === s[c].provider && (a = "@" + s[c].external_username), s[c].eun = a, 
+              l += "<span>" + a + "</span>", l += "</li>");
+            }
+            r.$(".dropdown-menu").html(l).data("identities", s);
           }
           this.updateIdentity(n);
         }
