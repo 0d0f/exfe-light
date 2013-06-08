@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 12:06:56 */
+/*! desktop@2a.10 2013-06-09 12:06:39 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -12339,7 +12339,7 @@ TWEEN.Tween = function(e) {
   function i(e) {
     var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.browsing;
     l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
-    n.attr("href", location.href), r.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
+    n.attr("href", location.href), r.html("Browsing as: <span>" + (l.name || l.nickname) + "</span>").addClass("browsing-identity"), 
     t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
       browsing: l,
       originToken: e.originToken,

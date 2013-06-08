@@ -6941,6 +6941,11 @@ body {
   color: #7C9CBF;
 }
 
+.navbar .user-name .browsing-identity > span {
+  font-weight: bold;
+  color: #3A6EA5;
+}
+
 .navbar .user-name:before {
   position: absolute;
   top: 0;
