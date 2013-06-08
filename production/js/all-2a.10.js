@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.9 2013-06-08 12:06:00 */
+/*! desktop@2a.10 2013-06-08 05:06:57 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -5882,6 +5882,7 @@ TWEEN.Tween = function(e) {
     deleteIdentity: "/Users/deleteIdentity",
     setDefaultIdentity: "/Users/setDefaultIdentity",
     mergeIdentities: "/Users/mergeIdentities",
+    setup: "/users/setup",
     getIdentityById: "/Identities/:identity_id",
     complete: "/Identities/complete",
     getIdentity: "/Identities/get",
@@ -7122,7 +7123,7 @@ TWEEN.Tween = function(e) {
                 }
               }, function(e) {
                 o.set("authorization", e), a.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
-                i(".set-up").remove(), d && d.hide();
+                i("#app-user-menu").find(".setup").remove(), d && d.hide();
               }, function(a) {
                 d && d.hide();
                 var r = a.meta;
@@ -7191,11 +7192,23 @@ TWEEN.Tween = function(e) {
       }
     }
   }, d.setup_email = {
+    errors: {
+      "400": {
+        weak_password: "Too short.",
+        no_password: " Password incorrect."
+      },
+      "401": {
+        invalid_token: "Invalid Token"
+      }
+    },
     options: {
       onHideAfter: function() {
-        this.destory();
+        this.defer && (this.defer.abort(), this.defer = null), this.destory();
       },
       events: {
+        "keypress .modal-form": function(e) {
+          return 13 === e.keyCode ? (this.$(".xbtn-success").focus().trigger("click"), !1) : void 0;
+        },
         'click [data-dismiss="dialog"]': function() {
           var e = this.srcNode;
           e && e.data("redirect") && (window.location.href = "/");
@@ -7208,7 +7221,8 @@ TWEEN.Tween = function(e) {
         },
         "blur #password": function(e) {
           var t = s.trim(i(e.currentTarget).val()), n = this.$('[for="password"]'), a = n.find("span");
-          t ? (n.removeClass("label-error"), a.text("")) : (n.addClass("label-error"), a.text("Password incorrect."));
+          t ? 4 > t.length ? (n.addClass("label-error"), a.text(this.errors["400"].weak_password)) : (n.removeClass("label-error"), 
+          a.text("")) : (n.addClass("label-error"), a.text(this.errors["400"].no_password));
         },
         "click #password-eye": function(e) {
           var t = i(e.currentTarget), n = t.prev();
@@ -7217,23 +7231,30 @@ TWEEN.Tween = function(e) {
           }), t.toggleClass("icon16-pass-hide icon16-pass-show");
         },
         "click .xbtn-success": function() {
-          var e = this, t = "user" === this._tokenType, n = this._page, s = t ? "resetPassword" : "setupUserByInvitationToken", l = {};
-          if (l.name = i.trim(this.$("#name").blur().val()), l.password = this.$("#password").blur().val(), 
-          t ? l.token = this._originToken : l.invitation_token = this._originToken, !this.$('[for="name"]').hasClass("label-error") || !this.$('[for="password"]').hasClass("label-error")) {
-            var c;
-            r.request(s, {
+          if (!this.$('[for="name"]').hasClass("label-error") || !this.$('[for="password"]').hasClass("label-error")) {
+            var e, t = this, n = t._settings, a = n.originToken, s = "user" === n.tokenType, l = n.page, c = s ? "setup" : "setupUserByInvitationToken", d = {
+              name: i.trim(this.$("#name").blur().val()),
+              password: this.$("#password").blur().val()
+            }, u = {}, h = t.errors;
+            s ? (u.token = a, d.identity_id = n.browsing.identities[0].id) : d.invitation_token = a, 
+            t.defer = r.request(c, {
               type: "POST",
-              data: l
-            }, function(t) {
-              if ("resolve" === n) if (c = o.get("authorization")) {
-                i("#app-user-menu").find(".set-up").remove();
-                var r = i("#app-browsing-identity"), s = r.data("settings");
-                s.setup = !1, s.originToken = t.authorization.token, r.data("settings", s).trigger("click.data-api");
-              } else o.set("authorization", t.authorization), o.set("user", e._browsing_user), 
-              window.location.href = "/"; else c = t.authorization, a.emit("app:user:signin:after", function() {
-                window.location.href = "/";
-              }), a.emit("app:user:signin", c.token, c.user_id);
-              e.hide();
+              params: u,
+              data: d
+            }, function(n) {
+              if ("resolve" === l) if (e = o.get("authorization")) {
+                i("#app-user-menu").find(".setup").remove();
+                var a = i("#app-browsing-identity"), r = a.data("settings");
+                r.setup = !1, r.originToken = n.authorization.token, a.data("settings", r).trigger("click.data-api");
+              } else o.set("authorization", n.authorization), window.location = "/"; else o.set("authorization", n.authorization), 
+              window.location.reload();
+              t && t.hide();
+            }, function(e) {
+              var i = e.meta, n = i && i.code, a = i && i.errorType;
+              if (n in h && a in h[n]) {
+                var r = t.$('[for="password"]'), s = r.find("span");
+                r.addClass("label-error"), s.text(h[n].errorType);
+              }
             });
           }
         }
@@ -7242,16 +7263,16 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-su",
         title: "Set Up Account",
-        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your EXFE account.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Full name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
+        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please set up your <span class="x-sign">EXFE</span> account.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="identity box"></div></div><div class="control-group"><label class="control-label" for="name">Name: <span></span></label><div class="controls"><input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" /></div></div><div class="control-group"><label class="control-label" for="password">Password: <span></span></label><div class="controls"><input type="password" class="input-large" id="password" autocomplete="off" placeholder="Set your EXFE password" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("source");
         if (t) {
-          var n = t.identity;
-          this._browsing_user = t.browsing_user, this._tokenType = t.tokenType, this._originToken = t.originToken, 
-          this._forward = t.forward || "/", this._page = t.page, this.$("#name").val(n.name), 
-          this.$(".identity").text(s.printExtUserName(n)), this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
+          this._settings = t;
+          var n = t.browsing.identities[0], a = t.forward;
+          !a && (t.forward = "/"), this.$("#name").val(n.name), this.$(".identity").text(s.printExtUserName(n)), 
+          this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
           this.$(".xbtn-siea").data("source", s.printExtUserName(n));
         }
       }
@@ -7298,7 +7319,8 @@ TWEEN.Tween = function(e) {
       },
       events: {
         "click .xbtn-dnm": function() {
-          i('[data-user-action="' + this._settings.action + '"]').trigger("click");
+          var e = this._settings.action;
+          "SETUP" === e ? (i('[data-user-action="' + e + '"]').trigger("click"), this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
           var e = this, t = e._settings.token, a = e._settings.invitation_token;
@@ -8634,31 +8656,31 @@ TWEEN.Tween = function(e) {
     var t = a(this), i = o.get("authorization"), n = i && i.user_id, r = i && i.token, s = o.get("user"), l = t.data("link"), c = (t.data("event-ignore"), 
     a("#app-browsing-identity")), d = c.length;
     if (d) {
-      var u = c.data(), h = u.settings, p = h.action, f = h.code, g = h.invitation_token, v = h.readOnly, y = h.browsing;
+      var u = c.data(), h = u.settings, p = h.action, f = h.code, g = h.invitation_token, v = h.tokenType, y = h.readOnly, _ = h.browsing;
       if (1 === f) {
         e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
-        var _ = a('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only">></div>');
-        return _.data("settings", y), a("#app-tmp").append(_), _.trigger("click"), !1;
+        var b = a('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
+        return b.data("settings", _), a("#app-tmp").append(b), b.trigger("click"), !1;
       }
       if (2 === f) {
-        var b = y.user_id;
-        if ("SIGNIN" === p && n && n !== b) {
-          if (!l) return e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault(), 
-          m(r, g, function() {
+        var x = _.user_id;
+        if ("SIGNIN" === p && n && n !== x) {
+          if (!l && "cross" !== v) return e.stopImmediatePropagation(), e.stopPropagation(), 
+          e.preventDefault(), m(r, g, function() {
             var e = a('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
             e.data("settings", {
-              browsing: y,
+              browsing: _,
               user: s,
               token: r,
               action: p,
               invitation_token: g
             }), a("#app-tmp").append(e), e.trigger("click");
           }), !1;
-        } else if ("SETUP" === p && !v && !l) return e.stopImmediatePropagation(), e.stopPropagation(), 
-        e.preventDefault(), n && n !== b ? m(r, g, function() {
+        } else if ("SETUP" === p && !y && !l) return e.stopImmediatePropagation(), e.stopPropagation(), 
+        e.preventDefault(), n && n !== x ? m(r, g, function() {
           var e = a('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
           e.data("settings", {
-            browsing: y,
+            browsing: _,
             user: s,
             token: r,
             action: p,
@@ -13433,14 +13455,12 @@ TWEEN.Tween = function(e) {
   }
   function i(e) {
     var t, i = s("#app-user-menu"), n = s("#app-user-name"), a = n.find("span"), r = i.find(".dropdown-wrapper"), o = r.find(".user-panel"), l = e.browsing;
-    e.browsing.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
+    l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
     n.attr("href", location.href), a.html("Browsing as: <em>" + (l.name || l.nickname) + "</em>").addClass("browsing-identity"), 
     t = h.compile(m.browsing_identity), o.length && o.remove(), r.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
-      browsing_user: l,
-      identity: l.identities[0],
-      originToken: e.originToken,
+      browsing: l,
+      originToken: e.invitation_token,
       tokenType: e.tokenType,
-      user_name: e.user_name,
       forward: e.forward,
       page: e.page
     });
@@ -15301,14 +15321,13 @@ define("lightsaber", function(e, t, i) {
     });
   };
   var d = function(e, t, i, n, a, o, c, d, u) {
-    var h = t.session, p = h.authorization, f = (h.user, p && p.user_id || 0);
+    var h = t.session, p = h.authorization, f = h.user, m = p && p.user_id || 0;
     r.request("getCrossByInvitationToken", {
       type: "POST",
       params: n,
       data: a
     }, function(t) {
-      console.dir(t);
-      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, m = t.action, g = t.cross;
+      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
       s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && r && (o || (o = {}), 
       c = o[d] = r, l.set("cats", o));
       var v = function() {
@@ -15320,7 +15339,7 @@ define("lightsaber", function(e, t, i) {
           }
         });
       };
-      if ((p && f === a || i && (p = i)) && a > 0 || !m) return s.once("app:user:signin:after", function() {
+      if ((p && m === a || i && (p = i)) && a > 0 || !f) return s.once("app:user:signin:after", function() {
         e.redirect("/#!" + g.id);
       }), s.emit("app:user:signin", p.token, p.user_id), void 0;
       if (!i && h) s.emit("app:usermenu:updatebrowsing", {
@@ -15328,7 +15347,7 @@ define("lightsaber", function(e, t, i) {
           identities: [ n ],
           name: n.name
         },
-        action: m,
+        action: f,
         readOnly: h,
         page: "cross",
         code: 1
@@ -15340,17 +15359,21 @@ define("lightsaber", function(e, t, i) {
             name: n.name
           },
           invitation_token: d,
-          action: m,
+          action: f,
           readOnly: h,
           tokenType: "invitation",
-          setup: "SETUP" === m,
+          setup: "SETUP" === f,
           page: "cross",
           code: 2
         };
         c && (y.tokenType = "cross", y.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", y);
       }
       v();
-    }, function() {});
+    }, function(t) {
+      var i = t && t.meta && t.meta.code, n = !!p;
+      403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", f), 
+      s.emit("app:usermenu:crosslist", p.token, p.user_id)), s.emit("app:cross:forbidden", null, null)) : 404 === i && e.location("/404");
+    });
   };
   c.crossToken = function(e, t, i) {
     var n, a, r = e.session, s = r.authorization, o = s && s.token, c = e.params[0], u = e.params[1], h = l.get("cats"), p = {};

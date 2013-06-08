@@ -616,21 +616,29 @@ define('xdialog', function (require, exports) {
 
   dialogs.forgotpassword = {
 
+    tab: '',
+
     updateIdentity: function (identity) {
       var provider = identity.provider;
       var $identity = this.$('.context-identity');
       this.$('.tab').addClass('hide');
       this.$('.xbtn-done').addClass('hide');
       if (provider === 'email') {
-        this.$('.tab1').removeClass('hide');
-        this.$('.xbtn-send').data('identity', identity);
-      }
-      else {
-        this.$('.tab2').removeClass('hide');
-        this.$('.authenticate').data('identity', identity);
+        this.tab = 'tab0';
+        this.$('.tab0').eq(0).removeClass('hide');
+        this.$('.xbtn-send').removeClass('hide').data('identity', identity);
+      } else if (provider === 'phone') {
+        this.tab = 'tab1';
+        this.$('.tab1').eq(0).removeClass('hide');
+        this.$('.xbtn-send').removeClass('hide').data('identity', identity);
+      } else {
+        this.tab = 'tab2';
+        this.$('.tab2').eq(0).removeClass('hide');
+        this.$('.authenticate').removeClass('hide').data('identity', identity);
+        this.$('.provider-text').text(provider.substr(0, 1).toUpperCase() + provider.substr(1));
       }
       $identity.find('.avatar img').attr('src', identity.avatar_filename);
-      $identity.find('.provider').attr('class', 'provider icon16-identity-' + identity.provider);
+      $identity.find('.provider').attr('class', 'provider icon16-identity-' + provider);
       $identity.find('.identity').text(identity.eun);
     },
 
@@ -666,8 +674,7 @@ define('xdialog', function (require, exports) {
                   external_username: i.external_username
                 },
                 beforeSend: function () {
-                  that.$('.send-before').removeClass('hide');
-                  that.$('.send-after').addClass('hide');
+                  that.$('.authenticate-before.tab2').removeClass('hide');
                   $e.addClass('disabled');
                 },
                 complete: function () {
@@ -717,8 +724,6 @@ define('xdialog', function (require, exports) {
             , index = $(e.currentTarget).data('index');
 
           this.updateIdentity(ids[index]);
-          // TODO: 优化
-          //this.$('.dropdown-toggle').removeClass('open');
         },
 
         'click .xbtn-cancel': function () {
@@ -739,6 +744,7 @@ define('xdialog', function (require, exports) {
 
         'click .xbtn-send': function (e) {
           var that = this;
+          var tab = that.tab;
           var $e = $(e.currentTarget);
           if ($e.hasClass('disabled')) {
             return;
@@ -753,11 +759,13 @@ define('xdialog', function (require, exports) {
                   external_username: i.external_username
                 },
                 beforeSend: function () {
-                  that.$('.send-before').removeClass('hide');
-                  that.$('.send-after').addClass('hide');
+                  that.$('.send-before.' + tab).removeClass('hide');
+                  that.$('.send-after.' + tab).addClass('hide');
                   $e.addClass('disabled');
                 },
                 complete: function () {
+                  that.$('.send-before.' + tab).addClass('hide');
+                  that.$('.send-after.' + tab).removeClass('hide');
                   $e.removeClass('disabled');
                 }
               }
@@ -767,8 +775,8 @@ define('xdialog', function (require, exports) {
                   that.$('.identity').next().removeClass('hide');
                   $e.addClass('hide');
                   that.$('.xbtn-done').removeClass('hide');
-                  that.$('.send-before').addClass('hide');
-                  that.$('.send-after').removeClass('hide');
+                  that.$('.send-before.' + tab).addClass('hide');
+                  that.$('.send-after.' + tab).removeClass('hide');
                 }
               }
               //, function (data) {}
@@ -781,6 +789,7 @@ define('xdialog', function (require, exports) {
         var that = this,
             ids = $(e.currentTarget).data('source'),
             l, first, eun;
+
         if (ids && (l = ids.length)) {
           first = ids[0];
           eun = first.external_username;
@@ -831,19 +840,21 @@ define('xdialog', function (require, exports) {
             + '</div>'
           + '</div>'
           + '<div class="alert-label">'
-            + '<div class="send-before tab tab1 hide">Confirm sending reset token to your mailbox?</div>'
-            + '<div class="send-after tab hide">Verification sent, it should arrive in minutes. Please check your mailbox and follow the instruction.</div>'
+            + '<div class="send-before tab tab0 hide">Confirm sending reset token to your mailbox?</div>'
+            + '<div class="send-after tab tab0 hide">Verification sent, it should arrive in minutes. Please check your mailbox and follow the instruction.</div>'
+            + '<div class="send-before tab tab1 hide">Confirm sending reset token to your phone?</div>'
+            + '<div class="send-after tab tab1 hide">Verification sent, it should arrive in minutes.</div>'
             + '<div class="xalert-error tab hide">'
               + '<p>Requested too much, hold on awhile.</p>'
               + '<p>Receive no verification email? It might be mistakenly filtered as spam, please check and un-spam. Alternatively, use ‘Manual Verification’.</p>'
             + '</div>'
 
-            + '<div class="authenticate-before tab tab2 hide">You will be directed to Twitter website to authenticate identity above, you can reset password then.</div>'
+            + '<div class="authenticate-before tab tab2 hide">You will be directed to <span class="provider-text"></span> website to authenticate identity above, you can reset password then.</div>'
           + '</div>',
 
         footer: ''
           + '<button class="pull-right xbtn-white xbtn-done hide">Done</button>'
-          + '<button class="pull-right xbtn-blue xbtn-send tab tab1 hide">Send</button>'
+          + '<button class="pull-right xbtn-blue xbtn-send tab tab0 tab1 hide">Send</button>'
           + '<button class="pull-right xbtn-blue authenticate tab tab2 hide">Authenticate</button>'
           + '<a class="pull-right xbtn-cancel">Cancel</a>'
 
@@ -1047,21 +1058,18 @@ define('xdialog', function (require, exports) {
 
       backdrop: false,
 
+      submitStatus: true,
+
       events: {
         'submit .modal-form': function () {
-          this.$('.xbtn-add').trigger('click');
+          if (this.submitStatus) {
+            this.$('.xbtn-add').trigger('click');
+            this.submitStatus = false;
+          }
           return false;
         },
         'click .xbtn-cancel': function () {
           this.destory();
-        },
-        'click #password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          var $input = $e.prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
         'click .xbtn-add': function (e) {
           e.preventDefault();
@@ -1106,7 +1114,7 @@ define('xdialog', function (require, exports) {
                 var $ai = $('.modal-ai');
                 $ai.find('#identity').prop('disabled', true);
                 $ai.find('.xbtn-add').addClass('hide');
-                $ai.find('.help-subject').addClass('hide');
+                $ai.find('.help-subject').addClass('im-hide');
                 $ai.find('.phone-tip').addClass('hide');
                 $ai.find('.success-tip').removeClass('hide');
                 $ai.find('.xbtn-done').removeClass('hide').focus();
@@ -1122,7 +1130,7 @@ define('xdialog', function (require, exports) {
         'click .help-subject': function (e) {
           e.preventDefault();
           this.$('.user-identity').addClass('hide');
-          $(e.target).addClass('hide');
+          this.$('.help-subject').addClass('im-hide');
           this.reset();
           this.$('#identity').val('').focus();
         },
@@ -1222,7 +1230,7 @@ define('xdialog', function (require, exports) {
                     + '</div>'
                     + '<div class="controls">'
                       + '<input type="text" class="input-large identity" id="identity" autocomplete="off" data-widget="typeahead" data-typeahead-type="identity" placeholder="Enter your email or phone" />'
-                      + '<i class="help-subject icon14-clear hide"></i>'
+                      + '<i class="help-subject icon14-clear im-hide"></i>'
                       + '<i class="help-inline small-loading hide"></i>'
                       + '<div class="xalert xalert-error hide" style="margin-top: 5px;"></div>'
 
@@ -1319,15 +1327,12 @@ define('xdialog', function (require, exports) {
       this.result = null;
     },
 
-    //availability: false,
-
     init: function () {
       var that = this;
-      //that.registration_flag = '';
       Bus.off('widget-dialog-identification-auto');
       Bus.on('widget-dialog-identification-auto', function (data) {
         var r = that.result = data;
-        that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('hide');
+        that && that.$('.help-subject')[(r ? 'remove' : 'add') + 'Class']('im-hide');
         if (r) {
           var identity = r.identity;
           if (identity && identity.avatar_filename) {
@@ -1342,59 +1347,9 @@ define('xdialog', function (require, exports) {
           }
           that.$('.phone-tip').toggleClass('hide',  identity.provider !== 'phone');
         }
-        //that.registration_flag = data.registration_flag;
-        /*
-        if (data) {
-          if (data.identity && data.identity.avatar_filename) {
-            that._identity = data.identity;
-            that.$('.user-identity').removeClass('hide')
-              .find('img').attr('src', data.identity.avatar_filename)
-              .next().attr('class', 'provider icon16-identity-' + data.identity.provider);
-          } else {
-            that.$('.user-identity').addClass('hide');
-            that._identity = null;
-          }
-
-          that.$('.phone-tip').toggleClass('hide', data.identity.provider !== 'phone');
-
-          var registration_flag = data.registration_flag;
-          that.registration_flag = registration_flag || '';
-          // SIGN_IN
-          if (registration_flag === 'SIGN_IN') {
-            that.$('.d1, .d2, .d3').addClass('hide');
-            that.$('.d0').removeClass('hide');
-            //that.$('.xbtn-forgotpwd').removeClass('disabled').data('source', [that._identity]);
-          }
-          // SIGN_UP 新身份
-          else if (registration_flag === 'SIGN_UP') {
-            that._identity = Util.parseId(that.$('#identity').val());
-            that.$('.d0, .d1, .d3').addClass('hide');
-            that.$('.xbtn-add').removeClass('hide');
-          }
-          // AUTHENTICATE
-          else if (registration_flag === 'AUTHENTICATE') {
-            that._identity = Util.parseId(that.$('#identity').val());
-            that.$('.d1, .d2').addClass('hide');
-            that.$('.d0, .d3').removeClass('hide');
-            that.$('label[for="password"]').parent().addClass('hide');
-          }
-          // VERIFY
-          else if (registration_flag === 'VERIFY') {
-            that.$('.d0, .d2, .d3').addClass('hide');
-            that.$('.d1').removeClass('hide');
-          }
-
-          that.$('.xbtn-success').removeClass('disabled');
-        } else {
-          that.$('.xbtn-success').addClass('disabled');
-          that.$('.phone-tip').addClass('hide');
-          that.$('.xbtn-forgotpwd').addClass('disabled').data('source', null);
-        }
-        */
       });
       Bus.off('widget-dialog-identification-nothing');
       Bus.on('widget-dialog-identification-nothing', function () {
-        //that.$('.control-group.d').removeClass('hide');
         that.$('.phone-tip').addClass('hide');
       });
     }
@@ -1923,7 +1878,7 @@ define('xdialog', function (require, exports) {
                     .data('dialog', null)
                     .data('dialog-type', 'changepassword')
                     .find('span').text('Change Password...');
-                  $('.set-up').remove();
+                  $('#app-user-menu').find('.setup').remove();
                   that && that.hide();
                 }
                 , function (data) {
@@ -2063,13 +2018,34 @@ define('xdialog', function (require, exports) {
   // --------------------------------------------------------------------------
   dialogs.setup_email = {
 
+    errors: {
+        '400': {
+            'weak_password': 'Too short.'
+          , 'no_password': ' Password incorrect.'
+        }
+      , '401': {
+            'invalid_token': 'Invalid Token'
+        }
+    },
+
     options: {
 
       onHideAfter: function () {
+        if (this.defer) {
+          this.defer.abort();
+          this.defer = null;
+        }
         this.destory();
       },
 
       events: {
+
+        'keypress .modal-form': function (e) {
+          if (e.keyCode === 13) {
+            this.$('.xbtn-success').focus().trigger('click');
+            return false;
+          }
+        },
 
         'click [data-dismiss="dialog"]': function () {
           var srcNode = this.srcNode;
@@ -2103,7 +2079,10 @@ define('xdialog', function (require, exports) {
           var $text = $pass.find('span');
           if (!val) {
             $pass.addClass('label-error');
-            $text.text('Password incorrect.');
+            $text.text(this.errors['400'].no_password);
+          } else if (4 > val.length) {
+            $pass.addClass('label-error');
+            $text.text(this.errors['400'].weak_password);
           } else {
             $pass.removeClass('label-error');
             $text.text('');
@@ -2120,62 +2099,74 @@ define('xdialog', function (require, exports) {
         },
 
         'click .xbtn-success': function () {
-          var that = this;
-          var isUserToken = this._tokenType === 'user';
-
-          var page = this._page;
-
-          var api_url = isUserToken ? 'resetPassword' : 'setupUserByInvitationToken';
-          var reqData = {};
-
-          reqData.name = $.trim(this.$('#name').blur().val());
-          reqData.password = this.$('#password').blur().val();
-
-          if (isUserToken) {
-            reqData.token = this._originToken;
-          }
-          else {
-            reqData.invitation_token = this._originToken;
-          }
 
           if (this.$('[for="name"]').hasClass('label-error')
               && this.$('[for="password"]').hasClass('label-error')) {
             return;
           }
 
-          var authorization;
+          var that = this
+            , settings = that._settings
+            , token = settings.originToken
+            , isUserToken = settings.tokenType === 'user'
+            , page = settings.page
+            , reqUrl = isUserToken ? 'setup' : 'setupUserByInvitationToken'
+            , postData = {
+                  name: $.trim(this.$('#name').blur().val())
+                , password: this.$('#password').blur().val()
+              }
+            , params = {}
+            , errors = that.errors
+            , authorization;
 
-          Api.request(api_url,
-            {
-              type: 'POST',
-              data: reqData
-            },
-            function (data) {
+          if (isUserToken) {
+            params.token = token;
+            postData.identity_id = settings.browsing.identities[0].id;
+          } else {
+            postData.invitation_token = token;
+          }
 
-              if (page === 'resolve') {
-                authorization = Store.get('authorization');
-                if (!authorization) {
+          that.defer = Api.request(reqUrl
+            , {
+                  type: 'POST'
+                , params: params
+                , data: postData
+              }
+            , function (data) {
+                if (page === 'resolve') {
+                  authorization = Store.get('authorization');
+                  if (!authorization) {
+                    Store.set('authorization', data.authorization);
+                    window.location = '/';
+                  } else {
+                    $('#app-user-menu').find('.setup').remove();
+                    var $bi = $('#app-browsing-identity');
+                    var settings = $bi.data('settings');
+                    settings.setup = false;
+                    settings.originToken = data.authorization.token;
+                    $bi.data('settings', settings).trigger('click.data-api');
+                  }
+                } else /*if (page === 'cross') */{
                   Store.set('authorization', data.authorization);
-                  Store.set('user', that._browsing_user);
-                  window.location.href = '/';
-                } else {
-                  $('#app-user-menu').find('.set-up').remove();
-                  var $bi = $('#app-browsing-identity');
-                  var settings = $bi.data('settings');
-                  settings.setup = false;
-                  settings.originToken = data.authorization.token;
-                  $bi.data('settings', settings).trigger('click.data-api');
+                  window.location.reload();
+                }
+
+                that && that.hide();
+              }
+
+            , function (data) {
+                var meta = data.meta
+                  , code = meta && meta.code
+                  , errorType = meta && meta.errorType;
+                if (code in errors) {
+                  if (errorType in errors[code]) {
+                    var $pass = that.$('[for="password"]');
+                    var $text = $pass.find('span');
+                    $pass.addClass('label-error');
+                    $text.text(errors[code].errorType);
+                  }
                 }
               }
-              else {
-                authorization = data.authorization
-                Bus.emit('app:user:signin:after', function () {
-                  window.location.href = '/';
-                });
-                Bus.emit('app:user:signin', authorization.token, authorization.user_id);
-              }
-              that.hide();
-            }
           );
 
         }
@@ -2195,7 +2186,9 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>Please set up your EXFE account.</legend>'
+              // @note: 06/08/2013 先去掉 merge
+              //+ '<legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend>'
+              + '<legend>Please set up your <span class="x-sign">EXFE</span> account.</legend>'
 
                 + '<div class="clearfix control-group">'
                   + '<div class="pull-right user-identity">'
@@ -2206,7 +2199,7 @@ define('xdialog', function (require, exports) {
                 + '</div>'
 
                 + '<div class="control-group">'
-                  + '<label class="control-label" for="name">Full name: <span></span></label>'
+                  + '<label class="control-label" for="name">Name: <span></span></label>'
                   + '<div class="controls">'
                     + '<input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" />'
                   + '</div>'
@@ -2224,7 +2217,8 @@ define('xdialog', function (require, exports) {
           + '</form>',
 
         footer: ''
-          ////+ '<button class="xbtn-white xbtn-sitm" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In to Merge…</button>'
+          // @note: 06/08/2013 先去掉 merge; 先登录其他身份，再 merge 改身份
+          //+ '<button class="xbtn-white xbtn-sitm" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Authenticate to Merge…</button>'
           + '<button class="pull-right xbtn-blue xbtn-success">Done</button>'
           + '<a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
@@ -2232,12 +2226,10 @@ define('xdialog', function (require, exports) {
       onShowBefore: function (e) {
         var data = $(e.currentTarget).data('source');
         if (!data) return;
-        var identity = data.identity;
-        this._browsing_user = data.browsing_user;
-        this._tokenType = data.tokenType;
-        this._originToken = data.originToken;
-        this._forward = data.forward || '/';
-        this._page = data.page;
+        this._settings = data;
+        var identity = data.browsing.identities[0]
+          , forward = data.forward;
+        !forward && (data.forward = '/');
         this.$('#name').val(identity.name);
         this.$('.identity').text(Util.printExtUserName(identity));
         this.$('.avatar')
@@ -2350,22 +2342,30 @@ define('xdialog', function (require, exports) {
 
       events: {
 
-        'click .xbtn-go': function () {
-          window.location.href = '/';
+        'click .xbtn-dnm': function () {
+          var action = this._settings.action;
+          if (action === 'SETUP') {
+            $('[data-user-action="' + action + '"]').trigger('click');
+            this.hide();
+          } else { // SIGNIN
+            window.location = '/';
+          }
         },
 
         'click .xbtn-merge': function () {
-          var that = this,
-              authorization = Store.get('authorization'),
-              token = authorization.token,
-              browsing_token = this._token,
-              identity = this._identity,
-              postData = { browsing_identity_token: browsing_token, identity_ids: '[' + identity.id + ']' };
+          var that = this
+            , token = that._settings.token
+            , invitation_token = that._settings.invitation_token;
+
+          // 调用 mergeidentities [OPTION C]
           Api.request('mergeIdentities'
             , {
               type: 'POST',
               params: { token: token },
-              data: postData
+              data: { invitation_token: invitation_token },
+              beforeSend: function () {
+                $('.modal-footer').find('button').prop('disabled', true);
+              }
             }
             , function (data) {
                 that.hide();
@@ -2389,6 +2389,9 @@ define('xdialog', function (require, exports) {
                   window.location.href = '/';
                 }
               }
+            , function () {
+              // @todo
+            }
           );
         }
 
@@ -2405,21 +2408,9 @@ define('xdialog', function (require, exports) {
 
         body: ''
           + '<div class="shadow title">Merge Identity?</div>'
-          + '<div class="user hide">'
-            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>.<span class="error-detial">Do NOT merge if it’s not you!</span></div>'
-            + '<div class="clearfix context-user">'
-              + '<div class="pull-left avatar">'
-                + '<img width="40" height="40" alt="" src="" />'
-              + '</div>'
-              + '<div class="pull-left username"></div>'
-            + '</div>'
-            + '<div class="clearfix">'
-              + '<button class="pull-right xbtn-white xbtn-go">Go</button>'
-              + '<a class="pull-right xbtn-cancel" data-dismiss="dialog">Cancel</a>'
-            + '</div>'
-            + '<div class="spliterline"></div>'
+          + '<div class="user">'
+            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span>NOT</span> merge if it’s not you!</div>'
           + '</div>'
-          + '<div class="browsing-tips"><span class="tip-0 hide">Otherwise, you’re</span><span class="tip-1 hide">You’re</span> currently browsing this page as identity underneath, please choose an option to continue.</div>'
           + '<div class="context-identity">'
             + '<div class="pull-right avatar">'
               + '<img width="40" height="40" alt="" src="" />'
@@ -2428,76 +2419,46 @@ define('xdialog', function (require, exports) {
             + '<div class="clearfix">'
               + '<div class="pull-left box identity"></div>'
             + '</div>'
+          + '</div>'
+          + '<div class="clearfix context-user">'
+            + '<div class="pull-left avatar">'
+              + '<img width="40" height="40" alt="" src="" />'
+            + '</div>'
+            + '<div class="pull-left username"></div>'
           + '</div>',
 
         footer: ''
-          ////+ '<button class="pull-right xbtn-blue xbtn-merge hide">Merge into account above</button>'
-          + '<button class="xbtn-white xbtn-sias hide" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In and Switch</button>'
-          + '<button class="xbtn-white xbtn-sui hide" data-widget="dialog" data-dialog-type="setup_email">Set Up Identity</button>'
+          + '<button class="pull-right xbtn-blue xbtn-merge">Merge and Go</button>'
+          + '<button class="pull-right xbtn-white xbtn-dnm">Do NOT Merge</button>'
+          //+ '<button class="pull-right xbtn-white xbtn-dnm" data-widget="dialog" data-dialog-type="setup_email">Do NOT Merge</button>'
 
       },
 
       onShowBefore: function (e) {
         var settings = $(e.currentTarget).data('settings');
         if (!settings) { return; }
-        var user = settings.normal
-          , browsing_user = settings.browsing
-          , setup = settings.setup
-          , action = settings.action;
+        this._settings = settings;
+        var user = settings.user
+          , browsing = settings.browsing
+          , bidentities = browsing.identities
+          , bidentity = bidentities[0]
+          , beun = Util.printExtUserName(bidentity);
 
-        this._token = settings.originToken;
-        this._user = user;
-        this._browsing_user = browsing_user;
-        this._setup = setup;
-        this._action = action;
-        this._tokenType = settings.tokenType;
-
-        if (this._user) {
-          this.$('.user')
-            .removeClass('hide')
-            .find('img')
-            .attr('src', user.avatar_filename)
-            .parent()
-            .next().text(user.name || user.nickname);
-          this.$('.xbtn-merge').removeClass('hide');
-          this.$('.browsing-tips').find('.tip-0').removeClass('hide');
-        }
-        else {
-          this.$('.xbtn-sias, .xbtn-sui').addClass('pull-right');
-          this.$('.browsing-tips').find('.tip-1').removeClass('hide');
-        }
-
-        this.$('browsing-tips').find('span').eq(this._user ? 0 : 1).removeClass('hide')
-
-        // browsing default identity
-        var bdidentity = browsing_user.identities[0];
-        this._identity = bdidentity;
-        var beun = Util.printExtUserName(bdidentity);
+        this.$('.merge-info')
+          .find('.identity').text(beun);
+        this.$('.merge-info')
+          .find('.user-name').text(user.name);
 
         this.$('.context-identity')
-          .find('img')
-          .attr('src', bdidentity.avatar_filename)
-          .next().addClass('icon16-identity-' + bdidentity.provider)
+          .find('.avatar img').attr('src', bidentity.avatar_filename)
+          .next().addClass('icon16-identity-' + bidentity.provider)
         this.$('.context-identity')
           .find('.identity').text(beun);
 
-        //if (!this._setup) { // test
-        if (this._setup) {
-          this.$('.xbtn-sui')
-            .removeClass('hide')
-            .attr('data-dialog-type', 'setup_' + bdidentity.provider)
-            .data('source', {
-              identity: bdidentity,
-              originToken: settings.originToken,
-              tokenType: settings.tokenType
-            }
-          );
-        }
-        else {
-          this.$('.xbtn-sias')
-            .removeClass('hide')
-            .data('source', beun);
-        }
+        this.$('.context-user')
+          .find('.avatar img').attr('src', user.avatar_filename);
+        this.$('.context-user')
+          .find('.username').text(user.name);
       }
 
     }
@@ -2524,8 +2485,8 @@ define('xdialog', function (require, exports) {
         title: 'Read-only Browsing',
 
         body: ''
-          + '<div class="shadow title">Read-only Browsing</div>'
-          + '<div>You’re browsing this page in read-only mode as <span></span> underneath. To change anything on this page, please <span class="underline">sign in</span> first.</div>'
+          + '<div class="shadow title">Authentication</div>'
+          + '<div>You’re browsing this page in read-only mode as identity underneath. To change anything on this page, please authenticate first.</div>'
           + '<div class="clearfix context-user hide">'
             + '<div class="pull-left avatar">'
               + '<img src="" alt="" width="40" height="40" />'
@@ -2542,7 +2503,7 @@ define('xdialog', function (require, exports) {
           + '</div>',
 
         footer: ''
-          + '<button class="pull-right xbtn-blue" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In...</button>'
+          + '<button class="pull-right xbtn-blue" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Authenticate</button>'
           + '<a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
 

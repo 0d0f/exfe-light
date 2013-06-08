@@ -24,11 +24,11 @@
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
-  window.launchApp = function (url, cb) {
+  window.launchApp = function (url, cb, ttl) {
     url = url || app_url;
     startTime = now();
+    failBack(cb, ttl);
     xframe.src = url;
-    failBack(cb);
   };
 
 
@@ -38,18 +38,19 @@
     });
   };
 
-  var failBack = function (cb) {
+  var failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
-        clearTimeout(failTimeout);
         currentTime = now();
-        if (currentTime - startTime < 500) {
+        // 时间摄长点，避免两次弹窗
+        if (currentTime - startTime < 1000) {
           if (cb) {
             cb();
           } else {
             window.location = '/';
           }
         }
-      }, 200);
+        //clearTimeout(failTimeout);
+      }, ttl || 200);
     },
 
     getSMSTokenFromHead = function () {
@@ -243,10 +244,8 @@
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
-                    setTimeout(function () {
-                      window.location = '/?redirect' + location.hash;
-                    }, 200)
-                  });
+                    window.location = '/?redirect' + location.hash;
+                  }, 500);
                 }
               } else {
                 handle();
@@ -266,12 +265,12 @@
   Director.dispatch = function (url) {
     /* jshint -W004 */
     delete _ENV_._data_;
+    window.noExfeApp = !!url.match(/\?redirect/);
     var params;
     if (routes.home.test(url)) {
       handle();
 
     } else if (url.match(routes.smsToken)) {
-      window.noExfeApp = !!params[1];
 
       var __t;
       if (window.noExfeApp) {
@@ -281,7 +280,7 @@
         }
       } else {
         __t = getSMSTokenFromHead();
-        localStorage.setItem('tmp-token', __t);
+        localStorage.setItem('tmp-token', JSON.stringify(__t));
       }
 
       if (__t) {
@@ -292,7 +291,6 @@
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
-      window.noExfeApp = !!params[1];
       var __t;
       if (window.noExfeApp) {
         __t = localStorage.getItem('tmp-token');
@@ -313,7 +311,7 @@
           , done: function (data) {
               if (token && data.meta && data.meta.code === 200) {
                 __t = _ENV_._data_ = data.response;
-                localStorage.setItem('tmp-token', __t);
+                localStorage.setItem('tmp-token', JSON.stringify(__t));
                 handle();
               } else {
                 redirectByError(data.meta);
@@ -325,11 +323,10 @@
           });
       }
     } else if ((params = url.match(routes.crossTokenForPhone))) {
-      window.noExfeApp = !!params[1];
       /* jshint -W003 */
       var cross_id = params[2]
         , ctoken = params[3]
-        , cats = localStorage.cats
+        , cats = localStorage.getItem('cats')
         , token;
 
       if (cats) {
@@ -348,11 +345,14 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.crossToken))) {
-      window.noExfeApp = !!params[1];
       var ctoken = params[2]
-        , cats = localStorage.cats
+        , cats = localStorage.getItem('cats')
         , data = { invitation_token: ctoken }
         , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
 
       if (cats && (token = cats[ctoken])) {
         data.cross_access_token = token;
@@ -401,4 +401,9 @@
   };
 
   Director.start();
+
+  /**
+   * 跳 App 逻辑
+   * 由于当前 App 还不支持 read-only 跳转, 此时不跳
+   */
 })();

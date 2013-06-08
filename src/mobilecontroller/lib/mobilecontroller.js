@@ -227,7 +227,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('redirect', function (args, cb) {
-        window.launchApp(app_prefix_url + args, cb);
+        window.launchApp(app_prefix_url + args, cb, 500);
       });
     },
 
@@ -307,7 +307,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            var search = window.search.substr(1);
+            var search = window.location.search.substr(1);
             if (search) {
               search = '&' + search;
             }
@@ -379,7 +379,7 @@ define('mobilecontroller', function (require, exports, module) {
           $error = this.$('.error-info'),
           $name = this.$('#name'),
           $pass = this.$('#password'),
-          //name = trim($name.val()),
+          name = trim($name.val()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
@@ -406,7 +406,7 @@ define('mobilecontroller', function (require, exports, module) {
               var authorization = data.response.authorization;
               if (authorization) {
                 App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
-                  var search = window.search.substr(1);
+                  var search = window.location.search.substr(1);
                   if (search) {
                     search = '&' + search;
                   }
@@ -416,16 +416,15 @@ define('mobilecontroller', function (require, exports, module) {
             } else {
               if (meta.code === 401) {
                 $error.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass('hide');
-                $button.parent().addClass('hide');
-              } else {
-                $button.removeClass('disabled').prop('disabled', true);
+                $pass.prop('disabled', true);
+                $button.parent().addClass('hide')
               }
             }
-            $button.removeClass('disabled').prop('disabled', true);
+            $button.prop('disabled', true);
           },
           error: function () {
             $error.html('Failed to set password. Please try later.').removeClass('hide');
-            $button.removeClass('disabled').prop('disabled', false);
+            $button.prop('disabled', false);
           }
         });
       } else {
