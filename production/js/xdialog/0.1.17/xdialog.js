@@ -1985,7 +1985,7 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Set Password</div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>Please set <span class="x-sign">EXFE</span> password of your account.<br />All your identities share the same password for sign-in and account management.</legend>'
+              + '<legend>Please set your <span class="x-sign">EXFE</span> password. All identities in your account share the same password for authentication.</legend>'
 
               + '<div class="clearfix context-user">'
                 + '<div class="pull-left avatar">'
