@@ -277,7 +277,7 @@ define('user', function (require) {
     $appUserName.attr('href', location.href);
 
     $nameSpan
-      .html('Browsing as: <em>' + (browsing.name || browsing.nickname) + '</em>')
+      .html('Browsing as: <span>' + (browsing.name || browsing.nickname) + '</span>')
       .addClass('browsing-identity');
 
     tplFun = Handlebars.compile(userMenuTpls.browsing_identity);
