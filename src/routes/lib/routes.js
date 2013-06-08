@@ -641,7 +641,8 @@ define('routes', function (require, exports, module) {
                 identities: [browsing_identity],
                 name: browsing_identity.name
               },
-              invitation_token: ctoken,
+              // invitation_token
+              originToken: ctoken,
               action: action,
               readOnly: read_only,
               tokenType: 'invitation',

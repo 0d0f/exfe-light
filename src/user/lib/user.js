@@ -292,7 +292,7 @@ define('user', function (require) {
       .find('.setup')
       .data('source', {
         browsing: browsing,
-        originToken: data.invitation_token,
+        originToken: data.originToken,
         tokenType: data.tokenType,
         forward: data.forward,
         page: data.page
