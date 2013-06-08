@@ -6,6 +6,7 @@ define('mobilecontroller', function (require, exports, module) {
       TWEEN = require('tween'),
       api_url = window._ENV_.api_url,
       app_scheme = window._ENV_.app_scheme,
+      app_prefix_url = app_scheme + '://crosses/',
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -27,10 +28,6 @@ define('mobilecontroller', function (require, exports, module) {
       },
 
       now = Date.now || function () { return new Date().getTime(); },
-
-      launchApp = function (args) {
-        window.location = app_scheme + '://crosses/' + (args || '');
-      },
 
       hasWebkitTransform = ('webkitTransform' in document.body.style),
       setCSSMatrix = function (e, m) {
@@ -227,8 +224,8 @@ define('mobilecontroller', function (require, exports, module) {
         }
       });
 
-      this.on('redirect', function (args) {
-        launchApp(args);
+      this.on('redirect', function (args, cb) {
+        window.launchApp(app_prefix_url + args, cb, 500);
       });
     },
 
@@ -284,12 +281,40 @@ define('mobilecontroller', function (require, exports, module) {
           // error getting identity informations
           req.error = true;
           res.redirect('/');
-        },
-        user_id = resolveToken.user_id,
-        token = resolveToken.token;
+        };
+
         this.element.removeClass('hide');
         $('#app-body').css('height', '100%');
-        App.controllers.footer.emit('reset-position');
+
+        var user = Store.get('tmp-user');
+        if (user) {
+          var identities = user.identities;
+          for (var i = 0, len = identities.length; i < len; ++i) {
+            var identity = identities[i];
+            if (identity.id === resolveToken.identity_id) {
+              self.showIdentity(identity);
+              self.$('.done-info').removeClass('hide');
+              break;
+            }
+          }
+          Store.remove('tmp-user');
+          Store.remove('tmp-token');
+          App.controllers.footer.emit('reset-position');
+          return;
+        }
+
+        var done = function (args) {
+          App.controllers.footer.emit('redirect', args, function () {
+            var search = window.location.search.substr(1);
+            if (search) {
+              search = '&' + search;
+            }
+            window.location = '/?redirect' +search + window.location.hash;
+          });
+        };
+
+        var user_id = resolveToken.user_id,
+        token = resolveToken.token;
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + user_id + '?token=' + token,
@@ -304,9 +329,11 @@ define('mobilecontroller', function (require, exports, module) {
                 if (identity.id === resolveToken.identity_id) {
                   self.showIdentity(identity);
                   self.$('.done-info').removeClass('hide');
+                  Store.set('tmp-user', user);
+                  App.controllers.footer.emit('reset-position');
                   if (user_id && token) {
                     var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
-                    App.controllers.footer.emit('redirect', args);
+                    done(args);
                   }
                   break;
                 }
@@ -350,7 +377,7 @@ define('mobilecontroller', function (require, exports, module) {
           $error = this.$('.error-info'),
           $name = this.$('#name'),
           $pass = this.$('#password'),
-          //name = trim($name.val()),
+          name = trim($name.val()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
@@ -376,16 +403,26 @@ define('mobilecontroller', function (require, exports, module) {
               $button.parent().addClass('hide');
               var authorization = data.response.authorization;
               if (authorization) {
-                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id);
+                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
+                  var search = window.location.search.substr(1);
+                  if (search) {
+                    search = '&' + search;
+                  }
+                  window.location = '/?redirect' +search + window.location.hash;
+                });
               }
             } else {
-              $button.removeClass('disabled').prop('disabled', true);
+              if (meta.code === 401) {
+                $error.html('<span class="t">Token expired.</span> Please request to reset password again.').removeClass('hide');
+                $pass.prop('disabled', true);
+                $button.parent().addClass('hide')
+              }
             }
-            $button.removeClass('disabled').prop('disabled', true);
+            $button.prop('disabled', true);
           },
           error: function () {
             $error.html('Failed to set password. Please try later.').removeClass('hide');
-            $button.removeClass('disabled').prop('disabled', false);
+            $button.prop('disabled', false);
           }
         });
       } else {
@@ -445,6 +482,21 @@ define('mobilecontroller', function (require, exports, module) {
         element.removeClass('hide');
         $('#app-body').css('height', '100%');
 
+        var user = Store.get('tmp-user');
+        if (user) {
+          $('.identity .avatar').attr('src', user.avatar_filename);
+          $('.identity .name').html(user.name);
+          if (window.noExfeApp) {
+            $('.password').addClass('hide');
+            $('.set-button').addClass('hide');
+            $('.done-info').removeClass('hide');
+          }
+          App.controllers.footer.emit('reset-position');
+          Store.remove('tmp-user');
+          Store.remove('tmp-token');
+          return;
+        }
+
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + resolveToken.user_id + '?token=' + resolveToken.token,
@@ -454,6 +506,8 @@ define('mobilecontroller', function (require, exports, module) {
             if (data && data.meta && data.meta.code === 200) {
               $('.identity .avatar').attr('src', user.avatar_filename);
               $('.identity .name').html(user.name);
+              Store.set('tmp-user', user);
+              App.controllers.footer.emit('reset-position');
               return;
             }
             cb();
@@ -462,8 +516,6 @@ define('mobilecontroller', function (require, exports, module) {
             cb();
           }
         });
-
-        App.controllers.footer.emit('reset-position');
       });
     }
   });

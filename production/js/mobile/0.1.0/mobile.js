@@ -37,7 +37,7 @@ define(function (require) {
   // `verify`
   // sms token
   // ?t=2345
-  app.get(/^\/+\?t=([a-zA-Z0-9]{3,})$/, function (req, res) {
+  app.get(/^\/+\?(?:(?:redirect)&)?t=([a-zA-Z0-9]{3,})$/, function (req, res) {
     var smsToken = window._ENV_._data_
       , action = smsToken.action;
     req.session.resolveToken = smsToken;
@@ -49,13 +49,13 @@ define(function (require) {
   });
 
   // resolve-token - `/#token=5c9a628f2b4f863435bc8d599a857c21`
-  app.get(/^\/+(?:\?)?#token=([a-zA-Z0-9]{64})\/?$/, routes.resolveToken);
+  app.get(/^\/+(?:\?(?:redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/, routes.resolveToken);
 
   // `cross`
   // phone-cross-token - `/#!233/8964`
-  app.get(/^\/+(?:\?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken);
+  app.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken);
   // cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8`
-  app.get(/^\/+(?:\?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken);
+  app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken);
 
   app.on('launched', function () {
     function animate() {
