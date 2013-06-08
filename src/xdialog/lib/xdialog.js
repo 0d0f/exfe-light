@@ -2018,13 +2018,34 @@ define('xdialog', function (require, exports) {
   // --------------------------------------------------------------------------
   dialogs.setup_email = {
 
+    errors: {
+        '400': {
+            'weak_password': 'Too short.'
+          , 'no_password': ' Password incorrect.'
+        }
+      , '401': {
+            'invalid_token': 'Invalid Token'
+        }
+    },
+
     options: {
 
       onHideAfter: function () {
+        if (this.defer) {
+          this.defer.abort();
+          this.defer = null;
+        }
         this.destory();
       },
 
       events: {
+
+        'keypress .modal-form': function (e) {
+          if (e.keyCode === 13) {
+            this.$('.xbtn-success').focus().trigger('click');
+            return false;
+          }
+        },
 
         'click [data-dismiss="dialog"]': function () {
           var srcNode = this.srcNode;
@@ -2058,7 +2079,10 @@ define('xdialog', function (require, exports) {
           var $text = $pass.find('span');
           if (!val) {
             $pass.addClass('label-error');
-            $text.text('Password incorrect.');
+            $text.text(this.errors['400'].no_password);
+          } else if (4 > val.length) {
+            $pass.addClass('label-error');
+            $text.text(this.errors['400'].weak_password);
           } else {
             $pass.removeClass('label-error');
             $text.text('');
@@ -2075,62 +2099,74 @@ define('xdialog', function (require, exports) {
         },
 
         'click .xbtn-success': function () {
-          var that = this;
-          var isUserToken = this._tokenType === 'user';
-
-          var page = this._page;
-
-          var api_url = isUserToken ? 'resetPassword' : 'setupUserByInvitationToken';
-          var reqData = {};
-
-          reqData.name = $.trim(this.$('#name').blur().val());
-          reqData.password = this.$('#password').blur().val();
-
-          if (isUserToken) {
-            reqData.token = this._originToken;
-          }
-          else {
-            reqData.invitation_token = this._originToken;
-          }
 
           if (this.$('[for="name"]').hasClass('label-error')
               && this.$('[for="password"]').hasClass('label-error')) {
             return;
           }
 
-          var authorization;
+          var that = this
+            , settings = that._settings
+            , token = settings.originToken
+            , isUserToken = settings.tokenType === 'user'
+            , page = settings.page
+            , reqUrl = isUserToken ? 'setup' : 'setupUserByInvitationToken'
+            , postData = {
+                  name: $.trim(this.$('#name').blur().val())
+                , password: this.$('#password').blur().val()
+              }
+            , params = {}
+            , errors = that.errors
+            , authorization;
 
-          Api.request(api_url,
-            {
-              type: 'POST',
-              data: reqData
-            },
-            function (data) {
+          if (isUserToken) {
+            params.token = token;
+            postData.identity_id = settings.browsing.identities[0].id;
+          } else {
+            postData.invitation_token = token;
+          }
 
-              if (page === 'resolve') {
-                authorization = Store.get('authorization');
-                if (!authorization) {
+          that.defer = Api.request(reqUrl
+            , {
+                  type: 'POST'
+                , params: params
+                , data: postData
+              }
+            , function (data) {
+                if (page === 'resolve') {
+                  authorization = Store.get('authorization');
+                  if (!authorization) {
+                    Store.set('authorization', data.authorization);
+                    window.location = '/';
+                  } else {
+                    $('#app-user-menu').find('.setup').remove();
+                    var $bi = $('#app-browsing-identity');
+                    var settings = $bi.data('settings');
+                    settings.setup = false;
+                    settings.originToken = data.authorization.token;
+                    $bi.data('settings', settings).trigger('click.data-api');
+                  }
+                } else /*if (page === 'cross') */{
                   Store.set('authorization', data.authorization);
-                  Store.set('user', that._browsing_user);
-                  window.location.href = '/';
-                } else {
-                  $('#app-user-menu').find('.setup').remove();
-                  var $bi = $('#app-browsing-identity');
-                  var settings = $bi.data('settings');
-                  settings.setup = false;
-                  settings.originToken = data.authorization.token;
-                  $bi.data('settings', settings).trigger('click.data-api');
+                  window.location.reload();
+                }
+
+                that && that.hide();
+              }
+
+            , function (data) {
+                var meta = data.meta
+                  , code = meta && meta.code
+                  , errorType = meta && meta.errorType;
+                if (code in errors) {
+                  if (errorType in errors[code]) {
+                    var $pass = that.$('[for="password"]');
+                    var $text = $pass.find('span');
+                    $pass.addClass('label-error');
+                    $text.text(errors[code].errorType);
+                  }
                 }
               }
-              else {
-                authorization = data.authorization
-                Bus.once('app:user:signin:after', function () {
-                  window.location.href = '/';
-                });
-                Bus.emit('app:user:signin', authorization.token, authorization.user_id);
-              }
-              that.hide();
-            }
           );
 
         }
@@ -2150,7 +2186,9 @@ define('xdialog', function (require, exports) {
           + '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div>'
           + '<form class="modal-form">'
             + '<fieldset>'
-              + '<legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend>'
+              // @note: 06/08/2013 先去掉 merge
+              //+ '<legend>Please set up your <span class="x-sign">EXFE</span> account. Alternatively, authenticate your existing account to merge with.</legend>'
+              + '<legend>Please set up your <span class="x-sign">EXFE</span> account.</legend>'
 
                 + '<div class="clearfix control-group">'
                   + '<div class="pull-right user-identity">'
@@ -2161,7 +2199,7 @@ define('xdialog', function (require, exports) {
                 + '</div>'
 
                 + '<div class="control-group">'
-                  + '<label class="control-label" for="name">Full name: <span></span></label>'
+                  + '<label class="control-label" for="name">Name: <span></span></label>'
                   + '<div class="controls">'
                     + '<input type="text" class="input-large" id="name" autocomplete="off" placeholder="Set a recognizable name" />'
                   + '</div>'
@@ -2179,7 +2217,8 @@ define('xdialog', function (require, exports) {
           + '</form>',
 
         footer: ''
-          ////+ '<button class="xbtn-white xbtn-sitm" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Sign In to Merge…</button>'
+          // @note: 06/08/2013 先去掉 merge; 先登录其他身份，再 merge 改身份
+          //+ '<button class="xbtn-white xbtn-sitm" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00">Authenticate to Merge…</button>'
           + '<button class="pull-right xbtn-blue xbtn-success">Done</button>'
           + '<a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
@@ -2187,12 +2226,10 @@ define('xdialog', function (require, exports) {
       onShowBefore: function (e) {
         var data = $(e.currentTarget).data('source');
         if (!data) return;
-        var identity = data.identity;
-        this._browsing = data.browsing;
-        this._tokenType = data.tokenType;
-        this._originToken = data.originToken;
-        this._forward = data.forward || '/';
-        this._page = data.page;
+        this._settings = data;
+        var identity = data.browsing.identities[0]
+          , forward = data.forward;
+        !forward && (data.forward = '/');
         this.$('#name').val(identity.name);
         this.$('.identity').text(Util.printExtUserName(identity));
         this.$('.avatar')
@@ -2306,7 +2343,13 @@ define('xdialog', function (require, exports) {
       events: {
 
         'click .xbtn-dnm': function () {
-          $('[data-user-action="' + this._settings.action + '"]').trigger('click');
+          var action = this._settings.action;
+          if (action === 'SETUP') {
+            $('[data-user-action="' + action + '"]').trigger('click');
+            this.hide();
+          } else { // SIGNIN
+            window.location = '/';
+          }
         },
 
         'click .xbtn-merge': function () {

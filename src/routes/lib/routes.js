@@ -147,6 +147,7 @@ define('routes', function (require, exports, module) {
           else {
             forwardUrl = '/#' + eun;
           }
+
           Bus.emit('app:usermenu:updatebrowsing',
             {   normal: user
               , browsing: new_user
@@ -154,6 +155,7 @@ define('routes', function (require, exports, module) {
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken
               , tokenType: 'user'
+              , user_token: target_token
               , page: 'resolve'
               , readOnly: true
               , user_name: target_user_name || new_user.name
@@ -264,10 +266,9 @@ define('routes', function (require, exports, module) {
             }
           });
           if (token_type === 'VERIFY') {
-            d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">');
+            d = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">');
             d.data('source', {
               browsing_user: user,
-              identity: identity,
               originToken: originToken,
               user_name: resolveData.user_name,
               tokenType: 'user'
@@ -294,7 +295,7 @@ define('routes', function (require, exports, module) {
               d2.appendTo($('#app-tmp'));
               d2.trigger('click.dialog.data-api');
             });
-            $('#app-user-menu').find('.set-up').trigger('click.dialog.data-api');
+            $('#app-user-menu').find('.setup').trigger('click.dialog.data-api');
           }
           else {
             d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
@@ -588,29 +589,11 @@ define('routes', function (require, exports, module) {
            *  2 -- 浏览身份登录
            */
 
-          /** 正常登录
-           *  TRUE    (any)   正常登录      M50D3           正常操作
-           *  FALSE   TRUE    正常登录      M50D3           正常操作
-           */
-
-          if (
-            (((authorization && user_id === browsing_user_id)
-              || (auth && (authorization = auth)))
-            && browsing_user_id > 0
-            || !action)) {
-            //Store.set('authorization', session.authorization = authorization);
-            Bus.once('app:user:signin:after', function () {
-              res.redirect('/#!' + cross.id);
-            });
-            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
-            return;
-          }
-
           /** 只读浏览
            *  (any)   FALSE   只读浏览      M50D5(SIGN_IN)  只读，拦截页面操作弹出M75D3 跳转后保持原有登录状态
            */
 
-          else if (!auth && read_only) {
+          if (!auth && read_only) {
             Bus.emit('app:usermenu:updatebrowsing', {
               browsing: {
                 identities: [browsing_identity],
@@ -621,6 +604,27 @@ define('routes', function (require, exports, module) {
               page: 'cross',
               code: 1
             });
+          }
+
+
+          /** 正常登录
+           *  TRUE    (any)   正常登录      M50D3           正常操作
+           *  FALSE   TRUE    正常登录      M50D3           正常操作
+           */
+
+          else if (
+            ((authorization && user_id === browsing_user_id)
+            ||
+            (!authorization && (authorization = auth))
+            ||
+            (authorization && !auth))
+            ) {
+            //Store.set('authorization', session.authorization = authorization);
+            Bus.once('app:user:signin:after', function () {
+              res.redirect('/#!' + cross.id);
+            });
+            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
+            return;
           }
 
           /** 浏览身份登录

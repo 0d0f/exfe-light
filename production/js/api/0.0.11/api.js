@@ -43,6 +43,8 @@ define('api', function (require) {
 
     mergeIdentities: '/Users/mergeIdentities',
 
+    setup: '/users/setup',
+
     // Identity
     getIdentityById: '/Identities/:identity_id',
 

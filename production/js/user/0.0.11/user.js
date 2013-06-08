@@ -288,13 +288,10 @@ define('user', function (require) {
 
     $dropdownWrapper.append(tplFun(data));
 
-    console.dir(data)
-
     $('#app-user-menu')
       .find('.setup')
       .data('source', {
         browsing: browsing,
-        identity: browsing.identities[0],
         originToken: data.invitation_token,
         tokenType: data.tokenType,
         forward: data.forward,

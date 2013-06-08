@@ -157,6 +157,7 @@ define(function (require) {
         , action = settings.action
         , code = settings.code
         , invitation_token = settings.invitation_token
+        , tokenType = settings.tokenType
         , readOnly = settings.readOnly
         , browsing = settings.browsing;
 
@@ -165,7 +166,7 @@ define(function (require) {
         e.stopPropagation();
         e.preventDefault();
 
-        var $d = $('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only">></div>');
+        var $d = $('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
         $d.data('settings', browsing);
         $('#app-tmp').append($d);
         $d.trigger('click');
@@ -179,24 +180,29 @@ define(function (require) {
             && (auth_user_id !== buser_id)) {
 
           if (!actionType) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-            e.preventDefault();
 
-            checkInvitationToken(auth_token, invitation_token, function () {
-              var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
-              $d.data('settings', {
-                browsing: browsing,
-                user: auth_user,
-                token: auth_token,
-                action: action,
-                invitation_token: invitation_token
+            // 非 x-token 需 check invitation_token 状态，弹窗
+            if (tokenType !== 'cross') {
+              e.stopImmediatePropagation();
+              e.stopPropagation();
+              e.preventDefault();
+
+              checkInvitationToken(auth_token, invitation_token, function () {
+                var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
+                $d.data('settings', {
+                  browsing: browsing,
+                  user: auth_user,
+                  token: auth_token,
+                  action: action,
+                  invitation_token: invitation_token
+                });
+                $('#app-tmp').append($d);
+                $d.trigger('click');
               });
-              $('#app-tmp').append($d);
-              $d.trigger('click');
-            });
 
-            return false;
+              return false;
+            }
+
           }
         } else if (action === 'SETUP' && !readOnly) {
 
