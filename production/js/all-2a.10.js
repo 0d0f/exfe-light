@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 12:06:17 */
+/*! desktop@2a.10 2013-06-09 12:06:02 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8672,11 +8672,12 @@ TWEEN.Tween = function(e) {
     if (d) {
       var u = c.data(), h = u.settings, p = h.action, f = h.code, g = h.invitation_token, v = h.tokenType, y = h.readOnly, _ = h.browsing;
       if (1 === f) {
-        e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
-        var b = r('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
-        return b.data("settings", _), r("#app-tmp").append(b), b.trigger("click"), !1;
-      }
-      if (2 === f) {
+        if (l) {
+          e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
+          var b = r('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
+          return b.data("settings", _), r("#app-tmp").append(b), b.trigger("click"), !1;
+        }
+      } else if (2 === f) {
         var x = _.user_id;
         if ("SIGNIN" === p && n && n !== x) {
           if (!l && "cross" !== v) return e.stopImmediatePropagation(), e.stopPropagation(), 

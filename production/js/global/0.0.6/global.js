@@ -162,16 +162,18 @@ define(function (require) {
         , browsing = settings.browsing;
 
       if (code === 1) {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
+        if (actionType) {
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+          e.preventDefault();
 
-        var $d = $('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
-        $d.data('settings', browsing);
-        $('#app-tmp').append($d);
-        $d.trigger('click');
+          var $d = $('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
+          $d.data('settings', browsing);
+          $('#app-tmp').append($d);
+          $d.trigger('click');
 
-        return false;
+          return false;
+        }
       } else if (code === 2) {
         var buser_id = browsing.user_id;
 
