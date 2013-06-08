@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-08 11:06:40 */
+/*! desktop@2a.10 2013-06-09 12:06:17 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7194,7 +7194,7 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-sp",
         title: "Set Password",
-        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set <span class="x-sign">EXFE</span> password of your account.<br />All your identities share the same password for sign-in and account management.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><div class="controls"><label class="control-label" for="password">Password: <span></span></label><input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
+        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set your <span class="x-sign">EXFE</span> password. All identities in your account share the same password for authentication.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><div class="controls"><label class="control-label" for="password">Password: <span></span></label><input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button>'
       },
       onShowBefore: function(e) {
