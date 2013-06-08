@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 12:06:22 */
+/*! desktop@2a.10 2013-06-09 02:06:48 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -3783,6 +3783,7 @@ TWEEN.Tween = function(e) {
     s.enabled = !s.disabled, i !== void 0 && "function" != typeof i ? i.exports = s : "function" == typeof define && define.amd ? define(s) : this.store = s;
   })();
 }), define("marked", function(e, t, i) {
+  "use strict";
   (function() {
     function e(e, t) {
       return "!" !== e[0][0] ? '<a href="' + s(t.href) + '"' + (t.title ? ' title="' + s(t.title) + '"' : "") + ">" + f.lexer(e[1]) + "</a>" : '<img src="' + s(t.href) + '" alt="' + s(e[1]) + '"' + (t.title ? ' title="' + s(t.title) + '"' : "") + ">";
@@ -8708,15 +8709,11 @@ TWEEN.Tween = function(e) {
       }
     }
   };
-  h.on("click.data-link", "a[data-link], div[data-link], span[data-link]", g), h.on("mousedown.data-link", "button[data-link], input[data-link], textarea[data-link]", g);
-  var v = 2;
+  h.on("click.data-link", "a[data-link], div[data-link], span[data-link]", g), h.on("mousedown.data-link", "button[data-link], input[data-link], textarea[data-link]", g), 
   a.on("app:cross:edited", function(e) {
-    if (0 !== v) {
-      v--;
-      var t = r("#app-browsing-identity"), i = t.data("settings"), n = r("#app-read-only"), a = t.data("action");
-      e ? e && "no_permission" === e.error && (n.size() || r("#app-main").append(n = r('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>').data("settings", i && i.browsing || o.get("user"))), 
-      n.trigger("click")) : "setup" === a && r('[data-user-action="' + a + '"]').trigger("click");
-    }
+    var t = r("#app-browsing-identity"), i = t.data("settings"), n = r("#app-read-only");
+    e && "no_permission" === e.error && (n.size() || r("#app-main").append(n = r('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>').data("settings", i && i.browsing || o.get("user"))), 
+    n.trigger("click"));
   }), h.on("click.dialog.data-api", '[data-widget="dialog"]', function(e) {
     var t, i = r(this), n = i.data("dialog"), a = i.data("dialog-type"), s = i.data("dialog-tab"), o = i.data("dialog-from"), u = i.data("dialog-settings");
     e.preventDefault(), n || a && (t = c[a], u && (t = r.extend(!0, {}, t, u)), n = new ("identification" === a ? d : l)(t), 
@@ -8724,12 +8721,12 @@ TWEEN.Tween = function(e) {
     h.find('[data-dialog-type="' + a + '"]').not(i).data("dialog", n)), s && n.switchTab(s), 
     n.show(e);
   });
-  var y = o.get("identities");
-  y || (y = []), h.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
+  var v = o.get("identities");
+  v || (v = []), h.on("focus.typeahead.data-api", '[data-typeahead-type="identity"]', function(e) {
     var t = r(this);
     t.data("typeahead") || (e.preventDefault(), t.data("typeahead", new u({
       options: {
-        source: y,
+        source: v,
         useCache: !0,
         target: t,
         onNothing: function() {

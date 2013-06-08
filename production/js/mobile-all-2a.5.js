@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 07:06:49 */
+/*! mobile@2a.5 2013-06-09 02:06:22 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3826,8 +3826,9 @@ TWEEN.Tween = function(t) {
         this.element.removeClass("hide"), this.element.css({
           position: "absolute",
           top: t + "px"
-        }), f && this.$(".web-version").removeClass("hide");
-      }), this.on("show-from-cross", function(t, e, n, i) {
+        }), this.$(".action").addClass("hide"), this.$(".get-button").removeClass("hide"), 
+        f && this.$(".web-version").removeClass("hide");
+      }), this.on("show-from-cross", function(t, e, n) {
         this.element.css({
           position: "relative",
           top: 0
@@ -3835,7 +3836,7 @@ TWEEN.Tween = function(t) {
           exfee_id: t,
           token: e
         }, this.$(".actions").addClass("action-cross"), this.$(".action").addClass("hide"), 
-        n && !i && this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
+        n || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
         $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), f && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(t, e) {
         window.launchApp(c + t, e, 500);

@@ -196,12 +196,14 @@ define('mobilecontroller', function (require, exports, module) {
           position: 'absolute',
           top:  top + 'px'
         });
+        this.$('.action').addClass('hide');
+        this.$('.get-button').removeClass('hide');
         if (iPad) {
           this.$('.web-version').removeClass('hide');
         }
       });
 
-      this.on('show-from-cross', function (exfee_id, token, isphone, read_only, args) {
+      this.on('show-from-cross', function (exfee_id, token, read_only/*, args*/) {
         this.element.css({
           position: 'relative',
           top: 0
@@ -213,7 +215,7 @@ define('mobilecontroller', function (require, exports, module) {
         };
         this.$('.actions').addClass('action-cross')
         this.$('.action').addClass('hide');
-        if (isphone && !read_only) {
+        if (!read_only) {
           this.$('.subscribe').removeClass('hide')
         }
         this.element.removeClass('hide');
