@@ -1105,8 +1105,10 @@ define('mappanel', function (require) {
       }
 
     , removeMarker: function (marker) {
-        marker.setMap(null);
-        marker = null;
+        if (marker) {
+          marker.setMap(null);
+          marker = null;
+        }
       }
 
     , clearMarkers: function () {
@@ -1237,7 +1239,7 @@ define('mappanel', function (require) {
         GMaps.event.trigger(map, 'resize');
         // 返回到中心点
         (!self._placeMarker && markers.length) && (self._placeMarker = markers[0]);
-        map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+        map.setCenter(!!self._placeMarker ? self._placeMarker.getPosition() : (self._userMarker ? self._userMarker.getPosition() : null));
 
         component.placeInput.$element.focusend();
       }
