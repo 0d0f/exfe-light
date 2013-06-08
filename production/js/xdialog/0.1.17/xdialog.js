@@ -1810,6 +1810,16 @@ define('xdialog', function (require, exports) {
 
   dialogs.setpassword = {
 
+    errors: {
+        '400': {
+            'weak_password': 'Too short.'
+          , 'no_password': ' Password incorrect.'
+        }
+      , '401': {
+            'invalid_token': 'Invalid Token'
+        }
+    },
+
     options: {
 
       onHideAfter: function () {
@@ -1837,16 +1847,27 @@ define('xdialog', function (require, exports) {
             .focus();
           $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
+        'blur #password': function (e) {
+          var val = this.$('#password').val()
+            , $pass = this.$('[for="password"]')
+            , $text = $pass.find('span');
+          if (!val) {
+            $pass.addClass('label-error');
+            $text.text(this.errors['400'].no_password);
+          } else if (4 > val.length) {
+            $pass.addClass('label-error');
+            $text.text(this.errors['400'].weak_password);
+          } else {
+            $pass.removeClass('label-error');
+            $text.text('');
+          }
+        },
         'click .xbtn-success': function (e) {
           var that = this;
-          var stpwd = that.$('#stpwd').val();
+          var stpwd = that.$('#password').val();
           var xbtn = that.srcNode;
 
-          // note: 暂时先用 alert
-          if (!stpwd) {
-            if (!stpwd) {
-              alert('Please set EXFE password.');
-            }
+          if (this.$('[for="password"]').hasClass('label-error')) {
             return;
           }
 
@@ -1974,9 +1995,9 @@ define('xdialog', function (require, exports) {
               + '</div>'
 
               + '<div class="control-group">'
-                + '<label class="control-label" for="stpwd">Password:</label>'
                 + '<div class="controls">'
-                  + '<input class="input-large" id="stpwd" placeholder="Set EXFE password" type="password" autocomplete="off" />'
+                  + '<label class="control-label" for="password">Password: <span></span></label>'
+                  + '<input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" />'
                   + '<i class="help-inline password-eye icon16-pass-hide pointer"></i>'
                 + '</div>'
               + '</div>'
@@ -2074,7 +2095,7 @@ define('xdialog', function (require, exports) {
         },
 
         'blur #password': function (e) {
-          var val = Util.trim($(e.currentTarget).val());
+          var val = $(e.currentTarget).val();
           var $pass = this.$('[for="password"]');
           var $text = $pass.find('span');
           if (!val) {

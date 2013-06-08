@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-08 05:06:57 */
+/*! desktop@2a.10 2013-06-08 11:06:32 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6364,7 +6364,7 @@ TWEEN.Tween = function(e) {
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("source");
-        t ? this.$("#identity").val(t) : this.emit("checkUser");
+        "string" == typeof t ? this.$("#identity").val(t) : this.emit("checkUser");
       },
       onShowAfter: function() {
         ("d00" === this.switchTabType || "d01" === this.switchTabType || "d02" === this.switchTabType) && this.$("#identity").focusend();
@@ -7079,6 +7079,15 @@ TWEEN.Tween = function(e) {
       }
     }
   }, d.setpassword = {
+    errors: {
+      "400": {
+        weak_password: "Too short.",
+        no_password: " Password incorrect."
+      },
+      "401": {
+        invalid_token: "Invalid Token"
+      }
+    },
     options: {
       onHideAfter: function() {
         this.befer && this.befer.abort() && (this.befer = null), this.destory();
@@ -7097,82 +7106,88 @@ TWEEN.Tween = function(e) {
             return "password" === t ? "text" : "password";
           }).focus(), t.toggleClass("icon16-pass-hide icon16-pass-show");
         },
+        "blur #password": function() {
+          var e = this.$("#password").val(), t = this.$('[for="password"]'), i = t.find("span");
+          e ? 4 > e.length ? (t.addClass("label-error"), i.text(this.errors["400"].weak_password)) : (t.removeClass("label-error"), 
+          i.text("")) : (t.addClass("label-error"), i.text(this.errors["400"].no_password));
+        },
         "click .xbtn-success": function(e) {
-          var t = this, n = t.$("#stpwd").val(), s = t.srcNode;
-          if (!n) return n || alert("Please set EXFE password."), void 0;
-          e.preventDefault();
-          var l = i(e.currentTarget), c = this._user, d = this._token, u = this.signed;
-          if (this._setup) {
-            var h = function(e, t, n, s, c, d) {
-              var u = r.request("setPassword", {
-                type: "POST",
-                params: {
-                  token: t
-                },
-                resources: {
-                  user_id: n.id
-                },
-                data: {
-                  new_password: s
-                },
-                beforeSend: function() {
-                  l.addClass("disabled loading");
-                },
-                complete: function() {
-                  l.removeClass("disabled loading");
-                }
-              }, function(e) {
-                o.set("authorization", e), a.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
-                i("#app-user-menu").find(".setup").remove(), d && d.hide();
-              }, function(a) {
-                d && d.hide();
-                var r = a.meta;
-                if (403 === r.code) {
-                  var l = r.errorType;
-                  "invalid_current_password" === l && alert("Invalid current password.");
-                } else if (401 === r.code && "authenticate_timeout" === r.errorType && e) {
-                  var c = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  i("#app-tmp").append(c);
-                  var u = o.get("authorization");
-                  t = u.token, c.trigger("click.dialog.data-api", {
-                    callback: function() {
-                      h(e, t, n, s);
-                    }
-                  });
-                }
-              });
-              d && (d.befer = u);
-            };
-            h(u, d, c, n, s, t);
-          } else {
-            var p = function(e, t, n, a, s) {
-              var l = r.request("resetPassword", {
-                type: "POST",
-                data: {
-                  token: t,
-                  name: n.name,
-                  password: a
-                }
-              }, function(e) {
-                o.set("authorization", e.authorization), s && s.hide(), window.location.href = "/";
-              }, function(r) {
-                s && s.hide();
-                var l = r.meta, c = l && l.code, d = l.errorType;
-                if (401 === c && "authenticate_timeout" === d) {
-                  var u = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
-                  i("#app-tmp").append(u);
-                  var h = o.get("authorization");
-                  t = h.token, u.trigger("click.dialog.data-api", {
-                    callback: function() {
-                      p(e, t, n, a);
-                    }
-                  });
-                } else 401 === c && "invalid_token" === d && (i(".token-expired").prev().addClass("hide"), 
-                i(".token-expired").removeClass("hide"));
-              });
-              s && (s.befer = l);
-            };
-            p(u, d, c, n, t);
+          var t = this, n = t.$("#password").val(), s = t.srcNode;
+          if (!this.$('[for="password"]').hasClass("label-error")) {
+            e.preventDefault();
+            var l = i(e.currentTarget), c = this._user, d = this._token, u = this.signed;
+            if (this._setup) {
+              var h = function(e, t, n, s, c, d) {
+                var u = r.request("setPassword", {
+                  type: "POST",
+                  params: {
+                    token: t
+                  },
+                  resources: {
+                    user_id: n.id
+                  },
+                  data: {
+                    new_password: s
+                  },
+                  beforeSend: function() {
+                    l.addClass("disabled loading");
+                  },
+                  complete: function() {
+                    l.removeClass("disabled loading");
+                  }
+                }, function(e) {
+                  o.set("authorization", e), a.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
+                  i("#app-user-menu").find(".setup").remove(), d && d.hide();
+                }, function(a) {
+                  d && d.hide();
+                  var r = a.meta;
+                  if (403 === r.code) {
+                    var l = r.errorType;
+                    "invalid_current_password" === l && alert("Invalid current password.");
+                  } else if (401 === r.code && "authenticate_timeout" === r.errorType && e) {
+                    var c = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                    i("#app-tmp").append(c);
+                    var u = o.get("authorization");
+                    t = u.token, c.trigger("click.dialog.data-api", {
+                      callback: function() {
+                        h(e, t, n, s);
+                      }
+                    });
+                  }
+                });
+                d && (d.befer = u);
+              };
+              h(u, d, c, n, s, t);
+            } else {
+              var p = function(e, t, n, a, s) {
+                var l = r.request("resetPassword", {
+                  type: "POST",
+                  data: {
+                    token: t,
+                    name: n.name,
+                    password: a
+                  }
+                }, function(e) {
+                  o.set("authorization", e.authorization), s && s.hide(), window.location.href = "/";
+                }, function(r) {
+                  s && s.hide();
+                  var l = r.meta, c = l && l.code, d = l.errorType;
+                  if (401 === c && "authenticate_timeout" === d) {
+                    var u = i('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
+                    i("#app-tmp").append(u);
+                    var h = o.get("authorization");
+                    t = h.token, u.trigger("click.dialog.data-api", {
+                      callback: function() {
+                        p(e, t, n, a);
+                      }
+                    });
+                  } else 401 === c && "invalid_token" === d && (i(".token-expired").prev().addClass("hide"), 
+                  i(".token-expired").removeClass("hide"));
+                });
+                s && (s.befer = l);
+              };
+              p(u, d, c, n, t);
+            }
           }
         }
       },
@@ -7180,7 +7195,7 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-sp",
         title: "Set Password",
-        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set <span class="x-sign">EXFE</span> password of your account.<br />All your identities share the same password for sign-in and account management.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><label class="control-label" for="stpwd">Password:</label><div class="controls"><input class="input-large" id="stpwd" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
+        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set <span class="x-sign">EXFE</span> password of your account.<br />All your identities share the same password for sign-in and account management.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><div class="controls"><label class="control-label" for="password">Password: <span></span></label><input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button>'
       },
       onShowBefore: function(e) {
@@ -7220,7 +7235,7 @@ TWEEN.Tween = function(e) {
           a.text(""));
         },
         "blur #password": function(e) {
-          var t = s.trim(i(e.currentTarget).val()), n = this.$('[for="password"]'), a = n.find("span");
+          var t = i(e.currentTarget).val(), n = this.$('[for="password"]'), a = n.find("span");
           t ? 4 > t.length ? (n.addClass("label-error"), a.text(this.errors["400"].weak_password)) : (n.removeClass("label-error"), 
           a.text("")) : (n.addClass("label-error"), a.text(this.errors["400"].no_password));
         },
@@ -13522,7 +13537,7 @@ TWEEN.Tween = function(e) {
   };
   c.on("app:api:getuser", f), c.on("app:usermenu:updatenormal", t), c.on("app:usermenu:updatebrowsing", i);
   var m = {
-    normal: '<div class="dropdown-menu user-panel"><div class="header"><div class="meta"><a class="pull-right avatar" href="{{profileLink}}" data-link><img width="40" height="40" alt="" src="{{avatar_filename}}" /></a><a class="attended" href="{{profileLink}}" data-link><span class="attended-nums">{{cross_quantity}}</span><span class="attended-x"><em class="x">·X·</em> attended</span></a></div></div><div class="body">{{#unless password}}<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword"><a href="#">Set Up</a> your <span class="x-sign">EXFE</span> password</div>{{/unless}}{{#if verifying}}<div class="merge verify" data-dialog-type="verification_{{identities.[0].provider}}" data-widget="dialog" data-identity-id="{{identities.[0].id}}"><strong>Verify</strong> your identity</div>{{/if}}<div class="list"></div></div><div class="footer"><a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a <span class="x">·X·</span></a><div class="spliterline"></div><div class="actions"><a href="#" class="pull-right" id="app-signout">Sign out</a></div></div></div>',
+    normal: '<div class="dropdown-menu user-panel"><div class="header"><div class="meta"><a class="pull-right avatar" href="{{profileLink}}" data-link><img width="40" height="40" alt="" src="{{avatar_filename}}" /></a><a class="attended" href="{{profileLink}}" data-link><span class="attended-nums">{{cross_quantity}}</span><span class="attended-x"><em class="x">·X·</em> attended</span></a></div></div><div class="body">{{#unless password}}<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword">Set <span class="x-sign">EXFE</span> password</div>{{/unless}}{{#if verifying}}<div class="merge verify" data-dialog-type="verification_{{identities.[0].provider}}" data-widget="dialog" data-identity-id="{{identities.[0].id}}"><strong>Verify</strong> identity</div>{{/if}}<div class="list"></div></div><div class="footer"><a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a <span class="x">·X·</span></a><div class="spliterline"></div><div class="actions"><a href="#" class="pull-right" id="app-signout">Sign out</a></div></div></div>',
     browsing_identity: '<div class="dropdown-menu user-panel"><div class="header"><h2>Browsing Identity</h2></div><div class="body">{{#with browsing}}<div>You are browsing this page as {{capitalize identities.[0].provider}} identity:</div><div class="identity"><span class="pull-right avatar alt40"><img src="{{identities.[0].avatar_filename}}" width="20" height="20" alt="" /></span><i class="icon16-identity-{{identities.[0].provider}}"></i><span class="oblique">{{identities.[0].external_username}}</span></div>{{#if ../setup}}<div class="merge setup" data-user-action="SETUP" data-widget="dialog" data-dialog-type="setup_{{identities.[0].provider}}"><h5>Start</h5>new account with this identity</div>{{/if}}{{/with}}{{#unless setup}}<div class="orspliter hide">or</div><div class="merge signin" data-user-action="SIGNIN" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00"><h5>Authenticate</h5>to continue with this identity</div>{{/unless}}</div><div class="footer"></div></div>'
   };
   h.registerHelper("ifConnected", function(e, t) {
@@ -15148,14 +15163,15 @@ define("lightsaber", function(e, t, i) {
       if (r.resolveData.setup = "INPUT_NEW_PASSWORD" === v && "VERIFY" === g && t.password === !1, 
       u) {
         r.browsing_user = t;
-        var n, h = o.printExtUserName(t.identities[0]);
-        n = d ? "/#" + h + "/token=" + a : "/#" + h, s.emit("app:usermenu:updatebrowsing", {
+        var n, p = o.printExtUserName(t.identities[0]);
+        n = d ? "/#" + p + "/token=" + a : "/#" + p, s.emit("app:usermenu:updatebrowsing", {
           normal: c,
           browsing: t,
           action: v,
           setup: "INPUT_NEW_PASSWORD" === v && "VERIFY" === g && t.password === !1,
           originToken: a,
           tokenType: "user",
+          user_token: h,
           page: "resolve",
           readOnly: !0,
           user_name: f || t.name,
@@ -15207,35 +15223,30 @@ define("lightsaber", function(e, t, i) {
     if ("INPUT_NEW_PASSWORD" === m) {
       var v;
       "SET_PASSWORD" === p && (g = "forgot_password.html"), t.render(g, function(e) {
-        if ($("#app-main").append(e), l && !c) {
-          var t = a.find(o.identities, function(e) {
-            return e.id === h ? !0 : void 0;
-          });
-          "VERIFY" === p ? (v = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">'), 
-          v.data("source", {
-            browsing_user: o,
-            identity: t,
-            originToken: r,
-            user_name: u.user_name,
-            tokenType: "user"
-          })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
-          v.data("source", {
-            user: o,
-            token: u.setup ? l.token : r,
-            setup: u.setup
-          })), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api");
-        } else "VERIFY" === p ? (s.once("app:user:signin:after", function() {
+        $("#app-main").append(e), l && !c ? (a.find(o.identities, function(e) {
+          return e.id === h ? !0 : void 0;
+        }), "VERIFY" === p ? (v = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">'), 
+        v.data("source", {
+          browsing_user: o,
+          originToken: r,
+          user_name: u.user_name,
+          tokenType: "user"
+        })) : "SET_PASSWORD" === p && (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
+        v.data("source", {
+          user: o,
+          token: u.setup ? l.token : r,
+          setup: u.setup
+        })), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api")) : "VERIFY" === p ? (s.once("app:user:signin:after", function() {
           var e = $('<div class="addidentity" data-destory="true" data-widget="dialog" data-dialog-type="addIdentityAfterSignIn">');
           e.data("source", {
             identity: d.identities[0]
           }), e.appendTo($("#app-tmp")), e.trigger("click.dialog.data-api");
-        }), $("#app-user-menu").find(".set-up").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
+        }), $("#app-user-menu").find(".setup").trigger("click.dialog.data-api")) : (v = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">'), 
         v.data("source", {
           user: d,
           token: u.setup ? c.token : r,
           setup: u.setup
-        }), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api"));
-        $(".modal-su, .modal-sp, .modal-bi").css("top", 250);
+        }), v.appendTo($("#app-tmp")), v.trigger("click.dialog.data-api")), $(".modal-su, .modal-sp, .modal-bi").css("top", 250);
       });
     }
     delete i.browsing_authorization, delete i.resolveData, delete i.originToken;
@@ -15327,48 +15338,51 @@ define("lightsaber", function(e, t, i) {
       params: n,
       data: a
     }, function(t) {
-      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, h = t.read_only, f = t.action, g = t.cross;
-      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === h && r && (o || (o = {}), 
+      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
+      s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === f && r && (o || (o = {}), 
       c = o[d] = r, l.set("cats", o));
-      var v = function() {
+      var y = function() {
         e.render("x.html", function(e) {
-          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, n, g, h, c || d, u), 
+          if ($("#app-main").empty().append(e), s.emit("xapp:cross:main"), s.emit("xapp:cross", null, n, v, f, c || d, u), 
           "mute" === u) {
             var t = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
-            t.data("source", g), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
+            t.data("source", v), t.appendTo($("#app-tmp")), t.trigger("click.dialog.data-api");
           }
         });
       };
-      if ((p && m === a || i && (p = i)) && a > 0 || !f) return s.once("app:user:signin:after", function() {
-        e.redirect("/#!" + g.id);
-      }), s.emit("app:user:signin", p.token, p.user_id), void 0;
-      if (!i && h) s.emit("app:usermenu:updatebrowsing", {
+      if (!i && f) s.emit("app:usermenu:updatebrowsing", {
         browsing: {
           identities: [ n ],
           name: n.name
         },
-        action: f,
-        readOnly: h,
+        action: g,
+        readOnly: f,
         page: "cross",
         code: 1
-      }); else if (!h && (c || i)) {
-        var y = {
-          browsing: {
-            user_id: n.connected_user_id,
-            identities: [ n ],
-            name: n.name
-          },
-          invitation_token: d,
-          action: f,
-          readOnly: h,
-          tokenType: "invitation",
-          setup: "SETUP" === f,
-          page: "cross",
-          code: 2
-        };
-        c && (y.tokenType = "cross", y.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", y);
+      }); else {
+        if ((p && m === a || !p && (p = i)) && a > 0) return l.set("authorization", h.authorization = p), 
+        s.once("app:user:signin:after", function() {
+          e.redirect("/#!" + v.id);
+        }), s.emit("app:user:signin", p.token, p.user_id), void 0;
+        if (!f && (c || i)) {
+          var _ = {
+            browsing: {
+              user_id: n.connected_user_id,
+              identities: [ n ],
+              name: n.name
+            },
+            invitation_token: d,
+            action: g,
+            readOnly: f,
+            tokenType: "invitation",
+            setup: "SETUP" === g,
+            page: "cross",
+            code: 2
+          };
+          c && (_.tokenType = "cross", _.cross_access_token = c), s.emit("app:usermenu:updatebrowsing", _);
+        }
       }
-      v();
+      y();
     }, function(t) {
       var i = t && t.meta && t.meta.code, n = !!p;
       403 === i ? (s.emit("app:page:home", !1), s.emit("app:page:usermenu", n), n && (s.emit("app:usermenu:updatenormal", f), 
