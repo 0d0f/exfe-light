@@ -1790,32 +1790,6 @@ define('xdialog', function (require, exports) {
 
   };
 
-  dialogs.verification_phone = {
-
-    options: {
-
-      events: {
-      },
-
-      backdrop: false,
-
-      viewData: {
-
-        cls: 'mblack modal-ve',
-
-        title: 'Verification',
-
-        body: ''
-          + '<div class="shadow title">Identity Verification</div>'
-          + '<div>Identity to verify:</div>'
-          + ''
-
-      }
-
-    }
-
-  };
-
   dialogs.setpassword = {
 
     errors: {
@@ -2384,14 +2358,22 @@ define('xdialog', function (require, exports) {
         'click .xbtn-merge': function () {
           var that = this
             , token = that._settings.token
-            , invitation_token = that._settings.invitation_token;
+            , invitation_token = that._settings.invitation_token
+            , provider = this.provider
+            , postData = {
+                invitation_token: invitation_token
+              };
+
+          if (provider !== 'email' && provider !== 'phone') {
+            postData.refere = window.location.href;
+          }
 
           // 调用 mergeidentities [OPTION C]
           Api.request('mergeIdentities'
             , {
               type: 'POST',
               params: { token: token },
-              data: { invitation_token: invitation_token },
+              data: postData,
               beforeSend: function () {
                 $('.modal-footer').find('button').prop('disabled', true);
               }
@@ -2438,7 +2420,7 @@ define('xdialog', function (require, exports) {
         body: ''
           + '<div class="shadow title">Merge Identity?</div>'
           + '<div class="user">'
-            + '<div class="merge-info">You’re browsing this page as <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span>NOT</span> merge if it’s not you!</div>'
+            + '<div class="merge-info">You’re browsing this page as <span class="buser-name"></span> <span class="oblique identity"></span>, we recommend you to merge this identity into current account <span class="user-name"></span>. Do <span class="not">NOT</span> merge if it’s not you!</div>'
           + '</div>'
           + '<div class="context-identity">'
             + '<div class="pull-right avatar">'
@@ -2471,23 +2453,22 @@ define('xdialog', function (require, exports) {
           , browsing = settings.browsing
           , bidentities = browsing.identities
           , bidentity = bidentities[0]
-          , beun = Util.printExtUserName(bidentity);
+          , beun = Util.printExtUserName(bidentity)
+          , provider = (this.provider = bidentity.provider);
 
-        this.$('.merge-info')
-          .find('.identity').text(beun);
-        this.$('.merge-info')
-          .find('.user-name').text(user.name);
+        var $mi = this.$('.merge-info');
+        $mi.find('.buser-name').text(browsing.name);
+        $mi.find('.identity').text(beun);
+        $mi.find('.user-name').text(user.name);
 
-        this.$('.context-identity')
-          .find('.avatar img').attr('src', bidentity.avatar_filename)
-          .next().addClass('icon16-identity-' + bidentity.provider)
-        this.$('.context-identity')
-          .find('.identity').text(beun);
+        $ci = this.$('.context-identity');
+        $ci.find('.avatar img').attr('src', bidentity.avatar_filename)
+          .next().addClass('icon16-identity-' + provider);
+        $ci.find('.identity').text(beun);
 
-        this.$('.context-user')
-          .find('.avatar img').attr('src', user.avatar_filename);
-        this.$('.context-user')
-          .find('.username').text(user.name);
+        $cu = this.$('.context-user');
+        $cu.find('.avatar img').attr('src', user.avatar_filename);
+        $cu.find('.username').text(user.name);
       }
 
     }

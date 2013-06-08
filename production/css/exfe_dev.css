@@ -7508,6 +7508,13 @@ body {
   color: #4c4c4c;
 }
 
+.modal-bi .merge-info .buser-name,
+.modal-bi .merge-info .user-name,
+.modal-bi .merge-info .not {
+  font-weight: bold;
+  color: #333333;
+}
+
 .modal-bi .xbtn-merge {
   padding: 0 5px;
   margin-left: 8px;
