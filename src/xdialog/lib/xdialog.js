@@ -2344,7 +2344,6 @@ define('xdialog', function (require, exports) {
       },
 
       events: {
-
         'click .xbtn-dnm': function () {
           var action = this._settings.action;
           if (action === 'SETUP') {
@@ -2461,12 +2460,12 @@ define('xdialog', function (require, exports) {
         $mi.find('.identity').text(beun);
         $mi.find('.user-name').text(user.name);
 
-        $ci = this.$('.context-identity');
+        var $ci = this.$('.context-identity');
         $ci.find('.avatar img').attr('src', bidentity.avatar_filename)
           .next().addClass('icon16-identity-' + provider);
         $ci.find('.identity').text(beun);
 
-        $cu = this.$('.context-user');
+        var $cu = this.$('.context-user');
         $cu.find('.avatar img').attr('src', user.avatar_filename);
         $cu.find('.username').text(user.name);
       }
