@@ -175,7 +175,7 @@ define('user', function (require) {
             + '</div>'
             + '{{#if ../setup}}'
             //+ '<div class="merge setup" data-source="{{identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d02">'
-            + '<div class="merge setup" data-user-action="SETUP" data-widget="dialog" data-dialog-type="setup_{{identities.[0].provider}}">'
+            + '<div class="merge setup" data-user-action="SETUP" data-widget="dialog">'
               + '<h5>Start</h5>'
               + 'new account with this identity'
             + '</div>'
@@ -227,8 +227,9 @@ define('user', function (require) {
       , $nameSpan = $appUserName.find('span')
       , $dropdownWrapper = $appUserMenu.find('.dropdown-wrapper')
       , $userPanel = $dropdownWrapper.find('.user-panel')
-      , tplFun
-      , profileLink = '/#' + Util.printExtUserName(user.identities[0]);
+      , identity = user.identities[0]
+      , profileLink = '/#' + Util.printExtUserName(identity)
+      , tplFun;
 
     $('#app-browsing-identity').remove();
 
@@ -245,7 +246,7 @@ define('user', function (require) {
     user.profileLink = profileLink;
 
     // 新身份未验证时，显示提示信息
-    user.verifying = 1 === user.identities.length && 'VERIFYING' === user.identities[0].status;
+    user.verifying = 1 === user.identities.length && 'VERIFYING' === identity.status;
 
     $dropdownWrapper.append(tplFun(user));
 
@@ -261,6 +262,7 @@ define('user', function (require) {
       , $dropdownWrapper = $appUserMenu.find('.dropdown-wrapper')
       , $userPanel = $dropdownWrapper.find('.user-panel')
       , browsing = data.browsing
+      , identity = browsing.identities[0]
       , tplFun;
 
     browsing.isBrowsing = true;
@@ -273,6 +275,11 @@ define('user', function (require) {
         .attr('data-dialog-type', 'browsing_identity')
     );
 
+    var setupType = 'setup_authenticate';
+
+    if (identity.provider === 'email' || identity.provider === 'phone') {
+      setupType = 'setup_verification';
+    }
 
     $appUserName.attr('href', location.href);
 
@@ -290,6 +297,7 @@ define('user', function (require) {
 
     $('#app-user-menu')
       .find('.setup')
+      .attr('data-dialog-type', setupType)
       .data('source', {
         browsing: browsing,
         originToken: data.originToken,

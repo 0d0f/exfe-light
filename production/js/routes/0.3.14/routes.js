@@ -266,7 +266,7 @@ define('routes', function (require, exports, module) {
             }
           });
           if (token_type === 'VERIFY') {
-            d = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">');
+            d = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_verification" data-redirect="true">');
             d.data('source', {
               browsing_user: user,
               originToken: originToken,

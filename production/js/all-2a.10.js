@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 03:06:37 */
+/*! desktop@2a.10 2013-06-09 05:06:08 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -395,7 +395,7 @@
       var n = J.grep(e, function(e) {
         return 1 === e.nodeType;
       });
-      if (zt.test(t)) return J.filter(t, n, !i);
+      if (Lt.test(t)) return J.filter(t, n, !i);
       t = J.filter(t, n);
     }
     return J.grep(e, function(e) {
@@ -495,7 +495,7 @@
   }
   function E(e, i, n, r, a, s) {
     a = a || i.dataTypes[0], s = s || {}, s[a] = !0;
-    for (var o, l = e[a], c = 0, d = l ? l.length : 0, u = e === zi; d > c && (u || !o); c++) o = l[c](i, n, r), 
+    for (var o, l = e[a], c = 0, d = l ? l.length : 0, u = e === Li; d > c && (u || !o); c++) o = l[c](i, n, r), 
     "string" == typeof o && (!u || s[o] ? o = t : (i.dataTypes.unshift(o), o = E(e, i, n, r, o, s)));
     return !u && o || s["*"] || (o = E(e, i, n, r, "*", s)), o;
   }
@@ -638,10 +638,10 @@
     }), n = 0; s > n; n++) r = f[n], l = u.createTween(r, m ? o[r] : 0), p[r] = o[r] || J.style(e, r), 
     r in o || (o[r] = l.start, m && (l.end = l.start, l.start = "width" === r || "height" === r ? 1 : 0));
   }
-  function z(e, t, i, n, r) {
-    return new z.prototype.init(e, t, i, n, r);
+  function L(e, t, i, n, r) {
+    return new L.prototype.init(e, t, i, n, r);
   }
-  function L(e, t) {
+  function z(e, t) {
     var i, n = {
       height: e
     }, r = 0;
@@ -1747,8 +1747,8 @@
         } else if (t.ownerDocument && (a = t.ownerDocument.getElementById(o)) && w(t, a) && a.id === o) return i.push(a), 
         i;
       } else {
-        if (r[2]) return z.apply(i, L.call(t.getElementsByTagName(e), 0)), i;
-        if ((o = r[3]) && ht && t.getElementsByClassName) return z.apply(i, L.call(t.getElementsByClassName(o), 0)), 
+        if (r[2]) return L.apply(i, z.call(t.getElementsByTagName(e), 0)), i;
+        if ((o = r[3]) && ht && t.getElementsByClassName) return L.apply(i, z.call(t.getElementsByClassName(o), 0)), 
         i;
       }
       return m(e.replace(Z, "$1"), t, i, n, s);
@@ -1827,7 +1827,7 @@
           var c, u, h, p = [], m = [], g = s.length, v = a || f(t || "*", o.nodeType ? [ o ] : o, [], a), y = !e || !a && t ? v : d(v, p, e, o, l), _ = i ? r || (a ? e : g || n) ? [] : s : y;
           if (i && i(y, _, o, l), n) for (h = d(_, m), n(h, [], o, l), c = h.length; c--; ) (u = h[c]) && (_[m[c]] = !(y[m[c]] = u));
           if (a) for (c = e && _.length; c--; ) (u = _[c]) && (a[p[c]] = !(s[p[c]] = u)); else _ = d(_ === s ? _.splice(g, _.length) : _), 
-          r ? r(null, s, _, l) : z.apply(s, _);
+          r ? r(null, s, _, l) : L.apply(s, _);
         }
       });
     }
@@ -1866,7 +1866,7 @@
             if (g > 0) for (;y--; ) b[y] || m[y] || (m[y] = O.call(c));
             m = d(m);
           }
-          z.apply(c, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(c);
+          L.apply(c, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(c);
         }
         return x && (A = C, T = w), b;
       };
@@ -1884,7 +1884,7 @@
           e = e.slice(s.shift().length);
         }
         for (a = ot.POS.test(e) ? -1 : s.length - 1; a >= 0 && (l = s[a], !_.relative[c = l.type]); a--) if ((d = _.find[c]) && (n = d(l.matches[0].replace(st, ""), nt.test(s[0].type) && t.parentNode || t, r))) {
-          if (s.splice(a, 1), e = n.length && s.join(""), !e) return z.apply(i, L.call(n, 0)), 
+          if (s.splice(a, 1), e = n.length && s.join(""), !e) return L.apply(i, z.call(n, 0)), 
           i;
           break;
         }
@@ -1892,7 +1892,7 @@
       return k(e, u)(n, t, r, i, nt.test(e)), i;
     }
     function g() {}
-    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, D = N.documentElement, A = 0, P = 0, O = [].pop, z = [].push, L = [].slice, H = [].indexOf || function(e) {
+    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, D = N.documentElement, A = 0, P = 0, O = [].pop, L = [].push, z = [].slice, H = [].indexOf || function(e) {
       for (var t = 0, i = this.length; i > t; t++) if (this[t] === e) return t;
       return -1;
     }, R = function(e, t) {
@@ -1939,9 +1939,9 @@
       return y = !N.getElementById(S), D.removeChild(e), t;
     });
     try {
-      L.call(D.childNodes, 0)[0].nodeType;
+      z.call(D.childNodes, 0)[0].nodeType;
     } catch (ft) {
-      L = function(e) {
+      z = function(e) {
         for (var t, i = []; t = this[e]; e++) i.push(t);
         return i;
       };
@@ -2247,7 +2247,7 @@
             p = nt.test(e) && i.parentNode || i, f = c.join(",");
           }
           if (f) try {
-            return z.apply(r, L.call(p.querySelectorAll(f), 0)), r;
+            return L.apply(r, z.call(p.querySelectorAll(f), 0)), r;
           } catch (m) {} finally {
             u || i.removeAttribute("id");
           }
@@ -2269,7 +2269,7 @@
     i.attr = J.attr, J.find = i, J.expr = i.selectors, J.expr[":"] = J.expr.pseudos, 
     J.unique = i.uniqueSort, J.text = i.getText, J.isXMLDoc = i.isXML, J.contains = i.contains;
   }(e);
-  var Pt = /Until$/, Ot = /^(?:parents|prev(?:Until|All))/, zt = /^.[^:#\[\.,]*$/, Lt = J.expr.match.needsContext, Ht = {
+  var Pt = /Until$/, Ot = /^(?:parents|prev(?:Until|All))/, Lt = /^.[^:#\[\.,]*$/, zt = J.expr.match.needsContext, Ht = {
     children: !0,
     contents: !0,
     next: !0,
@@ -2301,10 +2301,10 @@
       return this.pushStack(c(this, e, !0), "filter", e);
     },
     is: function(e) {
-      return !!e && ("string" == typeof e ? Lt.test(e) ? J(e, this.context).index(this[0]) >= 0 : J.filter(e, this).length > 0 : this.filter(e).length > 0);
+      return !!e && ("string" == typeof e ? zt.test(e) ? J(e, this.context).index(this[0]) >= 0 : J.filter(e, this).length > 0 : this.filter(e).length > 0);
     },
     closest: function(e, t) {
-      for (var i, n = 0, r = this.length, a = [], s = Lt.test(e) || "string" != typeof e ? J(e, t || this.context) : 0; r > n; n++) for (i = this[n]; i && i.ownerDocument && i !== t && 11 !== i.nodeType; ) {
+      for (var i, n = 0, r = this.length, a = [], s = zt.test(e) || "string" != typeof e ? J(e, t || this.context) : 0; r > n; n++) for (i = this[n]; i && i.ownerDocument && i !== t && 11 !== i.nodeType; ) {
         if (s ? s.index(i) > -1 : J.find.matchesSelector(i, e)) {
           a.push(i);
           break;
@@ -2786,7 +2786,7 @@
     }); else for (n in e) k(n, e[n], i, a);
     return r.join("&").replace(_i, "+");
   };
-  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Di = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Ai = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, Oi = J.fn.load, zi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
+  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Di = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Ai = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, Oi = J.fn.load, Li = {}, zi = {}, Hi = [ "*/" ] + [ "*" ];
   try {
     Ei = q.href;
   } catch (Ri) {
@@ -2867,8 +2867,8 @@
         url: !0
       }
     },
-    ajaxPrefilter: C(zi),
-    ajaxTransport: C(Li),
+    ajaxPrefilter: C(Li),
+    ajaxTransport: C(zi),
     ajax: function(e, i) {
       function n(e, i, n, s) {
         var c, u, y, _, x, k = i;
@@ -2918,7 +2918,7 @@
       }, h.url = ((e || h.url) + "").replace(Ti, "").replace(Ii, Ci[1] + "//"), h.dataTypes = J.trim(h.dataType || "*").toLowerCase().split(tt), 
       null == h.crossDomain && (c = Pi.exec(h.url.toLowerCase()) || !1, h.crossDomain = c && c.join(":") + (c[3] ? "" : "http:" === c[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
       h.data && h.processData && "string" != typeof h.data && (h.data = J.param(h.data, h.traditional)), 
-      E(zi, h, i, w), 2 === b) return w;
+      E(Li, h, i, w), 2 === b) return w;
       if (d = h.global, h.type = h.type.toUpperCase(), h.hasContent = !Si.test(h.type), 
       d && 0 === J.active++ && J.event.trigger("ajaxStart"), !h.hasContent && (h.data && (h.url += (Ni.test(h.url) ? "&" : "?") + h.data, 
       delete h.data), r = h.url, h.cache === !1)) {
@@ -2936,7 +2936,7 @@
         error: 1,
         complete: 1
       }) w[u](h[u]);
-      if (o = E(Li, h, i, w)) {
+      if (o = E(zi, h, i, w)) {
         w.readyState = 1, d && f.trigger("ajaxSend", [ w, h ]), h.async && h.timeout > 0 && (l = setTimeout(function() {
           w.abort("timeout");
         }, h.timeout));
@@ -3075,23 +3075,23 @@
     prefilter: function(e, t) {
       t ? Ji.unshift(e) : Ji.push(e);
     }
-  }), J.Tween = z, z.prototype = {
-    constructor: z,
+  }), J.Tween = L, L.prototype = {
+    constructor: L,
     init: function(e, t, i, n, r, a) {
       this.elem = e, this.prop = i, this.easing = r || "swing", this.options = t, this.start = this.now = this.cur(), 
       this.end = n, this.unit = a || (J.cssNumber[i] ? "" : "px");
     },
     cur: function() {
-      var e = z.propHooks[this.prop];
-      return e && e.get ? e.get(this) : z.propHooks._default.get(this);
+      var e = L.propHooks[this.prop];
+      return e && e.get ? e.get(this) : L.propHooks._default.get(this);
     },
     run: function(e) {
-      var t, i = z.propHooks[this.prop];
+      var t, i = L.propHooks[this.prop];
       return this.pos = t = this.options.duration ? J.easing[this.easing](e, this.options.duration * e, 0, 1, this.options.duration) : e, 
       this.now = (this.end - this.start) * t + this.start, this.options.step && this.options.step.call(this.elem, this.now, this), 
-      i && i.set ? i.set(this) : z.propHooks._default.set(this), this;
+      i && i.set ? i.set(this) : L.propHooks._default.set(this), this;
     }
-  }, z.prototype.init.prototype = z.prototype, z.propHooks = {
+  }, L.prototype.init.prototype = L.prototype, L.propHooks = {
     _default: {
       get: function(e) {
         var t;
@@ -3102,14 +3102,14 @@
         J.fx.step[e.prop] ? J.fx.step[e.prop](e) : e.elem.style && (null != e.elem.style[J.cssProps[e.prop]] || J.cssHooks[e.prop]) ? J.style(e.elem, e.prop, e.now + e.unit) : e.elem[e.prop] = e.now;
       }
     }
-  }, z.propHooks.scrollTop = z.propHooks.scrollLeft = {
+  }, L.propHooks.scrollTop = L.propHooks.scrollLeft = {
     set: function(e) {
       e.elem.nodeType && e.elem.parentNode && (e.elem[e.prop] = e.now);
     }
   }, J.each([ "toggle", "show", "hide" ], function(e, t) {
     var i = J.fn[t];
     J.fn[t] = function(n, r, a) {
-      return null == n || "boolean" == typeof n || !e && J.isFunction(n) && J.isFunction(r) ? i.apply(this, arguments) : this.animate(L(t, !0), n, r, a);
+      return null == n || "boolean" == typeof n || !e && J.isFunction(n) && J.isFunction(r) ? i.apply(this, arguments) : this.animate(z(t, !0), n, r, a);
     };
   }), J.fn.extend({
     fadeTo: function(e, t, i, n) {
@@ -3139,9 +3139,9 @@
       });
     }
   }), J.each({
-    slideDown: L("show"),
-    slideUp: L("hide"),
-    slideToggle: L("toggle"),
+    slideDown: z("show"),
+    slideUp: z("hide"),
+    slideToggle: z("toggle"),
     fadeIn: {
       opacity: "show"
     },
@@ -3172,7 +3172,7 @@
     swing: function(e) {
       return .5 - Math.cos(e * Math.PI) / 2;
     }
-  }, J.timers = [], J.fx = z.prototype.init, J.fx.tick = function() {
+  }, J.timers = [], J.fx = L.prototype.init, J.fx.tick = function() {
     for (var e, t = J.timers, i = 0; t.length > i; i++) e = t[i], e() || t[i] !== e || t.splice(i--, 1);
     t.length || J.fx.stop();
   }, J.fx.timer = function(e) {
@@ -7199,7 +7199,7 @@ TWEEN.Tween = function(e) {
         this.$(".username").text(this._user.name);
       }
     }
-  }, d.setup_email = {
+  }, d.setup_verification = {
     errors: {
       "400": {
         weak_password: "Too short.",
@@ -7285,15 +7285,16 @@ TWEEN.Tween = function(e) {
         }
       }
     }
-  }, d.setup_twitter = {
+  }, d.setup_authenticate = {
     options: {
       onHideAfter: function() {
         this._oauth_ && (this._oauth_.abort(), this._oauth_ = null), this.destory();
       },
       events: {
-        "click .authorize": function() {
+        "click .xbtn-blue": function() {
+          var e = this._settings.browsing.identities[0].provider;
           this._oauth_ = i.ajax({
-            url: "/OAuth/Authenticate?provider=twitter",
+            url: "/OAuth/Authenticate?provider=" + e,
             type: "POST",
             dataType: "JSON",
             success: function(e) {
@@ -7307,15 +7308,15 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-su",
         title: "Set Up Account",
-        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>You’re browsing as identity underneath, please authorize through Twitter to set up your <span class="x-sign">EXFE</span> account.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="box identity"></div></div><div class="clearfix"><button class="pull-right xbtn-blue authorize">Authorize</button><a class="pull-right underline pointer cancel" data-dismiss="dialog">Cancel</a></div></fieldset></form>',
-        footer: ""
+        body: '<div class="shadow title">Welcome to <span class="x-sign">EXFE</span></div><form class="modal-form"><fieldset><legend>Please authenticate following identity to continue.</legend><div class="clearfix control-group"><div class="pull-right user-identity"><img class="avatar" src="" alt="" width="40" height="40" /><i class="provider"></i></div><div class="box identity"></div></div></fieldset></form>',
+        footer: '<button class="pull-right xbtn-blue">Authenticate</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
       onShowBefore: function(e) {
         var t = i(e.currentTarget).data("source");
         if (t) {
-          var n = t.identity;
-          this._tokenType = t.tokenType, this._originToken = t.originToken, this.$(".identity").text(s.printExtUserName(n)), 
-          this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
+          this._settings = t;
+          var n = t.browsing.identities[0], r = t.forward;
+          !r && (t.forward = "/"), this.$(".identity").text(s.printExtUserName(n)), this.$(".avatar").attr("src", n.avatar_filename).next().addClass("icon16-identity-" + n.provider), 
           this.$(".xbtn-siea").data("source", s.printExtUserName(n));
         }
       }
@@ -7353,7 +7354,7 @@ TWEEN.Tween = function(e) {
                 browsing_token: browsing_token,
                 mergeable_user: t.mergeable_user
               }), r.appendTo(i("#app-tmp")), r.trigger("click.dialog.data-api"), i(".modal-mi").css("top", 230);
-            } else window.location.href = "/";
+            } else window.location.reload();
           }, function() {});
         }
       },
@@ -12321,16 +12322,18 @@ TWEEN.Tween = function(e) {
 }), define("user", function(e) {
   "use strict";
   function t(e) {
-    var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = "/#" + d.printExtUserName(e.identities[0]);
-    s("#app-browsing-identity").remove(), n.attr("href", l), r.text(e.name || e.nickname).removeClass("browsing-identity"), 
-    t = h.compile(m.normal), o.length && o.remove(), e.profileLink = l, e.verifying = 1 === e.identities.length && "VERIFYING" === e.identities[0].status, 
+    var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.identities[0], c = "/#" + d.printExtUserName(l);
+    s("#app-browsing-identity").remove(), n.attr("href", c), r.text(e.name || e.nickname).removeClass("browsing-identity"), 
+    t = h.compile(m.normal), o.length && o.remove(), e.profileLink = c, e.verifying = 1 === e.identities.length && "VERIFYING" === l.status, 
     a.append(t(e)), delete e.profileLink, delete e.verifying;
   }
   function i(e) {
-    var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.browsing;
-    l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity")), 
+    var t, i = s("#app-user-menu"), n = s("#app-user-name"), r = n.find("span"), a = i.find(".dropdown-wrapper"), o = a.find(".user-panel"), l = e.browsing, c = l.identities[0];
+    l.isBrowsing = !0, s("#app-browsing-identity").remove(), s("#app-tmp").append(s('<div id="app-browsing-identity">').data("settings", e).attr("data-widget", "dialog").attr("data-dialog-type", "browsing_identity"));
+    var d = "setup_authenticate";
+    ("email" === c.provider || "phone" === c.provider) && (d = "setup_verification"), 
     n.attr("href", location.href), r.html("Browsing as: <span>" + (l.name || l.nickname) + "</span>").addClass("browsing-identity"), 
-    t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").data("source", {
+    t = h.compile(m.browsing_identity), o.length && o.remove(), a.append(t(e)), s("#app-user-menu").find(".setup").attr("data-dialog-type", d).data("source", {
       browsing: l,
       originToken: e.originToken,
       tokenType: e.tokenType,
@@ -12396,7 +12399,7 @@ TWEEN.Tween = function(e) {
   c.on("app:api:getuser", f), c.on("app:usermenu:updatenormal", t), c.on("app:usermenu:updatebrowsing", i);
   var m = {
     normal: '<div class="dropdown-menu user-panel"><div class="header"><div class="meta"><a class="pull-right avatar" href="{{profileLink}}" data-link><img width="40" height="40" alt="" src="{{avatar_filename}}" /></a><a class="attended" href="{{profileLink}}" data-link><span class="attended-nums">{{cross_quantity}}</span><span class="attended-x"><em class="x">·X·</em> attended</span></a></div></div><div class="body">{{#unless password}}<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword">Set <span class="x-sign">EXFE</span> password</div>{{/unless}}{{#if verifying}}<div class="merge verify" data-dialog-type="verification_{{identities.[0].provider}}" data-widget="dialog" data-identity-id="{{identities.[0].id}}"><strong>Verify</strong> identity</div>{{/if}}<div class="list"></div></div><div class="footer"><a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a <span class="x">·X·</span></a><div class="spliterline"></div><div class="actions"><a href="#" class="pull-right" id="app-signout">Sign out</a></div></div></div>',
-    browsing_identity: '<div class="dropdown-menu user-panel"><div class="header"><h2>Browsing Identity</h2></div><div class="body">{{#with browsing}}<div>You are browsing this page as {{capitalize identities.[0].provider}} identity:</div><div class="identity"><span class="pull-right avatar alt40"><img src="{{identities.[0].avatar_filename}}" width="20" height="20" alt="" /></span><i class="icon16-identity-{{identities.[0].provider}}"></i><span class="oblique">{{identities.[0].external_username}}</span></div>{{#if ../setup}}<div class="merge setup" data-user-action="SETUP" data-widget="dialog" data-dialog-type="setup_{{identities.[0].provider}}"><h5>Start</h5>new account with this identity</div>{{/if}}{{/with}}{{#unless setup}}<div class="orspliter hide">or</div><div class="merge signin" data-user-action="SIGNIN" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00"><h5>Authenticate</h5>to continue with this identity</div>{{/unless}}</div><div class="footer"></div></div>'
+    browsing_identity: '<div class="dropdown-menu user-panel"><div class="header"><h2>Browsing Identity</h2></div><div class="body">{{#with browsing}}<div>You are browsing this page as {{capitalize identities.[0].provider}} identity:</div><div class="identity"><span class="pull-right avatar alt40"><img src="{{identities.[0].avatar_filename}}" width="20" height="20" alt="" /></span><i class="icon16-identity-{{identities.[0].provider}}"></i><span class="oblique">{{identities.[0].external_username}}</span></div>{{#if ../setup}}<div class="merge setup" data-user-action="SETUP" data-widget="dialog"><h5>Start</h5>new account with this identity</div>{{/if}}{{/with}}{{#unless setup}}<div class="orspliter hide">or</div><div class="merge signin" data-user-action="SIGNIN" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00"><h5>Authenticate</h5>to continue with this identity</div>{{/unless}}</div><div class="footer"></div></div>'
   };
   h.registerHelper("ifConnected", function(e, t) {
     return h.helpers["if"].call(this, "CONNECTED" === e, t);
@@ -13435,12 +13438,12 @@ TWEEN.Tween = function(e) {
     }), Api.request("conversation", t, function(t) {
       S(t.conversation, e);
     });
-  }, z = function() {
-    O(!0);
   }, L = function() {
+    O(!0);
+  }, z = function() {
     t("#conversation-form span.avatar img").attr("src", curIdentity.avatar_filename), 
     t("#conversation-form").show(), t(".conversation-timeline").html(""), t(".cross-conversation").slideDown(233), 
-    $ = "", M = {}, O(), convTimer = setInterval(z, 233e3);
+    $ = "", M = {}, O(), convTimer = setInterval(L, 233e3);
   }, H = function(e, i) {
     Cross.id = e.id, Cross.title = e.title, Cross.description = e.description, Cross.time = e.time, 
     Cross.place = e.place, Cross.widget = e.widget, Cross.exfee_id = e.exfee.id, Exfee = e.exfee, 
@@ -13450,7 +13453,7 @@ TWEEN.Tween = function(e) {
       curIdentity = ExfeUtilities.clone(Exfee.invitations[n].identity);
       break;
     }
-    P(), L();
+    P(), z();
   }, R = function(e) {
     Api.request("getCross", {
       resources: {
@@ -13612,7 +13615,7 @@ var MD5 = function(e) {
     }
     return t;
   }
-  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, D = 4, A = 11, P = 16, O = 23, z = 6, L = 10, H = 15, R = 21;
+  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, D = 4, A = 11, P = 16, O = 23, L = 6, z = 10, H = 15, R = 21;
   for (e = p(e), k = u(e), _ = 1732584193, b = 4023233417, x = 2562383102, w = 271733878, 
   f = 0; k.length > f; f += 16) m = _, g = b, v = x, y = w, _ = o(_, b, x, w, k[f + 0], C, 3614090360), 
   w = o(w, _, b, x, k[f + 1], E, 3905402710), x = o(x, w, _, b, k[f + 2], T, 606105819), 
@@ -13638,14 +13641,14 @@ var MD5 = function(e) {
   w = c(w, _, b, x, k[f + 0], A, 3936430074), x = c(x, w, _, b, k[f + 3], P, 3572445317), 
   b = c(b, x, w, _, k[f + 6], O, 76029189), _ = c(_, b, x, w, k[f + 9], D, 3654602809), 
   w = c(w, _, b, x, k[f + 12], A, 3873151461), x = c(x, w, _, b, k[f + 15], P, 530742520), 
-  b = c(b, x, w, _, k[f + 2], O, 3299628645), _ = d(_, b, x, w, k[f + 0], z, 4096336452), 
-  w = d(w, _, b, x, k[f + 7], L, 1126891415), x = d(x, w, _, b, k[f + 14], H, 2878612391), 
-  b = d(b, x, w, _, k[f + 5], R, 4237533241), _ = d(_, b, x, w, k[f + 12], z, 1700485571), 
-  w = d(w, _, b, x, k[f + 3], L, 2399980690), x = d(x, w, _, b, k[f + 10], H, 4293915773), 
-  b = d(b, x, w, _, k[f + 1], R, 2240044497), _ = d(_, b, x, w, k[f + 8], z, 1873313359), 
-  w = d(w, _, b, x, k[f + 15], L, 4264355552), x = d(x, w, _, b, k[f + 6], H, 2734768916), 
-  b = d(b, x, w, _, k[f + 13], R, 1309151649), _ = d(_, b, x, w, k[f + 4], z, 4149444226), 
-  w = d(w, _, b, x, k[f + 11], L, 3174756917), x = d(x, w, _, b, k[f + 2], H, 718787259), 
+  b = c(b, x, w, _, k[f + 2], O, 3299628645), _ = d(_, b, x, w, k[f + 0], L, 4096336452), 
+  w = d(w, _, b, x, k[f + 7], z, 1126891415), x = d(x, w, _, b, k[f + 14], H, 2878612391), 
+  b = d(b, x, w, _, k[f + 5], R, 4237533241), _ = d(_, b, x, w, k[f + 12], L, 1700485571), 
+  w = d(w, _, b, x, k[f + 3], z, 2399980690), x = d(x, w, _, b, k[f + 10], H, 4293915773), 
+  b = d(b, x, w, _, k[f + 1], R, 2240044497), _ = d(_, b, x, w, k[f + 8], L, 1873313359), 
+  w = d(w, _, b, x, k[f + 15], z, 4264355552), x = d(x, w, _, b, k[f + 6], H, 2734768916), 
+  b = d(b, x, w, _, k[f + 13], R, 1309151649), _ = d(_, b, x, w, k[f + 4], L, 4149444226), 
+  w = d(w, _, b, x, k[f + 11], z, 3174756917), x = d(x, w, _, b, k[f + 2], H, 718787259), 
   b = d(b, x, w, _, k[f + 9], R, 3951481745), _ = i(_, m), b = i(b, g), x = i(x, v), 
   w = i(w, y);
   var F = h(_) + h(b) + h(x) + h(w);
@@ -14074,7 +14077,7 @@ define("lightsaber", function(e, t, i) {
       "SET_PASSWORD" === p && (g = "forgot_password.html"), t.render(g, function(e) {
         $("#app-main").append(e), l && !c ? (r.find(o.identities, function(e) {
           return e.id === h ? !0 : void 0;
-        }), "VERIFY" === p ? (v = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email" data-redirect="true">'), 
+        }), "VERIFY" === p ? (v = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_verification" data-redirect="true">'), 
         v.data("source", {
           browsing_user: o,
           originToken: a,
