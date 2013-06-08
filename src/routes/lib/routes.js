@@ -613,13 +613,15 @@ define('routes', function (require, exports, module) {
            */
 
           else if (
-            ((authorization && user_id === browsing_user_id)
-            ||
-            (!authorization && (authorization = auth))
-            ||
-            (authorization && !auth))
+              (
+                (authorization && user_id === browsing_user_id)
+                ||
+                (!authorization && (authorization = auth))
+              )
+              && browsing_user_id > 0
             ) {
-            //Store.set('authorization', session.authorization = authorization);
+
+            Store.set('authorization', session.authorization = authorization);
             Bus.once('app:user:signin:after', function () {
               res.redirect('/#!' + cross.id);
             });
