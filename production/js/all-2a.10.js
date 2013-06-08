@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-08 11:06:32 */
+/*! desktop@2a.10 2013-06-08 11:06:14 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8520,7 +8520,7 @@ TWEEN.Tween = function(e) {
       this.defaultOptions.zoom = this.zoomN = this.hasLocation ? this.zoom12 : this.zoom2;
     },
     removeMarker: function(e) {
-      e.setMap(null), e = null;
+      e && (e.setMap(null), e = null);
     },
     clearMarkers: function() {
       var e, t = this.redMarkers, i = this.removeMarker;
@@ -8577,7 +8577,7 @@ TWEEN.Tween = function(e) {
           }, 0);
         }
         a.event.trigger(r, "resize"), !t._placeMarker && s.length && (t._placeMarker = s[0]), 
-        r.setCenter(t._placeMarker ? t._placeMarker.getPosition() : t._userMarker.getPosition()), 
+        r.setCenter(t._placeMarker ? t._placeMarker.getPosition() : t._userMarker ? t._userMarker.getPosition() : null), 
         i.placeInput.$element.focusend();
       }
     },
