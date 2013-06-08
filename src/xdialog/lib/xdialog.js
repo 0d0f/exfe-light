@@ -51,7 +51,7 @@ define('xdialog', function (require, exports) {
 
       onShowBefore: function (e) {
         var source = $(e.currentTarget).data('source');
-        if (source) {
+        if (typeof source === 'string') {
           this.$('#identity').val(source);
         } else {
           // 读取本地存储 user infos

@@ -10613,10 +10613,6 @@ body {
   margin: 0;
 }
 
-.x-forbidden .token-expired {
-  color: #E52E53;
-}
-
 .x-forbidden .title {
   padding: 40px 0 20px;
   font-size: 34px;
@@ -10632,6 +10628,10 @@ body {
   color: #333;
 }
 
+.x-forbidden .token-expired {
+  color: #E52E53;
+}
+
 .x-forbidden .big-x {
   position: absolute;
   top: 20px;
@@ -10642,18 +10642,13 @@ body {
 }
 
 .x-forbidden .details {
-  margin-top: 40px;
-  margin-left: 140px;
-  text-align: left;
-}
-
-.x-forbidden .details .info {
-  width: 360px;
-  margin-right: 30px;
+  width: 410px;
+  margin: 40px auto 0;
 }
 
 .x-forbidden .details .identity {
-  padding-top: 20px;
+  padding: 20px 0 0 80px;
+  text-align: left;
 }
 
 .x-forbidden .details .identity-name {
@@ -10662,6 +10657,12 @@ body {
   line-height: 24px;
   color: #4c4c4c;
   vertical-align: text-top;
+}
+
+#forbidden .authenticate {
+  width: 150px;
+  height: 24px;
+  margin-top: 50px;
 }
 
 .x-invite .title,
