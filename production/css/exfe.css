@@ -10005,9 +10005,10 @@ body {
   text-decoration: underline;
 }
 
-.settings-panel .user-infos .exfe-app {
+.settings-panel .user-infos .exfe-app a {
   font-size: 12px;
   color: #7f7f7f;
+  text-decoration: none;
 }
 
 .settings-panel .identities-trash {
