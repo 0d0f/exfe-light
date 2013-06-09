@@ -482,7 +482,7 @@ define('routes', function (require, exports, module) {
 
           var clicked = false;
           var provider = identity.provider;
-          $('.xbtn-authenticate').data('provider', provider).on('click', function (e) {
+          $('.xbtn-authenticate').attr('data-oauth', provider).on('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             if (clicked) {
@@ -550,7 +550,7 @@ define('routes', function (require, exports, module) {
       , function (d) {
           var auth = d.authorization
             , browsing_identity = d.browsing_identity
-            , browsing_user_id = browsing_identity && browsing_identity.connected_user_id
+            , browsing_user_id = (auth && auth.user_id) || (browsing_identity && browsing_identity.connected_user_id)
             , cross_access_token = d.cross_access_token
             , read_only = d.read_only
             , action = d.action

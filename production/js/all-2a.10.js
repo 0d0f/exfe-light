@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 01:06:58 */
+/*! desktop@2a.10 2013-06-09 02:06:31 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15304,7 +15304,7 @@ define("lightsaber", function(e, t, i) {
         $(".invite-to").find("img").attr("src", u.avatar_filename).parent().next().text(o.printExtUserName(u)), 
         $(".invite-from").find("img").attr("src", h.avatar_filename).parent().next().text(o.printExtUserName(h));
         var t = $(".x-invite").find(".redirecting"), i = t.next(), a = !1, r = u.provider;
-        $(".xbtn-authenticate").data("provider", r).on("click", function(e) {
+        $(".xbtn-authenticate").attr("data-oauth", r).on("click", function(e) {
           if (e.stopPropagation(), e.preventDefault(), !a) {
             var n = $(this).data("oauth");
             $.ajax({
@@ -15337,7 +15337,7 @@ define("lightsaber", function(e, t, i) {
       params: n,
       data: a
     }, function(t) {
-      var i = t.authorization, n = t.browsing_identity, a = n && n.connected_user_id, r = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
+      var i = t.authorization, n = t.browsing_identity, a = i && i.user_id || n && n.connected_user_id, r = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
       s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === f && r && (o || (o = {}), 
       c = o[d] = r, l.set("cats", o));
       var y = function() {
