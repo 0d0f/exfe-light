@@ -481,7 +481,8 @@ define('routes', function (require, exports, module) {
             , $fail = $redirecting.next();
 
           var clicked = false;
-          $('.xbtn-authenticate').on('click', function (e) {
+          var provider = identity.provider;
+          $('.xbtn-authenticate').attr('data-oauth', provider).on('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             if (clicked) {

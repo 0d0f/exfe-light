@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 05:06:54 */
+/*! desktop@2a.10 2013-06-09 01:06:58 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15303,8 +15303,8 @@ define("lightsaber", function(e, t, i) {
         $(".details .identity-name").text(l.name)) : $(".please-signin").removeClass("hide"), 
         $(".invite-to").find("img").attr("src", u.avatar_filename).parent().next().text(o.printExtUserName(u)), 
         $(".invite-from").find("img").attr("src", h.avatar_filename).parent().next().text(o.printExtUserName(h));
-        var t = $(".x-invite").find(".redirecting"), i = t.next(), a = !1;
-        $(".xbtn-authenticate").on("click", function(e) {
+        var t = $(".x-invite").find(".redirecting"), i = t.next(), a = !1, r = u.provider;
+        $(".xbtn-authenticate").data("provider", r).on("click", function(e) {
           if (e.stopPropagation(), e.preventDefault(), !a) {
             var n = $(this).data("oauth");
             $.ajax({
