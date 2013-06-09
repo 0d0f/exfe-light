@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 01:06:49 */
+/*! desktop@2a.10 2013-06-09 02:06:48 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -14190,7 +14190,7 @@ define("lightsaber", function(e, t, i) {
       params: n,
       data: r
     }, function(t) {
-      var i = t.authorization, n = t.browsing_identity, r = n && n.connected_user_id, a = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
+      var i = t.authorization, n = t.browsing_identity, r = i && i.user_id || n && n.connected_user_id, a = t.cross_access_token, f = t.read_only, g = t.action, v = t.cross;
       s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0), !1 === f && a && (o || (o = {}), 
       c = o[d] = a, l.set("cats", o));
       var y = function() {
