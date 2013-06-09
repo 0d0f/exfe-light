@@ -1910,6 +1910,12 @@ define(function (require, exports, module) {
         } else {
             $('.cross-dp.cross-place .xbtn-more').hide();
         }
+
+        if (!place.description && !place.title) {
+            $('.cross-dp.cross-place > address').text('Choose a place.').css('display', 'block')
+        } else {
+            $('.cross-dp.cross-place > address').css('display', 'none')
+        }
     };
 
 

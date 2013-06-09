@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.10 2013-06-09 02:06:48 */
+/*! desktop@2a.10 2013-06-09 02:06:12 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -13359,7 +13359,8 @@ TWEEN.Tween = function(e) {
     t(".cross-dp.cross-place > address").toggleClass("more", !0), t(".cross-dp.cross-place .xbtn-more").toggleClass("xbtn-less", !1), 
     e.description ? t(".cross-dp.cross-place > address").html(ExfeUtilities.escape(e.description).replace(/\r\n|\r|\n/g, "<br>")).toggleClass("gray", !1) : t(".cross-dp.cross-place > address").html("Choose a place.").toggleClass("gray", !0), 
     t(".cross-dp.cross-place > address").height() > 80 ? (t(".cross-dp.cross-place > address").toggleClass("more", !1), 
-    t(".cross-dp.cross-place .xbtn-more").show()) : t(".cross-dp.cross-place .xbtn-more").hide();
+    t(".cross-dp.cross-place .xbtn-more").show()) : t(".cross-dp.cross-place .xbtn-more").hide(), 
+    e.description || e.title ? t(".cross-dp.cross-place > address").css("display", "none") : t(".cross-dp.cross-place > address").text("Choose a place.").css("display", "block");
   }, E = function() {
     window.GatherExfeeWidget.showAll(!0), window.CrossExfeeWidget.showAll(!1, !0);
   }, T = function() {
