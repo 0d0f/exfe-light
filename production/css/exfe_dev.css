@@ -8590,6 +8590,7 @@ body {
 }
 
 .cross-dp h2 {
+  margin-bottom: 0;
   font-size: 34px;
   font-weight: 300;
   line-height: 40px;
