@@ -1009,7 +1009,8 @@ define('mappanel', function (require) {
         if (marker) {
           this.selectMarker(marker);
           position = marker.getPosition();
-          this._map.setCenter(position);
+          //this._map.setCenter(position);
+          this._map.panTo(position);
         }
 
         if (this.sizeStatus) {

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-18 06:06:11 */
+/*! desktop@2a.11 2013-06-18 07:06:50 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8480,7 +8480,7 @@ TWEEN.Tween = function(e) {
     showMarker: function(e, t) {
       var i, n;
       i = t && -1 === --e ? this._placeMarker : this.redMarkers[e], i && (this.selectMarker(i), 
-      n = i.getPosition(), this._map.setCenter(n)), this.sizeStatus && (this._map.setZoom(this.zoomN = this.zoom16), 
+      n = i.getPosition(), this._map.panTo(n)), this.sizeStatus && (this._map.setZoom(this.zoomN = this.zoom16), 
       this.panToRight());
     },
     selectMarker: function(e) {
