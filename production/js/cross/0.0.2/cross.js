@@ -1553,8 +1553,10 @@ define(function (require, exports, module) {
                 case 'exfee':
                     Editing = firstEditArea;
             }
-            if ((event.type === 'click' && (Editing || !Cross.id))
-              || event.type === 'dblclick') {
+
+            // if ((event.type === 'click' && (Editing || !Cross.id))
+            //   || event.type === 'dblclick') {
+            if (event.type === 'click' || (event.type === 'dblclick' && firstEditArea === 'background')) {
                 Editing = firstEditArea;
                 while (domWidget && !Editing && domWidget.tagName !== 'BODY') {
                     domWidget = domWidget.parentNode;
@@ -1581,7 +1583,9 @@ define(function (require, exports, module) {
 
     var Editable = function() {
         $('body').on('click save-cross', EditCross);
-        $('body').on('dblclick.data-link', '[editarea]', EditCross);
+        //$('body').on('dblclick.data-link', '[editarea]', EditCross);
+        $('body').on('click.data-link', '[editarea]', EditCross);
+        $('body').on('dblclick.data-link', '[editarea="background"]', EditCross);
         $('.cross-title .edit').bind('focus keydown keyup blur', function(event) {
             if (event.type === 'keydown') {
                 switch (event.which) {

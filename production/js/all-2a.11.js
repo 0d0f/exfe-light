@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-18 03:06:13 */
+/*! desktop@2a.11 2013-06-18 05:06:06 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8158,11 +8158,13 @@ TWEEN.Tween = function(e) {
       var c = function() {
         e = {
           coords: s
-        }, l || (t = e), i.emit("geos", e, t, l);
+        }, l || (t = e), i && i.emit && i.emit("geos", e, t, l);
       };
       this.isGeoSupported ? h.getCurrentPosition(function(n) {
         e = n, l || (t = e), i.emit("geos", e, t, l);
-      }, c) : c();
+      }, c, {
+        enableHighAccuracy: !0
+      }) : c();
     },
     showBefore: function() {
       this.element.attr("editarea", "map-panel");
@@ -13202,7 +13204,7 @@ TWEEN.Tween = function(e) {
          case "exfee":
           Editing = s;
         }
-        if ("click" === i.type && (Editing || !Cross.id) || "dblclick" === i.type) for (Editing = s; r && !Editing && "BODY" !== r.tagName; ) r = r.parentNode, 
+        if ("click" === i.type || "dblclick" === i.type && "background" === s) for (Editing = s; r && !Editing && "BODY" !== r.tagName; ) r = r.parentNode, 
         Editing = t(r).attr("editarea"); else Editing = "";
       }
       if ("background" === Editing) a.background[1](), Editing = n; else {
@@ -13212,8 +13214,8 @@ TWEEN.Tween = function(e) {
       }
     }
   }, h = function() {
-    t("body").on("click save-cross", u), t("body").on("dblclick.data-link", "[editarea]", u), 
-    t(".cross-title .edit").bind("focus keydown keyup blur", function(e) {
+    t("body").on("click save-cross", u), t("body").on("click.data-link", "[editarea]", u), 
+    t("body").on("dblclick.data-link", '[editarea="background"]', u), t(".cross-title .edit").bind("focus keydown keyup blur", function(e) {
       if ("keydown" === e.type) switch (e.which) {
        case 13:
         e.shiftKey || (e.preventDefault(), u());
