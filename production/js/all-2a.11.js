@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-18 05:06:46 */
+/*! desktop@2a.11 2013-06-18 06:06:47 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -15373,7 +15373,7 @@ define("lightsaber", function(e, t, i) {
         page: "cross",
         code: 1
       }); else {
-        if ((p && m === a || !p && (p = i)) && a > 0) return l.set("authorization", h.authorization = p), 
+        if ((p && m === a || !p && (p = i)) && a > 0 || p && !f && !n) return l.set("authorization", h.authorization = p), 
         s.once("app:user:signin:after", function() {
           e.redirect("/#!" + v.id);
         }), s.emit("app:user:signin", p.token, p.user_id), void 0;
