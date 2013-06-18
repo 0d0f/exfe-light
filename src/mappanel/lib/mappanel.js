@@ -125,7 +125,7 @@ define('mappanel', function (require) {
         this.element.on('click.mappanel', '.place-submit', function () {
           // NOTE: 先用老事件触发保存
           Cross.place = self.place;
-          $('body').click();
+          $('body').trigger('save-cross');
         });
 
         this.element.on('keydown.mappanel', proxy(this.keydown, this));

@@ -1360,7 +1360,7 @@ define(function (require, exports, module) {
             window.location = '/';
         });
         $('#cross-form-gather').bind('click', function() {
-            $('body').trigger('click');
+            $('body').trigger('save-cross');
             if (curIdentity) {
                 if (!$(this).hasClass('disabled')) {
                     $(this)
@@ -1580,7 +1580,7 @@ define(function (require, exports, module) {
 
 
     var Editable = function() {
-        $('body').on('click', EditCross);
+        $('body').on('click save-cross', EditCross);
         $('body').on('dblclick.data-link', '[editarea]', EditCross);
         $('.cross-title .edit').bind('focus keydown keyup blur', function(event) {
             if (event.type === 'keydown') {
@@ -1635,6 +1635,22 @@ define(function (require, exports, module) {
             var moreOrLess = !$(this).hasClass('xbtn-less');
             $('.cross-description').toggleClass('more', moreOrLess);
             $(this).toggleClass('xbtn-less', moreOrLess);
+        });
+        // listen `esc` `ctrl+enter`
+        $('.cross-description .editing').on('keydown', function(e) {
+            var kc = e.keyCode;
+            switch (kc) {
+                case 27:
+                    $(this).val(Cross.description);
+                    $('body').trigger('save-cross');
+                break;
+                case 13:
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        $('body').trigger('save-cross');
+                    }
+                break;
+            }
         });
         $('.cross-rsvp').bind('mouseenter mouseover mouseleave', function(event) {
             if (!readOnly) {
