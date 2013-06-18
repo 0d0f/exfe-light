@@ -296,10 +296,10 @@ define('mappanel', function (require) {
           placeGeo = { coords: { latitude: place.lat, longitude: place.lng, title: place.title } };
         }
 
-        var error = function () {
+        var error = function (/*perror*/) {
           userGeo = { coords: LOCATION };
           hasLatLng || (placeGeo = userGeo);
-          self.emit('geos', userGeo, placeGeo, hasLatLng);
+          self && self.emit && self.emit('geos', userGeo, placeGeo, hasLatLng);
         };
 
         if (this.isGeoSupported) {
@@ -310,7 +310,10 @@ define('mappanel', function (require) {
                 hasLatLng || (placeGeo = userGeo);
                 self.emit('geos', userGeo, placeGeo, hasLatLng);
               },
-              error
+              error,
+              {
+                enableHighAccuracy: true
+              }
             );
         }
         else {
