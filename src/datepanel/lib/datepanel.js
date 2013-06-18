@@ -151,7 +151,7 @@ define('datepanel', function (require/*, exports, module*/) {
         if (s) {
           this.eftime.origin = s;
         }
-        $('body').trigger('click');
+        $('body').trigger('save-cross');
       }
 
     , revert: function () {
