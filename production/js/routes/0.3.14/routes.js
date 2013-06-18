@@ -615,11 +615,16 @@ define('routes', function (require, exports, module) {
 
           else if (
               (
-                (authorization && user_id === browsing_user_id)
-                ||
-                (!authorization && (authorization = auth))
+                (
+                  (authorization && user_id === browsing_user_id)
+                  ||
+                  (!authorization && (authorization = auth))
+                )
+                && browsing_user_id > 0
               )
-              && browsing_user_id > 0
+
+              // 如果本地没有 browsing_identity 且 不是只读状态 且有 authorization，则正常登录
+              || (authorization && !read_only && !browsing_identity)
             ) {
 
             Store.set('authorization', session.authorization = authorization);
