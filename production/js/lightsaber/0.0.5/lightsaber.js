@@ -15,7 +15,13 @@ define('lightsaber', function (require, exports, module) {
    */
   var Emitter = require('emitter'),
       $ = require('jquery') || require('zepto'),
-      proxy = $.proxy;
+      // proxy = $.proxy;
+      proxy = function (f, c) {
+        if (!f) { return; }
+        return function cb(e) {
+          return f.call(c, e);
+        };
+      };
 
   var location = window.location,
       history = window.history,
@@ -24,7 +30,7 @@ define('lightsaber', function (require, exports, module) {
 
   // http://cacheandquery.com/blog/category/technology/
   var _firstLoad = false;
-  $(window).on('load', function (e) {
+  $(window).on('load', function () {
     _firstLoad = true;
     setTimeout(function () { _firstLoad = false; }, 0);
   });
@@ -171,8 +177,7 @@ define('lightsaber', function (require, exports, module) {
   };
 
   proto.render = function (name, options, fn) {
-    var self = this
-      , opts = {}
+    var opts = {}
       , cache = this.cache
       , engine = this.engine
       , view;
@@ -274,6 +279,10 @@ define('lightsaber', function (require, exports, module) {
    * @api private
    */
   proto.handle = function (req, res, out) {
+    if (!req.enableFullUrlPath && req.fullpath !== req.path) {
+      return;
+    }
+
     var stack = this.stack
       , removed = ''
       , slashAdded = false
@@ -356,12 +365,12 @@ define('lightsaber', function (require, exports, module) {
 
       if (this.historySupport) {
         //$(window).on('popstate', { app: this }, this.change);
-        $(window).on('popstate', proxy(this.change, this));
-        //window.addEventListener('popstate', this.change, false);
+        // $(window).on('popstate', proxy(this.change, this));
+        window.addEventListener('popstate', proxy(this.change, this), false);
       } else {
         //$(window).on('hashchange', { app: this }, this.change);
-        $(window).on('hashchange', proxy(this.change, this));
-        //window.addEventListener('hashchange', this.change, false);
+        // $(window).on('hashchange', proxy(this.change, this));
+        window.addEventListener('hashchange', proxy(this.change, this), false);
       }
 
     }
@@ -377,15 +386,6 @@ define('lightsaber', function (require, exports, module) {
   proto.change = function (e) {
     if (_firstLoad) return _firstLoad = false;
 
-    //console.dir(e.originalEvent);
-
-    /*
-    var app = e.data.app
-      , req = app.request
-      , res = app.response
-      , url = req.url;
-    */
-
     var app = this
       , req = app.request
       , res = app.response
@@ -393,14 +393,13 @@ define('lightsaber', function (require, exports, module) {
 
     req.updateUrl();
 
-    if ('/' !== url && url === req.url) return;
+    //if ('/' !== url && url === req.url) return;
+    if (url === req.url) return;
 
     app.handle(req, res);
 
     e.stopPropagation()
     e.preventDefault()
-
-    //delete e.data;
 
     return false;
   };
@@ -508,7 +507,8 @@ define('lightsaber', function (require, exports, module) {
     this.state.id = uuid();
     this.pushState();
 
-    $(window).triggerHandler('popstate');
+    //$(window).triggerHandler('popstate');
+    this.app.change();
   };
 
   // save state
@@ -834,12 +834,12 @@ define('lightsaber', function (require, exports, module) {
   function locals(obj) {
     obj.viewCallbacks = obj.viewCallbacks || [];
 
-    function locals(obj) {
-      for (var key in obj) locals[key] = obj[key];
+    function _locals(obj) {
+      for (var key in obj) _locals[key] = obj[key];
       return obj;
     }
 
-    return locals;
+    return _locals;
   }
 
   // merge

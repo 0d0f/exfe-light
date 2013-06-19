@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-07 05:06:15 */
+/*! mobile@2a.5 2013-06-19 10:06:27 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -3354,7 +3354,11 @@ TWEEN.Tween = function(t) {
       }), n = n || "", "" + (a ? "" : n) + "(?:" + (a ? n : "") + (i || "") + (s || i && "([^/.]+?)" || "([^/]+?)") + ")" + (a || "") + (o ? "(/*)?" : "");
     }).replace(/([\/.])/g, "\\$1").replace(/\*/g, "(.*)"), RegExp("^" + t + "$", n ? "" : "i"));
   }
-  var y, b = t("emitter"), w = t("jquery") || t("zepto"), k = w.proxy, x = window.location, _ = window.history, E = "/", C = !1;
+  var y, b = t("emitter"), w = t("jquery") || t("zepto"), k = function(t, e) {
+    return t ? function(n) {
+      return t.call(e, n);
+    } : void 0;
+  }, x = window.location, _ = window.history, E = "/", C = !1;
   w(window).on("load", function() {
     C = !0, setTimeout(function() {
       C = !1;
@@ -3440,19 +3444,21 @@ TWEEN.Tween = function(t) {
         n(h);
       }
     }
-    var i = this.stack, r = "", s = !1, a = 0;
-    n();
+    if (t.enableFullUrlPath || t.fullpath === t.path) {
+      var i = this.stack, r = "", s = !1, a = 0;
+      n();
+    }
   }, S.run = function(t) {
     this.emit("launch"), t = t || {};
     var e = this.request, n = this.response;
     this.running || (this.running = !0, !1 === t.dispatch && this.disable("dispatch"), 
-    !1 !== t.popstate && (this.historySupport ? w(window).on("popstate", k(this.change, this)) : w(window).on("hashchange", k(this.change, this))), 
+    !1 !== t.popstate && (this.historySupport ? window.addEventListener("popstate", k(this.change, this), !1) : window.addEventListener("hashchange", k(this.change, this), !1)), 
     this.disabled("dispatch") || (this.handle(e, n), this.emit("launched")));
   }, S.change = function(t) {
     if (C) return C = !1;
     var e = this, n = e.request, i = e.response, r = n.url;
-    return n.updateUrl(), "/" === r || r !== n.url ? (e.handle(n, i), t.stopPropagation(), 
-    t.preventDefault(), !1) : void 0;
+    return n.updateUrl(), r !== n.url ? (e.handle(n, i), t.stopPropagation(), t.preventDefault(), 
+    !1) : void 0;
   }, S.error = function(t, e) {
     var n = Error(e);
     return n.status = t, n;
@@ -3476,7 +3482,7 @@ TWEEN.Tween = function(t) {
     return arguments.length, t = arguments[0], "back" === t || "forward" === t ? (_[t](), 
     void 0) : y ? (e = arguments[1], n = arguments[2] || {}, this.path = t, this.title = e || "EXFE.COM", 
     document.title = this.title, this.state = n, this.state.id = h(), this.pushState(), 
-    w(window).triggerHandler("popstate"), void 0) : (this.location(t), void 0);
+    this.app.change(), void 0) : (this.location(t), void 0);
   }, S.save = function() {
     _.replaceState(this.state, this.title, this.path);
   }, S.pushState = function() {
