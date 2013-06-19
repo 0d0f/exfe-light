@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-19 04:06:19 */
+/*! desktop@2a.11 2013-06-19 10:06:58 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -13754,7 +13754,11 @@ define("lightsaber", function(e, t, i) {
       }), i = i || "", "" + (s ? "" : i) + "(?:" + (s ? i : "") + (n || "") + (a || n && "([^/.]+?)" || "([^/]+?)") + ")" + (s || "") + (o ? "(/*)?" : "");
     }).replace(/([\/.])/g, "\\$1").replace(/\*/g, "(.*)"), RegExp("^" + e + "$", i ? "" : "i"));
   }
-  var y, _ = e("emitter"), b = e("jquery") || e("zepto"), x = b.proxy, w = window.location, k = window.history, C = "/", E = !1;
+  var y, _ = e("emitter"), b = e("jquery") || e("zepto"), x = function(e, t) {
+    return e ? function(i) {
+      return e.call(t, i);
+    } : void 0;
+  }, w = window.location, k = window.history, C = "/", E = !1;
   b(window).on("load", function() {
     E = !0, setTimeout(function() {
       E = !1;
@@ -13840,19 +13844,21 @@ define("lightsaber", function(e, t, i) {
         i(u);
       }
     }
-    var n = this.stack, r = "", a = !1, s = 0;
-    i();
+    if (e.enableFullUrlPath || e.fullpath === e.path) {
+      var n = this.stack, r = "", a = !1, s = 0;
+      i();
+    }
   }, T.run = function(e) {
     this.emit("launch"), e = e || {};
     var t = this.request, i = this.response;
     this.running || (this.running = !0, !1 === e.dispatch && this.disable("dispatch"), 
-    !1 !== e.popstate && (this.historySupport ? b(window).on("popstate", x(this.change, this)) : b(window).on("hashchange", x(this.change, this))), 
+    !1 !== e.popstate && (this.historySupport ? window.addEventListener("popstate", x(this.change, this), !1) : window.addEventListener("hashchange", x(this.change, this), !1)), 
     this.disabled("dispatch") || (this.handle(t, i), this.emit("launched")));
   }, T.change = function(e) {
     if (E) return E = !1;
     var t = this, i = t.request, n = t.response, r = i.url;
-    return i.updateUrl(), "/" === r || r !== i.url ? (t.handle(i, n), e.stopPropagation(), 
-    e.preventDefault(), !1) : void 0;
+    return i.updateUrl(), r !== i.url ? (t.handle(i, n), e.stopPropagation(), e.preventDefault(), 
+    !1) : void 0;
   }, T.error = function(e, t) {
     var i = Error(t);
     return i.status = e, i;
@@ -13876,7 +13882,7 @@ define("lightsaber", function(e, t, i) {
     return arguments.length, e = arguments[0], "back" === e || "forward" === e ? (k[e](), 
     void 0) : y ? (t = arguments[1], i = arguments[2] || {}, this.path = e, this.title = t || "EXFE.COM", 
     document.title = this.title, this.state = i, this.state.id = u(), this.pushState(), 
-    b(window).triggerHandler("popstate"), void 0) : (this.location(e), void 0);
+    this.app.change(), void 0) : (this.location(e), void 0);
   }, T.save = function() {
     k.replaceState(this.state, this.title, this.path);
   }, T.pushState = function() {
