@@ -1271,7 +1271,9 @@ define(function (require, exports, module) {
             widget : [{image : '', widget_id : 0, id : 0, type : 'Background'}],
             relative : {id : 0, relation : ''}, type : 'Cross'
         },
-        rawExfee   = {id : 0, type : 'Exfee', invitations : []};
+        rawExfee   = {id : 0, type : 'Exfee', invitations : []},
+        // 是否自动填充 title 框: true => 自动
+        autoSetTitle = false;
 
 
     var SaveExfee = function(refresh) {
@@ -1305,6 +1307,19 @@ define(function (require, exports, module) {
     var ExfeeCallback = function(refresh) {
         ShowExfee();
         SaveExfee(refresh);
+        if (autoSetTitle) {
+            var title = '·X· ', n = 3, names = [], invit, identity;
+            for (var i = 0; (invit = Exfee.invitations[i++]) && (identity = invit.identity);) {
+                if (invit.rsvp_status !== 'REMOVED' && n--) {
+                    names.push(identity.name);
+                }
+                if (0 == n) {
+                    break;
+                }
+            }
+            title += names.join(', ');
+            ChangeTitle(title);
+        }
     };
 
 
@@ -1359,9 +1374,14 @@ define(function (require, exports, module) {
         $('#cross-form-discard').bind('click', function() {
             window.location = '/';
         });
-        $('#cross-form-gather').bind('click', function() {
-            $('body').trigger('save-cross');
+        $('#cross-form-gather').bind('click', function (e) {
+            //$('body').trigger('save-cross');
             if (curIdentity) {
+
+                if (JSON.stringify(InitCross) === JSON.stringify(Cross) && Exfee.invitations.length === 1) {
+                    return false;
+                }
+
                 if (!$(this).hasClass('disabled')) {
                     $(this)
                         .prop('disabled', true)
@@ -1402,7 +1422,10 @@ define(function (require, exports, module) {
 
     var GatherFormInit = function() {
         var objGatherTitle = $('#gather-title');
-        objGatherTitle.bind('focus keydown keyup blur', function(event) {
+        objGatherTitle.on('focus keydown keyup blur', function(event) {
+            if (event.type === 'keydown') {
+                autoSetTitle = false;
+            }
             ChangeTitle(objGatherTitle.val(), 'gather');
         });
     };
@@ -1588,6 +1611,7 @@ define(function (require, exports, module) {
         $('body').on('dblclick.data-link', '[editarea="background"]', EditCross);
         $('.cross-title .edit').bind('focus keydown keyup blur', function(event) {
             if (event.type === 'keydown') {
+                autoSetTitle = false;
                 switch (event.which) {
                     case 13:
                         if (!event.shiftKey) {
@@ -1715,7 +1739,7 @@ define(function (require, exports, module) {
 
     var fixTitle = function() {
         if (!Cross.title.length) {
-            Cross.title = curIdentity ? ('Meet ' + curIdentity.name) : 'Gather a ·X·';
+            Cross.title = '·X· ' + (curIdentity ? curIdentity.name : '');
         }
     };
 
@@ -2204,6 +2228,7 @@ define(function (require, exports, module) {
 
 
     var NewCross = function() {
+        autoSetTitle = true;
         readOnly = false;
         ResetCross();
         fixBackground();
@@ -2216,19 +2241,25 @@ define(function (require, exports, module) {
 
 
     var Gather = function() {
-        $('.cross-opts .saving').show();
         var objCross   = ExfeUtilities.clone(Cross);
         objCross.exfee = ExfeUtilities.clone(Exfee);
         objCross.by_identity = {id : curIdentity.id};
         Api.request(
             'gather',
-            {type : 'POST', data : JSON.stringify(objCross)},
+            {
+                type : 'POST',
+                data : JSON.stringify(objCross),
+                beforeSend: function () {
+                    $('.cross-opts .saving').show();
+                },
+                complete: function () {
+                    $('.cross-opts .saving').hide();
+                }
+            },
             function(data) {
-                $('.cross-opts .saving').hide();
                 document.location = '/#!' + data.cross.id;
             },
             function(data) {
-                $('.cross-opts .saving').hide();
                 $('#cross-form-gather')
                     .prop('disabled', false)
                     .toggleClass('disabled', false);
@@ -2384,6 +2415,8 @@ define(function (require, exports, module) {
             }
         } else {
             NewCross();
+            // 初始化 数据, 用于判断是否修改过
+            window.InitCross = ExfeUtilities.clone(Cross);
         }
     });
     // init event: signin
