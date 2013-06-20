@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 04:06:47 */
+/*! desktop@2a.11 2013-06-20 04:06:09 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -569,7 +569,7 @@
       for (var n = (Qi[t] || []).concat(Qi["*"]), a = 0, r = n.length; r > a; a++) if (n[a].call(e, t, i)) return;
     });
   }
-  function P(e, t, i) {
+  function D(e, t, i) {
     var n, a = 0, r = Zi.length, s = Z.Deferred().always(function() {
       delete o.elem;
     }), o = function() {
@@ -596,14 +596,14 @@
         return t ? s.resolveWith(e, [ l, t ]) : s.rejectWith(e, [ l, t ]), this;
       }
     }), c = l.props;
-    for (D(c, l.opts.specialEasing); r > a; a++) if (n = Zi[a].call(l, e, c, l.opts)) return n;
+    for (P(c, l.opts.specialEasing); r > a; a++) if (n = Zi[a].call(l, e, c, l.opts)) return n;
     return A(l, c), Z.isFunction(l.opts.start) && l.opts.start.call(e, l), Z.fx.timer(Z.extend(o, {
       anim: l,
       queue: l.opts.queue,
       elem: e
     })), l.progress(l.opts.progress).done(l.opts.done, l.opts.complete).fail(l.opts.fail).always(l.opts.always);
   }
-  function D(e, t) {
+  function P(e, t) {
     var i, n, a, r, s;
     for (i in e) if (n = Z.camelCase(i), a = t[n], r = e[i], Z.isArray(r) && (a = r[1], 
     r = e[i] = r[0]), i !== n && (e[n] = r, delete e[i]), s = Z.cssHooks[n], s && "expand" in s) {
@@ -1419,7 +1419,7 @@
       }
     });
   });
-  var $t = /^(?:textarea|input|select)$/i, Mt = /^([^\.]*|)(?:\.(.+)|)$/, St = /(?:^|\s)hover(\.\S+|)\b/, It = /^key/, Nt = /^(?:mouse|contextmenu)|click/, At = /^(?:focusinfocus|focusoutblur)$/, Pt = function(e) {
+  var $t = /^(?:textarea|input|select)$/i, Mt = /^([^\.]*|)(?:\.(.+)|)$/, St = /(?:^|\s)hover(\.\S+|)\b/, It = /^key/, Nt = /^(?:mouse|contextmenu)|click/, At = /^(?:focusinfocus|focusoutblur)$/, Dt = function(e) {
     return Z.event.special.hover ? e : e.replace(St, "mouseenter$1 mouseleave$1");
   };
   Z.event = {
@@ -1429,7 +1429,7 @@
         for (n.handler && (f = n, n = f.handler, r = f.selector), n.guid || (n.guid = Z.guid++), 
         l = s.events, l || (s.events = l = {}), o = s.handle, o || (s.handle = o = function(e) {
           return Z === t || e && Z.event.triggered === e.type ? t : Z.event.dispatch.apply(o.elem, arguments);
-        }, o.elem = e), i = Z.trim(Pt(i)).split(" "), c = 0; i.length > c; c++) d = Mt.exec(i[c]) || [], 
+        }, o.elem = e), i = Z.trim(Dt(i)).split(" "), c = 0; i.length > c; c++) d = Mt.exec(i[c]) || [], 
         u = d[1], h = (d[2] || "").split(".").sort(), g = Z.event.special[u] || {}, u = (r ? g.delegateType : g.bindType) || u, 
         g = Z.event.special[u] || {}, p = Z.extend({
           type: u,
@@ -1450,7 +1450,7 @@
     remove: function(e, t, i, n, a) {
       var r, s, o, l, c, d, u, h, p, f, m, g = Z.hasData(e) && Z._data(e);
       if (g && (h = g.events)) {
-        for (t = Z.trim(Pt(t || "")).split(" "), r = 0; t.length > r; r++) if (s = Mt.exec(t[r]) || [], 
+        for (t = Z.trim(Dt(t || "")).split(" "), r = 0; t.length > r; r++) if (s = Mt.exec(t[r]) || [], 
         o = l = s[1], c = s[2], o) {
           for (p = Z.event.special[o] || {}, o = (n ? p.delegateType : p.bindType) || o, f = h[o] || [], 
           d = f.length, c = c ? RegExp("(^|\\.)" + c.split(".").sort().join("\\.(?:.*\\.|)") + "(\\.|$)") : null, 
@@ -1793,13 +1793,13 @@
       return t ? o.length : o ? i.error(e) : q(e, l).slice(0);
     }
     function l(e, t, i) {
-      var n = t.dir, a = i && "parentNode" === t.dir, r = D++;
+      var n = t.dir, a = i && "parentNode" === t.dir, r = P++;
       return t.first ? function(t, i, r) {
         for (;t = t[n]; ) if (a || 1 === t.nodeType) return e(t, i, r);
       } : function(t, i, s) {
         if (s) {
           for (;t = t[n]; ) if ((a || 1 === t.nodeType) && e(t, i, s)) return t;
-        } else for (var o, l = P + " " + r + " ", c = l + v; t = t[n]; ) if (a || 1 === t.nodeType) {
+        } else for (var o, l = D + " " + r + " ", c = l + v; t = t[n]; ) if (a || 1 === t.nodeType) {
           if ((o = t[S]) === c) return t.sizset;
           if ("string" == typeof o && 0 === o.indexOf(l)) {
             if (t.sizset) return t;
@@ -1849,14 +1849,14 @@
     }
     function p(e, t) {
       var n = t.length > 0, a = e.length > 0, r = function(s, o, l, c, u) {
-        var h, p, f, m = [], g = 0, y = "0", b = s && [], x = null != u, w = T, k = s || a && _.find.TAG("*", u && o.parentNode || o), C = P += null == w ? 1 : Math.E;
+        var h, p, f, m = [], g = 0, y = "0", b = s && [], x = null != u, w = T, k = s || a && _.find.TAG("*", u && o.parentNode || o), C = D += null == w ? 1 : Math.E;
         for (x && (T = o !== N && o, v = r.el); null != (h = k[y]); y++) {
           if (a && h) {
             for (p = 0; f = e[p]; p++) if (f(h, o, l)) {
               c.push(h);
               break;
             }
-            x && (P = C, v = ++r.el);
+            x && (D = C, v = ++r.el);
           }
           n && ((h = !f && h) && g--, s && b.push(h));
         }
@@ -1868,7 +1868,7 @@
           }
           O.apply(c, m), x && !s && m.length > 0 && g + t.length > 1 && i.uniqueSort(c);
         }
-        return x && (P = C, T = w), b;
+        return x && (D = C, T = w), b;
       };
       return r.el = 0, n ? R(r) : r;
     }
@@ -1892,7 +1892,7 @@
       return k(e, u)(n, t, a, i, nt.test(e)), i;
     }
     function g() {}
-    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, A = N.documentElement, P = 0, D = 0, z = [].pop, O = [].push, L = [].slice, H = [].indexOf || function(e) {
+    var v, y, _, b, x, w, k, C, E, T, $ = !0, M = "undefined", S = ("sizcache" + Math.random()).replace(".", ""), I = String, N = e.document, A = N.documentElement, D = 0, P = 0, z = [].pop, O = [].push, L = [].slice, H = [].indexOf || function(e) {
       for (var t = 0, i = this.length; i > t; t++) if (this[t] === e) return t;
       return -1;
     }, R = function(e, t) {
@@ -2269,7 +2269,7 @@
     i.attr = Z.attr, Z.find = i, Z.expr = i.selectors, Z.expr[":"] = Z.expr.pseudos, 
     Z.unique = i.uniqueSort, Z.text = i.getText, Z.isXMLDoc = i.isXML, Z.contains = i.contains;
   }(e);
-  var Dt = /Until$/, zt = /^(?:parents|prev(?:Until|All))/, Ot = /^.[^:#\[\.,]*$/, Lt = Z.expr.match.needsContext, Ht = {
+  var Pt = /Until$/, zt = /^(?:parents|prev(?:Until|All))/, Ot = /^.[^:#\[\.,]*$/, Lt = Z.expr.match.needsContext, Ht = {
     children: !0,
     contents: !0,
     next: !0,
@@ -2364,7 +2364,7 @@
   }, function(e, t) {
     Z.fn[e] = function(i, n) {
       var a = Z.map(this, t, i);
-      return Dt.test(e) || (n = i), n && "string" == typeof n && (a = Z.filter(n, a)), 
+      return Pt.test(e) || (n = i), n && "string" == typeof n && (a = Z.filter(n, a)), 
       a = this.length > 1 && !Ht[e] ? Z.unique(a) : a, this.length > 1 && zt.test(e) && (a = a.reverse()), 
       this.pushStack(a, e, Y.call(arguments).join(","));
     };
@@ -2786,13 +2786,13 @@
     }); else for (n in e) k(n, e[n], i, r);
     return a.join("&").replace(_i, "+");
   };
-  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Ai = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Pi = /([?&])_=[^&]*/, Di = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, zi = Z.fn.load, Oi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
+  var Ci, Ei, Ti = /#.*$/, $i = /^(.*?):[ \t]*([^\r\n]*)\r?$/gm, Mi = /^(?:about|app|app\-storage|.+\-extension|file|res|widget):$/, Si = /^(?:GET|HEAD)$/, Ii = /^\/\//, Ni = /\?/, Ai = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, Di = /([?&])_=[^&]*/, Pi = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/, zi = Z.fn.load, Oi = {}, Li = {}, Hi = [ "*/" ] + [ "*" ];
   try {
     Ei = q.href;
   } catch (Ri) {
     Ei = j.createElement("a"), Ei.href = "", Ei = Ei.href;
   }
-  Ci = Di.exec(Ei.toLowerCase()) || [], Z.fn.load = function(e, i, n) {
+  Ci = Pi.exec(Ei.toLowerCase()) || [], Z.fn.load = function(e, i, n) {
     if ("string" != typeof e && zi) return zi.apply(this, arguments);
     if (!this.length) return this;
     var a, r, s, o = this, l = e.indexOf(" ");
@@ -2916,13 +2916,13 @@
         }
         return this;
       }, h.url = ((e || h.url) + "").replace(Ti, "").replace(Ii, Ci[1] + "//"), h.dataTypes = Z.trim(h.dataType || "*").toLowerCase().split(tt), 
-      null == h.crossDomain && (c = Di.exec(h.url.toLowerCase()) || !1, h.crossDomain = c && c.join(":") + (c[3] ? "" : "http:" === c[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
+      null == h.crossDomain && (c = Pi.exec(h.url.toLowerCase()) || !1, h.crossDomain = c && c.join(":") + (c[3] ? "" : "http:" === c[1] ? 80 : 443) !== Ci.join(":") + (Ci[3] ? "" : "http:" === Ci[1] ? 80 : 443)), 
       h.data && h.processData && "string" != typeof h.data && (h.data = Z.param(h.data, h.traditional)), 
       E(Oi, h, i, w), 2 === b) return w;
       if (d = h.global, h.type = h.type.toUpperCase(), h.hasContent = !Si.test(h.type), 
       d && 0 === Z.active++ && Z.event.trigger("ajaxStart"), !h.hasContent && (h.data && (h.url += (Ni.test(h.url) ? "&" : "?") + h.data, 
       delete h.data), a = h.url, h.cache === !1)) {
-        var k = Z.now(), C = h.url.replace(Pi, "$1_=" + k);
+        var k = Z.now(), C = h.url.replace(Di, "$1_=" + k);
         h.url = C + (C === h.url ? (Ni.test(h.url) ? "&" : "?") + "_=" + k : "");
       }
       (h.data && h.hasContent && h.contentType !== !1 || i.contentType) && w.setRequestHeader("Content-Type", h.contentType), 
@@ -3067,7 +3067,7 @@
       return a;
     } ]
   };
-  Z.Animation = Z.extend(P, {
+  Z.Animation = Z.extend(D, {
     tweener: function(e, t) {
       Z.isFunction(e) ? (t = e, e = [ "*" ]) : e = e.split(" ");
       for (var i, n = 0, a = e.length; a > n; n++) i = e[n], Qi[i] = Qi[i] || [], Qi[i].unshift(t);
@@ -3119,7 +3119,7 @@
     },
     animate: function(e, t, i, n) {
       var a = Z.isEmptyObject(e), r = Z.speed(t, i, n), s = function() {
-        var t = P(this, Z.extend({}, e), r);
+        var t = D(this, Z.extend({}, e), r);
         a && t.stop(!0);
       };
       return a || r.queue === !1 ? this.each(s) : this.queue(r.queue, s);
@@ -11889,7 +11889,7 @@ TWEEN.Tween = function(e) {
         id: e
       }
     }, t, i);
-  }, P = function(e, t, i) {
+  }, D = function(e, t, i) {
     return N("photox_like", {
       type: "POST",
       data: {
@@ -11897,7 +11897,7 @@ TWEEN.Tween = function(e) {
         LIKE: !1
       }
     }, t, i);
-  }, D = function(e, t, i, n) {
+  }, P = function(e, t, i, n) {
     return N("photox_getPhotoX", {
       resources: {
         photox_id: e
@@ -12279,7 +12279,7 @@ TWEEN.Tween = function(e) {
       }).on("click.mnemosyne", ".surface .btn-like", function(e) {
         e.preventDefault(), e.stopPropagation();
         var t = E(this), i = t.parent(), n = +i.data("id"), a = +i.attr("data-liked");
-        return -2 !== a ? (i.attr("data-liked", -2), 1 === a ? (P(n, function() {
+        return -2 !== a ? (i.attr("data-liked", -2), 1 === a ? (D(n, function() {
           i.attr("data-liked", 0), t.addClass("ix-unlike").removeClass("ix-like");
         }, function() {
           i.attr("data-liked", 1);
@@ -12420,7 +12420,7 @@ TWEEN.Tween = function(e) {
     },
     getPhotos: function() {
       var e = this, t = this.userId;
-      D(e.crossId, null, function(i) {
+      P(e.crossId, null, function(i) {
         var n = i.likes, a = i.photox.photos;
         $.each(a, function(e) {
           var i = n[e.id];
@@ -13089,23 +13089,27 @@ TWEEN.Tween = function(e) {
   });
   var d = function(e) {
     t(".user-xstats .attended").html(e.cross_quantity);
-    var n = t("#jst-user-avatar"), r = a.compile(n.html()), s = r({
+    var n = t("#jst-user-avatar"), r = a.compile(n.html()), o = r({
       avatar_filename: e.avatar_filename
     });
-    t(".user-avatar").append(s), t("#profile .user-name").find("h3").html(e.name || e.nickname), 
+    t(".user-avatar").append(o), t("#profile .user-name").find("h3").html(e.name || e.nickname), 
     t("#profile .user-bio").text(e.bio || ""), t("#profile .user-name").find(".changepassword").attr("data-dialog-type", e.password ? "changepassword" : "setpassword").find("span").text(e.password ? "Change Password..." : "Set Password..."), 
     a.registerPartial("jst-identity-item", t("#jst-identity-item").html());
-    var o = t("#jst-identity-list");
-    r = a.compile(o.html());
-    var l = e.identities;
-    l[0].__default__ = !0, s = r({
-      identities: l
-    }), t(".identity-list").append(s);
-    var d;
-    if (d = t("#app-main").data("event")) {
-      var u = d.action;
-      if ("add_identity" === u) {
-        var h = d.data, p = function(e, n, o) {
+    var l = e.devices;
+    l = s.filter(l, function(e) {
+      return "iOS" === e.os_name && "CONNECTED" === e.status ? e : void 0;
+    }), 0 === l.length && t(".exfe-app").removeClass("hide");
+    var d = t("#jst-identity-list");
+    r = a.compile(d.html());
+    var u = e.identities;
+    u[0].__default__ = !0, o = r({
+      identities: u
+    }), t(".identity-list").append(o);
+    var h;
+    if (h = t("#app-main").data("event")) {
+      var p = h.action;
+      if ("add_identity" === p) {
+        var f = h.data, m = function(e, n, s) {
           var l = i.get("authorization"), d = l.token;
           c.request("addIdentity", {
             type: "POST",
@@ -13118,24 +13122,24 @@ TWEEN.Tween = function(e) {
             }
           }, function(e) {
             var n = e.identity, l = i.get("user"), c = l.identities;
-            c.push(n), i.set("user", l), r = a.compile(t("#jst-identity-item").html()), s = r(e.identity), 
-            t(".identity-list").append(s), o && o.destory();
+            c.push(n), i.set("user", l), r = a.compile(t("#jst-identity-item").html()), o = r(e.identity), 
+            t(".identity-list").append(o), s && s.destory();
           }, function(i) {
             var a = i && i.meta;
             if (a && 401 === a.code && "authenticate_timeout" === a.errorType) {
-              o && o.destory();
+              s && s.destory();
               var r = t('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
               t("#app-tmp").append(r);
-              var s = t.Event("click.dialog.data-api");
-              s._data = {
+              var o = t.Event("click.dialog.data-api");
+              o._data = {
                 callback: function() {
-                  p(e, n);
+                  m(e, n);
                 }
-              }, r.trigger(s);
+              }, r.trigger(o);
             }
           });
         };
-        p(h.identity.external_username, h.identity.provider), t("#app-main").removeData("event");
+        m(f.identity.external_username, f.identity.provider), t("#app-main").removeData("event");
       }
     }
   }, u = function(e) {
@@ -14328,16 +14332,16 @@ TWEEN.Tween = function(e) {
                 place: Cross.place
               },
               update: function(e) {
-                E(e), D(e);
+                E(e), P(e);
               }
             });
             a.show(), t(".cross-place").attr("editable", !0);
           }
         } ],
         rsvp: [ function() {
-          P();
+          D();
         }, function() {
-          P(!0);
+          D(!0);
         } ],
         background: [ function() {}, function() {
           !i || "dblclick" !== i.type || !n && Cross.id || g(i ? i.shiftKey : !1);
@@ -14412,11 +14416,11 @@ TWEEN.Tween = function(e) {
         t(".cross-rsvp .show .by").hide();
       }
     }), t(".cross-rsvp .edit .accept").bind("click", function() {
-      ExfeeWidget.rsvpMe("ACCEPTED"), P();
+      ExfeeWidget.rsvpMe("ACCEPTED"), D();
     }), t(".cross-rsvp .edit .decline").bind("click", function() {
-      ExfeeWidget.rsvpMe("DECLINED"), P();
+      ExfeeWidget.rsvpMe("DECLINED"), D();
     }), t(".cross-rsvp .edit .interested").bind("click", function() {
-      ExfeeWidget.rsvpMe("INTERESTED"), P();
+      ExfeeWidget.rsvpMe("INTERESTED"), D();
     }), t(".cross-place .edit").bind("keydown", function(e) {
       e.shiftKey && 13 === e.which && (e.which = 4);
     }), t(".cross-place .xbtn-more").bind("click", function(e) {
@@ -14544,7 +14548,7 @@ TWEEN.Tween = function(e) {
       var e = t(this);
       e.text(G(e.data("iso-time")));
     });
-  }, P = function(e) {
+  }, D = function(e) {
     var i = ExfeeWidget.getMyInvitation();
     if (i) {
       var n = i.by_identity ? i.by_identity : curIdentity, a = i.identity.id === n.id;
@@ -14576,7 +14580,7 @@ TWEEN.Tween = function(e) {
       }
     }
     t(".cross-rsvp .show").hide(), t(".cross-rsvp .edit").hide();
-  }, D = function(e) {
+  }, P = function(e) {
     function i(i) {
       var n = i.coords;
       a = a.replace(/\{\{lat\}\}/gi, n.latitude).replace(/\{\{lng\}\}/gi, n.longitude).replace(/\{\{title\}\}/gi, ("" === e.provider ? n.latitude + "," + n.longitude + " " : "") + encodeURIComponent(e.title)), 
@@ -14591,7 +14595,7 @@ TWEEN.Tween = function(e) {
       }
     });
   }, z = function() {
-    x(), w(), E(Cross.place), T(), $(), P(), D(Cross.place);
+    x(), w(), E(Cross.place), T(), $(), D(), P(Cross.place);
   }, O = function(e) {
     var t = {
       resources: {
@@ -14717,11 +14721,11 @@ TWEEN.Tween = function(e) {
     } else if (null === i) switch (n && (curIdentity = n, Api.setToken(s)), R(a, r), 
     o) {
      case "accept":
-      ExfeeWidget.rsvpMe("ACCEPTED"), P();
+      ExfeeWidget.rsvpMe("ACCEPTED"), D();
       break;
 
      case "decline":
-      ExfeeWidget.rsvpMe("DECLINED"), P();
+      ExfeeWidget.rsvpMe("DECLINED"), D();
     } else q(), window.InitCross = ExfeUtilities.clone(Cross);
   }), V.on("app:user:signin:after", function() {
     if (window.Cross && !window.Cross.id) {
@@ -14794,7 +14798,7 @@ var MD5 = function(e) {
     }
     return t;
   }
-  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, A = 4, P = 11, D = 16, z = 23, O = 6, L = 10, H = 15, R = 21;
+  var f, m, g, v, y, _, b, x, w, k = [], C = 7, E = 12, T = 17, $ = 22, M = 5, S = 9, I = 14, N = 20, A = 4, D = 11, P = 16, z = 23, O = 6, L = 10, H = 15, R = 21;
   for (e = p(e), k = u(e), _ = 1732584193, b = 4023233417, x = 2562383102, w = 271733878, 
   f = 0; k.length > f; f += 16) m = _, g = b, v = x, y = w, _ = o(_, b, x, w, k[f + 0], C, 3614090360), 
   w = o(w, _, b, x, k[f + 1], E, 3905402710), x = o(x, w, _, b, k[f + 2], T, 606105819), 
@@ -14813,13 +14817,13 @@ var MD5 = function(e) {
   b = l(b, x, w, _, k[f + 8], N, 1163531501), _ = l(_, b, x, w, k[f + 13], M, 2850285829), 
   w = l(w, _, b, x, k[f + 2], S, 4243563512), x = l(x, w, _, b, k[f + 7], I, 1735328473), 
   b = l(b, x, w, _, k[f + 12], N, 2368359562), _ = c(_, b, x, w, k[f + 5], A, 4294588738), 
-  w = c(w, _, b, x, k[f + 8], P, 2272392833), x = c(x, w, _, b, k[f + 11], D, 1839030562), 
+  w = c(w, _, b, x, k[f + 8], D, 2272392833), x = c(x, w, _, b, k[f + 11], P, 1839030562), 
   b = c(b, x, w, _, k[f + 14], z, 4259657740), _ = c(_, b, x, w, k[f + 1], A, 2763975236), 
-  w = c(w, _, b, x, k[f + 4], P, 1272893353), x = c(x, w, _, b, k[f + 7], D, 4139469664), 
+  w = c(w, _, b, x, k[f + 4], D, 1272893353), x = c(x, w, _, b, k[f + 7], P, 4139469664), 
   b = c(b, x, w, _, k[f + 10], z, 3200236656), _ = c(_, b, x, w, k[f + 13], A, 681279174), 
-  w = c(w, _, b, x, k[f + 0], P, 3936430074), x = c(x, w, _, b, k[f + 3], D, 3572445317), 
+  w = c(w, _, b, x, k[f + 0], D, 3936430074), x = c(x, w, _, b, k[f + 3], P, 3572445317), 
   b = c(b, x, w, _, k[f + 6], z, 76029189), _ = c(_, b, x, w, k[f + 9], A, 3654602809), 
-  w = c(w, _, b, x, k[f + 12], P, 3873151461), x = c(x, w, _, b, k[f + 15], D, 530742520), 
+  w = c(w, _, b, x, k[f + 12], D, 3873151461), x = c(x, w, _, b, k[f + 15], P, 530742520), 
   b = c(b, x, w, _, k[f + 2], z, 3299628645), _ = d(_, b, x, w, k[f + 0], O, 4096336452), 
   w = d(w, _, b, x, k[f + 7], L, 1126891415), x = d(x, w, _, b, k[f + 14], H, 2878612391), 
   b = d(b, x, w, _, k[f + 5], R, 4237533241), _ = d(_, b, x, w, k[f + 12], O, 1700485571), 
