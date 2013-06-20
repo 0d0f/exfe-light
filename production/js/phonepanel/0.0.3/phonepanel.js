@@ -344,6 +344,7 @@ define('phonepanel', function (require) {
     , showAfter: function () {
         var self    = this,
             srcNode = self.srcNode;
+        last_get    = '';
         if (srcNode) {
           var offset  = srcNode.offset(),
               element = self.element,
