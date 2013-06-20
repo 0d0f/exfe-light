@@ -10796,6 +10796,11 @@ body {
   background-image: linear-gradient(to bottom, #fcfcfc, #eeeeee);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffcfcfc', endColorstr='#ffeeeeee', GradientType=0);
+  -webkit-transition: 144ms -webkit-transform ease-out;
+     -moz-transition: 144ms transform ease-out;
+      -ms-transition: 144ms -ms-transform ease-out;
+       -o-transition: 144ms -o-transform ease-out;
+          transition: 144ms transform ease-out;
 }
 
 .date-panel .date-input {

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 02:06:03 */
+/*! desktop@2a.11 2013-06-20 04:06:47 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7588,11 +7588,13 @@ TWEEN.Tween = function(e) {
       this.calendarTable = new g(this, ".date-calendar"), this.timeline = new v(this, ".date-timeline"), 
       this.listen();
     },
+    _x: 0,
     initComponents: function() {
       var e = this.eftime, t = this.dateObj.date;
       this.calendarTable.refresh(t), 0 === this.originEftime.outputformat && (this.calendarTable.addCursorStyle(), 
       this.calendarTable.select()), this.timeline.refresh(this.eftime), this.timeline.select(this.eftime), 
-      this.dateInput.change(e.origin || t.text), this.dateInput.$element.focusend(), this.eftime.begin_at.time && this.showTL();
+      this.dateInput.change(e.origin || t.text), this.dateInput.$element.focusend(), this.eftime.begin_at.time && (this._x = 124, 
+      this.element.css("left", "-=" + this._x), this.showTL());
     },
     listen: function() {
       this.element.on("click.datepanel", ".place-submit", y(this.submitSave, this)), this.element.on("keydown.datepanel", y(this.keydown, this)), 
@@ -7644,7 +7646,9 @@ TWEEN.Tween = function(e) {
       this.dateInput.change(t.origin);
     },
     showTL: function() {
-      this.timeline.show(this.eftime);
+      this.timeline.show(this.eftime), this._x || (this._x = 124, this.element.css({
+        "-webkit-transform": "translate3d(-" + this._x + "px, 0, 0)"
+      }));
     },
     keydown: function(e) {
       var t = this, i = e.altKey, n = e.ctrlKey, a = e.shiftKey, r = e.metaKey, s = e.keyCode;
@@ -7653,10 +7657,10 @@ TWEEN.Tween = function(e) {
     showAfter: function() {
       var e = this.srcNode;
       if (e) {
-        var t = e.offset(), i = this.element, n = i.outerWidth(), a = e.outerHeight();
+        var t = e.offset(), i = this.element, n = i.outerWidth();
         i.css({
-          left: t.left - n + 175 - 15,
-          top: t.top + a + 7
+          left: t.left - n - 15,
+          top: t.top
         });
       }
       this.initComponents();

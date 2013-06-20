@@ -106,6 +106,9 @@ define('datepanel', function (require/*, exports, module*/) {
         this.listen();
       }
 
+    // x = TimeLine's width
+    , _x: 0
+
     , initComponents: function () {
         var eftime = this.eftime
           , date = this.dateObj.date;
@@ -120,6 +123,8 @@ define('datepanel', function (require/*, exports, module*/) {
         this.dateInput.$element.focusend();
 
         if (this.eftime.begin_at.time) {
+          this._x = 124;
+          this.element.css('left', '-=' + this._x)
           this.showTL();
         }
       }
@@ -244,6 +249,12 @@ define('datepanel', function (require/*, exports, module*/) {
 
     , showTL: function () {
         this.timeline.show(this.eftime);
+        if (!this._x) {
+          this._x = 124;
+          this.element.css({
+            '-webkit-transform': 'translate3d(-' + this._x + 'px, 0, 0)'
+          });
+        }
       }
 
     , keydown: function (e) {
@@ -268,11 +279,10 @@ define('datepanel', function (require/*, exports, module*/) {
         if (srcNode) {
           var offset = srcNode.offset()
             , element = this.element
-            , width = element.outerWidth()
-            , height = srcNode.outerHeight();
+            , width = element.outerWidth();
           element.css({
-              left: offset.left - width + 175 - 15
-            , top: offset.top + height + 7
+              left: offset.left - width - 15,
+              top: offset.top
           });
         }
         this.initComponents();
