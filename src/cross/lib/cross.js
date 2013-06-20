@@ -603,7 +603,7 @@ ExfeeWidget = {
             }
             var index = ExfeeWidget.complete_exfee.push(ExfeUtilities.clone(identities[i])) - 1;
             var provider = identities[i].provider;
-            strCompleteItems += '<li' + (index ? '' : ' class="active"') + '>'
+            strCompleteItems += '<li>'
                               +   '<span class="pull-left avatar">'
                               +     '<img src="' + identities[i].avatar_filename + '" alt="" width="40" height="40">'
                               +     '<span class="rb"><i class="icon16-identity-' + identities[i].provider + '"></i></span>'
