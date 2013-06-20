@@ -150,7 +150,7 @@ define('filehtml5', function (require) {
     },
 
     cancelUpload: function () {
-      this._xhr.abort();
+      this._xhr && this._xhr.abort();
     }
 
   });

@@ -1,3 +1,8 @@
+* v0.0.11 2013-06-07T23:37:07 UTC+0800
+  - New Features
+    * `checkinvitationtoken` api
+    * `setup` api
+
 * v0.0.10 2013-05-10T16:42:07 UTC+0800
   - Changes
     * `window._ENV_` in exchange for `require('config')`

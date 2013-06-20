@@ -147,6 +147,7 @@ define('routes', function (require, exports, module) {
           else {
             forwardUrl = '/#' + eun;
           }
+
           Bus.emit('app:usermenu:updatebrowsing',
             {   normal: user
               , browsing: new_user
@@ -154,6 +155,7 @@ define('routes', function (require, exports, module) {
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken
               , tokenType: 'user'
+              , user_token: target_token
               , page: 'resolve'
               , readOnly: true
               , user_name: target_user_name || new_user.name
@@ -252,7 +254,9 @@ define('routes', function (require, exports, module) {
 
     if (action === 'INPUT_NEW_PASSWORD') {
       var d;
-      tplUrl = 'forgot_password.html';
+      if (token_type === 'SET_PASSWORD') {
+        tplUrl = 'forgot_password.html';
+      }
       res.render(tplUrl, function (tpl) {
         $('#app-main').append(tpl);
         if (authorization && !browsing_authorization) {
@@ -262,17 +266,16 @@ define('routes', function (require, exports, module) {
             }
           });
           if (token_type === 'VERIFY') {
-            d = $('<div class="merge set-up" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_email">');
+            d = $('<div class="merge setup" data-destory="true" data-user-action="setup" data-widget="dialog" data-dialog-type="setup_verification" data-redirect="true">');
             d.data('source', {
               browsing_user: user,
-              identity: identity,
               originToken: originToken,
               user_name: resolveData.user_name,
               tokenType: 'user'
             });
           }
           else if (token_type === 'SET_PASSWORD') {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: user,
               token: resolveData.setup ? authorization.token : originToken,
@@ -292,10 +295,10 @@ define('routes', function (require, exports, module) {
               d2.appendTo($('#app-tmp'));
               d2.trigger('click.dialog.data-api');
             });
-            $('#app-user-menu').find('.set-up').trigger('click.dialog.data-api');
+            $('#app-user-menu').find('.setup').trigger('click.dialog.data-api');
           }
           else {
-            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword">');
+            d = $('<div class="setpassword" data-destory="true" data-widget="dialog" data-dialog-type="setpassword" data-redirect="true">');
             d.data('source', {
               user: browsing_user,
               token: resolveData.setup ? browsing_authorization.token : originToken,
@@ -305,7 +308,7 @@ define('routes', function (require, exports, module) {
             d.trigger('click.dialog.data-api');
           }
         }
-        $('.modal-su, .modal-sp, .modal-bi').css('top', 230);
+        $('.modal-su, .modal-sp, .modal-bi').css('top', 250);
       });
     }
 
@@ -478,7 +481,8 @@ define('routes', function (require, exports, module) {
             , $fail = $redirecting.next();
 
           var clicked = false;
-          $('.xbtn-authenticate').on('click', function (e) {
+          var provider = identity.provider;
+          $('.xbtn-authenticate').attr('data-oauth', provider).on('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             if (clicked) {
@@ -530,6 +534,160 @@ define('routes', function (require, exports, module) {
   };
 
 
+  var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, rsvp) {
+    var session = req.session
+      , authorization = session.authorization
+      , user = session.user
+      , user_id = authorization && authorization.user_id || 0;
+
+    Api.request(
+        'getCrossByInvitationToken'
+      , {
+            type: 'POST'
+          , params: params
+          , data: data
+        }
+      , function (d) {
+          var auth = d.authorization
+            , browsing_identity = d.browsing_identity
+            , browsing_user_id = (auth && auth.user_id) || (browsing_identity && browsing_identity.connected_user_id)
+            , cross_access_token = d.cross_access_token
+            , read_only = d.read_only
+            , action = d.action
+            , cross = d.cross;
+
+          Bus.emit('app:page:home', false);
+
+          Bus.emit('app:page:usermenu', true);
+
+          if (false === read_only && cross_access_token) {
+            cats || (cats = {});
+            cat = cats[ctoken] = cross_access_token;
+            Store.set('cats', cats);
+          }
+
+          //
+          var render = function () {
+            res.render('x.html', function (tpl) {
+              $('#app-main')
+                .empty()
+                .append(tpl);
+              Bus.emit('xapp:cross:main');
+              Bus.emit('xapp:cross', null, browsing_identity, cross, read_only, cat || ctoken, rsvp);
+              if (rsvp === 'mute') {
+                var d = $('<div id="js-dialog-unsubscribe" data-destory="true" data-widget="dialog" data-dialog-type="unsubscribe">');
+                d.data('source', cross);
+                d.appendTo($('#app-tmp'));
+                d.trigger('click.dialog.data-api');
+              }
+            });
+          }
+
+          /**
+           * browser-code
+           *  0 -- 正常登录
+           *  1 -- 只读浏览
+           *  2 -- 浏览身份登录
+           */
+
+          /** 只读浏览
+           *  (any)   FALSE   只读浏览      M50D5(SIGN_IN)  只读，拦截页面操作弹出M75D3 跳转后保持原有登录状态
+           */
+
+          if (!auth && read_only) {
+            Bus.emit('app:usermenu:updatebrowsing', {
+              browsing: {
+                identities: [browsing_identity],
+                name: browsing_identity.name
+              },
+              action: action,
+              readOnly: read_only,
+              page: 'cross',
+              code: 1
+            });
+          }
+
+
+          /** 正常登录
+           *  TRUE    (any)   正常登录      M50D3           正常操作
+           *  FALSE   TRUE    正常登录      M50D3           正常操作
+           */
+
+          else if (
+              (
+                (
+                  (authorization && user_id === browsing_user_id)
+                  ||
+                  (!authorization && (authorization = auth))
+                )
+                && browsing_user_id > 0
+              )
+
+              // 如果本地没有 browsing_identity 且 不是只读状态 且有 authorization，则正常登录
+              || (authorization && !read_only && !browsing_identity)
+            ) {
+
+            Store.set('authorization', session.authorization = authorization);
+            Bus.once('app:user:signin:after', function () {
+              res.redirect('/#!' + cross.id);
+            });
+            Bus.emit('app:user:signin', authorization.token, authorization.user_id);
+            return;
+          }
+
+          /** 浏览身份登录
+           *  (any)   TRUE    浏览身份登录   M50D4 （SET_UP）  跳转时弹出M75D1或D2，若已登录先弹M75D4
+           *  TRUE    TRUE    浏览身份登录   M50D5 跳转时弹出M75D4
+           */
+
+          else if (!read_only && (cat || auth)) {
+            var data = {
+              browsing: {
+                user_id: browsing_identity.connected_user_id,
+                identities: [browsing_identity],
+                name: browsing_identity.name
+              },
+              // invitation_token
+              originToken: ctoken,
+              action: action,
+              readOnly: read_only,
+              tokenType: 'invitation',
+              setup: action === 'SETUP',
+              page: 'cross',
+              code: 2
+            };
+            if (cat) {
+              data.tokenType = 'cross';
+              data.cross_access_token = cat;
+            }
+            Bus.emit('app:usermenu:updatebrowsing', data);
+          }
+
+          render();
+        }
+
+      , function (data) {
+          var status = data && data.meta && data.meta.code
+            , hasAuth = !!authorization;
+          if (403 === status) {
+            Bus.emit('app:page:home', false);
+            Bus.emit('app:page:usermenu', hasAuth);
+            if (hasAuth) {
+              Bus.emit('app:usermenu:updatenormal', user);
+              Bus.emit('app:usermenu:crosslist'
+                , authorization.token
+                , authorization.user_id
+              );
+            }
+            Bus.emit('app:cross:forbidden', null, null);
+          } else if (404 === status) {
+            res.location('/404');
+          }
+        }
+      );
+    };
+
+  /*
   var _crosstoken = function (res, req, next, params, data, cats, cat, ctoken, rsvp) {
     var session = req.session,
         authorization = session.authorization,
@@ -631,19 +789,19 @@ define('routes', function (require, exports, module) {
       }
     );
   };
+  */
 
   // cross-token
   routes.crossToken = function (req, res, next) {
     var session = req.session
       , authorization = session.authorization
       , authToken = authorization && authorization.token
+      // ctoken = invitation_token
       , ctoken = req.params[0]
       , rsvp = req.params[1]
       , cats = Store.get('cats')
-      // cat = cross_access_token
-      , cat
       , params = {}
-      , data;
+      , cat, data;
 
     if (authToken) {
       params.token = authToken;
@@ -662,15 +820,16 @@ define('routes', function (require, exports, module) {
   };
 
   routes.crossPhoneToken = function (req, res, next) {
-    var session = req.session,
-        authorization = session.authorization,
-        authToken = authorization && authorization.token,
-        cross_id = req.params[0],
-        ctoken = req.params[1],
-        rsvp = req.params[2] || '',
-        cats = Store.get('cats'),
-        params = {},
-        cat, data;
+    var session = req.session
+      , authorization = session.authorization
+      , authToken = authorization && authorization.token
+      , cross_id = req.params[0]
+      // ctoken = invitation_token
+      , ctoken = req.params[1]
+      , rsvp = req.params[2] || ''
+      , cats = Store.get('cats')
+      , params = {}
+      , cat, data;
 
     if (authToken) {
       params.token = authToken;
@@ -681,9 +840,10 @@ define('routes', function (require, exports, module) {
     }
 
     data = {
-      invitation_token: ctoken,
-      cross_id: cross_id
+      invitation_token: ctoken
+    , cross_id: cross_id
     };
+
     if (cat) {
       data.cross_access_token = cat;
     }
@@ -758,7 +918,7 @@ define('routes', function (require, exports, module) {
             Store.remove('oauth');
             delete session.oauth;
           } else if (session.verification_token) {
-            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true"></div>')
+            $('<div id="app-oauth-resetpassword" class="hide" data-widget="dialog" data-dialog-type="setpassword" data-destory="true" data-redirect="false"></div>')
             .data('token', session.verification_token)
             .appendTo($('#app-tmp'))
               .trigger(e);

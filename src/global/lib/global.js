@@ -4,6 +4,7 @@ define(function (require) {
   'use strict';
   var $ = require('jquery')
     , Bus = require('bus')
+    , Api = require('api')
     , Store = require('store')
     , Dialog = require('dialog')
     , dialogs = require('xdialog').dialogs
@@ -122,98 +123,206 @@ define(function (require) {
     window.location.href = '/';
   });
 
-  // TODO:后面再优化
-  $BODY.on('click.data-link dblclick.data-link', '[data-link]', function (e) {
-    var actionType = $(this).data('link');
-    var event_ignore = $(this).data('event-ignore');
-
-    if (e.type !== event_ignore) {
-
-      // 判断权限
-      //var authorization = Store.get('authorization');
-          //token = authorization && authorization.token;
-
-
-      var $db = $('#app-browsing-identity')
-        , readOnly = $db.data('readOnly')
-        , settings = $db.data('settings')
-        , $readOnly = $('#app-read-only')
-        , tokenType = $db.data('token-type');
-        //, btoken = $db.data('token')
-        //, action = $db.data('action');
-
-      // read only
-      if ($db.size() && readOnly && actionType === 'nota') {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (!$readOnly.size()) {
-          $('#app-main').append(
-            $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
-              .data('settings', settings.browsing)
-          );
+  var checkInvitationToken = function (token, invitation_token, cb) {
+    Api.request('checkinvitationtoken'
+      , {
+          type: 'POST',
+          params: { token: token },
+          data: { invitation_token: invitation_token }
         }
+      , function (data) {
+          if (data.valid) {
+            cb();
+          }
+        }
+      );
+  };
 
-        $readOnly.trigger('click');
-        return false;
-      }
+  var __globlEvent = function (e) {
+    var $t = $(this)
+      // 已登录 user 信息
+      , auth = Store.get('authorization')
+      , auth_user_id = auth && auth.user_id
+      , auth_token = auth && auth.token
+      , auth_user = Store.get('user')
 
-      if ($db.size()) {
-        // profile 操作, 后端暂不支持browsing-identity 修改身份内容,弹 D4 窗口
-        //if (actionType === 'nota' && tokenType === 'user') {
-          //e.stopImmediatePropagation();
-          //e.stopPropagation();
-          //e.preventDefault();
-          //$('[data-user-action="' + action + '"]').trigger('click');
-          //return false;
-        //}
-        //else if (actionType === '') {
-        if (actionType === '' || (actionType === 'nota' && tokenType === 'user')) {
+      , actionType = $t.data('link')
+      , eventIgnore = $t.data('event-ignore')
+      , $db = $('#app-browsing-identity')
+      , status = $db.length;
+
+    if (status) {
+      var data = $db.data()
+        , settings = data.settings
+        , action = settings.action
+        , code = settings.code
+        , invitation_token = settings.invitation_token
+        , tokenType = settings.tokenType
+        , readOnly = settings.readOnly
+        , browsing = settings.browsing;
+
+      if (code === 1) {
+        if (actionType) {
           e.stopImmediatePropagation();
           e.stopPropagation();
           e.preventDefault();
-          $db.trigger('click');
+
+          var $d = $('<div id="read-only-browsing" data-destory="true" data-widget="dialog" data-dialog-type="read_only"></div>');
+          $d.data('settings', browsing);
+          $('#app-tmp').append($d);
+          $d.trigger('click');
+
           return false;
         }
-      /*
-      } else if (!token) {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        e.preventDefault();
-        if (!$readOnly.size()) {
-          $('#app-main').append(
-            $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
-              .data('settings', Store.get('user'))
-          );
+      } else if (code === 2) {
+        var buser_id = browsing.user_id;
+
+        if ((action === 'SIGNIN')
+            && auth_user_id
+            && (auth_user_id !== buser_id)) {
+
+          if (!actionType) {
+
+            // 非 x-token 需 check invitation_token 状态，弹窗
+            if (tokenType !== 'cross') {
+              e.stopImmediatePropagation();
+              e.stopPropagation();
+              e.preventDefault();
+
+              checkInvitationToken(auth_token, invitation_token, function () {
+                var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
+                $d.data('settings', {
+                  browsing: browsing,
+                  user: auth_user,
+                  token: auth_token,
+                  action: action,
+                  invitation_token: invitation_token
+                });
+                $('#app-tmp').append($d);
+                $d.trigger('click');
+              });
+
+              return false;
+            }
+
+          }
+        } else if (action === 'SETUP' && !readOnly) {
+
+            if (!actionType) {
+              e.stopImmediatePropagation();
+              e.stopPropagation();
+              e.preventDefault();
+              if (auth_user_id && auth_user_id !== buser_id) {
+                checkInvitationToken(auth_token, invitation_token, function () {
+                  var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
+                  $d.data('settings', {
+                    browsing: browsing,
+                    user: auth_user,
+                    token: auth_token,
+                    action: action,
+                    invitation_token: invitation_token
+                  });
+                  $('#app-tmp').append($d);
+                  $d.trigger('click');
+                });
+              } else {
+                $('[data-user-action="SETUP"]').trigger('click');
+              }
+
+            return false;
+          }
+
         }
-        $readOnly.trigger('click');
-        return false;
-      */
+
       }
 
     }
-  });
+  };
 
-  // 只弹两次
-  var LIMIT = 2;
+  $BODY.on('click.data-link', 'a[data-link], div[data-link], span[data-link]', __globlEvent);
+  $BODY.on('mousedown.data-link', 'button[data-link], input[data-link], textarea[data-link]', __globlEvent);
+
+  // TODO:后面再优化
+  // $BODY.on('click.data-link dblclick.data-link', '[data-link]', function (e) {
+  //   var actionType = $(this).data('link');
+  //   var event_ignore = $(this).data('event-ignore');
+
+  //   if (e.type !== event_ignore) {
+
+  //     // 判断权限
+  //     //var authorization = Store.get('authorization');
+  //         //token = authorization && authorization.token;
+
+
+  //     var $db = $('#app-browsing-identity')
+  //       , readOnly = $db.data('readOnly')
+  //       , settings = $db.data('settings')
+  //       , $readOnly = $('#app-read-only')
+  //       , tokenType = $db.data('token-type');
+  //       //, btoken = $db.data('token')
+  //       //, action = $db.data('action');
+
+  //     // read only
+  //     if ($db.size() && readOnly && actionType === 'nota') {
+  //       e.stopImmediatePropagation();
+  //       e.stopPropagation();
+  //       e.preventDefault();
+
+  //       if (!$readOnly.size()) {
+  //         $('#app-main').append(
+  //           $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
+  //             .data('settings', settings.browsing)
+  //         );
+  //       }
+
+  //       $readOnly.trigger('click');
+  //       return false;
+  //     }
+
+  //     if ($db.size()) {
+  //       // profile 操作, 后端暂不支持browsing-identity 修改身份内容,弹 D4 窗口
+  //       //if (actionType === 'nota' && tokenType === 'user') {
+  //         //e.stopImmediatePropagation();
+  //         //e.stopPropagation();
+  //         //e.preventDefault();
+  //         //$('[data-user-action="' + action + '"]').trigger('click');
+  //         //return false;
+  //       //}
+  //       //else if (actionType === '') {
+  //       if (actionType === '' || (actionType === 'nota' && tokenType === 'user')) {
+  //         e.stopImmediatePropagation();
+  //         e.stopPropagation();
+  //         e.preventDefault();
+  //         $db.trigger('click');
+  //         return false;
+  //       }
+  //     /*
+  //     } else if (!token) {
+  //       e.stopImmediatePropagation();
+  //       e.stopPropagation();
+  //       e.preventDefault();
+  //       if (!$readOnly.size()) {
+  //         $('#app-main').append(
+  //           $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
+  //             .data('settings', Store.get('user'))
+  //         );
+  //       }
+  //       $readOnly.trigger('click');
+  //       return false;
+  //     */
+  //     }
+
+  //   }
+  // });
+
   Bus.on('app:cross:edited', function (data) {
-    if (0 === LIMIT) {
-      return;
-    }
-    LIMIT--;
     var $db = $('#app-browsing-identity')
       , settings = $db.data('settings')
-      , $readOnly = $('#app-read-only')
-      , action = $db.data('action');
+      , $readOnly = $('#app-read-only');
 
-    if (!data) {
-      if (action === 'setup') {
-        $('[data-user-action="' + action + '"]').trigger('click');
-      }
     // read-only
     // data = {error : 'no_permission'}
-    } else if (data && data.error === 'no_permission') {
+    if (data && data.error === 'no_permission') {
       if (!$readOnly.size()) {
         $('#app-main').append(
           $readOnly = $('<div id="app-read-only" data-widget="dialog" data-dialog-type="read_only"></div>')
@@ -224,8 +333,6 @@ define(function (require) {
     }
   });
 
-/* MODAL DATA-API
-  * -------------- */
   $BODY.on('click.dialog.data-api', '[data-widget="dialog"]', function (e) {
     var $this = $(this)
       , data = $this.data('dialog')
@@ -263,7 +370,6 @@ define(function (require) {
     data.show(e);
 
   });
-//});
 
   var identities = Store.get('identities');
   if (!identities) { identities = []; }
@@ -289,9 +395,6 @@ define(function (require) {
         'onAutocomplete:finish': function (data) {
           var identity;
           if (data && (identity = data.identity)) {
-            //if (identity['avatar_filename'] === 'default.png') {
-              //identity['avatar_filename'] = '/img/default_portraituserface_20.png';
-            //}
             this.target
               .prev()
               .attr('src', identity.avatar_filename)

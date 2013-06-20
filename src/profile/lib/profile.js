@@ -170,6 +170,18 @@ define(function (require) {
 
     Handlebars.registerPartial('jst-identity-item', $('#jst-identity-item').html())
 
+    // check user's iOS devices has installed the app.
+    var devices = user.devices;
+    devices = R.filter(devices, function (v) {
+      if (v.os_name === 'iOS' && v.status === 'CONNECTED') {
+        return v;
+      }
+    });
+    if (0 === devices.length) {
+      $('.exfe-app').removeClass('hide');
+    }
+
+
     var jst_identity_list = $('#jst-identity-list');
     s = Handlebars.compile(jst_identity_list.html());
     var identities = user.identities;

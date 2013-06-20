@@ -10,8 +10,8 @@
         <!-- Cross-Container -->
         <div class="cross-container">
           <h1 class="title">You are opening a private invitation.</h1>
-          <p class="please-signin hide">Please authenticate as attendee first.</p>
-          <p class="please-access hide">The identity you just authenticated has no access.</p>
+          <p class="please-signin token-expired hide">The identity you just authenticated has no access.</p>
+          <p class="please-access hide">Please authenticate as attendee first.</p>
 
           <div class="details pull-right hide">
             <div class="info">
@@ -60,8 +60,7 @@
             </div>
 
           <div class="form-actions">
-            <button class="xbtn xbtn-authenticate" data-oauth="twitter">
-             <img class="pull-right" src="/static/img/twitter_40.png" alt="" width="40" height="40" />
+            <button class="xbtn xbtn-authenticate" data-oauth="">
             Authenticate
             </button>
             <p class="redirecting hide">Redirecting...</p>

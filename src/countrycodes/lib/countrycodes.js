@@ -1,3 +1,4 @@
+/* jshint -W109 */
 define('countrycodes', function () { return [
     {
         "country_code": "86",

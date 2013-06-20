@@ -125,7 +125,7 @@ define('mappanel', function (require) {
         this.element.on('click.mappanel', '.place-submit', function () {
           // NOTE: 先用老事件触发保存
           Cross.place = self.place;
-          $('body').click();
+          $('body').trigger('save-cross');
         });
 
         this.element.on('keydown.mappanel', proxy(this.keydown, this));
@@ -296,10 +296,14 @@ define('mappanel', function (require) {
           placeGeo = { coords: { latitude: place.lat, longitude: place.lng, title: place.title } };
         }
 
-        var error = function () {
+        var cbGeos = function (o, userGeo, placeGeo, hasLatLng) {
+          o && o.emit && o.emit('geos', userGeo, placeGeo, hasLatLng);
+        };
+
+        var error = function (/*perror*/) {
           userGeo = { coords: LOCATION };
           hasLatLng || (placeGeo = userGeo);
-          self.emit('geos', userGeo, placeGeo, hasLatLng);
+          cbGeos(self, userGeo, placeGeo, hasLatLng);
         };
 
         if (this.isGeoSupported) {
@@ -308,9 +312,12 @@ define('mappanel', function (require) {
               function (position) {
                 userGeo = position;
                 hasLatLng || (placeGeo = userGeo);
-                self.emit('geos', userGeo, placeGeo, hasLatLng);
+                cbGeos(self, userGeo, placeGeo, hasLatLng);
               },
-              error
+              error,
+              {
+                enableHighAccuracy: true
+              }
             );
         }
         else {
@@ -1006,7 +1013,8 @@ define('mappanel', function (require) {
         if (marker) {
           this.selectMarker(marker);
           position = marker.getPosition();
-          this._map.setCenter(position);
+          //this._map.setCenter(position);
+          this._map.panTo(position);
         }
 
         if (this.sizeStatus) {
@@ -1105,8 +1113,10 @@ define('mappanel', function (require) {
       }
 
     , removeMarker: function (marker) {
-        marker.setMap(null);
-        marker = null;
+        if (marker) {
+          marker.setMap(null);
+          marker = null;
+        }
       }
 
     , clearMarkers: function () {
@@ -1237,7 +1247,7 @@ define('mappanel', function (require) {
         GMaps.event.trigger(map, 'resize');
         // 返回到中心点
         (!self._placeMarker && markers.length) && (self._placeMarker = markers[0]);
-        map.setCenter(self._placeMarker ? self._placeMarker.getPosition() : self._userMarker.getPosition());
+        map.setCenter(!!self._placeMarker ? self._placeMarker.getPosition() : (self._userMarker ? self._userMarker.getPosition() : null));
 
         component.placeInput.$element.focusend();
       }

@@ -15,11 +15,11 @@ define('dialog', function (require) {
    *  - https://github.com/makeusabrew/bootbox/blob/master/bootbox.js
    */
 
-  var $ = require('jquery');
-  var Widget = require('widget');
+  var $ = require('jquery')
+    , Widget = require('widget')
 
-  var $BODY = $(document.body);
-  var $TMP = $('#app-tmp');
+    , $BODY = $(document.body)
+    , $TMP = $('#app-tmp');
 
   /*
    * HTML

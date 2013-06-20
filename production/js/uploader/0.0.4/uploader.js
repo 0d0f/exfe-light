@@ -82,10 +82,8 @@ define('uploader', function (require, exports, module) {
           break;
 
         case 'drop':
-          //var dropbox = this.$('.photozone')[0];
           var modalmain = this.$('.modal-main')[0];
 
-          //if (!$.contains(dropbox, e.target) && (e.target !== dropbox)) {
           if (!$.contains(modalmain, e.target) && (e.target !== modalmain)) {
             return false;
           }
@@ -107,7 +105,6 @@ define('uploader', function (require, exports, module) {
           i = 0, l = newfiles.length;
 
       if (false) {
-      //if (filterFunc) {
         for (; i < l; i++) {
           newfile = new FileHTML5(newfiles[i]);
           if (filterFunc(newfile)) {
@@ -241,6 +238,7 @@ define('uploader', function (require, exports, module) {
 
       this.filehtml5.on('uploadstart', function (e) {
         that.$('.loading').removeClass('hide');
+        that.$('.upload-done').prop('disabled', true);
       });
     },
 
@@ -273,7 +271,7 @@ define('uploader', function (require, exports, module) {
 
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
-          this.$('.upload-done').show();
+          this.$('.upload-done').prop('disabled', false).show();
           this.$('.upload-clear').hide();
           this.$('.zoom').show();
 
@@ -349,6 +347,7 @@ define('uploader', function (require, exports, module) {
       },
 
       onHideAfter: function () {
+        this.filehtml5 && this.filehtml5.cancelUpload();
         var $e = this.element;
         this.offSrcNode();
         this.destory();
@@ -379,7 +378,7 @@ define('uploader', function (require, exports, module) {
 
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
-          this.$('.upload-done').show();
+          this.$('.upload-done').prop('disabled', false).show();
           this.$('.upload-clear').hide();
           this.$('.zoom').hide();
 
@@ -548,6 +547,7 @@ define('uploader', function (require, exports, module) {
         'click .back': function (e) {
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
+          this.$('.upload-done').prop('disabled', false);
           this.$('.upload, .rotate, .upload-done').show();
           this.$('.back, .upload-clear').hide();
           return false;

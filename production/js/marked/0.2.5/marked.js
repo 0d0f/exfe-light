@@ -1,4 +1,5 @@
 define('marked', function (require, exports, module) {
+  'use strict';
 
 
 /**
