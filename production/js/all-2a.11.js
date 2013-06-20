@@ -1,9 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-<<<<<<< HEAD
-/*! desktop@2a.11 2013-06-20 02:06:34 */
-=======
-/*! desktop@2a.11 2013-06-20 02:06:03 */
->>>>>>> d9185c7... disable upload-button while uploading the image
+/*! desktop@2a.11 2013-06-20 04:06:59 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7590,11 +7586,13 @@ TWEEN.Tween = function(e) {
       this.calendarTable = new g(this, ".date-calendar"), this.timeline = new v(this, ".date-timeline"), 
       this.listen();
     },
+    _x: 0,
     initComponents: function() {
       var e = this.eftime, t = this.dateObj.date;
       this.calendarTable.refresh(t), 0 === this.originEftime.outputformat && (this.calendarTable.addCursorStyle(), 
       this.calendarTable.select()), this.timeline.refresh(this.eftime), this.timeline.select(this.eftime), 
-      this.dateInput.change(e.origin || t.text), this.dateInput.$element.focusend(), this.eftime.begin_at.time && this.showTL();
+      this.dateInput.change(e.origin || t.text), this.dateInput.$element.focusend(), this.eftime.begin_at.time && (this._x = 124, 
+      this.element.css("left", "-=" + this._x), this.showTL());
     },
     listen: function() {
       this.element.on("click.datepanel", ".place-submit", y(this.submitSave, this)), this.element.on("keydown.datepanel", y(this.keydown, this)), 
@@ -7646,7 +7644,9 @@ TWEEN.Tween = function(e) {
       this.dateInput.change(t.origin);
     },
     showTL: function() {
-      this.timeline.show(this.eftime);
+      this.timeline.show(this.eftime), this._x || (this._x = 124, this.element.css({
+        "-webkit-transform": "translate3d(-" + this._x + "px, 0, 0)"
+      }));
     },
     keydown: function(e) {
       var t = this, i = e.altKey, n = e.ctrlKey, r = e.shiftKey, a = e.metaKey, s = e.keyCode;
@@ -7655,10 +7655,10 @@ TWEEN.Tween = function(e) {
     showAfter: function() {
       var e = this.srcNode;
       if (e) {
-        var t = e.offset(), i = this.element, n = i.outerWidth(), r = e.outerHeight();
+        var t = e.offset(), i = this.element, n = i.outerWidth();
         i.css({
-          left: t.left - n + 175 - 15,
-          top: t.top + r + 7
+          left: t.left - n - 15,
+          top: t.top
         });
       }
       this.initComponents();
@@ -11681,18 +11681,11 @@ TWEEN.Tween = function(e) {
         if (n.length) {
           if (t = this.filehtml5 = n[0], !this.checkFile(t)) return !1;
           this.filehtml5Bind(), this.$(".overlay").addClass("hide"), this.$(".resizeable").removeClass("hide"), 
-<<<<<<< HEAD
-          this.$(".upload-done").show(), this.$(".upload-clear").hide(), this.$(".zoom").hide();
+          this.$(".upload-done").prop("disabled", !1).show(), this.$(".upload-clear").hide(), 
+          this.$(".zoom").hide();
           var r = this;
           r.ri = 0, r.R = [ 0, 0 ];
           var a, l, d = document.getElementById("avatar240"), u = document.getElementById("avatar80"), h = (r.r, 
-=======
-          this.$(".upload-done").prop("disabled", !1).show(), this.$(".upload-clear").hide(), 
-          this.$(".zoom").hide();
-          var a = this;
-          a.ri = 0, a.R = [ 0, 0 ];
-          var r, l, d = document.getElementById("avatar240"), u = document.getElementById("avatar80"), h = (a.r, 
->>>>>>> d9185c7... disable upload-button while uploading the image
           new o(d)), p = new o(u), f = document.getElementById("img-avatar");
           f.onerror = f.onload = function() {
             var e = f, t = Math.min(f.width, f.height);
