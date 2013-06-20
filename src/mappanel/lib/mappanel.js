@@ -296,10 +296,14 @@ define('mappanel', function (require) {
           placeGeo = { coords: { latitude: place.lat, longitude: place.lng, title: place.title } };
         }
 
+        var cbGeos = function (o, userGeo, placeGeo, hasLatLng) {
+          o && o.emit && o.emit('geos', userGeo, placeGeo, hasLatLng);
+        };
+
         var error = function (/*perror*/) {
           userGeo = { coords: LOCATION };
           hasLatLng || (placeGeo = userGeo);
-          self && self.emit && self.emit('geos', userGeo, placeGeo, hasLatLng);
+          cbGeos(self, userGeo, placeGeo, hasLatLng);
         };
 
         if (this.isGeoSupported) {
@@ -308,7 +312,7 @@ define('mappanel', function (require) {
               function (position) {
                 userGeo = position;
                 hasLatLng || (placeGeo = userGeo);
-                self.emit('geos', userGeo, placeGeo, hasLatLng);
+                cbGeos(self, userGeo, placeGeo, hasLatLng);
               },
               error,
               {

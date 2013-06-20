@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 04:06:09 */
+/*! desktop@2a.11 2013-06-20 04:06:18 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8161,16 +8161,18 @@ TWEEN.Tween = function(e) {
           title: a.title
         }
       });
-      var c = function() {
+      var c = function(e, t, i, n) {
+        e && e.emit && e.emit("geos", t, i, n);
+      }, d = function() {
         e = {
           coords: s
-        }, l || (t = e), i && i.emit && i.emit("geos", e, t, l);
+        }, l || (t = e), c(i, e, t, l);
       };
       this.isGeoSupported ? h.getCurrentPosition(function(n) {
-        e = n, l || (t = e), i.emit("geos", e, t, l);
-      }, c, {
+        e = n, l || (t = e), c(i, e, t, l);
+      }, d, {
         enableHighAccuracy: !0
-      }) : c();
+      }) : d();
     },
     showBefore: function() {
       this.element.attr("editarea", "map-panel");
