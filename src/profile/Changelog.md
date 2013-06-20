@@ -1,3 +1,7 @@
+* v0.1.20 2013-06-20T16:40:07 UTC+0800
+  - Changes
+    * checks devices status, toggle exfe-app link
+
 * v0.1.19 2013-05-10T16:42:07 UTC+0800
   - Changes
     * `window._ENV_` in exchange for `require('config')`

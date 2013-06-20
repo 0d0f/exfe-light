@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 04:06:59 */
+/*! desktop@2a.11 2013-06-20 04:06:54 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -11951,23 +11951,27 @@ TWEEN.Tween = function(e) {
   });
   var d = function(e) {
     t(".user-xstats .attended").html(e.cross_quantity);
-    var n = t("#jst-user-avatar"), a = r.compile(n.html()), s = a({
+    var n = t("#jst-user-avatar"), a = r.compile(n.html()), o = a({
       avatar_filename: e.avatar_filename
     });
-    t(".user-avatar").append(s), t("#profile .user-name").find("h3").html(e.name || e.nickname), 
+    t(".user-avatar").append(o), t("#profile .user-name").find("h3").html(e.name || e.nickname), 
     t("#profile .user-bio").text(e.bio || ""), t("#profile .user-name").find(".changepassword").attr("data-dialog-type", e.password ? "changepassword" : "setpassword").find("span").text(e.password ? "Change Password..." : "Set Password..."), 
     r.registerPartial("jst-identity-item", t("#jst-identity-item").html());
-    var o = t("#jst-identity-list");
-    a = r.compile(o.html());
-    var l = e.identities;
-    l[0].__default__ = !0, s = a({
-      identities: l
-    }), t(".identity-list").append(s);
-    var d;
-    if (d = t("#app-main").data("event")) {
-      var u = d.action;
-      if ("add_identity" === u) {
-        var h = d.data, p = function(e, n, o) {
+    var l = e.devices;
+    l = s.filter(l, function(e) {
+      return "iOS" === e.os_name && "CONNECTED" === e.status ? e : void 0;
+    }), 0 === l.length && t(".exfe-app").removeClass("hide");
+    var d = t("#jst-identity-list");
+    a = r.compile(d.html());
+    var u = e.identities;
+    u[0].__default__ = !0, o = a({
+      identities: u
+    }), t(".identity-list").append(o);
+    var h;
+    if (h = t("#app-main").data("event")) {
+      var p = h.action;
+      if ("add_identity" === p) {
+        var f = h.data, m = function(e, n, s) {
           var l = i.get("authorization"), d = l.token;
           c.request("addIdentity", {
             type: "POST",
@@ -11980,24 +11984,24 @@ TWEEN.Tween = function(e) {
             }
           }, function(e) {
             var n = e.identity, l = i.get("user"), c = l.identities;
-            c.push(n), i.set("user", l), a = r.compile(t("#jst-identity-item").html()), s = a(e.identity), 
-            t(".identity-list").append(s), o && o.destory();
+            c.push(n), i.set("user", l), a = r.compile(t("#jst-identity-item").html()), o = a(e.identity), 
+            t(".identity-list").append(o), s && s.destory();
           }, function(i) {
             var r = i && i.meta;
             if (r && 401 === r.code && "authenticate_timeout" === r.errorType) {
-              o && o.destory();
+              s && s.destory();
               var a = t('<div data-widget="dialog" data-dialog-type="authentication" data-destory="true" class="hide"></div>');
               t("#app-tmp").append(a);
-              var s = t.Event("click.dialog.data-api");
-              s._data = {
+              var o = t.Event("click.dialog.data-api");
+              o._data = {
                 callback: function() {
-                  p(e, n);
+                  m(e, n);
                 }
-              }, a.trigger(s);
+              }, a.trigger(o);
             }
           });
         };
-        p(h.identity.external_username, h.identity.provider), t("#app-main").removeData("event");
+        m(f.identity.external_username, f.identity.provider), t("#app-main").removeData("event");
       }
     }
   }, u = function(e) {
