@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 02:06:22 */
+/*! desktop@2a.11 2013-06-20 02:06:03 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -12760,7 +12760,7 @@ TWEEN.Tween = function(e) {
         data && 200 === data.meta.code && (i = !1, "user" === data.response.type ? h(".user-avatar .avatar, .user-panel .avatar").find("img").attr("src", data.response.avatars["80_80"]) : h('.identity-list li[data-identity-id="' + data.response.identity_id + '"] .avatar').find("img").attr("src", data.response.avatars["80_80"])), 
         e.emit("toggleError", i, "server"), e.hide();
       }), this.filehtml5.on("uploadstart", function() {
-        e.$(".loading").removeClass("hide");
+        e.$(".loading").removeClass("hide"), e.$(".upload-done").prop("disabled", !0);
       });
     },
     options: {
@@ -12776,8 +12776,8 @@ TWEEN.Tween = function(e) {
         if (this._data = e, this._canvasOffset = this.$("#avatar240").offset(), e.original) {
           var t = document.createElement("input");
           t.type = "file", this.filehtml5 = new g(t.files), this.filehtml5Bind(), this.$(".overlay").addClass("hide"), 
-          this.$(".resizeable").removeClass("hide"), this.$(".upload-done").show(), this.$(".upload-clear").hide(), 
-          this.$(".zoom").show();
+          this.$(".resizeable").removeClass("hide"), this.$(".upload-done").prop("disabled", !1).show(), 
+          this.$(".upload-clear").hide(), this.$(".zoom").show();
           var i = this;
           i.ri = 0, i.R = [ 0, 0 ];
           var n, a, r = document.getElementById("avatar240"), l = document.getElementById("avatar80"), d = (i.r, 
@@ -12815,7 +12815,8 @@ TWEEN.Tween = function(e) {
         if (n.length) {
           if (t = this.filehtml5 = n[0], !this.checkFile(t)) return !1;
           this.filehtml5Bind(), this.$(".overlay").addClass("hide"), this.$(".resizeable").removeClass("hide"), 
-          this.$(".upload-done").show(), this.$(".upload-clear").hide(), this.$(".zoom").hide();
+          this.$(".upload-done").prop("disabled", !1).show(), this.$(".upload-clear").hide(), 
+          this.$(".zoom").hide();
           var a = this;
           a.ri = 0, a.R = [ 0, 0 ];
           var r, l, d = document.getElementById("avatar240"), u = document.getElementById("avatar80"), h = (a.r, 
@@ -12876,8 +12877,8 @@ TWEEN.Tween = function(e) {
         },
         "click .back": function() {
           return this.$(".overlay").addClass("hide"), this.$(".resizeable").removeClass("hide"), 
-          this.$(".upload, .rotate, .upload-done").show(), this.$(".back, .upload-clear").hide(), 
-          !1;
+          this.$(".upload-done").prop("disabled", !1), this.$(".upload, .rotate, .upload-done").show(), 
+          this.$(".back, .upload-clear").hide(), !1;
         },
         "click .smallphoto": function(e) {
           e.preventDefault();

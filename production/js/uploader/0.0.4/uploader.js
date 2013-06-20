@@ -238,6 +238,7 @@ define('uploader', function (require, exports, module) {
 
       this.filehtml5.on('uploadstart', function (e) {
         that.$('.loading').removeClass('hide');
+        that.$('.upload-done').prop('disabled', true);
       });
     },
 
@@ -270,7 +271,7 @@ define('uploader', function (require, exports, module) {
 
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
-          this.$('.upload-done').show();
+          this.$('.upload-done').prop('disabled', false).show();
           this.$('.upload-clear').hide();
           this.$('.zoom').show();
 
@@ -377,7 +378,7 @@ define('uploader', function (require, exports, module) {
 
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
-          this.$('.upload-done').show();
+          this.$('.upload-done').prop('disabled', false).show();
           this.$('.upload-clear').hide();
           this.$('.zoom').hide();
 
@@ -546,6 +547,7 @@ define('uploader', function (require, exports, module) {
         'click .back': function (e) {
           this.$('.overlay').addClass('hide');
           this.$('.resizeable').removeClass('hide');
+          this.$('.upload-done').prop('disabled', false);
           this.$('.upload, .rotate, .upload-done').show();
           this.$('.back, .upload-clear').hide();
           return false;
