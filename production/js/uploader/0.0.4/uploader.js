@@ -82,10 +82,8 @@ define('uploader', function (require, exports, module) {
           break;
 
         case 'drop':
-          //var dropbox = this.$('.photozone')[0];
           var modalmain = this.$('.modal-main')[0];
 
-          //if (!$.contains(dropbox, e.target) && (e.target !== dropbox)) {
           if (!$.contains(modalmain, e.target) && (e.target !== modalmain)) {
             return false;
           }
@@ -107,7 +105,6 @@ define('uploader', function (require, exports, module) {
           i = 0, l = newfiles.length;
 
       if (false) {
-      //if (filterFunc) {
         for (; i < l; i++) {
           newfile = new FileHTML5(newfiles[i]);
           if (filterFunc(newfile)) {
@@ -349,6 +346,7 @@ define('uploader', function (require, exports, module) {
       },
 
       onHideAfter: function () {
+        this.filehtml5 && this.filehtml5.cancelUpload();
         var $e = this.element;
         this.offSrcNode();
         this.destory();
