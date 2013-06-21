@@ -68,7 +68,7 @@ define('user', function (require) {
               ) {
               setTimeout(function () {
                 window.location.hash = Util.printExtUserName(user.identities[0]);
-              }, 89 / 2);
+              }, 16);
               return;
             }
           }

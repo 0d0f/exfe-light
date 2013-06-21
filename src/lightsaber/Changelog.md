@@ -1,3 +1,7 @@
+* v0.0.6 2013-06-21T14:52:00 UTC+0800
+  - Bug fixes
+    * ie10 上， popstate 失效问题
+
 * v0.0.5 2013-04-19T13:10:00 UTC+0800
   - New Features
     * added `enableFullUrlPath` option
