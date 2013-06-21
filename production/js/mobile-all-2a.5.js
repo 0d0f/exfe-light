@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a.5 2013-06-19 10:06:27 */
+/*! mobile@2a.5 2013-06-21 02:06:51 */
 (function(t) {
   "use strict";
   function e(t, e, i) {
@@ -230,7 +230,7 @@ var Zepto = function() {
     opacity: 1,
     "z-index": 1,
     zoom: 1
-  }, D = /^\s*<(\w+|!)[^>]*>/, j = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, L = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = P.createElement("table"), B = P.createElement("tr"), q = {
+  }, D = /^\s*<(\w+|!)[^>]*>/, L = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, j = /^(?:body|html)$/i, R = [ "val", "css", "html", "text", "data", "width", "height", "offset" ], F = [ "after", "prepend", "before", "append" ], z = P.createElement("table"), B = P.createElement("tr"), q = {
     tr: P.createElement("tbody"),
     tbody: z,
     thead: z,
@@ -255,7 +255,7 @@ var Zepto = function() {
       return t.indexOf(e) == n;
     });
   }, Y.fragment = function(t, e, n) {
-    t.replace && (t = t.replace(j, "<$1></$2>")), e === x && (e = D.test(t) && RegExp.$1), 
+    t.replace && (t = t.replace(L, "<$1></$2>")), e === x && (e = D.test(t) && RegExp.$1), 
     e in q || (e = "*");
     var i, r, a = q[e];
     return a.innerHTML = "" + t, r = E.each(N.call(a.childNodes), function() {
@@ -605,7 +605,7 @@ var Zepto = function() {
     },
     position: function() {
       if (this.length) {
-        var t = this[0], e = this.offsetParent(), n = this.offset(), i = L.test(e[0].nodeName) ? {
+        var t = this[0], e = this.offsetParent(), n = this.offset(), i = j.test(e[0].nodeName) ? {
           top: 0,
           left: 0
         } : e.offset();
@@ -619,7 +619,7 @@ var Zepto = function() {
     },
     offsetParent: function() {
       return this.map(function() {
-        for (var t = this.offsetParent || P.body; t && !L.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
+        for (var t = this.offsetParent || P.body; t && !j.test(t.nodeName) && "static" == E(t).css("position"); ) t = t.offsetParent;
         return t;
       });
     }
@@ -3326,7 +3326,7 @@ TWEEN.Tween = function(t) {
     return -1;
   }
   function p(t, e, n, i, r) {
-    return w.get(e, function(e) {
+    return k.get(e, function(e) {
       var s, a = e;
       "html" !== r && (s = t.compile(e), a = s(n)), i(a);
     });
@@ -3347,29 +3347,29 @@ TWEEN.Tween = function(t) {
     return t;
   }
   function g(t, e, n, i) {
-    return t instanceof RegExp ? t : (T(t) && (t = "(" + t.join("|") + ")"), t = t.concat(i ? "" : "/?").replace(/\/\(/g, "(?:/").replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g, function(t, n, i, r, s, a, o) {
+    return t instanceof RegExp ? t : ($(t) && (t = "(" + t.join("|") + ")"), t = t.concat(i ? "" : "/?").replace(/\/\(/g, "(?:/").replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g, function(t, n, i, r, s, a, o) {
       return e.push({
         name: r,
         optional: !!a
       }), n = n || "", "" + (a ? "" : n) + "(?:" + (a ? n : "") + (i || "") + (s || i && "([^/.]+?)" || "([^/]+?)") + ")" + (a || "") + (o ? "(/*)?" : "");
     }).replace(/([\/.])/g, "\\$1").replace(/\*/g, "(.*)"), RegExp("^" + t + "$", n ? "" : "i"));
   }
-  var y, b = t("emitter"), w = t("jquery") || t("zepto"), k = function(t, e) {
+  var y, b = t("emitter"), w = /msie [\w.]+/.exec(navigator.userAgent.toLowerCase()), k = t("jquery") || t("zepto"), x = function(t, e) {
     return t ? function(n) {
       return t.call(e, n);
     } : void 0;
-  }, x = window.location, _ = window.history, E = "/", C = !1;
-  w(window).on("load", function() {
-    C = !0, setTimeout(function() {
-      C = !1;
+  }, _ = window.location, E = window.history, C = "/", S = !1;
+  k(window).on("load", function() {
+    S = !0, setTimeout(function() {
+      S = !1;
     }, 0);
   }), e = n.exports = i;
-  var S;
-  e.version = "0.0.5", S = r.prototype, S.historySupport = y = null !== (null !== _ ? _.pushState : void 0), 
-  w.browser && w.browser.opera && (S.historySupport = y = !1), S.init = function() {
-    this.route = E, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
+  var T;
+  e.version = "0.0.5", T = r.prototype, T.historySupport = y = null !== (null !== E ? E.pushState : void 0), 
+  k.browser && k.browser.opera && (T.historySupport = y = !1), T.init = function() {
+    this.route = C, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
     this.viewCallbacks = [], this.defaultConfiguration();
-  }, S.defaultConfiguration = function() {
+  }, T.defaultConfiguration = function() {
     this.set("env", "production"), this.enable("dispatch"), this.use(l(this)), this._usedRouter = !1, 
     this._router = new o(this), this.routes = this._router.map, this._router.caseSensitive = this.enabled("case sensitive routing"), 
     this._router.strict = this.enabled("strict routing"), this.locals = m(this), this.locals.settings = this.settings, 
@@ -3378,30 +3378,30 @@ TWEEN.Tween = function(t) {
     }), this.configure("production", function() {
       this.enable("view cache");
     });
-  }, S.use = function(t, e) {
-    return "string" != typeof t && (e = t, t = E), E !== t && E === t[t.length - 1] && (t = t.slice(0, -1)), 
+  }, T.use = function(t, e) {
+    return "string" != typeof t && (e = t, t = C), C !== t && C === t[t.length - 1] && (t = t.slice(0, -1)), 
     this.stack.push({
       route: t,
       handle: e
     }), this;
-  }, S.engine = function(t, e) {
+  }, T.engine = function(t, e) {
     if ("function" != typeof e) throw Error("callback function required");
     return "." !== t[0] && (t = "." + t), this.engines[t] = e, this;
-  }, S.set = function(t, e) {
+  }, T.set = function(t, e) {
     return 1 !== arguments.length ? (this.settings[t] = e, this) : this.settings.hasOwnProperty(t) ? this.settings[t] : void 0;
-  }, S.enabled = function(t) {
+  }, T.enabled = function(t) {
     return !!this.set(t);
-  }, S.disabled = function(t) {
+  }, T.disabled = function(t) {
     return !this.set(t);
-  }, S.enable = function(t) {
+  }, T.enable = function(t) {
     return this.set(t, !0);
-  }, S.disable = function(t) {
+  }, T.disable = function(t) {
     return this.set(t, !1);
-  }, S.configure = function(t, e) {
+  }, T.configure = function(t, e) {
     var n = "all", i = [].slice.call(arguments);
     return e = i.pop(), i.length && (n = i), ("all" === n || ~d(n, this.settings.env)) && e.call(this), 
     this;
-  }, S.render = function(t, e, n) {
+  }, T.render = function(t, e, n) {
     var i, r = {}, s = this.cache;
     if (this.engine, "function" == typeof e && (n = e, e = {}), v(r, this.locals), e.locals && v(r, e.locals), 
     v(r, e), r.cache = null === r.cache ? this.enabled("view cache") : r.cache, r.cache && (i = s[t]), 
@@ -3420,19 +3420,19 @@ TWEEN.Tween = function(t) {
     } catch (a) {
       n(a);
     }
-  }, S.path = function() {
+  }, T.path = function() {
     return this.route;
-  }, S.param = function(t, e) {
+  }, T.param = function(t, e) {
     var n, i = [].slice.call(arguments, 1), r = 0;
-    if (T(t)) for (n = t.length; n > r; ++r) for (var s = 0, a = i.length; a > s; ++s) this.param(t[r], i[s]); else if ("function" == typeof t) this._router.param(t); else for (":" === t[0] && (t = t.substr(1)), 
+    if ($(t)) for (n = t.length; n > r; ++r) for (var s = 0, a = i.length; a > s; ++s) this.param(t[r], i[s]); else if ("function" == typeof t) this._router.param(t); else for (":" === t[0] && (t = t.substr(1)), 
     n = i.length; n > r; ++r) this._router.param(t, e);
     return this;
-  }, S.initRouter = function() {
+  }, T.initRouter = function() {
     this._usedRouter === !1 && (this._usedRouter = !0, this.use(this._router.middleware));
-  }, S.get = function() {
+  }, T.get = function() {
     var t = [].slice.call(arguments);
     return this.initRouter(), this._router.route.apply(this._router, t);
-  }, S.handle = function(t, e) {
+  }, T.handle = function(t, e) {
     function n(o) {
       var c, u = i[a++];
       if (s && (t.url = t.url.substr(1), s = !1), t.url = r + t.url, u) try {
@@ -3448,55 +3448,55 @@ TWEEN.Tween = function(t) {
       var i = this.stack, r = "", s = !1, a = 0;
       n();
     }
-  }, S.run = function(t) {
+  }, T.run = function(t) {
     this.emit("launch"), t = t || {};
     var e = this.request, n = this.response;
     this.running || (this.running = !0, !1 === t.dispatch && this.disable("dispatch"), 
-    !1 !== t.popstate && (this.historySupport ? window.addEventListener("popstate", k(this.change, this), !1) : window.addEventListener("hashchange", k(this.change, this), !1)), 
+    !1 !== t.popstate && (this.historySupport && !w ? window.addEventListener("popstate", x(this.change, this), !1) : window.addEventListener("hashchange", x(this.change, this), !1)), 
     this.disabled("dispatch") || (this.handle(e, n), this.emit("launched")));
-  }, S.change = function(t) {
-    if (C) return C = !1;
+  }, T.change = function(t) {
+    if (S) return S = !1;
     var e = this, n = e.request, i = e.response, r = n.url;
-    return n.updateUrl(), r !== n.url ? (e.handle(n, i), t.stopPropagation(), t.preventDefault(), 
-    !1) : void 0;
-  }, S.error = function(t, e) {
+    return n.updateUrl(), r !== n.url ? (e.handle(n, i), t && (t.stopPropagation(), 
+    t.preventDefault()), !1) : void 0;
+  }, T.error = function(t, e) {
     var n = Error(e);
     return n.status = t, n;
-  }, S = s.prototype, S.updateUrl = function() {
-    this.host = x.hostname, this.port = x.port || 80, this.fullpath = x.pathname, this.enableFullUrlPath && (this.path = this.fullpath), 
-    this.hash = decodeURIComponent(x.hash), this.querystring = decodeURIComponent(x.search), 
+  }, T = s.prototype, T.updateUrl = function() {
+    this.host = _.hostname, this.port = _.port || 80, this.fullpath = _.pathname, this.enableFullUrlPath && (this.path = this.fullpath), 
+    this.hash = decodeURIComponent(_.hash), this.querystring = decodeURIComponent(_.search), 
     this.url = this.path + this.querystring + this.hash;
-  }, S.param = function(t, e) {
+  }, T.param = function(t, e) {
     var n = this.params || {}, i = this.query || {};
     return null != n[t] && n.hasOwnProperty(t) ? n[t] : null != i[t] ? i[t] : e;
-  }, S.getPath = function() {
+  }, T.getPath = function() {
     return this.path;
-  }, S.getHost = function() {
+  }, T.getHost = function() {
     return this.host;
-  }, S = a.prototype, S.location = function(t) {
+  }, T = a.prototype, T.location = function(t) {
     window.setTimeout(function() {
-      x.href = t;
+      _.href = t;
     }, 16);
-  }, S.redirect = function(t) {
+  }, T.redirect = function(t) {
     var e, n;
-    return arguments.length, t = arguments[0], "back" === t || "forward" === t ? (_[t](), 
+    return arguments.length, t = arguments[0], "back" === t || "forward" === t ? (E[t](), 
     void 0) : y ? (e = arguments[1], n = arguments[2] || {}, this.path = t, this.title = e || "EXFE.COM", 
     document.title = this.title, this.state = n, this.state.id = h(), this.pushState(), 
     this.app.change(), void 0) : (this.location(t), void 0);
-  }, S.save = function() {
-    _.replaceState(this.state, this.title, this.path);
-  }, S.pushState = function() {
-    _.pushState(this.state, this.title, this.path);
-  }, S.render = function(t, e, n) {
+  }, T.save = function() {
+    E.replaceState(this.state, this.title, this.path);
+  }, T.pushState = function() {
+    E.pushState(this.state, this.title, this.path);
+  }, T.render = function(t, e, n) {
     var i = this, e = e || {}, r = this.app;
     "function" == typeof e && (n = e, e = {}), e.locals = i.locals, r.render(t, e, n);
-  }, S = o.prototype, S.param = function(t, e) {
+  }, T = o.prototype, T.param = function(t, e) {
     if ("function" == typeof t) return this._params.push(t), void 0;
     var n, i, r = this._params, s = r.length;
     for (i = 0; s > i; ++i) (n = r[i](t, e)) && (e = n);
     if ("function" != typeof e) throw Error("invalid param() call for " + t + ", got " + e);
     return (this.params[t] = this.params[t] || []).push(e), this;
-  }, S._dispatch = function(t, e, n) {
+  }, T._dispatch = function(t, e, n) {
     var i = this.params, r = this;
     (function s(a, o) {
       function c(e) {
@@ -3530,31 +3530,31 @@ TWEEN.Tween = function(t) {
       return t.route = f = r.matchRequest(t, a), f ? (t.params = f.params, m = f.keys, 
       a = 0, u(o), void 0) : n(o);
     })(0);
-  }, S.matchRequest = function(t, e) {
+  }, T.matchRequest = function(t, e) {
     var n, i = t.url, r = this.map, s = r.length;
     for (e = e || 0; s > e; ++e) if (n = r[e], n.match(i)) return t._route_index = e, 
     n;
-  }, S.route = function(t) {
+  }, T.route = function(t) {
     t || Error("Router#get() requires a path");
     var e = [].slice.call(arguments, 1), n = new c(t, e, {
       sensitive: this.caseSensitive,
       strict: this.strict
     });
     return (this.map = this.map || []).push(n), this;
-  }, S = c.prototype, S.match = function(t) {
+  }, T = c.prototype, T.match = function(t) {
     this.regexp.lastIndex = 0;
     var e, n, i, r, s = this.keys, a = this.params = [], o = this.regexp.exec(t);
     if (!o) return !1;
     for (e = 1, n = o.length; n > e; ++e) i = s[e - 1], r = "string" == typeof o[e] ? decodeURIComponent(o[e]) : o[e], 
     i ? a[i.name] = r : a.push(r);
     return !0;
-  }, S = u.prototype, S.lookup = function(t) {
+  }, T = u.prototype, T.lookup = function(t) {
     return this.root + "/" + t + "?t=" + this.timestamp;
-  }, S.render = function(t, e) {
+  }, T.render = function(t, e) {
     return p(this.engine, this.path, t, e, this.ext);
   }, h.id = 0;
-  var T = Array.isArray;
-  T || (T = function(t) {
+  var $ = Array.isArray;
+  $ || ($ = function(t) {
     return t instanceof Array;
   });
 }), define("live", function(t) {
@@ -4540,8 +4540,8 @@ TWEEN.Tween = function(t) {
     h.invitations = [], A = C.length;
     for (var D = 0; A > D; ) h.invitations.push(C.splice(0, 5)), D += 5;
     A = h.invitations.length;
-    var j = h.invitations[A - 1], L = j.length;
-    if (L && 5 > L) for (;5 - L++; ) j.push(void 0);
+    var L = h.invitations[A - 1], j = L.length;
+    if (j && 5 > j) for (;5 - j++; ) L.push(void 0);
     var R = "";
     k && (_ ? (R = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
     c = _.token, r.set("authorization", _)) : (_ = r.get("authorization"), _ && _.user_id === k && (R = h.id + "?user_id=" + k + "&token=" + _.token + "&identity_id=" + x, 
