@@ -305,7 +305,7 @@ define('phonepanel', function (require) {
             element.find('.tips-area').show();
             element.find('.complete-list').slideUp();
         });
-        element.on('keyup.phonepanel', '.name', function(e) {
+        element.on('keydown.phonepanel', '.name', function(e) {
             if ($(this).val()) {
                 if (e.keyCode === 13) {
                     var phoneNumber = '+' + areaInfos[curCntry].country_code + rawPhone;
