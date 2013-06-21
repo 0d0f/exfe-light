@@ -2326,6 +2326,7 @@ define(function (require, exports, module) {
             $('.cross-edit').show(233);
         } else {
             ShowHost();
+            $('#gather').addClass('gathering-x');
             $('.cross-form').slideDown(233);
             $('.cross-edit').hide(233);
             $('#gather-title').select();
