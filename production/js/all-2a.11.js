@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-21 02:06:42 */
+/*! desktop@2a.11 2013-06-21 07:06:25 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -14699,8 +14699,9 @@ TWEEN.Tween = function(e) {
       K !== e && (B(), K = e);
     }
   }, Y = function(e) {
-    e ? (t(".cross-form").slideUp(233), t(".cross-edit").show(233)) : (b(), t(".cross-form").slideDown(233), 
-    t(".cross-edit").hide(233), t("#gather-title").select(), t("#gather-title").focus());
+    e ? (t(".cross-form").slideUp(233), t(".cross-edit").show(233)) : (b(), t("#gather").addClass("gathering-x"), 
+    t(".cross-form").slideDown(233), t(".cross-edit").hide(233), t("#gather-title").select(), 
+    t("#gather-title").focus());
   };
   window.Store = e("store"), window.Api = e("api"), window.webkitNotifications && window.webkitNotifications.requestPermission(function() {});
   var G = e("humantime");
