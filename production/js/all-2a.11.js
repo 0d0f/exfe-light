@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-20 04:06:18 */
+/*! desktop@2a.11 2013-06-21 02:06:42 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -11631,7 +11631,7 @@ TWEEN.Tween = function(e) {
         c(n), i.find(".tips-area").show(), i.find(".complete-list").slideUp();
       }), i.on("keyup.phonepanel", ".name", function() {
         i.find(".complete-list").html(""), i.find(".tips-area").show(), i.find(".complete-list").slideUp();
-      }), i.on("keyup.phonepanel", ".name", function(r) {
+      }), i.on("keydown.phonepanel", ".name", function(r) {
         if (t(this).val() && 13 === r.keyCode) {
           var l = "+" + o[a].country_code + n, c = i.find(".name").val();
           e.add({
@@ -13529,7 +13529,7 @@ TWEEN.Tween = function(e) {
         var v = decodeURIComponent(window.location.hash);
         if (i || ("" === v || /^#?(invalid)?/.test(v)) && !/^#gather/.test(v) && !/^#!/.test(v)) return setTimeout(function() {
           window.location.hash = d.printExtUserName(p.identities[0]);
-        }, 44.5), void 0;
+        }, 16), void 0;
       }
       c.emit("app:page:usermenu", !0), c.emit("app:usermenu:updatenormal", p), c.emit("app:usermenu:crosslist", e, t), 
       c.emit("app:user:signin:after", p);
@@ -13850,14 +13850,15 @@ TWEEN.Tween = function(e) {
           break;
         }
         if (!c) {
-          var u = ExfeeWidget.complete_exfee.push(ExfeUtilities.clone(n[l])) - 1, h = n[l].provider;
-          o += "<li" + (u ? "" : ' class="active"') + ">" + '<span class="pull-left avatar">' + '<img src="' + n[l].avatar_filename + '" alt="" width="40" height="40">' + '<span class="rb"><i class="icon16-identity-' + n[l].provider + '"></i></span>' + "</span>" + '<div class="identity">' + '<div class="name">' + r(n[l].name) + "</div>" + "<div>" + '<span class="oblique external">' + r(this.displayIdentity(n[l], !0)) + "</span>" + ("email" === h || "phone" === h ? "" : ' <span class="provider">@' + h.charAt(0).toUpperCase() + h.substr(1) + "</span>") + "</div>" + "</div>" + "</li>";
+          ExfeeWidget.complete_exfee.push(ExfeUtilities.clone(n[l])) - 1;
+          var u = n[l].provider;
+          o += '<li><span class="pull-left avatar"><img src="' + n[l].avatar_filename + '" alt="" width="40" height="40">' + '<span class="rb"><i class="icon16-identity-' + n[l].provider + '"></i></span>' + "</span>" + '<div class="identity">' + '<div class="name">' + r(n[l].name) + "</div>" + "<div>" + '<span class="oblique external">' + r(this.displayIdentity(n[l], !0)) + "</span>" + ("email" === u || "phone" === u ? "" : ' <span class="provider">@' + u.charAt(0).toUpperCase() + u.substr(1) + "</span>") + "</div>" + "</div>" + "</li>";
         }
       }
       s.append(o), this.displayCompletePanel(t, i && ExfeeWidget.complete_exfee.length);
-      var p = i.replace(/\-|\(|\)|\ /g, "");
-      if (p && a && !ExfeeWidget.complete_exfee.length && !$("#phone-panel").length && /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(p)) {
-        var f = {
+      var h = i.replace(/\-|\(|\)|\ /g, "");
+      if (h && a && !ExfeeWidget.complete_exfee.length && !$("#phone-panel").length && /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(h)) {
+        var p = {
           "＋": "+",
           "０": "0",
           "１": "1",
@@ -13869,10 +13870,10 @@ TWEEN.Tween = function(e) {
           "７": "7",
           "８": "8",
           "９": "9"
-        }, m = p.split("");
-        for (p = "", l = 0; m.length > l; l++) p += f[m[l]] === void 0 ? m[l] : f[m[l]];
-        t.val(p);
-        var g = e("phonepanel"), v = new g({
+        }, f = h.split("");
+        for (h = "", l = 0; f.length > l; l++) h += p[f[l]] === void 0 ? f[l] : p[f[l]];
+        t.val(h);
+        var m = e("phonepanel"), g = new m({
           options: {
             parentNode: $("#app-tmp"),
             srcNode: t
@@ -13881,7 +13882,7 @@ TWEEN.Tween = function(e) {
             ExfeeWidget.addExfee(e), t.val("");
           }
         });
-        v.show();
+        g.show();
       }
     },
     isMyIdentity: function(e) {
@@ -14885,7 +14886,7 @@ define("lightsaber", function(e, t, i) {
     return -1;
   }
   function p(e, t, i, n, a) {
-    return b.get(t, function(t) {
+    return x.get(t, function(t) {
       var r, s = t;
       "html" !== a && (r = e.compile(t), s = r(i)), n(s);
     });
@@ -14906,29 +14907,29 @@ define("lightsaber", function(e, t, i) {
     return e;
   }
   function v(e, t, i, n) {
-    return e instanceof RegExp ? e : ($(e) && (e = "(" + e.join("|") + ")"), e = e.concat(n ? "" : "/?").replace(/\/\(/g, "(?:/").replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g, function(e, i, n, a, r, s, o) {
+    return e instanceof RegExp ? e : (M(e) && (e = "(" + e.join("|") + ")"), e = e.concat(n ? "" : "/?").replace(/\/\(/g, "(?:/").replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g, function(e, i, n, a, r, s, o) {
       return t.push({
         name: a,
         optional: !!s
       }), i = i || "", "" + (s ? "" : i) + "(?:" + (s ? i : "") + (n || "") + (r || n && "([^/.]+?)" || "([^/]+?)") + ")" + (s || "") + (o ? "(/*)?" : "");
     }).replace(/([\/.])/g, "\\$1").replace(/\*/g, "(.*)"), RegExp("^" + e + "$", i ? "" : "i"));
   }
-  var y, _ = e("emitter"), b = e("jquery") || e("zepto"), x = function(e, t) {
+  var y, _ = e("emitter"), b = /msie [\w.]+/.exec(navigator.userAgent.toLowerCase()), x = e("jquery") || e("zepto"), w = function(e, t) {
     return e ? function(i) {
       return e.call(t, i);
     } : void 0;
-  }, w = window.location, k = window.history, C = "/", E = !1;
-  b(window).on("load", function() {
-    E = !0, setTimeout(function() {
-      E = !1;
+  }, k = window.location, C = window.history, E = "/", T = !1;
+  x(window).on("load", function() {
+    T = !0, setTimeout(function() {
+      T = !1;
     }, 0);
   }), t = i.exports = n;
-  var T;
-  t.version = "0.0.5", T = a.prototype, T.historySupport = y = null !== (null !== k ? k.pushState : void 0), 
-  b.browser && b.browser.opera && (T.historySupport = y = !1), T.init = function() {
-    this.route = C, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
+  var $;
+  t.version = "0.0.5", $ = a.prototype, $.historySupport = y = null !== (null !== C ? C.pushState : void 0), 
+  x.browser && x.browser.opera && ($.historySupport = y = !1), $.init = function() {
+    this.route = E, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
     this.viewCallbacks = [], this.defaultConfiguration();
-  }, T.defaultConfiguration = function() {
+  }, $.defaultConfiguration = function() {
     this.set("env", "production"), this.enable("dispatch"), this.use(d(this)), this._usedRouter = !1, 
     this._router = new o(this), this.routes = this._router.map, this._router.caseSensitive = this.enabled("case sensitive routing"), 
     this._router.strict = this.enabled("strict routing"), this.locals = m(this), this.locals.settings = this.settings, 
@@ -14937,30 +14938,30 @@ define("lightsaber", function(e, t, i) {
     }), this.configure("production", function() {
       this.enable("view cache");
     });
-  }, T.use = function(e, t) {
-    return "string" != typeof e && (t = e, e = C), C !== e && C === e[e.length - 1] && (e = e.slice(0, -1)), 
+  }, $.use = function(e, t) {
+    return "string" != typeof e && (t = e, e = E), E !== e && E === e[e.length - 1] && (e = e.slice(0, -1)), 
     this.stack.push({
       route: e,
       handle: t
     }), this;
-  }, T.engine = function(e, t) {
+  }, $.engine = function(e, t) {
     if ("function" != typeof t) throw Error("callback function required");
     return "." !== e[0] && (e = "." + e), this.engines[e] = t, this;
-  }, T.set = function(e, t) {
+  }, $.set = function(e, t) {
     return 1 !== arguments.length ? (this.settings[e] = t, this) : this.settings.hasOwnProperty(e) ? this.settings[e] : void 0;
-  }, T.enabled = function(e) {
+  }, $.enabled = function(e) {
     return !!this.set(e);
-  }, T.disabled = function(e) {
+  }, $.disabled = function(e) {
     return !this.set(e);
-  }, T.enable = function(e) {
+  }, $.enable = function(e) {
     return this.set(e, !0);
-  }, T.disable = function(e) {
+  }, $.disable = function(e) {
     return this.set(e, !1);
-  }, T.configure = function(e, t) {
+  }, $.configure = function(e, t) {
     var i = "all", n = [].slice.call(arguments);
     return t = n.pop(), n.length && (i = n), ("all" === i || ~h(i, this.settings.env)) && t.call(this), 
     this;
-  }, T.render = function(e, t, i) {
+  }, $.render = function(e, t, i) {
     var n, a = {}, r = this.cache;
     if (this.engine, "function" == typeof t && (i = t, t = {}), g(a, this.locals), t.locals && g(a, t.locals), 
     g(a, t), a.cache = null === a.cache ? this.enabled("view cache") : a.cache, a.cache && (n = r[e]), 
@@ -14979,19 +14980,19 @@ define("lightsaber", function(e, t, i) {
     } catch (s) {
       i(s);
     }
-  }, T.path = function() {
+  }, $.path = function() {
     return this.route;
-  }, T.param = function(e, t) {
+  }, $.param = function(e, t) {
     var i, n = [].slice.call(arguments, 1), a = 0;
-    if ($(e)) for (i = e.length; i > a; ++a) for (var r = 0, s = n.length; s > r; ++r) this.param(e[a], n[r]); else if ("function" == typeof e) this._router.param(e); else for (":" === e[0] && (e = e.substr(1)), 
+    if (M(e)) for (i = e.length; i > a; ++a) for (var r = 0, s = n.length; s > r; ++r) this.param(e[a], n[r]); else if ("function" == typeof e) this._router.param(e); else for (":" === e[0] && (e = e.substr(1)), 
     i = n.length; i > a; ++a) this._router.param(e, t);
     return this;
-  }, T.initRouter = function() {
+  }, $.initRouter = function() {
     this._usedRouter === !1 && (this._usedRouter = !0, this.use(this._router.middleware));
-  }, T.get = function() {
+  }, $.get = function() {
     var e = [].slice.call(arguments);
     return this.initRouter(), this._router.route.apply(this._router, e);
-  }, T.handle = function(e, t) {
+  }, $.handle = function(e, t) {
     function i(o) {
       var l, c = n[s++];
       if (r && (e.url = e.url.substr(1), r = !1), e.url = a + e.url, c) try {
@@ -15007,55 +15008,55 @@ define("lightsaber", function(e, t, i) {
       var n = this.stack, a = "", r = !1, s = 0;
       i();
     }
-  }, T.run = function(e) {
+  }, $.run = function(e) {
     this.emit("launch"), e = e || {};
     var t = this.request, i = this.response;
     this.running || (this.running = !0, !1 === e.dispatch && this.disable("dispatch"), 
-    !1 !== e.popstate && (this.historySupport ? window.addEventListener("popstate", x(this.change, this), !1) : window.addEventListener("hashchange", x(this.change, this), !1)), 
+    !1 !== e.popstate && (this.historySupport && !b ? window.addEventListener("popstate", w(this.change, this), !1) : window.addEventListener("hashchange", w(this.change, this), !1)), 
     this.disabled("dispatch") || (this.handle(t, i), this.emit("launched")));
-  }, T.change = function(e) {
-    if (E) return E = !1;
+  }, $.change = function(e) {
+    if (T) return T = !1;
     var t = this, i = t.request, n = t.response, a = i.url;
-    return i.updateUrl(), a !== i.url ? (t.handle(i, n), e.stopPropagation(), e.preventDefault(), 
-    !1) : void 0;
-  }, T.error = function(e, t) {
+    return i.updateUrl(), a !== i.url ? (t.handle(i, n), e && (e.stopPropagation(), 
+    e.preventDefault()), !1) : void 0;
+  }, $.error = function(e, t) {
     var i = Error(t);
     return i.status = e, i;
-  }, T = r.prototype, T.updateUrl = function() {
-    this.host = w.hostname, this.port = w.port || 80, this.fullpath = w.pathname, this.enableFullUrlPath && (this.path = this.fullpath), 
-    this.hash = decodeURIComponent(w.hash), this.querystring = decodeURIComponent(w.search), 
+  }, $ = r.prototype, $.updateUrl = function() {
+    this.host = k.hostname, this.port = k.port || 80, this.fullpath = k.pathname, this.enableFullUrlPath && (this.path = this.fullpath), 
+    this.hash = decodeURIComponent(k.hash), this.querystring = decodeURIComponent(k.search), 
     this.url = this.path + this.querystring + this.hash;
-  }, T.param = function(e, t) {
+  }, $.param = function(e, t) {
     var i = this.params || {}, n = this.query || {};
     return null != i[e] && i.hasOwnProperty(e) ? i[e] : null != n[e] ? n[e] : t;
-  }, T.getPath = function() {
+  }, $.getPath = function() {
     return this.path;
-  }, T.getHost = function() {
+  }, $.getHost = function() {
     return this.host;
-  }, T = s.prototype, T.location = function(e) {
+  }, $ = s.prototype, $.location = function(e) {
     window.setTimeout(function() {
-      w.href = e;
+      k.href = e;
     }, 16);
-  }, T.redirect = function(e) {
+  }, $.redirect = function(e) {
     var t, i;
-    return arguments.length, e = arguments[0], "back" === e || "forward" === e ? (k[e](), 
+    return arguments.length, e = arguments[0], "back" === e || "forward" === e ? (C[e](), 
     void 0) : y ? (t = arguments[1], i = arguments[2] || {}, this.path = e, this.title = t || "EXFE.COM", 
     document.title = this.title, this.state = i, this.state.id = u(), this.pushState(), 
     this.app.change(), void 0) : (this.location(e), void 0);
-  }, T.save = function() {
-    k.replaceState(this.state, this.title, this.path);
-  }, T.pushState = function() {
-    k.pushState(this.state, this.title, this.path);
-  }, T.render = function(e, t, i) {
+  }, $.save = function() {
+    C.replaceState(this.state, this.title, this.path);
+  }, $.pushState = function() {
+    C.pushState(this.state, this.title, this.path);
+  }, $.render = function(e, t, i) {
     var n = this, t = t || {}, a = this.app;
     "function" == typeof t && (i = t, t = {}), t.locals = n.locals, a.render(e, t, i);
-  }, T = o.prototype, T.param = function(e, t) {
+  }, $ = o.prototype, $.param = function(e, t) {
     if ("function" == typeof e) return this._params.push(e), void 0;
     var i, n, a = this._params, r = a.length;
     for (n = 0; r > n; ++n) (i = a[n](e, t)) && (t = i);
     if ("function" != typeof t) throw Error("invalid param() call for " + e + ", got " + t);
     return (this.params[e] = this.params[e] || []).push(t), this;
-  }, T._dispatch = function(e, t, i) {
+  }, $._dispatch = function(e, t, i) {
     var n = this.params, a = this;
     (function r(s, o) {
       function l(t) {
@@ -15089,31 +15090,31 @@ define("lightsaber", function(e, t, i) {
       return e.route = f = a.matchRequest(e, s), f ? (e.params = f.params, m = f.keys, 
       s = 0, c(o), void 0) : i(o);
     })(0);
-  }, T.matchRequest = function(e, t) {
+  }, $.matchRequest = function(e, t) {
     var i, n = e.url, a = this.map, r = a.length;
     for (t = t || 0; r > t; ++t) if (i = a[t], i.match(n)) return e._route_index = t, 
     i;
-  }, T.route = function(e) {
+  }, $.route = function(e) {
     e || Error("Router#get() requires a path");
     var t = [].slice.call(arguments, 1), i = new l(e, t, {
       sensitive: this.caseSensitive,
       strict: this.strict
     });
     return (this.map = this.map || []).push(i), this;
-  }, T = l.prototype, T.match = function(e) {
+  }, $ = l.prototype, $.match = function(e) {
     this.regexp.lastIndex = 0;
     var t, i, n, a, r = this.keys, s = this.params = [], o = this.regexp.exec(e);
     if (!o) return !1;
     for (t = 1, i = o.length; i > t; ++t) n = r[t - 1], a = "string" == typeof o[t] ? decodeURIComponent(o[t]) : o[t], 
     n ? s[n.name] = a : s.push(a);
     return !0;
-  }, T = c.prototype, T.lookup = function(e) {
+  }, $ = c.prototype, $.lookup = function(e) {
     return this.root + "/" + e + "?t=" + this.timestamp;
-  }, T.render = function(e, t) {
+  }, $.render = function(e, t) {
     return p(this.engine, this.path, e, t, this.ext);
   }, u.id = 0;
-  var $ = Array.isArray;
-  $ || ($ = function(e) {
+  var M = Array.isArray;
+  M || (M = function(e) {
     return e instanceof Array;
   });
 }), define("middleware", function(e, t, i) {
