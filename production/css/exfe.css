@@ -8456,6 +8456,11 @@ body {
   width: 100%;
   height: 100%;
   background: -webkit-gradient(linear, left bottom, left top, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: -webkit-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: -moz-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
+  background: -ms-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: -o-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
 }
 
 .shuffle-background {
@@ -8502,6 +8507,7 @@ body {
   right: -30px;
   bottom: 0;
   left: -30px;
+  z-index: -1;
   margin: 2px;
   -webkit-border-image: url(/static/img/border-image.png) 30 30 0 30 stretch stretch;
      -moz-border-image: url(/static/img/border-image.png) 30 30 0 30 stretch stretch;
@@ -8510,6 +8516,7 @@ body {
           border-image: url(/static/img/border-image.png) 30 30 0 30 stretch stretch;
   border-width: 30px;
   content: "";
+  posinter-events: none;
 }
 
 .cross-opts {
