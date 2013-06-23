@@ -942,9 +942,18 @@ define('mappanel', function (require) {
             GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
             GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
           }
-          GMaps.event.addDomListener(this._map, 'click', function (e) {
-            (e.stopPropagation) && e.stopPropagation();
+          $(this._map).on('click mousedown', function (e) {
+            e.stopPropagation();
           });
+          /*
+          GMaps.event.addDomListener(this._map, 'click', function (e) {
+            if (!e) { e = window.event; }
+            if (e) {
+              e.cancelBubble = true;
+              (e.stopPropagation) && e.stopPropagation();
+            }
+          });
+          */
           GMaps.event.addListener(this._map, 'mousedown', mousedown_func);
           GMaps.event.addListener(this._map, 'mouseup', mouseup_func);
           GMaps.event.addListener(this._map, 'dragstart', mouseup_func);
