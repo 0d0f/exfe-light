@@ -20,8 +20,8 @@
   .box-shadow(0 1px 4px rgba(0, 0, 0, .25));
   .border-radius(0 0 5px 5px);
   // keynote
-  @a: 255;
-  #gradient > .directional(#fafafa, #e6e6e6, (90 - @a)deg);
+  @a: 255deg;
+  #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
   &.fade {
     .transition(e('opacity .3s linear, top .3s ease-out'));
     top: -25%;
@@ -206,8 +206,8 @@
       margin: 10px 0 0 1px;
       border: 1px solid rgba(255, 255, 255, .5);
       // keynote
-      @a: 255;
-      #gradient > .directional(#fafafa, #e6e6e6, (90 - @a)deg);
+      @a: 255deg;
+      #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
       text-align: center;
       overflow: hidden;
       .box-shadow(0 1px 2px rgba(0, 0, 0, .25));
@@ -431,8 +431,8 @@
     z-index: @zindexModal * 10 + 1;
     width: 231px;
     // keynote
-    @a: 255;
-    #gradient > .directional(#fafafa, #e6e6e6, (90 - @a)deg);
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid #fff;
     .box-shadow(0 1px 4px rgba(0,0,0,.25));
     line-height: 24px;
@@ -494,8 +494,8 @@
     margin-top: 0;
     .border-radius(0);
     // keynote
-    @a: 255;
-    #gradient > .directional(#fafafa, #e6e6e6, (90 - @a)deg);
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid #fff;
     .box-shadow(0 1px 4px rgba(0,0,0,.25));
     line-height: 18px;
