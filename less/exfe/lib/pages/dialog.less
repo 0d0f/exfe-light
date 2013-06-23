@@ -408,7 +408,10 @@
     top: 0;
     right: 0;
     background-color: transparent;
-    #gradient > .directional(rgba(233, 231, 235, .97), rgba(108, 121, 127,.97), 266deg);
+    // keynote
+    @a: 266;
+    #gradient > .directional(rgba(233, 231, 235, .97), rgba(108, 121,
+    127,.97), (90 - @a)deg);
     z-index: @index + 1;
   }
 
@@ -553,7 +556,7 @@
     height: 240px;
     padding: 30px 30px 29px;
     z-index: @index + 3;
-    #gradient > .directional(#f2f2f2, #eaeaea, 270deg);
+    #gradient > .directional(#f2f2f2, #eaeaea, to bottom);
     .opacity(90);
   }
 

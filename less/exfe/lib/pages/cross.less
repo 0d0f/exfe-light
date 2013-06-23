@@ -383,7 +383,9 @@
     width: 195px;
     padding: 0 10px 20px;
     color: #424242;
-    #gradient > .directional(#fafafa, #e6e6e6, 255deg);
+    // keynote
+    @a: 255;
+    #gradient > .directional(#fafafa, #e6e6e6, (90 - @a)deg);
     .box-shadow(0 1px 4px rgba(0,0,0,.25));
     border: 1px solid rgba(255,255,255,0.8);
     .border-radius(2px);
@@ -434,7 +436,8 @@
       right: -4px;
       bottom: -4px;
       left: -4px;
-      #gradient > .directional(#919191, #eaeaea, 290deg);
+      @a: 290;
+      #gradient > .directional(#919191, #eaeaea, (90 - @a)deg);
     }
 
     /*
