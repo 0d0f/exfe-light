@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 03:06:48 */
+/*! desktop@2a.11 2013-06-24 03:06:43 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8461,7 +8461,7 @@ TWEEN.Tween = function(e) {
           clearTimeout(r._timer);
         };
         c && (n.event.addListener(this._userMarker, "mousedown", f), n.event.addListener(this._userMarker, "mouseup", f)), 
-        n.event.addListener(this._map, "click", function(e) {
+        n.event.addDomListener(this._map, "click", function(e) {
           e.stopPropagation && e.stopPropagation();
         }), n.event.addListener(this._map, "mousedown", f), n.event.addListener(this._map, "mouseup", m), 
         n.event.addListener(this._map, "dragstart", m);

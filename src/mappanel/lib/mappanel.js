@@ -942,7 +942,7 @@ define('mappanel', function (require) {
             GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
             GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
           }
-          GMaps.event.addListener(this._map, 'click', function (e) {
+          GMaps.event.addDomListener(this._map, 'click', function (e) {
             (e.stopPropagation) && e.stopPropagation();
           });
           GMaps.event.addListener(this._map, 'mousedown', mousedown_func);
