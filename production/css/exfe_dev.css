@@ -4807,10 +4807,10 @@ img:-moz-broken {
   text-align: center;
   cursor: pointer;
   background-color: #e6e6e6;
-  background-image: -moz-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -webkit-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -o-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: linear-gradient(255deg, #fafafa, #e6e6e6);
+  background-image: -moz-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -webkit-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -o-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: linear-gradient(195deg, #fafafa, #e6e6e6);
   background-repeat: repeat-x;
   border: 1px solid rgba(255, 255, 255, 0.5);
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -5141,10 +5141,10 @@ img:-moz-broken {
   margin-top: 0;
   line-height: 18px;
   background-color: #e6e6e6;
-  background-image: -moz-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -webkit-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -o-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: linear-gradient(255deg, #fafafa, #e6e6e6);
+  background-image: -moz-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -webkit-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -o-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: linear-gradient(195deg, #fafafa, #e6e6e6);
   background-repeat: repeat-x;
   border: 1px solid #fff;
   -webkit-border-radius: 0;
@@ -6991,10 +6991,10 @@ body {
   margin-right: 4px;
   color: #191919;
   background-color: #e6e6e6;
-  background-image: -moz-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -webkit-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: -o-linear-gradient(255deg, #fafafa, #e6e6e6);
-  background-image: linear-gradient(255deg, #fafafa, #e6e6e6);
+  background-image: -moz-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -webkit-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: -o-linear-gradient(195deg, #fafafa, #e6e6e6);
+  background-image: linear-gradient(195deg, #fafafa, #e6e6e6);
   background-repeat: repeat-x;
   border: 1px solid rgba(255, 255, 255, 0.8);
   -webkit-border-radius: 0 0 5px 5px;
@@ -8450,11 +8450,11 @@ body {
   width: 100%;
   height: 100%;
   background: -webkit-gradient(linear, left bottom, left top, from(#fafafa), to(rgba(250, 250, 250, 0)));
-  background: -webkit-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: -webkit-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
   background: -moz-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
-  background: -ms-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
-  background: -o-linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
-  background: linear-gradient(left, from(#fafafa), to(rgba(250, 250, 250, 0)));
+  background: -ms-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
+  background: -o-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
+  background: linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0));
 }
 
 .shuffle-background {
