@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-21 07:06:25 */
+/*! desktop@2a.11 2013-06-24 03:06:11 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8606,8 +8606,10 @@ TWEEN.Tween = function(e) {
     return i.moveToBookmark(t.getBookmark()), n.setEndPoint("EndToStart", i), n.text.length + t.text.length;
   }, T = function(e) {
     if (!window.google || !window.google.maps) {
-      window._loadMaps = function() {}, t('[src^="https://www.google.com"]').remove();
-      var i = document.getElementsByTagName("body")[0], n = document.createElement("script");
+      window._loadMaps = function() {};
+      var i = "google-maps-jsapi";
+      t(i).remove();
+      var n = document.getElementsByTagName("body")[0], a = document.createElement("script");
       window._gmap = function() {
         delete window._gmap;
       }, window._loadMaps = function() {
@@ -8617,8 +8619,8 @@ TWEEN.Tween = function(e) {
             e();
           }
         });
-      }, n.async = "async", n.src = "https://www.google.com/jsapi?callback=_loadMaps", 
-      i.appendChild(n);
+      }, a.async = "async", a.className = i, a.src = "//www.google.com/jsapi?callback=_loadMaps", 
+      n.appendChild(a);
     }
   };
   return v;
