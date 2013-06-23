@@ -7,8 +7,8 @@
   z-index: @zindexTooltip;
   padding: 5px 7px;
   // keynote
-  @a: 290;
-  #gradient > .directional(#d5e8f2, #fafafa, (90 - @a)deg);
+  @a: 290deg;
+  #gradient > .directional(#d5e8f2, #fafafa, 90deg - @a);
   .box-shadow(0 1px 4px rgba(0,0,0,.25));
   .border-radius(2px);
   border: 1px solid rgba(17,177,165,.2);

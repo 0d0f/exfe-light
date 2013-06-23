@@ -502,8 +502,8 @@
 
   .invitations {
     // keynote
-    @a: 255;
-    #gradient > .directional(#f7f9f9, #eff6f9, (90 - @a)deg);
+    @a: 255deg;
+    #gradient > .directional(#f7f9f9, #eff6f9, 90deg - @a);
     border: 1px solid rgba(245, 252, 255, .8);
     .box-shadow(0 1px 4px rgba(0, 0, 0, .25));
 
