@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 04:06:58 */
+/*! desktop@2a.11 2013-06-24 04:06:23 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8462,7 +8462,7 @@ TWEEN.Tween = function(e) {
         };
         d && (a.event.addListener(this._userMarker, "mousedown", m), a.event.addListener(this._userMarker, "mouseup", m)), 
         t(this._map).on("click mousedown", function(e) {
-          e.stopPropagation();
+          return e.stopPropagation(), !1;
         }), a.event.addListener(this._map, "mousedown", m), a.event.addListener(this._map, "mouseup", g), 
         a.event.addListener(this._map, "dragstart", g);
       } catch (v) {
