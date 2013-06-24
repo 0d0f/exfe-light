@@ -303,7 +303,8 @@ define('user', function (require) {
         originToken: data.originToken,
         tokenType: data.tokenType,
         forward: data.forward,
-        page: data.page
+        page: data.page,
+        token: data.token
       }
     );
   }

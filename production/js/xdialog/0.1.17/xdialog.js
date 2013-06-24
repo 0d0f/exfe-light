@@ -2123,7 +2123,7 @@ define('xdialog', function (require, exports) {
             , authorization;
 
           if (isUserToken) {
-            params.token = token;
+            params.token = settings.token;
             postData.identity_id = settings.browsing.identities[0].id;
           } else {
             postData.invitation_token = token;

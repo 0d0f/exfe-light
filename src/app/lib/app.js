@@ -94,7 +94,7 @@ define(function (require) {
   //    instagram:    cfddream@instagram  - `/#cfddream@instagram`
   //       flickr:    u0391@flickr        - `/#u0391@flickr`
   //      dropbox:    cfd@exfe.com        - `/#cfd@exfe.com
-  app.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
+  app.get(/^\/+(?:\?)?(?:ipad)?#(?:@?([^\/\s\!=]+))?@([^@\/\s]+)(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
   app.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
 
   // invalid link

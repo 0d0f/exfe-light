@@ -134,8 +134,8 @@ define('routes', function (require, exports, module) {
     Bus.emit('app:api:getuser'
       , target_token
       , target_user_id
-      , function done(data) {
-        var new_user = data.user;
+      , function done(results) {
+        var new_user = results.user;
         session.resolveData.setup = action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false;
         if (browsing_authorization) {
           session.browsing_user = new_user;
@@ -155,7 +155,7 @@ define('routes', function (require, exports, module) {
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken
               , tokenType: 'user'
-              , user_token: target_token
+              , token: target_token
               , page: 'resolve'
               , readOnly: true
               , user_name: target_user_name || new_user.name
@@ -165,7 +165,7 @@ define('routes', function (require, exports, module) {
             , 'browsing_identity');
         }
         else {
-          Store.set('user', user = session.user = data.user);
+          Store.set('user', user = session.user = results.user);
           Bus.emit('app:usermenu:updatenormal', user);
           Bus.emit('app:usermenu:crosslist'
             , authorization.token
@@ -194,6 +194,10 @@ define('routes', function (require, exports, module) {
   };
 
   routes.resolveShow = function (req, res) {
+
+    Bus.emit('app:page:home', false);
+    Bus.emit('app:page:usermenu', true);
+
     var session = req.session
       , auto_sign = session.auto_sign
       , originToken = session.originToken
