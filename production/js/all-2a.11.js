@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 04:06:23 */
+/*! desktop@2a.11 2013-06-24 02:06:17 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8097,6 +8097,8 @@ TWEEN.Tween = function(e) {
         i.preventDefault();
         var n = t(this).hasClass("map-rc");
         e.emit("zoom-map", n);
+      }), this.element.on("click.mappanel", function(e) {
+        e.stopPropagation();
       });
     },
     save: function() {
@@ -8171,7 +8173,8 @@ TWEEN.Tween = function(e) {
       this.isGeoSupported ? h.getCurrentPosition(function(n) {
         e = n, l || (t = e), c(i, e, t, l);
       }, d, {
-        enableHighAccuracy: !0
+        enableHighAccuracy: !0,
+        timeout: 6100
       }) : d();
     },
     showBefore: function() {
@@ -8383,89 +8386,87 @@ TWEEN.Tween = function(e) {
     resize: function(e, t) {
       880 > e && (e = 880), 500 > t && (t = 500), this.$element.width(e).height(t);
     },
-    initMap: function(e, i, n) {
-      var a, r, s = this, o = this.component, l = o.place, c = i.coords, d = e.coords, u = n;
-      c || (i.coords = c = {}), c.latitude || (c.latitude = "0"), c.longitude || (c.longitude = "0"), 
-      this.isGo = !0, this.hasLocation = !!d, this.hasPlace = u;
+    initMap: function(e, t, i) {
+      var n, a, r = this, s = this.component, o = s.place, l = t.coords, c = e.coords, d = i;
+      l || (t.coords = l = {}), l.latitude || (l.latitude = "0"), l.longitude || (l.longitude = "0"), 
+      this.isGo = !0, this.hasLocation = !!c, this.hasPlace = d;
       try {
-        if (a = this.GMaps = window.google.maps, r = a.ControlPosition, this._center = new a.LatLng(c.latitude, c.longitude), 
+        if (n = this.GMaps = window.google.maps, a = n.ControlPosition, this._center = new n.LatLng(l.latitude, l.longitude), 
         this._request = {
           radius: 5e4,
           location: this._center
         }, this.enableOptions = {
           zoomControl: !0,
           zoomControlOptions: {
-            position: r.RIGHT_TOP
+            position: a.RIGHT_TOP
           },
           scaleControl: !0,
           scaleControlOptions: {
-            position: r.BOTTOM_LEFT
+            position: a.BOTTOM_LEFT
           }
         }, this.zoomN = this.hasPlace ? this.zoom16 : this.hasLocation ? this.zoom12 : this.zoom2, 
-        this._map = new a.Map(this.$element[0], this.defaultOptions = {
+        this._map = new n.Map(this.$element[0], this.defaultOptions = {
           zoom: this.zoomN,
           center: this._center,
           disableDefaultUI: !0,
-          MapTypeId: a.MapTypeId.ROADMAP,
+          MapTypeId: n.MapTypeId.ROADMAP,
           panControl: !1,
           zoomControl: !1,
           scaleControl: !1
-        }), this._overlay = new a.OverlayView(), this._overlay.draw = function() {}, this._overlay.setMap(this._map), 
-        this.createIcons(), this.hasLocation && (this._userMarker = new a.Marker({
+        }), this._overlay = new n.OverlayView(), this._overlay.draw = function() {}, this._overlay.setMap(this._map), 
+        this.createIcons(), this.hasLocation && (this._userMarker = new n.Marker({
           map: this._map,
-          position: new a.LatLng(d.latitude, d.longitude),
+          position: new n.LatLng(c.latitude, c.longitude),
           icon: this.sbicon,
-          title: d.title || ""
-        })), this._service = new a.places.PlacesService(this._map), this.hasPlace) {
+          title: c.title || ""
+        })), this._service = new n.places.PlacesService(this._map), this.hasPlace) {
           this._map.panBy(-100, 0);
-          var h = this.createBlueMarker(a.Marker, {
+          var u = this.createBlueMarker(n.Marker, {
             map: this._map,
             position: this._center,
             icon: this.bicon,
             draggable: !0,
-            title: c.title || ""
-          }, l);
-          this.GMaps.event.addListener(h, "dragend", function(e) {
+            title: l.title || ""
+          }, o);
+          this.GMaps.event.addListener(u, "dragend", function(e) {
             var t = e.latLng;
             this._place.lat = "" + t.lat(), this._place.lng = "" + t.lng(), this._place.provider = "", 
-            o.emit("change-place", this._place, "map");
-          }), this.GMaps.event.addListener(h, "click", function() {
-            s.clearMarkers(), o.emit("change-place", this._place, "map");
-          }, !1), this.GMaps.event.addListener(h, "mouseover", function() {
-            s.selectMarker(this), o.emit("enter-placeitem", 0);
+            s.emit("change-place", this._place, "map");
+          }), this.GMaps.event.addListener(u, "click", function() {
+            r.clearMarkers(), s.emit("change-place", this._place, "map");
+          }, !1), this.GMaps.event.addListener(u, "mouseover", function() {
+            r.selectMarker(this), s.emit("enter-placeitem", 0);
           });
         }
-        var p, f = new a.Geocoder(), m = function(e) {
-          s._timer = setTimeout(function() {
-            var t, i = o.placeInput.getPlace(), n = e.latLng;
-            o.placesList.clear(), s.clearBlueMarker(), s.clearMarkers(), i.lat = "" + n.lat(), 
-            i.lng = "" + n.lng(), t = s.createBlueMarker(a.Marker, {
-              map: s._map,
-              position: n,
-              icon: s.bicon,
+        var h, p = new n.Geocoder(), f = function(e) {
+          r._timer = setTimeout(function() {
+            var t, i = s.placeInput.getPlace(), a = e.latLng;
+            s.placesList.clear(), r.clearBlueMarker(), r.clearMarkers(), i.lat = "" + a.lat(), 
+            i.lng = "" + a.lng(), t = r.createBlueMarker(n.Marker, {
+              map: r._map,
+              position: a,
+              icon: r.bicon,
               draggable: !0,
               title: i.title || ""
-            }, i), a.event.addListener(t, "dragend", function(e) {
+            }, i), n.event.addListener(t, "dragend", function(e) {
               var t = e.latLng;
               this._place.lat = "" + t.lat(), this._place.lng = "" + t.lng(), this._place.provider = "", 
-              o.emit("change-place", this._place, "map");
-            }), a.event.trigger(t, "mouseover"), p = function(e, n) {
-              s._timer && p.id === s.cbid && n === window.google.maps.GeocoderStatus.OK && e.length && (clearTimeout(s._timer), 
-              s.hasPlace = !0, s.cbid = 0, i.title = "Right there on map", i.description = e[0].formatted_address, 
-              i.provider = "", i.external_id = "", o.emit("change-place", t._place = i, "map"));
-            }, p.id = ++s.cbid, f.geocode({
-              latLng: new a.LatLng(i.lat, i.lng)
-            }, p);
+              s.emit("change-place", this._place, "map");
+            }), n.event.trigger(t, "mouseover"), h = function(e, n) {
+              r._timer && h.id === r.cbid && n === window.google.maps.GeocoderStatus.OK && e.length && (clearTimeout(r._timer), 
+              r.hasPlace = !0, r.cbid = 0, i.title = "Right there on map", i.description = e[0].formatted_address, 
+              i.provider = "", i.external_id = "", s.emit("change-place", t._place = i, "map"));
+            }, h.id = ++r.cbid, p.geocode({
+              latLng: new n.LatLng(i.lat, i.lng)
+            }, h);
           }, 610);
-        }, g = function() {
-          clearTimeout(s._timer);
+        }, m = function() {
+          clearTimeout(r._timer);
         };
-        d && (a.event.addListener(this._userMarker, "mousedown", m), a.event.addListener(this._userMarker, "mouseup", m)), 
-        t(this._map).on("click mousedown", function(e) {
-          return e.stopPropagation(), !1;
-        }), a.event.addListener(this._map, "mousedown", m), a.event.addListener(this._map, "mouseup", g), 
-        a.event.addListener(this._map, "dragstart", g);
-      } catch (v) {
+        c && (n.event.addListener(this._userMarker, "mousedown", f), n.event.addListener(this._userMarker, "mouseup", f)), 
+        n.event.addListener(this._map, "mousedown", f), n.event.addListener(this._map, "mouseup", m), 
+        n.event.addListener(this._map, "dragstart", m);
+      } catch (g) {
         this.isGo = !1;
       }
     },

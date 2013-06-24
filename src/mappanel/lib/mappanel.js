@@ -140,6 +140,9 @@ define('mappanel', function (require) {
           var rc = $(this).hasClass('map-rc');
           self.emit('zoom-map', rc);
         });
+
+        // stopPropagation to body
+        this.element.on('click.mappanel', function (e) { e.stopPropagation(); });
       }
 
     , save: function () {
@@ -316,7 +319,8 @@ define('mappanel', function (require) {
               },
               error,
               {
-                enableHighAccuracy: true
+                enableHighAccuracy: true,
+                timeout: 6100
               }
             );
         }
@@ -942,10 +946,6 @@ define('mappanel', function (require) {
             GMaps.event.addListener(this._userMarker, 'mousedown', mousedown_func);
             GMaps.event.addListener(this._userMarker, 'mouseup', mousedown_func);
           }
-          $(this._map).on('click mousedown', function (e) {
-            e.stopPropagation();
-            return false;
-          });
           GMaps.event.addListener(this._map, 'mousedown', mousedown_func);
           GMaps.event.addListener(this._map, 'mouseup', mouseup_func);
           GMaps.event.addListener(this._map, 'dragstart', mouseup_func);
