@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 02:06:17 */
+/*! desktop@2a.11 2013-06-24 05:06:23 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7369,7 +7369,7 @@ TWEEN.Tween = function(e) {
         var t = i(e.currentTarget).data("settings");
         if (t) {
           this._settings = t;
-          var n = t.user, a = t.browsing, r = a.identities, o = r[0], l = s.printExtUserName(o), c = this.provider = o.provider, d = this.$(".merge-info");
+          var n = t.normal, a = t.browsing, r = a.identities, o = r[0], l = s.printExtUserName(o), c = this.provider = o.provider, d = this.$(".merge-info");
           d.find(".buser-name").text(a.name), d.find(".identity").text(l), d.find(".user-name").text(n.name);
           var u = this.$(".context-identity");
           u.find(".avatar img").attr("src", o.avatar_filename).next().addClass("icon16-identity-" + c), 

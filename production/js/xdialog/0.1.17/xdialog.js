@@ -2442,7 +2442,7 @@ define('xdialog', function (require, exports) {
         var settings = $(e.currentTarget).data('settings');
         if (!settings) { return; }
         this._settings = settings;
-        var user = settings.user
+        var user = settings.normal
           , browsing = settings.browsing
           , bidentities = browsing.identities
           , bidentity = bidentities[0]
