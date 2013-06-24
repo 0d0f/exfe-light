@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 03:06:50 */
+/*! desktop@2a.11 2013-06-24 03:06:23 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -8095,6 +8095,8 @@ TWEEN.Tween = function(e) {
         i.preventDefault();
         var n = t(this).hasClass("map-rc");
         e.emit("zoom-map", n);
+      }), this.element.on("click.mappanel", function(e) {
+        e.stopPropagation();
       });
     },
     save: function() {
@@ -8169,7 +8171,8 @@ TWEEN.Tween = function(e) {
       this.isGeoSupported ? h.getCurrentPosition(function(n) {
         e = n, l || (t = e), c(i, e, t, l);
       }, d, {
-        enableHighAccuracy: !0
+        enableHighAccuracy: !0,
+        timeout: 6100
       }) : d();
     },
     showBefore: function() {

@@ -140,6 +140,9 @@ define('mappanel', function (require) {
           var rc = $(this).hasClass('map-rc');
           self.emit('zoom-map', rc);
         });
+
+        // stopPropagation to body
+        this.element.on('click.mappanel', function (e) { e.stopPropagation(); });
       }
 
     , save: function () {
@@ -316,7 +319,8 @@ define('mappanel', function (require) {
               },
               error,
               {
-                enableHighAccuracy: true
+                enableHighAccuracy: true,
+                timeout: 6100
               }
             );
         }
