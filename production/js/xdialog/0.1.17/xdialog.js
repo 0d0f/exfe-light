@@ -2448,9 +2448,10 @@ define('xdialog', function (require, exports) {
           , bidentities = browsing.identities
           , bidentity = bidentities[0]
           , beun = Util.printExtUserName(bidentity)
-          , provider = (this.provider = bidentity.provider);
+          , provider = (this.provider = bidentity.provider)
+          , $mi, $ci, $cu;
 
-        var $mi = this.$('.merge-info');
+        $mi = this.$('.merge-info');
         $mi.find('.buser-name').text(browsing.name);
         $mi.find('.identity').text(beun);
         $mi.find('.user-name').text(user.name);

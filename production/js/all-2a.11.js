@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 05:06:16 */
+/*! desktop@2a.11 2013-06-24 06:06:05 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7369,11 +7369,11 @@ TWEEN.Tween = function(e) {
         var t = i(e.currentTarget).data("settings");
         if (t) {
           this._settings = t;
-          var n = t.normal, r = t.browsing, a = r.identities, o = a[0], l = s.printExtUserName(o), c = this.provider = o.provider, d = this.$(".merge-info");
-          d.find(".buser-name").text(r.name), d.find(".identity").text(l), d.find(".user-name").text(n.name), 
-          $ci = this.$(".context-identity"), $ci.find(".avatar img").attr("src", o.avatar_filename).next().addClass("icon16-identity-" + c), 
-          $ci.find(".identity").text(l), $cu = this.$(".context-user"), $cu.find(".avatar img").attr("src", n.avatar_filename), 
-          $cu.find(".username").text(n.name);
+          var n, r, a, o = t.normal, l = t.browsing, c = l.identities, d = c[0], u = s.printExtUserName(d), h = this.provider = d.provider;
+          n = this.$(".merge-info"), n.find(".buser-name").text(l.name), n.find(".identity").text(u), 
+          n.find(".user-name").text(o.name), r = this.$(".context-identity"), r.find(".avatar img").attr("src", d.avatar_filename).next().addClass("icon16-identity-" + h), 
+          r.find(".identity").text(u), a = this.$(".context-user"), a.find(".avatar img").attr("src", o.avatar_filename), 
+          a.find(".username").text(o.name);
         }
       }
     }
