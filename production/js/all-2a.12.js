@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.12 2013-06-25 02:06:12 */
+/*! desktop@2a.12 2013-06-25 03:06:06 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7129,7 +7129,7 @@ TWEEN.Tween = function(e) {
                     l.removeClass("disabled loading");
                   }
                 }, function(e) {
-                  o.set("authorization", e), r.on("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
+                  o.set("authorization", e), r.emit("app:user:signin", e.token, e.user_id, !0), c && c.data("dialog", null).data("dialog-type", "changepassword").find("span").text("Change Password..."), 
                   i("#app-user-menu").find(".setup").remove(), d && d.hide();
                 }, function(r) {
                   d && d.hide();
