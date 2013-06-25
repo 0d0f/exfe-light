@@ -1876,7 +1876,7 @@ define('xdialog', function (require, exports) {
                 }
                 , function (data) {
                   Store.set('authorization', data);
-                  Bus.on('app:user:signin', data.token, data.user_id, true);
+                  Bus.emit('app:user:signin', data.token, data.user_id, true);
                   xbtn && xbtn
                     .data('dialog', null)
                     .data('dialog-type', 'changepassword')
