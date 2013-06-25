@@ -134,8 +134,8 @@ define('routes', function (require, exports, module) {
     Bus.emit('app:api:getuser'
       , target_token
       , target_user_id
-      , function done(data) {
-        var new_user = data.user;
+      , function done(results) {
+        var new_user = results.user;
         session.resolveData.setup = action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false;
         if (browsing_authorization) {
           session.browsing_user = new_user;
@@ -155,7 +155,7 @@ define('routes', function (require, exports, module) {
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken
               , tokenType: 'user'
-              , user_token: target_token
+              , token: target_token
               , page: 'resolve'
               , readOnly: true
               , user_name: target_user_name || new_user.name
@@ -165,7 +165,7 @@ define('routes', function (require, exports, module) {
             , 'browsing_identity');
         }
         else {
-          Store.set('user', user = session.user = data.user);
+          Store.set('user', user = session.user = results.user);
           Bus.emit('app:usermenu:updatenormal', user);
           Bus.emit('app:usermenu:crosslist'
             , authorization.token
@@ -194,6 +194,10 @@ define('routes', function (require, exports, module) {
   };
 
   routes.resolveShow = function (req, res) {
+
+    Bus.emit('app:page:home', false);
+    Bus.emit('app:page:usermenu', true);
+
     var session = req.session
       , auto_sign = session.auto_sign
       , originToken = session.originToken
@@ -851,6 +855,34 @@ define('routes', function (require, exports, module) {
     _crosstoken(res, req, next, params, data, cats, cat, ctoken, rsvp);
   };
 
+
+  // match user for profile
+  // url: /#x@exfe.com
+  routes.matchUserForProfile = function (req, res, next) {
+    var params = req.params
+      , name = params[0]
+      , idObject = Util.parseId(name)
+      , isNotInvalid = false;
+
+    if (idObject.provider) {
+      var user = req.session.user
+        , identities = user && user.identities;
+
+      if (identities) {
+        var i = 0, identity;
+        while ((identity = identities[i++])) {
+          isNotInvalid = identity.provider === idObject.provider
+              && identity.external_username === idObject.external_username;
+          if (isNotInvalid) {
+            next();
+            return;
+          }
+        }
+      }
+    }
+
+    if (!isNotInvalid) { res.redirect('/#invalid'); }
+  };
 
   // profile
   routes.profile = function (req, res) {

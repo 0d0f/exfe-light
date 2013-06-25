@@ -94,11 +94,11 @@ define(function (require) {
   //    instagram:    cfddream@instagram  - `/#cfddream@instagram`
   //       flickr:    u0391@flickr        - `/#u0391@flickr`
   //      dropbox:    cfd@exfe.com        - `/#cfd@exfe.com
-  app.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
-  app.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.profile);
+  app.get(/^\/+(?:\?)?(?:ipad)?#((?:@?[^\@\/\s\!=]+@[^\#@\/\s]+)|(?:@[^\@\/\s\!=]+))(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.matchUserForProfile, routes.profile);
+  app.get(/^\/+(?:\?)?(?:ipad)?#(\+?[1-9][0-9]{3,})(?:\/?(.*))\/?$/, routes.refreshAuthUser, routes.matchUserForProfile, routes.profile);
 
   // invalid link
-  app.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, routes.invalid);
+  app.get(/^\/+(?:\?)?(?:ipad)?#invalid(?:\/token=([a-zA-Z0-9]{4,}))?\/?$/, routes.invalid);
 
   // signout
   app.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, routes.signout);

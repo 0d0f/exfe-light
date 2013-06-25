@@ -90,7 +90,7 @@ body {
         padding: 6px 8px;
         text-shadow: 0 1px 1px #fff;
         border: 1px dashed rgba(0, 0, 0, .15);
-        #gradient > .directional(rgba(5, 5, 5, .05), rgba(127, 127, 127, .05), 270deg);
+        #gradient > .directional(rgba(5, 5, 5, .05), rgba(127, 127, 127, .05), to bottom);
         .border-radius(3px);
 
         & > strong {
@@ -139,7 +139,7 @@ body {
   .nav > li.user {
     //min-width: 78px;
     //max-width: 228px;
-    background-color: #fafafa;
+    // background-color: #fafafa;
   }
 
   .fill-left {
@@ -157,7 +157,9 @@ body {
     margin-right: 4px;
     width: 198px;
     padding: 20px 15px 15px;
-    #gradient > .directional(#fafafa, #e6e6e6, 255deg);
+    // keynote
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid rgba(255, 255, 255, .8);
     .box-shadow(0 1px 4px rgba(0, 0, 0, .25));
     .border-radius(0 0 5px 5px);
@@ -248,7 +250,7 @@ body {
         right: -8px;
         bottom: -5px;
         left: -8px;
-        #gradient > .directional(#fafafa, #e6e6e6, 270deg);
+        #gradient > .directional(#fafafa, #e6e6e6, to bottom);
         border: 1px solid rgba(127, 127, 127, .12);
         .box-shadow(0 1px 1px #fff);
         .border-radius(3px);

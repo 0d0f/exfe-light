@@ -140,6 +140,9 @@ define('mappanel', function (require) {
           var rc = $(this).hasClass('map-rc');
           self.emit('zoom-map', rc);
         });
+
+        // stopPropagation to body
+        this.element.on('click.mappanel', function (e) { e.stopPropagation(); });
       }
 
     , save: function () {
@@ -316,7 +319,8 @@ define('mappanel', function (require) {
               },
               error,
               {
-                enableHighAccuracy: true
+                enableHighAccuracy: true,
+                timeout: 6100
               }
             );
         }
@@ -1305,14 +1309,16 @@ define('mappanel', function (require) {
   var loadMap = function (cb) {
     if (window.google && window.google.maps) { return; }
     window._loadMaps = function () {};
-    $('[src^="https://www.google.com"]').remove();
+    var gid = 'google-maps-jsapi';
+    $(gid).remove();
     var b = document.getElementsByTagName('body')[0], g = document.createElement('script');
     window._gmap = function () { delete window._gmap; };
     window._loadMaps = function () {
       window.google.load('maps', '3', { other_params: 'key=' + MAP_KEY + '&sensor=false&libraries=places', callback: function () {cb()} });
     }
     g.async = 'async';
-    g.src = 'https://www.google.com/jsapi?callback=_loadMaps';
+    g.className = gid;
+    g.src = '//www.google.com/jsapi?callback=_loadMaps';
     b.appendChild(g);
   };
 

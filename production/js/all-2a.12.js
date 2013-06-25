@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.11 2013-06-24 06:06:18 */
+/*! desktop@2a.12 2013-06-25 02:06:53 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -7244,7 +7244,7 @@ TWEEN.Tween = function(e) {
               name: i.trim(this.$("#name").blur().val()),
               password: this.$("#password").blur().val()
             }, u = {}, h = t.errors;
-            s ? (u.token = a, d.identity_id = n.browsing.identities[0].id) : d.invitation_token = a, 
+            s ? (u.token = n.token, d.identity_id = n.browsing.identities[0].id) : d.invitation_token = a, 
             t.defer = r.request(c, {
               type: "POST",
               params: u,
@@ -13493,7 +13493,8 @@ TWEEN.Tween = function(e) {
       originToken: e.originToken,
       tokenType: e.tokenType,
       forward: e.forward,
-      page: e.page
+      page: e.page,
+      token: e.token
     });
   }
   function n(e, t) {
@@ -15219,7 +15220,7 @@ define("lightsaber", function(e, t, i) {
           setup: "INPUT_NEW_PASSWORD" === v && "VERIFY" === g && t.password === !1,
           originToken: a,
           tokenType: "user",
-          user_token: h,
+          token: h,
           page: "resolve",
           readOnly: !0,
           user_name: f || t.name,
@@ -15243,6 +15244,7 @@ define("lightsaber", function(e, t, i) {
       t.redirect("/#invalid/token=" + a);
     });
   }, c.resolveShow = function(e, t) {
+    s.emit("app:page:home", !1), s.emit("app:page:usermenu", !0);
     var i = e.session, n = i.auto_sign, r = i.originToken, o = i.user, l = i.authorization, c = i.browsing_authorization, d = i.browsing_user, u = i.resolveData, h = u.identity_id, p = u.token_type, f = null, m = u.action, g = "identity_verified.html";
     if (f) return t.render(g, function(e) {
       var t = $("#app-main");
@@ -15448,6 +15450,14 @@ define("lightsaber", function(e, t, i) {
       invitation_token: u,
       cross_id: c
     }, n && (a.cross_access_token = n), d(t, e, i, f, a, p, n, u, h);
+  }, c.matchUserForProfile = function(e, t, i) {
+    var n = e.params, a = n[0], r = o.parseId(a), s = !1;
+    if (r.provider) {
+      var l = e.session.user, c = l && l.identities;
+      if (c) for (var d, u = 0; d = c[u++]; ) if (s = d.provider === r.provider && d.external_username === r.external_username) return i(), 
+      void 0;
+    }
+    s || t.redirect("/#invalid");
   }, c.profile = function(e, t) {
     var i = e.session, n = i.authorization, a = i.user, r = i.browsing_authorization, c = i.browsing_user, d = i.action, u = i.oauth;
     s.emit("app:page:home", !1);
@@ -15514,8 +15524,8 @@ define("lightsaber", function(e, t, i) {
   s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})(?:\/(accept|mute|decline))?\/?$/, a.refreshAuthUser, a.crossPhoneToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/?$/, a.refreshAuthUser, a.crossToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/(accept|mute|decline)\/?$/, a.refreshAuthUser, a.crossToken), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#([^@\/\s\!=]+)?@([^@\/\s]+)(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, a.refreshAuthUser, a.profile), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, a.invalid), s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, a.signout), 
-  s.run();
+  s.get(/^\/+(?:\?)?(?:ipad)?#((?:@?[^\@\/\s\!=]+@[^\#@\/\s]+)|(?:@[^\@\/\s\!=]+))(?:\/?(.*))\/?$/, a.refreshAuthUser, a.matchUserForProfile, a.profile), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#(\+?[1-9][0-9]{3,})(?:\/?(.*))\/?$/, a.refreshAuthUser, a.matchUserForProfile, a.profile), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#invalid(?:\/token=([a-zA-Z0-9]{4,}))?\/?$/, a.invalid), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, a.signout), s.run();
 });

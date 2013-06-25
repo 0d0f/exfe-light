@@ -2123,7 +2123,7 @@ define('xdialog', function (require, exports) {
             , authorization;
 
           if (isUserToken) {
-            params.token = token;
+            params.token = settings.token;
             postData.identity_id = settings.browsing.identities[0].id;
           } else {
             postData.invitation_token = token;
@@ -2442,24 +2442,25 @@ define('xdialog', function (require, exports) {
         var settings = $(e.currentTarget).data('settings');
         if (!settings) { return; }
         this._settings = settings;
-        var user = settings.user
+        var user = settings.normal
           , browsing = settings.browsing
           , bidentities = browsing.identities
           , bidentity = bidentities[0]
           , beun = Util.printExtUserName(bidentity)
-          , provider = (this.provider = bidentity.provider);
+          , provider = (this.provider = bidentity.provider)
+          , $mi, $ci, $cu;
 
-        var $mi = this.$('.merge-info');
+        $mi = this.$('.merge-info');
         $mi.find('.buser-name').text(browsing.name);
         $mi.find('.identity').text(beun);
         $mi.find('.user-name').text(user.name);
 
-        var $ci = this.$('.context-identity');
+        $ci = this.$('.context-identity');
         $ci.find('.avatar img').attr('src', bidentity.avatar_filename)
           .next().addClass('icon16-identity-' + provider);
         $ci.find('.identity').text(beun);
 
-        var $cu = this.$('.context-user');
+        $cu = this.$('.context-user');
         $cu.find('.avatar img').attr('src', user.avatar_filename);
         $cu.find('.username').text(user.name);
       }
