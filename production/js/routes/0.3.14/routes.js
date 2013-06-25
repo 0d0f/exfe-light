@@ -856,6 +856,34 @@ define('routes', function (require, exports, module) {
   };
 
 
+  // match user for profile
+  // url: /#x@exfe.com
+  routes.matchUserForProfile = function (req, res, next) {
+    var params = req.params
+      , name = params[0]
+      , idObject = Util.parseId(name)
+      , isNotInvalid = false;
+
+    if (idObject.provider) {
+      var user = req.session.user
+        , identities = user && user.identities;
+
+      if (identities) {
+        var i = 0, identity;
+        while ((identity = identities[i++])) {
+          isNotInvalid = identity.provider === idObject.provider
+              && identity.external_username === idObject.external_username;
+          if (isNotInvalid) {
+            next();
+            return;
+          }
+        }
+      }
+    }
+
+    if (!isNotInvalid) { res.redirect('/#invalid'); }
+  };
+
   // profile
   routes.profile = function (req, res) {
     var session = req.session
