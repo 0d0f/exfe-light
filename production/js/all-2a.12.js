@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.12 2013-06-24 07:06:45 */
+/*! desktop@2a.12 2013-06-25 02:06:12 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -14305,6 +14305,14 @@ define("lightsaber", function(e, t, i) {
       invitation_token: u,
       cross_id: c
     }, n && (r.cross_access_token = n), d(t, e, i, f, r, p, n, u, h);
+  }, c.matchUserForProfile = function(e, t, i) {
+    var n = e.params, r = n[0], a = o.parseId(r), s = !1;
+    if (a.provider) {
+      var l = e.session.user, c = l && l.identities;
+      if (c) for (var d, u = 0; d = c[u++]; ) if (s = d.provider === a.provider && d.external_username === a.external_username) return i(), 
+      void 0;
+    }
+    s || t.redirect("/#invalid");
   }, c.profile = function(e, t) {
     var i = e.session, n = i.authorization, r = i.user, a = i.browsing_authorization, c = i.browsing_user, d = i.action, u = i.oauth;
     s.emit("app:page:home", !1);
@@ -14371,8 +14379,8 @@ define("lightsaber", function(e, t, i) {
   s.get(/^\/+(?:\?)?(?:ipad)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})(?:\/(accept|mute|decline))?\/?$/, r.refreshAuthUser, r.crossPhoneToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/?$/, r.refreshAuthUser, r.crossToken), 
   s.get(/^\/+(?:\?)?(?:ipad)?#!token=([a-zA-Z0-9]{32})\/(accept|mute|decline)\/?$/, r.refreshAuthUser, r.crossToken), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#(?:@?([^\/\s\!=]+))?@([^@\/\s]+)(?:\/?(.*))\/?$/, r.refreshAuthUser, r.profile), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#(\+)(1\d{10}|86\d{11})(?:\/?(.*))\/?$/, r.refreshAuthUser, r.profile), 
-  s.get(/^\/+(?:\?)?(?:ipad)?#invalid\/token=([a-zA-Z0-9]{64})\/?$/, r.invalid), s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, r.signout), 
-  s.run();
+  s.get(/^\/+(?:\?)?(?:ipad)?#((?:@?[^\@\/\s\!=]+@[^\#@\/\s]+)|(?:@[^\@\/\s\!=]+))(?:\/?(.*))\/?$/, r.refreshAuthUser, r.matchUserForProfile, r.profile), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#(\+?[1-9][0-9]{3,})(?:\/?(.*))\/?$/, r.refreshAuthUser, r.matchUserForProfile, r.profile), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#invalid(?:\/token=([a-zA-Z0-9]{4,}))?\/?$/, r.invalid), 
+  s.get(/^\/+(?:\?)?(?:ipad)?#signout\/?$/, r.signout), s.run();
 });
