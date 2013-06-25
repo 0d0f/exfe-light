@@ -14,6 +14,39 @@ define('xdialog', function (require, exports) {
     Dialog = require('dialog'),
     dialogs = {};
 
+  /**
+   * Toggle Password Input
+   */
+  var now = Date.now || function () { return new Date().getTime(); };
+  var togglePasswordInput = function (container, input, eyebtn) {
+    var TST, TIMEOUT;
+    container.on('mousedown', eyebtn, function (e) {
+      if (e.which === 3) { return false; }
+      var $elem = $(this);
+      if (TIMEOUT) {
+        clearTimeout(TIMEOUT);
+        TIMEOUT = void 0;
+      }
+      TST = now();
+      TIMEOUT = setTimeout(function () {
+        container.find(input).prop('type', 'text');
+        $elem.addClass('icon16-pass-show').removeClass('icon16-pass-hide');
+      }, 500);
+    })
+      .on('mouseup', eyebtn, function (e) {
+        if (TIMEOUT) {
+          clearTimeout(TIMEOUT);
+          TIMEOUT = void 0;
+        }
+        container.find(input).prop('type', 'password');
+        $(this).removeClass('icon16-pass-show').addClass('icon16-pass-hide');
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      });
+  };
+
+
   exports.dialogs = dialogs;
 
   // TODO: js html 分离
@@ -264,14 +297,6 @@ define('xdialog', function (require, exports) {
             this.switchTab('d00');
           }
 
-        },
-        'click #password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          var $input = $e.prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
         'click .xbtn-forgotpwd': function (e) {
           e.preventDefault();
@@ -902,14 +927,6 @@ define('xdialog', function (require, exports) {
             d.show(e);
           }
         },
-        'click .password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          var $input = $e.prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
-        },
         'click .xbtn-forgotpwd': function (e) {
           var user = Store.get('user'),
               identities = user.identities,
@@ -999,6 +1016,9 @@ define('xdialog', function (require, exports) {
       },
 
       onShowBefore: function () {
+        togglePasswordInput(this.element, '#cppwd', '#cppwd-eye');
+        togglePasswordInput(this.element, '#cp-npwd', '#cp-npwd-eye');
+
         var user = Store.get('user');
         this.$('.avatar > img').attr('src', user.avatar_filename);
         this.$('.username').text(user.name);
@@ -1029,7 +1049,7 @@ define('xdialog', function (require, exports) {
                 + '<label class="control-label" for="cppwd">Password:</label>'
                 + '<div class="controls">'
                   + '<input class="input-large" id="cppwd" placeholder="Current password" type="password" autocomplete="off" />'
-                  + '<i class="help-inline password-eye icon16-pass-hide pointer"></i>'
+                  + '<i class="help-inline password-eye icon16-pass-hide pointer" id="cppwd-eye"></i>'
                 + '</div>'
               + '</div>'
 
@@ -1037,7 +1057,7 @@ define('xdialog', function (require, exports) {
                 + '<label class="control-label" for="cp-npwd">New Password:</label>'
                 + '<div class="controls">'
                   + '<input class="input-large" id="cp-npwd" placeholder="Set new EXFE password" type="password" autocomplete="off" />'
-                  + '<i class="help-inline password-eye icon16-pass-hide pointer"></i>'
+                  + '<i class="help-inline password-eye icon16-pass-hide pointer" id="cp-npwd-eye"></i>'
                 + '</div>'
               + '</div>'
 
@@ -1820,15 +1840,6 @@ define('xdialog', function (require, exports) {
           this.$('.xbtn-success').click();
           return false;
         },
-        'click .password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          $e.prev()
-            .prop('type', function (i, val) {
-              return val === 'password' ? 'text' : 'password';
-            })
-            .focus();
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
-        },
         'blur #password': function (e) {
           var val = this.$('#password').val()
             , $pass = this.$('[for="password"]')
@@ -1980,7 +1991,7 @@ define('xdialog', function (require, exports) {
                 + '<div class="controls">'
                   + '<label class="control-label" for="password">Password: <span></span></label>'
                   + '<input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" />'
-                  + '<i class="help-inline password-eye icon16-pass-hide pointer"></i>'
+                  + '<i class="help-inline icon16-pass-hide pointer" id="password-eye"></i>'
                 + '</div>'
               + '</div>'
 
@@ -1993,6 +2004,7 @@ define('xdialog', function (require, exports) {
       },
 
       onShowBefore: function (e) {
+        togglePasswordInput(this.element, '#password', '#password-eye');
         var data = $(e.currentTarget).data('source');
         var token = $(e.currentTarget).data('token');
         this.signed = false;
@@ -2090,15 +2102,6 @@ define('xdialog', function (require, exports) {
             $pass.removeClass('label-error');
             $text.text('');
           }
-        },
-
-        'click #password-eye': function (e) {
-          var $e = $(e.currentTarget);
-          var $input = $e.prev();
-          $input.prop('type', function (i, val) {
-            return val === 'password' ? 'text' : 'password';
-          });
-          $e.toggleClass('icon16-pass-hide icon16-pass-show');
         },
 
         'click .xbtn-success': function () {
@@ -2227,6 +2230,7 @@ define('xdialog', function (require, exports) {
       },
 
       onShowBefore: function (e) {
+        togglePasswordInput(this.element, '#password', '#password-eye');
         var data = $(e.currentTarget).data('source');
         if (!data) return;
         this._settings = data;
@@ -2919,6 +2923,9 @@ define('xdialog', function (require, exports) {
         //if (that.switchTabType !== 'd02') that.switchTab('d01');
         that.$('.x-signin')[(that.availability ? 'remove' : 'add') + 'Class']('disabled');
       });
+
+
+      togglePasswordInput(this.element, '#password', '#password-eye');
     },
 
     resetInputs: function () {
