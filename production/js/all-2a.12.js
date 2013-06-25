@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.12 2013-06-25 03:06:26 */
+/*! desktop@2a.12 2013-06-25 05:06:17 */
 (function(e) {
   "use strict";
   function t(e, t, n) {
@@ -6348,7 +6348,21 @@ TWEEN.Tween = function(e) {
   });
 }), define("xdialog", function(e, t) {
   "use strict";
-  var i = e("jquery"), n = e("rex"), a = e("bus"), r = e("api"), s = e("util"), o = e("store"), l = e("handlebars"), c = e("dialog"), d = {};
+  var i = e("jquery"), n = e("rex"), a = e("bus"), r = e("api"), s = e("util"), o = e("store"), l = e("handlebars"), c = e("dialog"), d = {}, u = Date.now || function() {
+    return new Date().getTime();
+  }, h = function(e, t, n) {
+    var a, r;
+    e.on("mousedown", n, function(n) {
+      if (3 === n.which) return !1;
+      var s = i(this);
+      r && (clearTimeout(r), r = void 0), a = u(), r = setTimeout(function() {
+        e.find(t).prop("type", "text"), s.addClass("icon16-pass-show").removeClass("icon16-pass-hide");
+      }, 500);
+    }).on("mouseup", n, function(n) {
+      return r && (clearTimeout(r), r = void 0), e.find(t).prop("type", "password"), i(this).removeClass("icon16-pass-show").addClass("icon16-pass-hide"), 
+      n.preventDefault(), n.stopPropagation(), !1;
+    });
+  };
   t.dialogs = d, d.identification = {
     options: {
       errors: {
@@ -6443,12 +6457,6 @@ TWEEN.Tween = function(e) {
           o.remove("lastIdentity"), o.remove("last_external_username"), o.remove("authorization"), 
           o.remove("user"), o.remove("identities"), this.$('[data-typeahead-type="identity"]').data("typeahead").source = null, 
           this.switchTab("d00"));
-        },
-        "click #password-eye": function(e) {
-          var t = i(e.currentTarget), n = t.prev();
-          n.prop("type", function(e, t) {
-            return "password" === t ? "text" : "password";
-          }), t.toggleClass("icon16-pass-hide icon16-pass-show");
         },
         "click .xbtn-forgotpwd": function(e) {
           e.preventDefault(), this.element.addClass("hide"), i("#js-modal-backdrop").addClass("hide");
@@ -6688,12 +6696,6 @@ TWEEN.Tween = function(e) {
             s.show(e);
           }
         },
-        "click .password-eye": function(e) {
-          var t = i(e.currentTarget), n = t.prev();
-          n.prop("type", function(e, t) {
-            return "password" === t ? "text" : "password";
-          }), t.toggleClass("icon16-pass-hide icon16-pass-show");
-        },
         "click .xbtn-forgotpwd": function(e) {
           var t = o.get("user"), a = t.identities, r = a.length, s = [];
           1 === r ? s.push(a[0]) : n.each(a, function(e) {
@@ -6737,6 +6739,7 @@ TWEEN.Tween = function(e) {
         }
       },
       onShowBefore: function() {
+        h(this.element, "#cppwd", "#cppwd-eye"), h(this.element, "#cp-npwd", "#cp-npwd-eye");
         var e = o.get("user");
         this.$(".avatar > img").attr("src", e.avatar_filename), this.$(".username").text(e.name);
       },
@@ -6744,7 +6747,7 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "modal-cp mblack modal-large",
         title: "Change Password",
-        body: '<div class="shadow title">Change Password</div><form class="modal-form"><fieldset><legend>Enter your current <span class="x-sign">EXFE</span> password, and set new one. All your identities share the same password for sign-in and account management.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img src="" width="40" height="40" /></div><div class="pull-left username"></div></div><div class="control-group"><label class="control-label" for="cppwd">Password:</label><div class="controls"><input class="input-large" id="cppwd" placeholder="Current password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div><div class="control-group"><label class="control-label" for="cp-npwd">New Password:</label><div class="controls"><input class="input-large" id="cp-npwd" placeholder="Set new EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
+        body: '<div class="shadow title">Change Password</div><form class="modal-form"><fieldset><legend>Enter your current <span class="x-sign">EXFE</span> password, and set new one. All your identities share the same password for sign-in and account management.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img src="" width="40" height="40" /></div><div class="pull-left username"></div></div><div class="control-group"><label class="control-label" for="cppwd">Password:</label><div class="controls"><input class="input-large" id="cppwd" placeholder="Current password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer" id="cppwd-eye"></i></div></div><div class="control-group"><label class="control-label" for="cp-npwd">New Password:</label><div class="controls"><input class="input-large" id="cp-npwd" placeholder="Set new EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer" id="cp-npwd-eye"></i></div></div></fieldset></form>',
         footer: '<button class="xbtn-white xbtn-forgotpwd" data-dialog-from="changepassword" data-widget="dialog" data-dialog-type="forgotpassword">Forgot Password...</button><button class="pull-right xbtn-blue xbtn-success">Change</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Discard</a>'
       }
     }
@@ -6832,7 +6835,7 @@ TWEEN.Tween = function(e) {
         others: '<div class="authentication d d1 hide"><div class="modal-body"><div class="shadow title">Authentication</div><div class="content"><img class="hide" src="/static/img/loading.gif" width="32" height="32" /><p class="redirecting hide">Redirecting to <span class="oauth-provider"></span>…</p><p class="xalert-fail hide">Failed to connect with <span class="oauth-provider"></span> server.</p></div></div></div>'
       }
     },
-    addIdentity: function u(e, t, n, a) {
+    addIdentity: function p(e, t, n, a) {
       var s = o.get("authorization"), l = s.token, c = r.request("addIdentity", {
         type: "POST",
         params: {
@@ -6852,7 +6855,7 @@ TWEEN.Tween = function(e) {
           var s = i.Event("click.dialog.data-api");
           s._data = {
             callback: function() {
-              u({
+              p({
                 external_username: e.external_username,
                 provider: e.provider
               });
@@ -7093,12 +7096,6 @@ TWEEN.Tween = function(e) {
         "submit .modal-form": function() {
           return this.$(".xbtn-success").click(), !1;
         },
-        "click .password-eye": function(e) {
-          var t = i(e.currentTarget);
-          t.prev().prop("type", function(e, t) {
-            return "password" === t ? "text" : "password";
-          }).focus(), t.toggleClass("icon16-pass-hide icon16-pass-show");
-        },
         "blur #password": function() {
           var e = this.$("#password").val(), t = this.$('[for="password"]'), i = t.find("span");
           e ? 4 > e.length ? (t.addClass("label-error"), i.text(this.errors["400"].weak_password)) : (t.removeClass("label-error"), 
@@ -7188,10 +7185,11 @@ TWEEN.Tween = function(e) {
       viewData: {
         cls: "mblack modal-sp",
         title: "Set Password",
-        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set your <span class="x-sign">EXFE</span> password. All identities in your account share the same password for authentication.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><div class="controls"><label class="control-label" for="password">Password: <span></span></label><input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline password-eye icon16-pass-hide pointer"></i></div></div></fieldset></form>',
+        body: '<div class="shadow title">Set Password</div><form class="modal-form"><fieldset><legend>Please set your <span class="x-sign">EXFE</span> password. All identities in your account share the same password for authentication.</legend><div class="clearfix context-user"><div class="pull-left avatar"><img width="40" height="40" alt="" src="" /></div><div class="pull-left username"></div></div><div class="control-group"><div class="controls"><label class="control-label" for="password">Password: <span></span></label><input class="input-large" id="password" placeholder="Set EXFE password" type="password" autocomplete="off" /><i class="help-inline icon16-pass-hide pointer" id="password-eye"></i></div></div></fieldset></form>',
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button>'
       },
       onShowBefore: function(e) {
+        h(this.element, "#password", "#password-eye");
         var t = i(e.currentTarget).data("source"), n = i(e.currentTarget).data("token");
         this.signed = !1, this._setup = !1, t ? (this._user = t.user, this._token = n || t.token, 
         this._setup = t.setup) : (this.signed = !0, this._user = o.get("user"), this._token = n || o.get("authorization").token, 
@@ -7232,12 +7230,6 @@ TWEEN.Tween = function(e) {
           t ? 4 > t.length ? (n.addClass("label-error"), a.text(this.errors["400"].weak_password)) : (n.removeClass("label-error"), 
           a.text("")) : (n.addClass("label-error"), a.text(this.errors["400"].no_password));
         },
-        "click #password-eye": function(e) {
-          var t = i(e.currentTarget), n = t.prev();
-          n.prop("type", function(e, t) {
-            return "password" === t ? "text" : "password";
-          }), t.toggleClass("icon16-pass-hide icon16-pass-show");
-        },
         "click .xbtn-success": function() {
           if (!this.$('[for="name"]').hasClass("label-error") || !this.$('[for="password"]').hasClass("label-error")) {
             var e, t = this, n = t._settings, a = n.originToken, s = "user" === n.tokenType, l = n.page, c = s ? "setup" : "setupUserByInvitationToken", d = {
@@ -7275,6 +7267,7 @@ TWEEN.Tween = function(e) {
         footer: '<button class="pull-right xbtn-blue xbtn-success">Done</button><a class="pull-right xbtn-discard" data-dismiss="dialog">Cancel</a>'
       },
       onShowBefore: function(e) {
+        h(this.element, "#password", "#password-eye");
         var t = i(e.currentTarget).data("source");
         if (t) {
           this._settings = t;
@@ -7519,7 +7512,7 @@ TWEEN.Tween = function(e) {
       }
     }
   };
-  var h = c.extend({
+  var f = c.extend({
     availability: !1,
     init: function() {
       var e = this;
@@ -7543,7 +7536,7 @@ TWEEN.Tween = function(e) {
         e.$(".authenticate").addClass("hide"), e.$(".user-identity").addClass("hide"), e.$('[for="identity"]').removeClass("label-error").find("span").text(""), 
         e.$(".xbtn-forgotpwd").addClass("hide").data("source", null), e.availability = !1, 
         e.$(".x-signin")[(e.availability ? "remove" : "add") + "Class"]("disabled");
-      });
+      }), h(this.element, "#password", "#password-eye");
     },
     resetInputs: function() {
       this.$("input").val(""), this.$(".label-error").removeClass("label-error").find("span").text(""), 
@@ -7569,7 +7562,7 @@ TWEEN.Tween = function(e) {
       this.setPasswordPlaceHolder(e);
     }
   });
-  t.Identification = h;
+  t.Identification = f;
 }), define("datepanel", function(e) {
   "use strict";
   var t = e("jquery"), i = t.browser.msie, n = e("humantime"), a = n.locales[n.locale], r = a.months, s = a.monthsShort, o = n.createEFTime, l = n.toLocaleDate, c = n.lead0, d = e("util"), u = d.trim, h = e("api"), p = e("rex"), f = e("panel").extend({
@@ -11662,19 +11655,19 @@ TWEEN.Tween = function(e) {
     },
     showAfter: function() {
       var e = this, i = e.srcNode;
-      if (i) {
-        var r = i.offset(), s = e.element, l = i.outerHeight();
-        s.css({
-          left: this.oleft = r.left,
-          top: this.otop = r.top + l
+      if (r = "", i) {
+        var s = i.offset(), l = e.element, d = i.outerHeight();
+        l.css({
+          left: this.oleft = s.left,
+          top: this.otop = s.top + d
         }), t("#phone-panel .identity-avatar").hide(), t("#phone-panel .identity-name").hide(), 
         n = i.val().replace(/\-|\(|\)|\ /g, "");
-        var d = a;
-        if (/^\+.*$/.test(n)) for (var u = 0; o.length > u; u++) if (o[u].regular.test(n)) {
-          n = n.replace(o[u].regular, ""), d = u;
+        var u = a;
+        if (/^\+.*$/.test(n)) for (var h = 0; o.length > h; h++) if (o[h].regular.test(n)) {
+          n = n.replace(o[h].regular, ""), u = h;
           break;
         }
-        c(d), s.find(".name").focus();
+        c(u), l.find(".name").focus();
       }
     },
     destory: function() {
