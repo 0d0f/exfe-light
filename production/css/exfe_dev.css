@@ -8476,7 +8476,7 @@ body {
 .cross-container {
   position: relative;
   z-index: 3;
-  padding-top: 80px;
+  padding-top: 40px;
   background-color: rgba(255, 255, 255, 0.3);
   background-color: transparent;
   background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
@@ -8549,7 +8549,7 @@ body {
 
 .cross-title {
   position: relative;
-  margin: 0 40px 20px;
+  margin: 0 40px 30px;
   /*padding: 80px 0 20px;*/
 
   /*padding: 0 0 20px;*/
@@ -8557,6 +8557,7 @@ body {
 }
 
 .cross-title h1 {
+  margin: 0;
   font-size: 42px;
   font-weight: 300;
   line-height: 50px;
@@ -8629,7 +8630,7 @@ body {
 }
 
 .cross-dp h2 {
-  margin-bottom: 0;
+  margin: 0;
   font-size: 34px;
   font-weight: 300;
   line-height: 40px;
@@ -8729,7 +8730,7 @@ body {
 }
 
 .cross-rsvp .edit .by {
-  margin: 3px 0 0 30px;
+  margin: 6px 0 0 30px;
   color: #4C4C4C;
 }
 
@@ -8757,18 +8758,6 @@ body {
 
 .no-bg .cross-background .cross-background-blur {
   display: none;
-}
-
-.no-bg .cross-container {
-  padding-top: 50px;
-}
-
-.no-bg .cross-title {
-  /*padding: 50px 0 30px;*/
-
-  /*padding: 0 0 30px;*/
-
-  margin-bottom: 30px;
 }
 
 .single-line h1 {
