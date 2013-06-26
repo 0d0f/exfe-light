@@ -85,7 +85,9 @@ module.exports = function (grunt) {
           indent_level: 2,
           width: 80,
           beautify: true
-        }
+        },
+        // 不压缩变量
+        mangle: false
       },
       files: {
         '<%= dirs.dist %>/<%= dirs.desktop %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
@@ -118,7 +120,8 @@ module.exports = function (grunt) {
           indent_level: 2,
           width: 80,
           beautify: true
-        }
+        },
+        mangle: false
       },
       files: {
         '<%= dirs.dist %>/<%= dirs.mobile %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
