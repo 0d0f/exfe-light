@@ -1,3 +1,7 @@
+* v0.0.9 2013-06-27T00:48:00 UTC+0800
+  - Features
+    * `begin_at#time` supports to pasre 'hh:mm:ss +0000'
+
 * v0.0.8 2013-04-10T14:54:10 UTC+0800
   - Features
     * added `HumanTime#printTime`
