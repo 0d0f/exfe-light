@@ -30,6 +30,7 @@ module.exports = function (grunt) {
 
   var JSHINT_IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
 
+  //title 40 40 30
 
   // publish {{{
   var PUBLISH = {};
@@ -48,7 +49,30 @@ module.exports = function (grunt) {
     },
     DESKTOP: {
       options: {
-        banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        banner: '<%= meta.banner %>\n'
+          + '/*\n'
+          + '// desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
+          + '//@ sourceMappingURL=all-<%= pkg.desktop.version %>.min.map\n'
+          + '*/\n',
+        sourceMap: '<%= dirs.dist %>/all-<%= pkg.desktop.version %>.min.map',
+        sourceMappingURL: function (dest) {
+          return dest.split('/')[2];
+        },
+        // See https://github.com/mozilla/source-map#sourcemapconsumer
+        /*
+        {
+          version : 3,
+          file: "out.js",
+          sourceRoot : "",
+          sources: ["foo.js", "bar.js"],
+          names: ["src", "maps", "are", "fun"],
+          mappings: "AA,AB;;ABCDE;"
+        }
+        */
+        sourceMapOutCover: {
+          file: '<%= dirs.desktop_min %>',
+          sources: ['<%= dirs.desktop %>']
+        }
       },
       files: {
         '<%= dirs.dist %>/<%= dirs.desktop_min %>': ['<%= dirs.dist %>/<%= dirs.desktop %>']
@@ -57,7 +81,6 @@ module.exports = function (grunt) {
     DESKTOP_beautify: {
       options: {
         banner: '<%= meta.banner %>\n/*! desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n',
-        //sourceMap: '<%= dirs.dist %>/all-source-map.js'
         beautify: {
           indent_level: 2,
           width: 80,
@@ -70,7 +93,19 @@ module.exports = function (grunt) {
     },
     MOBILE: {
       options: {
-        banner: '<%= meta.banner %>\n/*! mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\n'
+        banner: '<%= meta.banner %>\n'
+          + '/*\n'
+          + '// mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
+          + '//@ sourceMappingURL=mobile-all-<%= pkg.mobile.version %>.min.map\n'
+          + '*/\n',
+        sourceMap: '<%= dirs.dist %>/mobile-all-<%= pkg.mobile.version %>.min.map',
+        sourceMappingURL: function (dest) {
+          return dest.split('/')[2];
+        },
+        sourceMapOutCover: {
+          file: '<%= dirs.mobile_min %>',
+          sources: ['<%= dirs.mobile %>']
+        }
       },
       files: {
         '<%= dirs.dist %>/<%= dirs.mobile_min %>': ['<%= dirs.dist %>/<%= dirs.mobile %>']
