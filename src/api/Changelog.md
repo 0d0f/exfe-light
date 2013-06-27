@@ -1,3 +1,7 @@
+* v0.0.12 2013-06-27T15:05:00 UTC+0800
+  - New Features
+    * redirect to /500 while `http#status` is 500.
+
 * v0.0.11 2013-06-07T23:37:07 UTC+0800
   - New Features
     * `checkinvitationtoken` api
