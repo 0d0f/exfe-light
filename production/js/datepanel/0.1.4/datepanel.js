@@ -252,7 +252,7 @@ define('datepanel', function (require/*, exports, module*/) {
         if (!this._x) {
           this._x = 124;
           this.element.css({
-            '-webkit-transform': '-webkit-translate3d(-' + this._x + 'px, 0, 0)'
+            '-webkit-transform': 'translate3d(-' + this._x + 'px, 0, 0)'
           , '-moz-transform': '-moz-translate3d(-' + this._x + 'px, 0, 0)'
           , '-ms-transform': '-ms-translate3d(-' + this._x + 'px, 0, 0)'
           , '-o-transform': '-o-translate3d(-' + this._x + 'px, 0, 0)'
