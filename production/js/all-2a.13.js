@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-27 12:06:38 */
+/*! desktop@2a.13 2013-06-27 03:06:00 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -6055,7 +6055,9 @@ TWEEN.Tween = function(object) {
       dfd.reject(data, code, statusText, jqXHR);
     }), promise.jqXHR = jqXHR, promise.abort = function(statusText) {
       jqXHR && (jqXHR.abort(statusText), jqXHR = dfd = promise = void 0);
-    }, promise.done(done).fail(fail).always(function() {
+    }, promise.done(done).fail(fail).fail(function(data, code) {
+      500 === code && (window.location = "/500");
+    }).always(function() {
       jqXHR = dfd = promise = void 0;
     }), promise;
   }
