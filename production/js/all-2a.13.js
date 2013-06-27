@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-27 03:06:12 */
+/*! desktop@2a.13 2013-06-27 03:06:50 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -7856,7 +7856,7 @@ TWEEN.Tween = function(object) {
     },
     showTL: function() {
       this.timeline.show(this.eftime), this._x || (this._x = 124, this.element.css({
-        "-webkit-transform": "-webkit-translate3d(-" + this._x + "px, 0, 0)",
+        "-webkit-transform": "translate3d(-" + this._x + "px, 0, 0)",
         "-moz-transform": "-moz-translate3d(-" + this._x + "px, 0, 0)",
         "-ms-transform": "-ms-translate3d(-" + this._x + "px, 0, 0)",
         "-o-transform": "-o-translate3d(-" + this._x + "px, 0, 0)",
