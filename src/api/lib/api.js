@@ -275,7 +275,7 @@ define('api', function (require) {
       .done(done)
       .fail(fail)
       // redirect to /500
-      .fail(function (data, code) { if (500 === code) { window.location = '/500'; } })
+      .fail(function (data, code) { if (/^50[024]$/.exec(code)) { window.location = '/500'; } })
       .always(function () { jqXHR = dfd = promise = void 0; });
 
     return promise;
