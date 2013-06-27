@@ -9570,7 +9570,14 @@ body {
   position: relative;
   z-index: 1;
   padding: 40px 40px 35px 160px;
-  margin: 0 auto;
+  margin: 0 auto 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .x-gather .cross-form .bg-gatherax {
@@ -9751,8 +9758,7 @@ body {
 
 .gathering-x .cross-background {
   height: 100%;
-  margin-top: -245px;
-  background-position: 50% 0;
+  background-position: 50% 36%;
 }
 
 .x-profile .gr-a {
