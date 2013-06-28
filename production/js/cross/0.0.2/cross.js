@@ -211,15 +211,12 @@ ExfeeWidget = {
                     case 'mouseenter':
                         $('#' + dom_id + ' .total').css('visibility', 'visible');
                         $('#' + dom_id + ' .avatar .rb').show();
-                        if (!readOnly) {
-                        }
                         break;
                     case 'mouseleave':
                         if (!ExfeeWidget.focus[dom_id + '-input']
                          && $('#' + dom_id + ' .exfee-input').val() === '') {
                             $('#' + dom_id + ' .total').css('visibility',       'hidden');
                             $('#' + dom_id + ' .avatar .rb').hide();
-                            ExfeeWidget.showLimitWarning(false);
                         }
                 }
             }
@@ -773,9 +770,6 @@ ExfeeWidget = {
         this.ajaxIdentity(arrValid);
         if (ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput) {
             strTail = '';
-            this.showLimitWarning();
-        } else {
-            this.showLimitWarning(false);
         }
         var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^\+?[0-9]{5,15}$/.test(strTail);
         objInput.parent().find('.pointer').toggleClass(
@@ -1299,7 +1293,10 @@ define(function (require, exports, module) {
                                   ? 'no_permission' : '';
                     bus.emit('app:cross:edited', {error : errorType});
                 }
-            );
+            )
+              .always(function () {
+                ExfeeWidget.showLimitWarning(ExfeeWidget.summary().items > ExfeeWidget.soft_limit);
+              });
         }
     };
 
@@ -1564,7 +1561,6 @@ define(function (require, exports, module) {
                     if (!$('#gather-exfee .exfee-input').val()) {
                         $('#gather-exfee .thumbnails .avatar .rb').hide();
                     }
-                    ExfeeWidget.showLimitWarning(false);
                 },
                 function() {}
             ]
