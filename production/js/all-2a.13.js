@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-28 01:06:11 */
+/*! desktop@2a.13 2013-06-28 09:06:55 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -13945,7 +13945,7 @@ TWEEN.Tween = function(object) {
 
          case "mouseleave":
           ExfeeWidget.focus[dom_id + "-input"] || "" !== $("#" + dom_id + " .exfee-input").val() || ($("#" + dom_id + " .total").css("visibility", "hidden"), 
-          $("#" + dom_id + " .avatar .rb").hide(), ExfeeWidget.showLimitWarning(!1));
+          $("#" + dom_id + " .avatar .rb").hide());
         }
       }), $("#" + this.dom_id + " .input-xlarge").bind("focus keydown blur", this.inputEvent), 
       $("#" + this.dom_id + " .pointer").bind("mousedown", function(e) {
@@ -14218,8 +14218,7 @@ TWEEN.Tween = function(object) {
             strTail = arrInput[i]);
           }
           var newInput = arrInvalid.join("; ");
-          newInput !== strInput && objInput.val(newInput), this.ajaxIdentity(arrValid), ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput ? (strTail = "", 
-          this.showLimitWarning()) : this.showLimitWarning(!1);
+          newInput !== strInput && objInput.val(newInput), this.ajaxIdentity(arrValid), ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput && (strTail = "");
           var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(strTail);
           objInput.parent().find(".pointer").toggleClass("icon16-exfee-plus-blue", bolCorrect).toggleClass("icon16-exfee-plus", !bolCorrect), 
           this.checkComplete(objInput, strTail.replace(/^@/, ""), force);
@@ -14504,6 +14503,8 @@ TWEEN.Tween = function(object) {
       bus.emit("app:cross:edited", {
         error: errorType
       });
+    }).always(function() {
+      ExfeeWidget.showLimitWarning(ExfeeWidget.summary().items > ExfeeWidget.soft_limit);
     }));
   }, ExfeeCallback = function(refresh) {
     if (ShowExfee(), SaveExfee(refresh), autoSetTitle) {
@@ -14641,8 +14642,7 @@ TWEEN.Tween = function(object) {
         } ],
         exfee: [ function() {
           $("#cross-exfee .exfee-input").val() || ($("#cross-exfee .total").css("visibility", "hidden"), 
-          $("#cross-exfee .thumbnails .avatar .rb").hide()), $("#gather-exfee .exfee-input").val() || $("#gather-exfee .thumbnails .avatar .rb").hide(), 
-          ExfeeWidget.showLimitWarning(!1);
+          $("#cross-exfee .thumbnails .avatar .rb").hide()), $("#gather-exfee .exfee-input").val() || $("#gather-exfee .thumbnails .avatar .rb").hide();
         }, function() {} ]
       };
       if (event) {
