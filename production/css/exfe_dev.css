@@ -5738,12 +5738,6 @@ img:-moz-broken {
   border: none;
 }
 
-body {
-  /* Addresses a small issue in webkit: http://bit.ly/NEdoDq */
-
-  -webkit-backface-visibility: hidden;
-}
-
 /*
 .keyframes (@name, ...) {
   @webkit: ~"@-webkit-";
@@ -6003,34 +5997,6 @@ body {
           box-shadow: 0 1px 1px #fafafa;
 }
 
-.xbtn-gather {
-  width: 138px;
-  height: 30px;
-  font-size: 22px;
-  font-weight: 300;
-  line-height: 26px;
-  line-height: 30px;
-  color: #050505;
-  text-align: center;
-  text-shadow: 0 1px 1px #ffffff;
-  background-color: #9bb8d7;
-  background-color: #dbeaf9;
-  background-image: -moz-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dbeaf9), to(#3a6ea5));
-  background-image: -webkit-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: -o-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: linear-gradient(to bottom, #dbeaf9, #3a6ea5);
-  background-repeat: repeat-x;
-  border: 1px solid rgba(127, 127, 127, 0.15);
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdbeaf9', endColorstr='#ff3a6ea5', GradientType=0);
-  -webkit-box-shadow: 0 1px 1px #ffffff;
-     -moz-box-shadow: 0 1px 1px #ffffff;
-          box-shadow: 0 1px 1px #ffffff;
-}
-
 .xbtn-reauthorize {
   height: 16px;
   padding: 0 10px;
@@ -6218,23 +6184,56 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e6e6', endColorstr='#ff7f7f7f', GradientType=0);
 }
 
+.xbtn-gather {
+  width: 138px;
+  height: 30px;
+  font-size: 22px;
+  line-height: 30px;
+}
+
 .xbtn-savegather {
-  width: 88px;
-  height: 24px;
-  color: #050505;
-  text-shadow: 0 1px 1px #d5e8f2;
-  background-color: #9bb8d7;
-  background-image: -moz-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dbeaf9), to(#3a6ea5));
-  background-image: -webkit-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: -o-linear-gradient(top, #dbeaf9, #3a6ea5);
-  background-image: linear-gradient(to bottom, #dbeaf9, #3a6ea5);
-  background-repeat: repeat-x;
-  border: 1px solid rgba(230, 230, 230, 0.5);
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdbeaf9', endColorstr='#ff3a6ea5', GradientType=0);
+  width: 160px;
+  height: 44px;
+  font-size: 24px;
+  line-height: 44px;
+}
+
+.xbtn-gather,
+.xbtn-savegather {
+  font-weight: 300;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#0c67b3), to(#6babe4));
+  background-image: -moz-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: -webkit-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: -ms-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: -o-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: linear-gradient(to top, #0c67b3, #6babe4);
+  border: none;
+  -webkit-box-shadow: 0 1px 0 #0e68b4;
+     -moz-box-shadow: 0 1px 0 #0e68b4;
+          box-shadow: 0 1px 0 #0e68b4;
+}
+
+.xbtn-gather:active,
+.xbtn-savegather:active {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#0860a9), to(#529ee2));
+  background-image: -moz-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  background-image: -webkit-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  background-image: -ms-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  background-image: -o-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  background-image: linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+}
+
+.xbtn-gather:hover,
+.xbtn-savegather:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#398ace), color-stop(0.215, #2282d1), color-stop(0.455, #3d8acc), to(#75b3ea));
+  background-image: -moz-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  background-image: -webkit-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  background-image: -ms-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  background-image: -o-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  background-image: linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
 }
 
 .xbtn-ok {
@@ -7023,7 +7022,7 @@ body {
   margin-top: 15px;
   font-weight: 300;
   line-height: 30px;
-  text-align: center;
+  color: #fff;
 }
 
 .navbar .user-panel .header {
@@ -9563,7 +9562,7 @@ body {
 .x-gather .cross-form {
   position: relative;
   z-index: 1;
-  padding: 40px 40px 35px 160px;
+  padding: 40px 40px 35px 150px;
   margin: 0 auto 40px;
   background-color: rgba(255, 255, 255, 0.8);
   -webkit-border-radius: 2px;
@@ -9611,15 +9610,15 @@ body {
   color: #e52e53;
 }
 
-.x-gather .choose-identity {
+.x-gather .cross-form .choose-identity {
   position: absolute;
-  left: 80px;
+  left: 40px;
   z-index: 2;
   width: 80px;
   height: 80px;
 }
 
-.x-gather .choose-identity .placeholder {
+.x-gather .cross-form .choose-identity .placeholder {
   display: table-cell;
   height: 60px;
   padding: 10px;
@@ -9635,6 +9634,27 @@ body {
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
           border-radius: 5px;
+}
+
+.x-gather .cross-form label {
+  margin-left: 5px;
+}
+
+.x-gather .cross-form input,
+.x-gather .cross-form textarea {
+  background-color: transparent;
+}
+
+.x-gather .cross-form .form-actions {
+  padding: 0;
+  margin: 0;
+  line-height: 24px;
+  background: none;
+  border-top: none;
+}
+
+.x-gather .cross-form .control-buttons {
+  margin-top: -10px;
 }
 
 .x-gather .row {
@@ -9653,39 +9673,29 @@ body {
   padding-right: 40px;
 }
 
+/*
 .x-gather .form-horizontal {
   position: relative;
   z-index: 2;
   margin-bottom: 0;
-}
 
-.x-gather .form-horizontal .control-group {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
+  .control-group {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
 
-.x-gather .form-horizontal input,
-.x-gather .form-horizontal textarea {
-  background-color: transparent;
-}
+  .control-label {
+    width: 70px;
+    color: #7f7f7f;
+    margin-right: 10px;
+  }
 
-.x-gather .form-horizontal .control-label {
-  width: 70px;
-  margin-right: 10px;
-  color: #7f7f7f;
-}
+  .controls {
+    margin-left: 0px;
+  }
 
-.x-gather .form-horizontal .controls {
-  margin-left: 0;
 }
-
-.x-gather .form-horizontal .form-actions {
-  padding: 0;
-  margin: 0;
-  line-height: 24px;
-  background: none;
-  border-top: none;
-}
+*/
 
 #gather-title {
   width: 460px;
@@ -9731,12 +9741,12 @@ body {
 }
 
 #gather-exfee {
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .gather-invite {
   position: relative;
-  width: 360px;
+  width: 280px;
 }
 
 .gather-invite input {

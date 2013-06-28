@@ -73,23 +73,6 @@
   border: 1px solid rgba(127,127,127,.15);
 }
 
-.xbtn-gather {
-  width: 138px;
-  height: 30px;
-  font-size: 22px;
-  font-weight: 300;
-  line-height: 26px;
-  text-align: center;
-  line-height: 30px;
-  text-shadow: 0 1px 1px #ffffff;
-  #gradient > .vertical(#dbeaf9, @exfeBlue);
-  background-color: #dbeaf9;
-  .box-shadow(0 1px 1px #ffffff);
-  .border-radius(5px);
-  border: 1px solid rgba(127,127,127,.15);
-  color: #050505;
-}
-
 .xbtn-reauthorize {
   padding: 0 10px;
   height: 16px;
@@ -184,14 +167,54 @@
 
 }
 
+.xbtn-gather {
+  width: 138px;
+  height: 30px;
+  font-size: 22px;
+  line-height: 30px;
+}
+
 .xbtn-savegather {
-  width: 88px;
-  height: 24px;
-  .border-radius(5px);
-  text-shadow: 0 1px 1px #d5e8f2;
-  #gradient > .vertical(#dbeaf9, @exfeBlue);
-  border: 1px solid rgba(230, 230, 230, .5);
-  color: #050505;
+  width: 160px;
+  height: 44px;
+  font-size: 24px;
+  line-height: 44px;
+}
+
+.xbtn-gather,
+.xbtn-savegather {
+  text-align: center;
+  font-weight: 300;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .15);
+  border: none;
+  @startColor: #0c67b3;
+  @endColor: #6babe4;
+  background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
+  background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+  background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
+  background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
+  background-image: linear-gradient(to top, @startColor, @endColor); // Standard, IE10
+  .box-shadow(0 1px 0 rgb(14, 104, 180));
+  color: #ffffff;
+
+  &:active {
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#0860a9), to(#529ee2));
+    background-image: -moz-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+    background-image: -webkit-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+    background-image: -ms-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+    background-image: -o-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+    background-image: linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  }
+
+  &:hover {
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#398ace), color-stop(0.215, #2282d1), color-stop(0.455, #3d8acc), to(#75b3ea));
+    background-image: -moz-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+    background-image: -webkit-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+    background-image: -ms-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+    background-image: -o-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+    background-image: linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  }
 }
 
 .xbtn-ok {

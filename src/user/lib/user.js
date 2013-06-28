@@ -149,7 +149,7 @@ define('user', function (require) {
             + '<div class="list"></div>'
           + '</div>'
           + '<div class="footer">'
-            + '<a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a <span class="x">·X·</span></a>'
+            + '<a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a ·X·</a>'
             + '<div class="spliterline"></div>'
             + '<div class="actions">'
               + '<a href="#" class="pull-right" id="app-signout">Sign out</a>'
