@@ -6152,7 +6152,6 @@ img:-moz-broken {
   width: 120px;
   height: 36px;
   font-size: 16px;
-  font-weight: 300;
   line-height: 32px;
   cursor: pointer;
   border: none;
@@ -8787,7 +8786,7 @@ body {
 }
 
 .cross-rsvp .edit .by {
-  margin: 6px 0 0 30px;
+  margin: 6px 0 0 0;
   color: #4C4C4C;
 }
 
