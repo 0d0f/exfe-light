@@ -5,7 +5,7 @@
     //height: 500px;
     //padding: 40px 40px 0;
     position: relative;
-    padding: 40px 40px 35px 160px;
+    padding: 40px 40px 35px 150px;
     margin: 0 auto 40px;
     z-index: 1;
     background-color: rgba(255,255,255,0.8);
@@ -47,24 +47,44 @@
       margin-right: 10px;
       color: #e52e53;
     }
-  }
 
-  .choose-identity {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    left: 80px;
-    z-index: 2;
+    .choose-identity {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      left: 40px;
+      z-index: 2;
 
-    .placeholder {
-      display: table-cell;
-      height: 60px;
-      padding: 10px;
-      text-align: center;
-      vertical-align: middle;
-      #gradient > .directional(#fafafa, #e6e6e6, to bottom);
-      border: 1px solid #e6e6e6;
-      .border-radius(5px);
+      .placeholder {
+        display: table-cell;
+        height: 60px;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+        #gradient > .directional(#fafafa, #e6e6e6, to bottom);
+        border: 1px solid #e6e6e6;
+        .border-radius(5px);
+      }
+    }
+
+    label {
+      margin-left: 5px;
+    }
+
+    input, textarea {
+      background-color: transparent;
+    }
+
+    .form-actions {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border-top: none;
+      line-height: 24px;
+    }
+
+    .control-buttons {
+      margin-top: -10px;
     }
   }
 
@@ -84,6 +104,7 @@
 }
 
 // Cross-Form
+/*
 .x-gather .form-horizontal {
   position: relative;
   z-index: 2;
@@ -92,10 +113,6 @@
   .control-group {
     margin-top: 0;
     margin-bottom: 10px;
-  }
-
-  input, textarea {
-    background-color: transparent;
   }
 
   .control-label {
@@ -108,14 +125,8 @@
     margin-left: 0px;
   }
 
-  .form-actions {
-    margin: 0;
-    padding: 0;
-    background: none;
-    border-top: none;
-    line-height: 24px;
-  }
 }
+*/
 
 #gather-title {
   width: 460px;
@@ -141,12 +152,12 @@
 }
 
 #gather-exfee {
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .gather-invite {
   position: relative;
-  width: 360px;
+  width: 280px;
 
   input {
     width: 254px;
