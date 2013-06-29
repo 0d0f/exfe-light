@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-29 06:06:51 */
+/*! desktop@2a.13 2013-06-29 06:06:37 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -6047,16 +6047,16 @@ TWEEN.Tween = function(object) {
   function _ajax(options, done, fail) {
     var dfd, promise, jqXHR, o = {};
     return _extend(o, defaultOptions), _extend(o, options), dfd = deferred(), promise = dfd.promise(), 
-    jqXHR = ajax(o).done(function(data, statusText, jqXHR) {
+    jqXHR = ajax(o).done(function(data, statusText) {
       var code = data && data.meta && data.meta.code;
       200 === code ? dfd.resolve(data.response, statusText, jqXHR) : dfd.reject(data, code, statusText, jqXHR);
-    }).fail(function(data, statusText, jqXHR) {
+    }).fail(function(data, statusText) {
       var code = data && data.meta && data.meta.code;
       dfd.reject(data, code, statusText, jqXHR);
     }), promise.jqXHR = jqXHR, promise.abort = function(statusText) {
       jqXHR && (jqXHR.abort(statusText), jqXHR = dfd = promise = void 0);
     }, promise.done(done).fail(fail).fail(function(data, code) {
-      /^50[024]$/.exec(code) && (window.location = "/500");
+      /^50[024]$/.exec(code || jqXHR.status) && (window.location = "/500");
     }).always(function() {
       jqXHR = dfd = promise = void 0;
     }), promise;
@@ -14821,7 +14821,7 @@ TWEEN.Tween = function(object) {
     place.description ? $(".cross-dp.cross-place > address").html(ExfeUtilities.escape(place.description).replace(/\r\n|\r|\n/g, "<br>")).toggleClass("gray", !1) : $(".cross-dp.cross-place > address").html("Choose a place.").toggleClass("gray", !0), 
     $(".cross-dp.cross-place > address").height() > 80 ? ($(".cross-dp.cross-place > address").toggleClass("more", !1), 
     $(".cross-dp.cross-place .xbtn-more").show()) : $(".cross-dp.cross-place .xbtn-more").hide(), 
-    place.description || place.title ? $(".cross-dp.cross-place > address").css("display", "none") : $(".cross-dp.cross-place > address").text("Choose a place.").css("display", "block");
+    $(".cross-dp.cross-place > address").css("display", "block"), place.description || place.title ? !place.description && place.title && $(".cross-dp.cross-place > address").css("display", "none") : $(".cross-dp.cross-place > address").text("Choose a place.").css("display", "block");
   }, ShowExfee = function() {
     window.GatherExfeeWidget.showAll(!0), window.CrossExfeeWidget.showAll(!1, !0);
   }, ShowBackground = function() {
