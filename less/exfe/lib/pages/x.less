@@ -331,6 +331,28 @@
       }
     }
 
+    .cross-map {
+      a {
+        display: block;
+        height: 140px;
+        overflow: hidden;
+        position: relative;
+        .border-radius(3px);
+
+        &:after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          content: '';
+          .border-radius(3px);
+          .box-shadow(0px 0px 0px 1px rgba(0,0,0,0.1) inset, 0px 1px 4px 0px rgba(0,0,0,0.2) inset);
+          pointer-events: none;
+        }
+      }
+    }
+
     .cross-rsvp {
       margin-bottom: 20px;
 
