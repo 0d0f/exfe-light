@@ -1951,9 +1951,10 @@ define(function (require, exports, module) {
             $('.cross-dp.cross-place .xbtn-more').hide();
         }
 
+        $('.cross-dp.cross-place > address').css('display', 'block')
         if (!place.description && !place.title) {
             $('.cross-dp.cross-place > address').text('Choose a place.').css('display', 'block')
-        } else {
+        } else if (!place.description && place.title) {
             $('.cross-dp.cross-place > address').css('display', 'none')
         }
     };

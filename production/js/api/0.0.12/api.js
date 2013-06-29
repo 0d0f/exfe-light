@@ -251,7 +251,7 @@ define('api', function (require) {
     promise = dfd.promise();
 
     jqXHR = ajax(o)
-      .done(function (data, statusText, jqXHR) {
+      .done(function (data, statusText) {
         var code = data && data.meta && data.meta.code;
         if (200 === code) {
           dfd.resolve(data.response, statusText, jqXHR);
@@ -259,7 +259,7 @@ define('api', function (require) {
           dfd.reject(data, code, statusText, jqXHR);
         }
       })
-      .fail(function (data, statusText, jqXHR) {
+      .fail(function (data, statusText) {
           var code = data && data.meta && data.meta.code;
           dfd.reject(data, code, statusText, jqXHR);
         });
@@ -275,7 +275,7 @@ define('api', function (require) {
       .done(done)
       .fail(fail)
       // redirect to /500
-      .fail(function (data, code) { if (/^50[024]$/.exec(code)) { window.location = '/500'; } })
+      .fail(function (data, code) { if (/^50[024]$/.exec(code || jqXHR.status)) { window.location = '/500'; } })
       .always(function () { jqXHR = dfd = promise = void 0; });
 
     return promise;
