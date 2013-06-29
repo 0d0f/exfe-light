@@ -8648,6 +8648,9 @@ body {
   padding: 4px;
   background: rgba(255, 255, 255, 0.25);
   border: 1px solid #d5d5d5;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
 }
 
 .cross-description p {
