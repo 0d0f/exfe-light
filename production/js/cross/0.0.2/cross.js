@@ -1862,7 +1862,7 @@ define(function (require, exports, module) {
             domDesc  = ExfeUtilities.escape(Cross.description).replace(/\r\n|\r|\n/g, '<br>'); // ? Marked.parse(Cross.description)
             $('.cross-description .show').toggleClass('gray', false).toggleClass('gsd', false);;
         } else {
-            domDesc  = 'Click here to describe something about this ·X·.';
+            domDesc  = 'Take some notes here.';
             $('.cross-description .show').toggleClass('gray', true).toggleClass('gsd', !Cross.id);
         }
         if ($('.cross-description .show').html() !== domDesc) {

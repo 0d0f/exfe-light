@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-29 06:06:37 */
+/*! desktop@2a.13 2013-06-29 07:06:05 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -14788,7 +14788,7 @@ TWEEN.Tween = function(object) {
     var expended = $(".cross-description .xbtn-more").hasClass("xbtn-less"), domDesc = "";
     $(".cross-description").toggleClass("more", !0), $(".cross-description .xbtn-more").toggleClass("xbtn-less", !1), 
     Cross.description ? (domDesc = ExfeUtilities.escape(Cross.description).replace(/\r\n|\r|\n/g, "<br>"), 
-    $(".cross-description .show").toggleClass("gray", !1).toggleClass("gsd", !1)) : (domDesc = "Click here to describe something about this ·X·.", 
+    $(".cross-description .show").toggleClass("gray", !1).toggleClass("gsd", !1)) : (domDesc = "Take some notes here.", 
     $(".cross-description .show").toggleClass("gray", !0).toggleClass("gsd", !Cross.id)), 
     $(".cross-description .show").html() !== domDesc && $(".cross-description .show").html(domDesc), 
     $(".cross-description .show").height() > 180 ? ($(".cross-description").toggleClass("more", !1), 
