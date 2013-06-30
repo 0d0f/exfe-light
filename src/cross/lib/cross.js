@@ -2107,7 +2107,7 @@ define(function (require, exports, module) {
     var ShowGoogleMap = function (place) {
         $('.cross-map').empty();
         var hasLL = place.lat.length && place.lng.length,
-            map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x170&maptype=road&sensor=false" alt="" width="280" height="170" /></a>';
+            map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a'+encodeURIComponent('http://img.exfe.com/web/map_pin_blue@2x.png')+'%7C{{lat}},{{lng}}&zoom=13&size=280x170&maptype=road&sensor=false" alt="" width="280" height="170" /></a>';
 
         function getMap(position) {
           var coords = position.coords;
