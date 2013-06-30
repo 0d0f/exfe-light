@@ -161,8 +161,9 @@
           "from": "underscore@>= 1.2.1"
         },
         "watch": {
-          "version": "0.7.0",
-          "from": "watch@>= 0.5.1"
+          "version": "0.8.0",
+          "from": "watch@0.8.0",
+          "resolved": "https://registry.npmjs.org/watch/-/watch-0.8.0.tgz"
         }
       }
     },
@@ -180,6 +181,11 @@
       "version": "0.4.1",
       "from": "grunt-contrib-copy@",
       "resolved": "https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz"
+    },
+    "grunt-contrib-less": {
+      "version": "0.6.1",
+      "from": "grunt-contrib-less@",
+      "resolved": "https://registry.npmjs.org/grunt-contrib-less/-/grunt-contrib-less-0.6.1.tgz"
     },
     "grunt-shell": {
       "version": "0.2.2",
