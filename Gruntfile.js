@@ -272,13 +272,31 @@ module.exports = function (grunt) {
         nospawn: true
       },
       less: {
-        files: ['less/exfe/lib/*.less', 'less/exfe/lib/pages/*.less']
+        files: ['less/exfe/lib/**/*.less'],
+        tasks: ['less']
       },
       html: {
         files: ['templates/*.html']
+      }
+    },
+
+    less: {
+      dev: {
+        options: {
+          compress: true,
+        },
+        files: {
+          './production/css/exfe.css': './less/exfe/lib/exfe.less',
+        }
       },
-      css: {
-        files: []
+      prod: {
+        options: {
+          compress: true,
+          yuicompress: true
+        },
+        files: {
+          './production/css/exfe.min.css': './less/exfe/lib/exfe.less',
+        }
       }
     },
 
@@ -309,6 +327,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-livereload');
   grunt.loadNpmTasks('grunt-shell');
 

@@ -1,31 +1,6 @@
 // https://github.com/daneden/animate.css/blob/master/animate.css
 // https://github.com/CSSHat/LESSHat/blob/master/lesshat.less
 
-//body { /* Addresses a small issue in webkit: http://bit.ly/NEdoDq */
-//  -webkit-backface-visibility: hidden;
-//}
-
-/*
-.keyframes (@name, ...) {
-  @webkit: ~"@-webkit-";
-  @moz: ~"@-moz-";
-  @ms: ~"@-ms-";
-  @o: ~"@-o-";
-  @a: ~"@{arguments}";
-
-  @{webkit}keyframes @{name} {
-  }
-  @{moz}keyframes @{name} {
-  }
-  @{ms}keyframes @{name} {
-  }
-  @{o}keyframes @{name} {
-  }
-  @-keyframes @{name} {
-  }
-}
-*/
-
 .animation (@name, ...) {
   .@{name} {
     -webkit-animation: @arguments;
