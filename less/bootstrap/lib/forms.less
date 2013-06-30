@@ -121,7 +121,7 @@ input[type="color"],
 .uneditable-input {
   background-color: @inputBackground;
   border: 1px solid @inputBorder;
-  .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  .box-shadow(inset 0 1px 1px rgba(127, 127, 127, .1));
   .transition(~"border linear .2s, box-shadow linear .2s");
 
   // Focus state
@@ -129,7 +129,7 @@ input[type="color"],
     border-color: @inputFocusBorder;
     outline: 0;
     outline: thin dotted \9; /* IE6-9 */
-    .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 3px rgba(55, 132, 213, .5)");
+    .box-shadow(~"inset 0 1px 1px rgba(127, 127, 127,.1), 0 0 3px rgba(55, 132, 213, .5)");
   }
 }
 
