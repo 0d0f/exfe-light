@@ -6910,6 +6910,8 @@ body {
 
 .navbar .brand span {
   height: 100%;
+  margin-right: 5px;
+  margin-left: 10px;
   font-size: 24px;
   font-weight: 300;
   color: #3a6ea5;
@@ -7282,7 +7284,6 @@ body {
 .navbar .version {
   position: absolute;
   bottom: 12px;
-  margin-left: 5px;
   font-size: 12px;
   font-style: oblique;
   font-weight: 300;
