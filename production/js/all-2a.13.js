@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.13 2013-06-30 11:06:33 */
+/*! desktop@2a.13 2013-06-30 11:06:53 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -14882,7 +14882,7 @@ TWEEN.Tween = function(object) {
       $(".cross-map").append(map_dom);
     }
     $(".cross-map").empty();
-    var hasLL = place.lat.length && place.lng.length, map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img class="gm0" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x200&maptype=road&sensor=false" alt="" width="280" height="200" /><img  class="gm1" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x170&maptype=road&sensor=false" alt="" width="280" height="170" /></a>';
+    var hasLL = place.lat.length && place.lng.length, map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img class="gm0" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x200&maptype=road&sensor=false" alt="" width="280" height="200" /><img  class="gm1" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
     hasLL && getMap({
       coords: {
         latitude: place.lat,
