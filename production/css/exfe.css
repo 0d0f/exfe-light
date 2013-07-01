@@ -7588,7 +7588,7 @@ body {
 }
 .cross-place address {
   margin-bottom: 0;
-  padding-bottom: 10px;
+  padding: 0;
   max-height: 80px;
   overflow: hidden;
   word-wrap: break-word;
@@ -7599,6 +7599,7 @@ body {
   resize: none;
 }
 .cross-map a {
+  margin-top: 10px;
   display: block;
   height: 140px;
   overflow: hidden;
