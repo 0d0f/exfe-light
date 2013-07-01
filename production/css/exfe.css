@@ -5907,7 +5907,7 @@ img:-moz-broken {
 .panel:focus {
   outline: none;
 }
-.footer {
+footer .footer {
   padding-bottom: 25px;
   text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
@@ -5916,7 +5916,7 @@ img:-moz-broken {
   opacity: 0.8;
   filter: alpha(opacity=80);
 }
-.footer p {
+footer .footer p {
   margin: 0;
 }
 html,
@@ -6110,7 +6110,7 @@ body {
   margin: 0 auto;
 }
 .navbar .user-panel .xbtn-gather {
-  margin-top: 15px;
+  margin: 20px auto;
   color: #fff;
   line-height: 30px;
   font-weight: 300;
