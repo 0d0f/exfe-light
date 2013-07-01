@@ -283,7 +283,6 @@ module.exports = function (grunt) {
     less: {
       dev: {
         options: {
-          compress: true,
         },
         files: {
           './production/css/exfe.css': './less/exfe/lib/exfe.less',
@@ -291,8 +290,8 @@ module.exports = function (grunt) {
       },
       prod: {
         options: {
-          compress: true,
-          yuicompress: true
+          yuicompress: true,
+          report: 'min'
         },
         files: {
           './production/css/exfe.min.css': './less/exfe/lib/exfe.less',
