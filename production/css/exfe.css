@@ -5060,8 +5060,13 @@ img:-moz-broken {
   height: 16px;
   font-size: 12px;
   line-height: 12px;
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 1px #ffffff;
+  -moz-box-shadow: 0 1px 1px #ffffff;
+  box-shadow: 0 1px 1px #ffffff;
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(top, #fafafa, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#e6e6e6));
@@ -5070,17 +5075,8 @@ img:-moz-broken {
   background-image: linear-gradient(to bottom, #fafafa, #e6e6e6);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffe6e6e6', GradientType=0);
-  border-color: #e6e6e6 #e6e6e6 #c0c0c0;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  -webkit-box-shadow: 0 1px 1px #ffffff;
-  -moz-box-shadow: 0 1px 1px #ffffff;
-  box-shadow: 0 1px 1px #ffffff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  border: 1px solid #000;
-  text-shadow: none;
+  border: 1px solid rgba(127, 127, 127, 0.15);
+  color: #191919;
 }
 .xbtn-signin {
   width: 118px;
@@ -7515,9 +7511,11 @@ body {
   font-weight: 300;
   line-height: 50px;
 }
+.cross-description-outer {
+  margin-bottom: 40px;
+}
 .cross-description {
   position: relative;
-  margin-bottom: 40px;
   overflow: hidden;
   word-wrap: break-word;
 }
@@ -7563,7 +7561,7 @@ body {
   display: inline-block;
 }
 .cross-photox {
-  padding: 20px 0;
+  margin-bottom: 40px;
 }
 .cross-dp h2 {
   margin: 0;
@@ -7647,7 +7645,7 @@ body {
   filter: alpha(opacity=100);
 }
 .cross-rsvp {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 .cross-rsvp .show {
   display: table;
@@ -7910,11 +7908,8 @@ body {
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-.cross-conversation {
-  margin-top: 20px;
-}
 .cross-conversation h3 {
-  margin-bottom: 15px;
+  margin: 0 0 15px;
   font-size: 24px;
   font-weight: 300;
   line-height: 30px;
