@@ -159,7 +159,7 @@
     @startColor: #0c67b3;
     @endColor: #6babe4;
     background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
-    background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+    background-image: -moz-linear-gradient(90deg, @startColor, @endColor); // FF 3.6+
     background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
     background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
     background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
@@ -169,7 +169,7 @@
       @startColor: #0860a9;
       @endColor: #529ee2;
       background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
-      background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+      background-image: -moz-linear-gradient(90deg, @startColor, @endColor); // FF 3.6+
       background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
       background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
       background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
@@ -182,7 +182,7 @@
       @c2: #3d8acc;
       @c3: #75b3ea;
       background-image: -webkit-gradient(linear, left bottom, left top, from(@c0), color-stop(.215, @c1), color-stop(.455, @c2),  to(@c3));
-      background-image: -moz-linear-gradient(to top, @c0, @c1 21.5%, @c2 45.5%, @c3); // FF 3.6+
+      background-image: -moz-linear-gradient(90deg, @c0, @c1 21.5%, @c2 45.5%, @c3); // FF 3.6+
       background-image: -webkit-linear-gradient(to top, @c0, @c1 21.5%, @c2 45.5%, @c3); // Safari 5.1+, Chrome 10+
       background-image: -ms-linear-gradient(to top, @c0, @c1 21.5%, @c2 45.5%, @c3); // Opera 11.10
       background-image: -o-linear-gradient(to top, @c0, @c1 21.5%, @c2 45.5%, @c3); // Opera 11.10
@@ -196,7 +196,7 @@
     @startColor: #dddddd;
     @endColor: #ffffff;
     background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
-    background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+    background-image: -moz-linear-gradient(90deg, @startColor, @endColor); // FF 3.6+
     background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
     background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
     background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
@@ -206,7 +206,7 @@
       @startColor: #ccc;
       @endColor: #eee;
       background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
-      background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+      background-image: -moz-linear-gradient(90deg, @startColor, @endColor); // FF 3.6+
       background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
       background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
       background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
@@ -218,7 +218,7 @@
       @c1: #ebebeb;
       @c2: #ffffff;
       background-image: -webkit-gradient(linear, left bottom, left top, from(@c0), color-stop(.327, @c1),  to(@c2));
-      background-image: -moz-linear-gradient(to top, @c0, @c1 32.7%, @c2); // FF 3.6+
+      background-image: -moz-linear-gradient(90deg, @c0, @c1 32.7%, @c2); // FF 3.6+
       background-image: -webkit-linear-gradient(to top, @c0, @c1 32.7%, @c2); // Safari 5.1+, Chrome 10+
       background-image: -ms-linear-gradient(to top, @c0, @c1 32.7%, @c2); // Opera 11.10
       background-image: -o-linear-gradient(to top, @c0, @c1 32.7%, @c2); // Opera 11.10
@@ -251,7 +251,7 @@
   @startColor: #0c67b3;
   @endColor: #6babe4;
   background-image: -webkit-gradient(linear, left bottom, left top, from(@startColor), to(@endColor));
-  background-image: -moz-linear-gradient(to top, @startColor, @endColor); // FF 3.6+
+  background-image: -moz-linear-gradient(90deg, @startColor, @endColor); // FF 3.6+
   background-image: -webkit-linear-gradient(to top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
   background-image: -ms-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
   background-image: -o-linear-gradient(to top, @startColor, @endColor); // Opera 11.10
@@ -262,7 +262,7 @@
 
   &:active {
     background-image: -webkit-gradient(linear, left bottom, left top, from(#0860a9), to(#529ee2));
-    background-image: -moz-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+    background-image: -moz-linear-gradient(90deg, #0860a9 0%, #529ee2 100%);
     background-image: -webkit-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
     background-image: -ms-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
     background-image: -o-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
@@ -271,7 +271,7 @@
 
   &:hover {
     background-image: -webkit-gradient(linear, left bottom, left top, from(#398ace), color-stop(0.215, #2282d1), color-stop(0.455, #3d8acc), to(#75b3ea));
-    background-image: -moz-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+    background-image: -moz-linear-gradient(90deg, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
     background-image: -webkit-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
     background-image: -ms-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
     background-image: -o-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
