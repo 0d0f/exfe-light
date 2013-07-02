@@ -6076,7 +6076,7 @@ body {
   margin-top: -6px;
   margin-right: 4px;
   width: 198px;
-  padding: 20px 15px 15px;
+  padding: 20px 15px 5px;
   background-color: #e6e6e6;
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(-165deg, #fafafa, #e6e6e6);
@@ -7632,6 +7632,10 @@ body {
   top: 0;
   opacity: 0.25;
   filter: alpha(opacity=25);
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  -o-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
 }
 .cross-map a .gm1:hover {
   opacity: 1;
