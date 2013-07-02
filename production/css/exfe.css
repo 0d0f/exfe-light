@@ -5271,7 +5271,7 @@ img:-moz-broken {
   -moz-box-shadow: 0 1px 0 #0e68b4;
   box-shadow: 0 1px 0 #0e68b4;
   background-image: -webkit-gradient(linear, left bottom, left top, from(#0c67b3), to(#6babe4));
-  background-image: -moz-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: -moz-linear-gradient(90deg, #0c67b3, #6babe4);
   background-image: -webkit-linear-gradient(to top, #0c67b3, #6babe4);
   background-image: -ms-linear-gradient(to top, #0c67b3, #6babe4);
   background-image: -o-linear-gradient(to top, #0c67b3, #6babe4);
@@ -5279,7 +5279,7 @@ img:-moz-broken {
 }
 .xbtn-rsvp.accept:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#0860a9), to(#529ee2));
-  background-image: -moz-linear-gradient(to top, #0860a9, #529ee2);
+  background-image: -moz-linear-gradient(90deg, #0860a9, #529ee2);
   background-image: -webkit-linear-gradient(to top, #0860a9, #529ee2);
   background-image: -ms-linear-gradient(to top, #0860a9, #529ee2);
   background-image: -o-linear-gradient(to top, #0860a9, #529ee2);
@@ -5287,7 +5287,7 @@ img:-moz-broken {
 }
 .xbtn-rsvp.accept:hover {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#398ace), color-stop(0.215, #2282d1), color-stop(0.455, #3d8acc), to(#75b3ea));
-  background-image: -moz-linear-gradient(to top, #398ace, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea);
+  background-image: -moz-linear-gradient(90deg, #398ace, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea);
   background-image: -webkit-linear-gradient(to top, #398ace, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea);
   background-image: -ms-linear-gradient(to top, #398ace, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea);
   background-image: -o-linear-gradient(to top, #398ace, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea);
@@ -5297,7 +5297,7 @@ img:-moz-broken {
   color: #aaa;
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.6);
   background-image: -webkit-gradient(linear, left bottom, left top, from(#dddddd), to(#ffffff));
-  background-image: -moz-linear-gradient(to top, #dddddd, #ffffff);
+  background-image: -moz-linear-gradient(90deg, #dddddd, #ffffff);
   background-image: -webkit-linear-gradient(to top, #dddddd, #ffffff);
   background-image: -ms-linear-gradient(to top, #dddddd, #ffffff);
   background-image: -o-linear-gradient(to top, #dddddd, #ffffff);
@@ -5305,7 +5305,7 @@ img:-moz-broken {
 }
 .xbtn-rsvp.decline:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#cccccc), to(#eeeeee));
-  background-image: -moz-linear-gradient(to top, #cccccc, #eeeeee);
+  background-image: -moz-linear-gradient(90deg, #cccccc, #eeeeee);
   background-image: -webkit-linear-gradient(to top, #cccccc, #eeeeee);
   background-image: -ms-linear-gradient(to top, #cccccc, #eeeeee);
   background-image: -o-linear-gradient(to top, #cccccc, #eeeeee);
@@ -5313,7 +5313,7 @@ img:-moz-broken {
 }
 .xbtn-rsvp.decline:hover {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#e9e9e9), color-stop(0.327, #ebebeb), to(#ffffff));
-  background-image: -moz-linear-gradient(to top, #e9e9e9, #ebebeb 32.7%, #ffffff);
+  background-image: -moz-linear-gradient(90deg, #e9e9e9, #ebebeb 32.7%, #ffffff);
   background-image: -webkit-linear-gradient(to top, #e9e9e9, #ebebeb 32.7%, #ffffff);
   background-image: -ms-linear-gradient(to top, #e9e9e9, #ebebeb 32.7%, #ffffff);
   background-image: -o-linear-gradient(to top, #e9e9e9, #ebebeb 32.7%, #ffffff);
@@ -5339,7 +5339,7 @@ img:-moz-broken {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
   border: none;
   background-image: -webkit-gradient(linear, left bottom, left top, from(#0c67b3), to(#6babe4));
-  background-image: -moz-linear-gradient(to top, #0c67b3, #6babe4);
+  background-image: -moz-linear-gradient(90deg, #0c67b3, #6babe4);
   background-image: -webkit-linear-gradient(to top, #0c67b3, #6babe4);
   background-image: -ms-linear-gradient(to top, #0c67b3, #6babe4);
   background-image: -o-linear-gradient(to top, #0c67b3, #6babe4);
@@ -5355,7 +5355,7 @@ img:-moz-broken {
 .xbtn-gather:active,
 .xbtn-savegather:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#0860a9), to(#529ee2));
-  background-image: -moz-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
+  background-image: -moz-linear-gradient(90deg, #0860a9 0%, #529ee2 100%);
   background-image: -webkit-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
   background-image: -ms-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
   background-image: -o-linear-gradient(to top, #0860a9 0%, #529ee2 100%);
@@ -5364,7 +5364,7 @@ img:-moz-broken {
 .xbtn-gather:hover,
 .xbtn-savegather:hover {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#398ace), color-stop(0.215, #2282d1), color-stop(0.455, #3d8acc), to(#75b3ea));
-  background-image: -moz-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
+  background-image: -moz-linear-gradient(90deg, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
   background-image: -webkit-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
   background-image: -ms-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
   background-image: -o-linear-gradient(to top, #398ace 0%, #2282d1 21.5%, #3d8acc 45.5%, #75b3ea 100%);
@@ -6291,6 +6291,7 @@ body {
 .navbar .version {
   position: absolute;
   bottom: 12px;
+  left: 147px;
   font-size: 12px;
   line-height: 16px;
   font-style: oblique;
@@ -7391,7 +7392,7 @@ body {
   width: 100%;
   background-repeat: no-repeat;
   background-image: -webkit-gradient(linear, left bottom, left top, from(#fafafa), color-stop(0.25, rgba(250, 250, 250, 0.92)), color-stop(0.5 rgba(250, 250, 250, 0.75)), to(rgba(250, 250, 250, 0)));
-  background-image: -webkit-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0.92) 25%, rgba(250, 250, 250, 0.75) 50%, rgba(250, 250, 250, 0));
+  background-image: -webkit-linear-gradient(90deg, #fafafa, rgba(250, 250, 250, 0.92) 25%, rgba(250, 250, 250, 0.75) 50%, rgba(250, 250, 250, 0));
   background-image: -moz-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0.92) 25%, rgba(250, 250, 250, 0.75) 50%, rgba(250, 250, 250, 0));
   background-image: -ms-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0.92) 25%, rgba(250, 250, 250, 0.75) 50%, rgba(250, 250, 250, 0));
   background-image: -o-linear-gradient(to top, #fafafa, rgba(250, 250, 250, 0.92) 25%, rgba(250, 250, 250, 0.75) 50%, rgba(250, 250, 250, 0));
