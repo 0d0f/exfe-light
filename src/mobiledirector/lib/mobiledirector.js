@@ -7,7 +7,7 @@
     , apiUrl = _ENV_.api_url
     , app_scheme = _ENV_.app_scheme
     , JSFILE = _ENV_.JSFILE
-    , CSSFILE = _ENV_.JSFILE
+    , CSSFILE = _ENV_.CSSFILE
     , supportHistory = window.history
     , localStorage = window.localStorage
     , eventType = supportHistory ? 'popstate' : 'hashchange'
