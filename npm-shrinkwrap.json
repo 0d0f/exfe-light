@@ -198,7 +198,8 @@
     },
     "grunt-lib-contrib": {
       "version": "0.6.1",
-      "from": "grunt-lib-contrib@~0.6.1",
+      "from": "grunt-lib-contrib@0.6.1",
+      "resolved": "https://registry.npmjs.org/grunt-lib-contrib/-/grunt-lib-contrib-0.6.1.tgz",
       "dependencies": {
         "zlib-browserify": {
           "version": "0.0.1",
@@ -237,6 +238,27 @@
           "version": "0.0.2",
           "from": "prettysize@~0.0.2",
           "resolved": "https://registry.npmjs.org/prettysize/-/prettysize-0.0.2.tgz"
+        }
+      }
+    },
+    "matchdep": {
+      "version": "0.1.2",
+      "from": "matchdep@",
+      "dependencies": {
+        "minimatch": {
+          "version": "0.2.12",
+          "from": "minimatch@~0.2.9",
+          "dependencies": {
+            "lru-cache": {
+              "version": "2.3.0",
+              "from": "lru-cache@2",
+              "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-2.3.0.tgz"
+            },
+            "sigmund": {
+              "version": "1.0.0",
+              "from": "sigmund@~1.0.0"
+            }
+          }
         }
       }
     },
