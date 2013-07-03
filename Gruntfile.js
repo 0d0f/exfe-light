@@ -11,6 +11,8 @@ module.exports = function (grunt) {
   };
 
   var PKG = grunt.file.readJSON('package.json');
+  PKG.desktop.sha1 = PKG.desktop.version;
+  PKG.mobile.sha1 = PKG.mobile.version;
 
   // desktop (桌面)
   var DESKTOP_META = PKG.desktop.dependencies;
@@ -52,9 +54,9 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=all-<%= pkg.desktop.version %>.min.map\n'
+          + '//@ sourceMappingURL=all-<%= pkg.desktop.sha1 %>.min.map\n'
           + '*/\n',
-        sourceMap: '<%= dirs.dist %>/all-<%= pkg.desktop.version %>.min.map',
+        sourceMap: '<%= dirs.dist %>/all-<%= pkg.desktop.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
           return dest.split('/')[2];
         },
@@ -98,9 +100,9 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=mobile-all-<%= pkg.mobile.version %>.min.map\n'
+          + '//@ sourceMappingURL=mobile-all-<%= pkg.mobile.sha1 %>.min.map\n'
           + '*/\n',
-        sourceMap: '<%= dirs.dist %>/mobile-all-<%= pkg.mobile.version %>.min.map',
+        sourceMap: '<%= dirs.dist %>/mobile-all-<%= pkg.mobile.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
           return dest.split('/')[2];
         },
@@ -187,10 +189,10 @@ module.exports = function (grunt) {
     },
     dirs: {
       dist: 'production/js',
-      desktop: 'all-<%= pkg.desktop.version %>.js',
-      desktop_min: 'all-<%= pkg.desktop.version %>.min.js',
-      mobile: 'mobile-all-<%= pkg.mobile.version %>.js',
-      mobile_min: 'mobile-all-<%= pkg.mobile.version %>.min.js',
+      desktop: 'all-<%= pkg.desktop.sha1 %>.js',
+      desktop_min: 'all-<%= pkg.desktop.sha1 %>.min.js',
+      mobile: 'mobile-all-<%= pkg.mobile.sha1 %>.js',
+      mobile_min: 'mobile-all-<%= pkg.mobile.sha1 %>.min.js',
       deploy: '/exfe/exfelight'
     },
 
@@ -218,7 +220,7 @@ module.exports = function (grunt) {
       deploy_meta: {
         expand: true,
         src: ['package.json'],
-        dest: 'production'
+        dest: 'production/'
       },
       deploy_js: {
         expand: true,
@@ -484,6 +486,33 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('server', [ 'livereload-start', 'connect', 'watch', 'regarde']);
+
+  grunt.registerTask('gitsha1', function (arg) {
+    var crypto = require('crypto');
+    // git sha1
+    var sha1 = function (path, isLong) {
+      var s = crypto.createHash('sha1')
+        , c = grunt.file.read(path, { encoding: 'binary' })
+        , ss = '';
+      s.update('blob ' + c.length + '\0' + c, 'binary');
+      ss = s.digest('hex');
+      return isLong ? ss : ss.substr(0, 7);
+    };
+
+    if (arg === 'DESKTOP') {
+      PKG.desktop.sha1 += '-' + sha1(grunt.config.get('concat.DESKTOP.dest'));
+      grunt.file.copy('production/js/all-' + PKG.desktop.version + '.js', 'production/js/all-' + PKG.desktop.sha1 + '.js');
+      grunt.file.delete('production/js/all-' + PKG.desktop.version + '.js');
+    } else if (arg === 'MOBILE') {
+      PKG.mobile.sha1 += '-' + sha1(grunt.config.get('concat.MOBILE.dest'));
+      grunt.file.copy('production/js/mobile-all-' + PKG.mobile.version + '.js', 'production/js/mobile-all-' + PKG.mobile.sha1 + '.js');
+      grunt.file.delete('production/js/mobile-all-' + PKG.mobile.version + '.js');
+    }
+  });
+
+  grunt.registerTask('update:package', 'Update package.json', function () {
+    grunt.file.write('package.json', JSON.stringify(PKG, null, 2), 'utf8');
+  });
 
   grunt.registerTask('default', 'Log some stuff.', function() {
     grunt.log.write('Logging some stuff...').ok();
