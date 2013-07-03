@@ -7,6 +7,7 @@
     , apiUrl = _ENV_.api_url
     , app_scheme = _ENV_.app_scheme
     , JSFILE = _ENV_.JSFILE
+    , CSSFILE = _ENV_.JSFILE
     , supportHistory = window.history
     , localStorage = window.localStorage
     , eventType = supportHistory ? 'popstate' : 'hashchange'
@@ -94,7 +95,7 @@
     inject = function (cb) {
       var css = 'mobile-css';
       if (!checkNodeExsits(css)) {
-        injectCss('/static/css/exfe_mobile.min.css', css);
+        injectCss('/static/css/' + CSSFILE, css);
       }
       var js = 'mobile-js';
       if (!checkNodeExsits(js)) {
