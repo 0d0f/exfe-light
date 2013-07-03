@@ -23,13 +23,14 @@
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-livereload": "~0.1.2",
     "mocha": "~1.11.0",
-    "grunt-contrib-less": "~0.6.1"
+    "grunt-contrib-less": "~0.6.1",
+    "matchdep": "~0.1.2"
   },
   "desktop": {
-    "version": "2a.13",
+    "version": "2a",
     "files": {
-      "dev": "all-{{version}}.js",
-      "pro": "all-{{version}}.min.js"
+      "dev": "all-{{sha1}}.js",
+      "pro": "all-{{sha1}}.min.js"
     },
     "dependencies": [
       {
@@ -208,13 +209,14 @@
         "name": "app",
         "version": "0.2.11"
       }
-    ]
+    ],
+    "sha1": "2a-1ce9e1e"
   },
   "mobile": {
-    "version": "2a.6",
+    "version": "2a",
     "files": {
-      "dev": "mobile-all-{{version}}.js",
-      "pro": "mobile-all-{{version}}.min.js"
+      "dev": "mobile-all-{{sha1}}.js",
+      "pro": "mobile-all-{{sha1}}.min.js"
     },
     "dependencies": [
       {
@@ -285,6 +287,7 @@
         "name": "mobile",
         "version": "0.1.0"
       }
-    ]
+    ],
+    "sha1": "2a"
   }
 }
