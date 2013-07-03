@@ -5,14 +5,26 @@ module.exports = function (grunt) {
   var path = require('path');
   var semver = require('semver');
 
+  var crypto = require('crypto');
+  // git sha1
+  var sha1 = function (path, isLong) {
+    var s = crypto.createHash('sha1')
+      , c = grunt.file.read(path, { encoding: 'binary' })
+      , ss = '';
+    s.update('blob ' + c.length + '\0' + c, 'binary');
+    ss = s.digest('hex');
+    return isLong ? ss : ss.substr(0, 7);
+  };
+
   var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
   var folderMount = function folderMount(connect, point) {
     return connect.static(path.resolve(point));
   };
 
   var PKG = grunt.file.readJSON('package.json');
-  PKG.desktop.sha1 = PKG.desktop.version;
-  PKG.mobile.sha1 = PKG.mobile.version;
+  PKG.desktop.sha1 = PKG.desktop.sha1 || PKG.desktop.version;
+  PKG.mobile.sha1 = PKG.mobile.sha1 || PKG.mobile.version;
+  PKG.css = PKG.css || {};
 
   // desktop (桌面)
   var DESKTOP_META = PKG.desktop.dependencies;
@@ -283,20 +295,36 @@ module.exports = function (grunt) {
     },
 
     less: {
-      dev: {
+      DESKTOP_dev: {
         options: {
         },
         files: {
           './production/css/exfe.css': './less/exfe/lib/exfe.less',
         }
       },
-      prod: {
+      DESKTOP_prod: {
         options: {
           yuicompress: true,
           report: 'min'
         },
         files: {
           './production/css/exfe.min.css': './less/exfe/lib/exfe.less',
+        }
+      },
+      MOBILE_dev: {
+        options: {
+        },
+        files: {
+          './production/css/exfemobile.css': './less/mobile/lib/mobile.less',
+        }
+      },
+      MOBILE_prod: {
+        options: {
+          yuicompress: true,
+          report: 'min'
+        },
+        files: {
+          './production/css/exfemobile.min.css': './less/mobile/lib/mobile.less',
         }
       }
     },
@@ -488,29 +516,37 @@ module.exports = function (grunt) {
   grunt.registerTask('server', [ 'livereload-start', 'connect', 'watch', 'regarde']);
 
   grunt.registerTask('gitsha1', function (arg) {
-    var crypto = require('crypto');
-    // git sha1
-    var sha1 = function (path, isLong) {
-      var s = crypto.createHash('sha1')
-        , c = grunt.file.read(path, { encoding: 'binary' })
-        , ss = '';
-      s.update('blob ' + c.length + '\0' + c, 'binary');
-      ss = s.digest('hex');
-      return isLong ? ss : ss.substr(0, 7);
-    };
-
     if (arg === 'DESKTOP') {
-      PKG.desktop.sha1 += '-' + sha1(grunt.config.get('concat.DESKTOP.dest'));
+      PKG.desktop.sha1 = PKG.desktop.version + '-' + sha1(grunt.config.get('concat.DESKTOP.dest'));
       grunt.file.copy('production/js/all-' + PKG.desktop.version + '.js', 'production/js/all-' + PKG.desktop.sha1 + '.js');
       grunt.file.delete('production/js/all-' + PKG.desktop.version + '.js');
     } else if (arg === 'MOBILE') {
-      PKG.mobile.sha1 += '-' + sha1(grunt.config.get('concat.MOBILE.dest'));
+      PKG.mobile.sha1 = PKG.mobile.version + '-' + sha1(grunt.config.get('concat.MOBILE.dest'));
       grunt.file.copy('production/js/mobile-all-' + PKG.mobile.version + '.js', 'production/js/mobile-all-' + PKG.mobile.sha1 + '.js');
       grunt.file.delete('production/js/mobile-all-' + PKG.mobile.version + '.js');
     }
   });
 
+  grunt.registerTask('buildcss', 'Build CSS', function (arg) {
+    if (arg === 'DESKTOP') {
+      PKG.css.exfe    = 'exfe-' + sha1('production/css/exfe.css') + '.css';
+      PKG.css.exfemin = 'exfe-' + sha1('production/css/exfe.min.css') + '.min.css';
+      grunt.file.copy('production/css/exfe.css','production/css/' + PKG.css.exfe);
+      grunt.file.delete('production/css/exfe.css');
+      grunt.file.copy('production/css/exfe.min.css', 'production/css/' + PKG.css.exfemin);
+      grunt.file.delete('production/css/exfe.min.css');
+    } else if (arg === 'MOBILE') {
+      PKG.css.exfemobile    = 'exfemobile-' + sha1('production/css/exfemobile.css') + '.css';
+      PKG.css.exfemobilemin = 'exfemobile-' + sha1('production/css/exfemobile.min.css') + '.min.css';
+      grunt.file.copy('production/css/exfemobile.css', 'production/css/' + PKG.css.exfemobile);
+      grunt.file.delete('production/css/exfemobile.css');
+      grunt.file.copy('production/css/exfemobile.min.css', 'production/css/' + PKG.css.exfemobilemin);
+      grunt.file.delete('production/css/exfemobile.min.css');
+    }
+  });
+
   grunt.registerTask('update:package', 'Update package.json', function () {
+    grunt.config.set('pkg', PKG);
     grunt.file.write('package.json', JSON.stringify(PKG, null, 2), 'utf8');
   });
 
