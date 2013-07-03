@@ -7654,8 +7654,7 @@ body {
   vertical-align: middle;
 }
 .cross-rsvp .attendance {
-  /*margin-left: 20px;*/
-
+  margin-left: 7px;
   display: inline-block;
   width: 116px;
   height: 32px;

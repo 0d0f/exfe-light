@@ -1,5 +1,9 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
+<<<<<<< HEAD:production/js/all-2a.13.js
 /*! desktop@2a.13 2013-06-30 11:06:09 */
+=======
+/*! desktop@2a 2013-07-03 05:07:40 */
+>>>>>>> eaac92b... tweaks grunt:production/js/all-2a-fd23acf.js
 (function(context) {
   "use strict";
   function define(id, deps, factory) {

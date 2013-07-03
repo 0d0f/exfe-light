@@ -198,7 +198,7 @@
         "version": "0.2.11"
       }
     ],
-    "sha1": "2a-1ce9e1e"
+    "sha1": "2a-fd23acf"
   },
   "mobile": {
     "version": "2a",
@@ -277,5 +277,11 @@
       }
     ],
     "sha1": "2a"
+  },
+  "css": {
+    "exfe": "exfe-5d5aa8d.css",
+    "exfemin": "exfe-47f642a.min.css",
+    "exfemobile": "exfemobile-d10f1d3.css",
+    "exfemobilemin": "exfemobile-6eb566a.min.css"
   }
 }
