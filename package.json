@@ -29,8 +29,8 @@
   "desktop": {
     "version": "2a",
     "files": {
-      "dev": "all-{{sha1}}.js",
-      "pro": "all-{{sha1}}.min.js"
+      "dev": "exfe-{{sha1}}.js",
+      "pro": "exfe-{{sha1}}.min.js"
     },
     "dependencies": [
       {
@@ -214,13 +214,13 @@
         "version": "0.2.11"
       }
     ],
-    "sha1": "2a-8e62417"
+    "sha1": "2a-9835fc4"
   },
   "mobile": {
     "version": "2a",
     "files": {
-      "dev": "mobile-all-{{sha1}}.js",
-      "pro": "mobile-all-{{sha1}}.min.js"
+      "dev": "exfemobile-{{sha1}}.js",
+      "pro": "exfemobile-{{sha1}}.min.js"
     },
     "dependencies": [
       {
@@ -292,7 +292,7 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-6a28f62"
+    "sha1": "2a-d4d0f50"
   },
   "css": {
     "exfe": "exfe-5d5aa8d.css",

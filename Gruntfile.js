@@ -31,12 +31,12 @@ module.exports = function (grunt) {
 
   var DESKTOP_CONCAT = {
     src: [],
-    dest: 'production/js/all-<%= pkg.desktop.version %>.js'
+    dest: 'production/js/exfe-<%= pkg.desktop.version %>.js'
   };
 
   var MOBILE_CONCAT = {
     src: [],
-    dest: 'production/js/mobile-all-<%= pkg.mobile.version %>.js'
+    dest: 'production/js/exfemobile-<%= pkg.mobile.version %>.js'
   };
 
   // mobile (移动)
@@ -66,9 +66,9 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=all-<%= pkg.desktop.sha1 %>.min.map\n'
+          + '//@ sourceMappingURL=exfe-<%= pkg.desktop.sha1 %>.min.map\n'
           + '*/\n',
-        sourceMap: '<%= dirs.dist %>/all-<%= pkg.desktop.sha1 %>.min.map',
+        sourceMap: '<%= dirs.dist %>/exfe-<%= pkg.desktop.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
           return dest.split('/')[2];
         },
@@ -112,9 +112,9 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=mobile-all-<%= pkg.mobile.sha1 %>.min.map\n'
+          + '//@ sourceMappingURL=exfemobile-<%= pkg.mobile.sha1 %>.min.map\n'
           + '*/\n',
-        sourceMap: '<%= dirs.dist %>/mobile-all-<%= pkg.mobile.sha1 %>.min.map',
+        sourceMap: '<%= dirs.dist %>/exfemobile-<%= pkg.mobile.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
           return dest.split('/')[2];
         },
@@ -201,10 +201,10 @@ module.exports = function (grunt) {
     },
     dirs: {
       dist: 'production/js',
-      desktop: 'all-<%= pkg.desktop.sha1 %>.js',
-      desktop_min: 'all-<%= pkg.desktop.sha1 %>.min.js',
-      mobile: 'mobile-all-<%= pkg.mobile.sha1 %>.js',
-      mobile_min: 'mobile-all-<%= pkg.mobile.sha1 %>.min.js',
+      desktop: 'exfe-<%= pkg.desktop.sha1 %>.js',
+      desktop_min: 'exfe-<%= pkg.desktop.sha1 %>.min.js',
+      mobile: 'exfemobile-<%= pkg.mobile.sha1 %>.js',
+      mobile_min: 'exfemobile-<%= pkg.mobile.sha1 %>.min.js',
       deploy: '/exfe/exfelight'
     },
 
@@ -518,12 +518,12 @@ module.exports = function (grunt) {
   grunt.registerTask('gitsha1', function (arg) {
     if (arg === 'DESKTOP') {
       PKG.desktop.sha1 = PKG.desktop.version + '-' + sha1(grunt.config.get('concat.DESKTOP.dest'));
-      grunt.file.copy('production/js/all-' + PKG.desktop.version + '.js', 'production/js/all-' + PKG.desktop.sha1 + '.js');
-      grunt.file.delete('production/js/all-' + PKG.desktop.version + '.js');
+      grunt.file.copy('production/js/exfe-' + PKG.desktop.version + '.js', 'production/js/exfe-' + PKG.desktop.sha1 + '.js');
+      grunt.file.delete('production/js/exfe-' + PKG.desktop.version + '.js');
     } else if (arg === 'MOBILE') {
       PKG.mobile.sha1 = PKG.mobile.version + '-' + sha1(grunt.config.get('concat.MOBILE.dest'));
-      grunt.file.copy('production/js/mobile-all-' + PKG.mobile.version + '.js', 'production/js/mobile-all-' + PKG.mobile.sha1 + '.js');
-      grunt.file.delete('production/js/mobile-all-' + PKG.mobile.version + '.js');
+      grunt.file.copy('production/js/exfemobile-' + PKG.mobile.version + '.js', 'production/js/exfemobile-' + PKG.mobile.sha1 + '.js');
+      grunt.file.delete('production/js/exfemobile-' + PKG.mobile.version + '.js');
     }
   });
 

@@ -156,7 +156,7 @@ define(function (require) {
         , settings = data.settings
         , action = settings.action
         , code = settings.code
-        , invitation_token = settings.invitation_token
+        , invitation_token = settings.originToken
         , tokenType = settings.tokenType
         , readOnly = settings.readOnly
         , browsing = settings.browsing;
@@ -184,7 +184,7 @@ define(function (require) {
           if (!actionType) {
 
             // 非 x-token 需 check invitation_token 状态，弹窗
-            if (tokenType !== 'cross') {
+            //if (tokenType !== 'cross') {
               e.stopImmediatePropagation();
               e.stopPropagation();
               e.preventDefault();
@@ -203,7 +203,7 @@ define(function (require) {
               });
 
               return false;
-            }
+            //}
 
           }
         } else if (action === 'SETUP' && !readOnly) {

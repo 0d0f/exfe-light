@@ -368,12 +368,12 @@ define('lightsaber', function (require, exports, module) {
       // 当前在 ie10， popstate 触发失效，暂时先用 hashchange
       if (this.historySupport && !isIE) {
         //$(window).on('popstate', { app: this }, this.change);
-        // $(window).on('popstate', proxy(this.change, this));
-        window.addEventListener('popstate', proxy(this.change, this), false);
+        $(window).on('popstate', proxy(this.change, this));
+        //window.addEventListener('popstate', proxy(this.change, this), false);
       } else {
         //$(window).on('hashchange', { app: this }, this.change);
-        // $(window).on('hashchange', proxy(this.change, this));
-        window.addEventListener('hashchange', proxy(this.change, this), false);
+         $(window).on('hashchange', proxy(this.change, this));
+        //window.addEventListener('hashchange', proxy(this.change, this), false);
       }
 
     }
