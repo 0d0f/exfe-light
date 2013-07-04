@@ -42,6 +42,8 @@ define('lightsaber', function (require, exports, module) {
       , request = new Request()
       , response = new Response();
     merge(app, Emitter.prototype);
+    app.request = request;
+    app.response = response;
     request.app = response.app = app;
     app.init();
     return app;
