@@ -422,11 +422,6 @@ module.exports = function (grunt) {
       switch (name) {
       case 'js':
         grunt.task.run('copy:deploy_js');
-        //var dist = grunt.config.get('dirs.dist') + '/';
-        //grunt.file.copy(dist + grunt.config.get('dirs.desktop'), jsdir + '/' + grunt.config.get('dirs.desktop'));
-        //grunt.file.copy(dist + grunt.config.get('dirs.desktop_min'), jsdir + '/' + grunt.config.get('dirs.desktop_min'));
-        //grunt.file.copy(dist + grunt.config.get('dirs.mobile'), jsdir + '/' + grunt.config.get('dirs.mobile'));
-        //grunt.file.copy(dist + grunt.config.get('dirs.mobile_min'), jsdir + '/' + grunt.config.get('dirs.mobile_min'));
         break;
 
       case 'css':
