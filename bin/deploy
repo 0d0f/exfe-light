@@ -1,0 +1,16 @@
+#!/bin/bash
+
+branch="$1"
+
+if [ -n "$1" ]; then
+
+  if [ $branch = "master" ]; then
+    grunt deploy:js deploy:meta deploy:build:"/exfe/exfelight":"$BUILD_ID.$BUILD_NUMBER" --no-color
+  else if [ $branch = "release" ]; then
+    grunt deploy:js deploy:meta deploy:build:"/exfe/exfelight_release":"$BUILD_ID.$BUILD_NUMBER" --force --no-color
+
+    cd /exfe/exfelight_release
+    git push -f release
+  fi
+
+fi

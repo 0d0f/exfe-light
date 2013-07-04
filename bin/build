@@ -1,0 +1,11 @@
+#!/bin/bash
+
+grunt publish:all --force --no-color
+
+grunt uglifymulti:DESKTOP uglifymulti:MOBILE --force --no-color
+
+grunt less buildcss:DESKTOP buildcss:MOBILE update:package --no-color
+
+grunt concat:DESKTOP gitsha1:DESKTOP uglify:DESKTOP_beautify uglify:DESKTOP update:package --no-color
+
+grunt concat:MOBILE gitsha1:MOBILE uglify:MOBILE_beautify uglify:MOBILE update:package --no-color
