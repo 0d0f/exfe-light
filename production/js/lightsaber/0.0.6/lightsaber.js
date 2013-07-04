@@ -43,7 +43,7 @@ define('lightsaber', function (require, exports, module) {
       , response = new Response();
     merge(app, Emitter.prototype);
     request.app = response.app = app;
-    app.init();
+    app.init();G
     return app;
   }
 
@@ -777,8 +777,8 @@ define('lightsaber', function (require, exports, module) {
   // lightsaber init middleware:
   function lightsaberInit(app) {
     return function init(req, res, next) {
-      req.res = res;
-      res.req = req;
+      //req.res = res;
+      //res.req = req;
 
       req.next = next;
 
