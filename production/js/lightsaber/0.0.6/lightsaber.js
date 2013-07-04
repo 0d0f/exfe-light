@@ -38,10 +38,11 @@ define('lightsaber', function (require, exports, module) {
 
   // Create Application
   function createApplication() {
-    var app = new Application();
+    var app = new Application()
+      , request = new Request()
+      , response = new Response();
     merge(app, Emitter.prototype);
-    app.request = new Request();
-    app.response = new Response();
+    request.app = response.app = app;
     app.init();
     return app;
   }
@@ -68,11 +69,12 @@ define('lightsaber', function (require, exports, module) {
   }
 
   proto.init = function () {
-    this.route = ROOT;
-    this.stack = [];
     this.cache = {};
     this.settings = {};
     this.engines = {};
+
+    this.route = ROOT;
+    this.stack = [];
     this.viewCallbacks = [];
     this.defaultConfiguration();
   };
@@ -88,9 +90,9 @@ define('lightsaber', function (require, exports, module) {
     this.use(lightsaberInit(this));
 
     // router
-    this._usedRouter = false;
     this._router = new Router(this);
     this.routes = this._router.map;
+    this._usedRouter = false;
     this._router.caseSensitive = this.enabled('case sensitive routing');
     this._router.strict = this.enabled('strict routing');
 
@@ -775,10 +777,8 @@ define('lightsaber', function (require, exports, module) {
   // lightsaber init middleware:
   function lightsaberInit(app) {
     return function init(req, res, next) {
-      req.app = res.app = app;
-
-      //req.res = res;
-      //res.req = req;
+      req.res = res;
+      res.req = req;
 
       req.next = next;
 
