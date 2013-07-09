@@ -191,6 +191,9 @@ define('api', function (require) {
         params = {};
       }
 
+      // timezone
+      params['Accept-Timezone'] = tz.determine().name();
+
         //params.token = Api._token;
       //}
 
@@ -238,10 +241,7 @@ define('api', function (require) {
     timeout: 10000,
     cache: false,
     // CORS: Cross Origin Resource Share
-    xhrFields: { withCredentials: true },
-    headers: {
-      'Accept-Timezone': tz.determine().name()
-    }
+    xhrFields: { withCredentials: true }
   };
 
   function _ajax(options, done, fail) {
