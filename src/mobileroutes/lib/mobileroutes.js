@@ -18,7 +18,8 @@ define('mobileroutes', function (require, exports, module) {
       SetPasswordController = Controllers.SetPasswordController,
       VerifyController = Controllers.VerifyController,
       CrossController = Controllers.CrossController,
-      LiveController = Controllers.LiveController;
+      LiveController = Controllers.LiveController,
+      RouteXController = Controllers.RouteXController;
 
   var showCross = function (req, res, data, cats, ctoken, token) {
       cats || (cats = {});
@@ -361,6 +362,22 @@ define('mobileroutes', function (require, exports, module) {
       liveCont.emit('show', app.screen, app.ios);
 
       app.currPageName = 'LIVE' ;
+    },
+
+
+    // `routex`
+    routex: function (req, res) {
+      var app =req.app;
+      window.title = '活点地图';
+      var routexCont = app.controllers.routex = new RouteXController({
+        options: {
+          template: $('#routex-tmpl').html()
+        }
+      , cross: _ENV_._data_.cross
+      , token: _ENV_._data_.token
+      , cross_id: _ENV_._data_.cross_id
+      });
+      routexCont.emit('show', app.screen);
     }
 
   };
