@@ -4,11 +4,9 @@ define('mobilecontroller', function (require, exports, module) {
   var Base = require('base'),
       Store = require('store'),
       TWEEN = require('tween'),
-      _ENV_ = window._ENV_,
-      api_url = _ENV_.api_url,
-      app_scheme = _ENV_.app_scheme,
+      api_url = window._ENV_.api_url,
+      app_scheme = window._ENV_.app_scheme,
       app_prefix_url = app_scheme + '://crosses/',
-      AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -229,7 +227,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('redirect', function (args, cb) {
-        window.launchApp(app_prefix_url + args, cb, 500);
+        window.launchApp(app_prefix_url + args, cb);
       });
     },
 
@@ -309,7 +307,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            var search = window.location.search.substr(1);
+            var search = window.search.substr(1);
             if (search) {
               search = '&' + search;
             }
@@ -1621,167 +1619,6 @@ define('mobilecontroller', function (require, exports, module) {
       this.a.stop();
       this.b.stop();
     }
-
-  });
-
-  var routexStream = require('routexstream')
-    , geoService = routexStream.geoService;
-
-  exports.RouteXController = Controller.extend({
-
-      init: function () {
-        this.render();
-        this.listen();
-      }
-
-    , render: function () {
-        var self = this
-          , cb = function (r) {
-              var p;
-              if ('success' === r.status) {
-                p = r;
-              }
-              self.loadMaps(self.position = p);
-              self.startStream();
-            };
-
-        $('#app-routex').remove();
-        this.element.appendTo($('#app-container'));
-        geoService.get(cb, cb, { enableHighAccuracy: true, maximumAge: 0, timeout: 0 });
-      }
-
-    , listen: function () {
-        var self = this
-          , element = self.element
-          , $win = $(window)
-          , $openExfe = self.$('#open-exfe')
-          , $locate = self.$('#locate');
-
-        self.on('show', function (/*screen*/) {
-          $('html, body').css('min-height', $win.height());
-
-          self.createIdentitiesList();
-
-          $win.trigger('orientationchange');
-        });
-
-        // 监听横竖屏切换
-        $win.on('orientationchange', function () {
-          var height = $win.height()
-            , width = $win.width();
-          //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
-          //https://gist.github.com/callmephilip/3626669
-          //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
-          // $locate.css('-webkit-transform', 'translate3d(-10px, ' + (height - (32 + 10)) + 'px, 0)');
-          $locate.css('-webkit-transform', 'translate3d(-10px, -10px, 0)');
-          $openExfe.css('-webkit-transform', 'translate3d(-10px, 10px, 0)');
-        });
-
-        element.on('touchstart.maps', '#locate', function () {
-          var $that = $(this)
-            , isBlue = $that.hasClass('blue')
-            , watching = self.watching = !isBlue;
-
-          $that.toggleClass('blue', watching);
-          if (watching && self.position) {
-            self.mapController.showGeoLocation(self.position);
-            //self.mapController.fitBounds([self.position]);
-            self.mapController.fitCenter(self.position);
-          } else {
-            self.mapController.hideGeoLocation();
-          }
-        });
-
-        element.on('touchstart.maps', '#identities > .identity', function () {
-          var $that = $(this)
-            , uid = $that.data('uid')
-            // pre-uid
-            , puid = self.mapController.uid
-            , selected = !!$that.hasClass('selected');
-
-          $that.parent().find('.identity.selected').removeClass('selected');
-          $that.toggleClass('selected', !selected);
-
-          // clear pre line
-          if (selected || puid !== uid) {
-            self.mapController.hideTipline(puid);
-            self.mapController.hidePolyline(puid);
-            self.mapController.uid = null;
-          }
-
-          if (!selected) {
-            self.mapController.showTipline(uid);
-            self.mapController.showPolyline(uid);
-            self.mapController.fitBounds();
-          }
-        });
-
-      }
-
-    , loadMaps: function (p) {
-        var RoutexMaps = require('routexmaps')
-          , mc = this.mapController = new RoutexMaps({
-              url: 'http://ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
-            , mapDiv: this.$('#map')[0]
-            , mapOptions: {
-                zoom: 5
-              }
-            , svg: this.$('#svg')[0]
-            , callback: function (map) {
-                if (position) {
-                  map.setZoom(8);
-                  map.setCenter(new google.maps.LatLng(position.latitude, position.longitude));
-                }
-              }
-        });
-        mc.load();
-      }
-
-    , startStream: function () {
-        var self = this
-          , mapController = this.mapController;
-
-        // --------------------------------------------------- test
-        var cross_id = self.cross_id;
-        var token = self.token;
-
-        routexStream.init(
-            cross_id
-          , token
-          , function (type, result) {
-              mapController.draw(type, result);
-            }
-          , function (e) {
-              console.log(e);
-            }
-        );
-        routexStream.startGeo(function (r) {
-          self.position = r;
-          if (self.watching) {
-            //mapController.showGeoLocation(r);
-            //mapController.fitBounds([r]);
-          }
-        });
-        // --------------------------------------------------- test
-      }
-
-    , createIdentitiesList: function () {
-        var exfee = this.cross.exfee
-          , $identities = this.$('#identities')
-          , invitations = exfee.invitations.slice(0)
-          , invitation
-          , identity;
-
-        while ((invitation = invitations.shift())) {
-          identity = invitation.identity;
-          var id = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"></div></div>')
-          id.attr('data-uid', identity.external_username + '@' + identity.provider);
-          id.find('img').attr('src', identity.avatar_filename);
-          $identities.append(id);
-        }
-        window.getComputedStyle($identities[0]).webkitTransform;
-        $identities.css('-webkit-transform', 'translate3d(0, 0, 0)');
-      }
 
   });
 
