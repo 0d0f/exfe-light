@@ -328,6 +328,18 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
 /* ==========================================================================
    EXFE App
    ========================================================================== */
@@ -1928,4 +1940,445 @@ button .exfe {
 .btn_mail:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#115297), to(#44b0fa));
   background-image: -moz-linear-gradient(90deg, #115297 0%, #44b0fa 100%);
+}
+/* Animation keyframes - you need to add prefixes */
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+/* Loading animation container */
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  display: none;
+}
+/* Spinning circle (inner circle) */
+.loading .maskedCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
+  border: 3px solid white;
+}
+/* Spinning circle mask */
+.loading .mask {
+  width: 12px;
+  height: 12px;
+  overflow: hidden;
+}
+/* Spinner */
+.loading .spinner {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 26px;
+  height: 26px;
+  -webkit-animation: spin 1s infinite linear;
+}
+@-webkit-keyframes pound {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(2.5);
+  }
+  /*
+    100% {
+      opacity: 1;
+      -webkit-transform: scale(1.25);
+    }
+    */
+}
+#routex {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+  z-index: 2000;
+  overflow: hidden;
+  -webkit-text-size-adjust: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#routex #map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #map #geomarker {
+  position: relative;
+}
+#routex #map #geomarker img {
+  vertical-align: top;
+}
+#routex #map #geomarker:after {
+  position: absolute;
+  content: '';
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 1px solid #007BFF;
+  border-radius: 20px;
+  -webkit-transform: scale(1.25);
+  -webkit-animation: pound 1s ease-out infinite;
+}
+#routex #svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #identities-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  padding-left: 3px;
+  text-align: center;
+  background: #eee;
+  -webkit-transform: translate3d(-50px, 0, 0);
+  -webkit-transition: -webkit-transform 233ms ease-in;
+  background-color: rgba(255, 255, 255, 0.88);
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  border-radius: 0 0 3px 0;
+}
+#routex #identities-overlay #isme:after {
+  position: absolute;
+  content: '';
+  left: -3px;
+  bottom: -3px;
+  height: 3px;
+  width: 50px;
+  background: -webkit-radial-gradient(50% 0%, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0));
+}
+#routex #identities-overlay #identities {
+  min-height: 65px;
+  max-height: 245px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-user-select: none;
+}
+#routex #identities-overlay .identity {
+  position: relative;
+  height: 60px;
+  padding-top: 5px;
+  background: transparent;
+  pointer-event: auto;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #identities-overlay .identity .abg {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: block;
+  background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
+  background-size: 100% 100%;
+  -webkit-user-select: none;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #identities-overlay .identity .avatar {
+  position: absolute;
+  border-radius: 3px;
+  width: 40px;
+  height: 40px;
+  top: 2px;
+  left: 2px;
+  display: block;
+  float: none;
+  border: 1px solid transparent;
+  -webkit-user-select: none;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #identities-overlay .identity .detial {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 10px;
+  height: 12px;
+  line-height: 12px;
+  text-align: left;
+}
+#routex #identities-overlay .identity .detial i {
+  position: absolute;
+  left: 3px;
+  right: 0;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transition: -webkit-transform 233ms ease-in;
+}
+#routex #identities-overlay .identity .detial i[class^="icon-dot"],
+#routex #identities-overlay .identity .detial i[class*=" icon-dot"] {
+  top: 2.5px;
+}
+#routex #identities-overlay .identity .detial .distance {
+  width: 41px;
+  padding-left: 13px;
+  white-space: nowrap;
+  display: inline-block;
+  overflow: hiddden;
+}
+#routex #identities-overlay .identity .detial .distance .unit {
+  font-size: 8px;
+}
+#routex #open-exfe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 52px;
+  width: 52px;
+  z-index: 1000101;
+  -webkit-transform: translate3d(52px, 0, 0);
+  -webkit-transition: -webkit-transform 233ms ease-in;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+#routex #open-exfe .btn-openexfe {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  background: url('/static/img/btn_pad@2x.png') no-repeat;
+  background-size: 100% 100%;
+}
+#routex #open-exfe .btn-openexfe:after {
+  position: absolute;
+  content: '';
+  top: 6px;
+  left: 6px;
+  width: 20px;
+  height: 20px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url('/static/img/exfe_flat_20@2x.png');
+}
+#routex #locate {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 52px;
+  height: 52px;
+  -webkit-transform: translate3d(52px, 0, 0);
+  -webkit-transition: -webkit-transform 233ms ease-in;
+  z-index: 1000101;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+#routex #locate .btn-locate {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url('/static/img/map_arrow_g5@2x.png');
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transition: -webkit-transform 233ms ease-in;
+}
+#routex #locate:after {
+  position: absolute;
+  content: '';
+  width: 32px;
+  height: 32px;
+  top: 10px;
+  left: 10px;
+  background: url('/static/img/btn_pad@2x.png') no-repeat;
+  background-size: 100% 100%;
+  z-index: -1;
+}
+#routex #locate.blue .btn-locate {
+  background-image: url('/static/img/map_arrow_blue@2x.png');
+}
+#routex #locate.load .btn-locate {
+  background-image: none;
+}
+#routex #locate.load .loading {
+  display: block;
+}
+#routex #free-identities {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000201;
+  background: rgba(250, 250, 250, 0.92);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #free-identities #iavatar {
+  margin: 20px auto 0;
+  width: 140px;
+  height: 140px;
+  border-radius: 140px;
+  border: 2px dashed #b2b2b2;
+}
+#routex #free-identities h2 {
+  margin: 0;
+  line-height: 21px;
+  font-size: 21px;
+  font-weight: normal;
+  color: #191919;
+  padding: 10px 7.5px 5px 7.5px;
+  border-bottom: 1px solid #bfbfbf;
+  box-shadow: 0 1px 1px #fff;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #free-identities .exfers {
+  margin-top: 5px;
+  max-height: 185px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+#routex #free-identities .exfers ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#routex #free-identities .exfers ul li {
+  float: left;
+  margin-bottom: 5px;
+  margin-left: 7.5px;
+  width: 70px;
+}
+#routex #free-identities .exfers .avatar {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 70px;
+  -webkit-text-size-adjust: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+#routex #free-identities .exfers .avatar.no-free {
+  opacity: .5;
+}
+#routex #free-identities .exfers .name {
+  font-size: 13px;
+  line-height: 15px;
+  min-height: 15px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#routex #free-identities .my-avatar {
+  margin-top: 15px;
+  text-align: center;
+}
+#routex #free-identities .no-avatar {
+  box-shadow: 0 1px 2px rgba(51, 51, 51, 0.66);
+  border: 1px solid #fff;
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient(-180deg, #fafafa, #eaeaea);
+  background-image: linear-gradient(-180deg, #fafafa, #eaeaea);
+  border-radius: 3px;
+  width: 200px;
+  height: 44px;
+  font-size: 21px;
+  color: #153353;
+  line-height: 44px;
+}
+#routex .btn {
+  -webkit-user-select: none;
+  padding: 0;
+  text-align: center;
+}
+#routex .info-windown {
+  box-shadow: 0 1px 2px rgba(51, 51, 51, 0.66);
+  border: 1px solid #fff;
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient(-180deg, #fafafa, #eaeaea);
+  background-image: linear-gradient(-180deg, #fafafa, #eaeaea);
+  border-radius: 3px;
+  border-radius: 5px;
+  padding: 5px;
+  color: #191919;
+}
+#routex .info-windown h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 21px;
+  line-height: 21px;
+  font-weight: 300;
+  max-height: 21px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#routex .info-windown div {
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 300;
+}
+#routex .park {
+  max-width: 200px;
+  min-width: 100px;
+}
+#routex .park .description {
+  margin: 0;
+  max-height: 28px;
+  overflow: hidden;
+}
+#routex .icon {
+  display: inline-block;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+#routex .icon-dot-grey,
+#routex .icon-dot-red {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 -1px 1px #ffffff;
+  border-radius: 8px;
+}
+#routex .icon-dot-grey {
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient(-180deg, #cccccc, #7f7f7f);
+  background-image: linear-gradient(-180deg, #cccccc, #7f7f7f);
+}
+#routex .icon-dot-red {
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient(-180deg, #ff7e98, #e52e53);
+  background-image: linear-gradient(-180deg, #ff7e98, #e52e53);
+}
+#routex .icon-arrow-grey,
+#routex .icon-arrow-red {
+  width: 12px;
+  height: 12px;
+}
+#routex .icon-arrow-grey {
+  background-image: url(/static/img/map_arrow_12g5@2x.png);
+}
+#routex .icon-arrow-red {
+  background-image: url(/static/img/map_arrow_12red@2x.png);
 }
