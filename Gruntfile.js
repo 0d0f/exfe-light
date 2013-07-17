@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// desktop@<%= pkg.desktop.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=exfe-<%= pkg.desktop.sha1 %>.min.map\n'
+          + '//# sourceMappingURL=exfe-<%= pkg.desktop.sha1 %>.min.map\n'
           + '*/\n',
         sourceMap: '<%= dirs.dist %>/exfe-<%= pkg.desktop.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
@@ -112,7 +112,7 @@ module.exports = function (grunt) {
         banner: '<%= meta.banner %>\n'
           + '/*\n'
           + '// mobile@<%= pkg.mobile.version %> <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %>\n'
-          + '//@ sourceMappingURL=exfemobile-<%= pkg.mobile.sha1 %>.min.map\n'
+          + '//# sourceMappingURL=exfemobile-<%= pkg.mobile.sha1 %>.min.map\n'
           + '*/\n',
         sourceMap: '<%= dirs.dist %>/exfemobile-<%= pkg.mobile.sha1 %>.min.map',
         sourceMappingURL: function (dest) {
@@ -286,8 +286,8 @@ module.exports = function (grunt) {
         nospawn: true
       },
       less: {
-        files: ['less/exfe/lib/**/*.less'],
-        tasks: ['less']
+        files: ['less/exfe/lib/**/*.less', 'less/mobile/lib/**/*.less'],
+        tasks: ['less', 'buildcss:DESKTOP', 'buildcss:MOBILE', 'update:package', 'deploy:meta']
       },
       html: {
         files: ['templates/*.html']
@@ -391,6 +391,18 @@ module.exports = function (grunt) {
           grunt.task.run('publish:' + v.name);
         //}
       });
+      MOBILE_META.forEach(function (v) {
+        //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
+          grunt.task.run('publish:' + v.name);
+        //}
+      });
+    } else if (name === 'DESKTOP') {
+      DESKTOP_META.forEach(function (v) {
+        //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
+          grunt.task.run('publish:' + v.name);
+        //}
+      });
+    } else if (name === 'MOBILE') {
       MOBILE_META.forEach(function (v) {
         //if (JSHINT_IGNORE.indexOf(v.name) === -1) {
           grunt.task.run('publish:' + v.name);
