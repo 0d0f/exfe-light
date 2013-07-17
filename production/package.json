@@ -214,7 +214,7 @@
         "version": "0.2.11"
       }
     ],
-    "sha1": "2a-08e2752"
+    "sha1": "2a-6b43f97"
   },
   "mobile": {
     "version": "2a",
@@ -276,18 +276,6 @@
         "version": "0.0.2"
       },
       {
-        "name": "routexstream",
-        "version": "0.0.1"
-      },
-      {
-        "name": "routexmaps",
-        "version": "0.0.1"
-      },
-      {
-        "name": "infobox",
-        "version": "1.1.12"
-      },
-      {
         "name": "mobilemiddleware",
         "version": "0.1.0"
       },
@@ -304,7 +292,7 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-fe67196"
+    "sha1": "2a-d3e696e"
   },
   "css": {
     "exfe": "exfe-8d9a26f.css",
