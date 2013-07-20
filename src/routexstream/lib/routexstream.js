@@ -18,7 +18,7 @@ define('routexstream', function (require) {
 
     var unat_cbf = null;
 
-    var bolDebug = true;
+    var bolDebug = !true;
 
     var myData   = { timestamp: 0, latitude : '', longitude : '', accuracy : '' };
 
@@ -67,6 +67,7 @@ define('routexstream', function (require) {
                 }
             }
         });
+        /*
         if (!stream.live && token) {
             stream.init(
                 streaming_api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
@@ -74,6 +75,7 @@ define('routexstream', function (require) {
             );
             log('Streaming with token: ' + token);
         }
+        */
     }
 
 
@@ -141,7 +143,7 @@ define('routexstream', function (require) {
             this.pop    = pop;
             this.dead   = dead;
             var http = this.http = new XMLHttpRequest();
-            http.open('post', url, true);
+            http.open('post', url);
             http.onreadystatechange = this.listen;
             http.send();
             this.timer  = setInterval(this.listen, 1000);
@@ -200,6 +202,13 @@ define('routexstream', function (require) {
                 submitGps();
             }
         }
+        if (!stream.live && token) {
+            stream.init(
+                streaming_api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
+                streamCallback, streamDead
+            );
+            log('Streaming with token: ' + token);
+        }
     };
 
 
@@ -212,22 +221,47 @@ define('routexstream', function (require) {
        geoService.stopWatch(intGeoWatch);
     };
 
+    var getGeo = function (done, fail) {
+      geoService.get(
+          function (result) {
+            myData.timestamp = result.timestamp;
+            myData.latitude  = result.latitude + '';
+            myData.longitude = result.longitude + '';
+            myData.accuracy  = result.accuracy + '';
+            done && done(result);
+            log(
+                'Location update: '
+              + 'time = ' + myData.timestamp + ', '
+              + 'lat  = ' + myData.latitude  + ', '
+              + 'lng  = ' + myData.longitude + ', '
+              + 'acu  = ' + myData.accuracy
+            );
+          }
+        , function (result) {
+            fail && fail(result);
+          }
+      );
+    };
 
-    var startGeo = function (cb) {
-      intGeoWatch = geoService.watch(function (result) {
-          myData.timestamp = result.timestamp;
-          myData.latitude  = result.latitude + '';
-          myData.longitude = result.longitude + '';
-          myData.accuracy  = result.accuracy + '';
-          cb && cb(result);
-          log(
-              'Location update: '
-            + 'time = ' + myData.timestamp + ', '
-            + 'lat  = ' + myData.latitude  + ', '
-            + 'lng  = ' + myData.longitude + ', '
-            + 'acu  = ' + myData.accuracy
-          );
-        }
+    var startGeo = function (done, fail) {
+      intGeoWatch = geoService.watch(
+          function (result) {
+            myData.timestamp = result.timestamp;
+            myData.latitude  = result.latitude + '';
+            myData.longitude = result.longitude + '';
+            myData.accuracy  = result.accuracy + '';
+            done && done(result);
+            log(
+                'Location update: '
+              + 'time = ' + myData.timestamp + ', '
+              + 'lat  = ' + myData.latitude  + ', '
+              + 'lng  = ' + myData.longitude + ', '
+              + 'acu  = ' + myData.accuracy
+            );
+          }
+        , function (result) {
+            fail && fail(result);
+          }
       );
     };
 
@@ -238,30 +272,32 @@ define('routexstream', function (require) {
     var geoService = {
 
       options: {
-        enableHighAccuracy: true
-      , maximumAge: 0
-      // , timeout: 30000
-      , timeout: 3000
+          enableHighAccuracy: true
+        , maximumAge: 0
+        , timeout: 30000
       }
 
-    , freshness_threshold: 233
+    , freshness_threshold: 4999.999999//5000
     , accuracy_threshold: 500
 
     , _success: function (done) {
         var freshness_threshold = this.freshness_threshold
-          , accuracy_threshold = this.accuracy_threshold;
+          , accuracy_threshold = this.accuracy_threshold
+          , prev = (new Date()).getTime();
         // position
         return function d(p) {
           var coords = p.coords
             , result = coords
-            , now = (new Date()).getTime()
-            , timestamp = p.timestamp;
+            , curr = (new Date()).getTime();
 
-          if (now - timestamp > freshness_threshold) {
+          if (curr - prev > freshness_threshold) {
+            console.log('success', (curr - prev) / 1000, result);
+            prev = curr + freshness_threshold;
             result.status = 'success';
-            result.timestamp = Math.round(timestamp / 1000);
+            result.timestamp = Math.round(p.timestamp / 1000);
             result.accuracy = parseInt(coords.accuracy || accuracy_threshold);
             done && done(result);
+            d = null;
           }
         };
       }
@@ -274,7 +310,9 @@ define('routexstream', function (require) {
             , code: e.code
             , message: e.message
           };
+          console.log('fail', result);
           fail && fail(result);
+          f = null;
         };
       }
 
@@ -301,161 +339,10 @@ define('routexstream', function (require) {
        */
 
     , stopWatch: function (wid) {
-        geolocation.clearWatch(wid);
+        console.log('stop watch ', wid);
+        wid && geolocation.clearWatch(wid);
       }
     };
-
-    var geomarks =  {
-            "id": 0,
-            "created_by": "cfd@exfe.com@email",
-            "type": "route",
-            "color": "#ff0000",
-            "positions": [
-                {
-                    "latitude": 31.21734480179986,
-                    "longitude": 121.5864718
-                },
-                {
-                    "latitude": 31.21319463357469,
-                    "longitude": 121.5972739
-                },
-                {
-                    "latitude": 31.268121713163797,
-                    "longitude": 121.5976561
-                },
-                {
-                    "latitude": 31.247065104540905,
-                    "longitude": 121.5970507
-                },
-                {
-                    "latitude": 31.206737991954668,
-                    "longitude": 121.5462089
-                },
-                {
-                    "latitude": 31.248654045999515,
-                    "longitude": 121.5291807
-                },
-                {
-                    "latitude": 31.25565585251572,
-                    "longitude": 121.5656451
-                },
-                {
-                    "latitude": 31.268261173480656,
-                    "longitude": 121.5331074
-                },
-                {
-                    "latitude": 31.2327964098393,
-                    "longitude": 121.5508703
-                },
-                {
-                    "latitude": 31.250543878922706,
-                    "longitude": 121.6255542
-                }
-            ]
-        };
-
-    var geomarks1 =  {
-            "id": 1,
-            "created_by": "0day.zh@gmail.com@email",
-            "type": "route",
-            "color": "#0000ff",
-            "positions": [
-                {
-                    "latitude": 31.234197033286563,
-                    "longitude": 121.5449758
-                },
-                {
-                    "latitude": 31.255222305861768,
-                    "longitude": 121.6002405
-                },
-                {
-                    "latitude": 31.19713847061759,
-                    "longitude": 121.5849201
-                },
-                {
-                    "latitude": 31.248763796544168,
-                    "longitude": 121.6172143
-                },
-                {
-                    "latitude": 31.199140422578434,
-                    "longitude": 121.5295201
-                },
-                {
-                    "latitude": 31.23870660743816,
-                    "longitude": 121.5498787
-                },
-                {
-                    "latitude": 31.228642727640924,
-                    "longitude": 121.5294021
-                },
-                {
-                    "latitude": 31.23028873356199,
-                    "longitude": 121.5390788
-                },
-                {
-                    "latitude": 31.274770147210454,
-                    "longitude": 121.6137738
-                },
-                {
-                    "latitude": 31.180405477757102,
-                    "longitude": 121.6165173
-                }
-            ]
-        };
-
-    var location0 = {
-          "id": "0",
-          "type": "location",
-          "created_at": 0,
-          "created_by": "",
-          "updated_at": 0,
-          "updated_by": "uid",
-          "tags": [
-            "destination",
-            "park"
-          ],
-          "icon": "http://api.panda.0d0f.com/v3/icons/mapmark?content=A",
-          "title": "2013 西藏单车旅游",
-          "description": "求带、求包养、求……",
-          "latitude": "31.180405477757102",
-          "longitude": "121.6165173"
-        };
-
-    var location1 = {
-          "id": "1",
-          "type": "location",
-          "created_at": 0,
-          "created_by": "",
-          "updated_at": 0,
-          "updated_by": "uid",
-          "tags": [
-            "park",
-            "destination"
-          ],
-          "icon": "http://api.panda.0d0f.com/v3/icons/mapmark",
-          "title": "2013 台湾自由行",
-          "description": "台北、高雄、新竹……",
-          "latitude": "31.250543878922706",
-          "longitude": "121.6255542"
-        };
-
-    var location2 = {
-          "id": "2",
-          "type": "location",
-          "created_at": 0,
-          "created_by": "",
-          "updated_at": 0,
-          "updated_by": "uid",
-          "tags": [
-            "destination",
-            "park"
-          ],
-          "icon": "http://api.panda.0d0f.com/v3/icons/mapmark?content=B&color=red",
-          "title": "2014 北京由行",
-          "description": "故宫……",
-          "latitude": "39.90403",
-          "longitude": "116.407526"
-        };
 
     var streamCallback = function (rawData) {
         if (rawData && rawData.length) {
@@ -463,9 +350,6 @@ define('routexstream', function (require) {
             if (data && data.type && data.data) {
                 var type   = data.type.replace(/^.*\/([^\/]*)$/, '$1');
                 var result = data.data;
-                // test
-                type = 'geomarks';
-                result = [geomarks, geomarks1, location2, location1, location0][Math.floor((Math.random() * 5))];
 
                 switch (type) {
                     case 'breadcrumbs':
@@ -544,6 +428,7 @@ define('routexstream', function (require) {
             shake_start_callback = start_callback;
             shake_end_callback   = end_callback;
         },
+        getGeo: getGeo,
         startGeo: startGeo,
         stopGeo: stopGeo,
         geoService: geoService
@@ -555,9 +440,9 @@ define('routexstream', function (require) {
     var inthndShake  = rawShake(shake_start_callback, shake_end_callback);
 
     window.addEventListener('load', function () {
-        setTimeout(function() {
-            window.scrollTo(0, 0);
-        }, 0);
+      setTimeout(function() {
+        window.scrollTo(0, 0);
+      }, 0);
     });
 
     return routexStream;

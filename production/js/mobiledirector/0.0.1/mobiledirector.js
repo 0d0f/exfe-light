@@ -248,7 +248,7 @@
       window.location = '/';
     },
 
-    crossFunc = function (data) {
+  crossFunc = function (data, noCheckApp) {
       request({
           url: apiUrl + '/Crosses/GetCrossByInvitationToken'
         , type: 'POST'
@@ -258,7 +258,7 @@
             if (data.meta && data.meta.code === 200) {
               var c = crossCallback(data.response);
               if (c[0] && c[1]) {
-                if (window.noExfeApp) {
+                if (noCheckApp || window.noExfeApp) {
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
@@ -392,19 +392,19 @@
         data.cross_access_token = token;
       }
 
-      //crossFunc(data);
+      //prop
+      crossFunc(data, true);
 
-      // test
+      // dev
+      /*
       var cross_id = 100718;
       var token = 'f12988492a46c2cf05be0ceff43abb643d13d37d549e95c7a1c8776f371df649';
       request({
-        url: apiUrl + '/crosses/100718?token=f12988492a46c2cf05be0ceff43abb643d13d37d549e95c7a1c8776f371df649'
+        url: apiUrl + '/crosses/' + cross_id + '?token=' + token;
       , type: 'POST'
       , done: function (data) {
           if (data.meta && data.meta.code === 200) {
-            _ENV_._data_ = data.response;
-            _ENV_._data_.token = token;
-            _ENV_._data_.cross_id = cross_id;
+            _ENV_._data_ = data;
             handle();
           } else {
           }
@@ -412,6 +412,7 @@
       , fail: function (data) {
         }
       });
+    */
 
     } else {
       window.location = '/';
