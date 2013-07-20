@@ -4,9 +4,11 @@ define('mobilecontroller', function (require, exports, module) {
   var Base = require('base'),
       Store = require('store'),
       TWEEN = require('tween'),
-      api_url = window._ENV_.api_url,
-      app_scheme = window._ENV_.app_scheme,
+      _ENV_ = window._ENV_,
+      api_url = _ENV_.api_url,
+      app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + '://crosses/',
+      AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -1619,6 +1621,374 @@ define('mobilecontroller', function (require, exports, module) {
       this.a.stop();
       this.b.stop();
     }
+
+  });
+
+  var routexStream = require('routexstream')
+    , geoService = routexStream.geoService;
+
+  exports.RouteXController = Controller.extend({
+
+
+      init: function () {
+        this.render();
+        this.listen();
+      }
+
+    , render: function () {
+        $('#app-routex').remove();
+        this.element.appendTo($('#app-container'));
+        this.loadMaps();
+      }
+
+    , listen: function () {
+        var self = this
+          , element = self.element
+          , $win = $(window)
+          , $openExfe = self.$('#open-exfe')
+          , $locate = self.$('#locate');
+
+        // 监听横竖屏切换
+        $win.on('orientationchange', function () {
+          var height = $win.height()
+            , width = $win.width();
+          //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
+          //https://gist.github.com/callmephilip/3626669
+          //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
+          // $locate.css('-webkit-transform', 'translate3d(-10px, ' + (height - (32 + 10)) + 'px, 0)');
+          $locate.css('-webkit-transform', 'translate3d(0, 0, 0)');
+          $openExfe.css('-webkit-transform', 'translate3d(0, 0, 0)');
+        });
+
+        var gotoGPS = function () {
+          var status = self.checkGPSStyle();
+          if (2 === status) {
+            self.trackGeoLocation();
+          } else if (1 === status) {
+            self.startStream();
+          }
+        };
+        element.on('touchstart.maps', '#locate', gotoGPS);
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
+          var $that = $(this)
+            , $d = $that.parent().parent()
+            , uid = $d.data('uid');
+          if (self.mapReadyStatus) {
+            self.mapController.showBreadcrumbs(uid);
+          }
+          gotoGPS();
+          e.preventDefault();
+          return false;
+        });
+
+        element.on('touchstart.maps', '#identities .avatar', function () {
+          var $that = $(this)
+            , $d = $that.parent().parent()
+            , uid = $d.data('uid');
+
+          if (self.mapReadyStatus) {
+            self.mapController.showBreadcrumbs(uid);
+            self.mapController.fitBounds([uid]);
+          }
+        });
+
+        /*
+        element.on('touchstart.maps', '#identities-overlay .avatar', function () {
+          var $that = $(this)
+            , $d = $that.parent().parent()
+            , isMe = $d.attr('id') === 'isme'
+            , uid = $d.data('uid')
+            , index = $d.index()
+            // pre-uid
+            , puid = self.mapController && self.mapController.uid
+            , selected = !!$d.hasClass('selected');
+
+          $d.parents('#identities-overlay').find('.selected').removeClass('selected');
+          $d.toggleClass('selected', !selected);
+
+          console.log('uid', uid, 'puid', puid, 'isMe', isMe, 'selected', selected);
+          if (isMe) {
+            return;
+          }
+
+          // clear pre line
+          if (selected || puid !== uid) {
+            self.mapController.hideTipline(puid);
+            self.mapController.hideBreadcrumbs(puid);
+            self.mapController.uid = null;
+          }
+
+          if (!selected) {
+            self.mapController.showTipline(uid);
+            self.mapController.showBreadcrumbs(uid);
+            // self.mapController.fitBounds();
+          }
+        });
+
+        $('#identities').on('scroll.maps', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log(233, 'scroll')
+        // element.on('scroll.maps', '#identities', function () {
+          var uid = self.mapController && self.mapController.uid;
+          if (uid) {
+            self.mapController.showTipline(uid);
+          }
+        });
+        */
+
+        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
+          var $that = $(this)
+            , id = $that.data('identity-id')
+            , uid = $that.data('uid')
+            , touched = !!$that.hasClass('touched');
+
+          if (touched) { return; }
+
+          var c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
+
+          if (c) {
+
+            $that.addClass('touched')
+            $.ajax({
+                type: 'get'
+              , url: api_url + '/crosses/' + self.cross.id + '/freeidentities/' + id + '/itsme?token=' + self.token
+              // , beforeSend: function () {}
+              , complete: function () { $that.removeClass('touched'); }
+              , success: function (data) {
+                  var code = data.meta && data.meta.code;
+                  if (200 === code) {
+                    console.log('success')
+                    console.dir(data)
+                    var cats = Store.get('cats') || {};
+                    cats[self.ctoken] = data.response.cross_access_token;
+                    self.myIdentityId = id;
+                    self.myuid = uid;
+                    Store.set('cats', cats);
+
+                    self.$('#free-identities').hide().empty();
+                    self.createIdentitiesList();
+                    self.streaming();
+                  }
+                }
+              , error: function (data) {
+                  console.log('fail')
+                  console.dir(data)
+                }
+            });
+
+          }
+
+        });
+
+        var $identities = element.find('#identities');
+
+        $identities.on('scroll.maps', function (e) {
+          var $avatars = $(this).find('.avatar')
+            , pb = this.getBoundingClientRect()
+            , scrollTop = this.scrollTop
+            , height = pb.height
+            , minT = pb.top
+            , maxT = height + minT
+            , ids =  this._ids = {};
+
+          $avatars.each(function (i) {
+            var bound = this.getBoundingClientRect()
+              , uid = $(this).parents('.identity').data('uid')
+              // , l = bound.left + bound.width
+              , t = bound.height / 2 + bound.top;
+            if (minT <= t &&  t <= maxT) {
+              ids[uid] = [i, 50, t];
+            }
+          });
+
+          self.mapController && self.mapController.contains();
+          console.dir(ids);
+
+          if (scrollTop <= 0 || scrollTop + height >= this.scrollHeight) {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+          }
+        });
+
+        self.on('show', function () {
+          $('html, body').css('min-height', $win.height());
+
+          console.log('This is Smith-Token.', self.isSmithToken);
+
+          // 身份认领
+          if (self.isSmithToken) {
+            element.find('#free-identities').removeClass('hide');
+            self.getFreeIdentities();
+          } else {
+            self.createIdentitiesList();
+            self.streaming();
+          }
+
+          $win.trigger('orientationchange');
+        });
+
+      }
+
+    , updateExfeeName: function () {
+        this.element.find('#exfee-name').text(this.cross.exfee.name);
+      }
+
+    , createFreeIdentitiesList: function (identities) {
+        var tmp ='<li data-identity-id="{{id}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>'
+          , $identities = this.element.find('#free-identities .identities')
+          , identity;
+
+        identities = identities.slice(0);
+        while ((identity = identities.shift())) {
+          $identities.append(
+            tmp
+              .replace('{{id}}', identity.id)
+              .replace('{{avatar_filename}}', identity.avatar_filename)
+              .replace(/\{\{external_username\}\}/g, identity.external_username)
+              .replace('{{provider}}', identity.provider)
+              .replace('{{is_free}}', (identity.free ? ' ': ' no-') + 'free')
+          );
+        }
+      }
+
+    , getFreeIdentities: function () {
+        this.updateExfeeName();
+        this.createFreeIdentitiesList(this.freeIdentities);
+      }
+
+    , loadMaps: function (p) {
+        var self = this
+          , RoutexMaps = require('routexmaps')
+          , mc = this.mapController = new RoutexMaps({
+              // production use `key`
+              url: 'http://ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
+              // url: 'http://maps.googleapis.com/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
+            , mapDiv: this.$('#map')[0]
+            , mapOptions: {
+                zoom: 5
+              }
+            , svg: this.$('#svg')[0]
+            , callback: function (map) {
+                self.mapReadyStatus = true;
+                self.trackGeoLocation();
+              }
+        });
+        // defaults to true
+        mc.tracking = true
+        mc.load();
+      }
+
+    , mapReadyStatus: false
+
+    , streaming: function () {
+        this.initStream();
+        this.startStream();
+        console.log('start streaming');
+      }
+
+    , initStream: function () {
+        var self = this;
+        routexStream.init(
+            self.cross.id
+          , self.token
+          , function (type, result) {
+              self.mapController && self.mapController.draw(type, result);
+            }
+          , function (e) {
+              console.log(e);
+            }
+        );
+      }
+
+    , startStream: function () {
+        var self = this;
+        self.switchGPSStyle(0);
+        routexStream.stopGeo();
+        routexStream.startGeo(
+            function (r) {
+              self.position = r;
+              self.switchGPSStyle(2);
+              Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '' });
+              self.trackGeoLocation();
+              console.log('GPS', r.latitude, r.longitude);
+            }
+          , function (r) {
+              self.switchGPSStyle(1);
+              console.log(r.status, r);
+              routexStream.stopGeo();
+            }
+        );
+      }
+
+    , checkGPSStyle: function () {
+        return ~~this.$('#locate').attr('data-status');
+      }
+
+      // status: 0 - load, 1 - fail-grey, 2 - succes - blue
+    , switchGPSStyle: function (status, c) {
+        if (0 === status) {
+          c = 'load';
+        } else if (1 === status) {
+          c = 'grey';
+        } else {
+          status = 2;
+          c = 'blue';
+        }
+        this.$('#locate').removeClass().addClass(c).attr('data-status', status);;
+      }
+
+    , trackGeoLocation: function () {
+        var mapController = this.mapController
+          , position = this.position
+          , mapReadyStatus = this.mapReadyStatus;
+        if (mapReadyStatus && mapController) {
+          console.log('tracking');
+          mapController.myuid = this.myuid;
+          mapController.updateGeoLocation(this.myuid, position);
+          mapController.fitCenter(position)
+
+          var identities = document.getElementById('identities');
+          if (!identities._ids) {
+            identities.scrollTop = 1;
+            identities.scrollTop = 0;
+          }
+        }
+      }
+
+    , updateMe: function (myIdentity) {
+        this.myIdentity = myIdentity;
+        var div = this.$('#isme');
+        div.attr('data-uid', myIdentity.external_username + '@' + myIdentity.provider);
+        div.find('img').attr('src', myIdentity.avatar_filename);
+      }
+
+    , createIdentitiesList: function () {
+        var exfee = this.cross.exfee
+          , $identities = this.$('#identities')
+          , myIdentityId = this.myIdentityId
+          , invitations = exfee.invitations.slice(0)
+          , invitation
+          , identity;
+
+        console.dir(exfee);
+
+        while ((invitation = invitations.shift())) {
+          identity = invitation.identity;
+          if (myIdentityId === identity.id) {
+            this.myuid = identity.external_username + '@' + identity.provider;
+            this.updateMe(identity);
+            continue;
+          }
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')
+          div.attr('data-uid', identity.external_username + '@' + identity.provider);
+          div.find('img').attr('src', identity.avatar_filename);
+          $identities.append(div);
+        }
+        window.getComputedStyle($identities[0]).webkitTransform;
+        $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
+      }
 
   });
 

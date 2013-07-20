@@ -18,7 +18,8 @@ define('mobileroutes', function (require, exports, module) {
       SetPasswordController = Controllers.SetPasswordController,
       VerifyController = Controllers.VerifyController,
       CrossController = Controllers.CrossController,
-      LiveController = Controllers.LiveController;
+      LiveController = Controllers.LiveController,
+      RouteXController = Controllers.RouteXController;
 
   var showCross = function (req, res, data, cats, ctoken, token) {
       cats || (cats = {});
@@ -361,6 +362,49 @@ define('mobileroutes', function (require, exports, module) {
       liveCont.emit('show', app.screen, app.ios);
 
       app.currPageName = 'LIVE' ;
+    },
+
+
+    // `routex`
+    routex: function (req, res) {
+      // smith: identity_id = 916, user_id = 646
+      // smith的wechat群: id = 100730
+
+      document.title = '活点地图';
+
+      var app = req.app
+        , ctoken = req.params[0]
+        , response = _ENV_._data_.response
+        , cross = response.cross
+        , cross_access_token = response.cross_access_token
+        // , authorization = response.authorization
+        , browsing_identity = response.browsing_identity
+        , smith_identity_id = browsing_identity && browsing_identity.id
+        , free_identities = response.free_identities
+
+        , cats = (Store.get('cats') || {})
+        // , token = ((cats && cats[ctoken]) || (authorization && authorization.token));
+        , token = cats && cats[ctoken];
+
+      if (cross_access_token) {
+        token = cats[ctoken] = cross_access_token;
+        Store.set('cats', cats);
+      }
+
+      var routexCont = app.controllers.routex = new RouteXController({
+          options: {
+            template: $('#routex-tmpl').html()
+          }
+        , lastGPS: Store.get('last-latlng')
+        , cross: cross
+        , token: token
+        , ctoken: ctoken
+        , myIdentityId: browsing_identity.id
+        , isSmithToken: smith_identity_id === _ENV_.SMITH_ID
+        , freeIdentities: free_identities
+      });
+
+      routexCont.emit('show');
     }
 
   };

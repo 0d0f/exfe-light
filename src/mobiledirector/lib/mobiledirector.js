@@ -7,12 +7,13 @@
     , apiUrl = _ENV_.api_url
     , app_scheme = _ENV_.app_scheme
     , JSFILE = _ENV_.JSFILE
+    , CSSFILE = _ENV_.CSSFILE
     , supportHistory = window.history
     , localStorage = window.localStorage
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , xframe = document.getElementById('xframe')
+    //, xframe = document.getElementById('xframe')
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
@@ -20,6 +21,7 @@
         , resolveToken: /^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/
         , crossTokenForPhone: /^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/
+        , routex: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
@@ -27,18 +29,33 @@
   window.launchApp = function (url, cb) {
     url = url || app_url;
     startTime = now();
-    xframe.src = url;
-    failBack(cb);
+    failBack(cb, 200);
+    //xframe.src = url;
+    redirectIframe(url);
   };
-
 
   window.openExfe = function () {
+    startTime = now();
     window.launchApp('', function () {
-      xframe.src = itunes;
-    });
+      redirectIframe(itunes);
+    }, 1000);
   };
 
-  var failBack = function (cb) {
+  var redirectIframe = function (url, id) {
+      !id && (id = 'app-redirect');
+      var i = document.getElementById(id);
+      if (i) { document.body.removeChild(i); }
+      i = document.createElement('iframe')
+      document.body.appendChild(i);
+      i.id = id;
+      i.src = url;
+      i.setAttribute('frameborder', 0);
+      i.className = 'hide';
+      i.style.display = 'none';
+      return i;
+    },
+
+    failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
         clearTimeout(failTimeout);
         currentTime = now();
@@ -46,10 +63,11 @@
           if (cb) {
             cb();
           } else {
-            window.location = '/';
+            window.location.href = '/';
           }
         }
-      }, 200);
+        clearTimeout(failTimeout);
+      }, ttl || 200);
     },
 
     getSMSTokenFromHead = function () {
@@ -93,7 +111,7 @@
     inject = function (cb) {
       var css = 'mobile-css';
       if (!checkNodeExsits(css)) {
-        injectCss('/static/css/exfe_mobile.min.css', css);
+        injectCss('/static/css/' + CSSFILE, css);
       }
       var js = 'mobile-js';
       if (!checkNodeExsits(js)) {
@@ -229,7 +247,7 @@
       window.location = '/';
     },
 
-    crossFunc = function (data) {
+  crossFunc = function (data, noCheckApp) {
       request({
           url: apiUrl + '/Crosses/GetCrossByInvitationToken'
         , type: 'POST'
@@ -239,7 +257,7 @@
             if (data.meta && data.meta.code === 200) {
               var c = crossCallback(data.response);
               if (c[0] && c[1]) {
-                if (window.noExfeApp) {
+                if (noCheckApp || window.noExfeApp) {
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
@@ -359,6 +377,42 @@
       }
 
       crossFunc(data);
+
+    } else if ((params = url.match(routes.routex))) {
+      var ctoken = params[2]
+        , cats = localStorage.getItem('cats')
+        , data = { invitation_token: ctoken }
+        , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      //prop
+      crossFunc(data, true);
+
+      // dev
+      /*
+      var cross_id = 100718;
+      var token = 'f12988492a46c2cf05be0ceff43abb643d13d37d549e95c7a1c8776f371df649';
+      request({
+        url: apiUrl + '/crosses/' + cross_id + '?token=' + token;
+      , type: 'POST'
+      , done: function (data) {
+          if (data.meta && data.meta.code === 200) {
+            _ENV_._data_ = data;
+            handle();
+          } else {
+          }
+        }
+      , fail: function (data) {
+        }
+      });
+    */
 
     } else {
       window.location = '/';
