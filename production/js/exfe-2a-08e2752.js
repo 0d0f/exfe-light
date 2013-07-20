@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a.12 2013-06-26 11:06:40 */
+/*! desktop@2a 2013-07-20 11:07:41 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5769,6 +5769,190 @@ TWEEN.Tween = function(object) {
     var context = -1 !== "twitter facebook google flickr instagram dropbox".indexOf(provider);
     return Handlebars.helpers["if"].call(this, context, options);
   });
+}), define("timezonedetect", function(require, exports) {
+  (function(root) {
+    var jstz = function() {
+      "use strict";
+      var HEMISPHERE_SOUTH = "s", get_date_offset = function(date) {
+        var offset = -date.getTimezoneOffset();
+        return null !== offset ? offset : 0;
+      }, get_date = function(year, month, date) {
+        var d = new Date();
+        return void 0 !== year && d.setFullYear(year), d.setMonth(month), d.setDate(date), 
+        d;
+      }, get_january_offset = function(year) {
+        return get_date_offset(get_date(year, 0, 2));
+      }, get_june_offset = function(year) {
+        return get_date_offset(get_date(year, 5, 2));
+      }, date_is_dst = function(date) {
+        var is_southern = date.getMonth() > 7, base_offset = is_southern ? get_june_offset(date.getFullYear()) : get_january_offset(date.getFullYear()), date_offset = get_date_offset(date), is_west = 0 > base_offset, dst_offset = base_offset - date_offset;
+        return is_west || is_southern ? 0 !== dst_offset : 0 > dst_offset;
+      }, lookup_key = function() {
+        var january_offset = get_january_offset(), june_offset = get_june_offset(), diff = january_offset - june_offset;
+        return 0 > diff ? january_offset + ",1" : diff > 0 ? june_offset + ",1," + HEMISPHERE_SOUTH : january_offset + ",0";
+      }, determine = function() {
+        var key = lookup_key();
+        return new jstz.TimeZone(jstz.olson.timezones[key]);
+      }, dst_start_for = function(tz_name) {
+        var ru_pre_dst_change = new Date(2010, 6, 15, 1, 0, 0, 0), dst_starts = {
+          "America/Denver": new Date(2011, 2, 13, 3, 0, 0, 0),
+          "America/Mazatlan": new Date(2011, 3, 3, 3, 0, 0, 0),
+          "America/Chicago": new Date(2011, 2, 13, 3, 0, 0, 0),
+          "America/Mexico_City": new Date(2011, 3, 3, 3, 0, 0, 0),
+          "America/Asuncion": new Date(2012, 9, 7, 3, 0, 0, 0),
+          "America/Santiago": new Date(2012, 9, 3, 3, 0, 0, 0),
+          "America/Campo_Grande": new Date(2012, 9, 21, 5, 0, 0, 0),
+          "America/Montevideo": new Date(2011, 9, 2, 3, 0, 0, 0),
+          "America/Sao_Paulo": new Date(2011, 9, 16, 5, 0, 0, 0),
+          "America/Los_Angeles": new Date(2011, 2, 13, 8, 0, 0, 0),
+          "America/Santa_Isabel": new Date(2011, 3, 5, 8, 0, 0, 0),
+          "America/Havana": new Date(2012, 2, 10, 2, 0, 0, 0),
+          "America/New_York": new Date(2012, 2, 10, 7, 0, 0, 0),
+          "Europe/Helsinki": new Date(2013, 2, 31, 5, 0, 0, 0),
+          "Pacific/Auckland": new Date(2011, 8, 26, 7, 0, 0, 0),
+          "America/Halifax": new Date(2011, 2, 13, 6, 0, 0, 0),
+          "America/Goose_Bay": new Date(2011, 2, 13, 2, 1, 0, 0),
+          "America/Miquelon": new Date(2011, 2, 13, 5, 0, 0, 0),
+          "America/Godthab": new Date(2011, 2, 27, 1, 0, 0, 0),
+          "Europe/Moscow": ru_pre_dst_change,
+          "Asia/Amman": new Date(2013, 2, 29, 1, 0, 0, 0),
+          "Asia/Beirut": new Date(2013, 2, 31, 2, 0, 0, 0),
+          "Asia/Damascus": new Date(2013, 3, 6, 2, 0, 0, 0),
+          "Asia/Jerusalem": new Date(2013, 2, 29, 5, 0, 0, 0),
+          "Asia/Yekaterinburg": ru_pre_dst_change,
+          "Asia/Omsk": ru_pre_dst_change,
+          "Asia/Krasnoyarsk": ru_pre_dst_change,
+          "Asia/Irkutsk": ru_pre_dst_change,
+          "Asia/Yakutsk": ru_pre_dst_change,
+          "Asia/Vladivostok": ru_pre_dst_change,
+          "Asia/Baku": new Date(2013, 2, 31, 4, 0, 0),
+          "Asia/Yerevan": new Date(2013, 2, 31, 3, 0, 0),
+          "Asia/Kamchatka": ru_pre_dst_change,
+          "Asia/Gaza": new Date(2010, 2, 27, 4, 0, 0),
+          "Africa/Cairo": new Date(2010, 4, 1, 3, 0, 0),
+          "Europe/Minsk": ru_pre_dst_change,
+          "Pacific/Apia": new Date(2010, 10, 1, 1, 0, 0, 0),
+          "Pacific/Fiji": new Date(2010, 11, 1, 0, 0, 0),
+          "Australia/Perth": new Date(2008, 10, 1, 1, 0, 0, 0)
+        };
+        return dst_starts[tz_name];
+      };
+      return {
+        determine: determine,
+        date_is_dst: date_is_dst,
+        dst_start_for: dst_start_for
+      };
+    }();
+    jstz.TimeZone = function(tz_name) {
+      "use strict";
+      var AMBIGUITIES = {
+        "America/Denver": [ "America/Denver", "America/Mazatlan" ],
+        "America/Chicago": [ "America/Chicago", "America/Mexico_City" ],
+        "America/Santiago": [ "America/Santiago", "America/Asuncion", "America/Campo_Grande" ],
+        "America/Montevideo": [ "America/Montevideo", "America/Sao_Paulo" ],
+        "Asia/Beirut": [ "Asia/Amman", "Asia/Jerusalem", "Asia/Beirut", "Europe/Helsinki", "Asia/Damascus" ],
+        "Pacific/Auckland": [ "Pacific/Auckland", "Pacific/Fiji" ],
+        "America/Los_Angeles": [ "America/Los_Angeles", "America/Santa_Isabel" ],
+        "America/New_York": [ "America/Havana", "America/New_York" ],
+        "America/Halifax": [ "America/Goose_Bay", "America/Halifax" ],
+        "America/Godthab": [ "America/Miquelon", "America/Godthab" ],
+        "Asia/Dubai": [ "Europe/Moscow" ],
+        "Asia/Dhaka": [ "Asia/Yekaterinburg" ],
+        "Asia/Jakarta": [ "Asia/Omsk" ],
+        "Asia/Shanghai": [ "Asia/Krasnoyarsk", "Australia/Perth" ],
+        "Asia/Tokyo": [ "Asia/Irkutsk" ],
+        "Australia/Brisbane": [ "Asia/Yakutsk" ],
+        "Pacific/Noumea": [ "Asia/Vladivostok" ],
+        "Pacific/Tarawa": [ "Asia/Kamchatka", "Pacific/Fiji" ],
+        "Pacific/Tongatapu": [ "Pacific/Apia" ],
+        "Asia/Baghdad": [ "Europe/Minsk" ],
+        "Asia/Baku": [ "Asia/Yerevan", "Asia/Baku" ],
+        "Africa/Johannesburg": [ "Asia/Gaza", "Africa/Cairo" ]
+      }, timezone_name = tz_name, ambiguity_check = function() {
+        for (var ambiguity_list = AMBIGUITIES[timezone_name], length = ambiguity_list.length, i = 0, tz = ambiguity_list[0]; length > i; i += 1) if (tz = ambiguity_list[i], 
+        jstz.date_is_dst(jstz.dst_start_for(tz))) return timezone_name = tz, void 0;
+      }, is_ambiguous = function() {
+        return AMBIGUITIES[timezone_name] !== void 0;
+      };
+      return is_ambiguous() && ambiguity_check(), {
+        name: function() {
+          return timezone_name;
+        }
+      };
+    }, jstz.olson = {}, jstz.olson.timezones = {
+      "-720,0": "Pacific/Majuro",
+      "-660,0": "Pacific/Pago_Pago",
+      "-600,1": "America/Adak",
+      "-600,0": "Pacific/Honolulu",
+      "-570,0": "Pacific/Marquesas",
+      "-540,0": "Pacific/Gambier",
+      "-540,1": "America/Anchorage",
+      "-480,1": "America/Los_Angeles",
+      "-480,0": "Pacific/Pitcairn",
+      "-420,0": "America/Phoenix",
+      "-420,1": "America/Denver",
+      "-360,0": "America/Guatemala",
+      "-360,1": "America/Chicago",
+      "-360,1,s": "Pacific/Easter",
+      "-300,0": "America/Bogota",
+      "-300,1": "America/New_York",
+      "-270,0": "America/Caracas",
+      "-240,1": "America/Halifax",
+      "-240,0": "America/Santo_Domingo",
+      "-240,1,s": "America/Santiago",
+      "-210,1": "America/St_Johns",
+      "-180,1": "America/Godthab",
+      "-180,0": "America/Argentina/Buenos_Aires",
+      "-180,1,s": "America/Montevideo",
+      "-120,0": "America/Noronha",
+      "-120,1": "America/Noronha",
+      "-60,1": "Atlantic/Azores",
+      "-60,0": "Atlantic/Cape_Verde",
+      "0,0": "UTC",
+      "0,1": "Europe/London",
+      "60,1": "Europe/Berlin",
+      "60,0": "Africa/Lagos",
+      "60,1,s": "Africa/Windhoek",
+      "120,1": "Asia/Beirut",
+      "120,0": "Africa/Johannesburg",
+      "180,0": "Asia/Baghdad",
+      "180,1": "Europe/Moscow",
+      "210,1": "Asia/Tehran",
+      "240,0": "Asia/Dubai",
+      "240,1": "Asia/Baku",
+      "270,0": "Asia/Kabul",
+      "300,1": "Asia/Yekaterinburg",
+      "300,0": "Asia/Karachi",
+      "330,0": "Asia/Kolkata",
+      "345,0": "Asia/Kathmandu",
+      "360,0": "Asia/Dhaka",
+      "360,1": "Asia/Omsk",
+      "390,0": "Asia/Rangoon",
+      "420,1": "Asia/Krasnoyarsk",
+      "420,0": "Asia/Jakarta",
+      "480,0": "Asia/Shanghai",
+      "480,1": "Asia/Irkutsk",
+      "525,0": "Australia/Eucla",
+      "525,1,s": "Australia/Eucla",
+      "540,1": "Asia/Yakutsk",
+      "540,0": "Asia/Tokyo",
+      "570,0": "Australia/Darwin",
+      "570,1,s": "Australia/Adelaide",
+      "600,0": "Australia/Brisbane",
+      "600,1": "Asia/Vladivostok",
+      "600,1,s": "Australia/Sydney",
+      "630,1,s": "Australia/Lord_Howe",
+      "660,1": "Asia/Kamchatka",
+      "660,0": "Pacific/Noumea",
+      "690,0": "Pacific/Norfolk",
+      "720,1,s": "Pacific/Auckland",
+      "720,0": "Pacific/Tarawa",
+      "765,1,s": "Pacific/Chatham",
+      "780,0": "Pacific/Tongatapu",
+      "780,1,s": "Pacific/Apia",
+      "840,0": "Pacific/Kiritimati"
+    }, exports !== void 0 ? exports.jstz = jstz : root.jstz = jstz;
+  })(this);
 }), define("util", function() {
   "use strict";
   var trimLeft = /^\s+/, trimRight = /\s+$/, zh_CN = /[^0-9a-zA-Z_\u4e00-\u9fa5\ \'\.]+/g, NativeTrim = String.prototype.trim, Util = {
@@ -5840,7 +6024,7 @@ TWEEN.Tween = function(object) {
   return Util;
 }), function() {
   "use strict";
-  var PLACEHOLDER = /(?:\{\{|%\{)(\w*?)(?:\}\}?)/gm, ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/, ISO8601_TIME = /^\d{2}:\d{2}:\d{2}$/, N2 = .2, N6 = 6e4, D = 864e5, EN = {
+  var PLACEHOLDER = /(?:\{\{|%\{)(\w*?)(?:\}\}?)/gm, TIMEZONE = /[\+\-][0-9]{4}$/, ISO8601_DATE = /^\d{4}-\d{2}-\d{2}$/, ISO8601_TIME = /^\d{2}:\d{2}:\d{2}$/, N2 = .2, N6 = 6e4, D = 864e5, EN = {
     monthsShort: "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),
     months: "January February March April May June July August September October November December".split(" "),
     weekdaysShort: "Sun Mon Tue Wed Thu Fri Sat".split(" "),
@@ -5942,9 +6126,9 @@ TWEEN.Tween = function(object) {
   }, humanTime.toLocaleDate = function(eft) {
     var d, de, ds, opf = eft.outputformat, now = new Date(), today = now.getFullYear() + "-" + lead0(now.getMonth() + 1) + "-" + lead0(now.getDate()), isToday = !1, reTime = !1;
     if (opf) d = now, ds = today, isToday = !0; else {
-      var b = eft.begin_at, bd = b.date, bt = b.time, btz = b.timezone, s = "";
+      var b = eft.begin_at, bd = b.date, time = b.time.replace(/\s/g, ""), bt = time && time.replace(TIMEZONE, ""), zone = time && (TIMEZONE.exec(time) || "Z"), btz = zone && zone[0], s = "";
       bd ? (s = formatDate(bd), bt ? s += "T" + formatTime(bt) : (reTime = !0, isToday = s === today)) : (s = today, 
-      bt && (s += "T" + formatTime(bt))), bd && bt && btz && (s += "Z"), d = parseISO(s), 
+      bt && (s += "T" + formatTime(bt))), bd && bt && btz && (s += btz), d = parseISO(s), 
       reTime && (d.setHours(0), d.setMinutes(0), d.setSeconds(0), d.setMilliseconds(0)), 
       de = ds = d.getFullYear() + "-" + lead0(d.getMonth() + 1) + "-" + lead0(d.getDate()), 
       ds += bt ? " " + lead0(d.getHours()) + ":" + lead0(d.getMinutes()) + ":" + lead0(d.getSeconds()) : "";
@@ -6047,19 +6231,21 @@ TWEEN.Tween = function(object) {
   function _ajax(options, done, fail) {
     var dfd, promise, jqXHR, o = {};
     return _extend(o, defaultOptions), _extend(o, options), dfd = deferred(), promise = dfd.promise(), 
-    jqXHR = ajax(o).done(function(data, statusText, jqXHR) {
+    jqXHR = ajax(o).done(function(data, statusText) {
       var code = data && data.meta && data.meta.code;
       200 === code ? dfd.resolve(data.response, statusText, jqXHR) : dfd.reject(data, code, statusText, jqXHR);
-    }).fail(function(data, statusText, jqXHR) {
+    }).fail(function(data, statusText) {
       var code = data && data.meta && data.meta.code;
       dfd.reject(data, code, statusText, jqXHR);
     }), promise.jqXHR = jqXHR, promise.abort = function(statusText) {
       jqXHR && (jqXHR.abort(statusText), jqXHR = dfd = promise = void 0);
-    }, promise.done(done).fail(fail).always(function() {
+    }, promise.done(done).fail(fail).fail(function(data, code) {
+      /^50[024]$/.exec(code || jqXHR.status) && (window.location = "/500");
+    }).always(function() {
       jqXHR = dfd = promise = void 0;
     }), promise;
   }
-  var $ = require("jquery"), deferred = $.Deferred, ajax = $.ajax, param = $.param, _ENV_ = window._ENV_, urls = {
+  var $ = require("jquery"), tz = require("timezonedetect").jstz, deferred = $.Deferred, ajax = $.ajax, param = $.param, _ENV_ = window._ENV_, urls = {
     base_url: _ENV_.api_url,
     signin: "/Users/signin",
     getRegistrationFlag: "/Users/getRegistrationFlag",
@@ -6115,8 +6301,9 @@ TWEEN.Tween = function(object) {
     request: function(channel, options, done, fail) {
       var k, url = urls[channel], params = options.params, resources = options.resources;
       if (url) {
-        if (params || (params = {}), params && (Api._token && !params.token && (params.token = Api._token), 
-        params = param(params), url += params ? "?" + params : ""), resources) for (k in resources) url = url.replace(":" + k, encodeURIComponent(resources[k]));
+        if (params || (params = {}), params["Accept-Timezone"] = tz.determine().name(), 
+        params && (Api._token && !params.token && (params.token = Api._token), params = param(params), 
+        url += params ? "?" + params : ""), resources) for (k in resources) url = url.replace(":" + k, encodeURIComponent(resources[k]));
         return options.url = urls.base_url + url, delete options.params, delete options.resources, 
         _ajax(options, done, fail);
       }
@@ -6695,7 +6882,7 @@ TWEEN.Tween = function(object) {
             }, function(data) {
               if (delete App.request.session.browsing_authorization, delete App.request.session.browsing_user, 
               Store.set("authorization", data), Store.set("last_external_username", Util.printExtUserName(od)), 
-              that.hide(), "d01" === t || "d02" === t) window.location.reload(); else {
+              that.hide(), "d01" === t || "d02" === t) window.location.href = "/"; else {
                 var d = new Dialog(dialogs.welcome);
                 d.render(), d.show({
                   identity: {
@@ -7854,7 +8041,11 @@ TWEEN.Tween = function(object) {
     },
     showTL: function() {
       this.timeline.show(this.eftime), this._x || (this._x = 124, this.element.css({
-        "-webkit-transform": "translate3d(-" + this._x + "px, 0, 0)"
+        "-webkit-transform": "translate3d(-" + this._x + "px, 0, 0)",
+        "-moz-transform": "-moz-translate3d(-" + this._x + "px, 0, 0)",
+        "-ms-transform": "-ms-translate3d(-" + this._x + "px, 0, 0)",
+        "-o-transform": "-o-translate3d(-" + this._x + "px, 0, 0)",
+        transform: "translate3d(-" + this._x + "px, 0, 0)"
       }));
     },
     keydown: function(e) {
@@ -8893,7 +9084,8 @@ TWEEN.Tween = function(object) {
     var $t = $(this), auth = Store.get("authorization"), auth_user_id = auth && auth.user_id, auth_token = auth && auth.token, auth_user = Store.get("user"), actionType = $t.data("link"), $db = ($t.data("event-ignore"), 
     $("#app-browsing-identity")), status = $db.length;
     if (status) {
-      var data = $db.data(), settings = data.settings, action = settings.action, code = settings.code, invitation_token = settings.invitation_token, tokenType = settings.tokenType, readOnly = settings.readOnly, browsing = settings.browsing;
+      var data = $db.data(), settings = data.settings, action = settings.action, code = settings.code, invitation_token = settings.originToken, readOnly = (settings.tokenType, 
+      settings.readOnly), browsing = settings.browsing;
       if (1 === code) {
         if (actionType) {
           e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
@@ -8904,8 +9096,8 @@ TWEEN.Tween = function(object) {
       } else if (2 === code) {
         var buser_id = browsing.user_id;
         if ("SIGNIN" === action && auth_user_id && auth_user_id !== buser_id) {
-          if (!actionType && "cross" !== tokenType) return e.stopImmediatePropagation(), e.stopPropagation(), 
-          e.preventDefault(), checkInvitationToken(auth_token, invitation_token, function() {
+          if (!actionType) return e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault(), 
+          checkInvitationToken(auth_token, invitation_token, function() {
             var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
             $d.data("settings", {
               browsing: browsing,
@@ -13821,7 +14013,7 @@ TWEEN.Tween = function(object) {
   Bus.on("app:api:getuser", getUser), Bus.on("app:usermenu:updatenormal", updateNormalUserMenu), 
   Bus.on("app:usermenu:updatebrowsing", updateBrowsingUserMenu);
   var userMenuTpls = {
-    normal: '<div class="dropdown-menu user-panel"><div class="header"><div class="meta"><a class="pull-right avatar" href="{{profileLink}}" data-link><img width="40" height="40" alt="" src="{{avatar_filename}}" /></a><a class="attended" href="{{profileLink}}" data-link><span class="attended-nums">{{cross_quantity}}</span><span class="attended-x"><em class="x">·X·</em> attended</span></a></div></div><div class="body">{{#unless password}}<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword">Set <span class="x-sign">EXFE</span> password</div>{{/unless}}{{#if verifying}}<div class="merge verify" data-dialog-type="verification_{{identities.[0].provider}}" data-widget="dialog" data-identity-id="{{identities.[0].id}}"><strong>Verify</strong> identity</div>{{/if}}<div class="list"></div></div><div class="footer"><a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a <span class="x">·X·</span></a><div class="spliterline"></div><div class="actions"><a href="#" class="pull-right" id="app-signout">Sign out</a></div></div></div>',
+    normal: '<div class="dropdown-menu user-panel"><div class="header"><div class="meta"><a class="pull-right avatar" href="{{profileLink}}" data-link><img width="40" height="40" alt="" src="{{avatar_filename}}" /></a><a class="attended" href="{{profileLink}}" data-link><span class="attended-nums">{{cross_quantity}}</span><span class="attended-x"><em class="x">·X·</em> attended</span></a></div></div><div class="body">{{#unless password}}<div class="merge setup" data-widget="dialog" data-dialog-type="setpassword">Set <span class="x-sign">EXFE</span> password</div>{{/unless}}{{#if verifying}}<div class="merge verify" data-dialog-type="verification_{{identities.[0].provider}}" data-widget="dialog" data-identity-id="{{identities.[0].id}}"><strong>Verify</strong> identity</div>{{/if}}<div class="list"></div></div><div class="footer"><a href="/#gather" class="xbtn xbtn-gather" id="js-gatherax" data-link>Gather a ·X·</a><div class="spliterline"></div><div class="actions"><a href="#" class="pull-right" id="app-signout">Sign out</a></div></div></div>',
     browsing_identity: '<div class="dropdown-menu user-panel"><div class="header"><h2>Browsing Identity</h2></div><div class="body">{{#with browsing}}<div>You are browsing this page as {{capitalize identities.[0].provider}} identity:</div><div class="identity"><span class="pull-right avatar alt40"><img src="{{identities.[0].avatar_filename}}" width="20" height="20" alt="" /></span><i class="icon16-identity-{{identities.[0].provider}}"></i><span class="oblique">{{identities.[0].external_username}}</span></div>{{#if ../setup}}<div class="merge setup" data-user-action="SETUP" data-widget="dialog"><h5>Start</h5>new account with this identity</div>{{/if}}{{/with}}{{#unless setup}}<div class="orspliter hide">or</div><div class="merge signin" data-user-action="SIGNIN" data-source="{{browsing.identities.[0].external_username}}" data-widget="dialog" data-dialog-type="identification" data-dialog-tab="d00"><h5>Authenticate</h5>to continue with this identity</div>{{/unless}}</div><div class="footer"></div></div>'
   };
   Handlebars.registerHelper("ifConnected", function(status, options) {
@@ -13939,7 +14131,7 @@ TWEEN.Tween = function(object) {
 
          case "mouseleave":
           ExfeeWidget.focus[dom_id + "-input"] || "" !== $("#" + dom_id + " .exfee-input").val() || ($("#" + dom_id + " .total").css("visibility", "hidden"), 
-          $("#" + dom_id + " .avatar .rb").hide(), ExfeeWidget.showLimitWarning(!1));
+          $("#" + dom_id + " .avatar .rb").hide());
         }
       }), $("#" + this.dom_id + " .input-xlarge").bind("focus keydown blur", this.inputEvent), 
       $("#" + this.dom_id + " .pointer").bind("mousedown", function(e) {
@@ -14212,8 +14404,7 @@ TWEEN.Tween = function(object) {
             strTail = arrInput[i]);
           }
           var newInput = arrInvalid.join("; ");
-          newInput !== strInput && objInput.val(newInput), this.ajaxIdentity(arrValid), ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput ? (strTail = "", 
-          this.showLimitWarning()) : this.showLimitWarning(!1);
+          newInput !== strInput && objInput.val(newInput), this.ajaxIdentity(arrValid), ExfeeWidget.summary().items >= ExfeeWidget.hard_limit && strInput && (strTail = "");
           var bolCorrect = !!ExfeeWidget.parseAttendeeInfo(strTail) || /^[\+＋]?[0-9\uFF10-\uFF19]{5,15}$/.test(strTail);
           objInput.parent().find(".pointer").toggleClass("icon16-exfee-plus-blue", bolCorrect).toggleClass("icon16-exfee-plus", !bolCorrect), 
           this.checkComplete(objInput, strTail.replace(/^@/, ""), force);
@@ -14498,6 +14689,8 @@ TWEEN.Tween = function(object) {
       bus.emit("app:cross:edited", {
         error: errorType
       });
+    }).always(function() {
+      ExfeeWidget.showLimitWarning(ExfeeWidget.summary().items > ExfeeWidget.soft_limit);
     }));
   }, ExfeeCallback = function(refresh) {
     if (ShowExfee(), SaveExfee(refresh), autoSetTitle) {
@@ -14635,8 +14828,7 @@ TWEEN.Tween = function(object) {
         } ],
         exfee: [ function() {
           $("#cross-exfee .exfee-input").val() || ($("#cross-exfee .total").css("visibility", "hidden"), 
-          $("#cross-exfee .thumbnails .avatar .rb").hide()), $("#gather-exfee .exfee-input").val() || $("#gather-exfee .thumbnails .avatar .rb").hide(), 
-          ExfeeWidget.showLimitWarning(!1);
+          $("#cross-exfee .thumbnails .avatar .rb").hide()), $("#gather-exfee .exfee-input").val() || $("#gather-exfee .thumbnails .avatar .rb").hide();
         }, function() {} ]
       };
       if (event) {
@@ -14782,7 +14974,7 @@ TWEEN.Tween = function(object) {
     var expended = $(".cross-description .xbtn-more").hasClass("xbtn-less"), domDesc = "";
     $(".cross-description").toggleClass("more", !0), $(".cross-description .xbtn-more").toggleClass("xbtn-less", !1), 
     Cross.description ? (domDesc = ExfeUtilities.escape(Cross.description).replace(/\r\n|\r|\n/g, "<br>"), 
-    $(".cross-description .show").toggleClass("gray", !1).toggleClass("gsd", !1)) : (domDesc = "Click here to describe something about this ·X·.", 
+    $(".cross-description .show").toggleClass("gray", !1).toggleClass("gsd", !1)) : (domDesc = "Take some notes here.", 
     $(".cross-description .show").toggleClass("gray", !0).toggleClass("gsd", !Cross.id)), 
     $(".cross-description .show").html() !== domDesc && $(".cross-description .show").html(domDesc), 
     $(".cross-description .show").height() > 180 ? ($(".cross-description").toggleClass("more", !1), 
@@ -14815,7 +15007,7 @@ TWEEN.Tween = function(object) {
     place.description ? $(".cross-dp.cross-place > address").html(ExfeUtilities.escape(place.description).replace(/\r\n|\r|\n/g, "<br>")).toggleClass("gray", !1) : $(".cross-dp.cross-place > address").html("Choose a place.").toggleClass("gray", !0), 
     $(".cross-dp.cross-place > address").height() > 80 ? ($(".cross-dp.cross-place > address").toggleClass("more", !1), 
     $(".cross-dp.cross-place .xbtn-more").show()) : $(".cross-dp.cross-place .xbtn-more").hide(), 
-    place.description || place.title ? $(".cross-dp.cross-place > address").css("display", "none") : $(".cross-dp.cross-place > address").text("Choose a place.").css("display", "block");
+    $(".cross-dp.cross-place > address").css("display", "block"), place.description || place.title ? !place.description && place.title && $(".cross-dp.cross-place > address").css("display", "none") : $(".cross-dp.cross-place > address").text("Choose a place.").css("display", "block");
   }, ShowExfee = function() {
     window.GatherExfeeWidget.showAll(!0), window.CrossExfeeWidget.showAll(!1, !0);
   }, ShowBackground = function() {
@@ -14876,7 +15068,7 @@ TWEEN.Tween = function(object) {
       $(".cross-map").append(map_dom);
     }
     $(".cross-map").empty();
-    var hasLL = place.lat.length && place.lng.length, map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img style="border-radius: 3px; box-shadow: 2px 2px 4px rgba(0, 0, 0, .25);" src="https://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lng}}&markers=icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
+    var hasLL = place.lat.length && place.lng.length, map_dom = '<a target="_blank" href="https://maps.google.com/maps?key=' + _ENV_.MAP_KEY + '&q={{title}}&hl=en&ie=UTF8&sll={{lat}},{{lng}}&t=m&z=16"><img class="gm0" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x200&maptype=road&sensor=false" alt="" width="280" height="200" /><img  class="gm1" src="https://maps.googleapis.com/maps/api/staticmap?scale=2&center={{lat}},{{lng}}&markers=scale:2|icon%3a' + encodeURIComponent("http://img.exfe.com/web/map_pin_blue@2x.png") + '%7C{{lat}},{{lng}}&zoom=13&size=280x140&maptype=road&sensor=false" alt="" width="280" height="140" /></a>';
     hasLL && getMap({
       coords: {
         latitude: place.lat,
@@ -15139,9 +15331,9 @@ var MD5 = function(string) {
 define("lightsaber", function(require, exports, module) {
   "use strict";
   function createApplication() {
-    var app = new Application();
-    return merge(app, Emitter.prototype), app.request = new Request(), app.response = new Response(), 
-    app.init(), app;
+    var app = new Application(), request = new Request(), response = new Response();
+    return merge(app, Emitter.prototype), app.request = request, app.response = response, 
+    request.app = response.app = app, app.init(), app;
   }
   function Application() {}
   function Request(enableFullUrlPath) {
@@ -15166,10 +15358,9 @@ define("lightsaber", function(require, exports, module) {
     options = options || {}, this.name = name, this.root = options.root, this.engine = options.engine, 
     this.ext = extname(name), this.timestamp = timestamp || "", this.path = this.lookup(name);
   }
-  function lightsaberInit(app) {
+  function lightsaberInit() {
     return function(req, res, next) {
-      req.app = res.app = app, req.next = next, res.locals = res.locals || locals(res), 
-      next();
+      req.next = next, res.locals = res.locals || locals(res), next();
     };
   }
   function uuid() {
@@ -15225,11 +15416,11 @@ define("lightsaber", function(require, exports, module) {
   var proto;
   exports.version = "0.0.5", proto = Application.prototype, proto.historySupport = historySupport = null !== (null !== history ? history.pushState : void 0), 
   $.browser && $.browser.opera && (proto.historySupport = historySupport = !1), proto.init = function() {
-    this.route = ROOT, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
+    this.cache = {}, this.settings = {}, this.engines = {}, this.route = ROOT, this.stack = [], 
     this.viewCallbacks = [], this.defaultConfiguration();
   }, proto.defaultConfiguration = function() {
     this.set("env", "production"), this.enable("dispatch"), this.use(lightsaberInit(this)), 
-    this._usedRouter = !1, this._router = new Router(this), this.routes = this._router.map, 
+    this._router = new Router(this), this.routes = this._router.map, this._usedRouter = !1, 
     this._router.caseSensitive = this.enabled("case sensitive routing"), this._router.strict = this.enabled("strict routing"), 
     this.locals = locals(this), this.locals.settings = this.settings, this.configure("development", function() {
       this.set("env", "development");
@@ -15311,7 +15502,7 @@ define("lightsaber", function(require, exports, module) {
     this.emit("launch"), options = options || {};
     var req = this.request, res = this.response;
     this.running || (this.running = !0, !1 === options.dispatch && this.disable("dispatch"), 
-    !1 !== options.popstate && (this.historySupport && !isIE ? window.addEventListener("popstate", proxy(this.change, this), !1) : window.addEventListener("hashchange", proxy(this.change, this), !1)), 
+    !1 !== options.popstate && (this.historySupport && !isIE ? $(window).on("popstate", proxy(this.change, this)) : $(window).on("hashchange", proxy(this.change, this))), 
     this.disabled("dispatch") || (this.handle(req, res), this.emit("launched")));
   }, proto.change = function(e) {
     if (_firstLoad) return _firstLoad = !1;

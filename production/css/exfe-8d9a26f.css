@@ -4988,8 +4988,8 @@ img:-moz-broken {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  border: 1px solid #000;
   text-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .xbtn-blue {
   position: relative;
@@ -5959,7 +5959,7 @@ body {
 }
 .navbar .brand img {
   vertical-align: top;
-  margin-top: 9px;
+  margin-top: 7px;
 }
 .navbar .brand span {
   margin-left: 10px;
