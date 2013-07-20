@@ -57,7 +57,7 @@ define(function (require) {
   // cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8`
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken);
 
-  app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{1,})\/routex\/?$/, routes.routex);
+  app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
 
   app.on('launched', function () {
     function animate() {

@@ -202,7 +202,11 @@
         "version": "0.2.11"
       }
     ],
+<<<<<<< HEAD
     "sha1": "2a-dfdfe14"
+=======
+    "sha1": "2a-08e2752"
+>>>>>>> bafe767... improved routex
   },
   "mobile": {
     "version": "2a",
@@ -264,6 +268,18 @@
         "version": "0.0.2"
       },
       {
+        "name": "routexstream",
+        "version": "0.0.1"
+      },
+      {
+        "name": "routexmaps",
+        "version": "0.0.1"
+      },
+      {
+        "name": "infobox",
+        "version": "1.1.12"
+      },
+      {
         "name": "mobilemiddleware",
         "version": "0.1.0"
       },
@@ -280,12 +296,21 @@
         "version": "0.1.0"
       }
     ],
+<<<<<<< HEAD
     "sha1": "2a-78e90a4"
+=======
+    "sha1": "2a-5ab5c7a"
+>>>>>>> bafe767... improved routex
   },
   "css": {
     "exfe": "exfe-5d5aa8d.css",
     "exfemin": "exfe-47f642a.min.css",
+<<<<<<< HEAD
     "exfemobile": "exfemobile-27e74f6.css",
     "exfemobilemin": "exfemobile-2325fe0.min.css"
+=======
+    "exfemobile": "exfemobile-b938ba8.css",
+    "exfemobilemin": "exfemobile-516d643.min.css"
+>>>>>>> bafe767... improved routex
   }
 }

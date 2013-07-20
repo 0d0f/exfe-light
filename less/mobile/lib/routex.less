@@ -1,3 +1,45 @@
+/* Animation keyframes - you need to add prefixes */
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+
+/* Loading animation container */
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  display: none;
+}
+
+/* Spinning circle (inner circle) */
+.loading .maskedCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
+  border: 3px solid white;
+}
+
+/* Spinning circle mask */
+.loading .mask {
+  width: 12px;
+  height: 12px;
+  overflow: hidden;
+}
+
+/* Spinner */
+.loading .spinner {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 26px;
+  height: 26px;
+  -webkit-animation: spin 1s infinite linear;
+}
+
 @-webkit-keyframes pound {
   0% {
     opacity: 1;
@@ -86,31 +128,47 @@
     -webkit-transform: translate3d(0, 0, 0);
   }
 
-  #identities {
+  #identities-overlay {
     position: absolute;
     left: 0;
     top: 0;
     width: 50px;
-    padding: 0 3px;
+    padding-left: 3px;
     text-align: center;
     background: #eee;
-    min-height: 60px;
-    max-height: 60px * 5;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    -webkit-text-size-adjust: none;
-    -webkit-user-select: none;
     -webkit-transform: translate3d(-50px, 0, 0);
-    -webkit-overflow-scrolling: touch;
-    background-color: rgba(255, 255, 255, .88);
-
     -webkit-transition: -webkit-transform 233ms ease-in;
+    background-color: rgba(255, 255, 255, .88);
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    border-radius: 0 0 3px 0;
+
+    #isme:after {
+      position: absolute;
+      content: '';
+      left: -3px;
+      bottom: -3px;
+      height: 3px;
+      width: 50px;
+      background: -webkit-radial-gradient(50% 0%,rgba(127, 127, 127, 0.5),rgba(127, 127, 127, 0));
+    }
+
+    #identities {
+      min-height: 60px + 5px;
+      max-height: 60px * 4 + 5px;
+      padding-bottom: 5px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-user-select: none;
+      // -webkit-overflow-scrolling: touch;
+    }
 
     .identity {
+      position: relative;
       height: 60px;
       padding-top: 5px;
       background: transparent;
+      pointer-event: auto;
       -webkit-transform: translate3d(0, 0, 0);
       .abg {
         position: relative;
@@ -137,38 +195,76 @@
       }
 
       .detial {
+        position: absolute;
+        bottom: 0;
+        left: 0;
         font-size: 10px;
-        min-height: 11px;
-        line-height: 11px;
+        height: 12px;
+        line-height: 12px;
+        text-align: left;
+
+        i {
+          position: absolute;
+          left: 3px;
+          right: 0;
+          -webkit-backface-visibility: hidden;
+          -webkit-transform-origin: 50% 50%;
+          -webkit-transition: -webkit-transform 233ms ease-in;
+        }
+
+        i[class^="icon-dot"],
+        i[class*=" icon-dot"] {
+          top: 2.5px;
+        }
+
+        .distance {
+          width: 41px;
+          padding-left: 13px;
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hiddden;
+
+          .unit {
+            font-size: 8px;
+          }
+        }
       }
     }
 
-    .identity:first {
-
-    }
   }
 
   #open-exfe {
     position: absolute;
     top: 0;
     right: 0;
-    height: 32px;
-    width: 32px;
-    -webkit-transform: translate3d(32px, 10px, 0);
-    background: url('/static/img/btn_pad@2x.png') no-repeat;
-    background-size: 100% 100%;
+    height: 52px;
+    width: 52px;
+    z-index: 1000001 + 100;
+    -webkit-transform: translate3d(52px, 0, 0);
     -webkit-transition: -webkit-transform 233ms ease-in;
+    -webkit-user-select: none;
+    pointer-events: auto;
 
-    &:after {
+    .btn-openexfe {
       position: absolute;
-      content: '';
-      top: 6px;
-      left: 6px;
-      width: 20px;
-      height: 20px;
+      top: 10px;
+      left: 10px;
+      width: 32px;
+      height: 32px;
+      background: url('/static/img/btn_pad@2x.png') no-repeat;
       background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-image: url('/static/img/exfe_flat_20@2x.png');
+
+      &:after {
+        position: absolute;
+        content: '';
+        top: 6px;
+        left: 6px;
+        width: 20px;
+        height: 20px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-image: url('/static/img/exfe_flat_20@2x.png');
+      }
     }
   }
 
@@ -176,40 +272,65 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 32px;
-    height: 32px;
-    -webkit-transform: translate3d(32px, -10px, 0);
-    background: url('/static/img/btn_pad@2x.png') no-repeat;
-    background-size: 100% 100%;
+    width: 52px;
+    height: 52px;
+    -webkit-transform: translate3d(52px, 0, 0);
     -webkit-transition: -webkit-transform 233ms ease-in;
+    z-index: 1000001 + 100;
+    -webkit-user-select: none;
+    pointer-events: auto;
 
-    &:after {
+    .btn-locate {
       position: absolute;
-      content: '';
-      top: 6px;
-      left: 6px;
+      top: 16px;
+      left: 16px;
       width: 20px;
       height: 20px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-image: url('/static/img/map_arrow_g5@2x.png');
+
+      -webkit-backface-visibility: hidden;
+      -webkit-transform-origin: 50% 50%;
+      -webkit-transition: -webkit-transform 233ms ease-in;
+    }
+
+    &:after {
+      position: absolute;
+      content: '';
+      width: 32px;
+      height: 32px;
+      top: 10px;
+      left: 10px;
+      background: url('/static/img/btn_pad@2x.png') no-repeat;
+      background-size: 100% 100%;
+      z-index: -1;
+    }
+
+    &.blue .btn-locate {
+      background-image: url('/static/img/map_arrow_blue@2x.png');
+    }
+
+    &.load .btn-locate {
+      background-image: none;
+    }
+    &.load .loading {
+      display: block;
     }
   }
-  #locate.blue:after {
-    background-image: url('/static/img/map_arrow_blue@2x.png');
-  }
 
-  #exfee {
+  #free-identities {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 1000001 + 200;
     background: rgba(250, 250, 250, .92);
     -webkit-transform: translate3d(0, 0, 0);
 
     #iavatar {
-      margin: 30px auto 0;
+      margin: 20px auto 0;
       width: 140px;
       height: 140px;
       border-radius: 140px;
@@ -223,9 +344,15 @@
       font-weight: normal;
       color: #191919;
 
-      padding: 0 0 5px 7.5px;
+      padding: 10px 7.5px 5px 7.5px;
       border-bottom: 1px solid #bfbfbf;
       box-shadow: 0 1px 1px #fff;
+      white-space: nowrap;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      -webkit-transform: translate3d(0, 0, 0);
+      //text-overflow: ellipsis;
     }
 
     .exfers {
@@ -254,6 +381,10 @@
         -webkit-text-size-adjust: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
+
+        &.no-free {
+          opacity: .5;
+        }
       }
 
       .name {
@@ -303,6 +434,10 @@
       font-size: 21px;
       line-height: 21px;
       font-weight: 300;
+      max-height: 21px;
+      overflow: hidden;
+      //text-overflow: ellipsis;
+      white-space: nowrap;
     }
     div {
       font-size: 14px;
@@ -313,10 +448,56 @@
   }
 
   .park {
-    width: 160px;
+    max-width: 200px;
+    min-width: 100px;
 
     .description {
       margin: 0;
+      max-height: 28px;
+      overflow: hidden;
     }
+  }
+
+  .icon {
+    display: inline-block;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  .icon-dot-grey,
+  .icon-dot-red {
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 -1px 1px #fff;
+    border-radius: 8px;
+  }
+
+  .icon-dot-grey {
+    @d: 90deg - 270deg;
+    @startColor: #ccc;
+    @endColor: #7f7f7f;
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
+  }
+  .icon-dot-red {
+    @d: 90deg - 270deg;
+    @startColor: #FF7E98;
+    @endColor: #E52E53;
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
+  }
+
+  .icon-arrow-grey,
+  .icon-arrow-red {
+    width: 12px;
+    height: 12px;
+  }
+  .icon-arrow-grey {
+    background-image: url(/static/img/map_arrow_12g5@2x.png);
+  }
+  .icon-arrow-red {
+    background-image: url(/static/img/map_arrow_12red@2x.png);
   }
 }
