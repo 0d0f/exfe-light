@@ -5,7 +5,6 @@
   var now = Date.now || function () { return new Date().getTime(); }
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
-    // , apiUrl = 'http://api.panda.0d0f.com'
     , app_scheme = _ENV_.app_scheme
     , JSFILE = _ENV_.JSFILE
     , CSSFILE = _ENV_.CSSFILE

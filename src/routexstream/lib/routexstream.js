@@ -274,10 +274,10 @@ define('routexstream', function (require) {
       options: {
           enableHighAccuracy: true
         , maximumAge: 0
-        , timeout: 30000
+        , timeout: 29999.999999 //30000
       }
 
-    , freshness_threshold: 4999.999999//5000
+    , freshness_threshold: 4999.999999 //5000
     , accuracy_threshold: 500
 
     , _success: function (done) {

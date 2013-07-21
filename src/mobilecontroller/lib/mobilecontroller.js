@@ -1660,23 +1660,21 @@ define('mobilecontroller', function (require, exports, module) {
           $openExfe.css('-webkit-transform', 'translate3d(0, 0, 0)');
         });
 
-        var gotoGPS = function () {
+        var gotoGPS = function (e, showBreadcrumbs) {
           var status = self.checkGPSStyle();
+          if (self.mapReadyStatus) {
+            var uid = self.mapController.myuid;
+            showBreadcrumbs && self.mapController.showBreadcrumbs(uid);
+            self.mapController.fitBoundsWithDestination(uid);
+          }
           if (2 === status) {
-            self.trackGeoLocation();
           } else if (1 === status) {
             self.startStream();
           }
         };
         element.on('touchstart.maps', '#locate', gotoGPS);
         element.on('touchstart.maps', '#isme .avatar', function (e) {
-          var $that = $(this)
-            , $d = $that.parent().parent()
-            , uid = $d.data('uid');
-          if (self.mapReadyStatus) {
-            self.mapController.showBreadcrumbs(uid);
-          }
-          gotoGPS();
+          gotoGPS(e, true);
           e.preventDefault();
           return false;
         });
@@ -1688,7 +1686,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           if (self.mapReadyStatus) {
             self.mapController.showBreadcrumbs(uid);
-            self.mapController.fitBounds([uid]);
+            self.mapController.fitBoundsWithDestination(uid);
           }
         });
 
@@ -1798,7 +1796,7 @@ define('mobilecontroller', function (require, exports, module) {
               // , l = bound.left + bound.width
               , t = bound.height / 2 + bound.top;
             if (minT <= t &&  t <= maxT) {
-              ids[uid] = [i, 50, t];
+              ids[uid] = [i, 46, t];
             }
           });
 
@@ -1863,7 +1861,7 @@ define('mobilecontroller', function (require, exports, module) {
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               // production use `key`
-              url: 'http://ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
+              url: '//ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
               // url: 'http://maps.googleapis.com/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: this.$('#map')[0]
             , mapOptions: {
@@ -1872,7 +1870,7 @@ define('mobilecontroller', function (require, exports, module) {
             , svg: this.$('#svg')[0]
             , callback: function (map) {
                 self.mapReadyStatus = true;
-                self.trackGeoLocation();
+                self.mapController.updateGeoLocation(null);
               }
         });
         // defaults to true
@@ -1918,6 +1916,10 @@ define('mobilecontroller', function (require, exports, module) {
               self.switchGPSStyle(1);
               console.log(r.status, r);
               routexStream.stopGeo();
+
+              if (self.mapController) {
+                self.mapController.switchGEOStyle(0);
+              }
             }
         );
       }
@@ -1947,13 +1949,14 @@ define('mobilecontroller', function (require, exports, module) {
           console.log('tracking');
           mapController.myuid = this.myuid;
           mapController.updateGeoLocation(this.myuid, position);
-          mapController.fitCenter(position)
 
+          /*
           var identities = document.getElementById('identities');
           if (!identities._ids) {
             identities.scrollTop = 1;
             identities.scrollTop = 0;
           }
+          */
         }
       }
 
