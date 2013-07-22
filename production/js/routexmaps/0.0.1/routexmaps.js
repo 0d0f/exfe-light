@@ -406,88 +406,6 @@ define('routexmaps', function (require) {
     return bounds;
   };
 
-  proto.fitBounds = function (uids) {
-    console.log('fit bounds', uids);
-    if (uids && uids.length) {
-      var gms = this.geoMarkers, latlngs = [], gm, uid;
-      while ((uid = uids.shift())) {
-        if ((gm = gms[uid])) {
-          latlngs.push(gm.getPosition());
-        }
-      }
-      this.calBounds(latlngs, this.geoLocation.getPosition());
-    }
-  };
-
-  proto.calBounds = function (latlngs, center) {
-    var projection = this.overlay.getProjection()
-      , c = projection.fromLatLngToContainerPixel(center)
-      , destinationLatlng = this.destinationLatlng
-      , bounds = new google.maps.LatLngBounds(), maxd = 0, latlng, d, sw, ne;
-
-    if (destinationLatlng) {
-      latlngs.push(destinationLatlng);
-    }
-
-    while ((latlng = latlngs.shift())) {
-      d = distance(latlng, center);
-      console.log(d);
-      if (d > maxd) { maxd = d; }
-      bounds.extend(latlng);
-    }
-    sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd, c.y));
-    ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd, c.y));
-    bounds.extend(sw);
-    bounds.extend(center);
-    bounds.extend(ne);
-    this.map.fitBounds(bounds);
-  };
-
-  proto.updateBreadcrumbs = function (uid, positions) {
-    var breadcrumbs = this.breadcrumbs, coords = [],  p, b, latlng, locate;
-    positions = positions.slice(0);
-    locate = positions[0];
-
-    while ((p = positions.shift())) {
-      latlng = new google.maps.LatLng(p.latitude, p.longitude);
-      coords.push(latlng);
-    }
-
-    b = breadcrumbs[uid];
-    if (!b) {
-      b = breadcrumbs[uid] = this.addBreadcrumbs(uid, positions);
-    }
-
-    latlng = coords[0];
-    b.setPath(coords);
-    b._uid = uid;
-    b._position = positions;
-
-    console.log('update breadcrumbs', uid);
-    if (this.myuid === uid) {
-      !this.geoLocation && this.updateGeoLocation(uid, latlng);
-      return;
-    }
-
-    this.updateIdentityGeoLocation(uid, locate, latlng);
-
-    this.updateTipline(uid, latlng);
-  };
-
-  proto.updateIdentityGeoLocation = function (uid, locate, latlng) {
-    var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
-    if (!latlng) {
-      latlng = new google.maps.LatLng(locate.latitude, locate.longitude);
-    }
-    if (!gm) {
-      gm = geoMarkers[uid] = this.addLastPoint();
-    }
-    gm._location = locate;
-    gm.setPosition(latlng);
-    console.log(uid, latlng.lat(), latlng.lng(), this.geoLocation);
-    this.distancematrix(uid);
-  };
-
   proto.addBreadcrumbs = function (uid, positions) {
     // var rgba = data.color.split(',')
       // , color = '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16)
@@ -692,7 +610,6 @@ define('routexmaps', function (require) {
       if ('destination' === tag) {
         locate._type = 'destination';
         this.destinationLocation = locate;
-        //this.fitCenter();
         break;
       }
     }
@@ -745,6 +662,8 @@ define('routexmaps', function (require) {
         , closeBoxURL: ""
         , alignBottom: true
         , enableEventPropagation: false
+        , leftBoundary: 60
+        , zIndex: 610
       });
       infobox.open(self.map, this);
       infobox._marker = this;
@@ -781,11 +700,22 @@ define('routexmaps', function (require) {
   };
 
   proto.contains = function () {
-    var bounds = this.map.getBounds()
-      , ids = document.getElementById('identities')._ids || {}
+    var mapBounds = this.map.getBounds()
+      , projection = this.overlay.getProjection()
+      , sw = mapBounds.getSouthWest()
+      , ne = mapBounds.getNorthEast()
+      , bounds = new google.maps.LatLngBounds()
       , geoMarkers = this.geoMarkers
+      , ids = document.getElementById('identities')._ids || {}
       , uid, gm, latlng;
     console.log('contains', ids)
+
+    sw = projection.fromLatLngToContainerPixel(sw);
+    sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y));
+
+    bounds.extend(sw);
+    bounds.extend(ne);
+
     for (uid in geoMarkers) {
       gm = geoMarkers[uid];
       latlng = gm.getPosition();
