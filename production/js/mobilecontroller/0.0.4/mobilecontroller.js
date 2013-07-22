@@ -1654,6 +1654,8 @@ define('mobilecontroller', function (require, exports, module) {
         $win.on('orientationchange', function () {
           var height = $win.height()
             , width = $win.width();
+
+          $('#identities').css('max-height', Math.round(height / 60) * 60 - 60 - 100 + 5);
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
@@ -1675,15 +1677,15 @@ define('mobilecontroller', function (require, exports, module) {
           }
         };
         element.on('tap.maps', function (e) {
-          if (e.target !== self.tapElement
+          if (self.tapElement
+            && e.target !== self.tapElement
             && !$.contains($infoWins[0], e.target)) {
               $infoWins.addClass('hide');
               self.tapElement = null;
           }
         });
         element.on('tap.maps', '#locate', gotoGPS);
-        element.on('tap.maps', '#isme .avatar', function (e) {
-          if (isScroll) { return; }
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
           gotoGPS(e, true);
 
           if (self.tapElement === this) {
@@ -1806,15 +1808,21 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
         });
 
-        var pageY = 0, scrollTop = 0;
+        element.on('touchmove', '.info-windown', function (e) {
+          e.preventDefault();
+        });
+
+        var pageY = 0, scrollTop = 0, _t;
         $identities.on('touchstart.maps', function (e) {
+          isScroll = false;
           pageY = e.pageY;
           scrollTop = this.scrollTop;
         });
-        $identities.on('touchstart.maps', function (e) {
-          pageY = e.pageY;
-          scrollTop = this.scrollTop;
-          isScroll = false;
+        $identities.on('touchend.maps', function (e) {
+          if (_t) clearTimeout(_t);
+          _t = setTimeout(function () {
+            isScroll = false;
+          }, 233);
         });
         $identities.on('touchmove.maps', function (e) {
           isScroll = true;

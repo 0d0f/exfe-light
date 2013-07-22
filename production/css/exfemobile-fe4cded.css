@@ -2067,6 +2067,15 @@ button .exfe {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   border-radius: 0 0 3px 0;
 }
+#routex #identities-overlay #isme:before {
+  position: absolute;
+  content: '';
+  left: -3px;
+  bottom: -1px;
+  width: 50px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.5);
+  z-index: 1;
+}
 #routex #identities-overlay #isme:after {
   position: absolute;
   content: '';
@@ -2074,15 +2083,18 @@ button .exfe {
   bottom: -3px;
   height: 3px;
   width: 50px;
-  background: -webkit-radial-gradient(50% 0%, rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0));
+  background: -webkit-radial-gradient(25px -1px, ellipse farthest-side, rgba(127, 127, 127, 0.5) 0%, rgba(127, 127, 127, 0) 100%);
+  z-index: 2;
 }
 #routex #identities-overlay #identities {
   min-height: 65px;
-  max-height: 245px;
   padding-bottom: 5px;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-user-select: none;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: height 233ms ease-in;
+  -webkit-overflow-scrolling: touch;
 }
 #routex #identities-overlay .identity {
   position: relative;

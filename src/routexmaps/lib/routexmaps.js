@@ -761,8 +761,8 @@ define('routexmaps', function (require) {
   proto.showTipline = function (uid, bound) {
     var tl = this.tiplines[uid], p, startPoints;
     if (!tl) { return; }
-    var f = [bound[1], bound[2]]
-      , s = [f[0] + 13, f[1]]
+    var f = [bound[1], bound[2] + 60]
+      , s = [f[0] + 13, f[1]  + 60]
       , points = [f.join(','), s.join(',')].join(' ');
     p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng);
     tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
