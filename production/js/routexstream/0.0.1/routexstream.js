@@ -202,7 +202,7 @@ define('routexstream', function (require) {
         }
         if (!stream.live && token) {
             stream.init(
-                streaming_api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
+                api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);

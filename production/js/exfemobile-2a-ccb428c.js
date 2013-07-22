@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 08:07:23 */
+/*! mobile@2a 2013-07-22 08:07:12 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3852,7 +3852,7 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(streaming_api_url + "/v3/crosses/" + cross_id + "/routex?_method=WATCH&token=" + token, streamCallback, streamDead), 
+    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/v3/crosses/" + cross_id + "/routex?_method=WATCH&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
     return data.timestamp && data.latitude && data.longitude && data.accuracy;
