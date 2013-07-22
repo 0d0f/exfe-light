@@ -2,7 +2,7 @@ define('routexstream', function (require) {
     'use strict';
 
     var _ENV_ = window._ENV_
-      , api_url = _ENV_.api_url
+      , api_url = _ENV_.apiv3_url
       , geolocation = navigator.geolocation;
 
     var cross_id = 0;

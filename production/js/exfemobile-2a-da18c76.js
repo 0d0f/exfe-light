@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 09:07:34 */
+/*! mobile@2a 2013-07-22 09:07:13 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3784,7 +3784,7 @@ TWEEN.Tween = function(object) {
   }), live;
 }), define("routexstream", function() {
   "use strict";
-  var _ENV_ = window._ENV_, api_url = _ENV_.api_url, geolocation = navigator.geolocation, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
+  var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, geolocation = navigator.geolocation, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
     timestamp: 0,
     latitude: "",
     longitude: "",
