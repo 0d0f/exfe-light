@@ -2257,7 +2257,7 @@ button .exfe {
 }
 #routex #free-identities .exfers {
   margin-top: 5px;
-  max-height: 185px;
+  max-height: 265px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -2293,7 +2293,9 @@ button .exfe {
   white-space: nowrap;
 }
 #routex #free-identities .my-avatar {
+  clear: both;
   margin-top: 15px;
+  margin-bottom: 15px;
   text-align: center;
 }
 #routex #free-identities .no-avatar {
@@ -2324,6 +2326,7 @@ button .exfe {
   border-radius: 5px;
   padding: 5px;
   color: #191919;
+  z-index: 987;
 }
 #routex .info-windown h2 {
   margin: 0;
@@ -2339,6 +2342,16 @@ button .exfe {
   font-size: 14px;
   line-height: 14px;
   font-weight: 300;
+}
+#routex .info-windown .splitline:after {
+  position: absolute;
+  content: '';
+  height: 1px;
+  left: -6px;
+  right: -6px;
+  bottom: 0;
+  background-color: #ccc;
+  box-shadow: 0 1px 1px #ffffff;
 }
 #routex .park {
   max-width: 200px;
@@ -2381,4 +2394,40 @@ button .exfe {
 }
 #routex .icon-arrow-red {
   background-image: url(/static/img/map_arrow_12red@2x.png);
+}
+#routex #info-wins {
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transform: translate3d(50px, 0, 0);
+  -webkit-transition: -webkit-transform 144ms ease-in;
+}
+#routex #my-info {
+  position: relative;
+  width: 200px;
+  height: 132px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: lighter;
+  line-height: 16px;
+  letter-spacing: 1.5px;
+}
+#routex #my-info > div {
+  position: relative;
+  line-height: 40px;
+}
+#routex #my-info .show,
+#routex #my-info .discover {
+  color: #007CFF;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+#routex #other-info {
+  position: relative;
+  width: 200px;
+  height: 125px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: lighter;
+  line-height: 16px;
+  letter-spacing: 1.5px;
 }

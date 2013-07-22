@@ -2,7 +2,43 @@ define('routexmaps', function (require) {
 
   'use strict';
 
-  var Store = require('store');
+    var distance = function (lat1, lng1, lat2, lng2) {
+        var R = 6371 // Radius of the Earth in km
+          , dLat = (lat2 - lat1) * Math.PI / 180
+          , dLon = (lng2 - lng1) * Math.PI / 180
+          , a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+          , c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+          , d = R * c;
+        return d;
+      }
+    , calRotate = function (lat1, lon1, lat2, lon2) {
+        var dLon = lon2 - lon1
+          , y = Math.sin(dLon) * Math.cos(lat2)
+          , x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        return Math.atan2(y, x);
+     }
+    , distanceOutput = function (n, s, t, r) {
+        t = '<span class="unit">{{u}}</span>';
+        n = Math.floor(n);
+        r = {
+            text: ''
+          , status: 0
+          , distance: n
+        };
+        if (n < 30) {
+          r.status = 4;
+          r.text = '抵达';
+        } else if (n < 1000) {
+          r.text = n + t.replace('{{u}}', '米');
+        } else if (n < 9000) {
+          r.text = (n / 1000 + '').slice(0, 3) + t.replace('{{u}}', '公里');
+        } else {
+          r.text = 9 + '+' + t.replace('{{u}}', '公里');
+        }
+
+        return r;
+      };
+
 
   function RoutexMaps(options) {
     options = this.options = options || {};
@@ -10,11 +46,17 @@ define('routexmaps', function (require) {
     this.options.svg = null;
 
     this.routes = {};
+    this.places = {};
     this.locations = {};
     this.tiplines = {};
     this.breadcrumbs = {};
     this.geoMarkers = {};
     this.icons = {};
+
+    this.boundsOffset = {
+        left: 50
+      , top: 0
+    };
 
     window._loadmaps_ = function (rm, mapDiv, mapOptions, callback) {
 
@@ -57,7 +99,7 @@ define('routexmaps', function (require) {
 
         // hdpi
         GMaps.visualRefresh = true;
-        // default China
+        // defaults to China
         mapOptions.center = new GMaps.LatLng(35.86166, 104.195397);
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP;
         mapOptions.disableDefaultUI = true;
@@ -73,8 +115,6 @@ define('routexmaps', function (require) {
 
           GEvent.addListener(map, 'zoom_changed', function () {
             console.log('zoom_end')
-            // rm.showTipline(rm.uid);
-            // rm.showBreadcrumbs(rm.uid);
             rm.contains();
           });
 
@@ -88,8 +128,6 @@ define('routexmaps', function (require) {
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               console.log('touchmove');
               rm.hideTiplines();
-              // rm.hideTipline(rm.uid);
-              // rm.hideBreadcrumbs(rm.uid);
             });
           });
 
@@ -99,8 +137,7 @@ define('routexmaps', function (require) {
 
         var overlay = rm.overlay = new GMaps.OverlayView();
         overlay.draw = function () {};
-        // overlay.onAdd = function () {};
-        // overlay.onRemove = function () {};
+        // overlay.onAdd = overlay.onRemove = function () {};
         overlay.setMap(map);
 
         callback(map);
@@ -124,7 +161,7 @@ define('routexmaps', function (require) {
         cb && cb();
       }
     };
-    n.async = 1;
+    n.async = !0;
     n.src = this.options.url;
     document.body.appendChild(n);
   };
@@ -133,169 +170,240 @@ define('routexmaps', function (require) {
     console.log('type', type, data);
     if (type === 'geomarks') {
 
-      var item, st;
+      var rs = [], ps = [], item, st, k;
       data = data.slice(0);
       while ((item = data.shift())) {
         st = item.type;
         if (st === 'route') {
-          // this.updatePolyline(item);
+          rs.push(item);
         } else if (st === 'location') {
-          this.updatePoint(item);
+          ps.push(item);
         }
       }
+
+      // draw route
+      this.drawRoutes(rs);
+
+      // draw place
+      this.drawPlaces(ps);
 
     } else if (type === 'breadcrumbs') {
-      for (var uid in data) {
-        this.updateBreadcrumbs(uid, data[uid]);
-      }
+      // draw identity path
+      this.drawIdentityPaths(data);
     }
   };
 
-  proto.fitBounds = function (uids) {
-    console.log('fit bounds', uids);
-    if (uids && uids.length) {
-      var gms = this.geoMarkers, latlngs = [], gm, uid;
-      while ((uid = uids.shift())) {
-        if ((gm = gms[uid])) {
-          latlngs.push(gm.getPosition());
+  proto.drawRoutes = function (rs) {
+    var routes = this.routes, r, k, item;
+    for (k in routes) {
+      r = routes[k];
+      r.setMap(null);
+      r = null;
+      delete routes[k];
+    }
+    while ((item = rs.shift())) {
+      // this.updatePolyline(item);
+    }
+  };
+
+  proto.drawPlaces = function (ps) {
+    console.log('draw places', ps.length, ps);
+    // reset destination place
+    this.destinationPlace = null;
+    var places = this.places, p, k, item;
+    for (k in places) {
+      p = places[k];
+      p.setMap(null);
+      p = null;
+      delete places[k];
+    }
+    while ((item = ps.shift())) {
+      this.addPlace(item);
+    }
+  };
+
+  proto.addPlace = function (data) {
+    console.log('add a place', data);
+    var id = data.id
+      , latlng = this.toLatLng(data.latitude, data.longitude)
+      , place, tags, tag;
+
+    place = this.places[id] = this.addPoint(data);
+    place._data = data;
+
+    place.setPosition(latlng);
+    place.setVisible(true);
+
+    if (!this.destinationPlace) {
+      tags = data.tags.slice(0);
+      while ((tag = tags.shift())) {
+        if ('destination' === tag) {
+          var geoLocation = this.geoLocation;
+          if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
+            this.panToDestination(latlng);
+          }
+          place.setZIndex(378);
+          this.destinationPlace = place;
+          break;
         }
       }
-      this.calBounds(latlngs, this.geoLocation.getPosition());
     }
   };
 
-  proto.calBounds = function (latlngs, center) {
-    var projection = this.overlay.getProjection()
-      , c = projection.fromLatLngToContainerPixel(center)
-      , destinationLatlng = this.destinationLatlng
-      , bounds = new google.maps.LatLngBounds(), maxd = 0, latlng, d, sw, ne;
+  proto.toLatLng = function (latitude, longitude) {
+    return new google.maps.LatLng(latitude, longitude);
+  };
 
-    if (destinationLatlng) {
-      latlngs.push(destinationLatlng);
+  proto.drawIdentityPaths = function (data) {
+    var bs = this.breadcrumbs, toLatLng = this.toLatLng, dp = this.destinationPlace
+      , uid, b, d, p, positions, coords, latlng, gm;
+    for (uid in data) {
+      d = data[uid];
+      b = bs[uid];
+      positions = d.slice(0);
+      coords = [];
+      if (!b) {
+        b = bs[uid] = this.addBreadcrumbs();
+      }
+
+      while ((p = positions.shift())) {
+        coords.push(toLatLng(p.latitude, p.longitude));
+      }
+
+      latlng = coords[0];
+      b.setPath(coords);
+      b._uid = uid;
+      b._data = d;
+
+      gm = this.drawGeoMarker(uid, positions[0], latlng);
+
+      this.distanceMatrix(uid, gm, dp);
+    }
+  };
+
+  proto.drawGeoMarker = function (uid, data, latlng) {
+    if (this.myuid === uid) {
+      return this.geoLocation;
+    }
+    var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
+    if (!gm) {
+      gm = geoMarkers[uid] = this.addGeoMarker();
+    }
+    gm.setPosition(latlng);
+    gm._data = data;
+    return gm;
+  };
+
+  proto.addGeoMarker = function () {
+    var gm = new google.maps.Marker({
+        map: this.map
+      , animation: 3
+      , zIndex: 333
+      , icon: this.icons.dotGrey
+    });
+    return gm;
+  };
+
+  proto.distanceMatrix = function (uid, gm, dp) {
+    console.log(uid, 'destination', dp, gm);
+    var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
+      , $detial = $identity.find('.detial')
+      , $icon = $detial.find('.icon')
+      , $distance = $detial.find('.distance');
+    if (gm && dp) {
+      var p0 = gm.getPosition()
+        , p1 = dp.getPosition()
+        , lat1 = p0.lat(), lng1 = p0.lng()
+        , lat2 = p1.lat(), lng2 = p1.lng()
+        , d = distance(lat2, lng2, lat1, lng1)
+        , r = Math.round(calRotate(lat2, lng2, lat1, lng1) * 180 / Math.PI)
+        , result = distanceOutput(d);
+
+      result.rotate = r;
+
+      console.dir(result);
+      $distance.html(result.text);
+      if (!$icon.hasClass('icon-arrow-red') && !$icon.hasClass('icon-arrow-grey')) {
+        $icon.attr('class', 'icon icon-arrow-grey');
+      }
+      $icon.css('-webkit-transform', 'rotate(' + r + 'deg)');
+      $detial.css('visibility', 'visible');
+    } else if (gm) {
+      $detial.css('visibility', 'visible');
+    } else {
+      $detial.css('visibility', 'hidden');
+    }
+  };
+
+  proto.fitBoundsWithDestination = function (uid) {
+    console.log('fit bounds with destination');
+    var destinationPlace = this.destinationPlace
+      , isme = this.myuid === uid
+      , gm = isme ? this.geoLocation : this.geoMarkers[uid];
+    if (gm) {
+      var gmlatlng = gm.getPosition()
+        , projection = this.overlay.getProjection()
+        , map = this.map;
+      if (destinationPlace) {
+        var dlatlng = destinationPlace.getPosition()
+          , p = projection.fromLatLngToContainerPixel(dlatlng)
+          , bounds;
+
+        if (isme) {
+          bounds = this.calculateBoundsByCenter(gmlatlng, [dlatlng]);
+        } else {
+          bounds = new google.maps.LatLngBounds()
+          if (p.x < 50) {
+            p = projection.fromContainerPixelToLatLng(new google.maps.Point(p.x - 50, p.y));
+            bounds.extend(p);
+          }
+
+          bounds.extend(gmlatlng);
+          bounds.extend(dlatlng);
+        }
+
+        map.fitBounds(bounds);
+      } else {
+        if (!map.getBounds().contains(gmlatlng)) {
+          if (map.getZoom() < 7) {
+            map.setZoom(15);
+          }
+          map.panTo(gmlatlng);
+        }
+      }
+    }
+  };
+
+  proto.panToDestination = function (position) {
+    var map = this.map;
+    if (map.getZoom() < 7) {
+      map.setZoom(15);
+    }
+    map.panTo(position || this.destinationPlace.getPosition());
+  };
+
+  proto.calculateBoundsByCenter = function (center, others) {
+    var bounds = new google.maps.LatLngBounds()
+      , projection = this.overlay.getProjection()
+      , points = [], point, coord, c;
+    while ((coord = others.shift())) {
+      point = projection.fromLatLngToContainerPixel(coord);
+      points.push(point);
     }
 
-    while ((latlng = latlngs.shift())) {
-      d = distance(latlng, center);
-      console.log(d);
+    var c = projection.fromLatLngToContainerPixel(center), maxd = 0, d, p;
+    while ((p = points.shift())) {
+      d = Math.sqrt(Math.pow(p.x - c.x, 2) + Math.pow(p.y - c.y, 2));
       if (d > maxd) { maxd = d; }
-      bounds.extend(latlng);
     }
-    sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd, c.y - maxd));
-    ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd, c.y + maxd));
+
+    var sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50))
+      , ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
+
     bounds.extend(sw);
     bounds.extend(center);
     bounds.extend(ne);
-    this.map.fitBounds(bounds);
-  };
-
-  function distance(p2, p1) {
-    var R = 6371; // Radius of the Earth in km
-    var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
-    var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c;
-    return d;
-  }
-
-  proto.fitCenter = function (position) {
-    var locations = this.locations, bounds = new google.maps.LatLngBounds(), i = 0, coords = [], location, uid, latlng;
-    /*
-    for (uid in locations) {
-      location = locations[uid];
-      if ('destination' === location._type) {
-        // bounds.extend(location.getPosition());
-        console.log('destination')
-        coords.push(location.getPosition());
-        i = 2;
-      }
-    }
-    */
-    if (position) {
-      // bounds.extend(latlng = new google.maps.LatLng(position.latitude, position.longitude));
-      // coords.push(latlng = new google.maps.LatLng(position.latitude, position.longitude));
-      latlng = new google.maps.LatLng(position.latitude, position.longitude);
-      i++;
-    } else {
-      latlng = this.map.getCenter();
-    }
-
-    var overlay = this.overlay;
-
-    if (1 < i) {
-    // this.map.fitBounds(bounds);
-      var points = [], point, coord;
-      while ((coord = coords.shift())) {
-        point = overlay.getProjection().fromLatLngToContainerPixel(coord);
-        points.push(point);
-      }
-
-      var c = overlay.getProjection().fromLatLngToContainerPixel(latlng), maxd = 0, d, p;
-      while ((p = points.shift())) {
-        d = Math.sqrt(Math.pow(p.x - c.x, 2) + Math.pow(p.y - c.y, 2));
-        console.log(d, p.x, c.x, p.y, c.y);
-        if (d > maxd) { maxd = d; }
-      }
-
-      var sw = overlay.getProjection().fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd, c.y - maxd));
-      var ne = overlay.getProjection().fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd, c.y + maxd));
-
-      bounds.extend(sw);
-      bounds.extend(latlng);
-      bounds.extend(ne);
-      this.map.fitBounds(bounds);
-
-    } else {
-      // this.map.setZoom(15);
-      this.map.panTo(latlng);
-    }
-  };
-
-  proto.updateBreadcrumbs = function (uid, positions) {
-    console.log('update breadcrumbs', uid);
-    if (this.myuid === uid) {
-      !this.geoLocation && this.updateGeoLocation(uid, latlng);
-      return;
-    }
-
-    var breadcrumbs = this.breadcrumbs, coords = [],  p, b, latlng, locate;
-    positions = positions.slice(0);
-    locate = positions[0];
-
-    while ((p = positions.shift())) {
-      latlng = new google.maps.LatLng(p.latitude, p.longitude);
-      coords.push(latlng);
-    }
-
-    b = breadcrumbs[uid];
-    if (!b) {
-      b = breadcrumbs[uid] = this.addBreadcrumbs(uid, positions);
-    }
-
-    latlng = coords[0];
-    b.setPath(coords);
-    b._uid = uid;
-    b._position = positions;
-
-    this.updateIdentityGeoLocation(uid, locate, latlng);
-
-    this.updateTipline(uid, latlng);
-  };
-
-  proto.updateIdentityGeoLocation = function (uid, locate, latlng) {
-    var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
-    if (!latlng) {
-      latlng = new google.maps.LatLng(locate.latitude, locate.longitude);
-    }
-    if (!gm) {
-      gm = geoMarkers[uid] = this.addLastPoint();
-    }
-    gm._location = locate;
-    gm.setPosition(latlng);
-    console.log(uid, latlng.lat(), latlng.lng(), this.geoLocation);
-    this.distancematrix(uid);
+    return bounds;
   };
 
   proto.addBreadcrumbs = function (uid, positions) {
@@ -330,40 +438,36 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  var distanceOutput = function (n, s, t, r) {
-    t = '<span class="unit">{{u}}</span>';
-    n = Math.floor(n);
-    r = {
-        text: ''
-      , status: 0
-    };
-    if (n < 30) {
-      r.status = 4;
-      r.text = '抵达';
-    } else if (n < 1000) {
-      r.text = n + t.replace('{{u}}', '米');
-    } else if (n < 9000) {
-      r.text = (n / 1000 + '').slice(0, 3) + t.replace('{{u}}', '公里');
-    } else {
-      r.text = 9 + '+' + t.replace('{{u}}', '公里');
-    }
+  var headingInRadians = function (p1, p2) {
+     var lat1 = p1.lat()
+      , lon1 = p1.lng()
+      , lat2 = p2.lat()
+      , lon2  = p2.lng()
+      , dLon = lon2 - lon1
+      , y = Math.sin(dLon) * Math.cos(lat2)
+      , x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        
+    return Math.atan2(y, x);
+  }
 
-    return r;
-  };
+  proto.distancematrix = function (uid, isGPS) {
+    var b = isGPS ? this.geoLocation : this.geoMarkers[uid]
+      , d = this.destinationPlace
+      , $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
+      , $detial = $identity.find('.detial')
+      , $icon = $detial.find('.icon')
+      , $distance = $detial.find('.distance');
 
-  proto.distancematrix = function (uid) {
-    var b = this.geoMarkers[uid]
-      , g = this.geoLocation;
-
-    if (b && g) {
+    if (b && d) {
+      $detial.css('visibility', 'visible');
       var start = b.getPosition()
-        , end = g.getPosition()
+        , end = d.getPosition()
         , r = distanceOutput(distance(start, end));
-      console.log('DistanceMatrixService', r, !!b, !!a);
+      console.log('DistanceMatrixService', r.text, r.status, !!b, !!d, headingInRadians(start, end));
       if (4 === r.status) {
-        $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.distance').text(r.text);
+        $distance.text(r.text);
       } else {
-        $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.distance').html(r.text);
+        $distance.html(r.text);
       }
       /*
       var service = new google.maps.DistanceMatrixService()
@@ -396,9 +500,9 @@ define('routexmaps', function (require) {
       );
       */
     } else if (b) {
-
+      $detial.css('visibility', 'visible');
     } else {
-
+      $detial.css('visibility', 'hidden');
     }
   };
 
@@ -490,38 +594,28 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  proto.hasDestination = false;
   proto.updatePoint = function (data) {
-    var locations = this.locations, id = data.id, bounds, locate, latlng, tags, tag;
+    var locations = this.locations, id = data.id, locate, latlng, tags, tag;
 
     locate = locations[id];
     if (!locate) {
       locate = locations[id] = this.addPoint(data);
     }
 
-    bounds = new google.maps.LatLngBounds();
-    latlng = new google.maps.LatLng(data.latitude, data.longitude);
-    bounds.extend(latlng);
-
     locate.setPosition(latlng);
     locate.setVisible(true);
 
-    if (!this.hasDestination) {
-      tags = data.tags.slice(0);
-      while ((tag = tags.shift())) {
-        if ('destination' === tag) {
-          locate._type = 'destination';
-          this.destinationLatlng = latlng;
-          this.hasDestination = true;
-          //this.fitCenter();
-          break;
-        }
+    tags = data.tags.slice(0);
+    while ((tag = tags.shift())) {
+      if ('destination' === tag) {
+        locate._type = 'destination';
+        this.destinationLocation = locate;
+        break;
       }
     }
 
     console.log(id, latlng.lat(), latlng.lng(), locate)
     locate._data = data;
-    locate._bounds = bounds;
   };
 
   proto.addLastPoint = function (latlng) {
@@ -568,6 +662,8 @@ define('routexmaps', function (require) {
         , closeBoxURL: ""
         , alignBottom: true
         , enableEventPropagation: false
+        , leftBoundary: 60
+        , zIndex: 610
       });
       infobox.open(self.map, this);
       infobox._marker = this;
@@ -604,11 +700,22 @@ define('routexmaps', function (require) {
   };
 
   proto.contains = function () {
-    var bounds = this.map.getBounds()
-      , ids = document.getElementById('identities')._ids || []
+    var mapBounds = this.map.getBounds()
+      , projection = this.overlay.getProjection()
+      , sw = mapBounds.getSouthWest()
+      , ne = mapBounds.getNorthEast()
+      , bounds = new google.maps.LatLngBounds()
       , geoMarkers = this.geoMarkers
+      , ids = document.getElementById('identities')._ids || {}
       , uid, gm, latlng;
     console.log('contains', ids)
+
+    sw = projection.fromLatLngToContainerPixel(sw);
+    sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y));
+
+    bounds.extend(sw);
+    bounds.extend(ne);
+
     for (uid in geoMarkers) {
       gm = geoMarkers[uid];
       latlng = gm.getPosition();
@@ -621,7 +728,7 @@ define('routexmaps', function (require) {
       bounds = this.map.getBounds();
     }
     if (!ids) {
-      ids = document.getElementById('identities')._ids || [];
+      ids = document.getElementById('identities')._ids || {};
     }
     if (bounds.contains(latlng) && (b = ids[uid])) {
       this.showTipline(uid, b);
@@ -671,6 +778,7 @@ define('routexmaps', function (require) {
       , s = [f[0] + 13, f[1]]
       , points = [f.join(','), s.join(',')].join(' ');
     p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng);
+    console.log('tipline', uid);
     tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
     tl.setAttributeNS(null, 'display', 'block');
   };
@@ -682,8 +790,9 @@ define('routexmaps', function (require) {
   };
 
   proto.updateGeoLocation = function (uid, position) {
-    var geoLocation = this.geoLocation;
+    var geoLocation = this.geoLocation, latlng;
     if (!geoLocation) {
+      // status: 0-init, 1-last-latlng, 2: new-latlng
       geoLocation = this.geoLocation = new google.maps.Marker({
           map: this.map
         , zIndex: 377
@@ -698,15 +807,30 @@ define('routexmaps', function (require) {
         , animation: 2
         , icon: this.icons.arrowGrey
       });
-      geoLocation._uid = uid;
-      var lastlatlng = Store.get('last-latlng');
+      geoLocation._status = 0;
+      var lastlatlng = JSON.parse(window.localStorage.getItem('last-latlng'));
       if (lastlatlng) {
-        geoLocation.setPosition(new google.maps.LatLng(lastlatlng.lat, lastlatlng.lng));
+        geoLocation._status = 1;
+        latlng = new google.maps.LatLng(lastlatlng.lat, lastlatlng.lng);
+        geoLocation.setPosition(latlng);
+        this.map.setZoom(15);
+        this.map.panTo(latlng);
+        console.log('init position', lastlatlng);
       }
     }
     if (position) {
       geoLocation.setIcon(this.icons.arrowBlue);
       geoLocation.setPosition(new google.maps.LatLng(position.latitude, position.longitude));
+      geoLocation._status = 2;
+    }
+    geoLocation._uid = uid;
+  };
+
+  // status: 0-grey, 1-blue
+  proto.switchGEOStyle = function (status) {
+    var geoLocation = this.geoLocation;
+    if (geoLocation) {
+      geoLocation.setIcon(this.icons['arrow' + (status ? 'Blue' : 'Grey')]);
     }
   };
 
