@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 07:07:44 */
+/*! mobile@2a 2013-07-22 07:07:56 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4031,7 +4031,7 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.toLatLng = function(latitude, longitude) {
-    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(latitude - this.latOffset, longitude - this.lngOffset);
+    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(latitude + this.latOffset, longitude + this.lngOffset);
   }, proto.drawIdentityPaths = function(data) {
     var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
     for (uid in data) {
