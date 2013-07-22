@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 05:07:19 */
+/*! mobile@2a 2013-07-22 06:07:35 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4233,7 +4233,7 @@ TWEEN.Tween = function(object) {
     if (tl) {
       var f = [ bound[1], bound[2] ], s = [ f[0] + 13, f[1] ], points = [ f.join(","), s.join(",") ].join(" ");
       p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), console.log("tipline", uid), 
-      tl.setAttribute("points", points + " " + p.x + "," + p.y), tl.setAttributeNS(null, "display", "block");
+      tl.setAttribute("points", points + " " + p.x + "," + (p.y + 60)), tl.setAttributeNS(null, "display", "block");
     }
   }, proto.hideTipline = function(uid) {
     var tl = this.tiplines[uid];
@@ -5195,8 +5195,9 @@ TWEEN.Tween = function(object) {
     listen: function() {
       var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate"), isScroll = !1;
       $win.on("orientationchange", function() {
-        $win.height(), $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), 
-        $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)");
+        var height = $win.height();
+        $win.width(), $("#identities").css("max-height", 60 * Math.round(height / 60) - 60 - 100 + 5), 
+        $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)");
       });
       var gotoGPS = function(e, showBreadcrumbs) {
         var status = self.checkGPSStyle();
@@ -5207,16 +5208,13 @@ TWEEN.Tween = function(object) {
         2 === status || 1 === status && self.startStream();
       };
       element.on("tap.maps", function(e) {
-        e.target === self.tapElement || $.contains($infoWins[0], e.target) || ($infoWins.addClass("hide"), 
+        self.tapElement && e.target !== self.tapElement && !$.contains($infoWins[0], e.target) && ($infoWins.addClass("hide"), 
         self.tapElement = null);
-      }), element.on("tap.maps", "#locate", gotoGPS), element.on("tap.maps", "#isme .avatar", function(e) {
-        if (!isScroll) {
-          if (gotoGPS(e, !0), self.tapElement === this) return $infoWins.addClass("hide"), 
-          self.tapElement = null, !1;
-          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
-          $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
-          self.tapElement = this;
-        }
+      }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
+        return gotoGPS(e, !0), self.tapElement === this ? ($infoWins.addClass("hide"), self.tapElement = null, 
+        !1) : ($infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
+        $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
+        self.tapElement = this, void 0);
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
@@ -5266,12 +5264,16 @@ TWEEN.Tween = function(object) {
         }), self.mapController && self.mapController.contains(), console.dir(ids);
       }), element.on("touchmove.maps", "#identities-overlay", function(e) {
         e.stopPropagation(), e.preventDefault();
+      }), element.on("touchmove", ".info-windown", function(e) {
+        e.preventDefault();
       });
-      var pageY = 0, scrollTop = 0;
+      var _t, pageY = 0, scrollTop = 0;
       $identities.on("touchstart.maps", function(e) {
-        pageY = e.pageY, scrollTop = this.scrollTop;
-      }), $identities.on("touchstart.maps", function(e) {
-        pageY = e.pageY, scrollTop = this.scrollTop, isScroll = !1;
+        isScroll = !1, pageY = e.pageY, scrollTop = this.scrollTop;
+      }), $identities.on("touchend.maps", function() {
+        _t && clearTimeout(_t), _t = setTimeout(function() {
+          isScroll = !1;
+        }, 233);
       }), $identities.on("touchmove.maps", function(e) {
         isScroll = !0, e.preventDefault(), console.log(e.pageY, e), this.scrollTop = pageY - e.pageY + scrollTop;
       }), self.on("show", function() {

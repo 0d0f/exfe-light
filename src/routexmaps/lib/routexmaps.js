@@ -786,7 +786,7 @@ define('routexmaps', function (require) {
       , points = [f.join(','), s.join(',')].join(' ');
     p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng);
     console.log('tipline', uid);
-    tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
+    tl.setAttribute('points', points  + ' ' + p.x + ',' + (p.y + 60));
     tl.setAttributeNS(null, 'display', 'block');
   };
 
