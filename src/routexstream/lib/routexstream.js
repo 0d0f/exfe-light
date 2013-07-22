@@ -52,7 +52,7 @@ define('routexstream', function (require) {
             url     : streaming_api_url + '/v3/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
             data    : JSON.stringify(myData),
             success : function (data) {
-              console.dir(data);
+              localStorage.setItem('offset-latlng', JSON.stringify(data));
             },
             error   : function (data) {
                 var status = data.status;

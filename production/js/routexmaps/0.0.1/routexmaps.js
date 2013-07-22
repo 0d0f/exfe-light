@@ -45,6 +45,9 @@ define('routexmaps', function (require) {
     this.svgLayer = this.options.svg;
     this.options.svg = null;
 
+    this.latOffset = 0;
+    this.lngOffset = 0;
+
     this.routes = {};
     this.places = {};
     this.locations = {};
@@ -100,7 +103,7 @@ define('routexmaps', function (require) {
         // hdpi
         GMaps.visualRefresh = true;
         // defaults to China
-        mapOptions.center = new GMaps.LatLng(35.86166, 104.195397);
+        mapOptions.center = rm.toLatLng(35.86166, 104.195397);
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP;
         mapOptions.disableDefaultUI = true;
 
@@ -243,11 +246,12 @@ define('routexmaps', function (require) {
   };
 
   proto.toLatLng = function (latitude, longitude) {
-    return new google.maps.LatLng(latitude, longitude);
+    console.log(this.latOffset, this.lngOffset);
+    return new google.maps.LatLng(latitude - this.latOffset, longitude - this.lngOffset);
   };
 
   proto.drawIdentityPaths = function (data) {
-    var bs = this.breadcrumbs, toLatLng = this.toLatLng, dp = this.destinationPlace
+    var bs = this.breadcrumbs, dp = this.destinationPlace
       , uid, b, d, p, positions, coords, latlng, gm;
     for (uid in data) {
       d = data[uid];
@@ -259,7 +263,7 @@ define('routexmaps', function (require) {
       }
 
       while ((p = positions.shift())) {
-        coords.push(toLatLng(p.latitude, p.longitude));
+        coords.push(this.toLatLng(p.latitude, p.longitude));
       }
 
       latlng = coords[0];
@@ -274,6 +278,7 @@ define('routexmaps', function (require) {
   };
 
   proto.drawGeoMarker = function (uid, data, latlng) {
+    console.log('myuid === uid', this.myuid, uid, this.myuid === uid);
     if (this.myuid === uid) {
       return this.geoLocation;
     }
@@ -283,6 +288,8 @@ define('routexmaps', function (require) {
     }
     gm.setPosition(latlng);
     gm._data = data;
+
+    this.updateTipline(uid, latlng);
     return gm;
   };
 
@@ -536,7 +543,7 @@ define('routexmaps', function (require) {
     bounds = new google.maps.LatLngBounds();
 
     while ((p = positions.shift())) {
-      latlng = new google.maps.LatLng(p.latitude, p.longitude);
+      latlng = this.toLatLng(p.latitude, p.longitude);
       bounds.extend(latlng);
       coords.push(latlng);
     }
@@ -613,12 +620,12 @@ define('routexmaps', function (require) {
   };
 
   proto.addPoint = function (data) {
+    console.log(data.icon);
     var self = this
       , GMaps = google.maps
       , m = new GMaps.Marker({
           map: this.map
         , animation: 2
-        // , position: new google.maps.LatLng(data.latitude, data.longitude)
         , visible: false
         , zIndex: 233
         , icon: new google.maps.MarkerImage(
@@ -790,7 +797,7 @@ define('routexmaps', function (require) {
       var lastlatlng = JSON.parse(window.localStorage.getItem('last-latlng'));
       if (lastlatlng) {
         geoLocation._status = 1;
-        latlng = new google.maps.LatLng(lastlatlng.lat, lastlatlng.lng);
+        latlng = this.toLatLng(lastlatlng.lat, lastlatlng.lng);
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
@@ -798,7 +805,7 @@ define('routexmaps', function (require) {
     }
     if (position) {
       geoLocation.setIcon(this.icons.arrowBlue);
-      geoLocation.setPosition(new google.maps.LatLng(position.latitude, position.longitude));
+      geoLocation.setPosition(this.toLatLng(position.latitude, position.longitude));
       geoLocation._status = 2;
     }
     geoLocation._uid = uid;

@@ -1647,7 +1647,8 @@ define('mobilecontroller', function (require, exports, module) {
           , $win = $(window)
           , $infoWins = self.$('#info-wins')
           , $openExfe = self.$('#open-exfe')
-          , $locate = self.$('#locate');
+          , $locate = self.$('#locate')
+          , isScroll = false;
 
         // 监听横竖屏切换
         $win.on('orientationchange', function () {
@@ -1682,6 +1683,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
         element.on('tap.maps', '#locate', gotoGPS);
         element.on('tap.maps', '#isme .avatar', function (e) {
+          if (isScroll) { return; }
           gotoGPS(e, true);
 
           if (self.tapElement === this) {
@@ -1701,6 +1703,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#identities .avatar', function (e) {
+          if (isScroll) { return; }
           var $that = $(this)
             , $d = $that.parent().parent()
             , uid = $d.data('uid');
@@ -1778,8 +1781,8 @@ define('mobilecontroller', function (require, exports, module) {
           }
           var $avatars = $(this).find('.avatar')
             , pb = this.getBoundingClientRect()
-            , scrollTop = this.scrollTop
             , height = pb.height
+            , scrollTop = this.scrollTop
             , minT = pb.top
             , maxT = height + minT
             , ids =  this._ids = {};
@@ -1796,16 +1799,35 @@ define('mobilecontroller', function (require, exports, module) {
 
           self.mapController && self.mapController.contains();
           console.dir(ids);
+        });
 
-          if (scrollTop <= 0 || scrollTop + height >= this.scrollHeight) {
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-          }
+        element.on('touchmove.maps', '#identities-overlay', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        });
+
+        var pageY = 0, scrollTop = 0;
+        $identities.on('touchstart.maps', function (e) {
+          pageY = e.pageY;
+          scrollTop = this.scrollTop;
+        });
+        $identities.on('touchstart.maps', function (e) {
+          pageY = e.pageY;
+          scrollTop = this.scrollTop;
+          isScroll = false;
+        });
+        $identities.on('touchmove.maps', function (e) {
+          isScroll = true;
+          e.preventDefault();
+          console.log(e.pageY, e);
+          this.scrollTop = (pageY - e.pageY) + scrollTop;
         });
 
         self.on('show', function () {
-          $('html, body').css('min-height', $win.height());
+          $('html, body').css({
+              'min-height': $win.height()
+            //, 'overflow': 'hidden'
+          });
 
           console.log('This is Smith-Token.', self.isSmithToken);
 
@@ -1867,12 +1889,22 @@ define('mobilecontroller', function (require, exports, module) {
                 self.mapController.updateGeoLocation(null);
               }
         });
+        mc.myuid = this.myuid;
+        this.setLatLngOffset();
         // defaults to true
         mc.tracking = true
         mc.load();
       }
 
     , mapReadyStatus: false
+
+    , setLatLngOffset: function () {
+        var offset = Store.get('offset-latlng');
+        if (offset) {
+          this.mapController.latOffset = offset.earth_to_mars_latitude * 1;
+          this.mapController.lngOffset = offset.earth_to_mars_longitude * 1;
+        }
+      }
 
     , streaming: function () {
         this.initStream();
@@ -1886,7 +1918,11 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (type, result) {
-              self.mapController && self.mapController.draw(type, result);
+              if (self.mapController) {
+                self.setLatLngOffset();
+                self.mapController.myuid = self.myuid;
+                self.mapController.draw(type, result);
+              }
             }
           , function (e) {
               console.log(e);
@@ -1941,16 +1977,14 @@ define('mobilecontroller', function (require, exports, module) {
           , mapReadyStatus = this.mapReadyStatus;
         if (mapReadyStatus && mapController) {
           console.log('tracking');
-          mapController.myuid = this.myuid;
+          this.setLatLngOffset();
           mapController.updateGeoLocation(this.myuid, position);
 
-          /*
           var identities = document.getElementById('identities');
           if (!identities._ids) {
             identities.scrollTop = 1;
             identities.scrollTop = 0;
           }
-          */
         }
       }
 
