@@ -1726,51 +1726,6 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
-        /*
-        element.on('touchstart.maps', '#identities-overlay .avatar', function () {
-          var $that = $(this)
-            , $d = $that.parent().parent()
-            , isMe = $d.attr('id') === 'isme'
-            , uid = $d.data('uid')
-            , index = $d.index()
-            // pre-uid
-            , puid = self.mapController && self.mapController.uid
-            , selected = !!$d.hasClass('selected');
-
-          $d.parents('#identities-overlay').find('.selected').removeClass('selected');
-          $d.toggleClass('selected', !selected);
-
-          console.log('uid', uid, 'puid', puid, 'isMe', isMe, 'selected', selected);
-          if (isMe) {
-            return;
-          }
-
-          // clear pre line
-          if (selected || puid !== uid) {
-            self.mapController.hideTipline(puid);
-            self.mapController.hideBreadcrumbs(puid);
-            self.mapController.uid = null;
-          }
-
-          if (!selected) {
-            self.mapController.showTipline(uid);
-            self.mapController.showBreadcrumbs(uid);
-            // self.mapController.fitBounds();
-          }
-        });
-
-        $('#identities').on('scroll.maps', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log(233, 'scroll')
-        // element.on('scroll.maps', '#identities', function () {
-          var uid = self.mapController && self.mapController.uid;
-          if (uid) {
-            self.mapController.showTipline(uid);
-          }
-        });
-        */
-
         element.on('tap.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
             , id = $that.data('identity-id')

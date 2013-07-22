@@ -51,8 +51,10 @@ define('routexstream', function (require) {
             type    : 'post',
             url     : streaming_api_url + '/v3/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
             data    : JSON.stringify(myData),
-            success : function() {},
-            error   : function(data) {
+            success : function (data) {
+              console.dir(data);
+            },
+            error   : function (data) {
                 var status = data.status;
                 if (status && status >= 400 && status <= 499) {
                     log('Unauthorized.');

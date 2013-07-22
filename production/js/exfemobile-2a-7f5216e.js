@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 11:07:03 */
+/*! mobile@2a 2013-07-22 02:07:25 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3796,7 +3796,9 @@ TWEEN.Tween = function(object) {
       type: "post",
       url: streaming_api_url + "/v3/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
       data: JSON.stringify(myData),
-      success: function() {},
+      success: function(data) {
+        console.dir(data);
+      },
       error: function(data) {
         var status = data.status;
         status && status >= 400 && 499 >= status ? (log("Unauthorized."), unat_cbf && (token = "", 
