@@ -46,7 +46,7 @@ define('routexstream', function (require) {
         }
         submit_request = $.ajax({
             type    : 'post',
-            url     : api_url + '/v3/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
+            url     : api_url + '/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
             data    : JSON.stringify(myData),
             success : function (data) {
               localStorage.setItem('offset-latlng', JSON.stringify(data));
@@ -202,7 +202,7 @@ define('routexstream', function (require) {
         }
         if (!stream.live && token) {
             stream.init(
-                api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
+                api_url + '/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
