@@ -7,3 +7,5 @@ rm -rf production/css/exfemobile-*
 grunt less buildcss:MOBILE update:package deploy:meta --force
 
 grunt publish:MOBILE uglifymulti:MOBILE concat:MOBILE gitsha1:MOBILE uglify:MOBILE_beautify uglify:MOBILE update:package deploy:meta  --force
+
+rm -rf production/css/exfe.*

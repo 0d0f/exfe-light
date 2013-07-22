@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 02:07:25 */
+/*! mobile@2a 2013-07-22 02:07:47 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3972,14 +3972,12 @@ TWEEN.Tween = function(object) {
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), initListener = GEvent.addListener(map, "tilesloaded", function() {
           GEvent.addListener(map, "bounds_changed", function() {
-            console.log("bounds_end", rm.uid), GEvent.trigger(map, "zoom_changed");
+            GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
-            console.log("zoom_end"), rm.contains();
-          }), GEvent.addListener(map, "drag", function() {
-            console.log("drag");
-          }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            console.log("touchstart", rm.uid), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
-              console.log("touchmove"), rm.hideTiplines();
+            rm.contains();
+          }), GEvent.addListener(map, "drag", function() {}), GEvent.addDomListener(mapDiv, "touchstart", function() {
+            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+              rm.hideTiplines();
             });
           }), GEvent.removeListener(initListener);
         }), overlay = rm.overlay = new GMaps.OverlayView();
@@ -4001,14 +3999,14 @@ TWEEN.Tween = function(object) {
     }, 30 > n ? (r.status = 4, r.text = "抵达") : r.text = 1e3 > n ? n + t.replace("{{u}}", "米") : 9e3 > n ? (n / 1e3 + "").slice(0, 3) + t.replace("{{u}}", "公里") : "9+" + t.replace("{{u}}", "公里"), 
     r;
   }, proto = RoutexMaps.prototype;
-  proto.load = function(cb) {
+  return proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.onload = n.onerror = n.onreadystatechange = function() {
       /^(?:loaded|complete|undefined)$/.test(n.readyState) && (n = n.onload = n.onerror = n.onreadystatechange = null, 
       cb && cb());
     }, n.async = !0, n.src = this.options.url, document.body.appendChild(n);
   }, proto.draw = function(type, data) {
-    if (console.log("type", type, data), "geomarks" === type) {
+    if ("geomarks" === type) {
       var item, st, rs = [], ps = [];
       for (data = data.slice(0); item = data.shift(); ) st = item.type, "route" === st ? rs.push(item) : "location" === st && ps.push(item);
       this.drawRoutes(rs), this.drawPlaces(ps);
@@ -4018,12 +4016,11 @@ TWEEN.Tween = function(object) {
     for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
     for (;item = rs.shift(); ) ;
   }, proto.drawPlaces = function(ps) {
-    console.log("draw places", ps.length, ps), this.destinationPlace = null;
+    this.destinationPlace = null;
     var p, k, item, places = this.places;
     for (k in places) p = places[k], p.setMap(null), p = null, delete places[k];
     for (;item = ps.shift(); ) this.addPlace(item);
   }, proto.addPlace = function(data) {
-    console.log("add a place", data);
     var place, tags, tag, id = data.id, latlng = this.toLatLng(data.latitude, data.longitude);
     if (place = this.places[id] = this.addPoint(data), place._data = data, place.setPosition(latlng), 
     place.setVisible(!0), !this.destinationPlace) for (tags = data.tags.slice(0); tag = tags.shift(); ) if ("destination" === tag) {
@@ -4055,15 +4052,13 @@ TWEEN.Tween = function(object) {
     });
     return gm;
   }, proto.distanceMatrix = function(uid, gm, dp) {
-    console.log(uid, "destination", dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
     if (gm && dp) {
       var p0 = gm.getPosition(), p1 = dp.getPosition(), lat1 = p0.lat(), lng1 = p0.lng(), lat2 = p1.lat(), lng2 = p1.lng(), d = distance(lat2, lng2, lat1, lng1), r = Math.round(180 * calRotate(lat2, lng2, lat1, lng1) / Math.PI), result = distanceOutput(d);
-      result.rotate = r, console.dir(result), $distance.html(result.text), $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-grey") || $icon.attr("class", "icon icon-arrow-grey"), 
+      result.rotate = r, $distance.html(result.text), $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-grey") || $icon.attr("class", "icon icon-arrow-grey"), 
       $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $detial.css("visibility", "visible");
     } else gm ? $detial.css("visibility", "visible") : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
-    console.log("fit bounds with destination");
     var destinationPlace = this.destinationPlace, isme = this.myuid === uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition(), projection = this.overlay.getProjection(), map = this.map;
@@ -4106,18 +4101,12 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  };
-  var headingInRadians = function(p1, p2) {
-    var lat1 = p1.lat(), lon1 = p1.lng(), lat2 = p2.lat(), lon2 = p2.lng(), dLon = lon2 - lon1, y = Math.sin(dLon) * Math.cos(lat2), x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-    return Math.atan2(y, x);
-  };
-  return proto.distancematrix = function(uid, isGPS) {
+  }, proto.distancematrix = function(uid, isGPS) {
     var b = isGPS ? this.geoLocation : this.geoMarkers[uid], d = this.destinationPlace, $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $distance = ($detial.find(".icon"), 
     $detial.find(".distance"));
     if (b && d) {
       $detial.css("visibility", "visible");
       var start = b.getPosition(), end = d.getPosition(), r = distanceOutput(distance(start, end));
-      console.log("DistanceMatrixService", r.text, r.status, !!b, !!d, headingInRadians(start, end)), 
       4 === r.status ? $distance.text(r.text) : $distance.html(r.text);
     } else b ? $detial.css("visibility", "visible") : $detial.css("visibility", "hidden");
   }, proto.hideBreadcrumbs = function(uid) {
@@ -4126,7 +4115,7 @@ TWEEN.Tween = function(object) {
   }, proto.showBreadcrumbs = function(uid) {
     var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
     uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
-    this.uid = uid, console.log("showBreadcrumbs", puid, uid);
+    this.uid = uid;
   }, proto.showGeoMarker = function() {}, proto.updatePolyline = function(data) {
     var p, route, bounds, latlng, routes = this.routes, coords = [], uid = data.created_by, positions = data.positions.slice(0);
     for (route = routes[uid], route || (route = routes[uid] = this.addPolyline(data)), 
@@ -4161,7 +4150,7 @@ TWEEN.Tween = function(object) {
       locate._type = "destination", this.destinationLocation = locate;
       break;
     }
-    console.log(id, latlng.lat(), latlng.lng(), locate), locate._data = data;
+    locate._data = data;
   }, proto.addLastPoint = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4179,7 +4168,7 @@ TWEEN.Tween = function(object) {
       icon: new google.maps.MarkerImage(data.icon, new google.maps.Size(48, 68), new google.maps.Point(0, 0), new google.maps.Point(12, 34), new google.maps.Size(24, 34))
     }), GEvent = GMaps.event;
     return GEvent.addListener(m, "mousedown", function(e) {
-      if (console.log("marker mousedown", e), e && e.stop(), self.removeInfobox(this)) return !1;
+      if (e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description),
         maxWidth: 200,
@@ -4192,8 +4181,8 @@ TWEEN.Tween = function(object) {
         leftBoundary: 60,
         zIndex: 610
       });
-      infobox.open(self.map, this), infobox._marker = this, GEvent.addListenerOnce(this, "mouseout", function(e) {
-        console.log("mouseout", e), infobox.close(), infobox = self.infobox = null;
+      infobox.open(self.map, this), infobox._marker = this, GEvent.addListenerOnce(this, "mouseout", function() {
+        infobox.close(), infobox = self.infobox = null;
       });
     }), m;
   }, proto.removeInfobox = function(marker) {
@@ -4207,7 +4196,7 @@ TWEEN.Tween = function(object) {
     return bounds;
   }, proto.contains = function() {
     var uid, gm, latlng, mapBounds = this.map.getBounds(), projection = this.overlay.getProjection(), sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new google.maps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
-    console.log("contains", ids), sw = projection.fromLatLngToContainerPixel(sw), sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y)), 
+    sw = projection.fromLatLngToContainerPixel(sw), sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y)), 
     bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
@@ -4221,7 +4210,6 @@ TWEEN.Tween = function(object) {
     tl || (tl = this.tiplines[uid] = this.addTipline(uid)), latlng && (tl._lastlatlng = latlng, 
     this.containsOne(uid, latlng));
   }, proto.addTipline = function(uid) {
-    console.log("tipline", uid);
     var tl = (this.breadcrumbs[uid], document.createElementNS("http://www.w3.org/2000/svg", "polyline"));
     return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#FF7E98"), tl.setAttribute("stroke-width", 1), 
     tl.setAttribute("style", "-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));"), 
@@ -4230,8 +4218,8 @@ TWEEN.Tween = function(object) {
     var p, tl = this.tiplines[uid];
     if (tl) {
       var f = [ bound[1], bound[2] ], s = [ f[0] + 13, f[1] ], points = [ f.join(","), s.join(",") ].join(" ");
-      p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), console.log("tipline", uid), 
-      tl.setAttribute("points", points + " " + p.x + "," + p.y), tl.setAttributeNS(null, "display", "block");
+      p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), tl.setAttribute("points", points + " " + p.x + "," + p.y), 
+      tl.setAttributeNS(null, "display", "block");
     }
   }, proto.hideTipline = function(uid) {
     var tl = this.tiplines[uid];
@@ -4248,7 +4236,7 @@ TWEEN.Tween = function(object) {
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
       lastlatlng && (geoLocation._status = 1, latlng = new google.maps.LatLng(lastlatlng.lat, lastlatlng.lng), 
-      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
+      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
     }
     position && (geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(new google.maps.LatLng(position.latitude, position.longitude)), 
     geoLocation._status = 2), geoLocation._uid = uid;
@@ -4540,7 +4528,7 @@ TWEEN.Tween = function(object) {
         read_only || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
         $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), iPad && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(args, cb) {
-        window.launchApp(app_prefix_url + args, cb);
+        window.launchApp(app_prefix_url + args, cb, 500);
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {
@@ -4593,7 +4581,7 @@ TWEEN.Tween = function(object) {
         }
         var done = function(args) {
           App.controllers.footer.emit("redirect", args, function() {
-            var search = window.search.substr(1);
+            var search = window.location.search.substr(1);
             search && (search = "&" + search), window.location = "/?redirect" + search + window.location.hash;
           });
         }, user_id = resolveToken.user_id, token = resolveToken.token;
@@ -5477,7 +5465,7 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, cross = response.cross, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, smith_identity_id = browsing_identity && browsing_identity.id, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
         options: {
@@ -5487,8 +5475,8 @@ TWEEN.Tween = function(object) {
         cross: cross,
         token: token,
         ctoken: ctoken,
-        myIdentityId: browsing_identity.id,
-        isSmithToken: smith_identity_id === _ENV_.SMITH_ID,
+        myIdentityId: browsing_identity && browsing_identity.id || 0,
+        isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities
       });
       routexCont.emit("show");
