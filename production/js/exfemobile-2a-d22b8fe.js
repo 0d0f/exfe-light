@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 02:07:22 */
+/*! mobile@2a 2013-07-22 05:07:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3797,7 +3797,7 @@ TWEEN.Tween = function(object) {
       url: streaming_api_url + "/v3/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
       data: JSON.stringify(myData),
       success: function(data) {
-        console.dir(data);
+        localStorage.setItem("offset-latlng", JSON.stringify(data));
       },
       error: function(data) {
         var status = data.status;
@@ -3955,8 +3955,9 @@ TWEEN.Tween = function(object) {
   "use strict";
   function RoutexMaps(options) {
     options = this.options = options || {}, this.svgLayer = this.options.svg, this.options.svg = null, 
-    this.routes = {}, this.places = {}, this.locations = {}, this.tiplines = {}, this.breadcrumbs = {}, 
-    this.geoMarkers = {}, this.icons = {}, this.boundsOffset = {
+    this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.locations = {}, 
+    this.tiplines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, 
+    this.boundsOffset = {
       left: 50,
       top: 0
     }, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -3968,7 +3969,7 @@ TWEEN.Tween = function(object) {
         icons.dotRed = new GMaps.MarkerImage("/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.arrowBlue = new GMaps.MarkerImage("/static/img/map_arrow_blue@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
         icons.arrowGrey = new GMaps.MarkerImage("/static/img/map_arrow_g5@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
-        GMaps.visualRefresh = !0, mapOptions.center = new GMaps.LatLng(35.86166, 104.195397), 
+        GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), initListener = GEvent.addListener(map, "tilesloaded", function() {
           GEvent.addListener(map, "bounds_changed", function() {
@@ -4033,19 +4034,19 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.toLatLng = function(latitude, longitude) {
-    return new google.maps.LatLng(latitude, longitude);
+    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(latitude - this.latOffset, longitude - this.lngOffset);
   }, proto.drawIdentityPaths = function(data) {
-    var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, toLatLng = this.toLatLng, dp = this.destinationPlace;
+    var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
     for (uid in data) {
-      for (d = data[uid], b = bs[uid], positions = d.slice(0), coords = [], b || (b = bs[uid] = this.addBreadcrumbs()); p = positions.shift(); ) coords.push(toLatLng(p.latitude, p.longitude));
+      for (d = data[uid], b = bs[uid], positions = d.slice(0), coords = [], b || (b = bs[uid] = this.addBreadcrumbs()); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
       latlng = coords[0], b.setPath(coords), b._uid = uid, b._data = d, gm = this.drawGeoMarker(uid, positions[0], latlng), 
       this.distanceMatrix(uid, gm, dp);
     }
   }, proto.drawGeoMarker = function(uid, data, latlng) {
-    if (this.myuid === uid) return this.geoLocation;
+    if (console.log("myuid === uid", this.myuid, uid, this.myuid === uid), this.myuid === uid) return this.geoLocation;
     var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
     return gm || (gm = geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    gm._data = data, gm;
+    gm._data = data, this.updateTipline(uid, latlng), gm;
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4130,7 +4131,7 @@ TWEEN.Tween = function(object) {
   }, proto.showGeoMarker = function() {}, proto.updatePolyline = function(data) {
     var p, route, bounds, latlng, routes = this.routes, coords = [], uid = data.created_by, positions = data.positions.slice(0);
     for (route = routes[uid], route || (route = routes[uid] = this.addPolyline(data)), 
-    bounds = new google.maps.LatLngBounds(); p = positions.shift(); ) latlng = new google.maps.LatLng(p.latitude, p.longitude), 
+    bounds = new google.maps.LatLngBounds(); p = positions.shift(); ) latlng = this.toLatLng(p.latitude, p.longitude), 
     bounds.extend(latlng), coords.push(latlng);
     route._data = data, route._bounds = bounds, route.setPath(coords), this.updateTipline(uid, latlng);
   }, proto.addPolyline = function(data) {
@@ -4171,6 +4172,7 @@ TWEEN.Tween = function(object) {
     });
     return gm;
   }, proto.addPoint = function(data) {
+    console.log(data.icon);
     var self = this, GMaps = google.maps, m = new GMaps.Marker({
       map: this.map,
       animation: 2,
@@ -4247,10 +4249,10 @@ TWEEN.Tween = function(object) {
         icon: this.icons.arrowGrey
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
-      lastlatlng && (geoLocation._status = 1, latlng = new google.maps.LatLng(lastlatlng.lat, lastlatlng.lng), 
+      lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(lastlatlng.lat, lastlatlng.lng), 
       geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
     }
-    position && (geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(new google.maps.LatLng(position.latitude, position.longitude)), 
+    position && (geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(this.toLatLng(position.latitude, position.longitude)), 
     geoLocation._status = 2), geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
@@ -5191,7 +5193,7 @@ TWEEN.Tween = function(object) {
       $("#app-routex").remove(), this.element.appendTo($("#app-container")), this.loadMaps();
     },
     listen: function() {
-      var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate");
+      var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate"), isScroll = !1;
       $win.on("orientationchange", function() {
         $win.height(), $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), 
         $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)");
@@ -5208,20 +5210,25 @@ TWEEN.Tween = function(object) {
         e.target === self.tapElement || $.contains($infoWins[0], e.target) || ($infoWins.addClass("hide"), 
         self.tapElement = null);
       }), element.on("tap.maps", "#locate", gotoGPS), element.on("tap.maps", "#isme .avatar", function(e) {
-        return gotoGPS(e, !0), self.tapElement === this ? ($infoWins.addClass("hide"), self.tapElement = null, 
-        !1) : ($infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
-        $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
-        self.tapElement = this, void 0);
+        if (!isScroll) {
+          if (gotoGPS(e, !0), self.tapElement === this) return $infoWins.addClass("hide"), 
+          self.tapElement = null, !1;
+          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
+          $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
+          self.tapElement = this;
+        }
       }), element.on("tap.maps", "#identities .avatar", function() {
-        var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
-        if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
-        self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
-        !1;
-        $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#my-info").addClass("hide"), 
-        $infoWins.find("#other-info").removeClass("hide");
-        var bound = this.getBoundingClientRect();
-        $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
-        self.tapElement = this;
+        if (!isScroll) {
+          var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
+          if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
+          self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
+          !1;
+          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#my-info").addClass("hide"), 
+          $infoWins.find("#other-info").removeClass("hide");
+          var bound = this.getBoundingClientRect();
+          $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
+          self.tapElement = this;
+        }
       }), element.on("tap.maps", "#free-identities .identities li", function() {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
         if (!touched) {
@@ -5249,18 +5256,29 @@ TWEEN.Tween = function(object) {
         }
       });
       var $identities = element.find("#identities");
-      $identities.on("scroll.maps", function(e) {
+      $identities.on("scroll.maps", function() {
         $infoWins.hasClass("hide") || $infoWins.addClass("hide");
-        var $avatars = $(this).find(".avatar"), pb = this.getBoundingClientRect(), scrollTop = this.scrollTop, height = pb.height, minT = pb.top, maxT = height + minT, ids = this._ids = {};
-        return $avatars.each(function(i) {
+        var $avatars = $(this).find(".avatar"), pb = this.getBoundingClientRect(), height = pb.height, minT = (this.scrollTop, 
+        pb.top), maxT = height + minT, ids = this._ids = {};
+        $avatars.each(function(i) {
           var bound = this.getBoundingClientRect(), uid = $(this).parents(".identity").data("uid"), t = bound.height / 2 + bound.top;
           t >= minT && maxT >= t && (ids[uid] = [ i, 46, t ]);
-        }), self.mapController && self.mapController.contains(), console.dir(ids), 0 >= scrollTop || scrollTop + height >= this.scrollHeight ? (e.stopPropagation(), 
-        e.preventDefault(), !1) : void 0;
+        }), self.mapController && self.mapController.contains(), console.dir(ids);
+      }), element.on("touchmove.maps", "#identities-overlay", function(e) {
+        e.stopPropagation(), e.preventDefault();
+      });
+      var pageY = 0, scrollTop = 0;
+      $identities.on("touchstart.maps", function(e) {
+        pageY = e.pageY, scrollTop = this.scrollTop;
+      }), $identities.on("touchstart.maps", function(e) {
+        pageY = e.pageY, scrollTop = this.scrollTop, isScroll = !1;
+      }), $identities.on("touchmove.maps", function(e) {
+        isScroll = !0, e.preventDefault(), console.log(e.pageY, e), this.scrollTop = pageY - e.pageY + scrollTop;
       }), self.on("show", function() {
-        $("html, body").css("min-height", $win.height()), console.log("This is Smith-Token.", self.isSmithToken), 
-        self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), self.getFreeIdentities()) : (self.createIdentitiesList(), 
-        self.streaming()), $win.trigger("orientationchange");
+        $("html, body").css({
+          "min-height": $win.height()
+        }), console.log("This is Smith-Token.", self.isSmithToken), self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), 
+        self.getFreeIdentities()) : (self.createIdentitiesList(), self.streaming()), $win.trigger("orientationchange");
       });
     },
     updateExfeeName: function() {
@@ -5285,16 +5303,21 @@ TWEEN.Tween = function(object) {
           self.mapReadyStatus = !0, self.mapController.updateGeoLocation(null);
         }
       });
-      mc.tracking = !0, mc.load();
+      mc.myuid = this.myuid, this.setLatLngOffset(), mc.tracking = !0, mc.load();
     },
     mapReadyStatus: !1,
+    setLatLngOffset: function() {
+      var offset = Store.get("offset-latlng");
+      offset && (this.mapController.latOffset = 1 * offset.earth_to_mars_latitude, this.mapController.lngOffset = 1 * offset.earth_to_mars_longitude);
+    },
     streaming: function() {
       this.initStream(), this.startStream(), console.log("start streaming");
     },
     initStream: function() {
       var self = this;
       routexStream.init(self.cross.id, self.token, function(type, result) {
-        self.mapController && self.mapController.draw(type, result);
+        self.mapController && (self.setLatLngOffset(), self.mapController.myuid = self.myuid, 
+        self.mapController.draw(type, result));
       }, function(e) {
         console.log(e);
       });
@@ -5319,8 +5342,11 @@ TWEEN.Tween = function(object) {
     },
     trackGeoLocation: function() {
       var mapController = this.mapController, position = this.position, mapReadyStatus = this.mapReadyStatus;
-      mapReadyStatus && mapController && (console.log("tracking"), mapController.myuid = this.myuid, 
-      mapController.updateGeoLocation(this.myuid, position));
+      if (mapReadyStatus && mapController) {
+        console.log("tracking"), this.setLatLngOffset(), mapController.updateGeoLocation(this.myuid, position);
+        var identities = document.getElementById("identities");
+        identities._ids || (identities.scrollTop = 1, identities.scrollTop = 0);
+      }
     },
     updateMe: function(myIdentity) {
       this.myIdentity = myIdentity;
