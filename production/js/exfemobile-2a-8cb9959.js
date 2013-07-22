@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 07:07:25 */
+/*! mobile@2a 2013-07-22 07:07:27 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4231,7 +4231,7 @@ TWEEN.Tween = function(object) {
   }, proto.showTipline = function(uid, bound) {
     var p, tl = this.tiplines[uid];
     if (tl) {
-      var f = [ bound[1], bound[2] + 60 ], s = [ f[0] + 13, f[1] + 60 ], points = [ f.join(","), s.join(",") ].join(" ");
+      var f = [ bound[1], bound[2] ], s = [ f[0] + 13, f[1] ], points = [ f.join(","), s.join(",") ].join(" ");
       p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), console.log("tipline", uid), 
       tl.setAttribute("points", points + " " + p.x + "," + p.y), tl.setAttributeNS(null, "display", "block");
     }
