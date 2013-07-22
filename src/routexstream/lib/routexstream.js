@@ -2,7 +2,6 @@ define('routexstream', function (require) {
     'use strict';
 
     var _ENV_ = window._ENV_
-      , streaming_api_url = _ENV_.streaming_api_url
       , api_url = _ENV_.api_url
       , geolocation = navigator.geolocation;
 
@@ -26,8 +25,6 @@ define('routexstream', function (require) {
 
     var lstRoute = '';
 
-    var streaming_api_url    = streaming_api_url;
-
     var submit_request       = null;
 
     var shake_start_callback = null;
@@ -49,7 +46,7 @@ define('routexstream', function (require) {
         }
         submit_request = $.ajax({
             type    : 'post',
-            url     : streaming_api_url + '/v3/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
+            url     : api_url + '/v3/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
             data    : JSON.stringify(myData),
             success : function (data) {
               localStorage.setItem('offset-latlng', JSON.stringify(data));

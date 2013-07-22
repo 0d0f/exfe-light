@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 07:07:32 */
+/*! mobile@2a 2013-07-22 08:07:57 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3784,17 +3784,16 @@ TWEEN.Tween = function(object) {
   }), live;
 }), define("routexstream", function() {
   "use strict";
-  var _ENV_ = window._ENV_, streaming_api_url = _ENV_.streaming_api_url, geolocation = (_ENV_.api_url, 
-  navigator.geolocation), cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
+  var _ENV_ = window._ENV_, api_url = _ENV_.api_url, geolocation = navigator.geolocation, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
     timestamp: 0,
     latitude: "",
     longitude: "",
     accuracy: ""
-  }, lstLocat = "", lstRoute = "", streaming_api_url = streaming_api_url, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
+  }, lstLocat = "", lstRoute = "", submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
       type: "post",
-      url: streaming_api_url + "/v3/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
+      url: api_url + "/v3/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
       data: JSON.stringify(myData),
       success: function(data) {
         localStorage.setItem("offset-latlng", JSON.stringify(data));
