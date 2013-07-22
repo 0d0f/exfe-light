@@ -147,7 +147,6 @@ define('routexstream', function (require) {
             http.onreadystatechange = this.listen;
             http.send();
             this.timer  = setInterval(this.listen, 1000);
-            console.log(url);
         },
         listen : function() {
             var http = stream.http;
@@ -291,7 +290,6 @@ define('routexstream', function (require) {
             , curr = (new Date()).getTime();
 
           if (curr - prev > freshness_threshold) {
-            console.log('success', (curr - prev) / 1000, result);
             prev = curr + freshness_threshold;
             result.status = 'success';
             result.timestamp = Math.round(p.timestamp / 1000);
@@ -310,7 +308,6 @@ define('routexstream', function (require) {
             , code: e.code
             , message: e.message
           };
-          console.log('fail', result);
           fail && fail(result);
           f = null;
         };
@@ -339,7 +336,6 @@ define('routexstream', function (require) {
        */
 
     , stopWatch: function (wid) {
-        console.log('stop watch ', wid);
         wid && geolocation.clearWatch(wid);
       }
     };

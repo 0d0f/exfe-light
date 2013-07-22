@@ -328,6 +328,18 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
 /* ==========================================================================
    EXFE App
    ========================================================================== */

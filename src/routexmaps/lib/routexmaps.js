@@ -109,24 +109,19 @@ define('routexmaps', function (require) {
         var initListener = GEvent.addListener(map, 'tilesloaded', function () {
 
           GEvent.addListener(map, 'bounds_changed', function () {
-            console.log('bounds_end', rm.uid)
             GEvent.trigger(map, 'zoom_changed');
           });
 
           GEvent.addListener(map, 'zoom_changed', function () {
-            console.log('zoom_end')
             rm.contains();
           });
 
           GEvent.addListener(map, 'drag', function () {
-            console.log('drag')
           });
 
           GEvent.addDomListener(mapDiv, 'touchstart', function () {
-            console.log('touchstart', rm.uid);
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              console.log('touchmove');
               rm.hideTiplines();
             });
           });
@@ -167,7 +162,6 @@ define('routexmaps', function (require) {
   };
 
   proto.draw = function (type, data) {
-    console.log('type', type, data);
     if (type === 'geomarks') {
 
       var rs = [], ps = [], item, st, k;
@@ -207,7 +201,6 @@ define('routexmaps', function (require) {
   };
 
   proto.drawPlaces = function (ps) {
-    console.log('draw places', ps.length, ps);
     // reset destination place
     this.destinationPlace = null;
     var places = this.places, p, k, item;
@@ -223,7 +216,6 @@ define('routexmaps', function (require) {
   };
 
   proto.addPlace = function (data) {
-    console.log('add a place', data);
     var id = data.id
       , latlng = this.toLatLng(data.latitude, data.longitude)
       , place, tags, tag;
@@ -305,7 +297,6 @@ define('routexmaps', function (require) {
   };
 
   proto.distanceMatrix = function (uid, gm, dp) {
-    console.log(uid, 'destination', dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
       , $detial = $identity.find('.detial')
       , $icon = $detial.find('.icon')
@@ -321,7 +312,6 @@ define('routexmaps', function (require) {
 
       result.rotate = r;
 
-      console.dir(result);
       $distance.html(result.text);
       if (!$icon.hasClass('icon-arrow-red') && !$icon.hasClass('icon-arrow-grey')) {
         $icon.attr('class', 'icon icon-arrow-grey');
@@ -336,7 +326,6 @@ define('routexmaps', function (require) {
   };
 
   proto.fitBoundsWithDestination = function (uid) {
-    console.log('fit bounds with destination');
     var destinationPlace = this.destinationPlace
       , isme = this.myuid === uid
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -463,7 +452,6 @@ define('routexmaps', function (require) {
       var start = b.getPosition()
         , end = d.getPosition()
         , r = distanceOutput(distance(start, end));
-      console.log('DistanceMatrixService', r.text, r.status, !!b, !!d, headingInRadians(start, end));
       if (4 === r.status) {
         $distance.text(r.text);
       } else {
@@ -482,13 +470,11 @@ define('routexmaps', function (require) {
             , avoidTolls: false
           }
         , function (d, s) {
-            console.log('distancematrix', s);
             if (s === OK) {
               var e = d.rows[0].elements[0]
                 , v = e.distance.value
                 , r = distanceOutput(v);
 
-              console.log(distance(start, end) * 1000, v);
 
               if (4 === r.status) {
                 $('.identity[data-uid="' + uid + '"]').find('.distance').text(r.text);
@@ -533,7 +519,6 @@ define('routexmaps', function (require) {
       }
     }
     this.uid = uid;
-    console.log('showBreadcrumbs', puid, uid);
   };
 
   proto.showGeoMarker = function (uid) {
@@ -614,7 +599,6 @@ define('routexmaps', function (require) {
       }
     }
 
-    console.log(id, latlng.lat(), latlng.lng(), locate)
     locate._data = data;
   };
 
@@ -648,7 +632,6 @@ define('routexmaps', function (require) {
     , GEvent = GMaps.event;
 
     GEvent.addListener(m, 'mousedown', function (e) {
-      console.log('marker mousedown', e);
       e && e.stop();
 
       if (self.removeInfobox(this)) { return false; }
@@ -669,7 +652,6 @@ define('routexmaps', function (require) {
       infobox._marker = this;
 
       GEvent.addListenerOnce(this, 'mouseout', function (e) {
-        console.log('mouseout', e);
         infobox.close();
         infobox = self.infobox = null;
       });
@@ -708,7 +690,6 @@ define('routexmaps', function (require) {
       , geoMarkers = this.geoMarkers
       , ids = document.getElementById('identities')._ids || {}
       , uid, gm, latlng;
-    console.log('contains', ids)
 
     sw = projection.fromLatLngToContainerPixel(sw);
     sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y));
@@ -756,7 +737,6 @@ define('routexmaps', function (require) {
   };
 
   proto.addTipline = function (uid) {
-    console.log('tipline', uid);
     var breadcrumbs = this.breadcrumbs[uid]
       , color = '#FF325B'
       , tl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
@@ -778,7 +758,6 @@ define('routexmaps', function (require) {
       , s = [f[0] + 13, f[1]]
       , points = [f.join(','), s.join(',')].join(' ');
     p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng);
-    console.log('tipline', uid);
     tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
     tl.setAttributeNS(null, 'display', 'block');
   };
@@ -815,7 +794,6 @@ define('routexmaps', function (require) {
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
-        console.log('init position', lastlatlng);
       }
     }
     if (position) {
