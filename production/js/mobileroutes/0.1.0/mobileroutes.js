@@ -376,10 +376,10 @@ define('mobileroutes', function (require, exports, module) {
         , ctoken = req.params[0]
         , response = _ENV_._data_.response
         , cross = response.cross
+        , action = response.action
         , cross_access_token = response.cross_access_token
         // , authorization = response.authorization
         , browsing_identity = response.browsing_identity
-        , smith_identity_id = browsing_identity && browsing_identity.id
         , free_identities = response.free_identities
 
         , cats = (Store.get('cats') || {})
@@ -399,8 +399,8 @@ define('mobileroutes', function (require, exports, module) {
         , cross: cross
         , token: token
         , ctoken: ctoken
-        , myIdentityId: browsing_identity.id
-        , isSmithToken: smith_identity_id === _ENV_.SMITH_ID
+        , myIdentityId: (browsing_identity && browsing_identity.id) || 0
+        , isSmithToken: action === 'CLAIM_IDENTITY'
         , freeIdentities: free_identities
       });
 

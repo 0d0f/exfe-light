@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 02:07:25 */
+/*! mobile@2a 2013-07-22 02:07:22 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5477,7 +5477,7 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, cross = response.cross, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, smith_identity_id = browsing_identity && browsing_identity.id, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
         options: {
@@ -5487,8 +5487,8 @@ TWEEN.Tween = function(object) {
         cross: cross,
         token: token,
         ctoken: ctoken,
-        myIdentityId: browsing_identity.id,
-        isSmithToken: smith_identity_id === _ENV_.SMITH_ID,
+        myIdentityId: browsing_identity && browsing_identity.id || 0,
+        isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities
       });
       routexCont.emit("show");
