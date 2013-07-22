@@ -91,6 +91,8 @@ function InfoBox(opt_opts) {
   this.position_ = opt_opts.position || new google.maps.LatLng(0, 0);
   this.zIndex_ = opt_opts.zIndex || null;
 
+  this.leftBoundary = opt_opts.leftBoundary || 0;
+
   // Additional options (unique to InfoBox):
   //
   this.boxClass_ = opt_opts.boxClass || "infoBox";
@@ -326,13 +328,13 @@ InfoBox.prototype.panBox_ = function (disablePan) {
 
     if (map instanceof google.maps.Map) { // Only pan if attached to map, not panorama
 
-      if (!map.getBounds().contains(this.position_)) {
+      bounds = map.getBounds();
+
+      if (!bounds.contains(this.position_)) {
       // Marker not in visible area of map, so set center
       // of map to the marker position first.
         map.setCenter(this.position_);
       }
-
-      bounds = map.getBounds();
 
       var mapDiv = map.getDiv();
       var mapWidth = mapDiv.offsetWidth;
@@ -344,11 +346,13 @@ InfoBox.prototype.panBox_ = function (disablePan) {
       var padX = this.infoBoxClearance_.width;
       var padY = this.infoBoxClearance_.height;
       var pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_);
+      var leftBoundary = this.leftBoundary;
 
-      if (pixPosition.x < (-iwOffsetX + padX)) {
-        xOffset = pixPosition.x + iwOffsetX - padX;
+      if (pixPosition.x < (-iwOffsetX + padX + leftBoundary)) {
+        xOffset = pixPosition.x + iwOffsetX - padX - leftBoundary;
       } else if ((pixPosition.x + iwWidth + iwOffsetX + padX) > mapWidth) {
-        xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth;
+        //xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth;
+        xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth + 10;
       }
       if (this.alignBottom_) {
         if (pixPosition.y < (-iwOffsetY + padY + iwHeight)) {

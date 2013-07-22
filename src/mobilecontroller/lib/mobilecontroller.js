@@ -1645,6 +1645,7 @@ define('mobilecontroller', function (require, exports, module) {
         var self = this
           , element = self.element
           , $win = $(window)
+          , $infoWins = self.$('#info-wins')
           , $openExfe = self.$('#open-exfe')
           , $locate = self.$('#locate');
 
@@ -1672,14 +1673,34 @@ define('mobilecontroller', function (require, exports, module) {
             self.startStream();
           }
         };
-        element.on('touchstart.maps', '#locate', gotoGPS);
-        element.on('touchstart.maps', '#isme .avatar', function (e) {
+        element.on('tap.maps', function (e) {
+          if (e.target !== self.tapElement
+            && !$.contains($infoWins[0], e.target)) {
+              $infoWins.addClass('hide');
+              self.tapElement = null;
+          }
+        });
+        element.on('tap.maps', '#locate', gotoGPS);
+        element.on('tap.maps', '#isme .avatar', function (e) {
           gotoGPS(e, true);
-          e.preventDefault();
-          return false;
+
+          if (self.tapElement === this) {
+            $infoWins.addClass('hide');
+            self.tapElement = null;
+            return false;
+          }
+
+          if ($infoWins.hasClass('hide')) {
+            $infoWins.removeClass('hide');
+          }
+
+          $infoWins.find('#other-info').addClass('hide');
+          $infoWins.find('#my-info').removeClass('hide');
+          $infoWins.css('-webkit-transform', 'translate3d(50px, 6px, 0)');
+          self.tapElement = this;
         });
 
-        element.on('touchstart.maps', '#identities .avatar', function () {
+        element.on('tap.maps', '#identities .avatar', function (e) {
           var $that = $(this)
             , $d = $that.parent().parent()
             , uid = $d.data('uid');
@@ -1688,6 +1709,21 @@ define('mobilecontroller', function (require, exports, module) {
             self.mapController.showBreadcrumbs(uid);
             self.mapController.fitBoundsWithDestination(uid);
           }
+
+          if (self.tapElement === this) {
+            $infoWins.addClass('hide');
+            self.tapElement = null;
+            return false;
+          }
+
+          if ($infoWins.hasClass('hide')) {
+            $infoWins.removeClass('hide');
+          }
+          $infoWins.find('#my-info').addClass('hide');
+          $infoWins.find('#other-info').removeClass('hide');
+          var bound = this.getBoundingClientRect();
+          $infoWins.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
+          self.tapElement = this;
         });
 
         /*
@@ -1735,7 +1771,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
         */
 
-        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
+        element.on('tap.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
             , id = $that.data('identity-id')
             , uid = $that.data('uid')
@@ -1782,6 +1818,9 @@ define('mobilecontroller', function (require, exports, module) {
         var $identities = element.find('#identities');
 
         $identities.on('scroll.maps', function (e) {
+          if (!$infoWins.hasClass('hide')) {
+            $infoWins.addClass('hide');
+          }
           var $avatars = $(this).find('.avatar')
             , pb = this.getBoundingClientRect()
             , scrollTop = this.scrollTop

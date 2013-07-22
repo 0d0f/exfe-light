@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-21 04:07:26 */
+/*! mobile@2a 2013-07-22 11:07:54 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4085,32 +4085,6 @@ TWEEN.Tween = function(object) {
     d > maxd && (maxd = d);
     var sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50)), ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
     return bounds.extend(sw), bounds.extend(center), bounds.extend(ne), bounds;
-  }, proto.fitBounds = function(uids) {
-    if (console.log("fit bounds", uids), uids && uids.length) {
-      for (var gm, uid, gms = this.geoMarkers, latlngs = []; uid = uids.shift(); ) (gm = gms[uid]) && latlngs.push(gm.getPosition());
-      this.calBounds(latlngs, this.geoLocation.getPosition());
-    }
-  }, proto.calBounds = function(latlngs, center) {
-    var latlng, d, sw, ne, projection = this.overlay.getProjection(), c = projection.fromLatLngToContainerPixel(center), destinationLatlng = this.destinationLatlng, bounds = new google.maps.LatLngBounds(), maxd = 0;
-    for (destinationLatlng && latlngs.push(destinationLatlng); latlng = latlngs.shift(); ) d = distance(latlng, center), 
-    console.log(d), d > maxd && (maxd = d), bounds.extend(latlng);
-    sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd, c.y)), 
-    ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd, c.y)), 
-    bounds.extend(sw), bounds.extend(center), bounds.extend(ne), this.map.fitBounds(bounds);
-  }, proto.updateBreadcrumbs = function(uid, positions) {
-    var p, b, latlng, locate, breadcrumbs = this.breadcrumbs, coords = [];
-    for (positions = positions.slice(0), locate = positions[0]; p = positions.shift(); ) latlng = new google.maps.LatLng(p.latitude, p.longitude), 
-    coords.push(latlng);
-    return b = breadcrumbs[uid], b || (b = breadcrumbs[uid] = this.addBreadcrumbs(uid, positions)), 
-    latlng = coords[0], b.setPath(coords), b._uid = uid, b._position = positions, console.log("update breadcrumbs", uid), 
-    this.myuid === uid ? (!this.geoLocation && this.updateGeoLocation(uid, latlng), 
-    void 0) : (this.updateIdentityGeoLocation(uid, locate, latlng), this.updateTipline(uid, latlng), 
-    void 0);
-  }, proto.updateIdentityGeoLocation = function(uid, locate, latlng) {
-    var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
-    latlng || (latlng = new google.maps.LatLng(locate.latitude, locate.longitude)), 
-    gm || (gm = geoMarkers[uid] = this.addLastPoint()), gm._location = locate, gm.setPosition(latlng), 
-    console.log(uid, latlng.lat(), latlng.lng(), this.geoLocation), this.distancematrix(uid);
   }, proto.addBreadcrumbs = function() {
     var color = "#FF325B", alpha = .5, p = new google.maps.Polyline({
       map: this.map,
@@ -4214,7 +4188,9 @@ TWEEN.Tween = function(object) {
         closeBoxMargin: "",
         closeBoxURL: "",
         alignBottom: !0,
-        enableEventPropagation: !1
+        enableEventPropagation: !1,
+        leftBoundary: 60,
+        zIndex: 610
       });
       infobox.open(self.map, this), infobox._marker = this, GEvent.addListenerOnce(this, "mouseout", function(e) {
         console.log("mouseout", e), infobox.close(), infobox = self.infobox = null;
@@ -4230,8 +4206,9 @@ TWEEN.Tween = function(object) {
     for (k in locations) bounds.union(locations[k]._bounds);
     return bounds;
   }, proto.contains = function() {
-    var uid, gm, latlng, bounds = this.map.getBounds(), ids = document.getElementById("identities")._ids || {}, geoMarkers = this.geoMarkers;
-    console.log("contains", ids);
+    var uid, gm, latlng, mapBounds = this.map.getBounds(), projection = this.overlay.getProjection(), sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new google.maps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
+    console.log("contains", ids), sw = projection.fromLatLngToContainerPixel(sw), sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y)), 
+    bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
     bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
@@ -4284,9 +4261,9 @@ TWEEN.Tween = function(object) {
     opt_opts = opt_opts || {}, google.maps.OverlayView.apply(this, arguments), this.content_ = opt_opts.content || "", 
     this.disableAutoPan_ = opt_opts.disableAutoPan || !1, this.maxWidth_ = opt_opts.maxWidth || 0, 
     this.pixelOffset_ = opt_opts.pixelOffset || new google.maps.Size(0, 0), this.position_ = opt_opts.position || new google.maps.LatLng(0, 0), 
-    this.zIndex_ = opt_opts.zIndex || null, this.boxClass_ = opt_opts.boxClass || "infoBox", 
-    this.boxStyle_ = opt_opts.boxStyle || {}, this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px", 
-    this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif", 
+    this.zIndex_ = opt_opts.zIndex || null, this.leftBoundary = opt_opts.leftBoundary || 0, 
+    this.boxClass_ = opt_opts.boxClass || "infoBox", this.boxStyle_ = opt_opts.boxStyle || {}, 
+    this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px", this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif", 
     "" === opt_opts.closeBoxURL && (this.closeBoxURL_ = ""), this.infoBoxClearance_ = opt_opts.infoBoxClearance || new google.maps.Size(1, 1), 
     opt_opts.visible === void 0 && (opt_opts.visible = opt_opts.isHidden === void 0 ? !0 : !opt_opts.isHidden), 
     this.isHidden_ = !opt_opts.visible, this.alignBottom_ = opt_opts.alignBottom || !1, 
@@ -4333,9 +4310,9 @@ TWEEN.Tween = function(object) {
   }, InfoBox.prototype.panBox_ = function(disablePan) {
     var map, bounds, xOffset = 0, yOffset = 0;
     if (!disablePan && (map = this.getMap(), map instanceof google.maps.Map)) {
-      map.getBounds().contains(this.position_) || map.setCenter(this.position_), bounds = map.getBounds();
-      var mapDiv = map.getDiv(), mapWidth = mapDiv.offsetWidth, mapHeight = mapDiv.offsetHeight, iwOffsetX = this.pixelOffset_.width, iwOffsetY = this.pixelOffset_.height, iwWidth = this.div_.offsetWidth, iwHeight = this.div_.offsetHeight, padX = this.infoBoxClearance_.width, padY = this.infoBoxClearance_.height, pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_);
-      -iwOffsetX + padX > pixPosition.x ? xOffset = pixPosition.x + iwOffsetX - padX : pixPosition.x + iwWidth + iwOffsetX + padX > mapWidth && (xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth), 
+      bounds = map.getBounds(), bounds.contains(this.position_) || map.setCenter(this.position_);
+      var mapDiv = map.getDiv(), mapWidth = mapDiv.offsetWidth, mapHeight = mapDiv.offsetHeight, iwOffsetX = this.pixelOffset_.width, iwOffsetY = this.pixelOffset_.height, iwWidth = this.div_.offsetWidth, iwHeight = this.div_.offsetHeight, padX = this.infoBoxClearance_.width, padY = this.infoBoxClearance_.height, pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_), leftBoundary = this.leftBoundary;
+      -iwOffsetX + padX + leftBoundary > pixPosition.x ? xOffset = pixPosition.x + iwOffsetX - padX - leftBoundary : pixPosition.x + iwWidth + iwOffsetX + padX > mapWidth && (xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth + 10), 
       this.alignBottom_ ? -iwOffsetY + padY + iwHeight > pixPosition.y ? yOffset = pixPosition.y + iwOffsetY - padY - iwHeight : pixPosition.y + iwOffsetY + padY > mapHeight && (yOffset = pixPosition.y + iwOffsetY + padY - mapHeight) : -iwOffsetY + padY > pixPosition.y ? yOffset = pixPosition.y + iwOffsetY - padY : pixPosition.y + iwHeight + iwOffsetY + padY > mapHeight && (yOffset = pixPosition.y + iwHeight + iwOffsetY + padY - mapHeight), 
       (0 !== xOffset || 0 !== yOffset) && (map.getCenter(), map.panBy(xOffset, yOffset));
     }
@@ -5214,7 +5191,7 @@ TWEEN.Tween = function(object) {
       $("#app-routex").remove(), this.element.appendTo($("#app-container")), this.loadMaps();
     },
     listen: function() {
-      var self = this, element = self.element, $win = $(window), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate");
+      var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate");
       $win.on("orientationchange", function() {
         $win.height(), $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), 
         $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)");
@@ -5227,12 +5204,25 @@ TWEEN.Tween = function(object) {
         }
         2 === status || 1 === status && self.startStream();
       };
-      element.on("touchstart.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
-        return gotoGPS(e, !0), e.preventDefault(), !1;
-      }), element.on("touchstart.maps", "#identities .avatar", function() {
+      element.on("tap.maps", function(e) {
+        e.target === self.tapElement || $.contains($infoWins[0], e.target) || ($infoWins.addClass("hide"), 
+        self.tapElement = null);
+      }), element.on("tap.maps", "#locate", gotoGPS), element.on("tap.maps", "#isme .avatar", function(e) {
+        return gotoGPS(e, !0), self.tapElement === this ? ($infoWins.addClass("hide"), self.tapElement = null, 
+        !1) : ($infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
+        $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
+        self.tapElement = this, void 0);
+      }), element.on("tap.maps", "#identities .avatar", function() {
         var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
-        self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid));
-      }), element.on("touchstart.maps", "#free-identities .identities li", function() {
+        if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
+        self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
+        !1;
+        $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#my-info").addClass("hide"), 
+        $infoWins.find("#other-info").removeClass("hide");
+        var bound = this.getBoundingClientRect();
+        $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
+        self.tapElement = this;
+      }), element.on("tap.maps", "#free-identities .identities li", function() {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
         if (!touched) {
           var c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？");
@@ -5260,6 +5250,7 @@ TWEEN.Tween = function(object) {
       });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function(e) {
+        $infoWins.hasClass("hide") || $infoWins.addClass("hide");
         var $avatars = $(this).find(".avatar"), pb = this.getBoundingClientRect(), scrollTop = this.scrollTop, height = pb.height, minT = pb.top, maxT = height + minT, ids = this._ids = {};
         return $avatars.each(function(i) {
           var bound = this.getBoundingClientRect(), uid = $(this).parents(".identity").data("uid"), t = bound.height / 2 + bound.top;
