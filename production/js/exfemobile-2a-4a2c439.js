@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 05:07:49 */
+/*! mobile@2a 2013-07-23 06:07:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3831,7 +3831,8 @@ TWEEN.Tween = function(object) {
     init: function(url, pop, dead) {
       this.prvLen = 0, this.nxtIdx = 0, this.live = !0, this.pop = pop, this.dead = dead;
       var http = this.http = new XMLHttpRequest();
-      http.open("post", url), http.onreadystatechange = this.listen, http.send(), this.timer = setInterval(this.listen, 1e3);
+      http.open("post", url, !0), http.onreadystatechange = this.listen, http.send(), 
+      this.timer = setInterval(this.listen, 1e3);
     },
     listen: function() {
       var http = stream.http;

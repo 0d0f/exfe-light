@@ -142,7 +142,8 @@ define('routexstream', function (require) {
             this.pop    = pop;
             this.dead   = dead;
             var http = this.http = new XMLHttpRequest();
-            http.open('post', url);
+            // async: true
+            http.open('post', url, true);
             http.onreadystatechange = this.listen;
             http.send();
             this.timer  = setInterval(this.listen, 1000);
