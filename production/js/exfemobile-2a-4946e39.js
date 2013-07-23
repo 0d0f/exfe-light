@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 10:07:40 */
+/*! mobile@2a 2013-07-23 10:07:54 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4084,7 +4084,7 @@ TWEEN.Tween = function(object) {
       } ]
     })));
   }, proto.toLatLng = function(latitude, longitude) {
-    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(latitude + this.latOffset, longitude + this.lngOffset);
+    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(1 * latitude + this.latOffset, 1 * longitude + this.lngOffset);
   }, proto.drawIdentityPaths = function(data) {
     var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
     for (uid in data) {
@@ -5306,7 +5306,7 @@ TWEEN.Tween = function(object) {
     },
     loadMaps: function() {
       var self = this, RoutexMaps = require("routexmaps"), mc = this.mapController = new RoutexMaps({
-        url: "http://maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
+        url: "//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
         mapDiv: this.$("#map")[0],
         mapOptions: {
           zoom: 5
