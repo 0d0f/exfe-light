@@ -2,7 +2,9 @@ define('routexmaps', function (require) {
 
   'use strict';
 
-    var distance = function (lat1, lng1, lat2, lng2) {
+    var SITE_URL = window._ENV_.site_url
+
+    , distance = function (lat1, lng1, lat2, lng2) {
         var R = 6371 // Radius of the Earth in km
           , dLat = (lat2 - lat1) * Math.PI / 180
           , dLon = (lng2 - lng1) * Math.PI / 180
@@ -74,28 +76,28 @@ define('routexmaps', function (require) {
         var icons = rm.icons;
 
         icons.dotGrey = new GMaps.MarkerImage(
-              '/static/img/map_dot_grey@2x.png'
+              SITE_URL + '/static/img/map_dot_grey@2x.png'
             , new GMaps.Size(36, 36)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(9, 9)
             , new GMaps.Size(18, 18)
           );
         icons.dotRed = new GMaps.MarkerImage(
-              '/static/img/map_dot_red@2x.png'
+              SITE_URL + '/static/img/map_dot_red@2x.png'
             , new GMaps.Size(36, 36)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(9, 9)
             , new GMaps.Size(18, 18)
           );
         icons.arrowBlue = new GMaps.MarkerImage(
-              '/static/img/map_arrow_blue@2x.png'
+              SITE_URL + '/static/img/map_arrow_blue@2x.png'
             , new GMaps.Size(40, 40)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(10, 10)
             , new GMaps.Size(20, 20)
           );
         icons.arrowGrey = new GMaps.MarkerImage(
-              '/static/img/map_arrow_g5@2x.png'
+              SITE_URL + '/static/img/map_arrow_g5@2x.png'
             , new GMaps.Size(40, 40)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(10, 10)
@@ -120,7 +122,7 @@ define('routexmaps', function (require) {
 
           GEvent.addListener(map, 'zoom_changed', function () {
             console.log('zoom_end')
-            //rm.contains();
+            rm.contains();
           });
 
           GEvent.addListener(map, 'drag', function () {

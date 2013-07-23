@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 09:07:07 */
+/*! mobile@2a 2013-07-23 10:07:40 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3964,17 +3964,17 @@ TWEEN.Tween = function(object) {
         var GMaps = google.maps, GEvent = GMaps.event;
         GMaps.InfoBox = require("infobox");
         var icons = rm.icons;
-        icons.dotGrey = new GMaps.MarkerImage("/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
-        icons.dotRed = new GMaps.MarkerImage("/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
-        icons.arrowBlue = new GMaps.MarkerImage("/static/img/map_arrow_blue@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
-        icons.arrowGrey = new GMaps.MarkerImage("/static/img/map_arrow_g5@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
+        icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
+        icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
+        icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_blue@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
+        icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_g5@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), initListener = GEvent.addListener(map, "tilesloaded", function() {
           GEvent.addListener(map, "bounds_changed", function() {
             console.log("bounds_end", rm.uid), GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
-            console.log("zoom_end");
+            console.log("zoom_end"), rm.contains();
           }), GEvent.addListener(map, "drag", function() {
             console.log("drag");
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
@@ -3987,7 +3987,7 @@ TWEEN.Tween = function(object) {
       };
     }(this, options.mapDiv, options.mapOptions, options.callback);
   }
-  var distance = function(lat1, lng1, lat2, lng2) {
+  var SITE_URL = window._ENV_.site_url, distance = function(lat1, lng1, lat2, lng2) {
     var R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lng2 - lng1) * Math.PI / 180, a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2), c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)), d = R * c;
     return d;
   }, calRotate = function(lat1, lon1, lat2, lon2) {
