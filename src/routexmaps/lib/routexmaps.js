@@ -407,9 +407,8 @@
       gm = geoMarkers[uid] = this.addGeoMarker();
     }
     gm.setPosition(latlng);
-    gm._data = data;
-
-    this.updated[uid] = data;
+    gm._data = this.updated[uid] = data;
+    console.log(uid, data)
 
     this.updateTipline(uid, latlng);
     return gm;
