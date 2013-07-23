@@ -12,6 +12,11 @@ define('mobilecontroller', function (require, exports, module) {
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
+      // animation {{{
+      //AF = require('af'),
+      //requestAnimationFrame = AF.request,
+      // animation }}}
+
       util   = require('util'),
       trim = util.trim,
       parseId = util.parseId,
@@ -1914,9 +1919,16 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , streaming: function () {
+        var self = this;
         this.initStream();
         this.startStream();
         console.log('start streaming');
+        console.log('start monit')
+        this.timer = setInterval(function () {
+          if (self.mapReadyStatus) {
+            self.mapController.monit();
+          }
+        }, 1000);
       }
 
     , initStream: function () {

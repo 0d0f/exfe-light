@@ -287,7 +287,12 @@
   };
 
   proto.monit = function () {
-    var u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, uid, d, now = Math.round((new Date()).getTime() / 1000), n;
+    var u = this.updated
+      , bs = this.breadcrumbs
+      , icons = this.icons
+      , gms = this.geoMarkers
+      , tiplines = this.tiplines
+      , uid, d, now = Math.round((new Date()).getTime() / 1000), n;
     var gm, b, $e;
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
@@ -295,6 +300,7 @@
         n = Math.floor((now - d.timestamp) / 60);
         gm = gms[uid];
         b = bs[uid];
+        tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
         if (n <= 1) {
 
@@ -306,6 +312,7 @@
             }
           }
 
+          tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
           b && b.setOptions({
               strokeOpacity: 0
@@ -334,6 +341,7 @@
             }
           }
 
+          tl && tl.setAttribute('stroke', '#7F7F7F');
           gm && gm.setIcon(icons.dotGrey);
           b && b.setOptions({
               strokeOpacity: 0
