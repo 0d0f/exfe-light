@@ -245,16 +245,18 @@
 
     checkSmithToken = function (d) {
       var authorization = d.authorization
-        , action = d.action
+        //, action = d.action
         , user_id
         // my identity id
         , myIdentityId
         , t
         , token;
 
+      /*
       if (action !== 'CLAIM_IDENTITY') {
         return token;
       }
+      */
 
       if (authorization) {
         t = authorization.token;
