@@ -1668,7 +1668,6 @@ define('mobilecontroller', function (require, exports, module) {
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
           // $locate.css('-webkit-transform', 'translate3d(-10px, ' + (height - (32 + 10)) + 'px, 0)');
         });
-        $win.triggerHandler('orientationchange');
 
         var gotoGPS = function (e, showBreadcrumbs) {
           var status = self.checkGPSStyle();
@@ -1805,7 +1804,9 @@ define('mobilecontroller', function (require, exports, module) {
             }
           });
 
-          self.mapController && self.mapController.contains();
+          if (self.mapReadyStatus && self.mapController) {
+            self.mapController.contains();
+          }
           console.dir(ids);
         });
 
@@ -2034,10 +2035,8 @@ define('mobilecontroller', function (require, exports, module) {
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
 
-        if ($identities.length && !$identities[0]._ids) {
-          console.log('trigger handler scroll.maps')
-          $identities.triggerHandler('scroll.maps');
-        }
+        console.log('trigger handler scroll.maps')
+        $('#identities').triggerHandler('scroll');
       }
 
   });
