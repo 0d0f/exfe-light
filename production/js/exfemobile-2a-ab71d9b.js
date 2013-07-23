@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 01:07:35 */
+/*! mobile@2a 2013-07-24 02:07:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4017,7 +4017,7 @@ TWEEN.Tween = function(object) {
   }, proto.drawRoutes = function(rs) {
     var r, k, item, routes = this.routes;
     for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
-    for (;item = rs.shift(); ) console.log(1231);
+    for (;item = rs.shift(); ) this.addRoute(item);
   }, proto.addRoute = function(data) {
     var p, route, coords = [], uid = data.created_by, positions = data.positions.slice(0);
     for (route = this.routes[uid] = this.addPolyline(data); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
@@ -4097,7 +4097,7 @@ TWEEN.Tween = function(object) {
     if (console.log("myuid === uid", this.myuid, uid, this.myuid === uid), this.myuid === uid) return this.geoLocation;
     var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
     return gm || (gm = geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    gm._data = data, this.updateTipline(uid, latlng), gm;
+    gm._data = data, this.updated[uid] = data, this.updateTipline(uid, latlng), gm;
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4159,14 +4159,11 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  }, proto.hideBreadcrumbs = function(uid) {
-    var b = this.breadcrumbs[uid];
-    b && b.setVisible(!1);
   }, proto.showBreadcrumbs = function(uid) {
     var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
     uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
     this.uid = uid, console.log("showBreadcrumbs", puid, uid);
-  }, proto.showGeoMarker = function() {}, proto.updatePoint = function(data) {
+  }, proto.updatePoint = function(data) {
     var locate, latlng, tags, tag, locations = this.locations, id = data.id;
     for (locate = locations[id], locate || (locate = locations[id] = this.addPoint(data)), 
     locate.setPosition(latlng), locate.setVisible(!0), tags = data.tags.slice(0); tag = tags.shift(); ) if ("destination" === tag) {
@@ -4265,7 +4262,8 @@ TWEEN.Tween = function(object) {
     }
     position && (latlng = this.toLatLng(position.latitude, position.longitude), geoLocation.setIcon(this.icons.arrowBlue), 
     geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), geoLocation._uid = uid;
+    this.map.panTo(latlng)), geoLocation._status = 2), this.updated[uid] = position || lastlatlng, 
+    geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
@@ -5329,7 +5327,7 @@ TWEEN.Tween = function(object) {
       var self = this;
       this.initStream(), this.startStream(), console.log("start streaming"), console.log("start monit"), 
       this.timer = setInterval(function() {
-        self.mapReadyStatus && self.mapController.monit();
+        self.mapReadyStatus && (console.log(new Date()), self.mapController.monit());
       }, 1e3);
     },
     initStream: function() {
