@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 12:07:05 */
+/*! mobile@2a 2013-07-24 12:07:55 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5208,9 +5208,9 @@ TWEEN.Tween = function(object) {
       var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate"), isScroll = !1;
       $win.on("orientationchange", function() {
         var height = $win.height();
-        $win.width(), $("#identities").css("max-height", 60 * Math.round(height / 60) - 60 - 100 + 5), 
-        $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)");
-      });
+        $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)"), 
+        $("#identities").css("max-height", 60 * Math.round(height / 60) - 60 - 100 + 5);
+      }), $win.triggerHandler("orientationchange");
       var gotoGPS = function(e, showBreadcrumbs) {
         var status = self.checkGPSStyle();
         if (self.mapReadyStatus) {
