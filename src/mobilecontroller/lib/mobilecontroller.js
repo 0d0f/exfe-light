@@ -1998,11 +1998,6 @@ define('mobilecontroller', function (require, exports, module) {
           console.log('tracking');
           this.setLatLngOffset();
           mapController.updateGeoLocation(this.myuid, position);
-
-          var $ids = $('#identities')
-          if ($ids.length && !$ids[0]._ids) {
-            $ids.triggerHandler('scroll.maps')
-          }
         }
       }
 
@@ -2037,6 +2032,10 @@ define('mobilecontroller', function (require, exports, module) {
         }
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
+
+        if ($ids.length && !$ids[0]._ids) {
+          $ids.triggerHandler('scroll.maps');
+        }
       }
 
   });

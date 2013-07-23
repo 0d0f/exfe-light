@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 11:07:40 */
+/*! mobile@2a 2013-07-24 12:07:14 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5360,11 +5360,8 @@ TWEEN.Tween = function(object) {
     },
     trackGeoLocation: function() {
       var mapController = this.mapController, position = this.position, mapReadyStatus = this.mapReadyStatus;
-      if (mapReadyStatus && mapController) {
-        console.log("tracking"), this.setLatLngOffset(), mapController.updateGeoLocation(this.myuid, position);
-        var $ids = $("#identities");
-        $ids.length && !$ids[0]._ids && $ids.triggerHandler("scroll.maps");
-      }
+      mapReadyStatus && mapController && (console.log("tracking"), this.setLatLngOffset(), 
+      mapController.updateGeoLocation(this.myuid, position));
     },
     updateMe: function(myIdentity) {
       this.myIdentity = myIdentity;
@@ -5380,7 +5377,8 @@ TWEEN.Tween = function(object) {
         div.attr("data-uid", identity.external_username + "@" + identity.provider), div.find("img").attr("src", identity.avatar_filename), 
         $identities.append(div);
       } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
-      window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)");
+      window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
+      $ids.length && !$ids[0]._ids && $ids.triggerHandler("scroll.maps");
     }
   });
 }), define("mobileroutes", function(require, exports, module) {

@@ -2412,6 +2412,7 @@ button .exfe {
 #routex .icon-arrow-red {
   width: 12px;
   height: 12px;
+  -webkit-transform-origin: 50% 7.5px;
 }
 #routex .icon-arrow-grey {
   background-image: url(/static/img/map_arrow_12g5@2x.png);
