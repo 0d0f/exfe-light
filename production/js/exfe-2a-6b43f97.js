@@ -1,9 +1,13 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
+<<<<<<< Updated upstream:production/js/exfe-2a-6b43f97.js
 <<<<<<< HEAD:production/js/exfe-2a-6b43f97.js
 /*! desktop@2a 2013-07-17 11:07:17 */
 =======
 /*! desktop@2a 2013-07-22 02:07:13 */
 >>>>>>> b0044b2... tweaks routex:production/js/exfe-2a-08e2752.js
+=======
+/*! desktop@2a 2013-07-22 12:07:44 */
+>>>>>>> Stashed changes:production/js/exfe-2a-08e2752.js
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
