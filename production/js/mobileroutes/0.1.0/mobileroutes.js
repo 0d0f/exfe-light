@@ -375,7 +375,7 @@ define('mobileroutes', function (require, exports, module) {
       var app = req.app
         , ctoken = req.params[0]
         , response = _ENV_._data_.response
-        , tokeInfos = _ENV_._data_.tokeInfos
+        , tokenInfos = _ENV_._data_.tokenInfos
         , cross = response.cross
         , action = response.action
         , cross_access_token = response.cross_access_token
@@ -401,8 +401,8 @@ define('mobileroutes', function (require, exports, module) {
         , lastGPS: Store.get('last-latlng')
         , cross: cross
         , ctoken: ctoken
-        , token: token || tokeInfos[0]
-        , myIdentityId: (browsing_identity && browsing_identity.id) || tokeInfos[1] || 0
+        , token: token || tokenInfos[0]
+        , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
         , isSmithToken: action === 'CLAIM_IDENTITY'
         , freeIdentities: free_identities
       });
