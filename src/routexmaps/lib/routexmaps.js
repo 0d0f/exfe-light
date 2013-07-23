@@ -760,7 +760,7 @@
 
     tl.setAttribute('fill', 'none');
     // 更改用户状态：在线-粉红，离线-灰色
-    tl.setAttribute('stroke', '#FF7E98');
+    tl.setAttribute('stroke', '#7F7F7F');
     tl.setAttribute('stroke-width', 1);
     tl.setAttribute('style', '-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));');
     tl.setAttributeNS(null, 'display', 'none');

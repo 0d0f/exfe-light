@@ -1999,9 +1999,9 @@ define('mobilecontroller', function (require, exports, module) {
           this.setLatLngOffset();
           mapController.updateGeoLocation(this.myuid, position);
 
-          var identities = document.getElementById('identities');
-          if (!identities._ids) {
-            $(identities).triggerHandler('scroll.maps');
+          var $ids = $('#identities')
+          if (!$ids[0]._ids) {
+            $ids.triggerHandler('scroll.maps')
           }
         }
       }

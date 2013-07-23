@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 11:07:53 */
+/*! mobile@2a 2013-07-23 11:07:15 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4236,7 +4236,7 @@ TWEEN.Tween = function(object) {
   }, proto.addTipline = function(uid) {
     console.log("tipline", uid);
     var tl = (this.breadcrumbs[uid], document.createElementNS("http://www.w3.org/2000/svg", "polyline"));
-    return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#FF7E98"), tl.setAttribute("stroke-width", 1), 
+    return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#7F7F7F"), tl.setAttribute("stroke-width", 1), 
     tl.setAttribute("style", "-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));"), 
     tl.setAttributeNS(null, "display", "none"), this.svgLayer.appendChild(tl), tl;
   }, proto.showTipline = function(uid, bound) {
@@ -5362,8 +5362,8 @@ TWEEN.Tween = function(object) {
       var mapController = this.mapController, position = this.position, mapReadyStatus = this.mapReadyStatus;
       if (mapReadyStatus && mapController) {
         console.log("tracking"), this.setLatLngOffset(), mapController.updateGeoLocation(this.myuid, position);
-        var identities = document.getElementById("identities");
-        identities._ids || $(identities).triggerHandler("scroll.maps");
+        var $ids = $("#identities");
+        $ids[0]._ids || $ids.triggerHandler("scroll.maps");
       }
     },
     updateMe: function(myIdentity) {
