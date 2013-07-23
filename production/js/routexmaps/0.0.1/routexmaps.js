@@ -1,4 +1,4 @@
-define('routexmaps', function (require) {
+  define('routexmaps', function (require) {
 
   'use strict';
 
@@ -359,7 +359,7 @@ define('routexmaps', function (require) {
   };
   proto.toLatLng = function (latitude, longitude) {
     console.log(this.latOffset, this.lngOffset);
-    return new google.maps.LatLng(latitude + this.latOffset, longitude + this.lngOffset);
+    return new google.maps.LatLng(latitude * 1 + this.latOffset, longitude * 1 + this.lngOffset);
   };
 
   proto.drawIdentityPaths = function (data) {
