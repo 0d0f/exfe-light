@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 02:07:51 */
+/*! mobile@2a 2013-07-24 02:07:40 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4097,7 +4097,8 @@ TWEEN.Tween = function(object) {
     if (console.log("myuid === uid", this.myuid, uid, this.myuid === uid), this.myuid === uid) return this.geoLocation;
     var geoMarkers = this.geoMarkers, gm = geoMarkers[uid];
     return gm || (gm = geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    gm._data = data, this.updated[uid] = data, this.updateTipline(uid, latlng), gm;
+    gm._data = this.updated[uid] = data, console.log(uid, data), this.updateTipline(uid, latlng), 
+    gm;
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
