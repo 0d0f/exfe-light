@@ -5,7 +5,6 @@
   var now = Date.now || function () { return new Date().getTime(); }
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
-    // , apiUrl = 'http://api.panda.0d0f.com'
     , app_scheme = _ENV_.app_scheme
     , JSFILE = _ENV_.JSFILE
     , CSSFILE = _ENV_.CSSFILE
@@ -208,6 +207,7 @@
         if (response.browsing_identity) {
           myIdId = response.browsing_identity.id;
         }
+        localStorage.setItem('authorization', JSON.stringify(authorization));
       } else if (response.browsing_identity
         && response.browsing_identity.connected_user_id) {
         user_id = response.browsing_identity.connected_user_id;
@@ -232,10 +232,10 @@
         } else if (authorization = localStorage.getItem('authorization')) {
           authorization = JSON.parse(authorization);
           if (authorization.user_id === user_id) {
-            args += '?user_id='     + user_id
-                  + '&token='       + authorization.token
-                  + '&identity_id=' + myIdId;
             token = authorization.token;
+            args += '?user_id='     + user_id
+                  + '&token='       + token
+                  + '&identity_id=' + myIdId;
           }
         }
       }
@@ -243,12 +243,49 @@
       return [token, args];
     },
 
+    checkSmithToken = function (d) {
+      var authorization = d.authorization
+        , action = d.action
+        , user_id
+        // my identity id
+        , myIdentityId
+        , t
+        , token;
+
+      if (action !== 'CLAIM_IDENTITY') {
+        return token;
+      }
+
+      if (authorization) {
+        t = authorization.token;
+        user_id = authorization.user_id;
+        localStorage.setItem('authorization', JSON.stringify(authorization));
+      } else if ((authorization = JSON.parse(localStorage.getItem('authorization')))) {
+        t = authorization.token;
+        user_id = authorization.user_id;
+      }
+
+      if (t) {
+        var invitations = d.cross.exfee.invitations, invitation;
+        for (var i = 0, len = invitations.length; i < len; ++i) {
+          invitation = invitations[i];
+          if (user_id === invitation.identity.connected_user_id) {
+            token = t;
+            myIdentityId = invitation.identity.id;
+            break;
+          }
+        }
+      }
+
+      return [token, myIdentityId];
+    },
+
     redirectByError = function (errorMeta) {
       setError(errorMeta);
       window.location = '/';
     },
 
-  crossFunc = function (data, noCheckApp) {
+    crossFunc = function (data, noCheckApp) {
       request({
           url: apiUrl + '/Crosses/GetCrossByInvitationToken'
         , type: 'POST'
@@ -257,6 +294,7 @@
             _ENV_._data_ = data;
             if (data.meta && data.meta.code === 200) {
               var c = crossCallback(data.response);
+              _ENV_._data_.tokenInfos = checkSmithToken(data.response);
               if (c[0] && c[1]) {
                 if (noCheckApp || window.noExfeApp) {
                   handle();
@@ -392,7 +430,6 @@
         data.cross_access_token = token;
       }
 
-      //prop
       crossFunc(data, true);
 
       // dev

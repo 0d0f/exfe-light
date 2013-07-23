@@ -1827,7 +1827,6 @@ define('mobilecontroller', function (require, exports, module) {
         $identities.on('touchmove.maps', function (e) {
           isScroll = true;
           e.preventDefault();
-          console.log(e.pageY, e);
           this.scrollTop = (pageY - e.pageY) + scrollTop;
         });
 

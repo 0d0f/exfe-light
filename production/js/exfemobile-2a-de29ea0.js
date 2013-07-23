@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-22 09:07:13 */
+/*! mobile@2a 2013-07-23 04:07:55 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3956,7 +3956,7 @@ TWEEN.Tween = function(object) {
     options = this.options = options || {}, this.svgLayer = this.options.svg, this.options.svg = null, 
     this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.locations = {}, 
     this.tiplines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, 
-    this.boundsOffset = {
+    this.updated = {}, this.boundsOffset = {
       left: 50,
       top: 0
     }, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -3972,12 +3972,14 @@ TWEEN.Tween = function(object) {
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), initListener = GEvent.addListener(map, "tilesloaded", function() {
           GEvent.addListener(map, "bounds_changed", function() {
-            GEvent.trigger(map, "zoom_changed");
+            console.log("bounds_end", rm.uid), GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
-            rm.contains();
-          }), GEvent.addListener(map, "drag", function() {}), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
-              rm.hideTiplines();
+            console.log("zoom_end"), rm.contains();
+          }), GEvent.addListener(map, "drag", function() {
+            console.log("drag");
+          }), GEvent.addDomListener(mapDiv, "touchstart", function() {
+            console.log("touchstart", rm.uid), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+              console.log("touchmove"), rm.hideTiplines();
             });
           }), GEvent.removeListener(initListener);
         }), overlay = rm.overlay = new GMaps.OverlayView();
@@ -4006,7 +4008,7 @@ TWEEN.Tween = function(object) {
       cb && cb());
     }, n.async = !0, n.src = this.options.url, document.body.appendChild(n);
   }, proto.draw = function(type, data) {
-    if ("geomarks" === type) {
+    if (console.log("type", type, data), "geomarks" === type) {
       var item, st, rs = [], ps = [];
       for (data = data.slice(0); item = data.shift(); ) st = item.type, "route" === st ? rs.push(item) : "location" === st && ps.push(item);
       this.drawRoutes(rs), this.drawPlaces(ps);
@@ -4014,13 +4016,28 @@ TWEEN.Tween = function(object) {
   }, proto.drawRoutes = function(rs) {
     var r, k, item, routes = this.routes;
     for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
-    for (;item = rs.shift(); ) ;
+    for (;item = rs.shift(); ) console.log(1231);
+  }, proto.addRoute = function(data) {
+    var p, route, coords = [], uid = data.created_by, positions = data.positions.slice(0);
+    for (route = this.routes[uid] = this.addPolyline(data); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
+    route._data = data, route.setPath(coords);
+  }, proto.addPolyline = function(data) {
+    var rgba = data.color && data.color.split(",") || [], alpha = (rgba.length ? "#" + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16) : "#00f", 
+    rgba[3] || 1), p = new google.maps.Polyline({
+      map: this.map,
+      geodesic: !0,
+      strokeColor: data.color,
+      strokeWeight: 1,
+      strokeOpacity: alpha
+    });
+    return p;
   }, proto.drawPlaces = function(ps) {
-    this.destinationPlace = null;
+    console.log("draw places", ps.length, ps), this.destinationPlace = null;
     var p, k, item, places = this.places;
     for (k in places) p = places[k], p.setMap(null), p = null, delete places[k];
     for (;item = ps.shift(); ) this.addPlace(item);
   }, proto.addPlace = function(data) {
+    console.log("add a place", data);
     var place, tags, tag, id = data.id, latlng = this.toLatLng(data.latitude, data.longitude);
     if (place = this.places[id] = this.addPoint(data), place._data = data, place.setPosition(latlng), 
     place.setVisible(!0), !this.destinationPlace) for (tags = data.tags.slice(0); tag = tags.shift(); ) if ("destination" === tag) {
@@ -4029,6 +4046,43 @@ TWEEN.Tween = function(object) {
       place.setZIndex(378), this.destinationPlace = place;
       break;
     }
+  }, proto.monit = function() {
+    var uid, d, n, gm, b, $e, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, now = Math.round(new Date().getTime() / 1e3);
+    for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
+    gm = gms[uid], b = bs[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+    gm && gm.setIcon(icons.dotRed), b && b.setOptions({
+      strokeOpacity: 0,
+      icons: [ {
+        icon: {
+          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          fillColor: "#FF325B",
+          fillOpacity: .5,
+          strokeColor: "#fff",
+          strokeOpacity: .5,
+          strokeWeight: 1,
+          scale: .5
+        },
+        repeat: "30px",
+        offset: "0"
+      } ]
+    })) : ($e.length && ($e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+    gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+      strokeOpacity: 0,
+      icons: [ {
+        icon: {
+          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          fillColor: "#7F7F7F",
+          fillOpacity: .5,
+          strokeColor: "#fff",
+          strokeOpacity: .5,
+          strokeWeight: 1,
+          scale: .5
+        },
+        repeat: "30px",
+        offset: "0"
+      } ]
+    })));
   }, proto.toLatLng = function(latitude, longitude) {
     return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(latitude + this.latOffset, longitude + this.lngOffset);
   }, proto.drawIdentityPaths = function(data) {
@@ -4052,13 +4106,16 @@ TWEEN.Tween = function(object) {
     });
     return gm;
   }, proto.distanceMatrix = function(uid, gm, dp) {
+    console.log(uid, "destination", dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
     if (gm && dp) {
       var p0 = gm.getPosition(), p1 = dp.getPosition(), lat1 = p0.lat(), lng1 = p0.lng(), lat2 = p1.lat(), lng2 = p1.lng(), d = distance(lat2, lng2, lat1, lng1), r = Math.round(180 * calRotate(lat2, lng2, lat1, lng1) / Math.PI), result = distanceOutput(d);
-      result.rotate = r, $distance.html(result.text), $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-grey") || $icon.attr("class", "icon icon-arrow-grey"), 
+      console.log(d, r, lat1, lng1, lat2, lng2), result.rotate = r, console.dir(result), 
+      $distance.html(result.text), $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-grey") || $icon.attr("class", "icon icon-arrow-grey"), 
       $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $detial.css("visibility", "visible");
     } else gm ? $detial.css("visibility", "visible") : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
+    console.log("fit bounds with destination");
     var destinationPlace = this.destinationPlace, isme = this.myuid === uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition(), projection = this.overlay.getProjection(), map = this.map;
@@ -4101,56 +4158,21 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  }, proto.distancematrix = function(uid, isGPS) {
-    var b = isGPS ? this.geoLocation : this.geoMarkers[uid], d = this.destinationPlace, $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $distance = ($detial.find(".icon"), 
-    $detial.find(".distance"));
-    if (b && d) {
-      $detial.css("visibility", "visible");
-      var start = b.getPosition(), end = d.getPosition(), r = distanceOutput(distance(start, end));
-      4 === r.status ? $distance.text(r.text) : $distance.html(r.text);
-    } else b ? $detial.css("visibility", "visible") : $detial.css("visibility", "hidden");
   }, proto.hideBreadcrumbs = function(uid) {
     var b = this.breadcrumbs[uid];
     b && b.setVisible(!1);
   }, proto.showBreadcrumbs = function(uid) {
     var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
     uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
-    this.uid = uid;
-  }, proto.showGeoMarker = function() {}, proto.updatePolyline = function(data) {
-    var p, route, bounds, latlng, routes = this.routes, coords = [], uid = data.created_by, positions = data.positions.slice(0);
-    for (route = routes[uid], route || (route = routes[uid] = this.addPolyline(data)), 
-    bounds = new google.maps.LatLngBounds(); p = positions.shift(); ) latlng = this.toLatLng(p.latitude, p.longitude), 
-    bounds.extend(latlng), coords.push(latlng);
-    route._data = data, route._bounds = bounds, route.setPath(coords), this.updateTipline(uid, latlng);
-  }, proto.addPolyline = function(data) {
-    var rgba = data.color.split(","), color = "#" + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16), alpha = rgba[3], p = new google.maps.Polyline({
-      map: this.map,
-      visible: !1,
-      geodesic: !0,
-      strokeOpacity: 0,
-      icons: [ {
-        icon: {
-          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
-          fillColor: color,
-          fillOpacity: alpha,
-          strokeColor: "#fff",
-          strokeOpacity: .5,
-          strokeWeight: 1,
-          scale: .5
-        },
-        repeat: "30px",
-        offset: "0"
-      } ]
-    });
-    return p;
-  }, proto.updatePoint = function(data) {
+    this.uid = uid, console.log("showBreadcrumbs", puid, uid);
+  }, proto.showGeoMarker = function() {}, proto.updatePoint = function(data) {
     var locate, latlng, tags, tag, locations = this.locations, id = data.id;
     for (locate = locations[id], locate || (locate = locations[id] = this.addPoint(data)), 
     locate.setPosition(latlng), locate.setVisible(!0), tags = data.tags.slice(0); tag = tags.shift(); ) if ("destination" === tag) {
       locate._type = "destination", this.destinationLocation = locate;
       break;
     }
-    locate._data = data;
+    console.log(id, latlng.lat(), latlng.lng(), locate), locate._data = data;
   }, proto.addLastPoint = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4169,7 +4191,7 @@ TWEEN.Tween = function(object) {
       icon: new google.maps.MarkerImage(data.icon, new google.maps.Size(48, 68), new google.maps.Point(0, 0), new google.maps.Point(12, 34), new google.maps.Size(24, 34))
     }), GEvent = GMaps.event;
     return GEvent.addListener(m, "mousedown", function(e) {
-      if (e && e.stop(), self.removeInfobox(this)) return !1;
+      if (console.log("marker mousedown", e), e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description),
         maxWidth: 200,
@@ -4182,8 +4204,8 @@ TWEEN.Tween = function(object) {
         leftBoundary: 60,
         zIndex: 610
       });
-      infobox.open(self.map, this), infobox._marker = this, GEvent.addListenerOnce(this, "mouseout", function() {
-        infobox.close(), infobox = self.infobox = null;
+      infobox.open(self.map, this), infobox._marker = this, GEvent.addListenerOnce(this, "mouseout", function(e) {
+        console.log("mouseout", e), infobox.close(), infobox = self.infobox = null;
       });
     }), m;
   }, proto.removeInfobox = function(marker) {
@@ -4197,7 +4219,7 @@ TWEEN.Tween = function(object) {
     return bounds;
   }, proto.contains = function() {
     var uid, gm, latlng, mapBounds = this.map.getBounds(), projection = this.overlay.getProjection(), sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new google.maps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
-    sw = projection.fromLatLngToContainerPixel(sw), sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y)), 
+    console.log("contains", ids), sw = projection.fromLatLngToContainerPixel(sw), sw = projection.fromContainerPixelToLatLng(new google.maps.Point(sw.x + 50, sw.y)), 
     bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
@@ -4211,6 +4233,7 @@ TWEEN.Tween = function(object) {
     tl || (tl = this.tiplines[uid] = this.addTipline(uid)), latlng && (tl._lastlatlng = latlng, 
     this.containsOne(uid, latlng));
   }, proto.addTipline = function(uid) {
+    console.log("tipline", uid);
     var tl = (this.breadcrumbs[uid], document.createElementNS("http://www.w3.org/2000/svg", "polyline"));
     return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#FF7E98"), tl.setAttribute("stroke-width", 1), 
     tl.setAttribute("style", "-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));"), 
@@ -4219,8 +4242,8 @@ TWEEN.Tween = function(object) {
     var p, tl = this.tiplines[uid];
     if (tl) {
       var f = [ bound[1], bound[2] ], s = [ f[0] + 13, f[1] ], points = [ f.join(","), s.join(",") ].join(" ");
-      p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), tl.setAttribute("points", points + " " + p.x + "," + p.y), 
-      tl.setAttributeNS(null, "display", "block");
+      p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng), console.log("tipline", uid), 
+      tl.setAttribute("points", points + " " + p.x + "," + p.y), tl.setAttributeNS(null, "display", "block");
     }
   }, proto.hideTipline = function(uid) {
     var tl = this.tiplines[uid];
@@ -4237,10 +4260,11 @@ TWEEN.Tween = function(object) {
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
       lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(lastlatlng.lat, lastlatlng.lng), 
-      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
+      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
     }
-    position && (geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(this.toLatLng(position.latitude, position.longitude)), 
-    geoLocation._status = 2), geoLocation._uid = uid;
+    position && (latlng = this.toLatLng(position.latitude, position.longitude), geoLocation.setIcon(this.icons.arrowBlue), 
+    geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
+    this.map.panTo(latlng)), geoLocation._status = 2), geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
@@ -5262,7 +5286,7 @@ TWEEN.Tween = function(object) {
           isScroll = !1;
         }, 233);
       }), $identities.on("touchmove.maps", function(e) {
-        isScroll = !0, e.preventDefault(), console.log(e.pageY, e), this.scrollTop = pageY - e.pageY + scrollTop;
+        isScroll = !0, e.preventDefault(), this.scrollTop = pageY - e.pageY + scrollTop;
       }), self.on("show", function() {
         $("html, body").css({
           "min-height": $win.height()
@@ -5492,7 +5516,7 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokeInfos = _ENV_._data_.tokeInfos, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
         options: {
@@ -5500,9 +5524,9 @@ TWEEN.Tween = function(object) {
         },
         lastGPS: Store.get("last-latlng"),
         cross: cross,
-        token: token,
         ctoken: ctoken,
-        myIdentityId: browsing_identity && browsing_identity.id || 0,
+        token: token || tokeInfos[0],
+        myIdentityId: browsing_identity && browsing_identity.id || tokeInfos[1] || 0,
         isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities
       });
