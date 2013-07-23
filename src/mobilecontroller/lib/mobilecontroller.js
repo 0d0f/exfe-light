@@ -2000,7 +2000,7 @@ define('mobilecontroller', function (require, exports, module) {
           mapController.updateGeoLocation(this.myuid, position);
 
           var $ids = $('#identities')
-          if (!$ids[0]._ids) {
+          if ($ids.length && !$ids[0]._ids) {
             $ids.triggerHandler('scroll.maps')
           }
         }
