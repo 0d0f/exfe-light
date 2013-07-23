@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 10:07:12 */
+/*! mobile@2a 2013-07-23 11:07:50 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3829,7 +3829,8 @@ TWEEN.Tween = function(object) {
     dead: null,
     live: !1,
     init: function(url, pop, dead) {
-      this.prvLen = 0, this.nxtIdx = 0, this.live = !0, this.pop = pop, this.dead = dead;
+      console.log(url), this.prvLen = 0, this.nxtIdx = 0, this.live = !0, this.pop = pop, 
+      this.dead = dead;
       var http = this.http = new XMLHttpRequest();
       http.open("post", url), http.onreadystatechange = this.listen, http.send(), this.timer = setInterval(this.listen, 1e3);
     },
@@ -4047,11 +4048,11 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.monit = function() {
-    var uid, d, n, gm, b, $e, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, now = Math.round(new Date().getTime() / 1e3);
+    var uid, d, n, gm, b, $e, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, now = Math.round(new Date().getTime() / 1e3);
     for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
-    gm = gms[uid], b = bs[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
     1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
-    gm && gm.setIcon(icons.dotRed), b && b.setOptions({
+    tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
       strokeOpacity: 0,
       icons: [ {
         icon: {
@@ -4067,7 +4068,7 @@ TWEEN.Tween = function(object) {
         offset: "0"
       } ]
     })) : ($e.length && ($e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
-    gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+    tl && tl.setAttribute("stroke", "#7F7F7F"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
       strokeOpacity: 0,
       icons: [ {
         icon: {
@@ -5324,7 +5325,11 @@ TWEEN.Tween = function(object) {
       offset && (this.mapController.latOffset = 1 * offset.earth_to_mars_latitude, this.mapController.lngOffset = 1 * offset.earth_to_mars_longitude);
     },
     streaming: function() {
-      this.initStream(), this.startStream(), console.log("start streaming");
+      var self = this;
+      this.initStream(), this.startStream(), console.log("start streaming"), console.log("start monit"), 
+      this.timer = setInterval(function() {
+        self.mapReadyStatus && self.mapController.monit();
+      }, 1e3);
     },
     initStream: function() {
       var self = this;
