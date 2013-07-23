@@ -1,0 +1,9 @@
+{
+  "name": "mobile",
+  "version": "0.1.0",
+  "description": "simple pages for mobile device only",
+  "homepage": "https://exfe.com/",
+  "author": "cfd",
+  "date": "2013-05-28T15:36:00 UTC+0800",
+  "hint": true
+}

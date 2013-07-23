@@ -19,7 +19,6 @@
 
   #date-string {
     width: 300px;
-    .border-radius(0);
     margin: 0 0 15px 0;
     background: #fefefe;
 
@@ -401,7 +400,9 @@
           height: 5px;
           border: 1px solid #3A6EA5;
           .border-radius(5px);
-          #gradient > .directional(#DBEAF9, #3A6EA5, 276deg);
+          // keynote
+          @a: 276deg;
+          #gradient > .directional(#DBEAF9, #3A6EA5, 90deg - @a);
         }
       }
 
@@ -415,7 +416,7 @@
       #tlPosition {
         .core (@index) {
           .topX (@index) when (@index > 0) {
-            (~".time-label:nth-child(@{index})") {
+            .time-label:nth-child(@{index}) {
               top: (@index - 1) * 5 * 12px;
             }
             .topX(@index - 1);
@@ -432,4 +433,9 @@
 
   }
 
+  -webkit-transition: 144ms -webkit-transform ease-out;
+  -moz-transition: 144ms transform ease-out;
+  -o-transition: 144ms -o-transform ease-out;
+  -ms-transition: 144ms -ms-transform ease-out;
+  transition: 144ms transform ease-out;
 }

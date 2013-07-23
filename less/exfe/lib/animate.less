@@ -1,0 +1,37 @@
+// https://github.com/daneden/animate.css/blob/master/animate.css
+// https://github.com/CSSHat/LESSHat/blob/master/lesshat.less
+
+.animation (@name, ...) {
+  .@{name} {
+    -webkit-animation: @arguments;
+    -moz-animation: @arguments;
+    -ms-animation: @arguments;
+    -o-animation: @arguments;
+    animation: @arguments;
+  }
+}
+
+@-webkit-keyframes a-bounce {
+  0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}
+  40% {-webkit-transform: translateY(-15px);}
+  60% {-webkit-transform: translateY(-7px);}
+}
+
+@-moz-keyframes a-bounce {
+  0%, 20%, 50%, 80%, 100% {-moz-transform: translateY(0);}
+  40% {-moz-transform: translateY(-15px);}
+  60% {-moz-transform: translateY(-7px);}
+}
+
+@-o-keyframes a-bounce {
+  0%, 20%, 50%, 80%, 100% {-o-transform: translateY(0);}
+  40% {-o-transform: translateY(-15px);}
+  60% {-o-transform: translateY(-7px);}
+}
+@keyframes a-bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-15px);}
+  60% {transform: translateY(-7px);}
+}
+
+.animation(a-bounce, 1s both);

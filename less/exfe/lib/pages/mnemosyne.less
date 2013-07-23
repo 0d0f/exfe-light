@@ -1,0 +1,326 @@
+.mnemosyne-start {
+  // note: 必须设置这样，防止浏览器左右滑动历史翻页
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  opacity: 1;
+
+  /*-----------------------*/
+  width: 100%;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+
+  -webkit-perspective: 0;
+  perspective: 0;
+  -webkit-transform-style: flat;
+  transform-style: flat;
+  -webkit-transform: translateZ(-999999px);
+  transform: translateZ(-999999px);
+  /*-----------------------*/
+}
+
+.mnemosyne-start #app-tmp {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  //overflow: hidden !important;
+  z-index: 1062;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  -webkit-perspective: 300px;
+  perspective: 300px;
+  .perspective();
+  -webkit-overflow-scrolling: touch;
+}
+
+.mnemosyne-start #app-tmp.show-slideshow {
+  overflow-x: hidden;
+
+  .slideshow-panel {
+    display: block;
+    z-index: 2000;
+    opacity: 0;
+  }
+}
+
+.mnemosyne-start .mnemosyne-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  //overflow: hidden !important;
+  z-index: 1060;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  pointer-events: none;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  opacity: 0;
+  background: no-repeat center center fixed #000;
+}
+
+.mnemosyne-start .mnemosyne-bg-in {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: -webkit-gradient(linear, left bottom, left top, from(#a0d3ef), color-stop(0.016, #86acdc), color-stop(0.056, #35598a), color-stop(0.105, rgba(21, 26, 33, 0.85)), to(rgba(87, 95, 159, 0.06))), ~'url("@{imgPath}/bg_pattern.png")' no-repeat center center fixed #000000;
+  background: -moz-linear-gradient(90deg, #a0d3ef 0%, #86acdc 1.6%, #35598a 5.6%, rgba(21, 26, 33, 0.85) 10.5%, rgba(87, 95, 159, 0.06) 100%), ~'url("@{imgPath}/bg_pattern.png")' no-repeat center center fixed #000000;
+  background-size: cover;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  pointer-events: none;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1);
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1);
+  opacity: 0;
+  z-index: 1061;
+}
+
+.mnemosyne-exit {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
+  //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2.3333333, 1);
+  z-index: 3000;
+}
+
+.perspective {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  /*-----------------------*/
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  //pointer-events: none;
+  /*-----------------------*/
+}
+
+.surface {
+  position: absolute;
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: flat;
+  transform-style: flat;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+  -webkit-user-select: none;
+}
+
+.group {
+  -webkit-transform-origin: 0px 0px;
+  transform-origin: 0px 0px;
+}
+
+.mnemosyne-panel {
+  border: 0;
+  box-shadow: none;
+  pointer-events: none;
+  visibility: visible;
+  //opacity: 0;
+  //.panel-header {}
+
+  .panel-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 1);
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 1);
+
+    //overflow-x: auto;
+    //kverflow-y: hidden;
+
+  }
+
+  .gallery {
+    height: auto;
+    padding-top: 40px;
+    padding-bottom: 60px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1);
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2584, 1);
+
+    /*-----------------------*/
+    //-webkit-transform-style: preserve-3d;
+    //transform-style: preserve-3d;
+    -webkit-transform-style: flat;
+    transform-style: flat;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform-origin: 0px 0px;
+    transform-origin: 0px 0px;
+    -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 1);
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 1);
+    opacity: 1;
+    /*-----------------------*/
+
+    figure {
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
+      pointer-events: auto;
+
+      background-color: rgba(255, 255, 255, 0.05);
+      .box-shadow(0 0 1px 1px rgba(255, 255, 255, 0.12) inset);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+
+      .photo {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+        //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000001, 1);
+        /*
+        -webkit-backface-visibility: visible;
+        backface-visibility: visible;
+        -webkit-transform-style: flat;
+        transform-style: flat;
+        */
+      }
+
+      .pic {
+        display: block;
+        position: absolute;
+        max-width: none;
+        max-height: none;
+      }
+
+      .mask {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: #fff;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 2px;
+        .box-shadow(0 0 0 1px rgba(255, 255, 255, 0.12) inset, 0 1px 0 rgba(255, 255, 255, 0.2) inset);
+        //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000003, 1);
+        //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000003, 1);
+      }
+
+      .btn-like {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        z-index: 3px;
+        //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+        //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+      }
+
+      .meta {
+        opacity: 0;
+        display: -webkit-box; /* safari */
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        box-orient: horizontal;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 30px;
+        padding: 3px;
+        font-size: 13px;
+        line-height: 24px;
+        color: #808080;
+        z-index: 3px;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, .5);
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        //-webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+        //transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.000002, 1);
+
+        .avatar {
+          display: block;
+          width: 24px;
+          height: 24px;
+          margin-right: 3px;
+
+          > img {
+            .border-radius(1px);
+          }
+        }
+
+        .title {
+          -webkit-box-flex: 1; /* safari */
+          -webkit-flex: 1;
+          -moz-flex: 1;
+          -ms-flex: 1;
+          -o-flex: 1;
+          flex: 1;
+        }
+
+        time {
+          font-family: "digital-7", @baseFontFamily;
+        }
+      }
+    }
+
+    .photos-padding-right {
+      position: absolute;
+      height: 100%;
+    }
+  }
+  //.panel-footer {}
+}
+
+.slideshow-panel {
+  display: none;
+  opacity: 0;
+  -webkit-perspective: 0px;
+  perspective: 0px;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+
+  .pic {
+    display: block;
+    position: absolute;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    .box-shadow(0 0 1px 1px rgba(255, 255, 255, 0.12) inset);
+  }
+}
+
+.load-failed:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url("/static/img/photo_bad.png") no-repeat center center;
+  background-size: 80px 80px;
+}

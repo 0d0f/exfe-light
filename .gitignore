@@ -1,6 +1,7 @@
 .DS_Store
 .*.swp
-footer.php
-less/1b.less
-less/themes
 *.bk*
+.idea/
+build/
+production/src
+miao

@@ -1,0 +1,8 @@
+{
+  "name": "global",
+  "description": "全局配置，比如全局 document 事件绑定",
+  "version": "0.0.6",
+  "author": "cfd",
+  "date": "2013-05-27T18:24:50 UTC+0800",
+  "hint": true
+}

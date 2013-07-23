@@ -1,0 +1,10 @@
+{
+  "name": "lightsaber",
+  "summary": " 「May the force be with you. 愿原力与你同在.」",
+  "description": "Lightsaber is a lightweight web framework.",
+  "wiki": "http://en.wikipedia.org/wiki/Lightsaber",
+  "author": "cfd",
+  "version": "0.0.6",
+  "date": "2013-06-21T14:52:00 UTC+0800",
+  "hint": true
+}

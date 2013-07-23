@@ -7,6 +7,16 @@
   z-index: @zindexPanel;
 }
 
+.panel:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: -0.5em;
+  z-index: -1;
+}
+
 .panel:focus {
   outline: none;
 }

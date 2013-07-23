@@ -3,9 +3,11 @@
     <!-- Cross-Form -->
     <div class="cross-form hide">
 
+      <!--
       <div class="bg-gatherax">
         Gather a <span class="x">·X·</span>
       </div>
+      -->
 
       <!-- Choose Identity -->
       <div class="pull-left choose-identity">
@@ -15,45 +17,40 @@
       </div>
       <!-- .Choose Identity -->
 
-      <div class="form-horizontal">
+      <div class="cross-form-user">
 
           <!--<legend class="hide">Extending form controls</legend>-->
 
           <!-- Cross-Form: Title -->
-          <div class="control-group">
-            <label class="control-label" for="gather-title">Intent</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="gather-title" placeholder="Gathering for what?" />
-            </div>
+          <div class="cross-form-title">
+            <label for="gather-title">Title</label>
+            <input type="text" class="input-xlarge" id="gather-title" placeholder="Gathering for what?" />
           </div>
           <!-- .Cross-Form: Title -->
 
           <!-- Cross-Form: Exfee -->
-          <div class="control-group cross-exfee" id="gather-exfee">
-            <label class="control-label" for="gather-exfee-input">Exfee</label>
-            <div class="controls">
-              <div class="gather-invite">
-                <input type="text" class="input-xlarge exfee-input" id="gather-exfee-input" placeholder="Invite people by name, email, etc." />
-                <i class="pointer icon16-exfee-plus"></i>
-              </div>
+          <div class="cross-exfee" id="gather-exfee">
+            <label class="control-label" for="gather-exfee-input">People</label>
+            <div class="gather-invite">
+              <input type="text" class="input-xlarge exfee-input" id="gather-exfee-input" placeholder="Invite by email, phone, etc." />
+              <i class="pointer icon16-exfee-plus"></i>
             </div>
 
             <!--<div class="cross-identities exfee_pop_up_save">-->
             <div class="cross-identities">
-              <ul class="unstyled thumbnails">
-              </ul>
+              <ul class="unstyled thumbnails"></ul>
             </div>
 
           </div>
           <!-- .Cross-Form: Exfee -->
 
           <div class="form-actions">
-            <div class="pull-right control-buttos">
+            <div class="pull-right control-buttons">
               <span class="underline discard" id="cross-form-discard">Discard</span>
-              <button class="xbtn-savegather" id="cross-form-gather">Gather</button>
+              <button class="xbtn-savegather" id="cross-form-gather">Gather a ·X·</button>
             </div>
             <div class="helps">
-              <p class="help-block add-identity">Edit more information directly in preview below.</p>
+              <p class="help-block add-identity">Edit more details directly in <span class="x">·X· </span> preview below.</p>
               <p class="help-block text-error pull-right please-identity hide">Please identify yourself before gathering.</p>
             </div>
         </div>
@@ -62,26 +59,13 @@
 
     </div>
 
-    <!-- Cross-Editing -->
-    <!--
-    <div class="xalert xalert-info cross-alert">
-      <span class="editing">Editing</span>
-      <button class="pull-right save">Done</button>
-      <a href="#" class="pull-right revert">Revert</a>
-    </div>
-    -->
-    <!-- .Cross-Edit -->
-
-    <!-- Cross-Shuffle-Background -->
-    <!-- 添加 `sb-animate` 设置旋转动画, 去掉则还原 -->
-    <!--<i class="pull-right icon14-question shuffle-background"></i>-->
-    <!-- .Cross-Shuffle-Background -->
-
     <!-- Cross-background -->
-    <div class="cross-background">
-      <div class="cross-background-blur"></div>
-      <div class="cross-background-side"></div>
+    <div class="cross-background" style="">
+      <div class="cross-background-blur-top"></div>
+      <div class="cross-background-blur-bottom"></div>
+      <!-- <div class="cross-background-side"></div> -->
     </div>
+    <div class="cross-background-color hide"></div>
 
     <!-- Cross-Container -->
     <div class="cross-container" editarea="background">
@@ -104,7 +88,7 @@
       </div>
       <!-- Cross-Operactions -->
 
-      <!-- Cross-Title -->
+      <!-- cross-title -->
       <div class="pointer cross-title" editarea="title" data-link="nota" data-event-ignore="click">
         <h1 class="show"></h1>
         <textarea class="edit editing hide"></textarea>
@@ -152,6 +136,10 @@
             </div>
           </div>
 
+          <!-- Cross-PhotoX -->
+          <div class="cross-photox hide"></div>
+          <!-- .Cross-Photox -->
+
           <!-- Cross-Conversation -->
           <div class="cross-conversation hide">
 
@@ -165,7 +153,7 @@
                 <img alt="" src="" width="40" height="40" />
               </span>
 
-              <div class="comment">
+              <div class="comment" data-link="nota">
                 <div class="comment-form">
                   <textarea></textarea>
                   <i class="pointer icon-enter-blue"></i>
@@ -176,8 +164,7 @@
 
 
             <!-- Conversation-Timeline -->
-            <div class="conversation-timeline">
-            </div>
+            <div class="conversation-timeline"></div>
             <!-- .Conversation-Timeline -->
 
           </div>
@@ -195,8 +182,6 @@
               <h2></h2>
               <div class="cross-time show"></div>
               <!--<div class="timezone"><i class="icon16-timezone"></i></div>-->
-              <!-- placeholder="1976-04-01 09:00 AM" -->
-              <input type="text" class="edit editing" style="display:none"> <!-- @todo @caifangdun move this style to css file -->
             </div>
 
             <!-- Cross-Place -->
@@ -236,13 +221,14 @@
                 <ul class="clearfix unstyled thumbnails"></ul>
 
                 <div class="invite-form">
-                    <!--<i class="pointer icon16-exfee-plus-blue"></i>-->
-                    <i class="pointer icon16-exfee-plus"></i>
-                    <input name="identity" type="text" class="input-xlarge exfee-input" id="cross-exfee-input" placeholder="Invite people by name, email, etc." editarea="exfee" />
+                  <!--<i class="pointer icon16-exfee-plus-blue"></i>-->
+                  <input name="identity" type="text" class="input-xlarge exfee-input" id="cross-exfee-input" placeholder="Invite by email, phone, etc." editarea="exfee" />
+                  <i class="pointer icon16-exfee-plus"></i>
                 </div>
                 <div class="exfee-warning hide">
                   <i class="icon16-warning"></i>
-                  <span class="xalert-fail">12 exfees maximum</span>
+                  <span class="xalert-fail">Quota limit exceeded.</span>
+                  <span>12 people limit on gathering this ·X·.<br />However, we’re glad to eliminate this limit during pilot period in appreciation of your early adaption and support. Thank you!</span>
                 </div>
 
               </div>

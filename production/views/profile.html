@@ -13,10 +13,11 @@
               <h3 class="pull-left" data-link="nota"></h3>
               <div class="xbtn changepassword" data-link="nota" data-widget="dialog"><i class="icon14-lock"></i><span></span></div>
             </div>
+            <div class="user-bio hide"></div>
             <ul class="unstyled identity-list" data-draggable="true"></ul>
-
+            <div class="exfe-app hide"><a title="EXFE is available for your iPhone." href="https://itunes.apple.com/cn/app/exfe/id514026604" target="_blank"><span class="x-sign">EXFE</span> is available for your iPhone.</a></div>
           </div>
-          <button id="app-profile-addidentity" class="pull-right xbtn xbtn-addidentity hide" data-widget="dialog" data-dialog-type="addidentity">Add Identity…</button>
+          <button id="app-profile-addidentity" class="pull-right xbtn xbtn-addidentity" data-widget="dialog" data-dialog-type="addidentity">Add Identity…</button>
 
           <div class="pull-right identities-trash hide">
             <div class="pull-right trash-message">
@@ -74,15 +75,15 @@
           </span><span class="identity"><span class="identityname"><em>{{printName name external_username}}</em></span><span class="oblique external">{{atName this}}</span> <i class="icon16-identity-{{provider}}"></i></span>
           <!-- {{#makeDefault __default__ status}}<a class="makedefault" href="#" data-link="nota">Make default</a>{{/makeDefault}} -->
           {{#isOAuthIdentity provider}}
-          <span class="xlabel isOAuth hide">Wanna change this name? Please do it in {{capitalize provider}}.</span>
-          {{/isOAuthIdentity}}
-          {{#ifOauthVerifying provider status}}
+          <span class="xlabel isOAuth hide">To change this name, please update your profile in {{capitalize provider}}.</span>
+          {{#ifRevoked status}}
           <span class="xlabel">
             <i class="icon16-warning"></i>
             <span>Authorization failed.</span>
             <button class="xbtn xbtn-reauthorize" data-widget="dialog" data-dialog-type="verification_oauth" data-link="nota">Re-Authorize</button>
           </span>
-          {{/ifOauthVerifying}}
+          {{/ifRevoked}}
+          {{/isOAuthIdentity}}
           {{#ifVerifying provider status}}
           <span class="xlabel">
             <i class="icon16-warning" style="display: none;"></i>
@@ -131,14 +132,14 @@
         <a href="/#!{{id}}" data-id="{{id}}" data-link>
           <h5>{{title}}</h5>
           <time>{{printTime time}}</time>
-          <address>{{place.title}} 
+          <address>{{place.title}}
           {{#if place.description}}
             <span class="gray333">({{place.description}})</span>
           {{/if}}
           </address>
-          <div><span>{{{confirmed_nums exfee.invitations}}}</span> 
-            <span class="gray333">of</span> 
-            {{{total exfee.invitations}}} 
+          <div><span>{{exfee.accepted}}</span>
+            <span class="gray333">of</span>
+            {{exfee.total}}
             <span class="gray333">accepted</span>: <span>{{{confirmed_identities exfee.invitations}}}</span>
           </div>
         </a>

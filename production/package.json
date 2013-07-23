@@ -158,10 +158,6 @@
         "version": "0.0.6"
       },
       {
-        "name": "photox",
-        "version": "0.0.2"
-      },
-      {
         "name": "filehtml5",
         "version": "0.0.1"
       },
@@ -172,14 +168,6 @@
       {
         "name": "phonepanel",
         "version": "0.0.3"
-      },
-      {
-        "name": "photoxwidget",
-        "version": "0.0.1"
-      },
-      {
-        "name": "mnemosyne",
-        "version": "0.0.1"
       },
       {
         "name": "uploader",
@@ -214,7 +202,7 @@
         "version": "0.2.11"
       }
     ],
-    "sha1": "2a-08e2752"
+    "sha1": "2a-6b43f97"
   },
   "mobile": {
     "version": "2a",
@@ -304,7 +292,7 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-4a2c439"
+    "sha1": "2a-447818f"
   },
   "css": {
     "exfe": "exfe-5d5aa8d.css",

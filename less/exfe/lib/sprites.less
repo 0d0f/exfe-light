@@ -174,6 +174,12 @@
 .icon16-timezone                  { background-position: 16 * @w2 @h2 }
 .icon16-identity-facebook-blue    { background-position: 17 * @w2 @h2 }
 .icon16-identity-facebook         { background-position: 18 * @w2 @h2 }
+.icon16-identity-instagram-blue   { background-position: 19 * @w2 @h2 }
+.icon16-identity-instagram        { background-position: 20 * @w2 @h2 }
+.icon16-identity-dropbox-blue     { background-position: 21 * @w2 @h2 }
+.icon16-identity-dropbox          { background-position: 22 * @w2 @h2 }
+.icon16-identity-flickr-blue      { background-position: 23 * @w2 @h2 }
+.icon16-identity-flickr           { background-position: 24 * @w2 @h2 }
 
 @w3: -10px;
 @h3: -44px;
@@ -213,3 +219,66 @@
 .icon24-enter                    { background-position: 4 * @w4_24 - 80 @h4_24; }
 .icon24-place                    { background-position: 5 * @w4_24 - 80 @h4_24; }
 .icon24-time                     { background-position: 6 * @w4_24 - 80 @h4_24; }
+
+
+// photox icons
+[class^="ix-"],
+[class*=" ix-"] {
+  display: inline-block;
+  .ie7-restore-right-whitespace();
+  vertical-align: text-top;
+  background-image: ~'url("@{imgPath}/icons-photox.png")';
+}
+
+// 36 & 36
+@w5_36: -36px;
+.ix-add,
+.ix-provider,
+.ix-wall {
+  width: 36px;
+  height: 36px;
+}
+.ix-add                          { background-position: 0 * @w5_36 0; }
+.ix-facebook                     { background-position: 1 * @w5_36 0; }
+.ix-instagram                    { background-position: 2 * @w5_36 0; }
+.ix-flickr                       { background-position: 3 * @w5_36 0; }
+.ix-dropbox                      { background-position: 4 * @w5_36 0; }
+.ix-wall-blue                    { background-position: 5 * @w5_36 0; }
+.ix-wall-gay                     { background-position: 6 * @w5_36 0; }
+
+// 72 * 72
+.ix-placehoder {
+  width: 72px;
+  height: 72px;
+  background-position: 0  -36px;
+}
+
+// 100 & 100
+@w6_100: -100px;
+@h6_100: -108px;
+.ix-big-provider {
+  width: 100px;
+  height: 100px;
+}
+.ix-facebook-big                 { background-position: 0 * @w6_100 @h6_100; }
+.ix-instagram-big                { background-position: 1 * @w6_100 @h6_100; }
+.ix-flickr-big                   { background-position: 2 * @w6_100 @h6_100; }
+.ix-dropbox-big                  { background-position: 3 * @w6_100 @h6_100; }
+
+@w7_20: -20px;
+@h7_20: -208px;
+.ix-selected,
+.ix-like,
+.ix-unlike {
+  width: 20px;
+  height: 20px;
+}
+.ix-selected                     { background-position: 0 * @w7_20 @h7_20; }
+.ix-unlike                       { background-position: 1 * @w7_20 @h7_20; }
+.ix-like                         { background-position: 2 * @w7_20 @h7_20; }
+
+.ix-exit {
+  width: 48px;
+  height: 48px;
+  background-position: 0 -228px;
+}

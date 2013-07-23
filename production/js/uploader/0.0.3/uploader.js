@@ -8,12 +8,12 @@ define('uploader', function (require, exports, module) {
   // Uploader Avatar Image
   // ---------------------
 
-  var $ = require('jquery');
-  var Api = require('api');
-  var Store = require('store');
-  var Config = require('config');
-  var Dialog = require('dialog');
-  var FileHTML5 = require('filehtml5');
+  var $ = require('jquery'),
+      Api = require('api'),
+      Store = require('store'),
+      API_URL = require('config').api_url,
+      Dialog = require('dialog'),
+      FileHTML5 = require('filehtml5');
 
   var Uploader = Dialog.extend({
 
@@ -614,7 +614,7 @@ define('uploader', function (require, exports, module) {
             data.identity_id = this._data.identity_id;
           }
 
-          this.filehtml5.startUpload(Config.api_url + '/avatar/update?token=' + token, data);
+          this.filehtml5.startUpload(API_URL + '/avatar/update?token=' + token, data);
           return false;
         },
 
@@ -670,7 +670,7 @@ define('uploader', function (require, exports, module) {
             that._data = data;
 
             // 头像上传
-            that.filehtml5.startUpload(Config.api_url + '/avatar/update?token=' + token, data);
+            that.filehtml5.startUpload(API_URL + '/avatar/update?token=' + token, data);
           }, 15.6);
         }
       },

@@ -5,7 +5,7 @@ body {
 
 .navbar {
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 34px;
 
   .navbar-bg {
     position: absolute;
@@ -37,7 +37,24 @@ body {
 
   .brand {
     padding: 0;
-    margin-left: 20px;
+    margin-left: 40px;
+    height: 50px;
+    line-height: 50px;
+
+    img {
+      vertical-align: top;
+      margin-top: (50 - 36)/2px;
+    }
+
+    span {
+      margin-left: 10px;
+      margin-right: 10px;
+      height: 100%;
+      font-size: 24px;
+      font-weight: 300;
+      color: @exfeBlue;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.75), 0 0 6px rgba(210, 226, 244, 0.5);
+    }
   }
 
   .nav {
@@ -87,13 +104,20 @@ body {
 
       .browsing-identity {
         margin-top: -6px;
-        padding: 6px 3px;
-        font-weight: bold;
-        color: #7C9CBF;
+        padding: 6px 8px;
         text-shadow: 0 1px 1px #fff;
         border: 1px dashed rgba(0, 0, 0, .15);
-        #gradient > .directional(rgba(5, 5, 5, .05), rgba(127, 127, 127, .05), 270deg);
+        #gradient > .directional(rgba(5, 5, 5, .05), rgba(127, 127, 127, .05), to bottom);
         .border-radius(3px);
+
+        & > strong {
+          color: #7C9CBF;
+        }
+
+        & > span {
+          color: #3A6EA5;
+          font-weight: bold;
+        }
       }
     }
 
@@ -132,7 +156,7 @@ body {
   .nav > li.user {
     //min-width: 78px;
     //max-width: 228px;
-    background-color: #fafafa;
+    // background-color: #fafafa;
   }
 
   .fill-left {
@@ -149,8 +173,10 @@ body {
     margin-top: -6px;
     margin-right: 4px;
     width: 198px;
-    padding: 20px 15px 15px;
-    #gradient > .directional(#fafafa, #e6e6e6, 255deg);
+    padding: 20px 15px 5px;
+    // keynote
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid rgba(255, 255, 255, .8);
     .box-shadow(0 1px 4px rgba(0, 0, 0, .25));
     .border-radius(0 0 5px 5px);
@@ -178,8 +204,8 @@ body {
 
 
     .xbtn-gather {
-      margin-top: 15px;
-      text-align: center;
+      margin: 20px auto;
+      color: #fff;
       line-height: 30px;
       font-weight: 300;
     }
@@ -205,11 +231,16 @@ body {
         }
 
         .oblique {
-          padding-left: 7px;
+          display: inline-block;
+          max-width: 140px;
+          margin-left: 7px;
+          .text-overflow();
         }
       }
 
-      .set-up, .merge {
+      .setup, .merge {
+        text-align: center;
+        h5 { margin: 0; }
         > a {
           display: inline;
           font-weight: bold;
@@ -236,7 +267,7 @@ body {
         right: -8px;
         bottom: -5px;
         left: -8px;
-        #gradient > .directional(#fafafa, #e6e6e6, 270deg);
+        #gradient > .directional(#fafafa, #e6e6e6, to bottom);
         border: 1px solid rgba(127, 127, 127, .12);
         .box-shadow(0 1px 1px #fff);
         .border-radius(3px);
@@ -343,24 +374,21 @@ body {
     }
   }
 
-  img {
-    display: block;
-  }
-
   .sign-in {
     font-style: oblique;
   }
 
   .version {
     position: absolute;
-    bottom: 10px;
-    left: 145px;
+    bottom: 12px;
+    left: 147px;
     font-size: 12px;
     line-height: 16px;
     font-style: oblique;
     font-weight: 300;
-    color: #7f7f7f;
+    color: #667E98;
     text-decoration: none;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.75), 0 0 6px rgba(210, 226, 244, 0.5);
   }
 
 }
@@ -372,7 +400,7 @@ body {
 }
 
 .x-sign {
-  color: #1175a5;
+  color: #3a6ea5 !important;
   font-style: normal;
 }
 

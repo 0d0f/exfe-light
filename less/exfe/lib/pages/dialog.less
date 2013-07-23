@@ -30,7 +30,7 @@
     > a {
       margin-left: 26px;
       .pull-left();
-      display: block;
+      //display: block;
       width: 40px;
       height: 40px;
       .hide-text();
@@ -243,13 +243,6 @@
 
 // browsing-identity
 .modal-bi {
-  .xbtn-go {
-    margin-left: 18px;
-  }
-
-  .browsing-tips {
-    padding-bottom: 15px;
-  }
 
   .bidentity {
     color: #4c4c4c;
@@ -263,8 +256,22 @@
     padding-top: 0;
   }
 
+  .merge-info {
+    .buser-name,
+    .user-name,
+    .not {
+      color: #333333;
+      font-weight: bold;
+    }
+  }
+
   .xbtn-merge {
     padding: 0 5px;
+    margin-left: 8px;
+  }
+
+  .xbtn-dnm {
+    color: #E52E53;
   }
 }
 
@@ -401,7 +408,10 @@
     top: 0;
     right: 0;
     background-color: transparent;
-    #gradient > .directional(rgba(233, 231, 235, .97), rgba(108, 121, 127,.97), 266deg);
+    // keynote
+    @a: 266deg;
+    #gradient > .directional(rgba(233, 231, 235, .97), rgba(108, 121,
+    127,.97), 90deg - @a);
     z-index: @index + 1;
   }
 
@@ -546,7 +556,7 @@
     height: 240px;
     padding: 30px 30px 29px;
     z-index: @index + 3;
-    #gradient > .directional(#f2f2f2, #eaeaea, 270deg);
+    #gradient > .directional(#f2f2f2, #eaeaea, to bottom);
     .opacity(90);
   }
 
@@ -606,5 +616,14 @@
   .modal-main {
     min-height: auto;
     padding-bottom: 19px;
+  }
+}
+
+.modal-id,
+.modal-ai {
+  .phone-tip {
+    font-size: 12px;
+    line-height: 14px;
+    color: rgb(127, 127, 127);
   }
 }

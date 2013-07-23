@@ -19,7 +19,9 @@
   color: #4c4c4c;
   .box-shadow(0 1px 4px rgba(0, 0, 0, .25));
   .border-radius(0 0 5px 5px);
-  #gradient > .vertical(#fafafa, #e6e6e6);
+  // keynote
+  @a: 255deg;
+  #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
   &.fade {
     .transition(e('opacity .3s linear, top .3s ease-out'));
     top: -25%;
@@ -38,6 +40,10 @@
     .border-radius(3px);
     .box-shadow(0 8px 16px rgba(0, 0, 0, .3));
   }
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1);
 }
 
 .modal-header {
@@ -62,11 +68,18 @@
     width: 20px;
     float: left;
     margin-top: 0;
+    color: #7f7f7f;
     font-size: 12px;
     font-weight: normal;
     text-shadow: none;
     background: transparent;
     border: none;
+    opacity: 1;
+
+    &:hover {
+      opacity: 1;
+      color: #7f7f7f;
+    }
   }
 }
 
@@ -192,7 +205,9 @@
       padding: 12px 4px 0px;
       margin: 10px 0 0 1px;
       border: 1px solid rgba(255, 255, 255, .5);
-      #gradient > .directional(#fafafa, #e6e6e6, 255deg);
+      // keynote
+      @a: 255deg;
+      #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
       text-align: center;
       overflow: hidden;
       .box-shadow(0 1px 2px rgba(0, 0, 0, .25));
@@ -207,7 +222,7 @@
 
     .dropdown-menu {
       width: 100%;
-      #gradient > .vertical(#fafafa, #e6e6e6);
+      #gradient > .directional(#fafafa, #e6e6e6, 195px);
       border: 1px solid #fff;
       .border-radius(0);
       .box-shadow(0 1px 4px rgba(0,0,0,.25));
@@ -415,7 +430,9 @@
     left: 1px;
     z-index: @zindexModal * 10 + 1;
     width: 231px;
-    #gradient > .vertical(#fafafa, #e6e6e6);
+    // keynote
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid #fff;
     .box-shadow(0 1px 4px rgba(0,0,0,.25));
     line-height: 24px;
@@ -429,10 +446,18 @@
 
     li {
       cursor: pointer;
-      font-style: oblique;
       padding: 0 3px;
       height: 24px;
       line-height: 24px;
+    }
+
+    // external_username
+    .eun {
+      font-style: oblique;
+    }
+
+    .provider {
+      color: #7f7f7f;
     }
 
     // li:hover,
@@ -468,7 +493,9 @@
     width: 278px;
     margin-top: 0;
     .border-radius(0);
-    #gradient > .directional(#fafafa, #e6e6e6, 255deg);
+    // keynote
+    @a: 255deg;
+    #gradient > .directional(#fafafa, #e6e6e6, 90deg - @a);
     border: 1px solid #fff;
     .box-shadow(0 1px 4px rgba(0,0,0,.25));
     line-height: 18px;
