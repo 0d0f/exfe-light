@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 07:07:35 */
+/*! mobile@2a 2013-07-23 09:07:07 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3974,7 +3974,7 @@ TWEEN.Tween = function(object) {
           GEvent.addListener(map, "bounds_changed", function() {
             console.log("bounds_end", rm.uid), GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
-            console.log("zoom_end"), rm.contains();
+            console.log("zoom_end");
           }), GEvent.addListener(map, "drag", function() {
             console.log("drag");
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
