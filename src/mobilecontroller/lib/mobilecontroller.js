@@ -1928,6 +1928,7 @@ define('mobilecontroller', function (require, exports, module) {
         console.log('start monit')
         this.timer = setInterval(function () {
           if (self.mapReadyStatus) {
+            console.log(new Date());
             self.mapController.monit();
           }
         }, 1000);

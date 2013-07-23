@@ -209,8 +209,7 @@
       delete routes[k];
     }
     while ((item = rs.shift())) {
-      console.log(1231);
-      //this.addRoute(item);
+      this.addRoute(item);
     }
   };
 
@@ -410,6 +409,8 @@
     gm.setPosition(latlng);
     gm._data = data;
 
+    this.updated[uid] = data;
+
     this.updateTipline(uid, latlng);
     return gm;
   };
@@ -560,14 +561,6 @@
     return p;
   };
 
-  proto.hideBreadcrumbs = function (uid) {
-    var b = this.breadcrumbs[uid];
-    if (b) {
-      b.setVisible(false);
-      // b.lastMarker.setVisible(false);
-    }
-  };
-
   proto.showBreadcrumbs = function (uid) {
     var bds = this.breadcrumbs
       , puid = this.uid
@@ -589,8 +582,6 @@
     this.uid = uid;
     console.log('showBreadcrumbs', puid, uid);
   };
-
-  proto.showGeoMarker = function (uid) {};
 
   proto.updatePoint = function (data) {
     var locations = this.locations, id = data.id, locate, latlng, tags, tag;
@@ -826,6 +817,7 @@
       }
       geoLocation._status = 2;
     }
+    this.updated[uid] = position || lastlatlng;
     geoLocation._uid = uid;
   };
 
