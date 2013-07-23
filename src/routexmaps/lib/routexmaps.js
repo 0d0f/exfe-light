@@ -391,7 +391,7 @@
       b._uid = uid;
       b._data = d;
 
-      gm = this.drawGeoMarker(uid, positions[0], latlng);
+      gm = this.drawGeoMarker(uid, d[0], latlng);
 
       this.distanceMatrix(uid, gm, dp);
     }
@@ -816,7 +816,9 @@
       }
       geoLocation._status = 2;
     }
-    this.updated[uid] = position || lastlatlng;
+    if (uid) {
+      this.updated[uid] = position || lastlatlng;
+    }
     geoLocation._uid = uid;
   };
 

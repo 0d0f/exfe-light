@@ -1959,8 +1959,8 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.startGeo(
             function (r) {
               self.position = r;
+              Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '', timestamp: r.timestamp });
               self.switchGPSStyle(2);
-              Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '' });
               self.trackGeoLocation();
               console.log('GPS', r.latitude, r.longitude);
             }
