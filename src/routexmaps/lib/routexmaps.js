@@ -292,7 +292,7 @@
       , gms = this.geoMarkers
       , tiplines = this.tiplines
       , uid, d, now = Math.round((new Date()).getTime() / 1000), n;
-    var gm, b, $e;
+    var gm, b, $e, tl;
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
         d = u[uid];
