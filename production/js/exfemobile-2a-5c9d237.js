@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 12:07:34 */
+/*! mobile@2a 2013-07-24 12:07:31 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5210,7 +5210,7 @@ TWEEN.Tween = function(object) {
         var height = $win.height();
         $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)"), 
         $("#identities").css("max-height", 60 * Math.round(height / 60) - 60 - 100 + 5);
-      }), $win.triggerHandler("orientationchange");
+      });
       var gotoGPS = function(e, showBreadcrumbs) {
         var status = self.checkGPSStyle();
         if (self.mapReadyStatus) {
@@ -5273,7 +5273,8 @@ TWEEN.Tween = function(object) {
         $avatars.each(function(i) {
           var bound = this.getBoundingClientRect(), uid = $(this).parents(".identity").data("uid"), t = bound.height / 2 + bound.top;
           t >= minT && maxT >= t && (ids[uid] = [ i, 46, t ]);
-        }), self.mapController && self.mapController.contains(), console.dir(ids);
+        }), self.mapReadyStatus && self.mapController && self.mapController.contains(), 
+        console.dir(ids);
       }), element.on("touchmove.maps", "#identities-overlay", function(e) {
         e.stopPropagation(), e.preventDefault();
       }), element.on("touchmove", ".info-windown", function(e) {
@@ -5378,8 +5379,7 @@ TWEEN.Tween = function(object) {
         $identities.append(div);
       } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
-      $identities.length && !$identities[0]._ids && (console.log("trigger handler scroll.maps"), 
-      $identities.triggerHandler("scroll.maps"));
+      console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }
   });
 }), define("mobileroutes", function(require, exports, module) {
