@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 04:07:58 */
+/*! mobile@2a 2013-07-23 05:07:28 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5516,7 +5516,7 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokeInfos = _ENV_._data_.tokeInfos, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokenInfos = _ENV_._data_.tokenInfos, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
         options: {
@@ -5525,8 +5525,8 @@ TWEEN.Tween = function(object) {
         lastGPS: Store.get("last-latlng"),
         cross: cross,
         ctoken: ctoken,
-        token: token || tokeInfos[0],
-        myIdentityId: browsing_identity && browsing_identity.id || tokeInfos[1] || 0,
+        token: token || tokenInfos[0],
+        myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
         isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities
       });
