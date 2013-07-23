@@ -375,6 +375,7 @@ define('mobileroutes', function (require, exports, module) {
       var app = req.app
         , ctoken = req.params[0]
         , response = _ENV_._data_.response
+        , tokeInfos = _ENV_._data_.tokeInfos
         , cross = response.cross
         , action = response.action
         , cross_access_token = response.cross_access_token
@@ -391,15 +392,17 @@ define('mobileroutes', function (require, exports, module) {
         Store.set('cats', cats);
       }
 
+
+
       var routexCont = app.controllers.routex = new RouteXController({
           options: {
             template: $('#routex-tmpl').html()
           }
         , lastGPS: Store.get('last-latlng')
         , cross: cross
-        , token: token
         , ctoken: ctoken
-        , myIdentityId: (browsing_identity && browsing_identity.id) || 0
+        , token: token || tokeInfos[0]
+        , myIdentityId: (browsing_identity && browsing_identity.id) || tokeInfos[1] || 0
         , isSmithToken: action === 'CLAIM_IDENTITY'
         , freeIdentities: free_identities
       });

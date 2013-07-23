@@ -1950,36 +1950,34 @@ button .exfe {
     -webkit-transform: rotate(360deg);
   }
 }
-/* Loading animation container */
 .loading {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 28px;
-  height: 28px;
-  margin: -14px 0 0 -14px;
+  left: 0px;
+  top: 0px;
+  width: 22px;
+  height: 22px;
   display: none;
 }
 /* Spinning circle (inner circle) */
 .loading .maskedCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 12px;
-  border: 3px solid white;
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  border: 2px solid #7f7f7f;
 }
 /* Spinning circle mask */
 .loading .mask {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   overflow: hidden;
 }
 /* Spinner */
 .loading .spinner {
   position: absolute;
-  left: 1px;
-  top: 1px;
-  width: 26px;
-  height: 26px;
+  left: 0px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
   -webkit-animation: spin 1s infinite linear;
 }
 @-webkit-keyframes pound {
@@ -2007,6 +2005,7 @@ button .exfe {
   background: #fafafa;
   z-index: 2000;
   overflow: hidden;
+  -webkit-appearance: none;
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -2022,6 +2021,7 @@ button .exfe {
   left: 0;
   width: 100%;
   height: 100%;
+  -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
 #routex #map #geomarker {
@@ -2050,6 +2050,7 @@ button .exfe {
   height: 100%;
   z-index: 1;
   pointer-events: none;
+  -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
 #routex #identities-overlay {
@@ -2060,6 +2061,7 @@ button .exfe {
   padding-left: 3px;
   text-align: center;
   background: #eee;
+  -webkit-appearance: none;
   -webkit-transform: translate3d(-50px, 0, 0);
   -webkit-transition: -webkit-transform 233ms ease-in;
   background-color: rgba(255, 255, 255, 0.88);
@@ -2085,6 +2087,7 @@ button .exfe {
   width: 50px;
   background: -webkit-radial-gradient(25px -1px, ellipse farthest-side, rgba(127, 127, 127, 0.5) 0%, rgba(127, 127, 127, 0) 100%);
   z-index: 2;
+  -webkit-appearance: none;
 }
 #routex #identities-overlay #identities {
   min-height: 65px;
@@ -2110,20 +2113,21 @@ button .exfe {
   height: 44px;
   display: block;
   background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
+  -webkit-appearance: none;
   background-size: 100% 100%;
   -webkit-user-select: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
 #routex #identities-overlay .identity .avatar {
   position: absolute;
-  border-radius: 3px;
+  border-radius: 2px;
   width: 40px;
   height: 40px;
   top: 2px;
   left: 2px;
   display: block;
   float: none;
-  border: 1px solid transparent;
+  -webkit-appearance: none;
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -2172,6 +2176,7 @@ button .exfe {
   -webkit-transition: -webkit-transform 233ms ease-in;
   -webkit-user-select: none;
   pointer-events: auto;
+  -webkit-appearance: none;
 }
 #routex #open-exfe .btn-openexfe {
   position: absolute;
@@ -2204,6 +2209,7 @@ button .exfe {
   z-index: 1000101;
   -webkit-user-select: none;
   pointer-events: auto;
+  -webkit-appearance: none;
 }
 #routex #locate .btn-locate {
   position: absolute;
@@ -2217,6 +2223,7 @@ button .exfe {
   -webkit-backface-visibility: hidden;
   -webkit-transform-origin: 50% 50%;
   -webkit-transition: -webkit-transform 233ms ease-in;
+  -webkit-appearance: none;
 }
 #routex #locate:after {
   position: absolute;
@@ -2246,6 +2253,7 @@ button .exfe {
   left: 0;
   z-index: 1000201;
   background: rgba(250, 250, 250, 0.92);
+  -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
 #routex #free-identities #iavatar {

@@ -56,6 +56,8 @@ define('routexmaps', function (require) {
     this.geoMarkers = {};
     this.icons = {};
 
+    this.updated = {};
+
     this.boundsOffset = {
         left: 50
       , top: 0
@@ -205,8 +207,37 @@ define('routexmaps', function (require) {
       delete routes[k];
     }
     while ((item = rs.shift())) {
-      // this.updatePolyline(item);
+      console.log(1231);
+      //this.addRoute(item);
     }
+  };
+
+
+  proto.addRoute = function (data) {
+    var coords = [], uid = data.created_by, positions = data.positions.slice(0), p, route;
+
+    route = this.routes[uid] = this.addPolyline(data);
+
+    while ((p = positions.shift())) {
+      coords.push(this.toLatLng(p.latitude, p.longitude));
+    }
+
+    route._data = data;
+    route.setPath(coords);
+  };
+
+  proto.addPolyline = function (data) {
+    var rgba = (data.color && data.color.split(',')) || []
+      , color = rgba.length ? '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16) : '#00f'
+      , alpha = rgba[3] || 1
+      , p = new google.maps.Polyline({
+            map: this.map
+          , geodesic: true
+          , strokeColor: data.color
+          , strokeWeight: 1
+          , strokeOpacity: alpha
+        });
+    return p;
   };
 
   proto.drawPlaces = function (ps) {
@@ -253,6 +284,77 @@ define('routexmaps', function (require) {
     }
   };
 
+  proto.monit = function () {
+    var u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, uid, d, now = Math.round((new Date()).getTime() / 1000), n;
+    var gm, b, $e;
+    for (uid in u) {
+      if (u.hasOwnProperty(uid)) {
+        d = u[uid];
+        n = Math.floor((now - d.timestamp) / 60);
+        gm = gms[uid];
+        b = bs[uid];
+        $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
+        if (n <= 1) {
+
+          if ($e.length) {
+            if ($e.hasClass('icon-arrow-gray')) {
+              $e.attr('class', 'icon icon-arrow-red');
+            } else {
+              $e.attr('class', 'icon icon-dot-red');
+            }
+          }
+
+          gm && gm.setIcon(icons.dotRed);
+          b && b.setOptions({
+              strokeOpacity: 0
+            , icons: [
+                {
+                    icon: {
+                        path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
+                      , fillColor: '#FF325B'
+                      , fillOpacity: .5
+                      , strokeColor: '#fff'
+                      , strokeOpacity: .5
+                      , strokeWeight: 1
+                      , scale: .5
+                    }
+                  , repeat: '30px'
+                  , offset: '0'
+                }
+              ]
+          });
+        } else {
+          if ($e.length) {
+            if ($e.hasClass('icon-arrow-red')) {
+              $e.attr('class', 'icon icon-arrow-grey');
+            } else {
+              $e.attr('class', 'icon icon-dot-grey');
+            }
+          }
+
+          gm && gm.setIcon(icons.dotGrey);
+          b && b.setOptions({
+              strokeOpacity: 0
+            , icons: [
+                {
+                    icon: {
+                        path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
+                      , fillColor: '#7F7F7F'
+                      , fillOpacity: .5
+                      , strokeColor: '#fff'
+                      , strokeOpacity: .5
+                      , strokeWeight: 1
+                      , scale: .5
+                    }
+                  , repeat: '30px'
+                  , offset: '0'
+                }
+              ]
+          });
+        }
+      }
+    }
+  };
   proto.toLatLng = function (latitude, longitude) {
     console.log(this.latOffset, this.lngOffset);
     return new google.maps.LatLng(latitude + this.latOffset, longitude + this.lngOffset);
@@ -325,6 +427,8 @@ define('routexmaps', function (require) {
         , d = distance(lat2, lng2, lat1, lng1)
         , r = Math.round(calRotate(lat2, lng2, lat1, lng1) * 180 / Math.PI)
         , result = distanceOutput(d);
+
+      console.log(d, r, lat1, lng1, lat2, lng2);
 
       result.rotate = r;
 
@@ -445,74 +549,6 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  var headingInRadians = function (p1, p2) {
-     var lat1 = p1.lat()
-      , lon1 = p1.lng()
-      , lat2 = p2.lat()
-      , lon2  = p2.lng()
-      , dLon = lon2 - lon1
-      , y = Math.sin(dLon) * Math.cos(lat2)
-      , x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-        
-    return Math.atan2(y, x);
-  }
-
-  proto.distancematrix = function (uid, isGPS) {
-    var b = isGPS ? this.geoLocation : this.geoMarkers[uid]
-      , d = this.destinationPlace
-      , $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
-      , $detial = $identity.find('.detial')
-      , $icon = $detial.find('.icon')
-      , $distance = $detial.find('.distance');
-
-    if (b && d) {
-      $detial.css('visibility', 'visible');
-      var start = b.getPosition()
-        , end = d.getPosition()
-        , r = distanceOutput(distance(start, end));
-      console.log('DistanceMatrixService', r.text, r.status, !!b, !!d, headingInRadians(start, end));
-      if (4 === r.status) {
-        $distance.text(r.text);
-      } else {
-        $distance.html(r.text);
-      }
-      /*
-      var service = new google.maps.DistanceMatrixService()
-        , OK = google.maps.DistanceMatrixStatus.OK;
-      service.getDistanceMatrix(
-          {
-              origins: [start]
-            , destinations: [end]
-            , travelMode: google.maps.TravelMode.DRIVING
-            , unitSystem: google.maps.UnitSystem.METRIC
-            , avoidHighways: false
-            , avoidTolls: false
-          }
-        , function (d, s) {
-            console.log('distancematrix', s);
-            if (s === OK) {
-              var e = d.rows[0].elements[0]
-                , v = e.distance.value
-                , r = distanceOutput(v);
-
-              console.log(distance(start, end) * 1000, v);
-
-              if (4 === r.status) {
-                $('.identity[data-uid="' + uid + '"]').find('.distance').text(r.text);
-              } else {
-                $('.identity[data-uid="' + uid + '"]').find('.distance').html(r.text);
-              }
-            }
-          }
-      );
-      */
-    } else if (b) {
-      $detial.css('visibility', 'visible');
-    } else {
-      $detial.css('visibility', 'hidden');
-    }
-  };
-
   proto.hideBreadcrumbs = function (uid) {
     var b = this.breadcrumbs[uid];
     if (b) {
@@ -543,63 +579,7 @@ define('routexmaps', function (require) {
     console.log('showBreadcrumbs', puid, uid);
   };
 
-  proto.showGeoMarker = function (uid) {
-
-  };
-
-  proto.updatePolyline = function (data) {
-    var routes = this.routes, coords = [], uid = data.created_by, positions = data.positions.slice(0), p, route, bounds, latlng;
-
-    route = routes[uid];
-    if (!route) {
-      route = routes[uid] = this.addPolyline(data);
-    }
-
-    bounds = new google.maps.LatLngBounds();
-
-    while ((p = positions.shift())) {
-      latlng = this.toLatLng(p.latitude, p.longitude);
-      bounds.extend(latlng);
-      coords.push(latlng);
-    }
-
-    route._data = data;
-    route._bounds = bounds;
-    route.setPath(coords);
-    // route.setVisible(true);
-    // update tipline
-    this.updateTipline(uid, latlng);
-  };
-
-  proto.addPolyline = function (data) {
-    var rgba = data.color.split(',')
-      , color = '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16)
-      , alpha = rgba[3]
-      , p = new google.maps.Polyline({
-        map: this.map
-      , visible: false
-      , geodesic: true
-      // , strokeColor: data.color
-      // , strokeWeight: 1
-      , strokeOpacity: 0
-      , icons: [
-          {
-              icon: {
-                  path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
-                , fillColor: color
-                , fillOpacity: alpha
-                , strokeColor: '#fff'
-                , strokeOpacity: .5
-                , strokeWeight: 1
-                , scale: .5
-              }
-            , repeat: '30px'
-            , offset: '0'
-          }
-        ]
-    });
-    return p;
-  };
+  proto.showGeoMarker = function (uid) {};
 
   proto.updatePoint = function (data) {
     var locations = this.locations, id = data.id, locate, latlng, tags, tag;
@@ -826,8 +806,13 @@ define('routexmaps', function (require) {
       }
     }
     if (position) {
+      latlng = this.toLatLng(position.latitude, position.longitude)
       geoLocation.setIcon(this.icons.arrowBlue);
-      geoLocation.setPosition(this.toLatLng(position.latitude, position.longitude));
+      geoLocation.setPosition(latlng);
+      if (2 !== geoLocation._status) {
+        this.map.setZoom(15);
+        this.map.panTo(latlng);
+      }
       geoLocation._status = 2;
     }
     geoLocation._uid = uid;
