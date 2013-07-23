@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-23 05:07:04 */
+/*! mobile@2a 2013-07-23 05:07:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5306,7 +5306,7 @@ TWEEN.Tween = function(object) {
     },
     loadMaps: function() {
       var self = this, RoutexMaps = require("routexmaps"), mc = this.mapController = new RoutexMaps({
-        url: "//ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_",
+        url: "http://maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
         mapDiv: this.$("#map")[0],
         mapOptions: {
           zoom: 5
@@ -5358,7 +5358,7 @@ TWEEN.Tween = function(object) {
       if (mapReadyStatus && mapController) {
         console.log("tracking"), this.setLatLngOffset(), mapController.updateGeoLocation(this.myuid, position);
         var identities = document.getElementById("identities");
-        identities._ids || (identities.scrollTop = 1, identities.scrollTop = 0);
+        identities._ids || $(identities).triggerHandler("scroll.maps");
       }
     },
     updateMe: function(myIdentity) {
