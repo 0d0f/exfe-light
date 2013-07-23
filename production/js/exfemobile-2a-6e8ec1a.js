@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 12:07:55 */
+/*! mobile@2a 2013-07-24 12:07:22 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5378,7 +5378,8 @@ TWEEN.Tween = function(object) {
         $identities.append(div);
       } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
-      $ids.length && !$ids[0]._ids && $ids.triggerHandler("scroll.maps");
+      $identities.length && !$identities[0]._ids && (console.log("trigger handler scroll.maps"), 
+      $identities.triggerHandler("scroll.maps"));
     }
   });
 }), define("mobileroutes", function(require, exports, module) {

@@ -2034,8 +2034,9 @@ define('mobilecontroller', function (require, exports, module) {
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
 
-        if ($ids.length && !$ids[0]._ids) {
-          $ids.triggerHandler('scroll.maps');
+        if ($identities.length && !$identities[0]._ids) {
+          console.log('trigger handler scroll.maps')
+          $identities.triggerHandler('scroll.maps');
         }
       }
 
