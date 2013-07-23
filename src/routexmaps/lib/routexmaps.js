@@ -120,7 +120,7 @@ define('routexmaps', function (require) {
 
           GEvent.addListener(map, 'zoom_changed', function () {
             console.log('zoom_end')
-            rm.contains();
+            //rm.contains();
           });
 
           GEvent.addListener(map, 'drag', function () {
