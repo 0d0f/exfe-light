@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 12:07:31 */
+/*! mobile@2a 2013-07-24 01:07:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4051,13 +4051,13 @@ TWEEN.Tween = function(object) {
     var uid, d, n, gm, b, $e, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, now = Math.round(new Date().getTime() / 1e3);
     for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
     gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+    console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
     tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
       strokeOpacity: 0,
       icons: [ {
         icon: {
           path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
-          fillColor: "#FF325B",
+          fillColor: "#FF7E98",
           fillOpacity: .5,
           strokeColor: "#fff",
           strokeOpacity: .5,
@@ -4068,12 +4068,12 @@ TWEEN.Tween = function(object) {
         offset: "0"
       } ]
     })) : ($e.length && ($e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
-    tl && tl.setAttribute("stroke", "#7F7F7F"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+    tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
       strokeOpacity: 0,
       icons: [ {
         icon: {
           path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
-          fillColor: "#7F7F7F",
+          fillColor: "#b2b2b2",
           fillOpacity: .5,
           strokeColor: "#fff",
           strokeOpacity: .5,
