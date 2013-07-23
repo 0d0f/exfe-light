@@ -302,6 +302,7 @@
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
+        console.log(n)
         if (n <= 1) {
 
           if ($e.length) {
@@ -320,7 +321,7 @@
                 {
                     icon: {
                         path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
-                      , fillColor: '#FF325B'
+                      , fillColor: '#FF7E98'
                       , fillOpacity: .5
                       , strokeColor: '#fff'
                       , strokeOpacity: .5
@@ -341,7 +342,7 @@
             }
           }
 
-          tl && tl.setAttribute('stroke', '#7F7F7F');
+          tl && tl.setAttribute('stroke', '#b2b2b2');
           gm && gm.setIcon(icons.dotGrey);
           b && b.setOptions({
               strokeOpacity: 0
@@ -349,7 +350,7 @@
                 {
                     icon: {
                         path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
-                      , fillColor: '#7F7F7F'
+                      , fillColor: '#b2b2b2'
                       , fillOpacity: .5
                       , strokeColor: '#fff'
                       , strokeOpacity: .5
