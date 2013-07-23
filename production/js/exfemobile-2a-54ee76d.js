@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 02:07:50 */
+/*! mobile@2a 2013-07-24 03:07:21 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4090,7 +4090,7 @@ TWEEN.Tween = function(object) {
     var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
     for (uid in data) {
       for (d = data[uid], b = bs[uid], positions = d.slice(0), coords = [], b || (b = bs[uid] = this.addBreadcrumbs()); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
-      latlng = coords[0], b.setPath(coords), b._uid = uid, b._data = d, gm = this.drawGeoMarker(uid, positions[0], latlng), 
+      latlng = coords[0], b.setPath(coords), b._uid = uid, b._data = d, gm = this.drawGeoMarker(uid, d[0], latlng), 
       this.distanceMatrix(uid, gm, dp);
     }
   }, proto.drawGeoMarker = function(uid, data, latlng) {
@@ -4263,7 +4263,7 @@ TWEEN.Tween = function(object) {
     }
     position && (latlng = this.toLatLng(position.latitude, position.longitude), geoLocation.setIcon(this.icons.arrowBlue), 
     geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), this.updated[uid] = position || lastlatlng, 
+    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
@@ -5343,10 +5343,11 @@ TWEEN.Tween = function(object) {
     startStream: function() {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
-        self.position = r, self.switchGPSStyle(2), Store.set("last-latlng", {
+        self.position = r, Store.set("last-latlng", {
           lat: r.latitude + "",
-          lng: r.longitude + ""
-        }), self.trackGeoLocation(), console.log("GPS", r.latitude, r.longitude);
+          lng: r.longitude + "",
+          timestamp: r.timestamp
+        }), self.switchGPSStyle(2), self.trackGeoLocation(), console.log("GPS", r.latitude, r.longitude);
       }, function(r) {
         self.switchGPSStyle(1), console.log(r.status, r), routexStream.stopGeo(), self.mapController && self.mapController.switchGEOStyle(0);
       });
