@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 03:07:27 */
+/*! mobile@2a 2013-07-24 12:07:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3963,7 +3963,7 @@ TWEEN.Tween = function(object) {
     }, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
       return function cb() {
         var GMaps = google.maps, GEvent = GMaps.event;
-        GMaps.InfoBox = require("infobox");
+        GMaps.InfoBox = require("infobox"), GMaps.TextLabel = require("maplabel");
         var icons = rm.icons;
         icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
@@ -4048,10 +4048,10 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.monit = function() {
-    var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, now = Math.round(new Date().getTime() / 1e3);
+    var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
     for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
     gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+    this.distanceMatrix(uid, gm, dp), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
     tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
       strokeOpacity: 0,
       icons: [ {
@@ -4160,7 +4160,7 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  }, proto.showBreadcrumbs = function(uid) {
+  }, proto.showTextLabels = function() {}, proto.showBreadcrumbs = function(uid) {
     var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
     uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
     this.uid = uid, console.log("showBreadcrumbs", puid, uid);
@@ -4263,12 +4263,87 @@ TWEEN.Tween = function(object) {
     }
     position && (latlng = this.toLatLng(position.latitude, position.longitude), geoLocation.setIcon(this.icons.arrowBlue), 
     geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
+    this.map.panTo(latlng)), geoLocation._status = 2), console.log(uid, position), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
   }, RoutexMaps;
+}), define("maplabel", function() {
+  function MapLabel(opt_options) {
+    this.set("fontFamily", "sans-serif"), this.set("fontSize", 12), this.set("fontColor", "#000000"), 
+    this.set("strokeWeight", 4), this.set("strokeColor", "#ffffff"), this.set("align", "center"), 
+    this.set("zIndex", 1e3), this.setValues(opt_options);
+  }
+  return MapLabel.prototype = new google.maps.OverlayView(), window.MapLabel = MapLabel, 
+  MapLabel.prototype.changed = function(prop) {
+    switch (prop) {
+     case "fontFamily":
+     case "fontSize":
+     case "fontColor":
+     case "strokeWeight":
+     case "strokeColor":
+     case "align":
+     case "text":
+      return this.drawCanvas_();
+
+     case "maxZoom":
+     case "minZoom":
+     case "position":
+      return this.draw();
+    }
+  }, MapLabel.prototype.drawCanvas_ = function() {
+    var canvas = this.canvas_;
+    if (canvas) {
+      var style = canvas.style;
+      style.zIndex = this.get("zIndex");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height), ctx.strokeStyle = this.get("strokeColor"), 
+      ctx.fillStyle = this.get("fontColor"), ctx.font = this.get("fontSize") + "px " + this.get("fontFamily");
+      var strokeWeight = Number(this.get("strokeWeight")), text = this.get("text");
+      if (text) {
+        strokeWeight && (ctx.lineWidth = strokeWeight, ctx.strokeText(text, strokeWeight, strokeWeight)), 
+        ctx.fillText(text, strokeWeight, strokeWeight);
+        var textMeasure = ctx.measureText(text), textWidth = textMeasure.width + strokeWeight;
+        style.marginLeft = this.getMarginLeft_(textWidth) + "px", style.marginTop = "-0.4em";
+      }
+    }
+  }, MapLabel.prototype.onAdd = function() {
+    var canvas = this.canvas_ = document.createElement("canvas"), style = canvas.style;
+    style.position = "absolute";
+    var ctx = canvas.getContext("2d");
+    ctx.lineJoin = "round", ctx.textBaseline = "top", this.drawCanvas_();
+    var panes = this.getPanes();
+    panes && panes.mapPane.appendChild(canvas);
+  }, MapLabel.prototype.onAdd = MapLabel.prototype.onAdd, MapLabel.prototype.getMarginLeft_ = function(textWidth) {
+    switch (this.get("align")) {
+     case "left":
+      return 0;
+
+     case "right":
+      return -textWidth;
+    }
+    return textWidth / -2;
+  }, MapLabel.prototype.draw = function() {
+    var projection = this.getProjection();
+    if (projection && this.canvas_) {
+      var latLng = this.get("position");
+      if (latLng) {
+        var pos = projection.fromLatLngToDivPixel(latLng), style = this.canvas_.style;
+        style.top = pos.y + "px", style.left = pos.x + "px", style.visibility = this.getVisible_();
+      }
+    }
+  }, MapLabel.prototype.draw = MapLabel.prototype.draw, MapLabel.prototype.getVisible_ = function() {
+    var minZoom = this.get("minZoom"), maxZoom = this.get("maxZoom");
+    if (void 0 === minZoom && void 0 === maxZoom) return "";
+    var map = this.getMap();
+    if (!map) return "";
+    var mapZoom = map.getZoom();
+    return minZoom > mapZoom || mapZoom > maxZoom ? "hidden" : "";
+  }, MapLabel.prototype.onRemove = function() {
+    var canvas = this.canvas_;
+    canvas && canvas.parentNode && canvas.parentNode.removeChild(canvas);
+  }, MapLabel.prototype.onRemove = MapLabel.prototype.onRemove, MapLabel;
 }), define("infobox", function() {
   function InfoBox(opt_opts) {
     opt_opts = opt_opts || {}, google.maps.OverlayView.apply(this, arguments), this.content_ = opt_opts.content || "", 
@@ -5242,9 +5317,12 @@ TWEEN.Tween = function(object) {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
         if (!touched) {
           var c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？");
-          c && ($that.addClass("touched"), $.ajax({
+          console.log("认领身份？", c, $.ajax), c && ($that.addClass("touched"), $.ajax({
             type: "get",
             url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
+            beforeSend: function() {
+              console.log("itsme before");
+            },
             complete: function() {
               $that.removeClass("touched");
             },
