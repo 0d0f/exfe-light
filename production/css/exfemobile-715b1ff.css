@@ -2266,7 +2266,8 @@ button .exfe {
 #routex #free-identities #iavatar .placeholder {
   display: table;
   text-align: center;
-  height: 130px;
+  height: 100%;
+  width: 100%;
   padding: 5px;
 }
 #routex #free-identities #iavatar .placeholder div {
