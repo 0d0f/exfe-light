@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 11:07:45 */
+/*! mobile@2a 2013-07-24 11:07:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5328,7 +5328,7 @@ TWEEN.Tween = function(object) {
       }), element.on("touchmove.maps", "#free-identities .identities li", function() {
         clearTimeout(tapTimeout), tapTimeout = null;
       }), element.on("touchend.maps", "#free-identities .identities li", function() {
-        clearTimeout(tapTimeout), tapTimeout = null, Date.now() - now > 750 ? $(this).trigger("select:maps") : $("#iavatar .avatar").attr("src", "");
+        clearTimeout(tapTimeout), tapTimeout = null, Date.now() - now > 1e3 ? $(this).trigger("select:maps") : $("#iavatar .avatar").attr("src", "");
       }), element.on("select:maps", "#free-identities .identities li", function() {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), free = $that.data("free"), touched = !!$that.hasClass("touched"), c = !0;
         touched || (free && (c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？")), c && ($that.addClass("touched"), 
