@@ -1754,7 +1754,7 @@ define('mobilecontroller', function (require, exports, module) {
             , c = true;
           now = Date.now();
           tapTimeout = setTimeout(function () {
-            $('#iavatar .avatar').attr('src', $that.find('.avatar').attr('src'));
+            $('#iavatar .avatar').css('background', 'url(' + $that.find('.avatar').attr('src') + ')');
           }, tapDelay);
         });
 
@@ -1767,7 +1767,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (Date.now() - now > 1000) {
             $(this).trigger('select:maps');
           } else {
-            $('#iavatar .avatar').attr('src', '');
+            $('#iavatar .avatar').css('background', '');
           }
         });
 
@@ -1815,6 +1815,8 @@ define('mobilecontroller', function (require, exports, module) {
                 }
             });
 
+          } else {
+            $('#iavatar .avatar').css('background', '');
           }
 
         });
