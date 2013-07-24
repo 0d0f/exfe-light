@@ -12,6 +12,8 @@ define('mobilecontroller', function (require, exports, module) {
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
+      $ = require('zepto'),
+
       // animation {{{
       //AF = require('af'),
       //requestAnimationFrame = AF.request,
@@ -1746,7 +1748,8 @@ define('mobilecontroller', function (require, exports, module) {
 
           var c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
 
-          console.log('认领身份？', c, $.ajax);
+          alert('认领身份？', c);
+          alert($.ajax.toString());
 
           if (c) {
 
