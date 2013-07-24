@@ -1764,7 +1764,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         element.on('touchend.maps', '#free-identities .identities li', function (e) {
           clearTimeout(tapTimeout); tapTimeout = null;
-          if (Date.now() - now > 750) {
+          if (Date.now() - now > 1000) {
             $(this).trigger('select:maps');
           } else {
             $('#iavatar .avatar').attr('src', '');
