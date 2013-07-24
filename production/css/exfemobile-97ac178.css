@@ -2266,11 +2266,11 @@ button .exfe {
 #routex #free-identities #iavatar .placeholder {
   display: table;
   text-align: center;
-  vertical-align: middle;
   height: 130px;
   padding: 5px;
 }
 #routex #free-identities #iavatar .placeholder div {
+  vertical-align: middle;
   display: table-cell;
 }
 #routex #free-identities h2 {

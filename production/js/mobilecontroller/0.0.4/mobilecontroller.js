@@ -12,6 +12,8 @@ define('mobilecontroller', function (require, exports, module) {
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
+      $ = require('zepto'),
+
       // animation {{{
       //AF = require('af'),
       //requestAnimationFrame = AF.request,
