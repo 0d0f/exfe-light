@@ -1738,7 +1738,8 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
-        element.on('longtap.maps', '#open-exfe', function () {
+        element.on('tap.maps', '#open-exfe', function (e) {
+          console.log('remove cats...');
           Store.remove('cats');
         });
 
