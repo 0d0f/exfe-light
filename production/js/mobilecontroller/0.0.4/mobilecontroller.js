@@ -1741,6 +1741,7 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('tap.maps', '#open-exfe', function (e) {
           console.log('remove cats...');
           Store.remove('cats');
+          Store.remove('offset-latlng');
         });
 
         element.on('tap.maps', '#free-identities .identities li', function (e) {
