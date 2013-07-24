@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 06:07:42 */
+/*! mobile@2a 2013-07-24 11:07:05 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5317,34 +5317,44 @@ TWEEN.Tween = function(object) {
         }
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng");
-      }), element.on("tap.maps", "#free-identities .identities li", function() {
-        var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
-        if (!touched) {
-          var c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？");
-          c && ($that.addClass("touched"), $.ajax({
-            type: "get",
-            url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
-            beforeSend: function() {
-              console.log("itsme before");
-            },
-            complete: function() {
-              $that.removeClass("touched");
-            },
-            success: function(data) {
-              var code = data.meta && data.meta.code;
-              if (200 === code) {
-                console.log("success"), console.dir(data);
-                var cats = Store.get("cats") || {};
-                cats[self.ctoken] = data.response.cross_access_token, self.myIdentityId = id, self.myuid = uid, 
-                Store.set("cats", cats), self.$("#free-identities").hide().empty(), self.createIdentitiesList(), 
-                self.streaming();
-              }
-            },
-            error: function(data) {
-              console.log("fail"), console.dir(data);
+      });
+      var now, tapDelay = 270;
+      element.on("touchstart.maps", "#free-identities .identities li", function() {
+        var $that = $(this);
+        $that.data("identity-id"), $that.data("uid"), $that.data("free"), !!$that.hasClass("touched"), 
+        now = Date.now(), tapTimeout = setTimeout(function() {
+          $("#iavatar .avatar").attr("src", $that.find(".avatar".attr("src")));
+        }, tapDelay);
+      }), element.on("touchmove.maps", "#free-identities .identities li", function() {
+        clearTimeout(tapTimeout), tapTimeout = null;
+      }), element.on("touchend.maps", "#free-identities .identities li", function() {
+        clearTimeout(tapTimeout), tapTimeout = null, Date.now() - now > 750 ? $(this).trigger("select:maps") : $("#iavatar .avatar").attr("src", "");
+      }), element.on("select:maps", "#free-identities .identities li", function() {
+        var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), free = $that.data("free"), touched = !!$that.hasClass("touched"), c = !0;
+        touched || (free && (c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？")), c && ($that.addClass("touched"), 
+        $.ajax({
+          type: "get",
+          url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
+          beforeSend: function() {
+            console.log("itsme before");
+          },
+          complete: function() {
+            $that.removeClass("touched");
+          },
+          success: function(data) {
+            var code = data.meta && data.meta.code;
+            if (200 === code) {
+              console.log("success"), console.dir(data);
+              var cats = Store.get("cats") || {};
+              cats[self.ctoken] = data.response.cross_access_token, self.myIdentityId = id, self.myuid = uid, 
+              Store.set("cats", cats), self.$("#free-identities").hide().empty(), self.createIdentitiesList(), 
+              self.streaming();
             }
-          }));
-        }
+          },
+          error: function(data) {
+            console.log("fail"), console.dir(data);
+          }
+        })));
       });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function() {
@@ -5381,8 +5391,8 @@ TWEEN.Tween = function(object) {
       this.element.find("#exfee-name").text(this.cross.exfee.name);
     },
     createFreeIdentitiesList: function(identities) {
-      var identity, tmp = '<li data-identity-id="{{id}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>', $identities = this.element.find("#free-identities .identities");
-      for (identities = identities.slice(0); identity = identities.shift(); ) $identities.append(tmp.replace("{{id}}", identity.id).replace("{{avatar_filename}}", identity.avatar_filename).replace(/\{\{external_username\}\}/g, identity.external_username).replace("{{provider}}", identity.provider).replace("{{is_free}}", (identity.free ? " " : " no-") + "free"));
+      var identity, tmp = '<li data-identity-id="{{id}}" data-free="{{free}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>', $identities = this.element.find("#free-identities .identities");
+      for (identities = identities.slice(0); identity = identities.shift(); ) $identities.append(tmp.replace("{{id}}", identity.id).replace("{{avatar_filename}}", identity.avatar_filename).replace(/\{\{external_username\}\}/g, identity.external_username).replace("{{provider}}", identity.provider).replace("{{is_free}}", (identity.free ? " " : " no-") + "free").replace("{{free}}", identity.free));
     },
     getFreeIdentities: function() {
       this.updateExfeeName(), this.createFreeIdentitiesList(this.freeIdentities);

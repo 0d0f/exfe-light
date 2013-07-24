@@ -1744,15 +1744,46 @@ define('mobilecontroller', function (require, exports, module) {
           Store.remove('offset-latlng');
         });
 
-        element.on('tap.maps', '#free-identities .identities li', function (e) {
+        var tapDelay = 270, now;
+        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
             , id = $that.data('identity-id')
             , uid = $that.data('uid')
-            , touched = !!$that.hasClass('touched');
+            , free = $that.data('free')
+            , touched = !!$that.hasClass('touched')
+            , c = true;
+          now = Date.now();
+          tapTimeout = setTimeout(function () {
+            $('#iavatar .avatar').attr('src', $that.find('.avatar'.attr('src')));
+          }, tapDelay);
+        });
+
+        element.on('touchmove.maps', '#free-identities .identities li', function (e) {
+          clearTimeout(tapTimeout); tapTimeout = null;
+        });
+
+        element.on('touchend.maps', '#free-identities .identities li', function (e) {
+          clearTimeout(tapTimeout); tapTimeout = null;
+          if (Date.now() - now > 750) {
+            $(this).trigger('select:maps');
+          } else {
+            $('#iavatar .avatar').attr('src', '');
+          }
+        });
+
+        element.on('select:maps', '#free-identities .identities li', function (e) {
+          var $that = $(this)
+            , id = $that.data('identity-id')
+            , uid = $that.data('uid')
+            , free = $that.data('free')
+            , touched = !!$that.hasClass('touched')
+            , c = true;
 
           if (touched) { return; }
 
-          var c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
+          if (free) {
+            c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
+          }
 
           if (c) {
 
@@ -1872,7 +1903,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , createFreeIdentitiesList: function (identities) {
-        var tmp ='<li data-identity-id="{{id}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>'
+        var tmp ='<li data-identity-id="{{id}}" data-free="{{free}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>'
           , $identities = this.element.find('#free-identities .identities')
           , identity;
 
@@ -1885,6 +1916,7 @@ define('mobilecontroller', function (require, exports, module) {
               .replace(/\{\{external_username\}\}/g, identity.external_username)
               .replace('{{provider}}', identity.provider)
               .replace('{{is_free}}', (identity.free ? ' ': ' no-') + 'free')
+              .replace('{{free}}', identity.free)
           );
         }
       }
