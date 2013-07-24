@@ -1738,7 +1738,7 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
-        element.on('longtap.maps', '#iavatar', function () {
+        element.on('longtap.maps', '#open-exfe', function () {
           Store.remove('cats');
         });
 
