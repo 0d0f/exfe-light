@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 05:07:58 */
+/*! mobile@2a 2013-07-24 06:07:42 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3801,8 +3801,8 @@ TWEEN.Tween = function(object) {
       },
       error: function(data) {
         var status = data.status;
-        status && status >= 400 && 499 >= status ? (log("Unauthorized."), unat_cbf && (token = "", 
-        stream.kill(), unat_cbf())) : (secCnt = secInt - 5, log("Network error"));
+        status && status >= 400 && 499 >= status ? (log("Unauthorized."), unat_cbf && (stream.kill(), 
+        unat_cbf())) : (secCnt = secInt - 5, log("Network error"));
       }
     }), void 0) : (log("No token!"), void 0);
   }, log = function(data, table) {
@@ -3854,8 +3854,9 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    console.log(stream.live, token), !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
-    log("Streaming with token: " + token)), checkGps(myData) && ++secCnt >= secInt && submitGps();
+    console.log(stream.live, token), checkGps(myData) && ++secCnt >= secInt && submitGps(), 
+    !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
+    log("Streaming with token: " + token));
   }, checkGps = function(data) {
     return data.timestamp && data.latitude && data.longitude && data.accuracy;
   }, stopGeo = function() {
@@ -5610,7 +5611,7 @@ TWEEN.Tween = function(object) {
         lastGPS: Store.get("last-latlng"),
         cross: cross,
         ctoken: ctoken,
-        token: token || tokenInfos[0],
+        token: token || tokenInfos[0] || ctoken,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
         isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities

@@ -57,7 +57,6 @@ define('routexstream', function (require) {
                 if (status && status >= 400 && status <= 499) {
                     log('Unauthorized.');
                     if (unat_cbf) {
-                        token = '';
                         stream.kill();
                         unat_cbf();
                     }
@@ -198,17 +197,17 @@ define('routexstream', function (require) {
 
     var breatheFunc  = function () {
         console.log(stream.live, token);
+        if (checkGps(myData)) {
+            if (++secCnt >= secInt) {
+                submitGps();
+            }
+        }
         if (!stream.live && token) {
             stream.init(
                 api_url + '/crosses/' + cross_id + '/routex?_method=WATCH&coordinate=mars&token=' + token,
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
-        }
-        if (checkGps(myData)) {
-            if (++secCnt >= secInt) {
-                submitGps();
-            }
         }
     };
 

@@ -401,7 +401,7 @@ define('mobileroutes', function (require, exports, module) {
         , lastGPS: Store.get('last-latlng')
         , cross: cross
         , ctoken: ctoken
-        , token: token || tokenInfos[0]
+        , token: token || tokenInfos[0] || ctoken
         , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
         , isSmithToken: action === 'CLAIM_IDENTITY'
         , freeIdentities: free_identities
