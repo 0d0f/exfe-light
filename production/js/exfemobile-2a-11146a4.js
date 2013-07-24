@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 02:07:40 */
+/*! mobile@2a 2013-07-24 04:07:13 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3796,7 +3796,7 @@ TWEEN.Tween = function(object) {
       url: api_url + "/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
       data: JSON.stringify(myData),
       success: function(data) {
-        localStorage.setItem("offset-latlng", JSON.stringify(data));
+        data && localStorage.setItem("offset-latlng", data);
       },
       error: function(data) {
         var status = data.status;
