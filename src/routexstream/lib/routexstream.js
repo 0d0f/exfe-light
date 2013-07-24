@@ -45,11 +45,12 @@ define('routexstream', function (require) {
             submit_request.abort();
         }
         submit_request = $.ajax({
-            type    : 'post',
+            type    : 'POST',
             url     : api_url + '/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
             data    : JSON.stringify(myData),
+            dataType: 'json',
             success : function (data) {
-              data && localStorage.setItem('offset-latlng', data);
+              data && localStorage.setItem('offset-latlng', JSON.stringify(data));
             },
             error   : function (data) {
                 var status = data.status;
@@ -196,17 +197,18 @@ define('routexstream', function (require) {
 
 
     var breatheFunc  = function () {
-        if (checkGps(myData)) {
-            if (++secCnt >= secInt) {
-                submitGps();
-            }
-        }
+        console.log(stream.live, token);
         if (!stream.live && token) {
             stream.init(
                 api_url + '/crosses/' + cross_id + '/routex?_method=WATCH&coordinate=mars&token=' + token,
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
+        }
+        if (checkGps(myData)) {
+            if (++secCnt >= secInt) {
+                submitGps();
+            }
         }
     };
 

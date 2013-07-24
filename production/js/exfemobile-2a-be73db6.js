@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 05:07:35 */
+/*! mobile@2a 2013-07-24 05:07:32 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3792,11 +3792,12 @@ TWEEN.Tween = function(object) {
   }, lstLocat = "", lstRoute = "", submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
-      type: "post",
+      type: "POST",
       url: api_url + "/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
       data: JSON.stringify(myData),
+      dataType: "json",
       success: function(data) {
-        data && localStorage.setItem("offset-latlng", data);
+        data && localStorage.setItem("offset-latlng", JSON.stringify(data));
       },
       error: function(data) {
         var status = data.status;
@@ -3853,8 +3854,8 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
-    log("Streaming with token: " + token));
+    console.log(stream.live, token), !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
+    log("Streaming with token: " + token)), checkGps(myData) && ++secCnt >= secInt && submitGps();
   }, checkGps = function(data) {
     return data.timestamp && data.latitude && data.longitude && data.accuracy;
   }, stopGeo = function() {
