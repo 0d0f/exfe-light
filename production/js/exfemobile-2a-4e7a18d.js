@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 01:07:00 */
+/*! mobile@2a 2013-07-24 01:07:08 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5313,7 +5313,7 @@ TWEEN.Tween = function(object) {
           $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
           self.tapElement = this;
         }
-      }), element.on("longtap.maps", "#iavatar", function() {
+      }), element.on("longtap.maps", "#open-exfe", function() {
         Store.remove("cats");
       }), element.on("tap.maps", "#free-identities .identities li", function() {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
