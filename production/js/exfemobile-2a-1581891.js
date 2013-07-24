@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 11:07:03 */
+/*! mobile@2a 2013-07-25 12:07:32 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5331,7 +5331,7 @@ TWEEN.Tween = function(object) {
         clearTimeout(tapTimeout), tapTimeout = null, Date.now() - now > 1e3 ? $(this).trigger("select:maps") : $("#iavatar .avatar").css("background", "");
       }), element.on("select:maps", "#free-identities .identities li", function() {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), free = $that.data("free"), touched = !!$that.hasClass("touched"), c = !0;
-        touched || (free && (c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？")), c && ($that.addClass("touched"), 
+        touched || (free && (c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？")), c ? ($that.addClass("touched"), 
         $.ajax({
           type: "get",
           url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
@@ -5354,7 +5354,7 @@ TWEEN.Tween = function(object) {
           error: function(data) {
             console.log("fail"), console.dir(data);
           }
-        })));
+        })) : $("#iavatar .avatar").css("background", ""));
       });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function() {

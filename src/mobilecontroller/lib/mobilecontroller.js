@@ -1815,6 +1815,8 @@ define('mobilecontroller', function (require, exports, module) {
                 }
             });
 
+          } else {
+            $('#iavatar .avatar').css('background', '');
           }
 
         });
