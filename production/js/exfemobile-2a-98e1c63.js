@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 01:07:48 */
+/*! mobile@2a 2013-07-24 01:07:32 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4628,7 +4628,7 @@ TWEEN.Tween = function(object) {
         read_only || this.$(".subscribe").removeClass("hide"), this.element.removeClass("hide"), 
         $("#app-footer").addClass("ft-bg"), this.$(".get-button").removeClass("hide"), iPad && this.$(".web-version").removeClass("hide");
       }), this.on("redirect", function(args, cb) {
-        window.launchApp(app_prefix_url + args, cb, 500);
+        window.launchApp(app_prefix_url + args, cb);
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {
@@ -4681,7 +4681,7 @@ TWEEN.Tween = function(object) {
         }
         var done = function(args) {
           App.controllers.footer.emit("redirect", args, function() {
-            var search = window.location.search.substr(1);
+            var search = window.search.substr(1);
             search && (search = "&" + search), window.location = "/?redirect" + search + window.location.hash;
           });
         }, user_id = resolveToken.user_id, token = resolveToken.token;
@@ -5317,7 +5317,7 @@ TWEEN.Tween = function(object) {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
         if (!touched) {
           var c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？");
-          alert("认领身份？", c), alert("" + $.ajax), c && ($that.addClass("touched"), $.ajax({
+          console.log("认领身份？", c, $.ajax), c && ($that.addClass("touched"), $.ajax({
             type: "get",
             url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
             beforeSend: function() {

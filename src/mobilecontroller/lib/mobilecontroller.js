@@ -236,7 +236,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('redirect', function (args, cb) {
-        window.launchApp(app_prefix_url + args, cb, 500);
+        window.launchApp(app_prefix_url + args, cb);
       });
     },
 
@@ -316,7 +316,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            var search = window.location.search.substr(1);
+            var search = window.search.substr(1);
             if (search) {
               search = '&' + search;
             }
@@ -1748,8 +1748,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           var c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
 
-          alert('认领身份？', c);
-          alert($.ajax.toString());
+          console.log('认领身份？', c, $.ajax);
 
           if (c) {
 
