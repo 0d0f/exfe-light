@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 04:07:24 */
+/*! mobile@2a 2013-07-24 05:07:20 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3853,7 +3853,7 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&token=" + token, streamCallback, streamDead), 
+    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
     return data.timestamp && data.latitude && data.longitude && data.accuracy;
@@ -4085,7 +4085,7 @@ TWEEN.Tween = function(object) {
       } ]
     })));
   }, proto.toLatLng = function(latitude, longitude) {
-    return console.log(this.latOffset, this.lngOffset), new google.maps.LatLng(1 * latitude + this.latOffset, 1 * longitude + this.lngOffset);
+    return new google.maps.LatLng(1 * latitude, 1 * longitude);
   }, proto.drawIdentityPaths = function(data) {
     var uid, b, d, p, positions, coords, latlng, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
     for (uid in data) {
@@ -4258,11 +4258,11 @@ TWEEN.Tween = function(object) {
         icon: this.icons.arrowGrey
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
-      lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(lastlatlng.lat, lastlatlng.lng), 
+      lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
       geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
     }
-    position && (latlng = this.toLatLng(position.latitude, position.longitude), geoLocation.setIcon(this.icons.arrowBlue), 
-    geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
+    position && (latlng = this.toLatLng(1 * position.latitude + this.latOffset, 1 * position.longitude + this.lngOffset), 
+    geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
     this.map.panTo(latlng)), geoLocation._status = 2), console.log(uid, position), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
@@ -5319,7 +5319,7 @@ TWEEN.Tween = function(object) {
         var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), touched = !!$that.hasClass("touched");
         if (!touched) {
           var c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？");
-          console.log("认领身份？", c, $.ajax), c && ($that.addClass("touched"), $.ajax({
+          c && ($that.addClass("touched"), $.ajax({
             type: "get",
             url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
             beforeSend: function() {
