@@ -370,8 +370,7 @@
     }
   };
   proto.toLatLng = function (latitude, longitude) {
-    console.log(this.latOffset, this.lngOffset);
-    return new google.maps.LatLng(latitude * 1 + this.latOffset, longitude * 1 + this.lngOffset);
+    return new google.maps.LatLng(latitude * 1, longitude * 1);
   };
 
   proto.drawIdentityPaths = function (data) {
@@ -806,7 +805,7 @@
       var lastlatlng = JSON.parse(window.localStorage.getItem('last-latlng'));
       if (lastlatlng) {
         geoLocation._status = 1;
-        latlng = this.toLatLng(lastlatlng.lat, lastlatlng.lng);
+        latlng = this.toLatLng(lastlatlng.lat * 1 + this.latOffset, lastlatlng.lng * 1 + this.lngOffset);
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
@@ -814,7 +813,7 @@
       }
     }
     if (position) {
-      latlng = this.toLatLng(position.latitude, position.longitude)
+      latlng = this.toLatLng(position.latitude * 1 + this.latOffset, position.longitude * 1 + this.lngOffset)
       geoLocation.setIcon(this.icons.arrowBlue);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {
