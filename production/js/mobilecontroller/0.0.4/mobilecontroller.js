@@ -1738,6 +1738,10 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
+        element.on('longtap.maps', '#iavatar', function () {
+          Store.remove('cats');
+        });
+
         element.on('tap.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
             , id = $that.data('identity-id')
