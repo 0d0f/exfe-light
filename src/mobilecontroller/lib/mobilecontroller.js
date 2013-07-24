@@ -1744,7 +1744,7 @@ define('mobilecontroller', function (require, exports, module) {
           Store.remove('offset-latlng');
         });
 
-        var tapDelay = 270, now;
+        var tapDelay = 270, tapTimeout, now;
         element.on('touchstart.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
             , id = $that.data('identity-id')
@@ -1754,7 +1754,7 @@ define('mobilecontroller', function (require, exports, module) {
             , c = true;
           now = Date.now();
           tapTimeout = setTimeout(function () {
-            $('#iavatar .avatar').attr('src', $that.find('.avatar'.attr('src')));
+            $('#iavatar .avatar').attr('src', $that.find('.avatar').attr('src'));
           }, tapDelay);
         });
 

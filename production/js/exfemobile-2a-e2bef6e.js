@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-24 10:07:24 */
+/*! mobile@2a 2013-07-24 11:07:33 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5318,12 +5318,12 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng");
       });
-      var now, tapDelay = 270;
+      var tapTimeout, now, tapDelay = 270;
       element.on("touchstart.maps", "#free-identities .identities li", function() {
         var $that = $(this);
         $that.data("identity-id"), $that.data("uid"), $that.data("free"), !!$that.hasClass("touched"), 
         now = Date.now(), tapTimeout = setTimeout(function() {
-          $("#iavatar .avatar").attr("src", $that.find(".avatar".attr("src")));
+          $("#iavatar .avatar").attr("src", $that.find(".avatar").attr("src"));
         }, tapDelay);
       }), element.on("touchmove.maps", "#free-identities .identities li", function() {
         clearTimeout(tapTimeout), tapTimeout = null;
