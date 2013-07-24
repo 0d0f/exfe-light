@@ -73,6 +73,8 @@
 
         GMaps.InfoBox = require('infobox');
 
+        GMaps.TextLabel = require('maplabel');
+
         var icons = rm.icons;
 
         icons.dotGrey = new GMaps.MarkerImage(
@@ -291,6 +293,7 @@
       , icons = this.icons
       , gms = this.geoMarkers
       , tiplines = this.tiplines
+      , dp = this.destinationPlace
       , uid, d, now = Math.round((new Date()).getTime() / 1000), n;
     var gm, b, $e, tl;
     for (uid in u) {
@@ -301,6 +304,7 @@
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
+        this.distanceMatrix(uid, gm ,dp);
         console.log(n)
         if (n <= 1) {
 
@@ -560,6 +564,9 @@
     return p;
   };
 
+  proto.showTextLabels = function (positions) {
+  };
+
   proto.showBreadcrumbs = function (uid) {
     var bds = this.breadcrumbs
       , puid = this.uid
@@ -816,6 +823,7 @@
       }
       geoLocation._status = 2;
     }
+    console.log(uid, position)
     if (uid) {
       this.updated[uid] = position || lastlatlng;
     }

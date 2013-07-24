@@ -2263,6 +2263,16 @@ button .exfe {
   border-radius: 140px;
   border: 2px dashed #b2b2b2;
 }
+#routex #free-identities #iavatar .placeholder {
+  display: table;
+  text-align: center;
+  vertical-align: middle;
+  height: 130px;
+  padding: 5px;
+}
+#routex #free-identities #iavatar .placeholder div {
+  display: table-cell;
+}
 #routex #free-identities h2 {
   margin: 0;
   line-height: 21px;

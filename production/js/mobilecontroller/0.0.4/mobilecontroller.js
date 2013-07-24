@@ -1746,13 +1746,15 @@ define('mobilecontroller', function (require, exports, module) {
 
           var c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
 
+          console.log('认领身份？', c, $.ajax);
+
           if (c) {
 
-            $that.addClass('touched')
+            $that.addClass('touched');
             $.ajax({
                 type: 'get'
               , url: api_url + '/crosses/' + self.cross.id + '/freeidentities/' + id + '/itsme?token=' + self.token
-              // , beforeSend: function () {}
+              , beforeSend: function () {console.log('itsme before')}
               , complete: function () { $that.removeClass('touched'); }
               , success: function (data) {
                   var code = data.meta && data.meta.code;
