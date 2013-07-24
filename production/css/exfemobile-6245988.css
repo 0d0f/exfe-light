@@ -2261,18 +2261,39 @@ button .exfe {
   width: 140px;
   height: 140px;
   border-radius: 140px;
-  border: 2px dashed #b2b2b2;
+  overflow: hidden;
 }
 #routex #free-identities #iavatar .placeholder {
+  position: relative;
   display: table;
   text-align: center;
   height: 100%;
   width: 100%;
   padding: 5px;
+  border: 2px dashed #b2b2b2;
 }
-#routex #free-identities #iavatar .placeholder div {
-  vertical-align: middle;
+#routex #free-identities #iavatar .placeholder .text {
   display: table-cell;
+  vertical-align: middle;
+}
+#routex #free-identities #iavatar .placeholder .avatar {
+  display: block;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 140px;
+  height: 140px;
+  border-radius: 140px;
+  border: 1px solid #ccc;
+}
+#routex #free-identities #iavatar .placeholder .mask {
+  display: block;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 140px;
+  height: 140px;
+  border-radius: 140px;
 }
 #routex #free-identities h2 {
   margin: 0;
