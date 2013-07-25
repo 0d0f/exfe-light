@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 01:07:55 */
+/*! mobile@2a 2013-07-25 01:07:10 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4035,7 +4035,7 @@ TWEEN.Tween = function(object) {
     for (route = this.routes[uid] = this.addPolyline(data); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
     route.setPath(coords);
   }, proto.addPolyline = function(data) {
-    var rgba = data.color && data.color.split(",") || [], alpha = (rgba.length ? "#" + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16) : "#007BFF", 
+    var rgba = data.color && data.color.split(",") || [], alpha = (rgba.length ? "#" + ((+rgba[0]).toString(16) + "0").substr(0, 2) + ((+rgba[1]).toString(16) + "0").substr(0, 2) + ((+rgba[2]).toString(16) + "0").substr(0, 2) : "#007BFF", 
     rgba[3] || 1), p = new google.maps.Polyline({
       map: this.map,
       strokeColor: data.color,
