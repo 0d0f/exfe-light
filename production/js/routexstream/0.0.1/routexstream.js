@@ -279,8 +279,8 @@ define('routexstream', function (require) {
 
     , cachedOptions: {
           enableHighAccuracy: false
-        , maximumAge: Infinity
-        , timeout: 29999.999999 //30000
+        , maximumAge: 3000 // Infinity
+        , timeout: 5000 // 29999.999999 //30000
       }
 
     , STATUS: 0

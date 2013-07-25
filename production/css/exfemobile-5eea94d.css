@@ -2395,8 +2395,6 @@ button .exfe {
   white-space: nowrap;
 }
 #routex .info-windown div {
-  font-size: 14px;
-  line-height: 14px;
   font-weight: 300;
 }
 #routex .info-windown .splitline:after {
@@ -2471,7 +2469,7 @@ button .exfe {
 }
 #routex #my-info > div {
   position: relative;
-  line-height: 40px;
+  line-height: 44px;
 }
 #routex #my-info .show,
 #routex #my-info .discover {
