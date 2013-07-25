@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 04:07:37 */
+/*! mobile@2a 2013-07-25 04:07:38 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4080,44 +4080,42 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.monit = function() {
-    if (!this.STATUS) {
-      var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
-      for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
-      gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-      this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
-      tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
-        strokeOpacity: 0,
-        icons: [ {
-          icon: {
-            path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
-            fillColor: "#FF7E98",
-            fillOpacity: .5,
-            strokeColor: "#fff",
-            strokeOpacity: .5,
-            strokeWeight: 1,
-            scale: .5
-          },
-          repeat: "30px",
-          offset: "0"
-        } ]
-      })) : ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
-      tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
-        strokeOpacity: 0,
-        icons: [ {
-          icon: {
-            path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
-            fillColor: "#b2b2b2",
-            fillOpacity: .5,
-            strokeColor: "#fff",
-            strokeOpacity: .5,
-            strokeWeight: 1,
-            scale: .5
-          },
-          repeat: "30px",
-          offset: "0"
-        } ]
-      })));
-    }
+    var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
+    for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
+    gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+    tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
+      strokeOpacity: 0,
+      icons: [ {
+        icon: {
+          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          fillColor: "#FF7E98",
+          fillOpacity: .5,
+          strokeColor: "#fff",
+          strokeOpacity: .5,
+          strokeWeight: 1,
+          scale: .5
+        },
+        repeat: "30px",
+        offset: "0"
+      } ]
+    })) : ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+    tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+      strokeOpacity: 0,
+      icons: [ {
+        icon: {
+          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          fillColor: "#b2b2b2",
+          fillOpacity: .5,
+          strokeColor: "#fff",
+          strokeOpacity: .5,
+          strokeWeight: 1,
+          scale: .5
+        },
+        repeat: "30px",
+        offset: "0"
+      } ]
+    })));
   }, proto.toLatLng = function(latitude, longitude) {
     return new google.maps.LatLng(1 * latitude, 1 * longitude);
   }, proto.drawIdentityPaths = function(data) {
@@ -4128,10 +4126,10 @@ TWEEN.Tween = function(object) {
       this.distanceMatrix(uid, gm, dp);
     }
   }, proto.drawGeoMarker = function(uid, data, latlng) {
-    if (this.myuid === uid) return this.geoLocation;
-    var gm = this.geoMarkers[uid];
-    return gm || (gm = this.geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    this.updated[uid] = data, this.updateTipline(uid, latlng), gm;
+    var gm;
+    return this.myuid === uid ? this.geoLocation : (gm = this.geoMarkers[uid], gm || (gm = this.geoMarkers[uid] = this.addGeoMarker()), 
+    gm.setPosition(latlng), this.updated[uid] = data, this.updateTipline(uid, latlng), 
+    gm);
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -5445,7 +5443,8 @@ TWEEN.Tween = function(object) {
     initStream: function() {
       var self = this;
       routexStream.init(self.cross.id, self.token, function(type, result) {
-        self.mapReadyStatus && self.mapController && self.mapController.draw(type, result);
+        self.mapReadyStatus && self.mapController && (self.mapController.myuid || (self.mapController.myuid = self.myuid), 
+        self.mapController.draw(type, result));
       }, function(e) {
         console.log(e);
       });

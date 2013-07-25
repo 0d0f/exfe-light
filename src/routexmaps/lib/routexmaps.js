@@ -321,7 +321,7 @@
   };
 
   proto.monit = function () {
-    if (this.STATUS) { return; }
+    //if (this.STATUS) { return; }
     var u = this.updated
       , bs = this.breadcrumbs
       , icons = this.icons
@@ -439,10 +439,11 @@
   };
 
   proto.drawGeoMarker = function (uid, data, latlng) {
+    var gm;
     if (this.myuid === uid) {
       return this.geoLocation;
     }
-    var gm = this.geoMarkers[uid];
+    gm = this.geoMarkers[uid];
     if (!gm) {
       gm = this.geoMarkers[uid] = this.addGeoMarker();
     }

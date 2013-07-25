@@ -1987,7 +1987,9 @@ define('mobilecontroller', function (require, exports, module) {
           , function (type, result) {
               if (self.mapReadyStatus && self.mapController) {
                 //self.setLatLngOffset();
-                //self.mapController.myuid = self.myuid;
+                if (!self.mapController.myuid) {
+                  self.mapController.myuid = self.myuid;
+                }
                 self.mapController.draw(type, result);
               }
             }
