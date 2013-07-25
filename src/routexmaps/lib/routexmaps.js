@@ -440,6 +440,7 @@
 
   proto.drawGeoMarker = function (uid, data, latlng) {
     var gm;
+    this.updated[uid] = data;
     if (this.myuid === uid) {
       return this.geoLocation;
     }
@@ -448,8 +449,6 @@
       gm = this.geoMarkers[uid] = this.addGeoMarker();
     }
     gm.setPosition(latlng);
-    //gm._data =
-    this.updated[uid] = data;
 
     this.updateTipline(uid, latlng);
     return gm;
