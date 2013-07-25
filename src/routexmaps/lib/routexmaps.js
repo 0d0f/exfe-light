@@ -316,12 +316,12 @@
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
-        this.distanceMatrix(uid, gm ,dp, n <= 1);
+        this.distanceMatrix(uid, gm ,dp, n);
         console.log(n)
         if (n <= 1) {
 
           if ($e.length) {
-            if ($e.hasClass('icon-arrow-gray')) {
+            if ($e.hasClass('icon-arrow-gray') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-red');
             } else {
               $e.attr('class', 'icon icon-dot-red');
@@ -350,7 +350,7 @@
           });
         } else {
           if ($e.length) {
-            if ($e.hasClass('icon-arrow-red')) {
+            if ($e.hasClass('icon-arrow-gray') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-grey');
             } else {
               $e.attr('class', 'icon icon-dot-grey');
@@ -381,6 +381,7 @@
       }
     }
   };
+
   proto.toLatLng = function (latitude, longitude) {
     return new google.maps.LatLng(latitude * 1, longitude * 1);
   };
@@ -421,7 +422,7 @@
       gm = this.geoMarkers[uid] = this.addGeoMarker();
     }
     gm.setPosition(latlng);
-    //gm._data = 
+    //gm._data =
     this.updated[uid] = data;
 
     this.updateTipline(uid, latlng);
@@ -439,6 +440,7 @@
   };
 
   proto.distanceMatrix = function (uid, gm, dp, time) {
+    time = time || 0;
     console.log(uid, 'destination', dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
       , $detial = $identity.find('.detial')
@@ -457,14 +459,17 @@
 
       result.rotate = r;
 
-      console.dir(result);
       $distance.html(result.text);
-      if (!$icon.hasClass('icon-arrow-red') && !$icon.hasClass('icon-arrow-grey')) {
+      if (!$icon.hasClass('icon-arrow-red') && !$icon.hasClass('icon-arrow-red')) {
         $icon.attr('class', 'icon icon-arrow-grey');
       }
       $icon.css('-webkit-transform', 'rotate(' + r + 'deg)');
       $detial.css('visibility', 'visible');
     } else if (gm) {
+      if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {
+        $icon.attr('class', 'icon icon-dot' + (time <= 1 ? 'red' : 'grey'));
+      }
+      $distance.html(time + (time > 9 ? '+' : '') + '<span class="unit">分钟前</span>');
       $detial.css('visibility', 'visible');
     } else {
       $detial.css('visibility', 'hidden');
@@ -804,7 +809,6 @@
       }
       geoLocation._status = 2;
     }
-    console.log(uid, position)
     if (uid) {
       this.updated[uid] = position || lastlatlng;
     }
