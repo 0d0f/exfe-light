@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 12:07:31 */
+/*! mobile@2a 2013-07-25 01:07:34 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5305,8 +5305,8 @@ TWEEN.Tween = function(object) {
           if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
           self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
           !1;
-          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#my-info").addClass("hide"), 
-          $infoWins.find("#other-info").removeClass("hide");
+          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $d.data("name"), $infoWins.find("#my-info").addClass("hide"), 
+          $infoWins.find("#other-info").removeClass("hide"), $infoWins.find("#other-info").find(".name").text($d.data("name"));
           var bound = this.getBoundingClientRect();
           $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
           self.tapElement = this;
@@ -5455,15 +5455,15 @@ TWEEN.Tween = function(object) {
       this.myIdentity = myIdentity;
       var div = this.$("#isme");
       div.attr("data-uid", myIdentity.external_username + "@" + myIdentity.provider), 
-      div.find("img").attr("src", myIdentity.avatar_filename);
+      div.attr("data-name", myIdentity.name), div.find("img").attr("src", myIdentity.avatar_filename);
     },
     createIdentitiesList: function() {
       var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myIdentityId = this.myIdentityId, invitations = exfee.invitations.slice(0);
       for (console.dir(exfee); invitation = invitations.shift(); ) if (identity = invitation.identity, 
       myIdentityId !== identity.id) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>');
-        div.attr("data-uid", identity.external_username + "@" + identity.provider), div.find("img").attr("src", identity.avatar_filename), 
-        $identities.append(div);
+        div.attr("data-uid", identity.external_username + "@" + identity.provider), div.attr("data-name", identity.name), 
+        div.find("img").attr("src", identity.avatar_filename), $identities.append(div);
       } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
