@@ -277,6 +277,14 @@ define('routexstream', function (require) {
         , timeout: 29999.999999 //30000
       }
 
+    , cachedOptions: {
+          enableHighAccuracy: false
+        , maximumAge: Infinity
+        , timeout: 29999.999999 //30000
+      }
+
+    , STATUS: 0
+
     , freshness_threshold: 4999.999999 //5000
     , accuracy_threshold: 500
 
@@ -329,7 +337,7 @@ define('routexstream', function (require) {
        */
 
     , watch: function (done, fail/*, options*/) {
-        return geolocation.watchPosition(this._success(done), this._error(fail), this.options);
+        return geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
       }
 
       /**

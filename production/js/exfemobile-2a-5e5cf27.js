@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 11:07:00 */
+/*! mobile@2a 2013-07-25 12:07:14 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3881,6 +3881,12 @@ TWEEN.Tween = function(object) {
       maximumAge: 0,
       timeout: 29999.999999
     },
+    cachedOptions: {
+      enableHighAccuracy: !1,
+      maximumAge: 1/0,
+      timeout: 29999.999999
+    },
+    STATUS: 0,
     freshness_threshold: 4999.999999,
     accuracy_threshold: 500,
     _success: function(done) {
@@ -3906,7 +3912,7 @@ TWEEN.Tween = function(object) {
       options = options || this.options, geolocation.getCurrentPosition(this._success(done), this._error(fail), options);
     },
     watch: function(done, fail) {
-      return geolocation.watchPosition(this._success(done), this._error(fail), this.options);
+      return geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
     },
     stopWatch: function(wid) {
       wid && geolocation.clearWatch(wid);
@@ -5424,7 +5430,7 @@ TWEEN.Tween = function(object) {
     startStream: function() {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
-        self.position = r, Store.set("last-latlng", {
+        routexStream.STATUS || (routexStream.STATUS = 1), self.position = r, Store.set("last-latlng", {
           lat: r.latitude + "",
           lng: r.longitude + "",
           timestamp: r.timestamp
