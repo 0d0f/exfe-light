@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 10:07:15 */
+/*! mobile@2a 2013-07-25 11:07:52 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3991,7 +3991,12 @@ TWEEN.Tween = function(object) {
   var SITE_URL = window._ENV_.site_url, EarthRadiusMeters = 6378137, distance = function(lat1, lng1, lat2, lng2) {
     var R = EarthRadiusMeters, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lng2 - lng1) * Math.PI / 180, a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2), c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)), d = R * c;
     return d;
+  }, latRadians = function(lat) {
+    return lat * Math.PI / 180;
+  }, lngRadians = function(lng) {
+    return lng * Math.PI / 180;
   }, bearing = function(lat1, lon1, lat2, lon2) {
+    lat1 = latRadians(lat1), lon1 = lngRadians(lon1), lat2 = latRadians(lat2), lon2 = lngRadians(lon2);
     var dLon = lon2 - lon1, y = Math.sin(dLon) * Math.cos(lat2), x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon), angle = Math.atan2(y, x);
     return 0 > angle && (angle += 2 * Math.PI), 180 * angle / Math.PI;
   }, distanceOutput = function(n, s, t, r) {

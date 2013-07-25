@@ -3,7 +3,7 @@
   'use strict';
 
   var SITE_URL = window._ENV_.site_url
-    //http://www.geocodezip.com/scripts/v3_epoly_proj.js
+    //htt://www.geocodezip.com/scripts/v3_epoly_proj.js
     //http://www.geocodezip.com/
 
     // meters
@@ -26,6 +26,10 @@
         return lng * Math.PI / 180;
       }
     , bearing = function (lat1, lon1, lat2, lon2) {
+        lat1 = latRadians(lat1);
+        lon1 = lngRadians(lon1);
+        lat2 = latRadians(lat2);
+        lon2 = lngRadians(lon2);
         var dLon = lon2 - lon1
           , y = Math.sin(dLon) * Math.cos(lat2)
           , x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon)
