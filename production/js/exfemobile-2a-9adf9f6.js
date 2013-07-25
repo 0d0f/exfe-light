@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 10:07:23 */
+/*! mobile@2a 2013-07-25 10:07:06 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4115,8 +4115,7 @@ TWEEN.Tween = function(object) {
       $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-red") || $icon.attr("class", "icon icon-arrow-grey"), 
       $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
-    $distance.html(time + (time > 9 ? "+" : "") + '<span class="unit">分钟前</span>'), 
-    $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
+    $distance.html((time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
     console.log("fit bounds with destination");
     var destinationPlace = this.destinationPlace, isme = this.myuid === uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
