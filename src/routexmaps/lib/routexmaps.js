@@ -321,7 +321,7 @@
         if (n <= 1) {
 
           if ($e.length) {
-            if ($e.hasClass('icon-arrow-gray') || $e.hasClass('icon-arrow-red')) {
+            if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-red');
             } else {
               $e.attr('class', 'icon icon-dot-red');
@@ -350,7 +350,7 @@
           });
         } else {
           if ($e.length) {
-            if ($e.hasClass('icon-arrow-gray') || $e.hasClass('icon-arrow-red')) {
+            if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-grey');
             } else {
               $e.attr('class', 'icon icon-dot-grey');
@@ -460,10 +460,8 @@
       result.rotate = r;
 
       $distance.html(result.text);
-      if (!$icon.hasClass('icon-arrow-red') && !$icon.hasClass('icon-arrow-red')) {
-        $icon.attr('class', 'icon icon-arrow-grey');
-      }
       $icon.css('-webkit-transform', 'rotate(' + r + 'deg)');
+      $icon.attr('class', 'icon icon-arrow-' + (time <= 1 ? 'red' : 'grey'));
       $detial.css('visibility', 'visible');
     } else if (gm) {
       if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {

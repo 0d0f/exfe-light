@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 10:07:09 */
+/*! mobile@2a 2013-07-25 10:07:15 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4050,7 +4050,7 @@ TWEEN.Tween = function(object) {
       var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
       for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
       gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-      this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+      this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4066,7 +4066,7 @@ TWEEN.Tween = function(object) {
           repeat: "30px",
           offset: "0"
         } ]
-      })) : ($e.length && ($e.hasClass("icon-arrow-gray") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+      })) : ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4112,8 +4112,8 @@ TWEEN.Tween = function(object) {
     if (gm && dp) {
       var p0 = gm.getPosition(), p1 = dp.getPosition(), lat1 = p0.lat(), lng1 = p0.lng(), lat2 = p1.lat(), lng2 = p1.lng(), d = distance(lat2, lng2, lat1, lng1), r = bearing(lat2, lng2, lat1, lng1), result = distanceOutput(d);
       console.log(d, r, lat1, lng1, lat2, lng2), result.rotate = r, $distance.html(result.text), 
-      $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-red") || $icon.attr("class", "icon icon-arrow-grey"), 
-      $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $detial.css("visibility", "visible");
+      $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), 
+      $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
     $distance.html((time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
