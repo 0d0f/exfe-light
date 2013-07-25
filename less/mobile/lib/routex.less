@@ -595,6 +595,7 @@
     font-size: 16px;
     font-weight: lighter;
     line-height: 16px;
+    padding: 0 5px;
     //letter-spacing: 1.5px;
 
     & > div {
@@ -604,6 +605,8 @@
 
     .show,
     .discover {
+      top: 0;
+      left: 0;
       color: #007CFF;
       text-shadow: 0 1px 1px rgba(255, 255, 255, .75);
       font-size: 16px;
@@ -619,5 +622,12 @@
     font-weight: lighter;
     line-height: 16px;
     letter-spacing: 1.5px;
+    padding: 0 5px;
+
+    & > div {
+      position: relative;
+      line-height: 44px;
+    }
+
   }
 }
