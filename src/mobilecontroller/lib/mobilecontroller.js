@@ -1731,8 +1731,11 @@ define('mobilecontroller', function (require, exports, module) {
           if ($infoWins.hasClass('hide')) {
             $infoWins.removeClass('hide');
           }
+
+          var name = $d.data('name');
           $infoWins.find('#my-info').addClass('hide');
           $infoWins.find('#other-info').removeClass('hide');
+          $infoWins.find('#other-info').find('.name').text($d.data('name'));
           var bound = this.getBoundingClientRect();
           $infoWins.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
           self.tapElement = this;
@@ -2053,6 +2056,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.myIdentity = myIdentity;
         var div = this.$('#isme');
         div.attr('data-uid', myIdentity.external_username + '@' + myIdentity.provider);
+        div.attr('data-name', myIdentity.name);
         div.find('img').attr('src', myIdentity.avatar_filename);
       }
 
@@ -2075,6 +2079,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')
           div.attr('data-uid', identity.external_username + '@' + identity.provider);
+          div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
           $identities.append(div);
         }

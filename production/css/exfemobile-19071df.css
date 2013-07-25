@@ -2495,3 +2495,15 @@ button .exfe {
   position: relative;
   line-height: 44px;
 }
+#routex #other-info .detial .name {
+  font-size: 21px;
+  line-height: 21px;
+}
+#routex #other-info .detial .date {
+  font-size: 9px;
+  line-height: 9px;
+}
+#routex #other-info .detial .between {
+  font-size: 14px;
+  line-height: 14px;
+}
