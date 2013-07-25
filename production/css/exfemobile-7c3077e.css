@@ -2466,6 +2466,7 @@ button .exfe {
   font-size: 16px;
   font-weight: lighter;
   line-height: 16px;
+  padding: 0 5px;
 }
 #routex #my-info > div {
   position: relative;
@@ -2473,6 +2474,8 @@ button .exfe {
 }
 #routex #my-info .show,
 #routex #my-info .discover {
+  top: 0;
+  left: 0;
   color: #007CFF;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   font-size: 16px;
@@ -2486,4 +2489,9 @@ button .exfe {
   font-weight: lighter;
   line-height: 16px;
   letter-spacing: 1.5px;
+  padding: 0 5px;
+}
+#routex #other-info > div {
+  position: relative;
+  line-height: 44px;
 }
