@@ -415,17 +415,20 @@
       d = data[uid];
       b = bs[uid];
       positions = d.slice(0);
-      if (!b) {
-        b = bs[uid] = this.addBreadcrumbs();
-      }
 
       coords = [];
       while ((p = positions.shift())) {
         coords.push(this.toLatLng(p.latitude, p.longitude));
       }
 
+      if (!b) {
+        b = bs[uid] = this.addBreadcrumbs();
+        // 先临时处理，防止闪
+        b.setPath(coords);
+      }
+
       //latlng = coords[0];
-      b.setPath(coords);
+      //b.setPath(coords);
       //b._uid = uid;
       //b._data = d;
 
