@@ -354,9 +354,6 @@
             }
           }
 
-          if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#FF7E98');
-          gm && gm.setIcon(icons.dotRed);
           b && b.setOptions({
               strokeOpacity: 0
             , icons: [
@@ -375,6 +372,9 @@
                 }
               ]
           });
+          if (isme) { continue; }
+          tl && tl.setAttribute('stroke', '#FF7E98');
+          gm && gm.setIcon(icons.dotRed);
         } else {
           if ($e.length) {
             if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
@@ -384,9 +384,6 @@
             }
           }
 
-          if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#b2b2b2');
-          gm && gm.setIcon(icons.dotGrey);
           b && b.setOptions({
               strokeOpacity: 0
             , icons: [
@@ -405,6 +402,9 @@
                 }
               ]
           });
+          if (isme) { continue; }
+          tl && tl.setAttribute('stroke', '#b2b2b2');
+          gm && gm.setIcon(icons.dotGrey);
         }
       }
     }

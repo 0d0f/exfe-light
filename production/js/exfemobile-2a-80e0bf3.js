@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 05:07:45 */
+/*! mobile@2a 2013-07-25 05:07:07 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4086,8 +4086,7 @@ TWEEN.Tween = function(object) {
     b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
     console.log(n), 1 >= n) {
       if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
-      isme) continue;
-      tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
+      b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
           icon: {
@@ -4102,11 +4101,11 @@ TWEEN.Tween = function(object) {
           repeat: "50px",
           offset: "0"
         } ]
-      });
+      }), isme) continue;
+      tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed);
     } else {
       if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
-      isme) continue;
-      tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+      b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
           icon: {
@@ -4121,7 +4120,8 @@ TWEEN.Tween = function(object) {
           repeat: "50px",
           offset: "0"
         } ]
-      });
+      }), isme) continue;
+      tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
     }
   }, proto.toLatLng = function(latitude, longitude) {
     return new google.maps.LatLng(1 * latitude, 1 * longitude);
