@@ -192,7 +192,7 @@
 
   proto.draw = function (type, data) {
     console.log(type, data);
-    this.STATUS = 1;
+    //this.STATUS = 1;
     if (type === 'geomarks') {
       var rs = [], ps = [], item, st, k;
       data = data.slice(0);
@@ -206,17 +206,23 @@
       }
 
       // draw route
-      /*
-      rs = {
-        positions: [
-            { latitude: 23.114921, longitude: 113.328212 }
-          , { latitude: 23.118915, longitude: 113.328017 }
-          , { latitude: 23.118602, longitude: 113.332745 }
-          , { latitude: 23.118511, longitude: 113.333832 }
-          , { latitude: 23.120837, longitude: 113.333759 }
-        ]
-      };
-      */
+      rs = [{
+          created_at: '1374729235.773445'
+        , created_by: 'cfddream@wechat'
+        , description: ''
+        , id: 233
+        , positions: [
+              { latitude: '23.114921', longitude: '113.328212' }
+            , { latitude: '23.118915', longitude: '113.328017' }
+            , { latitude: '23.118602', longitude: '113.332745' }
+            , { latitude: '23.118511', longitude: '113.333832' }
+            , { latitude: '23.120837', longitude: '113.333759' }
+          ]
+        , title: ''
+        , type: 'route'
+        , updated_at: '1374729235.77346'
+        , updated_by: "cfddream@wechat"
+      }];
       this.drawRoutes(rs);
 
       // draw place
@@ -226,7 +232,7 @@
       // draw identity path
       this.drawIdentityPaths(data);
     }
-    this.STATUS = 0;
+    //this.STATUS = 0;
   };
 
   proto.drawRoutes = function (rs) {
