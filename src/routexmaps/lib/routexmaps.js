@@ -259,7 +259,7 @@
 
   proto.addPolyline = function (data) {
     var rgba = (data.color && data.color.split(',')) || []
-      , color = rgba.length ? '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16) : '#007BFF'
+      , color = rgba.length ? '#' + ((+rgba[0]).toString(16) + '0').substr(0, 2) + ((+rgba[1]).toString(16) + '0').substr(0, 2) + ((+rgba[2]).toString(16) + '0').substr(0, 2) : '#007BFF'
       , alpha = rgba[3] || 1
       , p = new google.maps.Polyline({
             map: this.map
