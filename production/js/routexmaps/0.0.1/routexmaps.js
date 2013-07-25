@@ -328,16 +328,21 @@
       , gms = this.geoMarkers
       , tiplines = this.tiplines
       , dp = this.destinationPlace
-      , uid, d, now = Math.round((new Date()).getTime() / 1000), n;
+      , geo = this.geoLocation
+      , myuid = this.myuid
+      , uid, isme, d, now = Math.round((new Date()).getTime() / 1000), n;
     var gm, b, $e, tl;
     for (uid in u) {
-      if (u.hasOwnProperty(uid) && (d = u[uid])) {
+      if (u.hasOwnProperty(uid)) {
+        d = u[uid];
+        isme = myuid === uid;
         n = Math.floor((now - d.timestamp) / 60);
-        gm = gms[uid];
+        gm = isme ? geo : gms[uid];
+        this.distanceMatrix(uid, gm ,dp, n);
+
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
-        this.distanceMatrix(uid, gm ,dp, n);
         console.log(n)
         if (n <= 1) {
 
@@ -349,6 +354,7 @@
             }
           }
 
+          if (isme) { continue; }
           tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
           b && b.setOptions({
@@ -378,6 +384,7 @@
             }
           }
 
+          if (isme) { continue; }
           tl && tl.setAttribute('stroke', '#b2b2b2');
           gm && gm.setIcon(icons.dotGrey);
           b && b.setOptions({

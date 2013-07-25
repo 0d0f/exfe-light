@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 05:07:53 */
+/*! mobile@2a 2013-07-25 05:07:45 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4080,42 +4080,49 @@ TWEEN.Tween = function(object) {
       break;
     }
   }, proto.monit = function() {
-    var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
-    for (uid in u) u.hasOwnProperty(uid) && (d = u[uid]) && (n = Math.floor((now - d.timestamp) / 60), 
-    gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
-    tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
-      strokeOpacity: 0,
-      icons: [ {
-        icon: {
-          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-          fillColor: "#FF7E98",
-          fillOpacity: .8,
-          strokeColor: "#fff",
-          strokeOpacity: .8,
-          strokeWeight: 1,
-          scale: .5
-        },
-        repeat: "50px",
-        offset: "0"
-      } ]
-    })) : ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
-    tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
-      strokeOpacity: 0,
-      icons: [ {
-        icon: {
-          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-          fillColor: "#b2b2b2",
-          fillOpacity: .8,
-          strokeColor: "#fff",
-          strokeOpacity: .8,
-          strokeWeight: 1,
-          scale: .5
-        },
-        repeat: "50px",
-        offset: "0"
-      } ]
-    })));
+    var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, now = Math.round(new Date().getTime() / 1e3);
+    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid === uid, 
+    n = Math.floor((now - d.timestamp) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
+    b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    console.log(n), 1 >= n) {
+      if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+      isme) continue;
+      tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
+        strokeOpacity: 0,
+        icons: [ {
+          icon: {
+            path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
+            fillColor: "#FF7E98",
+            fillOpacity: .8,
+            strokeColor: "#fff",
+            strokeOpacity: .8,
+            strokeWeight: 1,
+            scale: .5
+          },
+          repeat: "50px",
+          offset: "0"
+        } ]
+      });
+    } else {
+      if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+      isme) continue;
+      tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
+        strokeOpacity: 0,
+        icons: [ {
+          icon: {
+            path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
+            fillColor: "#b2b2b2",
+            fillOpacity: .8,
+            strokeColor: "#fff",
+            strokeOpacity: .8,
+            strokeWeight: 1,
+            scale: .5
+          },
+          repeat: "50px",
+          offset: "0"
+        } ]
+      });
+    }
   }, proto.toLatLng = function(latitude, longitude) {
     return new google.maps.LatLng(1 * latitude, 1 * longitude);
   }, proto.drawIdentityPaths = function(data) {
