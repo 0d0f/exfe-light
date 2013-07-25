@@ -2483,7 +2483,6 @@ button .exfe {
 #routex #other-info {
   position: relative;
   width: 200px;
-  height: 125px;
   text-align: center;
   font-size: 16px;
   font-weight: lighter;
@@ -2494,6 +2493,9 @@ button .exfe {
 #routex #other-info > div {
   position: relative;
   line-height: 44px;
+}
+#routex #other-info .detial {
+  padding: 5px;
 }
 #routex #other-info .detial .name {
   font-size: 21px;
