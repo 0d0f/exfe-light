@@ -1983,8 +1983,8 @@ define('mobilecontroller', function (require, exports, module) {
           , self.token
           , function (type, result) {
               if (self.mapReadyStatus && self.mapController) {
-                self.setLatLngOffset();
-                self.mapController.myuid = self.myuid;
+                //self.setLatLngOffset();
+                //self.mapController.myuid = self.myuid;
                 self.mapController.draw(type, result);
               }
             }
