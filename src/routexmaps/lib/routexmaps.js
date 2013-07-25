@@ -331,8 +331,7 @@
       , uid, d, now = Math.round((new Date()).getTime() / 1000), n;
     var gm, b, $e, tl;
     for (uid in u) {
-      if (u.hasOwnProperty(uid)) {
-        d = u[uid];
+      if (u.hasOwnProperty(uid) && (d = u[uid])) {
         n = Math.floor((now - d.timestamp) / 60);
         gm = gms[uid];
         b = bs[uid];
