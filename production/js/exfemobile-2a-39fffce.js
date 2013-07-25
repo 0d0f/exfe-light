@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 04:07:15 */
+/*! mobile@2a 2013-07-25 04:07:46 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4088,15 +4088,15 @@ TWEEN.Tween = function(object) {
       strokeOpacity: 0,
       icons: [ {
         icon: {
-          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
           fillColor: "#FF7E98",
-          fillOpacity: .5,
+          fillOpacity: .8,
           strokeColor: "#fff",
-          strokeOpacity: .5,
+          strokeOpacity: .8,
           strokeWeight: 1,
           scale: .5
         },
-        repeat: "30px",
+        repeat: "50px",
         offset: "0"
       } ]
     })) : ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
@@ -4104,15 +4104,15 @@ TWEEN.Tween = function(object) {
       strokeOpacity: 0,
       icons: [ {
         icon: {
-          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
           fillColor: "#b2b2b2",
-          fillOpacity: .5,
+          fillOpacity: .8,
           strokeColor: "#fff",
-          strokeOpacity: .5,
+          strokeOpacity: .8,
           strokeWeight: 1,
           scale: .5
         },
-        repeat: "30px",
+        repeat: "50px",
         offset: "0"
       } ]
     })));
@@ -4172,21 +4172,21 @@ TWEEN.Tween = function(object) {
     var sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50)), ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
     return bounds.extend(sw), bounds.extend(center), bounds.extend(ne), bounds;
   }, proto.addBreadcrumbs = function() {
-    var color = "#b2b2b2", alpha = .5, p = new google.maps.Polyline({
+    var color = "#b2b2b2", alpha = .8, p = new google.maps.Polyline({
       map: this.map,
       visible: !1,
       strokeOpacity: 0,
       icons: [ {
         icon: {
-          path: "M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z",
+          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
           fillColor: color,
           fillOpacity: alpha,
           strokeColor: "#fff",
-          strokeOpacity: .5,
+          strokeOpacity: .8,
           strokeWeight: 1,
           scale: .5
         },
-        repeat: "100px",
+        repeat: "50px",
         offset: "0"
       } ]
     });

@@ -357,15 +357,15 @@
             , icons: [
                 {
                     icon: {
-                        path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
+                        path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
                       , fillColor: '#FF7E98'
-                      , fillOpacity: .5
+                      , fillOpacity: .8
                       , strokeColor: '#fff'
-                      , strokeOpacity: .5
+                      , strokeOpacity: .8
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '30px'
+                  , repeat: '50px'
                   , offset: '0'
                 }
               ]
@@ -386,15 +386,15 @@
             , icons: [
                 {
                     icon: {
-                        path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
+                        path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
                       , fillColor: '#b2b2b2'
-                      , fillOpacity: .5
+                      , fillOpacity: .8
                       , strokeColor: '#fff'
-                      , strokeOpacity: .5
+                      , strokeOpacity: .8
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '30px'
+                  , repeat: '50px'
                   , offset: '0'
                 }
               ]
@@ -575,7 +575,7 @@
       // , color = '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16)
       // , alpha = rgba[3]
     var color = '#b2b2b2'
-      , alpha = 0.5
+      , alpha = 0.8
       , p = new google.maps.Polyline({
         map: this.map
       , visible: false
@@ -586,15 +586,15 @@
       , icons: [
           {
               icon: {
-                  path: 'M0,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z'
+                  path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
                 , fillColor: color
                 , fillOpacity: alpha
                 , strokeColor: '#fff'
-                , strokeOpacity: .5
+                , strokeOpacity: .8
                 , strokeWeight: 1
                 , scale: .5
               }
-            , repeat: '100px'
+            , repeat: '50px'
             , offset: '0'
           }
         ]
