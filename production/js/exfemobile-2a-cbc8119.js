@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 09:07:56 */
+/*! mobile@2a 2013-07-25 10:07:23 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4050,7 +4050,7 @@ TWEEN.Tween = function(object) {
       var uid, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, now = Math.round(new Date().getTime() / 1e3);
       for (uid in u) u.hasOwnProperty(uid) && (d = u[uid], n = Math.floor((now - d.timestamp) / 60), 
       gm = gms[uid], b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-      this.distanceMatrix(uid, gm, dp, 1 >= n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+      this.distanceMatrix(uid, gm, dp, n), console.log(n), 1 >= n ? ($e.length && ($e.hasClass("icon-arrow-gray") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed), b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4066,7 +4066,7 @@ TWEEN.Tween = function(object) {
           repeat: "30px",
           offset: "0"
         } ]
-      })) : ($e.length && ($e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+      })) : ($e.length && ($e.hasClass("icon-arrow-gray") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey), b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4106,15 +4106,17 @@ TWEEN.Tween = function(object) {
       icon: this.icons.dotGrey
     });
     return gm;
-  }, proto.distanceMatrix = function(uid, gm, dp) {
-    console.log(uid, "destination", dp, gm);
+  }, proto.distanceMatrix = function(uid, gm, dp, time) {
+    time = time || 0, console.log(uid, "destination", dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
     if (gm && dp) {
       var p0 = gm.getPosition(), p1 = dp.getPosition(), lat1 = p0.lat(), lng1 = p0.lng(), lat2 = p1.lat(), lng2 = p1.lng(), d = distance(lat2, lng2, lat1, lng1), r = bearing(lat2, lng2, lat1, lng1), result = distanceOutput(d);
-      console.log(d, r, lat1, lng1, lat2, lng2), result.rotate = r, console.dir(result), 
-      $distance.html(result.text), $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-grey") || $icon.attr("class", "icon icon-arrow-grey"), 
+      console.log(d, r, lat1, lng1, lat2, lng2), result.rotate = r, $distance.html(result.text), 
+      $icon.hasClass("icon-arrow-red") || $icon.hasClass("icon-arrow-red") || $icon.attr("class", "icon icon-arrow-grey"), 
       $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $detial.css("visibility", "visible");
-    } else gm ? $detial.css("visibility", "visible") : $detial.css("visibility", "hidden");
+    } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
+    $distance.html(time + (time > 9 ? "+" : "") + '<span class="unit">分钟前</span>'), 
+    $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
     console.log("fit bounds with destination");
     var destinationPlace = this.destinationPlace, isme = this.myuid === uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -4249,7 +4251,7 @@ TWEEN.Tween = function(object) {
     }
     position && (latlng = this.toLatLng(1 * position.latitude + this.latOffset, 1 * position.longitude + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), console.log(uid, position), uid && (this.updated[uid] = position || lastlatlng), 
+    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
