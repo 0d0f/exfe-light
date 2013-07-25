@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 12:07:14 */
+/*! mobile@2a 2013-07-25 12:07:12 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3883,8 +3883,8 @@ TWEEN.Tween = function(object) {
     },
     cachedOptions: {
       enableHighAccuracy: !1,
-      maximumAge: 1/0,
-      timeout: 29999.999999
+      maximumAge: 3e3,
+      timeout: 5e3
     },
     STATUS: 0,
     freshness_threshold: 4999.999999,

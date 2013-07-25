@@ -206,6 +206,17 @@
       }
 
       // draw route
+      /*
+      rs = {
+        positions: [
+            { latitude: 23.114921, longitude: 113.328212 }
+          , { latitude: 23.118915, longitude: 113.328017 }
+          , { latitude: 23.118602, longitude: 113.332745 }
+          , { latitude: 23.118511, longitude: 113.333832 }
+          , { latitude: 23.120837, longitude: 113.333759 }
+        ]
+      };
+      */
       this.drawRoutes(rs);
 
       // draw place
