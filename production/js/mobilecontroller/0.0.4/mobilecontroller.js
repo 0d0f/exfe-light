@@ -2003,9 +2003,11 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.stopGeo();
         routexStream.startGeo(
             function (r) {
+              /*
               if (!routexStream.STATUS) {
                 routexStream.STATUS = 1;
               }
+              */
               self.position = r;
               Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '', timestamp: r.timestamp });
               self.switchGPSStyle(2);

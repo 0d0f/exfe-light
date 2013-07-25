@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 02:07:07 */
+/*! mobile@2a 2013-07-25 03:07:00 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4020,12 +4020,36 @@ TWEEN.Tween = function(object) {
       cb && cb());
     }, n.async = !0, n.src = this.options.url, document.body.appendChild(n);
   }, proto.draw = function(type, data) {
-    if (console.log(type, data), this.STATUS = 1, "geomarks" === type) {
+    if (console.log(type, data), "geomarks" === type) {
       var item, st, rs = [], ps = [];
       for (data = data.slice(0); item = data.shift(); ) st = item.type, "route" === st ? rs.push(item) : "location" === st && ps.push(item);
-      this.drawRoutes(rs), this.drawPlaces(ps);
+      rs = [ {
+        created_at: "1374729235.773445",
+        created_by: "cfddream@wechat",
+        description: "",
+        id: 233,
+        positions: [ {
+          latitude: "23.114921",
+          longitude: "113.328212"
+        }, {
+          latitude: "23.118915",
+          longitude: "113.328017"
+        }, {
+          latitude: "23.118602",
+          longitude: "113.332745"
+        }, {
+          latitude: "23.118511",
+          longitude: "113.333832"
+        }, {
+          latitude: "23.120837",
+          longitude: "113.333759"
+        } ],
+        title: "",
+        type: "route",
+        updated_at: "1374729235.77346",
+        updated_by: "cfddream@wechat"
+      } ], this.drawRoutes(rs), this.drawPlaces(ps);
     } else "breadcrumbs" === type && this.drawIdentityPaths(data);
-    this.STATUS = 0;
   }, proto.drawRoutes = function(rs) {
     var r, k, item, routes = this.routes;
     for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
@@ -5429,7 +5453,7 @@ TWEEN.Tween = function(object) {
     startStream: function() {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
-        routexStream.STATUS || (routexStream.STATUS = 1), self.position = r, Store.set("last-latlng", {
+        self.position = r, Store.set("last-latlng", {
           lat: r.latitude + "",
           lng: r.longitude + "",
           timestamp: r.timestamp
