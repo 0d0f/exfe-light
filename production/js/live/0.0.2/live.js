@@ -207,7 +207,7 @@ define('live', function (require) {
                 if (stream.pop) {
                   if (lneResp && lneResp.length) {
                     var line;
-                    while ((line = lneResp.shift())  && line.length) {
+                    while ((line = lneResp.shift()) && line.length) {
                       stream.pop(line);
                     }
                   }

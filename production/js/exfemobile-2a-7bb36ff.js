@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-26 02:07:11 */
+/*! mobile@2a 2013-07-26 04:07:00 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5365,8 +5365,8 @@ TWEEN.Tween = function(object) {
             var code = data.meta && data.meta.code;
             if (200 === code) {
               console.log("success"), console.dir(data);
-              var cats = Store.get("cats") || {};
-              cats[self.ctoken] = data.response.cross_access_token, self.myIdentityId = id, self.myuid = uid, 
+              var cats = Store.get("cats") || {}, token = data.response.cross_access_token;
+              cats[self.ctoken] = token, self.myIdentityId = id, self.myuid = uid, self.token = token, 
               Store.set("cats", cats), self.$("#free-identities").hide().empty(), self.createIdentitiesList(), 
               self.streaming();
             }

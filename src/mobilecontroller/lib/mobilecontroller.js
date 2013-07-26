@@ -1801,10 +1801,12 @@ define('mobilecontroller', function (require, exports, module) {
                   if (200 === code) {
                     console.log('success')
                     console.dir(data)
-                    var cats = Store.get('cats') || {};
-                    cats[self.ctoken] = data.response.cross_access_token;
+                    var cats = Store.get('cats') || {}
+                      , token = data.response.cross_access_token;
+                    cats[self.ctoken] = token;
                     self.myIdentityId = id;
                     self.myuid = uid;
+                    self.token = token;
                     Store.set('cats', cats);
 
                     self.$('#free-identities').hide().empty();
