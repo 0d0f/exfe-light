@@ -1,6 +1,8 @@
 define('live', function (require) {
     "use strict";
 
+    // http://stackoverflow.com/questions/1112413/cross-browser-implementation-of-http-streaming-push-ajax-pattern
+
     var _ENV_ = window._ENV_,
         streaming_api_url = _ENV_.streaming_api_url,
         api_url = _ENV_.api_url;
@@ -113,39 +115,37 @@ define('live', function (require) {
 
 
     var streamCallback = function(data) {
-        if (data && data.length) {
-            var rawCards = JSON.parse(data[data.length - 1]);
-            if (rawCards && rawCards.length) {
-                var cards = {};
-                for (var i in rawCards) {
-                    if (rawCards[i].id) {
-                        if (rawCards[i].id === myData.card.id) {
-                            myData.card.name       = rawCards[i].name;
-                            myData.card.avatar     = rawCards[i].avatar;
-                            myData.card.bio        = rawCards[i].bio;
-                            myData.card.identities = rawCards[i].identities;
-                            myData.card.timestamp  = rawCards[i].timestamp;
-                        } else {
-                            if (!rawCards[i].avatar) {
-                                rawCards[i].avatar = encodeURI(
-                                    api_url + '/avatar/default?name=' + rawCards[i].name
-                                );
-                            }
-                            cards[rawCards[i].id] = rawCards[i];
+        var rawCards = JSON.parse(data);
+        if (rawCards && rawCards.length) {
+            var cards = {};
+            for (var i in rawCards) {
+                if (rawCards[i].id) {
+                    if (rawCards[i].id === myData.card.id) {
+                        myData.card.name       = rawCards[i].name;
+                        myData.card.avatar     = rawCards[i].avatar;
+                        myData.card.bio        = rawCards[i].bio;
+                        myData.card.identities = rawCards[i].identities;
+                        myData.card.timestamp  = rawCards[i].timestamp;
+                    } else {
+                        if (!rawCards[i].avatar) {
+                            rawCards[i].avatar = encodeURI(
+                                api_url + '/avatar/default?name=' + rawCards[i].name
+                            );
                         }
+                        cards[rawCards[i].id] = rawCards[i];
                     }
                 }
-                var result  = {me : clone(myData.card), others : cards};
-                var curEcho = JSON.stringify(result);
-                log('Streaming pops: ' + curEcho, cards);
-                if (echo && lstEcho !== curEcho) {
-                    log('Callback')
-                    echo(result);
-                    lstEcho = curEcho;
-                }
-            } else {
-                log('Data error');
             }
+            var result  = {me : clone(myData.card), others : cards};
+            var curEcho = JSON.stringify(result);
+            log('Streaming pops: ' + curEcho, cards);
+            if (echo && lstEcho !== curEcho) {
+                log('Callback')
+                echo(result);
+                lstEcho = curEcho;
+            }
+        } else {
+            log('Data error');
         }
     };
 
@@ -205,7 +205,12 @@ define('live', function (require) {
                     lneResp.pop();
                 }
                 if (stream.pop) {
-                    stream.pop(lneResp);
+                  if (lneResp && lneResp.length) {
+                    var line;
+                    while ((line = lneResp.shift()) && line.length) {
+                      stream.pop(line);
+                    }
+                  }
                 }
             }
             if ( stream.http.readyState === 4 && stream.prvLen === stream.http.responseText.length) {

@@ -1,6 +1,8 @@
 define('routexstream', function (require) {
     'use strict';
 
+    // http://stackoverflow.com/questions/1112413/cross-browser-implementation-of-http-streaming-push-ajax-pattern
+
     var _ENV_ = window._ENV_
       , api_url = _ENV_.apiv3_url
       , geolocation = navigator.geolocation;
@@ -170,7 +172,12 @@ define('routexstream', function (require) {
                     lneResp.pop();
                 }
                 if (stream.pop) {
-                    stream.pop(lneResp);
+                  if (lneResp && lneResp.length) {
+                    var line;
+                    while ((line = lneResp.shift()) && line.length) {
+                      stream.pop(line);
+                    }
+                  }
                 }
             }
             if (http.readyState === 4 && stream.prvLen === http.responseText.length) {
@@ -351,31 +358,29 @@ define('routexstream', function (require) {
     };
 
     var streamCallback = function (rawData) {
-        if (rawData && rawData.length) {
-            var data = JSON.parse(rawData[rawData.length - 1]);
-            if (data && data.type && data.data) {
-                var type   = data.type.replace(/^.*\/([^\/]*)$/, '$1');
-                var result = data.data;
+        var data = JSON.parse(rawData);
+        if (data && data.type && data.data) {
+            var type   = data.type.replace(/^.*\/([^\/]*)$/, '$1');
+            var result = data.data;
 
-                switch (type) {
-                    case 'breadcrumbs':
-                        var curLocat = JSON.stringify(result);
-                        log('Streaming pops: ' + curLocat, result);
-                        if (echo && lstLocat !== curLocat) {
-                            log('Callback')
-                            echo(type, result);
-                            lstLocat = curLocat;
-                        }
-                        break;
-                    case 'geomarks':
-                        var curRoute = JSON.stringify(result);
-                        log('Streaming pops: ' + curRoute, result);
-                        if (echo && lstRoute !== curRoute) {
-                            log('Callback')
-                            echo(type, result);
-                            lstRoute = curRoute;
-                        }
-                }
+            switch (type) {
+                case 'breadcrumbs':
+                    var curLocat = JSON.stringify(result);
+                    log('Streaming pops: ' + curLocat, result);
+                    if (echo && lstLocat !== curLocat) {
+                        log('Callback')
+                        echo(type, result);
+                        lstLocat = curLocat;
+                    }
+                    break;
+                case 'geomarks':
+                    var curRoute = JSON.stringify(result);
+                    log('Streaming pops: ' + curRoute, result);
+                    if (echo && lstRoute !== curRoute) {
+                        log('Callback')
+                        echo(type, result);
+                        lstRoute = curRoute;
+                    }
             }
         }
     };
