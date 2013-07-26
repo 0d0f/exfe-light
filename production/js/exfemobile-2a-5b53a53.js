@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-25 05:07:07 */
+/*! mobile@2a 2013-07-26 02:07:11 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3681,22 +3681,20 @@ TWEEN.Tween = function(object) {
     }), !stream.live && token && (stream.init(streaming_api_url + "/v3/live/streaming?token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, streamCallback = function(data) {
-    if (data && data.length) {
-      var rawCards = JSON.parse(data[data.length - 1]);
-      if (rawCards && rawCards.length) {
-        var cards = {};
-        for (var i in rawCards) rawCards[i].id && (rawCards[i].id === myData.card.id ? (myData.card.name = rawCards[i].name, 
-        myData.card.avatar = rawCards[i].avatar, myData.card.bio = rawCards[i].bio, myData.card.identities = rawCards[i].identities, 
-        myData.card.timestamp = rawCards[i].timestamp) : (rawCards[i].avatar || (rawCards[i].avatar = encodeURI(api_url + "/avatar/default?name=" + rawCards[i].name)), 
-        cards[rawCards[i].id] = rawCards[i]));
-        var result = {
-          me: clone(myData.card),
-          others: cards
-        }, curEcho = JSON.stringify(result);
-        log("Streaming pops: " + curEcho, cards), echo && lstEcho !== curEcho && (log("Callback"), 
-        echo(result), lstEcho = curEcho);
-      } else log("Data error");
-    }
+    var rawCards = JSON.parse(data);
+    if (rawCards && rawCards.length) {
+      var cards = {};
+      for (var i in rawCards) rawCards[i].id && (rawCards[i].id === myData.card.id ? (myData.card.name = rawCards[i].name, 
+      myData.card.avatar = rawCards[i].avatar, myData.card.bio = rawCards[i].bio, myData.card.identities = rawCards[i].identities, 
+      myData.card.timestamp = rawCards[i].timestamp) : (rawCards[i].avatar || (rawCards[i].avatar = encodeURI(api_url + "/avatar/default?name=" + rawCards[i].name)), 
+      cards[rawCards[i].id] = rawCards[i]));
+      var result = {
+        me: clone(myData.card),
+        others: cards
+      }, curEcho = JSON.stringify(result);
+      log("Streaming pops: " + curEcho, cards), echo && lstEcho !== curEcho && (log("Callback"), 
+      echo(result), lstEcho = curEcho);
+    } else log("Data error");
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
@@ -3719,8 +3717,8 @@ TWEEN.Tween = function(object) {
         for (4 === stream.http.readyState && 200 !== stream.http.status && stream.kill(); stream.prvLen !== stream.http.responseText.length && (4 !== stream.http.readyState || stream.prvLen !== stream.http.responseText.length); ) {
           stream.prvLen = stream.http.responseText.length;
           var rawResp = stream.http.responseText.substring(stream.nxtIdx), lneResp = rawResp.split("\n");
-          stream.nxtIdx += rawResp.lastIndexOf("\n") + 1, "\n" === rawResp[rawResp.length - 1] && lneResp[lneResp.length] || lneResp.pop(), 
-          stream.pop && stream.pop(lneResp);
+          if (stream.nxtIdx += rawResp.lastIndexOf("\n") + 1, "\n" === rawResp[rawResp.length - 1] && lneResp[lneResp.length] || lneResp.pop(), 
+          stream.pop && lneResp && lneResp.length) for (var line; (line = lneResp.shift()) && line.length; ) stream.pop(line);
         }
         4 === stream.http.readyState && stream.prvLen === stream.http.responseText.length && stream.kill();
       }
@@ -3841,8 +3839,8 @@ TWEEN.Tween = function(object) {
         for (4 === http.readyState && 200 !== http.status && stream.kill(); stream.prvLen !== http.responseText.length && (4 !== http.readyState || stream.prvLen !== http.responseText.length); ) {
           stream.prvLen = http.responseText.length;
           var rawResp = http.responseText.substring(stream.nxtIdx), lneResp = rawResp.split("\n");
-          stream.nxtIdx += rawResp.lastIndexOf("\n") + 1, "\n" === rawResp[rawResp.length - 1] && lneResp[lneResp.length] || lneResp.pop(), 
-          stream.pop && stream.pop(lneResp);
+          if (stream.nxtIdx += rawResp.lastIndexOf("\n") + 1, "\n" === rawResp[rawResp.length - 1] && lneResp[lneResp.length] || lneResp.pop(), 
+          stream.pop && lneResp && lneResp.length) for (var line; (line = lneResp.shift()) && line.length; ) stream.pop(line);
         }
         4 === http.readyState && stream.prvLen === http.responseText.length && stream.kill();
       }
@@ -3918,22 +3916,20 @@ TWEEN.Tween = function(object) {
       wid && geolocation.clearWatch(wid);
     }
   }, streamCallback = function(rawData) {
-    if (rawData && rawData.length) {
-      var data = JSON.parse(rawData[rawData.length - 1]);
-      if (data && data.type && data.data) {
-        var type = data.type.replace(/^.*\/([^\/]*)$/, "$1"), result = data.data;
-        switch (type) {
-         case "breadcrumbs":
-          var curLocat = JSON.stringify(result);
-          log("Streaming pops: " + curLocat, result), echo && lstLocat !== curLocat && (log("Callback"), 
-          echo(type, result), lstLocat = curLocat);
-          break;
+    var data = JSON.parse(rawData);
+    if (data && data.type && data.data) {
+      var type = data.type.replace(/^.*\/([^\/]*)$/, "$1"), result = data.data;
+      switch (type) {
+       case "breadcrumbs":
+        var curLocat = JSON.stringify(result);
+        log("Streaming pops: " + curLocat, result), echo && lstLocat !== curLocat && (log("Callback"), 
+        echo(type, result), lstLocat = curLocat);
+        break;
 
-         case "geomarks":
-          var curRoute = JSON.stringify(result);
-          log("Streaming pops: " + curRoute, result), echo && lstRoute !== curRoute && (log("Callback"), 
-          echo(type, result), lstRoute = curRoute);
-        }
+       case "geomarks":
+        var curRoute = JSON.stringify(result);
+        log("Streaming pops: " + curRoute, result), echo && lstRoute !== curRoute && (log("Callback"), 
+        echo(type, result), lstRoute = curRoute);
       }
     }
   }, routexStream = {
