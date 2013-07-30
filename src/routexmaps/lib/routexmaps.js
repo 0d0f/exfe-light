@@ -777,8 +777,8 @@
     if (!tl) { return; }
     var f = [bound[1], bound[2]]
       , s = [f[0] + 13, f[1]]
-      , points = [f.join(','), s.join(',')].join(' ');
-    p = this.projection.fromLatLngToContainerPixel(tl._lastlatlng);
+      , points = [f.join(','), s.join(',')].join(' ')
+      , p = this.fromLatLngToContainerPixel(tl._lastlatlng);
     tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
     tl.setAttributeNS(null, 'display', 'block');
   };
