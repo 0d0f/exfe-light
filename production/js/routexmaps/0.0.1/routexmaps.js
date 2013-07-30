@@ -148,7 +148,7 @@
         mapOptions.center = rm.toLatLng(35.86166, 104.195397);
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP;
         mapOptions.disableDefaultUI = true;
-        mapOptions.minZoom = 2;
+        mapOptions.minZoom = 1;
 
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions);
 
