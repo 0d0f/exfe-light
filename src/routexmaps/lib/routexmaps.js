@@ -155,7 +155,6 @@
         overlay.draw = function () {};
         // overlay.onAdd = overlay.onRemove = function () {};
         overlay.setMap(map);
-        rm.projection = overlay.getProjection();
 
         var initListener = GEvent.addListener(map, 'tilesloaded', function () {
 
@@ -207,11 +206,11 @@
   };
 
   proto.fromContainerPixelToLatLng = function () {
-    return this.projection.fromContainerPixelToLatLng();
+    return this.overlay.getProjection().fromContainerPixelToLatLng();
   };
 
   proto.fromLatLngToContainerPixel = function () {
-    return this.projection.fromLatLngToContainerPixel();
+    return this.overlay.getProjection().fromLatLngToContainerPixel();
   };
 
   proto.draw = function (type, data) {
