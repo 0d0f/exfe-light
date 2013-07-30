@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-30 02:07:38 */
+/*! mobile@2a 2013-07-30 02:07:31 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3976,7 +3976,7 @@ TWEEN.Tween = function(object) {
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), overlay = rm.overlay = new GMaps.OverlayView();
-        overlay.draw = function() {}, overlay.setMap(map), rm.projection = overlay.getProjection();
+        overlay.draw = function() {}, overlay.setMap(map);
         var initListener = GEvent.addListener(map, "tilesloaded", function() {
           GEvent.addListener(map, "bounds_changed", function() {
             GEvent.trigger(map, "zoom_changed");
@@ -4022,9 +4022,9 @@ TWEEN.Tween = function(object) {
       cb && cb());
     }, n.src = this.options.url, document.body.appendChild(n);
   }, proto.fromContainerPixelToLatLng = function() {
-    return this.projection.fromContainerPixelToLatLng();
+    return this.overlay.getProjection().fromContainerPixelToLatLng();
   }, proto.fromLatLngToContainerPixel = function() {
-    return this.projection.fromLatLngToContainerPixel();
+    return this.overlay.getProjection().fromLatLngToContainerPixel();
   }, proto.draw = function(type, data) {
     if (console.log(type, data), "geomarks" === type) {
       var item, st, rs = [], ps = [];
