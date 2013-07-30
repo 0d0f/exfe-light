@@ -151,6 +151,12 @@
 
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions);
 
+        var overlay = rm.overlay = new GMaps.OverlayView();
+        overlay.draw = function () {};
+        // overlay.onAdd = overlay.onRemove = function () {};
+        overlay.setMap(map);
+        rm.projection = overlay.getProjection();
+
         var initListener = GEvent.addListener(map, 'tilesloaded', function () {
 
           GEvent.addListener(map, 'bounds_changed', function () {
@@ -173,13 +179,6 @@
           GEvent.removeListener(initListener);
 
         });
-
-        var overlay = rm.overlay = new GMaps.OverlayView();
-        overlay.draw = function () {};
-        // overlay.onAdd = overlay.onRemove = function () {};
-        overlay.setMap(map);
-
-        rm.projection = overlay.getProjection();
 
         callback(map);
 
@@ -511,11 +510,10 @@
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition()
-        , projection = this.overlay.getProjection()
         , map = this.map;
       if (destinationPlace) {
         var dlatlng = destinationPlace.getPosition()
-          , p = projection.fromLatLngToContainerPixel(dlatlng)
+          , p = this.fromLatLngToContainerPixel(dlatlng)
           , bounds;
 
         if (isme) {
@@ -523,7 +521,7 @@
         } else {
           bounds = new google.maps.LatLngBounds()
           if (p.x < 50) {
-            p = projection.fromContainerPixelToLatLng(new google.maps.Point(p.x - 50, p.y));
+            p = this.fromContainerPixelToLatLng(new google.maps.Point(p.x - 50, p.y));
             bounds.extend(p);
           }
 
@@ -553,21 +551,20 @@
 
   proto.calculateBoundsByCenter = function (center, others) {
     var bounds = new google.maps.LatLngBounds()
-      , projection = this.overlay.getProjection()
       , points = [], point, coord, c;
     while ((coord = others.shift())) {
-      point = projection.fromLatLngToContainerPixel(coord);
+      point = this.fromLatLngToContainerPixel(coord);
       points.push(point);
     }
 
-    var c = projection.fromLatLngToContainerPixel(center), maxd = 0, d, p;
+    var c = this.fromLatLngToContainerPixel(center), maxd = 0, d, p;
     while ((p = points.shift())) {
       d = Math.sqrt(Math.pow(p.x - c.x, 2) + Math.pow(p.y - c.y, 2));
       if (d > maxd) { maxd = d; }
     }
 
-    var sw = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50))
-      , ne = projection.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
+    var sw = this.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50))
+      , ne = this.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
 
     bounds.extend(sw);
     bounds.extend(center);
@@ -704,7 +701,6 @@
   proto.contains = function () {
     var mapBounds = this.map.getBounds()
       , GMaps = google.maps
-      , projection = this.overlay.getProjection()
       , sw = mapBounds.getSouthWest()
       , ne = mapBounds.getNorthEast()
       , bounds = new GMaps.LatLngBounds()
@@ -712,8 +708,8 @@
       , ids = document.getElementById('identities')._ids || {}
       , uid, gm, latlng;
 
-    sw = projection.fromLatLngToContainerPixel(sw);
-    sw = projection.fromContainerPixelToLatLng(new GMaps.Point(sw.x + 50, sw.y));
+    sw = this.fromLatLngToContainerPixel(sw);
+    sw = this.fromContainerPixelToLatLng(new GMaps.Point(sw.x + 50, sw.y));
 
     bounds.extend(sw);
     bounds.extend(ne);
