@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-30 02:07:15 */
+/*! mobile@2a 2013-07-30 03:07:59 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5365,7 +5365,7 @@ TWEEN.Tween = function(object) {
           var bound = this.getBoundingClientRect(), uid = $(this).parents(".identity").data("uid"), t = bound.height / 2 + bound.top;
           t >= minT && maxT >= t && (ids[uid] = [ i, 46, t ]);
         }), self.mapReadyStatus && self.mapController && self.mapController.contains(), 
-        console.dir(ids);
+        console.log(pb, ids);
       }), element.on("touchmove.maps", "#identities-overlay", function(e) {
         e.stopPropagation(), e.preventDefault();
       }), element.on("touchmove", ".info-windown", function(e) {
@@ -5383,8 +5383,9 @@ TWEEN.Tween = function(object) {
       }), self.on("show", function() {
         $("html, body").css({
           "min-height": $win.height()
-        }), console.log("This is Smith-Token.", self.isSmithToken), self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), 
-        self.getFreeIdentities()) : (self.createIdentitiesList(), self.streaming()), $win.trigger("orientationchange");
+        }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
+        self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), self.getFreeIdentities()) : (self.createIdentitiesList(), 
+        self.streaming());
       });
     },
     updateExfeeName: function() {

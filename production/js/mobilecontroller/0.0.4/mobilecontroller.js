@@ -1668,7 +1668,6 @@ define('mobilecontroller', function (require, exports, module) {
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
-          // $locate.css('-webkit-transform', 'translate3d(-10px, ' + (height - (32 + 10)) + 'px, 0)');
         });
 
         var gotoGPS = function (e, showBreadcrumbs) {
@@ -1852,7 +1851,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
-          console.dir(ids);
+          console.log(pb, ids);
         });
 
         element.on('touchmove.maps', '#identities-overlay', function (e) {
@@ -1890,6 +1889,8 @@ define('mobilecontroller', function (require, exports, module) {
 
           console.log('This is Smith-Token.', self.isSmithToken);
 
+          $win.trigger('orientationchange');
+
           // 身份认领
           if (self.isSmithToken) {
             element.find('#free-identities').removeClass('hide');
@@ -1898,8 +1899,6 @@ define('mobilecontroller', function (require, exports, module) {
             self.createIdentitiesList();
             self.streaming();
           }
-
-          $win.trigger('orientationchange');
         });
 
       }
@@ -2091,7 +2090,7 @@ define('mobilecontroller', function (require, exports, module) {
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
 
-        console.log('trigger handler scroll.maps')
+        console.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
       }
 
