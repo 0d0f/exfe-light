@@ -166,11 +166,9 @@
             rm.contains();
           });
 
-          GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
-            e && e.stop();
+          GEvent.addDomListener(mapDiv, 'touchstart', function () {
             GEvent.clearListeners(mapDiv, 'touchmove');
-            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function (e) {
-              e && e.stop();
+            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               rm.hideTiplines();
             });
           });
