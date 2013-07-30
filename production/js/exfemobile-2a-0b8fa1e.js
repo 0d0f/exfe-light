@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-30 03:07:59 */
+/*! mobile@2a 2013-07-30 04:07:21 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3974,7 +3974,8 @@ TWEEN.Tween = function(object) {
         icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_blue@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
         icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_g5@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
-        mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0;
+        mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
+        mapOptions.minZoom = 2;
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), overlay = rm.overlay = new GMaps.OverlayView();
         overlay.draw = function() {}, overlay.setMap(map);
         var initListener = GEvent.addListener(map, "tilesloaded", function() {
@@ -4225,6 +4226,7 @@ TWEEN.Tween = function(object) {
     sw = this.fromLatLngToContainerPixel(sw), sw = this.fromContainerPixelToLatLng(new GMaps.Point(sw.x + 50, sw.y)), 
     bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
+    console.log("map zoom", this.map.getZoom());
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
     bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
     bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);

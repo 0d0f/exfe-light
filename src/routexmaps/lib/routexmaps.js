@@ -148,6 +148,7 @@
         mapOptions.center = rm.toLatLng(35.86166, 104.195397);
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP;
         mapOptions.disableDefaultUI = true;
+        mapOptions.minZoom = 2;
 
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions);
 
@@ -716,6 +717,7 @@
       latlng = gm.getPosition();
       this.containsOne(uid, latlng, bounds, ids);
     }
+    console.log('map zoom', this.map.getZoom());
   };
 
   proto.containsOne = function (uid, latlng, bounds, ids, b) {
