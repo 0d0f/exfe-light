@@ -1799,8 +1799,7 @@ define('mobilecontroller', function (require, exports, module) {
               , success: function (data) {
                   var code = data.meta && data.meta.code;
                   if (200 === code) {
-                    console.log('success')
-                    console.dir(data)
+                    console.log('success', data)
                     var cats = Store.get('cats') || {}
                       , token = data.response.cross_access_token;
                     cats[self.ctoken] = token;

@@ -19,17 +19,17 @@
           , d = R * c;
         return d;
       }
-    , latRadians = function (lat) {
-        return lat * Math.PI / 180;
+    , toRad = function (l) {
+        return l * Math.PI / 180;
       }
-    , lngRadians = function (lng) {
-        return lng * Math.PI / 180;
+    , toDeg = function (angle) {
+        return angle * 180 / Math.PI;
       }
     , bearing = function (lat1, lon1, lat2, lon2) {
-        lat1 = latRadians(lat1);
-        lon1 = lngRadians(lon1);
-        lat2 = latRadians(lat2);
-        lon2 = lngRadians(lon2);
+        lat1 = toRad(lat1);
+        lon1 = toRad(lon1);
+        lat2 = toRad(lat2);
+        lon2 = toRad(lon2);
         var dLon = lon2 - lon1
           , y = Math.sin(dLon) * Math.cos(lat2)
           , x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon)
@@ -37,7 +37,7 @@
 
         if (angle < 0.0) angle += Math.PI * 2.0;
 
-        return angle * 180 / Math.PI;
+        return toDeg(angle);
      }
     , distanceOutput = function (n, s, t, r) {
         t = '<span class="unit">{{u}}</span>';
@@ -59,16 +59,29 @@
         }
 
         return r;
-      };
+      }
+
+    , toHex = function (n) {
+        return (n * 1).toString(16);
+      }
+
+    , pad0 = function (n) {
+        n += '';
+        return n + (n.length > 1 ?  '' : '0');
+      }
+
+    , MAX_INDEX = 610
+
+    // tags
+    , DESTINATION = 'destination'
+    , ROUTE = 'route'
+    , PARK = 'park';
 
 
   function RoutexMaps(options) {
     options = this.options = options || {};
     this.svgLayer = this.options.svg;
     delete this.options.svg;
-
-    // draw status
-    this.STATUS = 0;
 
     this.latOffset = 0;
     this.lngOffset = 0;
@@ -148,9 +161,11 @@
             rm.contains();
           });
 
-          GEvent.addDomListener(mapDiv, 'touchstart', function () {
+          GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
+            e && e.stop();
             GEvent.clearListeners(mapDiv, 'touchmove');
-            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
+            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function (e) {
+              e && e.stop();
               rm.hideTiplines();
             });
           });
@@ -163,6 +178,8 @@
         overlay.draw = function () {};
         // overlay.onAdd = overlay.onRemove = function () {};
         overlay.setMap(map);
+
+        rm.projection = overlay.getProjection();
 
         callback(map);
 
@@ -179,20 +196,27 @@
   proto.load = function (cb) {
     var n = document.createElement('script')
     n.type = 'text/javascript';
+    n.async = !0;
     n.onload = n.onerror = n.onreadystatechange = function () {
       if (/^(?:loaded|complete|undefined)$/.test(n.readyState)) {
         n = n.onload = n.onerror = n.onreadystatechange = null;
         cb && cb();
       }
     };
-    n.async = true;
     n.src = this.options.url;
     document.body.appendChild(n);
   };
 
+  proto.fromContainerPixelToLatLng = function () {
+    return this.projection.fromContainerPixelToLatLng();
+  };
+
+  proto.fromLatLngToContainerPixel = function () {
+    return this.projection.fromLatLngToContainerPixel();
+  };
+
   proto.draw = function (type, data) {
     console.log(type, data);
-    //this.STATUS = 1;
     if (type === 'geomarks') {
       var rs = [], ps = [], item, st, k;
       data = data.slice(0);
@@ -206,23 +230,6 @@
       }
 
       // draw route
-      rs = [{
-          created_at: '1374729235.773445'
-        , created_by: 'cfddream@wechat'
-        , description: ''
-        , id: 233
-        , positions: [
-              { latitude: '23.114921', longitude: '113.328212' }
-            , { latitude: '23.118915', longitude: '113.328017' }
-            , { latitude: '23.118602', longitude: '113.332745' }
-            , { latitude: '23.118511', longitude: '113.333832' }
-            , { latitude: '23.120837', longitude: '113.333759' }
-          ]
-        , title: ''
-        , type: 'route'
-        , updated_at: '1374729235.77346'
-        , updated_by: "cfddream@wechat"
-      }];
       this.drawRoutes(rs);
 
       // draw place
@@ -232,7 +239,6 @@
       // draw identity path
       this.drawIdentityPaths(data);
     }
-    //this.STATUS = 0;
   };
 
   proto.drawRoutes = function (rs) {
@@ -260,17 +266,16 @@
     }
 
     route.setPath(coords);
-    //route._data = data;
   };
 
   proto.addPolyline = function (data) {
     var rgba = (data.color && data.color.split(',')) || []
-      //, color = rgba.length ? '#' + ((+rgba[0]).toString(16) + '0').substr(0, 2) + ((+rgba[1]).toString(16) + '0').substr(0, 2) + ((+rgba[2]).toString(16) + '0').substr(0, 2) : '#007BFF'
-      , color = '#007BFF'
-      , alpha = 0.5 //rgba[3] || 1
+      , color = '#' + (rgba.length ? pad0(toHex(rgba[0])) + pad0(toHex(rgba[1])) + pad0(toHex(rgba[2])) : '007BFF')
+      , alpha = rgba[3] || 1
       , p = new google.maps.Polyline({
             map: this.map
-          //, geodesic: true
+          , index: MAX_INDEX - 4
+          , geodesic: true
           , strokeColor: color
           , strokeWeight: 4
           , strokeOpacity: alpha
@@ -302,26 +307,25 @@
 
     place = this.places[id] = this.addPoint(data);
     place.setPosition(latlng);
-    //place._data = data;
 
     if (!this.destinationPlace) {
       tags = data.tags.slice(0);
       while ((tag = tags.shift())) {
-        if ('destination' === tag) {
+        if (DESTINATION === tag) {
+          // 如果还没 GPS 自动定位到 destination
           var geoLocation = this.geoLocation;
           if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
             this.panToDestination(latlng);
           }
-          place.setZIndex(378);
+          place.setZIndex(MAX_INDEX);
           this.destinationPlace = place;
-          break;
+          return;
         }
       }
     }
   };
 
   proto.monit = function () {
-    //if (this.STATUS) { return; }
     var u = this.updated
       , bs = this.breadcrumbs
       , icons = this.icons
@@ -429,14 +433,9 @@
 
       if (!b) {
         b = bs[uid] = this.addBreadcrumbs();
-        // 先临时处理，防止闪
-        b.setPath(coords);
       }
 
-      //latlng = coords[0];
-      //b.setPath(coords);
-      //b._uid = uid;
-      //b._data = d;
+      b.setPath(coords);
 
       gm = this.drawGeoMarker(uid, d[0], coords[0]);
 
@@ -464,7 +463,7 @@
     var gm = new google.maps.Marker({
         map: this.map
       , animation: 3
-      , zIndex: 333
+      , zIndex: MAX_INDEX - 2
       , icon: this.icons.dotGrey
     });
     return gm;
@@ -577,14 +576,12 @@
   };
 
   proto.addBreadcrumbs = function (uid, positions) {
-    // var rgba = data.color.split(',')
-      // , color = '#' + (+rgba[0]).toString(16) + (+rgba[1]).toString(16) + (+rgba[2]).toString(16)
-      // , alpha = rgba[3]
     var color = '#b2b2b2'
       , alpha = 0.8
       , p = new google.maps.Polyline({
         map: this.map
       , visible: false
+      , index: MAX_INDEX - 3
       //, geodesic: true
       // , strokeColor: data.color
       // , strokeWeight: 1
@@ -600,6 +597,7 @@
                 , strokeWeight: 1
                 , scale: .5
               }
+            , fixedRotation: true
             , repeat: '50px'
             , offset: '0'
           }
@@ -632,16 +630,6 @@
     console.log('showBreadcrumbs', puid, uid);
   };
 
-  proto.addLastPoint = function (latlng) {
-    var gm =new google.maps.Marker({
-        map: this.map
-      , animation: 3
-      , zIndex: 366
-      , icon: this.icons.dotGrey
-    });
-    return gm;
-  };
-
   proto.addPoint = function (data) {
     var self = this
       , GMaps = google.maps
@@ -650,7 +638,7 @@
           map: map
         , animation: 2
         //, visible: false
-        , zIndex: 233
+        , zIndex: MAX_INDEX - 4
         , icon: new GMaps.MarkerImage(
               data.icon
             , new GMaps.Size(48, 68)
@@ -776,6 +764,8 @@
     // 更改用户状态：在线-粉红，离线-灰色
     tl.setAttribute('stroke', '#b2b2b2');
     tl.setAttribute('stroke-width', 1);
+    tl.setAttribute('stroke-linecap', 'round');
+    tl.setAttribute('stroke-linejoin', 'round');
     tl.setAttribute('style', '-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));');
     tl.setAttributeNS(null, 'display', 'none');
     this.svgLayer.appendChild(tl);
@@ -788,7 +778,7 @@
     var f = [bound[1], bound[2]]
       , s = [f[0] + 13, f[1]]
       , points = [f.join(','), s.join(',')].join(' ');
-    p = this.overlay.getProjection().fromLatLngToContainerPixel(tl._lastlatlng);
+    p = this.projection.fromLatLngToContainerPixel(tl._lastlatlng);
     tl.setAttribute('points', points  + ' ' + p.x + ',' + p.y);
     tl.setAttributeNS(null, 'display', 'block');
   };
@@ -805,7 +795,7 @@
       // status: 0-init, 1-last-latlng, 2: new-latlng
       geoLocation = this.geoLocation = new google.maps.Marker({
           map: this.map
-        , zIndex: 377
+        , zIndex: MAX_INDEX - 1
         , visible: true
         /**
          * google.maps.Animation
