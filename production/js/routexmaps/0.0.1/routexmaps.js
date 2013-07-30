@@ -205,12 +205,12 @@
     document.body.appendChild(n);
   };
 
-  proto.fromContainerPixelToLatLng = function () {
-    return this.overlay.getProjection().fromContainerPixelToLatLng();
+  proto.fromContainerPixelToLatLng = function (point) {
+    return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   };
 
-  proto.fromLatLngToContainerPixel = function () {
-    return this.overlay.getProjection().fromLatLngToContainerPixel();
+  proto.fromLatLngToContainerPixel = function (latlng) {
+    return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
   proto.draw = function (type, data) {

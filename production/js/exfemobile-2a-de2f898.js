@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-07-30 02:07:31 */
+/*! mobile@2a 2013-07-30 02:07:25 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4021,10 +4021,10 @@ TWEEN.Tween = function(object) {
       /^(?:loaded|complete|undefined)$/.test(n.readyState) && (n = n.onload = n.onerror = n.onreadystatechange = null, 
       cb && cb());
     }, n.src = this.options.url, document.body.appendChild(n);
-  }, proto.fromContainerPixelToLatLng = function() {
-    return this.overlay.getProjection().fromContainerPixelToLatLng();
-  }, proto.fromLatLngToContainerPixel = function() {
-    return this.overlay.getProjection().fromLatLngToContainerPixel();
+  }, proto.fromContainerPixelToLatLng = function(point) {
+    return this.overlay.getProjection().fromContainerPixelToLatLng(point);
+  }, proto.fromLatLngToContainerPixel = function(latlng) {
+    return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   }, proto.draw = function(type, data) {
     if (console.log(type, data), "geomarks" === type) {
       var item, st, rs = [], ps = [];
