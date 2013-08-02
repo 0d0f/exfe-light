@@ -109,6 +109,7 @@ define('routes', function (require, exports, module) {
     var target_token = data.token
       , target_user_id = data.user_id
       , target_user_name = data.user_name
+      , target_identity_id = data.identity_id
       // 是否还有可以合并的 `identities`
       //, mergeable_user = data.mergeable_user
       , mergeable_user = null
@@ -151,6 +152,7 @@ define('routes', function (require, exports, module) {
           Bus.emit('app:usermenu:updatebrowsing',
             {   normal: user
               , browsing: new_user
+              , browsing_identity_id: target_identity_id
               , action: action
               , setup: action === 'INPUT_NEW_PASSWORD' && token_type === 'VERIFY' && new_user.password === false
               , originToken: originToken

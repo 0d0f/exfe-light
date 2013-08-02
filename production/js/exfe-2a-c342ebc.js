@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a 2013-08-02 10:08:08 */
+/*! desktop@2a 2013-08-02 11:08:34 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -7720,9 +7720,9 @@ TWEEN.Tween = function(object) {
           this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
-          var that = this, token = that._settings.token, invitation_token = that._settings.originToken, provider = this.provider, postData = {
-            invitation_token: invitation_token
-          };
+          var that = this, token = that._settings.token, tokenType = that._settings.tokenType, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {};
+          invitation_token ? postData.invitation_token = invitation_token : "user" === tokenType && (postData.browsing_identity_token = token, 
+          postData.identity_ids = "[" + this.identity.id + "]", token = Store.get("authorization").token), 
           "email" !== provider && "phone" !== provider && (postData.refere = window.location.href), 
           Api.request("mergeIdentities", {
             type: "POST",
@@ -7761,9 +7761,16 @@ TWEEN.Tween = function(object) {
         var settings = $(e.currentTarget).data("settings");
         if (settings) {
           this._settings = settings;
-          var $mi, $ci, $cu, user = settings.normal, browsing = settings.browsing, bidentities = browsing.identities, bidentity = bidentities[0], beun = Util.printExtUserName(bidentity), provider = this.provider = bidentity.provider;
-          $mi = this.$(".merge-info"), $mi.find(".buser-name").text(browsing.name), $mi.find(".identity").text(beun), 
-          $mi.find(".user-name").text(user.name), $ci = this.$(".context-identity"), $ci.find(".avatar img").attr("src", bidentity.avatar_filename).next().addClass("icon16-identity-" + provider), 
+          var bidentity, beun, provider, $mi, $ci, $cu, user = settings.normal, browsing = settings.browsing, bidentities = browsing.identities, browsing_identity_id = settings.browsing_identity_id;
+          if (browsing_identity_id) for (var i = 0, l = bidentities.length; l > i; ++i) if (bidentity = bidentities[i], 
+          browsing_identity_id === bidentity.id) {
+            this.identity = bidentity, beun = Util.printExtUserName(bidentity), provider = this.provider = bidentity.provider;
+            break;
+          }
+          this.identity || (bidentity = this.identity = bidentities[0], beun = Util.printExtUserName(bidentity), 
+          provider = this.provider = bidentity.provider), $mi = this.$(".merge-info"), $mi.find(".buser-name").text(browsing.name), 
+          $mi.find(".identity").text(beun), $mi.find(".user-name").text(user.name), $ci = this.$(".context-identity"), 
+          $ci.find(".avatar img").attr("src", bidentity.avatar_filename).next().addClass("icon16-identity-" + provider), 
           $ci.find(".identity").text(beun), $cu = this.$(".context-user"), $cu.find(".avatar img").attr("src", user.avatar_filename), 
           $cu.find(".username").text(user.name);
         }
@@ -15696,7 +15703,7 @@ define("lightsaber", function(require, exports, module) {
   }, routes.inspectResolveToken = function(req, res, next, data, originToken) {
     var session = req.session, user = session.user, authorization = session.authorization;
     session.originToken = originToken, session.resolveData = data;
-    var browsing_authorization, target_token = data.token, target_user_id = data.user_id, target_user_name = data.user_name, mergeable_user = null, token_type = data.token_type, action = data.action;
+    var browsing_authorization, target_token = data.token, target_user_id = data.user_id, target_user_name = data.user_name, target_identity_id = data.identity_id, mergeable_user = null, token_type = data.token_type, action = data.action;
     !mergeable_user && (authorization && authorization.user_id === target_user_id || !authorization && "VERIFY" === token_type && "VERIFIED" === action) ? (authorization = {
       token: target_token,
       user_id: target_user_id
@@ -15711,6 +15718,7 @@ define("lightsaber", function(require, exports, module) {
         Bus.emit("app:usermenu:updatebrowsing", {
           normal: user,
           browsing: new_user,
+          browsing_identity_id: target_identity_id,
           action: action,
           setup: "INPUT_NEW_PASSWORD" === action && "VERIFY" === token_type && new_user.password === !1,
           originToken: originToken,

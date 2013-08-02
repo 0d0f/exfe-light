@@ -2354,17 +2354,25 @@ define('xdialog', function (require, exports) {
         'click .xbtn-merge': function () {
           var that = this
             , token = that._settings.token
-            , invitation_token = that._settings.originToken
+            , tokenType = that._settings.tokenType
+            , invitation_token = that._settings.invitation_token
             , provider = this.provider
-            , postData = {
-                invitation_token: invitation_token
-              };
+            , postData = {};
+
+          // 调用 mergeidentities [OPTION C]
+          if (invitation_token) {
+            postData.invitation_token = invitation_token;
+          // 调用 mergeidentities [OPTION A]
+          } else if (tokenType === 'user') {
+            postData.browsing_identity_token = token;
+            postData.identity_ids = '[' + this.identity.id + ']';
+            token = Store.get('authorization').token;
+          }
 
           if (provider !== 'email' && provider !== 'phone') {
             postData.refere = window.location.href;
           }
 
-          // 调用 mergeidentities [OPTION C]
           Api.request('mergeIdentities'
             , {
               type: 'POST',
@@ -2451,10 +2459,27 @@ define('xdialog', function (require, exports) {
         var user = settings.normal
           , browsing = settings.browsing
           , bidentities = browsing.identities
-          , bidentity = bidentities[0]
-          , beun = Util.printExtUserName(bidentity)
-          , provider = (this.provider = bidentity.provider)
+          , browsing_identity_id = settings.browsing_identity_id
+          , bidentity, beun, provider
           , $mi, $ci, $cu;
+
+        if (browsing_identity_id) {
+          for (var i = 0, l = bidentities.length; i < l; ++i) {
+            bidentity = bidentities[i];
+            if (browsing_identity_id === bidentity.id) {
+              this.identity = bidentity;
+              beun = Util.printExtUserName(bidentity)
+              provider = (this.provider = bidentity.provider);
+              break;
+            }
+          }
+        }
+
+        if (!this.identity) {
+          bidentity = (this.identity = bidentities[0])
+          beun = Util.printExtUserName(bidentity)
+          provider = (this.provider = bidentity.provider)
+        }
 
         $mi = this.$('.merge-info');
         $mi.find('.buser-name').text(browsing.name);
