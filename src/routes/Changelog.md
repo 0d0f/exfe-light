@@ -1,3 +1,7 @@
+* v0.3.15 2013-08-02T16:10:00 UTC+0800
+  - Bugs Fix
+    * `crossInvitation` identity & invited_by
+
 * v0.3.14 2013-05-28T14:50:00 UTC+0800
   - Bugs Fix
     * `session#originToken`
