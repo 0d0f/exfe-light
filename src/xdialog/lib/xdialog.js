@@ -2373,6 +2373,9 @@ define('xdialog', function (require, exports) {
               data: postData,
               beforeSend: function () {
                 $('.modal-footer').find('button').prop('disabled', true);
+              },
+              complete: function () {
+                $('.modal-footer').find('button').prop('disabled', false);
               }
             }
             , function (data) {

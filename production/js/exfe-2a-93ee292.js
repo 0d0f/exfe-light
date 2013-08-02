@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a 2013-08-02 04:08:26 */
+/*! desktop@2a 2013-08-02 11:08:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -7720,7 +7720,7 @@ TWEEN.Tween = function(object) {
           this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
-          var that = this, token = that._settings.token, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {
+          var that = this, token = that._settings.token, invitation_token = that._settings.originToken, provider = this.provider, postData = {
             invitation_token: invitation_token
           };
           "email" !== provider && "phone" !== provider && (postData.refere = window.location.href), 
@@ -7732,6 +7732,9 @@ TWEEN.Tween = function(object) {
             data: postData,
             beforeSend: function() {
               $(".modal-footer").find("button").prop("disabled", !0);
+            },
+            complete: function() {
+              $(".modal-footer").find("button").prop("disabled", !1);
             }
           }, function(data) {
             if (that.hide(), data.mergeable_user = null, data.mergeable_user) {
