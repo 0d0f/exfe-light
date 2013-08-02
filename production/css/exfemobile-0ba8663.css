@@ -1518,7 +1518,7 @@ button .exfe {
   margin: auto 15px auto 15px;
   max-height: 50px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-  font: 500 0.84px "HelveticaNeue-Medium";
+  font: 500 21px/25px "HelveticaNeue-Medium";
   overflow: hidden;
 }
 .inviter {
@@ -1727,7 +1727,7 @@ button .exfe {
 .time_major,
 .place_major {
   color: #3a6ea5;
-  font: 500 0.84px "HelveticaNeue-Medium";
+  font: 500 21px/25px "HelveticaNeue-Medium";
 }
 .time_minor,
 .place_minor {
@@ -1899,7 +1899,7 @@ button .exfe {
   background-color: transparent;
   color: #333;
   padding: 0 0 0 12px;
-  font: 300 1px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  font: 300 18px/18px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
