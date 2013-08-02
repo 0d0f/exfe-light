@@ -2354,7 +2354,7 @@ define('xdialog', function (require, exports) {
         'click .xbtn-merge': function () {
           var that = this
             , token = that._settings.token
-            , invitation_token = that._settings.invitation_token
+            , invitation_token = that._settings.originToken
             , provider = this.provider
             , postData = {
                 invitation_token: invitation_token

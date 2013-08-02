@@ -143,7 +143,7 @@
       },
       {
         "name": "xdialog",
-        "version": "0.1.17"
+        "version": "0.1.18"
       },
       {
         "name": "datepanel",
@@ -214,7 +214,7 @@
         "version": "0.2.11"
       }
     ],
-    "sha1": "2a-9cebe88"
+    "sha1": "2a-f1d1c8f"
   },
   "mobile": {
     "version": "2a",
