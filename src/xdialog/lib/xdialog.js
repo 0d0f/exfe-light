@@ -2357,7 +2357,8 @@ define('xdialog', function (require, exports) {
             , tokenType = that._settings.tokenType
             , invitation_token = that._settings.invitation_token
             , provider = this.provider
-            , postData = {};
+            , postData = {}
+            , reload = true;
 
           // 调用 mergeidentities [OPTION C]
           if (invitation_token) {
@@ -2367,6 +2368,7 @@ define('xdialog', function (require, exports) {
             postData.browsing_identity_token = token;
             postData.identity_ids = '[' + this.identity.id + ']';
             token = Store.get('authorization').token;
+            reload = false;
           }
 
           if (provider !== 'email' && provider !== 'phone') {
@@ -2404,7 +2406,11 @@ define('xdialog', function (require, exports) {
                   $('.modal-mi').css('top', 230);
                 }
                 else {
-                  window.location.reload();
+                  if (reload) {
+                    window.location.reload();
+                  } else {
+                    window.location.href = '/';
+                  }
                 }
               }
             , function () {

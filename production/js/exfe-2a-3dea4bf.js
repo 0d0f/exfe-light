@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a 2013-08-02 11:08:34 */
+/*! desktop@2a 2013-08-02 11:08:24 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -7720,10 +7720,10 @@ TWEEN.Tween = function(object) {
           this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
-          var that = this, token = that._settings.token, tokenType = that._settings.tokenType, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {};
+          var that = this, token = that._settings.token, tokenType = that._settings.tokenType, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {}, reload = !0;
           invitation_token ? postData.invitation_token = invitation_token : "user" === tokenType && (postData.browsing_identity_token = token, 
-          postData.identity_ids = "[" + this.identity.id + "]", token = Store.get("authorization").token), 
-          "email" !== provider && "phone" !== provider && (postData.refere = window.location.href), 
+          postData.identity_ids = "[" + this.identity.id + "]", token = Store.get("authorization").token, 
+          reload = !1), "email" !== provider && "phone" !== provider && (postData.refere = window.location.href), 
           Api.request("mergeIdentities", {
             type: "POST",
             params: {
@@ -7746,7 +7746,7 @@ TWEEN.Tween = function(object) {
                 browsing_token: browsing_token,
                 mergeable_user: data.mergeable_user
               }), d.appendTo($("#app-tmp")), d.trigger("click.dialog.data-api"), $(".modal-mi").css("top", 230);
-            } else window.location.reload();
+            } else reload ? window.location.reload() : window.location.href = "/";
           }, function() {});
         }
       },
