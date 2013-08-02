@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a 2013-08-02 10:08:10 */
+/*! desktop@2a 2013-08-02 10:08:08 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -7732,6 +7732,9 @@ TWEEN.Tween = function(object) {
             data: postData,
             beforeSend: function() {
               $(".modal-footer").find("button").prop("disabled", !0);
+            },
+            complete: function() {
+              $(".modal-footer").find("button").prop("disabled", !1);
             }
           }, function(data) {
             if (that.hide(), data.mergeable_user = null, data.mergeable_user) {
