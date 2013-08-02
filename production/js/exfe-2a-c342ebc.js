@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! desktop@2a 2013-07-03 06:07:13 */
+/*! desktop@2a 2013-08-02 11:08:34 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5951,7 +5951,7 @@ TWEEN.Tween = function(object) {
       "780,0": "Pacific/Tongatapu",
       "780,1,s": "Pacific/Apia",
       "840,0": "Pacific/Kiritimati"
-    }, exports !== void 0 ? exports.timezonedetect = jstz : root.jstz = jstz;
+    }, exports !== void 0 ? exports.jstz = jstz : root.jstz = jstz;
   })(this);
 }), define("util", function() {
   "use strict";
@@ -6245,7 +6245,7 @@ TWEEN.Tween = function(object) {
       jqXHR = dfd = promise = void 0;
     }), promise;
   }
-  var $ = require("jquery"), deferred = $.Deferred, ajax = $.ajax, param = $.param, _ENV_ = window._ENV_, urls = {
+  var $ = require("jquery"), tz = require("timezonedetect").jstz, deferred = $.Deferred, ajax = $.ajax, param = $.param, _ENV_ = window._ENV_, urls = {
     base_url: _ENV_.api_url,
     signin: "/Users/signin",
     getRegistrationFlag: "/Users/getRegistrationFlag",
@@ -6301,8 +6301,9 @@ TWEEN.Tween = function(object) {
     request: function(channel, options, done, fail) {
       var k, url = urls[channel], params = options.params, resources = options.resources;
       if (url) {
-        if (params || (params = {}), params && (Api._token && !params.token && (params.token = Api._token), 
-        params = param(params), url += params ? "?" + params : ""), resources) for (k in resources) url = url.replace(":" + k, encodeURIComponent(resources[k]));
+        if (params || (params = {}), params["Accept-Timezone"] = tz.determine().name(), 
+        params && (Api._token && !params.token && (params.token = Api._token), params = param(params), 
+        url += params ? "?" + params : ""), resources) for (k in resources) url = url.replace(":" + k, encodeURIComponent(resources[k]));
         return options.url = urls.base_url + url, delete options.params, delete options.resources, 
         _ajax(options, done, fail);
       }
@@ -6881,7 +6882,7 @@ TWEEN.Tween = function(object) {
             }, function(data) {
               if (delete App.request.session.browsing_authorization, delete App.request.session.browsing_user, 
               Store.set("authorization", data), Store.set("last_external_username", Util.printExtUserName(od)), 
-              that.hide(), "d01" === t || "d02" === t) window.location.reload(); else {
+              that.hide(), "d01" === t || "d02" === t) window.location.href = "/"; else {
                 var d = new Dialog(dialogs.welcome);
                 d.render(), d.show({
                   identity: {
@@ -7719,9 +7720,9 @@ TWEEN.Tween = function(object) {
           this.hide()) : window.location = "/";
         },
         "click .xbtn-merge": function() {
-          var that = this, token = that._settings.token, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {
-            invitation_token: invitation_token
-          };
+          var that = this, token = that._settings.token, tokenType = that._settings.tokenType, invitation_token = that._settings.invitation_token, provider = this.provider, postData = {};
+          invitation_token ? postData.invitation_token = invitation_token : "user" === tokenType && (postData.browsing_identity_token = token, 
+          postData.identity_ids = "[" + this.identity.id + "]", token = Store.get("authorization").token), 
           "email" !== provider && "phone" !== provider && (postData.refere = window.location.href), 
           Api.request("mergeIdentities", {
             type: "POST",
@@ -7731,6 +7732,9 @@ TWEEN.Tween = function(object) {
             data: postData,
             beforeSend: function() {
               $(".modal-footer").find("button").prop("disabled", !0);
+            },
+            complete: function() {
+              $(".modal-footer").find("button").prop("disabled", !1);
             }
           }, function(data) {
             if (that.hide(), data.mergeable_user = null, data.mergeable_user) {
@@ -7757,9 +7761,16 @@ TWEEN.Tween = function(object) {
         var settings = $(e.currentTarget).data("settings");
         if (settings) {
           this._settings = settings;
-          var $mi, $ci, $cu, user = settings.normal, browsing = settings.browsing, bidentities = browsing.identities, bidentity = bidentities[0], beun = Util.printExtUserName(bidentity), provider = this.provider = bidentity.provider;
-          $mi = this.$(".merge-info"), $mi.find(".buser-name").text(browsing.name), $mi.find(".identity").text(beun), 
-          $mi.find(".user-name").text(user.name), $ci = this.$(".context-identity"), $ci.find(".avatar img").attr("src", bidentity.avatar_filename).next().addClass("icon16-identity-" + provider), 
+          var bidentity, beun, provider, $mi, $ci, $cu, user = settings.normal, browsing = settings.browsing, bidentities = browsing.identities, browsing_identity_id = settings.browsing_identity_id;
+          if (browsing_identity_id) for (var i = 0, l = bidentities.length; l > i; ++i) if (bidentity = bidentities[i], 
+          browsing_identity_id === bidentity.id) {
+            this.identity = bidentity, beun = Util.printExtUserName(bidentity), provider = this.provider = bidentity.provider;
+            break;
+          }
+          this.identity || (bidentity = this.identity = bidentities[0], beun = Util.printExtUserName(bidentity), 
+          provider = this.provider = bidentity.provider), $mi = this.$(".merge-info"), $mi.find(".buser-name").text(browsing.name), 
+          $mi.find(".identity").text(beun), $mi.find(".user-name").text(user.name), $ci = this.$(".context-identity"), 
+          $ci.find(".avatar img").attr("src", bidentity.avatar_filename).next().addClass("icon16-identity-" + provider), 
           $ci.find(".identity").text(beun), $cu = this.$(".context-user"), $cu.find(".avatar img").attr("src", user.avatar_filename), 
           $cu.find(".username").text(user.name);
         }
@@ -9083,7 +9094,8 @@ TWEEN.Tween = function(object) {
     var $t = $(this), auth = Store.get("authorization"), auth_user_id = auth && auth.user_id, auth_token = auth && auth.token, auth_user = Store.get("user"), actionType = $t.data("link"), $db = ($t.data("event-ignore"), 
     $("#app-browsing-identity")), status = $db.length;
     if (status) {
-      var data = $db.data(), settings = data.settings, action = settings.action, code = settings.code, invitation_token = settings.invitation_token, tokenType = settings.tokenType, readOnly = settings.readOnly, browsing = settings.browsing;
+      var data = $db.data(), settings = data.settings, action = settings.action, code = settings.code, invitation_token = settings.originToken, readOnly = (settings.tokenType, 
+      settings.readOnly), browsing = settings.browsing;
       if (1 === code) {
         if (actionType) {
           e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault();
@@ -9094,8 +9106,8 @@ TWEEN.Tween = function(object) {
       } else if (2 === code) {
         var buser_id = browsing.user_id;
         if ("SIGNIN" === action && auth_user_id && auth_user_id !== buser_id) {
-          if (!actionType && "cross" !== tokenType) return e.stopImmediatePropagation(), e.stopPropagation(), 
-          e.preventDefault(), checkInvitationToken(auth_token, invitation_token, function() {
+          if (!actionType) return e.stopImmediatePropagation(), e.stopPropagation(), e.preventDefault(), 
+          checkInvitationToken(auth_token, invitation_token, function() {
             var $d = $('<div id="merge-identity" data-destory="true" data-widget="dialog" data-dialog-type="browsing_identity"></div>');
             $d.data("settings", {
               browsing: browsing,
@@ -15329,9 +15341,9 @@ var MD5 = function(string) {
 define("lightsaber", function(require, exports, module) {
   "use strict";
   function createApplication() {
-    var app = new Application();
-    return merge(app, Emitter.prototype), app.request = new Request(), app.response = new Response(), 
-    app.init(), app;
+    var app = new Application(), request = new Request(), response = new Response();
+    return merge(app, Emitter.prototype), app.request = request, app.response = response, 
+    request.app = response.app = app, app.init(), app;
   }
   function Application() {}
   function Request(enableFullUrlPath) {
@@ -15356,10 +15368,9 @@ define("lightsaber", function(require, exports, module) {
     options = options || {}, this.name = name, this.root = options.root, this.engine = options.engine, 
     this.ext = extname(name), this.timestamp = timestamp || "", this.path = this.lookup(name);
   }
-  function lightsaberInit(app) {
+  function lightsaberInit() {
     return function(req, res, next) {
-      req.app = res.app = app, req.next = next, res.locals = res.locals || locals(res), 
-      next();
+      req.next = next, res.locals = res.locals || locals(res), next();
     };
   }
   function uuid() {
@@ -15415,11 +15426,11 @@ define("lightsaber", function(require, exports, module) {
   var proto;
   exports.version = "0.0.5", proto = Application.prototype, proto.historySupport = historySupport = null !== (null !== history ? history.pushState : void 0), 
   $.browser && $.browser.opera && (proto.historySupport = historySupport = !1), proto.init = function() {
-    this.route = ROOT, this.stack = [], this.cache = {}, this.settings = {}, this.engines = {}, 
+    this.cache = {}, this.settings = {}, this.engines = {}, this.route = ROOT, this.stack = [], 
     this.viewCallbacks = [], this.defaultConfiguration();
   }, proto.defaultConfiguration = function() {
     this.set("env", "production"), this.enable("dispatch"), this.use(lightsaberInit(this)), 
-    this._usedRouter = !1, this._router = new Router(this), this.routes = this._router.map, 
+    this._router = new Router(this), this.routes = this._router.map, this._usedRouter = !1, 
     this._router.caseSensitive = this.enabled("case sensitive routing"), this._router.strict = this.enabled("strict routing"), 
     this.locals = locals(this), this.locals.settings = this.settings, this.configure("development", function() {
       this.set("env", "development");
@@ -15501,7 +15512,7 @@ define("lightsaber", function(require, exports, module) {
     this.emit("launch"), options = options || {};
     var req = this.request, res = this.response;
     this.running || (this.running = !0, !1 === options.dispatch && this.disable("dispatch"), 
-    !1 !== options.popstate && (this.historySupport && !isIE ? window.addEventListener("popstate", proxy(this.change, this), !1) : window.addEventListener("hashchange", proxy(this.change, this), !1)), 
+    !1 !== options.popstate && (this.historySupport && !isIE ? $(window).on("popstate", proxy(this.change, this)) : $(window).on("hashchange", proxy(this.change, this))), 
     this.disabled("dispatch") || (this.handle(req, res), this.emit("launched")));
   }, proto.change = function(e) {
     if (_firstLoad) return _firstLoad = !1;
@@ -15692,7 +15703,7 @@ define("lightsaber", function(require, exports, module) {
   }, routes.inspectResolveToken = function(req, res, next, data, originToken) {
     var session = req.session, user = session.user, authorization = session.authorization;
     session.originToken = originToken, session.resolveData = data;
-    var browsing_authorization, target_token = data.token, target_user_id = data.user_id, target_user_name = data.user_name, mergeable_user = null, token_type = data.token_type, action = data.action;
+    var browsing_authorization, target_token = data.token, target_user_id = data.user_id, target_user_name = data.user_name, target_identity_id = data.identity_id, mergeable_user = null, token_type = data.token_type, action = data.action;
     !mergeable_user && (authorization && authorization.user_id === target_user_id || !authorization && "VERIFY" === token_type && "VERIFIED" === action) ? (authorization = {
       token: target_token,
       user_id: target_user_id
@@ -15707,6 +15718,7 @@ define("lightsaber", function(require, exports, module) {
         Bus.emit("app:usermenu:updatebrowsing", {
           normal: user,
           browsing: new_user,
+          browsing_identity_id: target_identity_id,
           action: action,
           setup: "INPUT_NEW_PASSWORD" === action && "VERIFY" === token_type && new_user.password === !1,
           originToken: originToken,
@@ -15837,7 +15849,7 @@ define("lightsaber", function(require, exports, module) {
         token: shortToken
       }
     }, function(data) {
-      var _identity, invitation = data.invitation, identity = invitation.identity, by_identity = invitation.by_identity;
+      var _identity, invitation = data.invitation, identity = invitation.identity, invited_by = invitation.invited_by;
       return user_id && (_identity = R.find(user.identities, function(v) {
         return v.connected_user_id === identity.connected_user_id && v.id === identity.id ? !0 : void 0;
       })) ? (res.redirect("/#!" + cross_id), void 0) : "email" === identity.provider ? (Bus.emit("app:cross:forbidden", cross_id, identity), 
@@ -15846,7 +15858,7 @@ define("lightsaber", function(require, exports, module) {
         $(".form-horizontal").addClass("fh-left"), $(".details").removeClass("hide"), $(".details .avatar img").attr("src", user.avatar_filename), 
         $(".details .identity-name").text(user.name)) : $(".please-signin").removeClass("hide"), 
         $(".invite-to").find("img").attr("src", identity.avatar_filename).parent().next().text(Util.printExtUserName(identity)), 
-        $(".invite-from").find("img").attr("src", by_identity.avatar_filename).parent().next().text(Util.printExtUserName(by_identity));
+        $(".invite-from").find("img").attr("src", invited_by.avatar_filename).parent().next().text(Util.printExtUserName(invited_by));
         var $redirecting = $(".x-invite").find(".redirecting"), $fail = $redirecting.next(), clicked = !1, provider = identity.provider;
         $(".xbtn-authenticate").attr("data-oauth", provider).on("click", function(e) {
           if (e.stopPropagation(), e.preventDefault(), !clicked) {
