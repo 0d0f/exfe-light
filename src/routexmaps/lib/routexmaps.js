@@ -72,9 +72,13 @@
 
     , MAX_INDEX = 610
 
+    // type
+    , ROUTE = 'route'
+    , LOCATION = 'location'
+
     // tags
     , DESTINATION = 'destination'
-    , ROUTE = 'route'
+    , BREADCRUMBS = 'breadcrumbs'
     , PARK = 'park';
 
 
@@ -95,6 +99,8 @@
     this.icons = {};
 
     this.updated = {};
+
+    this._breadcrumbs = {};
 
     this.boundsOffset = {
         left: 50
@@ -212,8 +218,8 @@
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
-  proto.draw = function (type, data) {
-    console.log(type, data);
+  proto.draw = function (data) {
+    /*
     if (type === 'geomarks') {
       var rs = [], ps = [], item, st, k;
       data = data.slice(0);
@@ -236,8 +242,46 @@
       // draw identity path
       this.drawIdentityPaths(data);
     }
+    */
+    var type = data.type
+      , tags = data.tags.slice(0)
+      , tag;
+
+    console.log(type, tags, data);
+    switch (type) {
+      case LOCATION:
+        var isDestination;
+
+        while ((tag = tags.shift())) {
+          if (tag === DESTINATION) {
+            isDestination = true;
+            break;
+          }
+        }
+
+        this.drawPlace(data, isDestination);
+        break;
+
+      case ROUTE:
+        var isBreadcrumbs;
+
+        while ((tag = tags.shift())) {
+          if (tag === BREADCRUMBS) {
+            isBreadcrumbs = true;
+            break;
+          }
+        }
+
+        if (isBreadcrumbs) {
+          this.drawGeoMarker(data);
+        } else {
+          this.drawRoute(data);
+        }
+        break;
+    }
   };
 
+  /*
   proto.drawRoutes = function (rs) {
     var routes = this.routes, r, k, item;
     for (k in routes) {
@@ -252,18 +296,47 @@
       }
     }
   };
+  */
 
+  proto.drawRoute = function (data) {
+    var routes = this.routes
+      , uid = data.created_by
+      , positions = data.positions.slice(0)
+      , coords = []
+      , r, d, p;
+    if (routes.hasOwnProperty(uid)) {
+      r = routes[uid];
+      d = r.data;
+      // no update
+      if (d.updated_at === data.updated_at) {
+        return;
+      }
+    }
+
+    if (!r) {
+      r = routes[uid] = this.addPolyline(data);
+    }
+
+    while ((p = positions.shift())) {
+      coords.push(this.toLatLng(p.lat, p.lng));
+    }
+
+    r.setPath(coords);
+    r.data = data;
+  };
+
+  /*
   proto.addRoute = function (data) {
     var coords = [], uid = data.created_by, positions = data.positions.slice(0), p, route;
 
     route = this.routes[uid] = this.addPolyline(data);
+    route.data = data;
 
     while ((p = positions.shift())) {
       coords.push(this.toLatLng(p.latitude, p.longitude));
     }
-
-    route.setPath(coords);
   };
+  */
 
   proto.addPolyline = function (data) {
     var rgba = (data.color && data.color.split(',')) || []
@@ -280,6 +353,7 @@
     return p;
   };
 
+  /*
   proto.drawPlaces = function (ps) {
     var places = this.places, p, k, item;
     // reset destination place
@@ -296,31 +370,65 @@
       }
     }
   };
-
-  proto.addPlace = function (data) {
-    var id = data.id
-      , latlng = this.toLatLng(data.latitude, data.longitude)
-      , place, tags, tag;
-
-    place = this.places[id] = this.addPoint(data);
-    place.setPosition(latlng);
-
-    if (!this.destinationPlace) {
-      tags = data.tags.slice(0);
-      while ((tag = tags.shift())) {
-        if (DESTINATION === tag) {
-          // 如果还没 GPS 自动定位到 destination
-          var geoLocation = this.geoLocation;
-          if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
-            this.panToDestination(latlng);
-          }
-          place.setZIndex(MAX_INDEX);
-          this.destinationPlace = place;
-          return;
-        }
+  */
+  proto.drawPlace = function (data, isDestination) {
+    var places = this.places
+      , id = data.id, p, d, latlng;
+    if (places.hasOwnProperty(id)) {
+      p = places[id];
+      d = p.data;
+      // no update
+      if (d.updated_at === data.updated_at) {
+        return;
       }
+      /*
+      p.setMap(null);
+      p = null;
+      delete places[id];
+      */
+    }
+
+    if (!p) {
+      p = places[id] = this.addPoint(data, isDestination);
+    }
+
+    latlng = this.toLatLng(data.lat, data.lng);
+
+    p.setPosition(latlng);
+    p.data = data;
+
+    if (isDestination) {
+      // 如果还没 GPS 自动定位到 destination
+      var geoLocation = this.geoLocation;
+      if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
+        this.panToDestination(latlng);
+      }
+      this.destinationPlace = p;
+      p.setZIndex(MAX_INDEX);
     }
   };
+
+  /*
+  proto.addPlace = function (data, isDestination) {
+    var id = data.id
+      , latlng = this.toLatLng(data.latitude, data.longitude)
+      , place;
+
+    place = this.places[id] = this.addPoint(data, isDestination);
+    place.setPosition(latlng);
+    place.data = data;
+
+    if (isDestination) {
+      // 如果还没 GPS 自动定位到 destination
+      var geoLocation = this.geoLocation;
+      if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
+        this.panToDestination(latlng);
+      }
+      this.destinationPlace = place;
+      place.setZIndex(MAX_INDEX);
+    }
+  };
+  */
 
   proto.monit = function () {
     var u = this.updated
@@ -411,10 +519,11 @@
     }
   };
 
-  proto.toLatLng = function (latitude, longitude) {
-    return new google.maps.LatLng(latitude * 1, longitude * 1);
+  proto.toLatLng = function (lat, lng) {
+    return new google.maps.LatLng(lat * 1, lng * 1);
   };
 
+  /*
   proto.drawIdentityPaths = function (data) {
     var bs = this.breadcrumbs, dp = this.destinationPlace
       , uid, b, d, p, positions, coords, gm;
@@ -439,7 +548,13 @@
       this.distanceMatrix(uid, gm, dp);
     }
   };
+  */
 
+  proto.drawBreadcrumbs = function (data) {
+    var bs = this.breadcrumbs, uid = data.uid;
+  };
+
+  /*
   proto.drawGeoMarker = function (uid, data, latlng) {
     var gm;
     this.updated[uid] = data;
@@ -454,6 +569,37 @@
 
     this.updateTipline(uid, latlng);
     return gm;
+  };
+  */
+
+  proto.drawGeoMarker = function (data) {
+    var gms = this.geoMarkers
+      , uid = data.created_by
+      , g, d, position;
+    if (gms.hasOwnProperty(uid)) {
+      g = gms[uid];
+      d = g.data;
+      // no update
+      if (d.updated_at === data.updated_at) {
+        return;
+      }
+    }
+    if (!g) {
+      g = gms[uid] = this.addGeoMarker();
+    }
+    position = data.positions[0];
+    g.setPosition(this.toLatLng(position.lat, position.lng));
+    g.data = data;
+
+    this.updatePositions(data);
+  };
+
+  proto.updatePositions = function (data) {
+    if (!this._breadcrumbs[data.id]) {
+      this._breadcrumbs[data.id] = data;
+    } else {
+      this._breadcrumbs[data.id].positions.unshift(data.positions[0])
+    }
   };
 
   proto.addGeoMarker = function () {
@@ -604,10 +750,15 @@
   proto.showTextLabels = function (positions) {};
 
   proto.showBreadcrumbs = function (uid) {
+    if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
       , puid = this.uid
       , b = bds[uid]
       , pb;
+
+    if (!b) {
+      b = bds[uid] = this.addBreadcrumbs(uid, this._breadcrumbs[uid].positions);
+    }
     if (uid !== puid) {
       pb = bds[puid];
       if (pb) {
@@ -625,7 +776,7 @@
     console.log('showBreadcrumbs', puid, uid);
   };
 
-  proto.addPoint = function (data) {
+  proto.addPoint = function (data, isDestination) {
     var self = this
       , GMaps = google.maps
       , map = this.map
@@ -644,6 +795,8 @@
       })
     , GEvent = GMaps.event;
 
+    m.isDestination = isDestination;
+
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
       e && e.stop();
 
@@ -652,7 +805,7 @@
       var infobox = self.infobox = new GMaps.InfoBox({
           content: self.infoWindowTemplate.replace('{{title}}', data.title).replace('{{description}}', data.description)
         , maxWidth: 200
-        , pixelOffset: new GMaps.Size(-80, -38)
+        , pixelOffset: new GMaps.Size(-100, -38)
         , boxClass: 'park'
         , closeBoxMargin: ''
         , closeBoxURL: ''
@@ -660,16 +813,50 @@
         , enableEventPropagation: false
         , leftBoundary: 60
         , zIndex: 610
+        , boxId: (isDestination ? 'destination' : '')
+        , events: function () {
+            if (isDestination) {
+              var ib = this;
+              ib.editing = false;
+              GEvent.addDomListener(this.div_, 'touchstart', function () {
+                if (ib.editing) { return; }
+                var infoWindown = this.querySelector('.info-windown');
+                var title = this.querySelector('.title').innerHTML;
+                var description = this.querySelector('.description').innerHTML;
+                var ct = document.createElement('input');
+                ct.type = 'text';
+                ct.value = title;
+                var cd = document.createElement('textarea');
+                cd.value = description;
+                infoWindown.appendChild(ct)
+                infoWindown.appendChild(cd)
+                this.querySelector('.title').className = 'title hide';
+                this.querySelector('.description').className = 'description hide';
+                ib.editing = true;
+              });
+            }
+          }
       });
       infobox._marker = this;
       infobox.open(map, this);
 
       GEvent.addListenerOnce(this, 'mouseout', function mouseout() {
+        if (infobox.editing) {
+          var data = infobox._marker.data;
+          var title = $('#destination input').val().trim();
+          var description = $('#destination textarea').val().trim();
+          data.title = title;
+          data.description = description;
+          data.updated_at = Math.round(Date.now() / 1000);
+          $('#destination input, #description textarea').remove();
+          $('#destination .title').text(title).removeClass('hide');
+          $('#destination .description').text(description).removeClass('hide');
+          self.controller.editDestination(data);
+        }
         infobox.close();
         delete infobox._marker;
         infobox = self.infobox = null;
       });
-
     });
 
     return m;
@@ -803,7 +990,7 @@
         , icon: this.icons.arrowGrey
       });
       geoLocation._status = 0;
-      var lastlatlng = JSON.parse(window.localStorage.getItem('last-latlng'));
+      var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
       if (lastlatlng) {
         geoLocation._status = 1;
         latlng = this.toLatLng(lastlatlng.lat * 1 + this.latOffset, lastlatlng.lng * 1 + this.lngOffset);
@@ -822,6 +1009,8 @@
         this.map.panTo(latlng);
       }
       geoLocation._status = 2;
+
+      this.updatePositions({ id: uid, positions: [{ ts: position.timestamp, lat: position.latitude, lng: position.longitude }] });
     }
     if (uid) {
       this.updated[uid] = position || lastlatlng;

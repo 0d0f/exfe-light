@@ -392,14 +392,13 @@ define('mobileroutes', function (require, exports, module) {
         Store.set('cats', cats);
       }
 
-
-
       var routexCont = app.controllers.routex = new RouteXController({
           options: {
             template: $('#routex-tmpl').html()
           }
-        , lastGPS: Store.get('last-latlng')
+        , lastGPS: Store.get('position')
         , cross: cross
+        , cross_id: cross && cross.id
         , ctoken: ctoken
         , token: token || tokenInfos[0] || ctoken
         , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0

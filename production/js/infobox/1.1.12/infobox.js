@@ -93,9 +93,12 @@ function InfoBox(opt_opts) {
 
   this.leftBoundary = opt_opts.leftBoundary || 0;
 
+  this.events = opt_opts.events || function () {};
+
   // Additional options (unique to InfoBox):
   //
   this.boxClass_ = opt_opts.boxClass || "infoBox";
+  this.boxId_ = opt_opts.boxId || 'infobox';
   this.boxStyle_ = opt_opts.boxStyle || {};
   this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px";
   this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif";
@@ -393,6 +396,8 @@ InfoBox.prototype.setBoxStyle_ = function () {
     // Apply style values from the style sheet defined in the boxClass parameter:
     this.div_.className = this.boxClass_;
 
+    this.div_.id = this.boxId_;
+
     // Clear existing inline style values:
     this.div_.style.cssText = "";
 
@@ -500,6 +505,8 @@ InfoBox.prototype.draw = function () {
 
     this.div_.style.visibility = "visible";
   }
+
+  this.events && this.events();
 };
 
 /**

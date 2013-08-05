@@ -6,6 +6,7 @@ define('mobilecontroller', function (require, exports, module) {
       TWEEN = require('tween'),
       _ENV_ = window._ENV_,
       api_url = _ENV_.api_url,
+      apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + '://crosses/',
       AMAP_KEY = _ENV_.AMAP_KEY,
@@ -1636,7 +1637,6 @@ define('mobilecontroller', function (require, exports, module) {
 
   exports.RouteXController = Controller.extend({
 
-
       init: function () {
         this.render();
         this.listen();
@@ -1721,6 +1721,7 @@ define('mobilecontroller', function (require, exports, module) {
             self.mapController.fitBoundsWithDestination(uid);
           }
 
+          /*
           if (self.tapElement === this) {
             $infoWins.addClass('hide');
             self.tapElement = null;
@@ -1738,6 +1739,7 @@ define('mobilecontroller', function (require, exports, module) {
           var bound = this.getBoundingClientRect();
           $infoWins.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
           self.tapElement = this;
+          */
         });
 
         element.on('tap.maps', '#open-exfe', function (e) {
@@ -1949,13 +1951,55 @@ define('mobilecontroller', function (require, exports, module) {
               }
         });
         mc.myuid = this.myuid;
+        mc.myIdentity = this.myIdentity;
         this.setLatLngOffset();
         // defaults to true
         mc.tracking = true
         mc.load();
+        mc.controller = self;
+
+        if (this.token && this.cross_id) {
+          $.ajax({
+              url: apiv3_url + '/routex/crosses/' + this.cross_id + '/breadcrumbs?coordinate=mars&token=' + this.token
+            , type: 'GET'
+            , dataType: 'json'
+            , success: function (data) {
+                if (data && data.length) {
+                  var d;
+                  while ((d = data.shift())) {
+                    if (mc._breadcrumbs.hasOwnProperty(d.id)) {
+                      mc._breadcrumbs[d.id].positions = [].contact(mc._breadcrumbs[d.id].positions, d.positions);
+                      } else {
+                      mc._breadcrumbs[d.id] = d;
+                    }
+                  }
+                }
+              }
+            //, error: function () { }
+          });
+        }
+
       }
 
     , mapReadyStatus: false
+
+    , editDestination: function (destination) {
+        // 等待 google 修复
+        if (destination) {
+          $.ajax({
+              url: apiv3_url + '/routex/crosses/' + this.cross_id + '/geomarks/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
+            , data: destination
+            , type: 'POST'
+            , dataType: 'JSON'
+            , success: function (data) {
+                console.log(data)
+              }
+            , error: function (data) {
+                console.log(data)
+              }
+          });
+        }
+      }
 
     , setLatLngOffset: function () {
         var offset = Store.get('offset-latlng');
@@ -1966,6 +2010,21 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , streaming: function () {
+
+        // 开启跟踪
+        /*
+        if (this.myuser_id && this.cross_id) {
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/user/' + this.myuser_id
+            , dataType: 'JSON'
+            , data: '{"cross_id": ' + this.cross_id + ', "save_breadcrumbs": true}'
+            , success: function () {}
+            , error: function () {}
+          });
+        }
+        */
+
         var self = this;
         this.initStream();
         this.startStream();
@@ -1984,13 +2043,13 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.init(
             self.cross.id
           , self.token
-          , function (type, result) {
+          , function (result) {
               if (self.mapReadyStatus && self.mapController) {
                 //self.setLatLngOffset();
                 if (!self.mapController.myuid) {
                   self.mapController.myuid = self.myuid;
                 }
-                self.mapController.draw(type, result);
+                self.mapController.draw(result);
               }
             }
           , function (e) {
@@ -2011,7 +2070,7 @@ define('mobilecontroller', function (require, exports, module) {
               }
               */
               self.position = r;
-              Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '', timestamp: r.timestamp });
+              Store.set('position', { lat: r.latitude + '',  lng: r.longitude + '', ts: r.timestamp });
               self.switchGPSStyle(2);
               self.trackGeoLocation();
               console.log('GPS', r.latitude, r.longitude);
@@ -2078,6 +2137,7 @@ define('mobilecontroller', function (require, exports, module) {
           identity = invitation.identity;
           if (myIdentityId === identity.id) {
             this.myuid = identity.external_username + '@' + identity.provider;
+            this.myuser_id = identity.user_id;
             this.updateMe(identity);
             continue;
           }

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-02 04:08:59 */
+/*! mobile@2a 2013-08-05 07:08:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3787,7 +3787,7 @@ TWEEN.Tween = function(object) {
     latitude: "",
     longitude: "",
     accuracy: ""
-  }, lstLocat = "", lstRoute = "", submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
+  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
       type: "POST",
@@ -3852,8 +3852,7 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    console.log(stream.live, token), checkGps(myData) && ++secCnt >= secInt && submitGps(), 
-    !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=earth&token=" + token, streamCallback, streamDead), 
+    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/routex/crosses/" + cross_id + "?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
     return data.timestamp && data.latitude && data.longitude && data.accuracy;
@@ -3917,21 +3916,7 @@ TWEEN.Tween = function(object) {
     }
   }, streamCallback = function(rawData) {
     var data = JSON.parse(rawData);
-    if (data && data.type && data.data) {
-      var type = data.type.replace(/^.*\/([^\/]*)$/, "$1"), result = data.data;
-      switch (type) {
-       case "breadcrumbs":
-        var curLocat = JSON.stringify(result);
-        log("Streaming pops: " + curLocat, result), echo && lstLocat !== curLocat && (log("Callback"), 
-        echo(type, result), lstLocat = curLocat);
-        break;
-
-       case "geomarks":
-        var curRoute = JSON.stringify(result);
-        log("Streaming pops: " + curRoute, result), echo && lstRoute !== curRoute && (log("Callback"), 
-        echo(type, result), lstRoute = curRoute);
-      }
-    }
+    data && data.type && (log("Streaming pops: " + data.type), echo(data));
   }, routexStream = {
     init: function(intCrossId, strToken, callback, unauthorized_callback) {
       return intCrossId ? strToken ? callback ? unauthorized_callback ? (cross_id = intCrossId, 
@@ -3961,7 +3946,7 @@ TWEEN.Tween = function(object) {
     options = this.options = options || {}, this.svgLayer = this.options.svg, delete this.options.svg, 
     this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.locations = {}, 
     this.tiplines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, 
-    this.updated = {}, this.boundsOffset = {
+    this.updated = {}, this._breadcrumbs = {}, this.boundsOffset = {
       left: 50,
       top: 0
     }, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -4015,7 +4000,7 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, DESTINATION = "destination", proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", proto = RoutexMaps.prototype;
   return proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4026,20 +4011,30 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
-  }, proto.draw = function(type, data) {
-    if (console.log(type, data), "geomarks" === type) {
-      var item, st, rs = [], ps = [];
-      for (data = data.slice(0); item = data.shift(); ) st = item.type, "route" === st ? rs.push(item) : "location" === st && ps.push(item);
-      this.drawRoutes(rs), this.drawPlaces(ps);
-    } else "breadcrumbs" === type && this.drawIdentityPaths(data);
-  }, proto.drawRoutes = function(rs) {
-    var r, k, item, routes = this.routes;
-    for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
-    if (rs.length) for (;item = rs.shift(); ) this.addRoute(item);
-  }, proto.addRoute = function(data) {
-    var p, route, coords = [], uid = data.created_by, positions = data.positions.slice(0);
-    for (route = this.routes[uid] = this.addPolyline(data); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
-    route.setPath(coords);
+  }, proto.draw = function(data) {
+    var tag, type = data.type, tags = data.tags.slice(0);
+    switch (console.log(type, tags, data), type) {
+     case LOCATION:
+      for (var isDestination; tag = tags.shift(); ) if (tag === DESTINATION) {
+        isDestination = !0;
+        break;
+      }
+      this.drawPlace(data, isDestination);
+      break;
+
+     case ROUTE:
+      for (var isBreadcrumbs; tag = tags.shift(); ) if (tag === BREADCRUMBS) {
+        isBreadcrumbs = !0;
+        break;
+      }
+      isBreadcrumbs ? this.drawGeoMarker(data) : this.drawRoute(data);
+    }
+  }, proto.drawRoute = function(data) {
+    var r, d, p, routes = this.routes, uid = data.created_by, positions = data.positions.slice(0), coords = [];
+    if (!routes.hasOwnProperty(uid) || (r = routes[uid], d = r.data, d.updated_at !== data.updated_at)) {
+      for (r || (r = routes[uid] = this.addPolyline(data)); p = positions.shift(); ) coords.push(this.toLatLng(p.lat, p.lng));
+      r.setPath(coords), r.data = data;
+    }
   }, proto.addPolyline = function(data) {
     var rgba = data.color && data.color.split(",") || [], color = "#" + (rgba.length ? pad0(toHex(rgba[0])) + pad0(toHex(rgba[1])) + pad0(toHex(rgba[2])) : "007BFF"), alpha = rgba[3] || 1, p = new google.maps.Polyline({
       map: this.map,
@@ -4050,17 +4045,14 @@ TWEEN.Tween = function(object) {
       strokeOpacity: alpha
     });
     return p;
-  }, proto.drawPlaces = function(ps) {
-    var p, k, item, places = this.places;
-    this.destinationPlace = null;
-    for (k in places) p = places[k], p.setMap(null), p = null, delete places[k];
-    if (ps.length) for (;item = ps.shift(); ) this.addPlace(item);
-  }, proto.addPlace = function(data) {
-    var place, tags, tag, id = data.id, latlng = this.toLatLng(data.latitude, data.longitude);
-    if (place = this.places[id] = this.addPoint(data), place.setPosition(latlng), !this.destinationPlace) for (tags = data.tags.slice(0); tag = tags.shift(); ) if (DESTINATION === tag) {
+  }, proto.drawPlace = function(data, isDestination) {
+    var p, d, latlng, places = this.places, id = data.id;
+    if ((!places.hasOwnProperty(id) || (p = places[id], d = p.data, d.updated_at !== data.updated_at)) && (p || (p = places[id] = this.addPoint(data, isDestination)), 
+    latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
+    isDestination)) {
       var geoLocation = this.geoLocation;
-      return (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
-      place.setZIndex(MAX_INDEX), this.destinationPlace = place, void 0;
+      (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
+      this.destinationPlace = p, p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
     var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, now = Math.round(new Date().getTime() / 1e3);
@@ -4106,20 +4098,17 @@ TWEEN.Tween = function(object) {
       }), isme) continue;
       tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
     }
-  }, proto.toLatLng = function(latitude, longitude) {
-    return new google.maps.LatLng(1 * latitude, 1 * longitude);
-  }, proto.drawIdentityPaths = function(data) {
-    var uid, b, d, p, positions, coords, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
-    for (uid in data) {
-      for (d = data[uid], b = bs[uid], positions = d.slice(0), coords = []; p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
-      b || (b = bs[uid] = this.addBreadcrumbs()), b.setPath(coords), gm = this.drawGeoMarker(uid, d[0], coords[0]), 
-      this.distanceMatrix(uid, gm, dp);
-    }
-  }, proto.drawGeoMarker = function(uid, data, latlng) {
-    var gm;
-    return this.updated[uid] = data, this.myuid === uid ? this.geoLocation : (gm = this.geoMarkers[uid], 
-    gm || (gm = this.geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    this.updateTipline(uid, latlng), gm);
+  }, proto.toLatLng = function(lat, lng) {
+    return new google.maps.LatLng(1 * lat, 1 * lng);
+  }, proto.drawBreadcrumbs = function(data) {
+    this.breadcrumbs, data.uid;
+  }, proto.drawGeoMarker = function(data) {
+    var g, d, position, gms = this.geoMarkers, uid = data.created_by;
+    gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at) || (g || (g = gms[uid] = this.addGeoMarker()), 
+    position = data.positions[0], g.setPosition(this.toLatLng(position.lat, position.lng)), 
+    g.data = data, this.updatePositions(data));
+  }, proto.updatePositions = function(data) {
+    this._breadcrumbs[data.id] ? this._breadcrumbs[data.id].positions.unshift(data.positions[0]) : this._breadcrumbs[data.id] = data;
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4184,31 +4173,56 @@ TWEEN.Tween = function(object) {
     });
     return p;
   }, proto.showTextLabels = function() {}, proto.showBreadcrumbs = function(uid) {
-    var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
-    uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
-    this.uid = uid, console.log("showBreadcrumbs", puid, uid);
-  }, proto.addPoint = function(data) {
+    if (this._breadcrumbs[uid]) {
+      var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
+      b || (b = bds[uid] = this.addBreadcrumbs(uid, this._breadcrumbs[uid].positions)), 
+      uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
+      this.uid = uid, console.log("showBreadcrumbs", puid, uid);
+    }
+  }, proto.addPoint = function(data, isDestination) {
     var self = this, GMaps = google.maps, map = this.map, m = new GMaps.Marker({
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 4,
       icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     }), GEvent = GMaps.event;
-    return GEvent.addListener(m, "mousedown", function(e) {
+    return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description),
         maxWidth: 200,
-        pixelOffset: new GMaps.Size(-80, -38),
+        pixelOffset: new GMaps.Size(-100, -38),
         boxClass: "park",
         closeBoxMargin: "",
         closeBoxURL: "",
         alignBottom: !0,
         enableEventPropagation: !1,
         leftBoundary: 60,
-        zIndex: 610
+        zIndex: 610,
+        boxId: isDestination ? "destination" : "",
+        events: function() {
+          if (isDestination) {
+            var ib = this;
+            ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
+              if (!ib.editing) {
+                var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
+                ct.type = "text", ct.value = title;
+                var cd = document.createElement("textarea");
+                cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
+                this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
+                ib.editing = !0;
+              }
+            });
+          }
+        }
       });
       infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
+        if (infobox.editing) {
+          var data = infobox._marker.data, title = $("#destination input").val().trim(), description = $("#destination textarea").val().trim();
+          data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
+          $("#destination input, #description textarea").remove(), $("#destination .title").text(title).removeClass("hide"), 
+          $("#destination .description").text(description).removeClass("hide"), self.controller.editDestination(data);
+        }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;
       });
     }), m;
@@ -4261,14 +4275,20 @@ TWEEN.Tween = function(object) {
         animation: 2,
         icon: this.icons.arrowGrey
       }), geoLocation._status = 0;
-      var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
+      var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
       lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
       geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
     }
     position && (latlng = this.toLatLng(1 * position.latitude + this.latOffset, 1 * position.longitude + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
-    geoLocation._uid = uid;
+    this.map.panTo(latlng)), geoLocation._status = 2, this.updatePositions({
+      id: uid,
+      positions: [ {
+        ts: position.timestamp,
+        lat: position.latitude,
+        lng: position.longitude
+      } ]
+    })), uid && (this.updated[uid] = position || lastlatlng), geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
@@ -4354,7 +4374,8 @@ TWEEN.Tween = function(object) {
     this.disableAutoPan_ = opt_opts.disableAutoPan || !1, this.maxWidth_ = opt_opts.maxWidth || 0, 
     this.pixelOffset_ = opt_opts.pixelOffset || new google.maps.Size(0, 0), this.position_ = opt_opts.position || new google.maps.LatLng(0, 0), 
     this.zIndex_ = opt_opts.zIndex || null, this.leftBoundary = opt_opts.leftBoundary || 0, 
-    this.boxClass_ = opt_opts.boxClass || "infoBox", this.boxStyle_ = opt_opts.boxStyle || {}, 
+    this.events = opt_opts.events || function() {}, this.boxClass_ = opt_opts.boxClass || "infoBox", 
+    this.boxId_ = opt_opts.boxId || "infobox", this.boxStyle_ = opt_opts.boxStyle || {}, 
     this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px", this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif", 
     "" === opt_opts.closeBoxURL && (this.closeBoxURL_ = ""), this.infoBoxClearance_ = opt_opts.infoBoxClearance || new google.maps.Size(1, 1), 
     opt_opts.visible === void 0 && (opt_opts.visible = opt_opts.isHidden === void 0 ? !0 : !opt_opts.isHidden), 
@@ -4411,7 +4432,8 @@ TWEEN.Tween = function(object) {
   }, InfoBox.prototype.setBoxStyle_ = function() {
     var i, boxStyle;
     if (this.div_) {
-      this.div_.className = this.boxClass_, this.div_.style.cssText = "", boxStyle = this.boxStyle_;
+      this.div_.className = this.boxClass_, this.div_.id = this.boxId_, this.div_.style.cssText = "", 
+      boxStyle = this.boxStyle_;
       for (i in boxStyle) boxStyle.hasOwnProperty(i) && (this.div_.style[i] = boxStyle[i]);
       this.div_.style.opacity !== void 0 && "" !== this.div_.style.opacity && (this.div_.style.filter = "alpha(opacity=" + 100 * this.div_.style.opacity + ")"), 
       this.div_.style.position = "absolute", this.div_.style.visibility = "hidden", null !== this.zIndex_ && (this.div_.style.zIndex = this.zIndex_);
@@ -4434,7 +4456,7 @@ TWEEN.Tween = function(object) {
     this.createInfoBoxDiv_();
     var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
     this.div_.style.left = pixPosition.x + this.pixelOffset_.width + "px", this.alignBottom_ ? this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px" : this.div_.style.top = pixPosition.y + this.pixelOffset_.height + "px", 
-    this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible";
+    this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible", this.events && this.events();
   }, InfoBox.prototype.setOptions = function(opt_opts) {
     opt_opts.boxClass !== void 0 && (this.boxClass_ = opt_opts.boxClass, this.setBoxStyle_()), 
     opt_opts.boxStyle !== void 0 && (this.boxStyle_ = opt_opts.boxStyle, this.setBoxStyle_()), 
@@ -4527,7 +4549,7 @@ TWEEN.Tween = function(object) {
   };
 }), define("mobilecontroller", function(require, exports, module) {
   "use strict";
-  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
+  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, apiv3_url = _ENV_.apiv3_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
   window.openExfe), Handlebars = require("handlebars"), $ = require("zepto"), util = require("util"), trim = util.trim, parseId = util.parseId, iPad = navigator.userAgent.match(/iPad/), Live = require("live"), escape = function(html, encode) {
     return html.replace(encode ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }, now = Date.now || function() {
@@ -5308,14 +5330,7 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
-          if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
-          self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
-          !1;
-          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $d.data("name"), $infoWins.find("#my-info").addClass("hide"), 
-          $infoWins.find("#other-info").removeClass("hide"), $infoWins.find("#other-info").find(".name").text($d.data("name"));
-          var bound = this.getBoundingClientRect();
-          $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
-          self.tapElement = this;
+          self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid));
         }
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng");
@@ -5412,9 +5427,31 @@ TWEEN.Tween = function(object) {
           self.mapReadyStatus = !0, self.mapController.updateGeoLocation(null);
         }
       });
-      mc.myuid = this.myuid, this.setLatLngOffset(), mc.tracking = !0, mc.load();
+      mc.myuid = this.myuid, mc.myIdentity = this.myIdentity, this.setLatLngOffset(), 
+      mc.tracking = !0, mc.load(), mc.controller = self, this.token && this.cross_id && $.ajax({
+        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/breadcrumbs?coordinate=mars&token=" + this.token,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          if (data && data.length) for (var d; d = data.shift(); ) mc._breadcrumbs.hasOwnProperty(d.id) ? mc._breadcrumbs[d.id].positions = [].contact(mc._breadcrumbs[d.id].positions, d.positions) : mc._breadcrumbs[d.id] = d;
+        }
+      });
     },
     mapReadyStatus: !1,
+    editDestination: function(destination) {
+      destination && $.ajax({
+        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/geomarks/" + destination.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
+        data: destination,
+        type: "POST",
+        dataType: "JSON",
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      });
+    },
     setLatLngOffset: function() {
       var offset = Store.get("offset-latlng");
       offset && (this.mapController.latOffset = 1 * offset.earth_to_mars_latitude, this.mapController.lngOffset = 1 * offset.earth_to_mars_longitude);
@@ -5428,9 +5465,9 @@ TWEEN.Tween = function(object) {
     },
     initStream: function() {
       var self = this;
-      routexStream.init(self.cross.id, self.token, function(type, result) {
+      routexStream.init(self.cross.id, self.token, function(result) {
         self.mapReadyStatus && self.mapController && (self.mapController.myuid || (self.mapController.myuid = self.myuid), 
-        self.mapController.draw(type, result));
+        self.mapController.draw(result));
       }, function(e) {
         console.log(e);
       });
@@ -5438,10 +5475,10 @@ TWEEN.Tween = function(object) {
     startStream: function() {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
-        self.position = r, Store.set("last-latlng", {
+        self.position = r, Store.set("position", {
           lat: r.latitude + "",
           lng: r.longitude + "",
-          timestamp: r.timestamp
+          ts: r.timestamp
         }), self.switchGPSStyle(2), self.trackGeoLocation(), console.log("GPS", r.latitude, r.longitude);
       }, function(r) {
         self.switchGPSStyle(1), console.log(r.status, r), routexStream.stopGeo(), self.mapController && self.mapController.switchGEOStyle(0);
@@ -5472,7 +5509,8 @@ TWEEN.Tween = function(object) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>');
         div.attr("data-uid", identity.external_username + "@" + identity.provider), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div);
-      } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
+      } else this.myuid = identity.external_username + "@" + identity.provider, this.myuser_id = identity.user_id, 
+      this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }
@@ -5621,8 +5659,9 @@ TWEEN.Tween = function(object) {
         options: {
           template: $("#routex-tmpl").html()
         },
-        lastGPS: Store.get("last-latlng"),
+        lastGPS: Store.get("position"),
         cross: cross,
+        cross_id: cross && cross.id,
         ctoken: ctoken,
         token: token || tokenInfos[0] || ctoken,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,

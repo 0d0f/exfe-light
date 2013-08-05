@@ -68,15 +68,6 @@ define('routexstream', function (require) {
                 }
             }
         });
-        /*
-        if (!stream.live && token) {
-            stream.init(
-                streaming_api_url + '/v3/crosses/' + cross_id + '/routex?_method=WATCH&token=' + token,
-                streamCallback, streamDead
-            );
-            log('Streaming with token: ' + token);
-        }
-        */
     }
 
 
@@ -203,7 +194,6 @@ define('routexstream', function (require) {
 
 
     var breatheFunc  = function () {
-        console.log(stream.live, token);
         if (checkGps(myData)) {
             if (++secCnt >= secInt) {
                 submitGps();
@@ -211,8 +201,7 @@ define('routexstream', function (require) {
         }
         if (!stream.live && token) {
             stream.init(
-                //api_url + '/crosses/' + cross_id + '/routex?_method=WATCH&coordinate=mars&token=' + token,
-                api_url + '/crosses/' + cross_id + '/routex?_method=WATCH&coordinate=earth&token=' + token,
+                api_url + '/routex/crosses/' + cross_id + '?_method=WATCH&coordinate=mars&token=' + token,
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
@@ -359,6 +348,7 @@ define('routexstream', function (require) {
 
     var streamCallback = function (rawData) {
         var data = JSON.parse(rawData);
+        /*
         if (data && data.type && data.data) {
             var type   = data.type.replace(/^.*\/([^\/]*)$/, '$1');
             var result = data.data;
@@ -382,6 +372,11 @@ define('routexstream', function (require) {
                         lstRoute = curRoute;
                     }
             }
+        }
+        */
+        if (data && data.type) {
+            log('Streaming pops: ' + data.type)
+            echo(data)
         }
     };
 
