@@ -328,7 +328,8 @@
     if (routes.home.test(url)) {
       handle();
 
-    } else if (url.match(routes.smsToken)) {
+    } else if ((params = url.match(routes.smsToken))) {
+      window.noExfeApp = !!params[1];
 
       var __t;
       if (window.noExfeApp) {
