@@ -5,7 +5,6 @@ define('routexstream', function (require) {
 
     var _ENV_ = window._ENV_
       , api_url = _ENV_.apiv3_url
-      , geolocation = navigator.geolocation;
 
     var cross_id = 0;
 
@@ -21,7 +20,7 @@ define('routexstream', function (require) {
 
     var bolDebug = !true;
 
-    var myData   = { timestamp: 0, latitude : '', longitude : '', accuracy : '' };
+    var myData   = { ts: 0, lat : 0, lng : 0, acc : 0 };
 
     var lstLocat = '';
 
@@ -48,9 +47,8 @@ define('routexstream', function (require) {
         }
         submit_request = $.ajax({
             type    : 'POST',
-            url     : api_url + '/crosses/' + cross_id + '/routex/breadcrumbs?token=' + token,
-            data    : JSON.stringify(myData),
-            dataType: 'json',
+            url     : api_url + '/routex/breadcrumbs?coordinate=earth&token=' + token,
+            data    : JSON.stringify([myData]),
             success : function (data) {
               data && localStorage.setItem('offset-latlng', JSON.stringify(data));
             },
@@ -210,7 +208,7 @@ define('routexstream', function (require) {
 
 
     var checkGps = function (data) {
-      return data.timestamp && data.latitude && data.longitude && data.accuracy;
+      return data && data.ts && data.lat && data.lng && data.acc;
     };
 
 
@@ -221,17 +219,17 @@ define('routexstream', function (require) {
     var getGeo = function (done, fail) {
       geoService.get(
           function (result) {
-            myData.timestamp = result.timestamp;
-            myData.latitude  = result.latitude + '';
-            myData.longitude = result.longitude + '';
-            myData.accuracy  = result.accuracy + '';
+            myData.ts = result.timestamp;
+            myData.lat  = result.latitude;
+            myData.lng = result.longitude;
+            myData.acc  = result.accuracy;
             done && done(result);
             log(
                 'Location update: '
-              + 'time = ' + myData.timestamp + ', '
-              + 'lat  = ' + myData.latitude  + ', '
-              + 'lng  = ' + myData.longitude + ', '
-              + 'acu  = ' + myData.accuracy
+              + 'time = ' + myData.ts + ', '
+              + 'lat  = ' + myData.lat + ', '
+              + 'lng  = ' + myData.lng + ', '
+              + 'acu  = ' + myData.acc
             );
           }
         , function (result) {
@@ -243,17 +241,17 @@ define('routexstream', function (require) {
     var startGeo = function (done, fail) {
       intGeoWatch = geoService.watch(
           function (result) {
-            myData.timestamp = result.timestamp;
-            myData.latitude  = result.latitude + '';
-            myData.longitude = result.longitude + '';
-            myData.accuracy  = result.accuracy + '';
+            myData.ts = result.timestamp;
+            myData.lat = result.latitude;
+            myData.lng = result.longitude;
+            myData.acc  = result.accuracy;
             done && done(result);
             log(
                 'Location update: '
-              + 'time = ' + myData.timestamp + ', '
-              + 'lat  = ' + myData.latitude  + ', '
-              + 'lng  = ' + myData.longitude + ', '
-              + 'acu  = ' + myData.accuracy
+              + 'time = ' + myData.ts + ', '
+              + 'lat  = ' + myData.lat  + ', '
+              + 'lng  = ' + myData.lng + ', '
+              + 'acu  = ' + myData.acc
             );
           }
         , function (result) {
@@ -276,8 +274,8 @@ define('routexstream', function (require) {
 
     , cachedOptions: {
           enableHighAccuracy: false
-        , maximumAge: 3000 // Infinity
-        , timeout: 5000 // 29999.999999 //30000
+        , maximumAge: 60000 * 60 * 2 // 2 hours or Infinity
+        , timeout: 1000 * 5 // 29999.999999 //30000
       }
 
     , STATUS: 0
@@ -286,21 +284,32 @@ define('routexstream', function (require) {
     , accuracy_threshold: 500
 
     , _success: function (done) {
-        var freshness_threshold = this.freshness_threshold
+        var self = this
+          , freshness_threshold = this.freshness_threshold
           , accuracy_threshold = this.accuracy_threshold
           , prev = (new Date()).getTime();
         // position
         return function d(p) {
           var coords = p.coords
             , result = coords
-            , curr = (new Date()).getTime();
+            , curr = (new Date()).getTime()
+            , status = false;
+
+          if (self.STATUS === 0) {
+            status = true;
+          }
 
           if (curr - prev > freshness_threshold) {
+            status = true;
+          }
+
+          if (status) {
             prev = curr + freshness_threshold;
             result.status = 'success';
             result.timestamp = Math.round(p.timestamp / 1000);
             result.accuracy = parseInt(coords.accuracy || accuracy_threshold);
             done && done(result);
+            if (self.STATUS === 0) { self.STATUS = 1; }
             d = null;
           }
         };
@@ -325,7 +334,7 @@ define('routexstream', function (require) {
 
     , get: function (done, fail, options) {
         options = options || this.options;
-        geolocation.getCurrentPosition(this._success(done), this._error(fail), options);
+        navigator.geolocation.getCurrentPosition(this._success(done), this._error(fail), options);
       }
 
 
@@ -334,7 +343,7 @@ define('routexstream', function (require) {
        */
 
     , watch: function (done, fail/*, options*/) {
-        return geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
+        return navigator.geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
       }
 
       /**
@@ -342,38 +351,12 @@ define('routexstream', function (require) {
        */
 
     , stopWatch: function (wid) {
-        wid && geolocation.clearWatch(wid);
+        wid && navigator.geolocation.clearWatch(wid);
       }
     };
 
     var streamCallback = function (rawData) {
         var data = JSON.parse(rawData);
-        /*
-        if (data && data.type && data.data) {
-            var type   = data.type.replace(/^.*\/([^\/]*)$/, '$1');
-            var result = data.data;
-
-            switch (type) {
-                case 'breadcrumbs':
-                    var curLocat = JSON.stringify(result);
-                    log('Streaming pops: ' + curLocat, result);
-                    if (echo && lstLocat !== curLocat) {
-                        log('Callback')
-                        echo(type, result);
-                        lstLocat = curLocat;
-                    }
-                    break;
-                case 'geomarks':
-                    var curRoute = JSON.stringify(result);
-                    log('Streaming pops: ' + curRoute, result);
-                    if (echo && lstRoute !== curRoute) {
-                        log('Callback')
-                        echo(type, result);
-                        lstRoute = curRoute;
-                    }
-            }
-        }
-        */
         if (data && data.type) {
             log('Streaming pops: ' + data.type)
             echo(data)
@@ -439,7 +422,6 @@ define('routexstream', function (require) {
         stopGeo: stopGeo,
         geoService: geoService
     };
-
 
     var breatheTimer = setInterval(breatheFunc, 1000);
 

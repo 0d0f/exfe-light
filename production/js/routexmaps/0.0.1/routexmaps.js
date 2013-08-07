@@ -219,31 +219,9 @@
   };
 
   proto.draw = function (data) {
-    /*
-    if (type === 'geomarks') {
-      var rs = [], ps = [], item, st, k;
-      data = data.slice(0);
-      while ((item = data.shift())) {
-        st = item.type;
-        if (st === 'route') {
-          rs.push(item);
-        } else if (st === 'location') {
-          ps.push(item);
-        }
-      }
-
-      // draw route
-      this.drawRoutes(rs);
-
-      // draw place
-      this.drawPlaces(ps);
-
-    } else if (type === 'breadcrumbs') {
-      // draw identity path
-      this.drawIdentityPaths(data);
-    }
-    */
     var type = data.type
+      , action = data.action
+      , isDelete = action && action === 'delete'
       , tags = data.tags.slice(0)
       , tag;
 
@@ -259,7 +237,7 @@
           }
         }
 
-        this.drawPlace(data, isDestination);
+        isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
         break;
 
       case ROUTE:
@@ -275,37 +253,29 @@
         if (isBreadcrumbs) {
           this.drawGeoMarker(data);
         } else {
-          this.drawRoute(data);
+          isDelete ? this.removeRoute(data) : this.drawRoute(data);
         }
         break;
     }
   };
 
-  /*
-  proto.drawRoutes = function (rs) {
-    var routes = this.routes, r, k, item;
-    for (k in routes) {
-      r = routes[k];
-      r.setMap(null);
-      r = null;
-      delete routes[k];
-    }
-    if (rs.length) {
-      while ((item = rs.shift())) {
-        this.addRoute(item);
-      }
+  proto.removePlace = function (data) {
+    var places = this.places, id = data.id, p = places[id];
+    if (p) {
+      p.setMap(null);
+      p = null;
+      delete places[id];
     }
   };
-  */
 
   proto.drawRoute = function (data) {
     var routes = this.routes
-      , uid = data.created_by
+      , id = data.id
       , positions = data.positions.slice(0)
       , coords = []
       , r, d, p;
-    if (routes.hasOwnProperty(uid)) {
-      r = routes[uid];
+    if (routes.hasOwnProperty(id)) {
+      r = routes[id];
       d = r.data;
       // no update
       if (d.updated_at === data.updated_at) {
@@ -314,7 +284,7 @@
     }
 
     if (!r) {
-      r = routes[uid] = this.addPolyline(data);
+      r = routes[id] = this.addPolyline(data);
     }
 
     while ((p = positions.shift())) {
@@ -325,18 +295,14 @@
     r.data = data;
   };
 
-  /*
-  proto.addRoute = function (data) {
-    var coords = [], uid = data.created_by, positions = data.positions.slice(0), p, route;
-
-    route = this.routes[uid] = this.addPolyline(data);
-    route.data = data;
-
-    while ((p = positions.shift())) {
-      coords.push(this.toLatLng(p.latitude, p.longitude));
+  proto.removeRoute = function (data) {
+    var routes = this.routes, id = data.id, r = routes[id];
+    if (r) {
+      r.setMap(null);
+      r = null;
+      delete routes[id];
     }
   };
-  */
 
   proto.addPolyline = function (data) {
     var rgba = (data.color && data.color.split(',')) || []
@@ -353,24 +319,6 @@
     return p;
   };
 
-  /*
-  proto.drawPlaces = function (ps) {
-    var places = this.places, p, k, item;
-    // reset destination place
-    this.destinationPlace = null;
-    for (k in places) {
-      p = places[k];
-      p.setMap(null);
-      p = null;
-      delete places[k];
-    }
-    if (ps.length) {
-      while ((item = ps.shift())) {
-        this.addPlace(item);
-      }
-    }
-  };
-  */
   proto.drawPlace = function (data, isDestination) {
     var places = this.places
       , id = data.id, p, d, latlng;
@@ -381,11 +329,6 @@
       if (d.updated_at === data.updated_at) {
         return;
       }
-      /*
-      p.setMap(null);
-      p = null;
-      delete places[id];
-      */
     }
 
     if (!p) {
@@ -408,28 +351,6 @@
     }
   };
 
-  /*
-  proto.addPlace = function (data, isDestination) {
-    var id = data.id
-      , latlng = this.toLatLng(data.latitude, data.longitude)
-      , place;
-
-    place = this.places[id] = this.addPoint(data, isDestination);
-    place.setPosition(latlng);
-    place.data = data;
-
-    if (isDestination) {
-      // 如果还没 GPS 自动定位到 destination
-      var geoLocation = this.geoLocation;
-      if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
-        this.panToDestination(latlng);
-      }
-      this.destinationPlace = place;
-      place.setZIndex(MAX_INDEX);
-    }
-  };
-  */
-
   proto.monit = function () {
     var u = this.updated
       , bs = this.breadcrumbs
@@ -445,14 +366,14 @@
       if (u.hasOwnProperty(uid)) {
         d = u[uid];
         isme = myuid === uid;
-        n = Math.floor((now - d.timestamp) / 60);
+        n = Math.floor((now - d.ts) / 60);
         gm = isme ? geo : gms[uid];
         this.distanceMatrix(uid, gm ,dp, n);
 
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
-        console.log(n)
+        console.log('time', n)
         if (n <= 1) {
 
           if ($e.length) {
@@ -523,59 +444,14 @@
     return new google.maps.LatLng(lat * 1, lng * 1);
   };
 
-  /*
-  proto.drawIdentityPaths = function (data) {
-    var bs = this.breadcrumbs, dp = this.destinationPlace
-      , uid, b, d, p, positions, coords, gm;
-    for (uid in data) {
-      d = data[uid];
-      b = bs[uid];
-      positions = d.slice(0);
-
-      coords = [];
-      while ((p = positions.shift())) {
-        coords.push(this.toLatLng(p.latitude, p.longitude));
-      }
-
-      if (!b) {
-        b = bs[uid] = this.addBreadcrumbs();
-      }
-
-      b.setPath(coords);
-
-      gm = this.drawGeoMarker(uid, d[0], coords[0]);
-
-      this.distanceMatrix(uid, gm, dp);
-    }
-  };
-  */
-
   proto.drawBreadcrumbs = function (data) {
     var bs = this.breadcrumbs, uid = data.uid;
   };
 
-  /*
-  proto.drawGeoMarker = function (uid, data, latlng) {
-    var gm;
-    this.updated[uid] = data;
-    if (this.myuid === uid) {
-      return this.geoLocation;
-    }
-    gm = this.geoMarkers[uid];
-    if (!gm) {
-      gm = this.geoMarkers[uid] = this.addGeoMarker();
-    }
-    gm.setPosition(latlng);
-
-    this.updateTipline(uid, latlng);
-    return gm;
-  };
-  */
-
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
-      , uid = data.created_by
-      , g, d, position;
+      , uid = data.id.split('@')[0]
+      , g, d, position, latlng;
     if (gms.hasOwnProperty(uid)) {
       g = gms[uid];
       d = g.data;
@@ -588,18 +464,23 @@
       g = gms[uid] = this.addGeoMarker();
     }
     position = data.positions[0];
-    g.setPosition(this.toLatLng(position.lat, position.lng));
+    latlng = this.toLatLng(position.lat, position.lng);
+    g.setPosition(latlng);
     g.data = data;
 
+    this.updateTipline(uid, latlng);
     this.updatePositions(data);
   };
 
   proto.updatePositions = function (data) {
-    if (!this._breadcrumbs[data.id]) {
-      this._breadcrumbs[data.id] = data;
+    // user_id@provider
+    var id = data.id.split('@')[0]
+    if (!this._breadcrumbs[id]) {
+      this._breadcrumbs[id] = data;
     } else {
-      this._breadcrumbs[data.id].positions.unshift(data.positions[0])
+      this._breadcrumbs[id].positions.unshift(data.positions[0])
     }
+    this.updated[id] = this._breadcrumbs[id].positions[0];
   };
 
   proto.addGeoMarker = function () {
@@ -614,7 +495,6 @@
 
   proto.distanceMatrix = function (uid, gm, dp, time) {
     time = time || 0;
-    console.log(uid, 'destination', dp, gm);
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]')
       , $detial = $identity.find('.detial')
       , $icon = $detial.find('.icon')
@@ -627,8 +507,6 @@
         , d = distance(lat2, lng2, lat1, lng1)
         , r = bearing(lat2, lng2, lat1, lng1)
         , result = distanceOutput(d);
-
-      console.log(d, r, lat1, lng1, lat2, lng2);
 
       result.rotate = r;
 
@@ -648,7 +526,6 @@
   };
 
   proto.fitBoundsWithDestination = function (uid) {
-    console.log('fit bounds with destination');
     var destinationPlace = this.destinationPlace
       , isme = this.myuid === uid
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -716,7 +593,7 @@
     return bounds;
   };
 
-  proto.addBreadcrumbs = function (uid, positions) {
+  proto.addBreadcrumbs = function () {
     var color = '#b2b2b2'
       , alpha = 0.8
       , p = new google.maps.Polyline({
@@ -757,8 +634,18 @@
       , pb;
 
     if (!b) {
-      b = bds[uid] = this.addBreadcrumbs(uid, this._breadcrumbs[uid].positions);
+      b = bds[uid] = this.addBreadcrumbs();
     }
+
+    if (b) {
+      var positions = this._breadcrumbs[uid].positions.slice(0)
+        , coords = [], p;
+      while ((p = positions.pop())) {
+        coords.push(this.toLatLng(p.lat, p.lng));
+      }
+      b.setPath(coords);
+    }
+
     if (uid !== puid) {
       pb = bds[puid];
       if (pb) {
@@ -773,7 +660,6 @@
       }
     }
     this.uid = uid;
-    console.log('showBreadcrumbs', puid, uid);
   };
 
   proto.addPoint = function (data, isDestination) {
@@ -914,6 +800,8 @@
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
+    console.dir(ids);
+    console.log(uid, ids[uid]);
     if (bounds.contains(latlng) && (b = ids[uid])) {
       this.showTipline(uid, b);
     } else {
@@ -939,8 +827,7 @@
   };
 
   proto.addTipline = function (uid) {
-    var breadcrumbs = this.breadcrumbs[uid]
-      , tl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    var tl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
 
     tl.setAttribute('fill', 'none');
     // 更改用户状态：在线-粉红，离线-灰色
@@ -997,11 +884,10 @@
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
-        console.log('init position', lastlatlng);
       }
     }
     if (position) {
-      latlng = this.toLatLng(position.latitude * 1 + this.latOffset, position.longitude * 1 + this.lngOffset)
+      latlng = this.toLatLng(position.lat * 1 + this.latOffset, position.lng * 1 + this.lngOffset)
       geoLocation.setIcon(this.icons.arrowBlue);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {
@@ -1010,7 +896,9 @@
       }
       geoLocation._status = 2;
 
-      this.updatePositions({ id: uid, positions: [{ ts: position.timestamp, lat: position.latitude, lng: position.longitude }] });
+      if (uid && position) {
+        this.updatePositions({ id: uid, positions: [position] });
+      }
     }
     if (uid) {
       this.updated[uid] = position || lastlatlng;
