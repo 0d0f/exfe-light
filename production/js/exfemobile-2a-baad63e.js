@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-02 05:08:04 */
+/*! mobile@2a 2013-08-16 03:08:37 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3782,18 +3782,17 @@ TWEEN.Tween = function(object) {
   }), live;
 }), define("routexstream", function() {
   "use strict";
-  var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, geolocation = navigator.geolocation, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
-    timestamp: 0,
-    latitude: "",
-    longitude: "",
-    accuracy: ""
+  var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
+    ts: 0,
+    lat: 0,
+    lng: 0,
+    acc: 0
   }, lstLocat = "", lstRoute = "", submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
       type: "POST",
-      url: api_url + "/crosses/" + cross_id + "/routex/breadcrumbs?token=" + token,
-      data: JSON.stringify(myData),
-      dataType: "json",
+      url: api_url + "/routex/breadcrumbs?coordinate=earth&token=" + token,
+      data: JSON.stringify([ myData ]),
       success: function(data) {
         data && localStorage.setItem("offset-latlng", JSON.stringify(data));
       },
@@ -3856,20 +3855,20 @@ TWEEN.Tween = function(object) {
     !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=earth&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
-    return data.timestamp && data.latitude && data.longitude && data.accuracy;
+    return data && data.ts && data.lat && data.lng && data.acc;
   }, stopGeo = function() {
     geoService.stopWatch(intGeoWatch);
   }, getGeo = function(done, fail) {
     geoService.get(function(result) {
-      myData.timestamp = result.timestamp, myData.latitude = result.latitude + "", myData.longitude = result.longitude + "", 
-      myData.accuracy = result.accuracy + "", done && done(result), log("Location update: time = " + myData.timestamp + ", " + "lat  = " + myData.latitude + ", " + "lng  = " + myData.longitude + ", " + "acu  = " + myData.accuracy);
+      myData.ts = result.timestamp, myData.lat = result.latitude, myData.lng = result.longitude, 
+      myData.acc = result.accuracy, done && done(result), log("Location update: time = " + myData.ts + ", " + "lat  = " + myData.lat + ", " + "lng  = " + myData.lng + ", " + "acu  = " + myData.acc);
     }, function(result) {
       fail && fail(result);
     });
   }, startGeo = function(done, fail) {
     intGeoWatch = geoService.watch(function(result) {
-      myData.timestamp = result.timestamp, myData.latitude = result.latitude + "", myData.longitude = result.longitude + "", 
-      myData.accuracy = result.accuracy + "", done && done(result), log("Location update: time = " + myData.timestamp + ", " + "lat  = " + myData.latitude + ", " + "lng  = " + myData.longitude + ", " + "acu  = " + myData.accuracy);
+      myData.ts = result.timestamp, myData.lat = result.latitude, myData.lng = result.longitude, 
+      myData.acc = result.accuracy, done && done(result), log("Location update: time = " + myData.ts + ", " + "lat  = " + myData.lat + ", " + "lng  = " + myData.lng + ", " + "acu  = " + myData.acc);
     }, function(result) {
       fail && fail(result);
     });
@@ -3881,19 +3880,20 @@ TWEEN.Tween = function(object) {
     },
     cachedOptions: {
       enableHighAccuracy: !1,
-      maximumAge: 3e3,
+      maximumAge: 72e5,
       timeout: 5e3
     },
     STATUS: 0,
     freshness_threshold: 4999.999999,
     accuracy_threshold: 500,
     _success: function(done) {
-      var freshness_threshold = this.freshness_threshold, accuracy_threshold = this.accuracy_threshold, prev = new Date().getTime();
+      var self = this, freshness_threshold = this.freshness_threshold, accuracy_threshold = this.accuracy_threshold, prev = new Date().getTime();
       return function d(p) {
-        var coords = p.coords, result = coords, curr = new Date().getTime();
-        curr - prev > freshness_threshold && (prev = curr + freshness_threshold, result.status = "success", 
-        result.timestamp = Math.round(p.timestamp / 1e3), result.accuracy = parseInt(coords.accuracy || accuracy_threshold), 
-        done && done(result), d = null);
+        var coords = p.coords, result = coords, curr = new Date().getTime(), status = !1;
+        0 === self.STATUS && (status = !0), curr - prev > freshness_threshold && (status = !0), 
+        status && (prev = curr + freshness_threshold, result.status = "success", result.timestamp = Math.round(p.timestamp / 1e3), 
+        result.accuracy = parseInt(coords.accuracy || accuracy_threshold), done && done(result), 
+        0 === self.STATUS && (self.STATUS = 1), d = null);
       };
     },
     _error: function(fail) {
@@ -3907,13 +3907,13 @@ TWEEN.Tween = function(object) {
       };
     },
     get: function(done, fail, options) {
-      options = options || this.options, geolocation.getCurrentPosition(this._success(done), this._error(fail), options);
+      options = options || this.options, navigator.geolocation.getCurrentPosition(this._success(done), this._error(fail), options);
     },
     watch: function(done, fail) {
-      return geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
+      return navigator.geolocation.watchPosition(this._success(done), this._error(fail), this.STATUS ? this.options : this.cachedOptions);
     },
     stopWatch: function(wid) {
-      wid && geolocation.clearWatch(wid);
+      wid && navigator.geolocation.clearWatch(wid);
     }
   }, streamCallback = function(rawData) {
     var data = JSON.parse(rawData);
@@ -4015,7 +4015,7 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, DESTINATION = "destination", proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, DESTINATION = "destination", ROUTE = "route", proto = RoutexMaps.prototype;
   return proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4026,20 +4026,36 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
-  }, proto.draw = function(type, data) {
-    if (console.log(type, data), "geomarks" === type) {
-      var item, st, rs = [], ps = [];
-      for (data = data.slice(0); item = data.shift(); ) st = item.type, "route" === st ? rs.push(item) : "location" === st && ps.push(item);
-      this.drawRoutes(rs), this.drawPlaces(ps);
-    } else "breadcrumbs" === type && this.drawIdentityPaths(data);
-  }, proto.drawRoutes = function(rs) {
-    var r, k, item, routes = this.routes;
-    for (k in routes) r = routes[k], r.setMap(null), r = null, delete routes[k];
-    if (rs.length) for (;item = rs.shift(); ) this.addRoute(item);
-  }, proto.addRoute = function(data) {
-    var p, route, coords = [], uid = data.created_by, positions = data.positions.slice(0);
-    for (route = this.routes[uid] = this.addPolyline(data); p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
-    route.setPath(coords);
+  }, proto.draw = function(data) {
+    var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, tags = data.tags.slice(0);
+    switch (console.log(type, tags, data), type) {
+     case LOCATION:
+      for (var isDestination; tag = tags.shift(); ) if (tag === DESTINATION) {
+        isDestination = !0;
+        break;
+      }
+      isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
+      break;
+
+     case ROUTE:
+      for (var isBreadcrumbs; tag = tags.shift(); ) if (tag === BREADCRUMBS) {
+        isBreadcrumbs = !0;
+        break;
+      }
+      isBreadcrumbs ? this.drawGeoMarker(data) : isDelete ? this.removeRoute(data) : this.drawRoute(data);
+    }
+  }, proto.removePlace = function(data) {
+    var places = this.places, id = data.id, p = places[id];
+    p && (p.setMap(null), p = null, delete places[id]);
+  }, proto.drawRoute = function(data) {
+    var r, d, p, routes = this.routes, id = data.id, positions = data.positions.slice(0), coords = [];
+    if (!routes.hasOwnProperty(id) || (r = routes[id], d = r.data, d.updated_at !== data.updated_at)) {
+      for (r || (r = routes[id] = this.addPolyline(data)); p = positions.shift(); ) coords.push(this.toLatLng(p.lat, p.lng));
+      r.setPath(coords), r.data = data;
+    }
+  }, proto.removeRoute = function(data) {
+    var routes = this.routes, id = data.id, r = routes[id];
+    r && (r.setMap(null), r = null, delete routes[id]), route.setPath(coords);
   }, proto.addPolyline = function(data) {
     var rgba = data.color && data.color.split(",") || [], color = "#" + (rgba.length ? pad0(toHex(rgba[0])) + pad0(toHex(rgba[1])) + pad0(toHex(rgba[2])) : "007BFF"), alpha = rgba[3] || 1, p = new google.maps.Polyline({
       map: this.map,
@@ -4050,24 +4066,21 @@ TWEEN.Tween = function(object) {
       strokeOpacity: alpha
     });
     return p;
-  }, proto.drawPlaces = function(ps) {
-    var p, k, item, places = this.places;
-    this.destinationPlace = null;
-    for (k in places) p = places[k], p.setMap(null), p = null, delete places[k];
-    if (ps.length) for (;item = ps.shift(); ) this.addPlace(item);
-  }, proto.addPlace = function(data) {
-    var place, tags, tag, id = data.id, latlng = this.toLatLng(data.latitude, data.longitude);
-    if (place = this.places[id] = this.addPoint(data), place.setPosition(latlng), !this.destinationPlace) for (tags = data.tags.slice(0); tag = tags.shift(); ) if (DESTINATION === tag) {
+  }, proto.drawPlace = function(data, isDestination) {
+    var p, d, latlng, places = this.places, id = data.id;
+    if ((!places.hasOwnProperty(id) || (p = places[id], d = p.data, d.updated_at !== data.updated_at)) && (p || (p = places[id] = this.addPoint(data, isDestination)), 
+    latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
+    isDestination)) {
       var geoLocation = this.geoLocation;
-      return (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
-      place.setZIndex(MAX_INDEX), this.destinationPlace = place, void 0;
+      (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
+      this.destinationPlace = p, p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
     var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, now = Math.round(new Date().getTime() / 1e3);
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid === uid, 
-    n = Math.floor((now - d.timestamp) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
+    n = Math.floor((now - d.ts) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
     b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    console.log(n), 1 >= n) {
+    console.log("time", n), 1 >= n) {
       if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({
         strokeOpacity: 0,
@@ -4108,18 +4121,17 @@ TWEEN.Tween = function(object) {
     }
   }, proto.toLatLng = function(latitude, longitude) {
     return new google.maps.LatLng(1 * latitude, 1 * longitude);
-  }, proto.drawIdentityPaths = function(data) {
-    var uid, b, d, p, positions, coords, gm, bs = this.breadcrumbs, dp = this.destinationPlace;
-    for (uid in data) {
-      for (d = data[uid], b = bs[uid], positions = d.slice(0), coords = []; p = positions.shift(); ) coords.push(this.toLatLng(p.latitude, p.longitude));
-      b || (b = bs[uid] = this.addBreadcrumbs()), b.setPath(coords), gm = this.drawGeoMarker(uid, d[0], coords[0]), 
-      this.distanceMatrix(uid, gm, dp);
-    }
-  }, proto.drawGeoMarker = function(uid, data, latlng) {
-    var gm;
-    return this.updated[uid] = data, this.myuid === uid ? this.geoLocation : (gm = this.geoMarkers[uid], 
-    gm || (gm = this.geoMarkers[uid] = this.addGeoMarker()), gm.setPosition(latlng), 
-    this.updateTipline(uid, latlng), gm);
+  }, proto.drawBreadcrumbs = function(data) {
+    this.breadcrumbs, data.uid;
+  }, proto.drawGeoMarker = function(data) {
+    var g, d, position, latlng, gms = this.geoMarkers, uid = data.id.split("@")[0];
+    gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at) || (g || (g = gms[uid] = this.addGeoMarker()), 
+    position = data.positions[0], latlng = this.toLatLng(position.lat, position.lng), 
+    g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng), this.updatePositions(data));
+  }, proto.updatePositions = function(data) {
+    var id = data.id.split("@")[0];
+    this._breadcrumbs[id] ? this._breadcrumbs[id].positions.unshift(data.positions[0]) : this._breadcrumbs[id] = data, 
+    this.updated[id] = this._breadcrumbs[id].positions[0];
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
@@ -4129,17 +4141,15 @@ TWEEN.Tween = function(object) {
     });
     return gm;
   }, proto.distanceMatrix = function(uid, gm, dp, time) {
-    time = time || 0, console.log(uid, "destination", dp, gm);
+    time = time || 0;
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
     if (gm && dp) {
       var p0 = gm.getPosition(), p1 = dp.getPosition(), lat1 = p0.lat(), lng1 = p0.lng(), lat2 = p1.lat(), lng2 = p1.lng(), d = distance(lat2, lng2, lat1, lng1), r = bearing(lat2, lng2, lat1, lng1), result = distanceOutput(d);
-      console.log(d, r, lat1, lng1, lat2, lng2), result.rotate = r, $distance.html(result.text), 
-      $icon.css("-webkit-transform", "rotate(" + r + "deg)"), $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), 
-      $detial.css("visibility", "visible");
+      result.rotate = r, $distance.html(result.text), $icon.css("-webkit-transform", "rotate(" + r + "deg)"), 
+      $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
     $distance.html((time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
-    console.log("fit bounds with destination");
     var destinationPlace = this.destinationPlace, isme = this.myuid === uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition(), map = this.map;
@@ -4185,8 +4195,12 @@ TWEEN.Tween = function(object) {
     return p;
   }, proto.showTextLabels = function() {}, proto.showBreadcrumbs = function(uid) {
     var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
+    if (b || (b = bds[uid] = this.addBreadcrumbs()), b) {
+      for (var p, positions = this._breadcrumbs[uid].positions.slice(0), coords = []; p = positions.pop(); ) coords.push(this.toLatLng(p.lat, p.lng));
+      b.setPath(coords);
+    }
     uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
-    this.uid = uid, console.log("showBreadcrumbs", puid, uid);
+    this.uid = uid;
   }, proto.addPoint = function(data) {
     var self = this, GMaps = google.maps, map = this.map, m = new GMaps.Marker({
       map: map,
@@ -4229,15 +4243,15 @@ TWEEN.Tween = function(object) {
     console.log("map zoom", this.map.getZoom());
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
     bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
-    bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);
+    console.dir(ids), console.log(uid, ids[uid]), bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);
   }, proto.hideTiplines = function() {
     var uid, tls = this.tiplines;
     for (uid in tls) this.hideTipline(uid);
   }, proto.updateTipline = function(uid, latlng) {
     var tl = this.tiplines[uid];
     tl || (tl = this.tiplines[uid] = this.addTipline(uid)), latlng && this.containsOne(uid, tl._lastlatlng = latlng);
-  }, proto.addTipline = function(uid) {
-    var tl = (this.breadcrumbs[uid], document.createElementNS("http://www.w3.org/2000/svg", "polyline"));
+  }, proto.addTipline = function() {
+    var tl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
     return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#b2b2b2"), tl.setAttribute("stroke-width", 1), 
     tl.setAttribute("stroke-linecap", "round"), tl.setAttribute("stroke-linejoin", "round"), 
     tl.setAttribute("style", "-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));"), 
@@ -4263,12 +4277,14 @@ TWEEN.Tween = function(object) {
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
       lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
-      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng), console.log("init position", lastlatlng));
+      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
     }
-    position && (latlng = this.toLatLng(1 * position.latitude + this.latOffset, 1 * position.longitude + this.lngOffset), 
+    position && (latlng = this.toLatLng(1 * position.lat + this.latOffset, 1 * position.lng + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
-    geoLocation._uid = uid;
+    this.map.panTo(latlng)), geoLocation._status = 2, uid && position && this.updatePositions({
+      id: uid,
+      positions: [ position ]
+    })), uid && (this.updated[uid] = position || lastlatlng), geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
@@ -5409,17 +5425,57 @@ TWEEN.Tween = function(object) {
         },
         svg: this.$("#svg")[0],
         callback: function() {
-          self.mapReadyStatus = !0, self.mapController.updateGeoLocation(null);
+          self.mapReadyStatus = !0, self.mapController.updateGeoLocation(mc.myuid, self.position);
         }
       });
-      mc.myuid = this.myuid, this.setLatLngOffset(), mc.tracking = !0, mc.load();
+      mc.myuid = this.myuid, this.setLatLngOffset(), mc.tracking = !0, mc.load(), mc.controller = self, 
+      this.token && this.cross_id && $.ajax({
+        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/breadcrumbs?coordinate=mars&token=" + this.token,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          if (data && data.length) for (var d, id; d = data.shift(); ) id = d.id.split("@")[0], 
+          mc._breadcrumbs.hasOwnProperty(id) ? mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions) : mc._breadcrumbs[id] = d;
+        }
+      });
     },
     mapReadyStatus: !1,
+    editDestination: function(destination) {
+      destination && $.ajax({
+        type: "POST",
+        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/geomarks/location/" + destination.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
+        data: JSON.stringify(destination),
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      });
+    },
     setLatLngOffset: function() {
       var offset = Store.get("offset-latlng");
       offset && (this.mapController.latOffset = 1 * offset.earth_to_mars_latitude, this.mapController.lngOffset = 1 * offset.earth_to_mars_longitude);
     },
     streaming: function() {
+      if (this.cross_id && this.token) {
+        var data = {
+          cross_id: this.cross_id,
+          save_breadcrumbs: !0,
+          after_in_seconds: 7200
+        };
+        $.ajax({
+          type: "POST",
+          url: apiv3_url + "/routex/user/crosses?token=" + this.token,
+          data: JSON.stringify([ data ]),
+          success: function(data) {
+            console.log("success", data);
+          },
+          error: function(data) {
+            console.log("error", data);
+          }
+        });
+      }
       var self = this;
       this.initStream(), this.startStream(), console.log("start streaming"), console.log("start monit"), 
       this.timer = setInterval(function() {
@@ -5438,11 +5494,13 @@ TWEEN.Tween = function(object) {
     startStream: function() {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
-        self.position = r, Store.set("last-latlng", {
+        self.position = {
           lat: r.latitude + "",
           lng: r.longitude + "",
-          timestamp: r.timestamp
-        }), self.switchGPSStyle(2), self.trackGeoLocation(), console.log("GPS", r.latitude, r.longitude);
+          ts: r.timestamp,
+          acc: r.accuracy
+        }, Store.set("position", self.position), self.switchGPSStyle(2), self.trackGeoLocation(), 
+        console.log("GPS", r.lat, r.lng, r);
       }, function(r) {
         self.switchGPSStyle(1), console.log(r.status, r), routexStream.stopGeo(), self.mapController && self.mapController.switchGEOStyle(0);
       });
@@ -5462,17 +5520,17 @@ TWEEN.Tween = function(object) {
     updateMe: function(myIdentity) {
       this.myIdentity = myIdentity;
       var div = this.$("#isme");
-      div.attr("data-uid", myIdentity.external_username + "@" + myIdentity.provider), 
-      div.attr("data-name", myIdentity.name), div.find("img").attr("src", myIdentity.avatar_filename);
+      div.attr("data-uid", myIdentity.connected_user_id), div.attr("data-name", myIdentity.name), 
+      div.find("img").attr("src", myIdentity.avatar_filename);
     },
     createIdentitiesList: function() {
-      var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myIdentityId = this.myIdentityId, invitations = exfee.invitations.slice(0);
-      for (console.dir(exfee); invitation = invitations.shift(); ) if (identity = invitation.identity, 
-      myIdentityId !== identity.id) {
+      for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, invitations = (this.myIdentityId, 
+      exfee.invitations.slice(0)); invitation = invitations.shift(); ) if (identity = invitation.identity, 
+      myUserId !== identity.connected_user_id) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>');
-        div.attr("data-uid", identity.external_username + "@" + identity.provider), div.attr("data-name", identity.name), 
+        div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div);
-      } else this.myuid = identity.external_username + "@" + identity.provider, this.updateMe(identity);
+      } else this.myuid = identity.connected_user_id, this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }
@@ -5626,6 +5684,7 @@ TWEEN.Tween = function(object) {
         ctoken: ctoken,
         token: token || tokenInfos[0] || ctoken,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
+        myUserId: browsing_identity && browsing_identity.connected_user_id || 0,
         isSmithToken: "CLAIM_IDENTITY" === action,
         freeIdentities: free_identities
       });
@@ -5636,7 +5695,8 @@ TWEEN.Tween = function(object) {
   "use strict";
   var TWEEN = require("tween"), AF = require("af"), requestAnimationFrame = AF.request, middleware = require("mobilemiddleware"), FooterController = require("mobilecontroller").FooterController, routes = require("mobileroutes"), lightsaber = require("lightsaber"), app = window.App = lightsaber();
   app.use(middleware.setHtmlHeight), app.use(middleware.cleanup), app.initRouter(), 
-  app.use(middleware.errorHandler), app.controllers = {}, app.controllers.footer = new FooterController({
+  app.use(middleware.errorHandler), app.request.enableFullUrlPath = !0, app.controllers = {}, 
+  app.controllers.footer = new FooterController({
     App: app
   }), app.get(/^\/+(?:\?)?#{0,}$/, routes.index), app.get(/^\/+(?:\?)?#live\/?$/, routes.live), 
   app.get(/^\/+\?(?:(?:redirect)&)?t=([a-zA-Z0-9]{3,})$/, function(req, res) {
@@ -5646,6 +5706,7 @@ TWEEN.Tween = function(object) {
   app.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), 
+  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), app.get(/^\/+!\d+\/routex\/?\?xcode=([a-zA-Z0-9]{4,})$/, routes.routex), 
   app.on("launched", function() {
     function animate() {
       requestAnimationFrame(animate), TWEEN.update();

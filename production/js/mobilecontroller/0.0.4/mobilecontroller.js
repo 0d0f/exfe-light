@@ -1945,7 +1945,7 @@ define('mobilecontroller', function (require, exports, module) {
             , svg: this.$('#svg')[0]
             , callback: function (map) {
                 self.mapReadyStatus = true;
-                self.mapController.updateGeoLocation(null);
+                self.mapController.updateGeoLocation(mc.myuid, self.position);
               }
         });
         mc.myuid = this.myuid;
@@ -1953,9 +1953,50 @@ define('mobilecontroller', function (require, exports, module) {
         // defaults to true
         mc.tracking = true
         mc.load();
+        mc.controller = self;
+
+        if (this.token && this.cross_id) {
+          $.ajax({
+              url: apiv3_url + '/routex/crosses/' + this.cross_id + '/breadcrumbs?coordinate=mars&token=' + this.token
+            , type: 'GET'
+            , dataType: 'json'
+            , success: function (data) {
+                if (data && data.length) {
+                  var d, id;
+                  while ((d = data.shift())) {
+                    id = d.id.split('@')[0];
+                    if (mc._breadcrumbs.hasOwnProperty(id)) {
+                      mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions);
+                      } else {
+                      mc._breadcrumbs[id] = d;
+                    }
+                  }
+                }
+              }
+            //, error: function () { }
+          });
+        }
+
       }
 
     , mapReadyStatus: false
+
+    , editDestination: function (destination) {
+        // 等待 google 修复
+        if (destination) {
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/crosses/' + this.cross_id + '/geomarks/location/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
+            , data: JSON.stringify(destination)
+            , success: function (data) {
+                console.log(data)
+              }
+            , error: function (data) {
+                console.log(data)
+              }
+          });
+        }
+      }
 
     , setLatLngOffset: function () {
         var offset = Store.get('offset-latlng');
@@ -1966,6 +2007,27 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , streaming: function () {
+
+        // 开启跟踪
+        if (this.cross_id && this.token) {
+          var data = {
+              cross_id: this.cross_id
+            , save_breadcrumbs: true
+            , after_in_seconds: 7200
+          };
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/user/crosses?token=' + this.token
+            , data: JSON.stringify([data])
+            , success: function (data) {
+                console.log('success', data)
+              }
+            , error: function (data) {
+                console.log('error', data)
+              }
+          });
+        }
+
         var self = this;
         this.initStream();
         this.startStream();
@@ -2005,16 +2067,11 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.stopGeo();
         routexStream.startGeo(
             function (r) {
-              /*
-              if (!routexStream.STATUS) {
-                routexStream.STATUS = 1;
-              }
-              */
-              self.position = r;
-              Store.set('last-latlng', { lat: r.latitude + '',  lng: r.longitude + '', timestamp: r.timestamp });
+              self.position = { lat: r.latitude + '',  lng: r.longitude + '', ts: r.timestamp, acc: r.accuracy };
+              Store.set('position', self.position);
               self.switchGPSStyle(2);
               self.trackGeoLocation();
-              console.log('GPS', r.latitude, r.longitude);
+              console.log('GPS', r.lat, r.lng, r);
             }
           , function (r) {
               self.switchGPSStyle(1);
@@ -2059,7 +2116,7 @@ define('mobilecontroller', function (require, exports, module) {
     , updateMe: function (myIdentity) {
         this.myIdentity = myIdentity;
         var div = this.$('#isme');
-        div.attr('data-uid', myIdentity.external_username + '@' + myIdentity.provider);
+        div.attr('data-uid', myIdentity.connected_user_id);
         div.attr('data-name', myIdentity.name);
         div.find('img').attr('src', myIdentity.avatar_filename);
       }
@@ -2067,22 +2124,21 @@ define('mobilecontroller', function (require, exports, module) {
     , createIdentitiesList: function () {
         var exfee = this.cross.exfee
           , $identities = this.$('#identities')
+          , myUserId = this.myUserId
           , myIdentityId = this.myIdentityId
           , invitations = exfee.invitations.slice(0)
           , invitation
           , identity;
 
-        console.dir(exfee);
-
         while ((invitation = invitations.shift())) {
           identity = invitation.identity;
-          if (myIdentityId === identity.id) {
-            this.myuid = identity.external_username + '@' + identity.provider;
+          if (myUserId === identity.connected_user_id) {
+            this.myuid = identity.connected_user_id;
             this.updateMe(identity);
             continue;
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')
-          div.attr('data-uid', identity.external_username + '@' + identity.provider);
+          div.attr('data-uid', identity.connected_user_id);
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
           $identities.append(div);

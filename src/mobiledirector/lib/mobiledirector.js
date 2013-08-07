@@ -21,7 +21,9 @@
         , resolveToken: /^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/
         , crossTokenForPhone: /^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/
-        , routex: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
+        , routex0: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
+//        , routex1: /^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?(?:\?(redirect)?)?$/
+        , routex1: /^\/+!(\d+)\/routex\/?.*$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
@@ -419,8 +421,32 @@
 
       crossFunc(data);
 
-    } else if ((params = url.match(routes.routex))) {
+    } else if ((params = url.match(routes.routex0))) {
       var ctoken = params[2]
+        , cats = localStorage.getItem('cats')
+        , data = { invitation_token: ctoken }
+        , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      crossFunc(data, true);
+    } else if ((params = url.match(routes.routex1))) {
+      var querystring = location.search.substr(1);
+      var items = querystring.split('&'), item, datas = {}, key, val;
+      while ((item = items.shift())) {
+        item = item.split('=');
+        key = item[0];
+        val = item[1] || '';
+        datas[decodeURIComponent(key.replace(/\+/g, ' '))] = decodeURIComponent(val.replace(/\+/g, ' '));
+      }
+
+      var ctoken = datas.xcode
         , cats = localStorage.getItem('cats')
         , data = { invitation_token: ctoken }
         , token;
@@ -460,7 +486,7 @@
   };
 
   Director.getPath = function () {
-    return '/' + location.search + location.hash;
+    return location.pathname + location.search + location.hash;
   };
 
   Director.handle = function (e) {

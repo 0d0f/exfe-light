@@ -403,6 +403,7 @@ define('mobileroutes', function (require, exports, module) {
         , ctoken: ctoken
         , token: token || tokenInfos[0] || ctoken
         , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
+        , myUserId: (browsing_identity && browsing_identity.connected_user_id) || 0
         , isSmithToken: action === 'CLAIM_IDENTITY'
         , freeIdentities: free_identities
       });
