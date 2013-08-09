@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-16 03:08:01 */
+/*! mobile@2a 2013-08-16 03:08:56 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4201,26 +4201,28 @@ TWEEN.Tween = function(object) {
     return d >= 50;
   }, proto.showTextLabels = function(uid, positions, bool) {
     if (uid) {
-      for (var label, marker, p, t, n, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; (p = ps.shift()) && (t = 10 * Math.floor((now - p.ts) / 600), 
-      !(t > end)); ) ignore !== t && (prev && (b = this.distanceMatrixPixl(p, prev)), 
-      t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) ? (start = t, label = labels[i], 
-      label ? marker = label.marker : (marker = new google.maps.Marker({
-        map: map,
-        zIndex: MAX_INDEX - 4,
-        optimized: !1
-      }), label = labels[i] = new google.maps.TextLabel({
-        map: map,
-        zIndex: MAX_INDEX - 3
-      }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.lat, p.lng)), 
-      marker.setIcon({
-        path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-        fillColor: bool ? "#FF7E98" : "#b2b2b2",
-        fillOpacity: .8,
-        strokeColor: "#fff",
-        strokeOpacity: .8,
-        strokeWeight: 1,
-        scale: .5
-      })), label.set("text", t + "分钟前"), prev = p, i++) : ignore = n);
+      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.ts) / 600), 
+      ignore !== t) {
+        if (ignore = t, t > end) break;
+        prev && (b = this.distanceMatrixPixl(p, prev)), t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) && (start = t, 
+        label = labels[i], label ? marker = label.marker : (marker = new google.maps.Marker({
+          map: map,
+          zIndex: MAX_INDEX - 4,
+          optimized: !1
+        }), label = labels[i] = new google.maps.TextLabel({
+          map: map,
+          zIndex: MAX_INDEX - 3
+        }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.lat, p.lng)), 
+        marker.setIcon({
+          path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
+          fillColor: bool ? "#FF7E98" : "#b2b2b2",
+          fillOpacity: .8,
+          strokeColor: "#fff",
+          strokeOpacity: .8,
+          strokeWeight: 1,
+          scale: .5
+        })), label.set("text", t + "分钟前"), prev = p, i++);
+      }
       for (var len = labels.length - 1; len > i; len--) label = labels[len], label && label.setMap(null), 
       labels.splice(len, 1);
     }
