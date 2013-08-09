@@ -664,9 +664,11 @@
       while ((p = ps.shift())) {
         t = Math.floor((now - p.ts) / 600) * 10;
 
-        if (t > end) { break; }
-
         if (ignore === t) { continue; }
+
+        ignore = t;
+
+        if (t > end) { break; }
 
         if (prev) {
           b = this.distanceMatrixPixl(p, prev);
@@ -705,8 +707,6 @@
           label.set('text', t + '分钟前');
           prev = p;
           i++;
-        } else {
-          ignore = n;
         }
       }
 
