@@ -1,212 +1,72 @@
 define('maplabel', function () {
 
-/**
- * @license
- *
- * Copyright 2011 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// http://www.tdmarketing.co.nz/blog/2011/03/09/create-marker-with-custom-labels-in-google-maps-api-v3/
+// http://www.tdmarketing.co.nz/google-maps-v3-labels.html
 
-/**
- * @fileoverview Map Label.
- *
- * @author Luke Mahe (lukem@google.com),
- *         Chris Broadfoot (cbro@google.com)
- */
+// Define the overlay, derived from google.maps.OverlayView
+function Label(opt_options) {
+     // Initialization
+     this.setValues(opt_options);
 
-/**
- * Creates a new Map Label
- * @constructor
- * @extends google.maps.OverlayView
- * @param {Object.<string, *>=} opt_options Optional properties to set.
- */
-function MapLabel(opt_options) {
-  this.set('fontFamily', 'sans-serif');
-  this.set('fontSize', 12);
-  this.set('fontColor', '#000000');
-  this.set('strokeWeight', 4);
-  this.set('strokeColor', '#ffffff');
-  this.set('align', 'center');
+     // Here go the label styles
+     var span = this.span_ = document.createElement('span');
+     span.className = 'text-label';
+     span.style.cssText = 'position: relative; left: -46%; top: -23px;' +
+                          'white-space: nowrap;' +
+                          'padding: 2px;';
 
-  this.set('zIndex', 1e3);
-
-  this.setValues(opt_options);
-}
-MapLabel.prototype = new google.maps.OverlayView;
-
-window['MapLabel'] = MapLabel;
-
-
-/** @inheritDoc */
-MapLabel.prototype.changed = function(prop) {
-  switch (prop) {
-    case 'fontFamily':
-    case 'fontSize':
-    case 'fontColor':
-    case 'strokeWeight':
-    case 'strokeColor':
-    case 'align':
-    case 'text':
-      return this.drawCanvas_();
-    case 'maxZoom':
-    case 'minZoom':
-    case 'position':
-      return this.draw();
-  }
+     var div = this.div_ = document.createElement('div');
+     div.appendChild(span);
+     div.style.cssText = 'position: absolute; display: none';
 };
 
-/**
- * Draws the label to the canvas 2d context.
- * @private
- */
-MapLabel.prototype.drawCanvas_ = function() {
-  var canvas = this.canvas_;
-  if (!canvas) return;
+Label.prototype = new google.maps.OverlayView;
 
-  var style = canvas.style;
-  style.zIndex = /** @type number */(this.get('zIndex'));
+Label.prototype.onAdd = function() {
+     var pane = this.getPanes().overlayImage;
+     pane.appendChild(this.div_);
 
-  var ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = this.get('strokeColor');
-  ctx.fillStyle = this.get('fontColor');
-  ctx.font = this.get('fontSize') + 'px ' + this.get('fontFamily');
-
-  var strokeWeight = Number(this.get('strokeWeight'));
-
-  var text = this.get('text');
-  if (text) {
-    if (strokeWeight) {
-      ctx.lineWidth = strokeWeight;
-      ctx.strokeText(text, strokeWeight, strokeWeight);
-    }
-
-    ctx.fillText(text, strokeWeight, strokeWeight);
-
-    var textMeasure = ctx.measureText(text);
-    var textWidth = textMeasure.width + strokeWeight;
-    style.marginLeft = this.getMarginLeft_(textWidth) + 'px';
-    // Bring actual text top in line with desired latitude.
-    // Cheaper than calculating height of text.
-    style.marginTop = '-0.4em';
-  }
+     // Ensures the label is redrawn if the text or position is changed.
+     var me = this;
+     this.listeners_ = [
+          google.maps.event.addListener(this, 'position_changed',
+               function() { me.draw(); }),
+          google.maps.event.addListener(this, 'text_changed',
+               function() { me.draw(); }),
+          google.maps.event.addListener(this, 'zindex_changed',
+               function() { me.draw(); })
+     ];
 };
 
-/**
- * @inheritDoc
- */
-MapLabel.prototype.onAdd = function() {
-  var canvas = this.canvas_ = document.createElement('canvas');
-  var style = canvas.style;
-  style.position = 'absolute';
+// Implement onRemove
+Label.prototype.onRemove = function() {
+     var marker = this.marker;
+     if (marker) {
+        marker.setMap(null);
+        delete this.marker;
+     }
 
-  var ctx = canvas.getContext('2d');
-  ctx.lineJoin = 'round';
-  ctx.textBaseline = 'top';
+     this.div_.parentNode.removeChild(this.div_);
 
-  this.drawCanvas_();
-
-  var panes = this.getPanes();
-  if (panes) {
-    panes.mapPane.appendChild(canvas);
-  }
-};
-MapLabel.prototype['onAdd'] = MapLabel.prototype.onAdd;
-
-/**
- * Gets the appropriate margin-left for the canvas.
- * @private
- * @param {number} textWidth  the width of the text, in pixels.
- * @return {number} the margin-left, in pixels.
- */
-MapLabel.prototype.getMarginLeft_ = function(textWidth) {
-  switch (this.get('align')) {
-    case 'left':
-      return 0;
-    case 'right':
-      return -textWidth;
-  }
-  return textWidth / -2;
+     // Label is removed from the map, stop updating its position/text.
+     for (var i = 0, I = this.listeners_.length; i < I; ++i) {
+          google.maps.event.removeListener(this.listeners_[i]);
+     }
 };
 
-/**
- * @inheritDoc
- */
-MapLabel.prototype.draw = function() {
-  var projection = this.getProjection();
-
-  if (!projection) {
-    // The map projection is not ready yet so do nothing
-    return;
-  }
-
-  if (!this.canvas_) {
-    // onAdd has not been called yet.
-    return;
-  }
-
-  var latLng = /** @type {google.maps.LatLng} */ (this.get('position'));
-  if (!latLng) {
-    return;
-  }
-  var pos = projection.fromLatLngToDivPixel(latLng);
-
-  var style = this.canvas_.style;
-
-  style['top'] = pos.y + 'px';
-  style['left'] = pos.x + 'px';
-
-  style['visibility'] = this.getVisible_();
-};
-MapLabel.prototype['draw'] = MapLabel.prototype.draw;
-
-/**
- * Get the visibility of the label.
- * @private
- * @return {string} blank string if visible, 'hidden' if invisible.
- */
-MapLabel.prototype.getVisible_ = function() {
-  var minZoom = /** @type number */(this.get('minZoom'));
-  var maxZoom = /** @type number */(this.get('maxZoom'));
-
-  if (minZoom === undefined && maxZoom === undefined) {
-    return '';
-  }
-
-  var map = this.getMap();
-  if (!map) {
-    return '';
-  }
-
-  var mapZoom = map.getZoom();
-  if (mapZoom < minZoom || mapZoom > maxZoom) {
-    return 'hidden';
-  }
-  return '';
+// Implement draw
+Label.prototype.draw = function() {
+     var projection = this.getProjection();
+     var latlng = this.marker ? this.marker.getPosition() : this.get('position');
+     var position = projection.fromLatLngToDivPixel(latlng);
+     var div = this.div_;
+     div.style.left = position.x + 'px';
+     div.style.top = position.y + 'px';
+     div.style.display = 'block';
+     div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
+     this.span_.innerHTML = this.get('text').toString();
 };
 
-/**
- * @inheritDoc
- */
-MapLabel.prototype.onRemove = function() {
-  var canvas = this.canvas_;
-  if (canvas && canvas.parentNode) {
-    canvas.parentNode.removeChild(canvas);
-  }
-};
-MapLabel.prototype['onRemove'] = MapLabel.prototype.onRemove;
-
-return MapLabel;
+return Label;
 
 });
