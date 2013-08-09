@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-07 07:08:53 */
+/*! mobile@2a 2013-08-09 04:08:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3949,7 +3949,7 @@ TWEEN.Tween = function(object) {
     this.updated = {}, this._breadcrumbs = {}, this.boundsOffset = {
       left: 50,
       top: 0
-    }, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
+    }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
       return function cb() {
         var GMaps = google.maps, GEvent = GMaps.event;
         GMaps.InfoBox = require("infobox"), GMaps.TextLabel = require("maplabel");
@@ -4000,7 +4000,7 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
   return proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4044,7 +4044,7 @@ TWEEN.Tween = function(object) {
   }, proto.addPolyline = function(data) {
     var rgba = data.color && data.color.split(",") || [], color = "#" + (rgba.length ? pad0(toHex(rgba[0])) + pad0(toHex(rgba[1])) + pad0(toHex(rgba[2])) : "007BFF"), alpha = rgba[3] || 1, p = new google.maps.Polyline({
       map: this.map,
-      index: MAX_INDEX - 4,
+      index: MAX_INDEX - 5,
       geodesic: !0,
       strokeColor: color,
       strokeWeight: 4,
@@ -4061,11 +4061,11 @@ TWEEN.Tween = function(object) {
       this.destinationPlace = p, p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
-    var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, now = Math.round(new Date().getTime() / 1e3);
-    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid === uid, 
-    n = Math.floor((now - d.ts) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
-    b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    console.log("time", n), 1 >= n) {
+    var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, curr_uid = this.uid, now = Math.round(new Date().getTime() / 1e3);
+    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid == uid, n = Math.floor((now - d.ts) / 60), 
+    gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), b = bs[uid], tl = tiplines[uid], 
+    $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
+    1 >= n) {
       if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({
         strokeOpacity: 0,
@@ -4110,9 +4110,11 @@ TWEEN.Tween = function(object) {
     this.breadcrumbs, data.uid;
   }, proto.drawGeoMarker = function(data) {
     var g, d, position, latlng, gms = this.geoMarkers, uid = data.id.split("@")[0];
-    gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at) || (g || (g = gms[uid] = this.addGeoMarker()), 
-    position = data.positions[0], latlng = this.toLatLng(position.lat, position.lng), 
-    g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng), this.updatePositions(data));
+    if (this.updatePositions(data), uid != this.myuid) {
+      if (gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at)) return;
+      g || (g = gms[uid] = this.addGeoMarker()), position = data.positions[0], latlng = this.toLatLng(position.lat, position.lng), 
+      g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng);
+    }
   }, proto.updatePositions = function(data) {
     var id = data.id.split("@")[0];
     this._breadcrumbs[id] ? this._breadcrumbs[id].positions.unshift(data.positions[0]) : this._breadcrumbs[id] = data, 
@@ -4120,9 +4122,10 @@ TWEEN.Tween = function(object) {
   }, proto.addGeoMarker = function() {
     var gm = new google.maps.Marker({
       map: this.map,
-      animation: 3,
+      animation: 2,
       zIndex: MAX_INDEX - 2,
-      icon: this.icons.dotGrey
+      icon: this.icons.dotGrey,
+      optimized: !1
     });
     return gm;
   }, proto.distanceMatrix = function(uid, gm, dp, time) {
@@ -4160,7 +4163,7 @@ TWEEN.Tween = function(object) {
     var color = "#b2b2b2", alpha = .8, p = new google.maps.Polyline({
       map: this.map,
       visible: !1,
-      index: MAX_INDEX - 3,
+      index: MAX_INDEX - 5,
       strokeOpacity: 0,
       icons: [ {
         icon: {
@@ -4178,22 +4181,65 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  }, proto.showTextLabels = function() {}, proto.showBreadcrumbs = function(uid) {
-    if (this._breadcrumbs[uid]) {
-      var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
-      if (b || (b = bds[uid] = this.addBreadcrumbs()), b) {
-        for (var p, positions = this._breadcrumbs[uid].positions.slice(0), coords = []; p = positions.pop(); ) coords.push(this.toLatLng(p.lat, p.lng));
+  }, proto.MIN_PIXL = 50, proto.distanceMatrixPixl = function(p0, p1) {
+    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng)), b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng)), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    return d >= 50;
+  }, proto.showTextLabels = function(uid, positions, bool) {
+    if (uid) {
+      for (var label, marker, p, t, n, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; (p = ps.shift()) && (t = 10 * Math.floor((now - p.ts) / 600), 
+      !(t > end)); ) ignore !== t && (prev && (b = this.distanceMatrixPixl(p, prev)), 
+      t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) ? (start = t, label = labels[i], 
+      label ? marker = label.marker : (marker = new google.maps.Marker({
+        map: map,
+        zIndex: MAX_INDEX - 4,
+        optimized: !1
+      }), label = labels[i] = new google.maps.TextLabel({
+        map: map,
+        zIndex: MAX_INDEX - 3
+      }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.lat, p.lng)), 
+      marker.setIcon({
+        path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
+        fillColor: bool ? "#FF7E98" : "#b2b2b2",
+        fillOpacity: .8,
+        strokeColor: "#fff",
+        strokeOpacity: .8,
+        strokeWeight: 1,
+        scale: .5
+      })), label.set("text", t + "分钟前"), prev = p, i++) : ignore = n);
+      for (var len = labels.length - 1; len > i; len--) label = labels[len], label && label.setMap(null), 
+      labels.splice(len, 1);
+    }
+  }, proto.removeTextLabels = function() {
+    for (var label, labels = this.labels; label = labels.shift(); ) label.setMap(null);
+    labels.length = 0;
+  }, proto.updateBreadcrumbs = function(uid) {
+    var data, b, p, coords = [];
+    if (data = this._breadcrumbs[uid]) {
+      var positions0 = data.positions.slice(0), positions1 = positions0.slice(0);
+      if (this.showTextLabels(uid, positions0), b = this.breadcrumbs[uid]) {
+        for (;p = positions1.pop(); ) coords.push(this.toLatLng(p.lat, p.lng));
         b.setPath(coords);
       }
-      uid !== puid ? (pb = bds[puid], pb && pb.setVisible(!1), b && b.setVisible(!0)) : b && b.setVisible(!b.getVisible()), 
-      this.uid = uid;
+    }
+  }, proto.showBreadcrumbs = function(uid) {
+    if (this._breadcrumbs[uid]) {
+      var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
+      if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
+      uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null, 
+      this.removeTextLabels()), b && (b.setVisible(!0), this.uid = uid); else if (b) {
+        var v = !b.getVisible();
+        b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null, 
+        this.removeTextLabels());
+      }
+      console.log("current breadcrumbs", uid);
     }
   }, proto.addPoint = function(data, isDestination) {
     var self = this, GMaps = google.maps, map = this.map, m = new GMaps.Marker({
       map: map,
       animation: 2,
-      zIndex: MAX_INDEX - 4,
-      icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
+      zIndex: MAX_INDEX - 5,
+      icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)),
+      optimized: !1
     }), GEvent = GMaps.event;
     return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
@@ -4252,7 +4298,7 @@ TWEEN.Tween = function(object) {
     console.log("map zoom", this.map.getZoom());
   }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
     bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
-    console.dir(ids), console.log(uid, ids[uid]), bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);
+    bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);
   }, proto.hideTiplines = function() {
     var uid, tls = this.tiplines;
     for (uid in tls) this.hideTipline(uid);
@@ -4282,7 +4328,8 @@ TWEEN.Tween = function(object) {
         zIndex: MAX_INDEX - 1,
         visible: !0,
         animation: 2,
-        icon: this.icons.arrowGrey
+        icon: this.icons.arrowGrey,
+        optimized: !1
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
       lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
@@ -4299,80 +4346,33 @@ TWEEN.Tween = function(object) {
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
   }, RoutexMaps;
 }), define("maplabel", function() {
-  function MapLabel(opt_options) {
-    this.set("fontFamily", "sans-serif"), this.set("fontSize", 12), this.set("fontColor", "#000000"), 
-    this.set("strokeWeight", 4), this.set("strokeColor", "#ffffff"), this.set("align", "center"), 
-    this.set("zIndex", 1e3), this.setValues(opt_options);
+  function Label(opt_options) {
+    this.setValues(opt_options);
+    var span = this.span_ = document.createElement("span");
+    span.className = "text-label", span.style.cssText = "position: relative; left: -46%; top: -23px;white-space: nowrap;padding: 2px;";
+    var div = this.div_ = document.createElement("div");
+    div.appendChild(span), div.style.cssText = "position: absolute; display: none";
   }
-  return MapLabel.prototype = new google.maps.OverlayView(), window.MapLabel = MapLabel, 
-  MapLabel.prototype.changed = function(prop) {
-    switch (prop) {
-     case "fontFamily":
-     case "fontSize":
-     case "fontColor":
-     case "strokeWeight":
-     case "strokeColor":
-     case "align":
-     case "text":
-      return this.drawCanvas_();
-
-     case "maxZoom":
-     case "minZoom":
-     case "position":
-      return this.draw();
-    }
-  }, MapLabel.prototype.drawCanvas_ = function() {
-    var canvas = this.canvas_;
-    if (canvas) {
-      var style = canvas.style;
-      style.zIndex = this.get("zIndex");
-      var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height), ctx.strokeStyle = this.get("strokeColor"), 
-      ctx.fillStyle = this.get("fontColor"), ctx.font = this.get("fontSize") + "px " + this.get("fontFamily");
-      var strokeWeight = Number(this.get("strokeWeight")), text = this.get("text");
-      if (text) {
-        strokeWeight && (ctx.lineWidth = strokeWeight, ctx.strokeText(text, strokeWeight, strokeWeight)), 
-        ctx.fillText(text, strokeWeight, strokeWeight);
-        var textMeasure = ctx.measureText(text), textWidth = textMeasure.width + strokeWeight;
-        style.marginLeft = this.getMarginLeft_(textWidth) + "px", style.marginTop = "-0.4em";
-      }
-    }
-  }, MapLabel.prototype.onAdd = function() {
-    var canvas = this.canvas_ = document.createElement("canvas"), style = canvas.style;
-    style.position = "absolute";
-    var ctx = canvas.getContext("2d");
-    ctx.lineJoin = "round", ctx.textBaseline = "top", this.drawCanvas_();
-    var panes = this.getPanes();
-    panes && panes.mapPane.appendChild(canvas);
-  }, MapLabel.prototype.onAdd = MapLabel.prototype.onAdd, MapLabel.prototype.getMarginLeft_ = function(textWidth) {
-    switch (this.get("align")) {
-     case "left":
-      return 0;
-
-     case "right":
-      return -textWidth;
-    }
-    return textWidth / -2;
-  }, MapLabel.prototype.draw = function() {
-    var projection = this.getProjection();
-    if (projection && this.canvas_) {
-      var latLng = this.get("position");
-      if (latLng) {
-        var pos = projection.fromLatLngToDivPixel(latLng), style = this.canvas_.style;
-        style.top = pos.y + "px", style.left = pos.x + "px", style.visibility = this.getVisible_();
-      }
-    }
-  }, MapLabel.prototype.draw = MapLabel.prototype.draw, MapLabel.prototype.getVisible_ = function() {
-    var minZoom = this.get("minZoom"), maxZoom = this.get("maxZoom");
-    if (void 0 === minZoom && void 0 === maxZoom) return "";
-    var map = this.getMap();
-    if (!map) return "";
-    var mapZoom = map.getZoom();
-    return minZoom > mapZoom || mapZoom > maxZoom ? "hidden" : "";
-  }, MapLabel.prototype.onRemove = function() {
-    var canvas = this.canvas_;
-    canvas && canvas.parentNode && canvas.parentNode.removeChild(canvas);
-  }, MapLabel.prototype.onRemove = MapLabel.prototype.onRemove, MapLabel;
+  return Label.prototype = new google.maps.OverlayView(), Label.prototype.onAdd = function() {
+    var pane = this.getPanes().overlayImage;
+    pane.appendChild(this.div_);
+    var me = this;
+    this.listeners_ = [ google.maps.event.addListener(this, "position_changed", function() {
+      me.draw();
+    }), google.maps.event.addListener(this, "text_changed", function() {
+      me.draw();
+    }), google.maps.event.addListener(this, "zindex_changed", function() {
+      me.draw();
+    }) ];
+  }, Label.prototype.onRemove = function() {
+    var marker = this.marker;
+    marker && (marker.setMap(null), delete this.marker), this.div_.parentNode.removeChild(this.div_);
+    for (var i = 0, I = this.listeners_.length; I > i; ++i) google.maps.event.removeListener(this.listeners_[i]);
+  }, Label.prototype.draw = function() {
+    var projection = this.getProjection(), latlng = this.marker ? this.marker.getPosition() : this.get("position"), position = projection.fromLatLngToDivPixel(latlng), div = this.div_;
+    div.style.left = position.x + "px", div.style.top = position.y + "px", div.style.display = "block", 
+    div.style.zIndex = this.get("zIndex"), this.span_.innerHTML = "" + this.get("text");
+  }, Label;
 }), define("infobox", function() {
   function InfoBox(opt_opts) {
     opt_opts = opt_opts || {}, google.maps.OverlayView.apply(this, arguments), this.content_ = opt_opts.content || "", 
@@ -5434,12 +5434,12 @@ TWEEN.Tween = function(object) {
       });
       mc.myuid = this.myuid, mc.myIdentity = this.myIdentity, this.setLatLngOffset(), 
       mc.tracking = !0, mc.load(), mc.controller = self, this.token && this.cross_id && $.ajax({
-        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/breadcrumbs?coordinate=mars&token=" + this.token,
+        url: apiv3_url + "/routex/breadcrumbs/crosses/" + this.cross_id + "?coordinate=mars&token=" + this.token,
         type: "GET",
         dataType: "json",
         success: function(data) {
           if (data && data.length) for (var d, id; d = data.shift(); ) id = d.id.split("@")[0], 
-          mc._breadcrumbs.hasOwnProperty(id) ? mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions) : mc._breadcrumbs[id] = d;
+          mc._breadcrumbs[id] ? mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions) : mc._breadcrumbs[id] = d;
         }
       });
     },
@@ -5447,7 +5447,7 @@ TWEEN.Tween = function(object) {
     editDestination: function(destination) {
       destination && $.ajax({
         type: "POST",
-        url: apiv3_url + "/routex/crosses/" + this.cross_id + "/geomarks/location/" + destination.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
+        url: apiv3_url + "/routex/geomarks/crosses/" + this.cross_id + "/location/" + destination.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
         data: JSON.stringify(destination),
         success: function(data) {
           console.log(data);
@@ -5470,7 +5470,7 @@ TWEEN.Tween = function(object) {
         };
         $.ajax({
           type: "POST",
-          url: apiv3_url + "/routex/user/crosses?token=" + this.token,
+          url: apiv3_url + "/routex/users/crosses?token=" + this.token,
           data: JSON.stringify([ data ]),
           success: function(data) {
             console.log("success", data);

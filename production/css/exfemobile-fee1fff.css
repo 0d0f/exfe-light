@@ -2547,3 +2547,11 @@ button .exfe {
   font-size: 14px;
   line-height: 14px;
 }
+#routex .text-label {
+  background-color: rgba(204, 204, 204, 0.88);
+  border-radius: 3px;
+  font-size: 8px;
+  line-height: 12px;
+  font-weight: 300;
+  color: #191919;
+}

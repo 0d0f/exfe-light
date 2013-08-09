@@ -79,7 +79,8 @@
     // tags
     , DESTINATION = 'destination'
     , BREADCRUMBS = 'breadcrumbs'
-    , PARK = 'park';
+    , PARK = 'park'
+    , TIME_STEPS = [0, 1, 3, 5, 10, 15];
 
 
   function RoutexMaps(options) {
@@ -107,6 +108,8 @@
       , top: 0
     };
 
+    this.labels = [];
+
     window._loadmaps_ = function (rm, mapDiv, mapOptions, callback) {
 
       return function cb() {
@@ -114,7 +117,6 @@
           , GEvent = GMaps.event;
 
         GMaps.InfoBox = require('infobox');
-
         GMaps.TextLabel = require('maplabel');
 
         var icons = rm.icons;
@@ -310,7 +312,7 @@
       , alpha = rgba[3] || 1
       , p = new google.maps.Polyline({
             map: this.map
-          , index: MAX_INDEX - 4
+          , index: MAX_INDEX - 5
           , geodesic: true
           , strokeColor: color
           , strokeWeight: 4
@@ -360,12 +362,14 @@
       , dp = this.destinationPlace
       , geo = this.geoLocation
       , myuid = this.myuid
+      , curr_uid = this.uid
       , uid, isme, d, now = Math.round((new Date()).getTime() / 1000), n;
     var gm, b, $e, tl;
+
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
         d = u[uid];
-        isme = myuid === uid;
+        isme = myuid == uid;
         n = Math.floor((now - d.ts) / 60);
         gm = isme ? geo : gms[uid];
         this.distanceMatrix(uid, gm ,dp, n);
@@ -373,7 +377,11 @@
         b = bs[uid];
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
-        console.log('time', n)
+
+        if (curr_uid && (curr_uid == uid) && this._breadcrumbs[curr_uid]) {
+          this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), n <= 1);
+        }
+
         if (n <= 1) {
 
           if ($e.length) {
@@ -452,24 +460,27 @@
     var gms = this.geoMarkers
       , uid = data.id.split('@')[0]
       , g, d, position, latlng;
-    if (gms.hasOwnProperty(uid)) {
-      g = gms[uid];
-      d = g.data;
-      // no update
-      if (d.updated_at === data.updated_at) {
-        return;
-      }
-    }
-    if (!g) {
-      g = gms[uid] = this.addGeoMarker();
-    }
-    position = data.positions[0];
-    latlng = this.toLatLng(position.lat, position.lng);
-    g.setPosition(latlng);
-    g.data = data;
 
-    this.updateTipline(uid, latlng);
     this.updatePositions(data);
+    if (uid != this.myuid) {
+      if (gms.hasOwnProperty(uid)) {
+        g = gms[uid];
+        d = g.data;
+        // no update
+        if (d.updated_at === data.updated_at) {
+          return;
+        }
+      }
+      if (!g) {
+        g = gms[uid] = this.addGeoMarker();
+      }
+      position = data.positions[0];
+      latlng = this.toLatLng(position.lat, position.lng);
+      g.setPosition(latlng);
+      g.data = data;
+
+      this.updateTipline(uid, latlng);
+    }
   };
 
   proto.updatePositions = function (data) {
@@ -486,9 +497,10 @@
   proto.addGeoMarker = function () {
     var gm = new google.maps.Marker({
         map: this.map
-      , animation: 3
+      , animation: 2
       , zIndex: MAX_INDEX - 2
       , icon: this.icons.dotGrey
+      , optimized: false
     });
     return gm;
   };
@@ -599,7 +611,7 @@
       , p = new google.maps.Polyline({
         map: this.map
       , visible: false
-      , index: MAX_INDEX - 3
+      , index: MAX_INDEX - 5
       //, geodesic: true
       // , strokeColor: data.color
       // , strokeWeight: 1
@@ -624,7 +636,112 @@
     return p;
   };
 
-  proto.showTextLabels = function (positions) {};
+  proto.MIN_PIXL = 50;
+
+  proto.distanceMatrixPixl = function (p0, p1) {
+    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng))
+      , b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng))
+      , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+
+    return d >= 50;
+  };
+
+  proto.showTextLabels = function (uid, positions, bool) {
+    if (uid) {
+      var now = Math.round(Date.now() / 1000)
+        , labels = this.labels
+        , map = this.map
+        , ps = positions.slice(0)
+        , b = true
+        , start = 0
+        , end = 2 * 60
+        , i = 0
+        , ignore = 0
+        , label
+        , marker
+        , p, t, n, prev;
+
+      while ((p = ps.shift())) {
+        t = Math.floor((now - p.ts) / 600) * 10;
+
+        if (t > end) { break; }
+
+        if (ignore === t) { continue; }
+
+        if (prev) {
+          b = this.distanceMatrixPixl(p, prev);
+        }
+
+        if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
+          start = t;
+          label = labels[i];
+          if (!label) {
+            marker = new google.maps.Marker({
+                map: map
+                // http://jsfiddle.net/BNWYq/36/
+              , zIndex: MAX_INDEX - 4
+              , optimized: false
+            });
+            label = labels[i] = new google.maps.TextLabel({
+                map: map
+              , zIndex: MAX_INDEX - 3
+            });
+            label.marker = marker;
+          } else {
+            marker = label.marker;
+          }
+          if (marker) {
+            marker.setPosition(this.toLatLng(p.lat, p.lng));
+            marker.setIcon({
+                path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
+              , fillColor: bool ? '#FF7E98' : '#b2b2b2'
+              , fillOpacity: .8
+              , strokeColor: '#fff'
+              , strokeOpacity: .8
+              , strokeWeight: 1
+              , scale: .5
+            });
+          }
+          label.set('text', t + '分钟前');
+          prev = p;
+          i++;
+        } else {
+          ignore = n;
+        }
+      }
+
+      for (var len = labels.length - 1; len > i; len--) {
+        label = labels[len];
+        if (label) {
+          label.setMap(null);
+        }
+        labels.splice(len, 1);
+      }
+    }
+  };
+
+  proto.removeTextLabels = function () {
+    var labels = this.labels, label;
+    while ((label = labels.shift())) {
+      label.setMap(null);
+    }
+    labels.length = 0;
+  };
+
+  proto.updateBreadcrumbs = function (uid) {
+    var data, b, p, coords = [];
+    if (!(data = this._breadcrumbs[uid])) { return; }
+    var positions0 = data.positions.slice(0);
+    var positions1 = positions0.slice(0);
+    this.showTextLabels(uid, positions0);
+
+    if ((b = this.breadcrumbs[uid])) {
+      while ((p = positions1.pop())) {
+        coords.push(this.toLatLng(p.lat, p.lng));
+      }
+      b.setPath(coords);
+    }
+  };
 
   proto.showBreadcrumbs = function (uid) {
     if (!this._breadcrumbs[uid]) { return; }
@@ -633,33 +750,43 @@
       , b = bds[uid]
       , pb;
 
+    delete this.uid;
+
     if (!b) {
       b = bds[uid] = this.addBreadcrumbs();
     }
 
     if (b) {
-      var positions = this._breadcrumbs[uid].positions.slice(0)
-        , coords = [], p;
-      while ((p = positions.pop())) {
-        coords.push(this.toLatLng(p.lat, p.lng));
-      }
-      b.setPath(coords);
+      this.updateBreadcrumbs(uid);
     }
 
     if (uid !== puid) {
       pb = bds[puid];
       if (pb) {
-        pb.setVisible(false);
+        pb.setMap(null)
+        delete bds[puid];
+        pb = null;
+        this.removeTextLabels();
+        //pb.setVisible(false);
       }
       if (b) {
         b.setVisible(true);
+        this.uid = uid;
       }
     } else {
       if (b) {
-        b.setVisible(!b.getVisible());
+        var v = !b.getVisible();
+        b.setVisible(v);
+        if (v) { this.uid = uid; }
+        else {
+          b.setMap(null);
+          delete bds[uid];
+          b = null;
+          this.removeTextLabels();
+        }
       }
     }
-    this.uid = uid;
+    console.log('current breadcrumbs', uid);
   };
 
   proto.addPoint = function (data, isDestination) {
@@ -670,7 +797,7 @@
           map: map
         , animation: 2
         //, visible: false
-        , zIndex: MAX_INDEX - 4
+        , zIndex: MAX_INDEX - 5
         , icon: new GMaps.MarkerImage(
               data.icon
             , new GMaps.Size(48, 68)
@@ -678,6 +805,7 @@
             , new GMaps.Point(12, 34)
             , new GMaps.Size(24, 34)
           )
+        , optimized: false
       })
     , GEvent = GMaps.event;
 
@@ -790,6 +918,12 @@
       latlng = gm.getPosition();
       this.containsOne(uid, latlng, bounds, ids);
     }
+
+    /*
+    if (this.uid) {
+      this.updateBreadcrumbs(this.uid);
+    }
+    */
     console.log('map zoom', this.map.getZoom());
   };
 
@@ -800,8 +934,6 @@
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
-    console.dir(ids);
-    console.log(uid, ids[uid]);
     if (bounds.contains(latlng) && (b = ids[uid])) {
       this.showTipline(uid, b);
     } else {
@@ -875,6 +1007,7 @@
          */
         , animation: 2
         , icon: this.icons.arrowGrey
+        , optimized: false
       });
       geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem('position'));

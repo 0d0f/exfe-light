@@ -1960,7 +1960,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         if (this.token && this.cross_id) {
           $.ajax({
-              url: apiv3_url + '/routex/crosses/' + this.cross_id + '/breadcrumbs?coordinate=mars&token=' + this.token
+              url: apiv3_url + '/routex/breadcrumbs/crosses/' + this.cross_id + '?coordinate=mars&token=' + this.token
             , type: 'GET'
             , dataType: 'json'
             , success: function (data) {
@@ -1968,8 +1968,8 @@ define('mobilecontroller', function (require, exports, module) {
                   var d, id;
                   while ((d = data.shift())) {
                     id = d.id.split('@')[0];
-                    if (mc._breadcrumbs.hasOwnProperty(id)) {
-                      mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions);
+                    if (mc._breadcrumbs[id]) {
+                      mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions);
                       } else {
                       mc._breadcrumbs[id] = d;
                     }
@@ -1989,7 +1989,7 @@ define('mobilecontroller', function (require, exports, module) {
         if (destination) {
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/crosses/' + this.cross_id + '/geomarks/location/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
+            , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
             , data: JSON.stringify(destination)
             , success: function (data) {
                 console.log(data)
@@ -2020,7 +2020,7 @@ define('mobilecontroller', function (require, exports, module) {
           };
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/user/crosses?token=' + this.token
+            , url: apiv3_url + '/routex/users/crosses?token=' + this.token
             , data: JSON.stringify([data])
             , success: function (data) {
                 console.log('success', data)
