@@ -89,7 +89,6 @@
 
     this.routes = {};
     this.places = {};
-    this.locations = {};
     this.tiplines = {};
     this.breadcrumbs = {};
     this.geoMarkers = {};
@@ -169,7 +168,31 @@
             rm.contains();
           });
 
+          function clear(t) {
+            clearTimeout(t);
+            t = null;
+          }
+
+          var time = 377, t, MD_TIME;
+          GEvent.addListener(map, 'mousedown', function (e) {
+            MD_TIME = Date.now();
+            clear(t);
+            t = setTimeout(function () {
+              e.stop();
+              rm.showNearBy(e);
+            }, time);
+          });
+          GEvent.addListener(map, 'mouseup', function (e) {
+            if (Date.now() - MD_TIME < 377) {
+              clear(t);
+            }
+          });
+          GEvent.addListener(map, 'drag', function () {
+            clear(t);
+          });
+
           GEvent.addDomListener(mapDiv, 'touchstart', function () {
+            rm.hideNearBy();
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               rm.hideTiplines();
@@ -214,6 +237,107 @@
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
+
+  var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>';
+  var PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>';
+  var IDENTITY_TMP = '<div class="geo-marker"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
+  proto.hideNearBy = function () {
+    $('#nearby').remove();
+  };
+  proto.distance100px = function (p0, p1) {
+    var a = this.fromLatLngToContainerPixel(p0)
+      , b = this.fromLatLngToContainerPixel(p1)
+      , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    return d <= 100;
+  };
+  proto.showNearBy = function (e) {
+    if (e) {
+      var center = e.latLng
+        , status = false
+        , myuid = this.myuid
+        , places = this.places
+        , geoMarkers = this.geoMarkers
+        , geoLocation = this.geoLocation
+        , geoPosition = geoLocation && geoLocation.getPosition()
+        , destinationPosition = destinationPlace && destinationPlace.getPosition()
+        , destinationPlace = this.destinationPlace
+        , list = []
+        , now = Date.now()
+        , latlng
+        , uid, p;
+      console.log('-----------------------')
+
+      var nbDiv = $(NEARBY_TMP);
+
+      for (var k in places) {
+        p = places[k];
+        latlng = p.getPosition()
+        if (this.distance100px(latlng, center)) {
+          if (!status) { status = true; }
+          var tmp = $(PLACE_TMP);
+          tmp.find('.title').text(p.data.title);
+          tmp.find('.description').text(p.data.description);
+          nbDiv.append(tmp);
+        }
+      }
+
+      for (var k in geoMarkers) {
+        p = geoMarkers[k];
+        latlng = p.getPosition();
+        if (this.distance100px(latlng, center)) {
+          if (!status) { status = true; }
+          var id = p.data.id.split('@')[0];
+          var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
+          var tmp = $(IDENTITY_TMP);
+          tmp.find('img').attr('src', identity.avatar_filename);
+          tmp.find('.name').text(identity.name);
+          var position = p.data.positions[0];
+          var n = Math.floor((now - position.ts) / 60);
+          var dm = '', dd = '', str = '';
+
+          if (geoPosition) {
+            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()))
+            dm = s.text;
+          }
+
+          if (destinationPosition) {
+            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()))
+            dd = s.text;
+          }
+
+          if (n <= 1) {
+            if (dd) {
+              str += '<span>距离目的地' + dd + '</span>';
+            }
+            if (dm) {
+              str += '<span>与您相距' + dm + '</span>'
+            }
+          } else {
+            str += '<span>' + n + '所处位置</span>'
+            if (dd) {
+              str += '<span>距离目的地' + dd + '</span>';
+            }
+          }
+          if (str) {
+            nbDiv.find('status').html(str);
+          }
+
+          nbDiv.append(tmp);
+        }
+      }
+
+      if (status) {
+        var width = $(window).width()
+          , height = $(window).height();
+        nbDiv.css({
+            left: (width - 200 + 50) / 2
+          , top: (height - 132) / 2
+        });
+        $('#routex').append(nbDiv);
+      }
+    }
+  };
+
   proto.draw = function (data) {
     var type = data.type
       , action = data.action
@@ -221,7 +345,9 @@
       , tags = data.tags.slice(0)
       , tag;
 
-    console.log(type, tags, data);
+    alert(data.action)
+
+    console.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
         var isDestination;
@@ -496,6 +622,10 @@
       , animation: 2
       , zIndex: MAX_INDEX - 2
       , icon: this.icons.dotGrey
+      , shape: {
+            type: 'circle'
+          , circle: [9, 9, 9]
+        }
       , optimized: false
     });
     return gm;
@@ -634,12 +764,13 @@
 
   proto.MIN_PIXL = 50;
 
-  proto.distanceMatrixPixl = function (p0, p1) {
+  proto.distanceMatrixPixl = function (p0, p1, n) {
+    n = n || 50;
     var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng))
       , b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng))
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
-    return d >= 50;
+    return d >= n;
   };
 
   proto.showTextLabels = function (uid, positions, bool) {
@@ -800,7 +931,7 @@
             , new GMaps.Point(12, 34)
             , new GMaps.Size(24, 34)
           )
-        , optimized: false
+        //, optimized: false
       })
     , GEvent = GMaps.event;
 
@@ -847,14 +978,6 @@
   };
 
   proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
-
-  proto.getPointsBounds = function () {
-    var locations = this.locations, k, bounds = new google.maps.LatLngBounds();
-    for (k in locations) {
-      bounds.union(locations[k]._bounds);
-    }
-    return bounds;
-  };
 
   proto.contains = function () {
     var mapBounds = this.map.getBounds()
@@ -966,6 +1089,10 @@
          */
         , animation: 2
         , icon: this.icons.arrowGrey
+        , shape: {
+              type: 'rect'
+            , rect: [0, 0, 20, 20]
+          }
         , optimized: false
       });
       geoLocation._status = 0;
@@ -989,7 +1116,7 @@
       geoLocation._status = 2;
 
       if (uid && position) {
-        this.updatePositions({ id: uid, positions: [position] });
+        this.updatePositions({ id: String(uid), positions: [position] });
       }
     }
     if (uid) {

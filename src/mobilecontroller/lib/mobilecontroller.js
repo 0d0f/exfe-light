@@ -2115,10 +2115,12 @@ define('mobilecontroller', function (require, exports, module) {
 
     , updateMe: function (myIdentity) {
         this.myIdentity = myIdentity;
+        console.log('my identity', this.myIdentity);
         var div = this.$('#isme');
         div.attr('data-uid', myIdentity.connected_user_id);
         div.attr('data-name', myIdentity.name);
         div.find('img').attr('src', myIdentity.avatar_filename);
+        div.data('identity', myIdentity);
       }
 
     , createIdentitiesList: function () {
@@ -2142,6 +2144,7 @@ define('mobilecontroller', function (require, exports, module) {
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
           $identities.append(div);
+          div.data('identity', identity);
         }
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');

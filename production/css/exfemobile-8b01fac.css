@@ -2517,3 +2517,37 @@ button .exfe {
   font-weight: 300;
   color: #191919;
 }
+#routex #nearby {
+  position: absolute;
+  width: 200px;
+  max-height: 132px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  font-weight: 300;
+}
+#routex #nearby .place-marker .title {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 300;
+}
+#routex #nearby .place-marker .description {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9px;
+  font-weight: 300;
+}
+#routex #nearby .geo-marker img {
+  float: left;
+}
+#routex #nearby .geo-marker .detial {
+  width: 148px;
+  float: right;
+  text-align: right;
+}

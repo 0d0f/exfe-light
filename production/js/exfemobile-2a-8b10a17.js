@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-16 03:08:56 */
+/*! mobile@2a 2013-08-16 03:08:49 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3959,9 +3959,9 @@ TWEEN.Tween = function(object) {
   "use strict";
   function RoutexMaps(options) {
     options = this.options = options || {}, this.svgLayer = this.options.svg, delete this.options.svg, 
-    this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.locations = {}, 
-    this.tiplines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, 
-    this.updated = {}, this.boundsOffset = {
+    this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.tiplines = {}, 
+    this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, this.updated = {}, 
+    this.boundsOffset = {
       left: 50,
       top: 0
     }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -3979,12 +3979,25 @@ TWEEN.Tween = function(object) {
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), overlay = rm.overlay = new GMaps.OverlayView();
         overlay.draw = function() {}, overlay.setMap(map);
         var initListener = GEvent.addListener(map, "tilesloaded", function() {
+          function clear(t) {
+            clearTimeout(t), t = null;
+          }
           GEvent.addListener(map, "bounds_changed", function() {
             GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
+          });
+          var t, MD_TIME, time = 377;
+          GEvent.addListener(map, "mousedown", function(e) {
+            MD_TIME = Date.now(), clear(t), t = setTimeout(function() {
+              e.stop(), rm.showNearBy(e);
+            }, time);
+          }), GEvent.addListener(map, "mouseup", function() {
+            377 > Date.now() - MD_TIME && clear(t);
+          }), GEvent.addListener(map, "drag", function() {
+            clear(t);
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+            rm.hideNearBy(), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
               rm.hideTiplines();
             });
           }), GEvent.removeListener(initListener);
@@ -4016,7 +4029,7 @@ TWEEN.Tween = function(object) {
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
   }, MAX_INDEX = 610, DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
-  return proto.load = function(cb) {
+  proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
       /^(?:loaded|complete|undefined)$/.test(n.readyState) && (n = n.onload = n.onerror = n.onreadystatechange = null, 
@@ -4026,9 +4039,52 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
+  };
+  var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
+  return proto.hideNearBy = function() {
+    $("#nearby").remove();
+  }, proto.distance100px = function(p0, p1) {
+    var a = this.fromLatLngToContainerPixel(p0), b = this.fromLatLngToContainerPixel(p1), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    return 100 >= d;
+  }, proto.showNearBy = function(e) {
+    if (e) {
+      var latlng, p, center = e.latLng, status = !1, places = (this.myuid, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPosition = destinationPlace && destinationPlace.getPosition(), destinationPlace = this.destinationPlace, now = Date.now();
+      console.log("-----------------------");
+      var nbDiv = $(NEARBY_TMP);
+      for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
+        status || (status = !0);
+        var tmp = $(PLACE_TMP);
+        tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
+        nbDiv.append(tmp);
+      }
+      for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
+        status || (status = !0), p.data.id.split("@")[0];
+        var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
+        tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name);
+        var position = p.data.positions[0], n = Math.floor((now - position.ts) / 60), dm = "", dd = "", str = "";
+        if (geoPosition) {
+          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()));
+          dm = s.text;
+        }
+        if (destinationPosition) {
+          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()));
+          dd = s.text;
+        }
+        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += "<span>" + n + "所处位置</span>", 
+        dd && (str += "<span>距离目的地" + dd + "</span>")), str && nbDiv.find("status").html(str), 
+        nbDiv.append(tmp);
+      }
+      if (status) {
+        var width = $(window).width(), height = $(window).height();
+        nbDiv.css({
+          left: (width - 200 + 50) / 2,
+          top: (height - 132) / 2
+        }), $("#routex").append(nbDiv);
+      }
+    }
   }, proto.draw = function(data) {
     var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, tags = data.tags.slice(0);
-    switch (console.log(type, tags, data), type) {
+    switch (alert(data.action), console.log(type, action, isDelete, tags, data), type) {
      case LOCATION:
       for (var isDestination; tag = tags.shift(); ) if (tag === DESTINATION) {
         isDestination = !0;
@@ -4140,6 +4196,10 @@ TWEEN.Tween = function(object) {
       animation: 2,
       zIndex: MAX_INDEX - 2,
       icon: this.icons.dotGrey,
+      shape: {
+        type: "circle",
+        circle: [ 9, 9, 9 ]
+      },
       optimized: !1
     });
     return gm;
@@ -4196,9 +4256,10 @@ TWEEN.Tween = function(object) {
       } ]
     });
     return p;
-  }, proto.MIN_PIXL = 50, proto.distanceMatrixPixl = function(p0, p1) {
+  }, proto.MIN_PIXL = 50, proto.distanceMatrixPixl = function(p0, p1, n) {
+    n = n || 50;
     var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng)), b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng)), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return d >= 50;
+    return d >= n;
   }, proto.showTextLabels = function(uid, positions, bool) {
     if (uid) {
       for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.ts) / 600), 
@@ -4253,8 +4314,7 @@ TWEEN.Tween = function(object) {
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
-      icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)),
-      optimized: !1
+      icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     }), GEvent = GMaps.event;
     return GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
@@ -4279,11 +4339,7 @@ TWEEN.Tween = function(object) {
     return infobox && (m = infobox._marker, infobox.close(), delete infobox._marker, 
     infobox = this.infobox = null, m === marker) ? !0 : void 0;
   }, proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>', 
-  proto.getPointsBounds = function() {
-    var k, locations = this.locations, bounds = new google.maps.LatLngBounds();
-    for (k in locations) bounds.union(locations[k]._bounds);
-    return bounds;
-  }, proto.contains = function() {
+  proto.contains = function() {
     var uid, gm, latlng, mapBounds = this.map.getBounds(), GMaps = google.maps, sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new GMaps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
     sw = this.fromLatLngToContainerPixel(sw), sw = this.fromContainerPixelToLatLng(new GMaps.Point(sw.x + 50, sw.y)), 
     bounds.extend(sw), bounds.extend(ne);
@@ -4322,6 +4378,10 @@ TWEEN.Tween = function(object) {
         visible: !0,
         animation: 2,
         icon: this.icons.arrowGrey,
+        shape: {
+          type: "rect",
+          rect: [ 0, 0, 20, 20 ]
+        },
         optimized: !1
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
@@ -4331,7 +4391,7 @@ TWEEN.Tween = function(object) {
     position && (latlng = this.toLatLng(1 * position.lat + this.latOffset, 1 * position.lng + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
     this.map.panTo(latlng)), geoLocation._status = 2, uid && position && this.updatePositions({
-      id: uid,
+      id: uid + "",
       positions: [ position ]
     })), uid && (this.updated[uid] = position || lastlatlng), geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
@@ -5520,10 +5580,10 @@ TWEEN.Tween = function(object) {
       mapController.updateGeoLocation(this.myuid, position));
     },
     updateMe: function(myIdentity) {
-      this.myIdentity = myIdentity;
+      this.myIdentity = myIdentity, console.log("my identity", this.myIdentity);
       var div = this.$("#isme");
       div.attr("data-uid", myIdentity.connected_user_id), div.attr("data-name", myIdentity.name), 
-      div.find("img").attr("src", myIdentity.avatar_filename);
+      div.find("img").attr("src", myIdentity.avatar_filename), div.data("identity", myIdentity);
     },
     createIdentitiesList: function() {
       for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, invitations = (this.myIdentityId, 
@@ -5531,7 +5591,8 @@ TWEEN.Tween = function(object) {
       myUserId !== identity.connected_user_id) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>');
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
-        div.find("img").attr("src", identity.avatar_filename), $identities.append(div);
+        div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
+        div.data("identity", identity);
       } else this.myuid = identity.connected_user_id, this.updateMe(identity);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
