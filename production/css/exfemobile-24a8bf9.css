@@ -2558,11 +2558,29 @@ button .exfe {
 #routex #nearby {
   position: absolute;
   width: 200px;
-  max-height: 132px;
+  max-height: 150px;
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   font-weight: 300;
+}
+#routex #nearby > div {
+  position: relative;
+  padding: 5px 0;
+  height: 40px;
+}
+#routex #nearby > div:before {
+  position: absolute;
+  content: '';
+  height: 1px;
+  left: -6px;
+  right: -6px;
+  bottom: 0;
+  background-color: #ccc;
+  box-shadow: 0 1px 1px #ffffff;
+}
+#routex #nearby > div:last-child:before {
+  display: none;
 }
 #routex #nearby .place-marker .title {
   margin: 0;
@@ -2583,9 +2601,21 @@ button .exfe {
 }
 #routex #nearby .geo-marker img {
   float: left;
+  border-radius: 2px;
 }
 #routex #nearby .geo-marker .detial {
   width: 148px;
   float: right;
+  font-size: 16px;
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#routex #nearby .geo-marker .detial .status {
+  font-size: 9px;
+  font-weight: 300;
+}
+#routex #nearby .geo-marker .detial .status > span:last-child {
+  margin-left: 5px;
 }

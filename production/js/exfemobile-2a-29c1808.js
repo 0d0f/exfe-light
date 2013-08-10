@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-10 12:08:56 */
+/*! mobile@2a 2013-08-10 04:08:36 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3973,18 +3973,19 @@ TWEEN.Tween = function(object) {
             rm.contains();
           });
           var t, MD_TIME, time = 377;
-          GEvent.addListener(map, "mousedown", function(e) {
-            MD_TIME = Date.now(), clear(t), t = setTimeout(function() {
-              e.stop(), rm.showNearBy(e);
-            }, time);
-          }), GEvent.addListener(map, "mouseup", function() {
-            377 > Date.now() - MD_TIME && clear(t);
-          }), GEvent.addListener(map, "drag", function() {
-            clear(t);
-          }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            rm.hideNearBy(), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
-              rm.hideTiplines();
+          GEvent.addDomListener(mapDiv, "touchstart", function(e) {
+            console.dir(e), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), t = setTimeout(function() {
+              e.preventDefault();
+              var touch = e.touches[0], point = {
+                x: touch.pageX,
+                y: touch.pageY
+              };
+              rm.showNearBy(point);
+            }, time), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+              clear(t), rm.hideTiplines();
             });
+          }), GEvent.addDomListener(mapDiv, "touchend", function() {
+            377 > Date.now() - MD_TIME && clear(t);
           }), GEvent.removeListener(initListener);
         });
         callback(map), cb = null;
@@ -4025,16 +4026,16 @@ TWEEN.Tween = function(object) {
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
-  var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
+  var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
   return proto.hideNearBy = function() {
     $("#nearby").remove();
-  }, proto.distance100px = function(p0, p1) {
-    var a = this.fromLatLngToContainerPixel(p0), b = this.fromLatLngToContainerPixel(p1), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }, proto.distance100px = function(p0, b) {
+    var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return 100 >= d;
-  }, proto.showNearBy = function(e) {
+  }, proto.showNearBy = function(point) {
     if (e) {
-      var latlng, p, center = e.latLng, status = !1, places = (this.myuid, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPosition = destinationPlace && destinationPlace.getPosition(), destinationPlace = this.destinationPlace, now = Date.now();
-      console.log("-----------------------");
+      var latlng, p, center = point, status = !1, places = (this.myuid, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3;
+      console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
       for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
         status || (status = !0);
@@ -4055,9 +4056,9 @@ TWEEN.Tween = function(object) {
           var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()));
           dd = s.text;
         }
-        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += "<span>" + n + "所处位置</span>", 
-        dd && (str += "<span>距离目的地" + dd + "</span>")), str && nbDiv.find("status").html(str), 
-        nbDiv.append(tmp);
+        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += "<span>" + n + "分钟前所处位置</span>", 
+        dd && (str += "<span>距离目的地" + dd + "</span>")), str && tmp.find(".status").html(str), 
+        nbDiv.append($("<div></div>").append(tmp));
       }
       if (status) {
         var width = $(window).width(), height = $(window).height();
@@ -4068,10 +4069,11 @@ TWEEN.Tween = function(object) {
       }
     }
   }, proto.draw = function(data) {
-    var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, tags = data.tags.slice(0);
-    switch (alert(data.action), console.log(type, action, isDelete, tags, data), type) {
+    var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, hasTags = data.tags, tags = hasTags && data.tags.slice(0);
+    switch (console.log(type, action, isDelete, tags, data), type) {
      case LOCATION:
-      for (var isDestination; tag = tags.shift(); ) if (tag === DESTINATION) {
+      var isDestination;
+      if (hasTags) for (;tag = tags.shift(); ) if (tag === DESTINATION) {
         isDestination = !0;
         break;
       }
@@ -4079,7 +4081,8 @@ TWEEN.Tween = function(object) {
       break;
 
      case ROUTE:
-      for (var isBreadcrumbs; tag = tags.shift(); ) if (tag === BREADCRUMBS) {
+      var isBreadcrumbs;
+      if (hasTags) for (;tag = tags.shift(); ) if (tag === BREADCRUMBS) {
         isBreadcrumbs = !0;
         break;
       }

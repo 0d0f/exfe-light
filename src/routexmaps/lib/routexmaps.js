@@ -179,8 +179,8 @@
             t = null;
           }
 
-          var time = 377, t, MD_TIME;
-          GEvent.addListener(map, 'mousedown', function (e) {
+          /*
+          GEvent.addDomListener(mapDiv, 'mousedown', function (e) {
             MD_TIME = Date.now();
             clear(t);
             t = setTimeout(function () {
@@ -188,21 +188,32 @@
               rm.showNearBy(e);
             }, time);
           });
-          GEvent.addListener(map, 'mouseup', function (e) {
+          */
+
+          var time = 377, t, MD_TIME;
+          GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
+            console.dir(e)
+            rm.hideNearBy();
+
+            MD_TIME = Date.now();
+            clear(t);
+            t = setTimeout(function () {
+              e.preventDefault();
+              var touch = e.touches[0]
+                , point = { x: touch.pageX, y: touch.pageY };
+              rm.showNearBy(point);
+            }, time);
+
+            GEvent.clearListeners(mapDiv, 'touchmove');
+            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
+              clear(t);
+              rm.hideTiplines();
+            });
+          });
+          GEvent.addDomListener(mapDiv, 'touchend', function () {
             if (Date.now() - MD_TIME < 377) {
               clear(t);
             }
-          });
-          GEvent.addListener(map, 'drag', function () {
-            clear(t);
-          });
-
-          GEvent.addDomListener(mapDiv, 'touchstart', function () {
-            rm.hideNearBy();
-            GEvent.clearListeners(mapDiv, 'touchmove');
-            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              rm.hideTiplines();
-            });
           });
 
           GEvent.removeListener(initListener);
@@ -246,32 +257,31 @@
 
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>';
   var PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>';
-  var IDENTITY_TMP = '<div class="geo-marker"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
+  var IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
   proto.hideNearBy = function () {
     $('#nearby').remove();
   };
-  proto.distance100px = function (p0, p1) {
+  proto.distance100px = function (p0, b) {
     var a = this.fromLatLngToContainerPixel(p0)
-      , b = this.fromLatLngToContainerPixel(p1)
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return d <= 100;
   };
-  proto.showNearBy = function (e) {
+  proto.showNearBy = function (point) {
     if (e) {
-      var center = e.latLng
+      var center = point
         , status = false
         , myuid = this.myuid
         , places = this.places
         , geoMarkers = this.geoMarkers
         , geoLocation = this.geoLocation
         , geoPosition = geoLocation && geoLocation.getPosition()
-        , destinationPosition = destinationPlace && destinationPlace.getPosition()
         , destinationPlace = this.destinationPlace
+        , destinationPosition = destinationPlace && destinationPlace.getPosition()
         , list = []
-        , now = Date.now()
+        , now = Date.now() / 1000
         , latlng
         , uid, p;
-      console.log('-----------------------')
+      console.log('-----------------------', geoPosition, destinationPosition);
 
       var nbDiv = $(NEARBY_TMP);
 
@@ -319,16 +329,16 @@
               str += '<span>与您相距' + dm + '</span>'
             }
           } else {
-            str += '<span>' + n + '所处位置</span>'
+            str += '<span>' + n + '分钟前所处位置</span>'
             if (dd) {
               str += '<span>距离目的地' + dd + '</span>';
             }
           }
           if (str) {
-            nbDiv.find('status').html(str);
+            tmp.find('.status').html(str);
           }
 
-          nbDiv.append(tmp);
+          nbDiv.append($('<div></div>').append(tmp));
         }
       }
 
@@ -348,20 +358,21 @@
     var type = data.type
       , action = data.action
       , isDelete = action && action === 'delete'
-      , tags = data.tags.slice(0)
+      , hasTags = data.tags
+      , tags = hasTags && data.tags.slice(0)
       , tag;
-
-    alert(data.action)
 
     console.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
         var isDestination;
 
-        while ((tag = tags.shift())) {
-          if (tag === DESTINATION) {
-            isDestination = true;
-            break;
+        if (hasTags) {
+          while ((tag = tags.shift())) {
+            if (tag === DESTINATION) {
+              isDestination = true;
+              break;
+            }
           }
         }
 
@@ -371,10 +382,12 @@
       case ROUTE:
         var isBreadcrumbs;
 
-        while ((tag = tags.shift())) {
-          if (tag === BREADCRUMBS) {
-            isBreadcrumbs = true;
-            break;
+        if (hasTags) {
+          while ((tag = tags.shift())) {
+            if (tag === BREADCRUMBS) {
+              isBreadcrumbs = true;
+              break;
+            }
           }
         }
 
