@@ -287,7 +287,7 @@
           var tmp = $(PLACE_TMP);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description);
-          nbDiv.append(tmp);
+          nbDiv.append($('<div></div>').append(tmp));
         }
       }
 
