@@ -2090,7 +2090,7 @@ button .exfe {
   -webkit-appearance: none;
 }
 #routex #identities-overlay #identities {
-  min-height: 65px;
+  min-height: 5px;
   padding-bottom: 5px;
   overflow-x: hidden;
   overflow-y: auto;
