@@ -1882,6 +1882,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
+          alert(navigator.userAgent)
           alert('Weixin ' + self.isWeixin);
           $('html, body').css({
               'min-height': $win.height()
