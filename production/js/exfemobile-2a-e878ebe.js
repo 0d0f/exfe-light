@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-16 04:08:36 */
+/*! mobile@2a 2013-08-16 04:08:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5464,7 +5464,7 @@ TWEEN.Tween = function(object) {
       }), $identities.on("touchmove.maps", function(e) {
         isScroll = !0, e.preventDefault(), this.scrollTop = pageY - e.pageY + scrollTop;
       }), self.on("show", function() {
-        $("html, body").css({
+        console.log("Weixin", self.isWeixin), $("html, body").css({
           "min-height": $win.height()
         }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
         self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), self.getFreeIdentities()) : (self.createIdentitiesList(), 
@@ -5504,6 +5504,7 @@ TWEEN.Tween = function(object) {
         }
       });
     },
+    isWeixin: !!window.WeixinJSBridge,
     mapReadyStatus: !1,
     editDestination: function(destination) {
       destination && $.ajax({

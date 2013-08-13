@@ -1850,7 +1850,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
-          }
+        }
           console.log(pb, ids);
         });
 
@@ -1882,6 +1882,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
+          console.log('Weixin', self.isWeixin);
           $('html, body').css({
               'min-height': $win.height()
             //, 'overflow': 'hidden'
@@ -1978,6 +1979,8 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
       }
+
+    , isWeixin: !!window.WeixinJSBridge
 
     , mapReadyStatus: false
 
