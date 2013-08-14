@@ -1748,6 +1748,7 @@ define('mobilecontroller', function (require, exports, module) {
           Store.remove('offset-latlng');
         });
 
+        /*
         var tapDelay = 270, tapTimeout, now;
         element.on('touchstart.maps', '#free-identities .identities li', function (e) {
           var $that = $(this)
@@ -1825,6 +1826,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
 
         });
+        */
 
         var $identities = element.find('#identities');
 
@@ -1896,10 +1898,10 @@ define('mobilecontroller', function (require, exports, module) {
 
           $win.trigger('orientationchange');
 
-          // 身份认领
+          // 授权页面
           if (self.isSmithToken) {
-            element.find('#free-identities').removeClass('hide');
-            self.getFreeIdentities();
+            //element.find('#free-identities').removeClass('hide');
+            //self.getFreeIdentities();
           } else {
             self.createIdentitiesList();
             self.streaming();
@@ -1931,10 +1933,12 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    /*
     , getFreeIdentities: function () {
         this.updateExfeeName();
         this.createFreeIdentitiesList(this.freeIdentities);
       }
+    */
 
     , loadMaps: function (p) {
         var self = this

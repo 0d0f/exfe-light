@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-14 12:08:55 */
+/*! mobile@2a 2013-08-14 01:08:36 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5405,44 +5405,6 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng");
       });
-      var tapTimeout, now, tapDelay = 270;
-      element.on("touchstart.maps", "#free-identities .identities li", function() {
-        var $that = $(this);
-        $that.data("identity-id"), $that.data("uid"), $that.data("free"), !!$that.hasClass("touched"), 
-        now = Date.now(), tapTimeout = setTimeout(function() {
-          $("#iavatar .avatar").css("background", "url(" + $that.find(".avatar").attr("src") + ")");
-        }, tapDelay);
-      }), element.on("touchmove.maps", "#free-identities .identities li", function() {
-        clearTimeout(tapTimeout), tapTimeout = null;
-      }), element.on("touchend.maps", "#free-identities .identities li", function() {
-        clearTimeout(tapTimeout), tapTimeout = null, Date.now() - now > 1e3 ? $(this).trigger("select:maps") : $("#iavatar .avatar").css("background", "");
-      }), element.on("select:maps", "#free-identities .identities li", function() {
-        var $that = $(this), id = $that.data("identity-id"), uid = $that.data("uid"), free = $that.data("free"), touched = !!$that.hasClass("touched"), c = !0;
-        touched || (free && (c = confirm("确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？")), c ? ($that.addClass("touched"), 
-        $.ajax({
-          type: "get",
-          url: api_url + "/crosses/" + self.cross.id + "/freeidentities/" + id + "/itsme?token=" + self.token,
-          beforeSend: function() {
-            console.log("itsme before");
-          },
-          complete: function() {
-            $that.removeClass("touched");
-          },
-          success: function(data) {
-            var code = data.meta && data.meta.code;
-            if (200 === code) {
-              console.log("success", data);
-              var cats = Store.get("cats") || {}, token = data.response.cross_access_token;
-              cats[self.ctoken] = token, self.myIdentityId = id, self.myuid = uid, self.token = token, 
-              Store.set("cats", cats), self.$("#free-identities").hide().empty(), self.createIdentitiesList(), 
-              self.streaming();
-            }
-          },
-          error: function(data) {
-            console.log("fail"), console.dir(data);
-          }
-        })) : $("#iavatar .avatar").css("background", ""));
-      });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function() {
         $infoWins.hasClass("hide") || $infoWins.addClass("hide");
@@ -5471,8 +5433,7 @@ TWEEN.Tween = function(object) {
         alert("Weixin " + self.isWeixin), $("html, body").css({
           "min-height": $win.height()
         }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
-        self.isSmithToken ? (element.find("#free-identities").removeClass("hide"), self.getFreeIdentities()) : (self.createIdentitiesList(), 
-        self.streaming());
+        self.isSmithToken || (self.createIdentitiesList(), self.streaming());
       });
     },
     updateExfeeName: function() {
@@ -5481,9 +5442,6 @@ TWEEN.Tween = function(object) {
     createFreeIdentitiesList: function(identities) {
       var identity, tmp = '<li data-identity-id="{{id}}" data-free="{{free}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>', $identities = this.element.find("#free-identities .identities");
       for (identities = identities.slice(0); identity = identities.shift(); ) $identities.append(tmp.replace("{{id}}", identity.id).replace("{{avatar_filename}}", identity.avatar_filename).replace(/\{\{external_username\}\}/g, identity.external_username).replace("{{provider}}", identity.provider).replace("{{is_free}}", (identity.free ? " " : " no-") + "free").replace("{{free}}", identity.free));
-    },
-    getFreeIdentities: function() {
-      this.updateExfeeName(), this.createFreeIdentitiesList(this.freeIdentities);
     },
     loadMaps: function() {
       var self = this, RoutexMaps = require("routexmaps"), mc = this.mapController = new RoutexMaps({
