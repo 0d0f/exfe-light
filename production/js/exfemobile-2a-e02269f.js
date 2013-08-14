@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-16 04:08:53 */
+/*! mobile@2a 2013-08-16 04:08:16 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5429,7 +5429,8 @@ TWEEN.Tween = function(object) {
         alert("Weixin " + self.isWeixin), $("html, body").css({
           "min-height": $win.height()
         }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
-        self.isSmithToken || (self.createIdentitiesList(), self.streaming());
+        self.isSmithToken ? alert("It is Smith-Token.") : (self.createIdentitiesList(), 
+        self.streaming());
       });
     },
     updateExfeeName: function() {

@@ -1898,6 +1898,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           // 授权页面
           if (self.isSmithToken) {
+            alert('It is Smith-Token.');
             //element.find('#free-identities').removeClass('hide');
             //self.getFreeIdentities();
           } else {
