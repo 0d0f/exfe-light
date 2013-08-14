@@ -1882,7 +1882,8 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
-          alert(navigator.userAgent)
+          // weixin
+          // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
           alert('Weixin ' + self.isWeixin);
           $('html, body').css({
               'min-height': $win.height()
@@ -1981,7 +1982,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       }
 
-    , isWeixin: !!window.WeixinJSBridge
+    , isWeixin: !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent))
 
     , mapReadyStatus: false
 
