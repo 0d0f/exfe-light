@@ -2499,7 +2499,7 @@ button .exfe {
   -webkit-overflow-scrolling: touch;
   font-weight: 300;
   -webkit-appearance: none;
-  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 1px);
 }
 #routex #nearby > div {
   position: relative;

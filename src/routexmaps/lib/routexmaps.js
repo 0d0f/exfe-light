@@ -691,7 +691,7 @@
         if (isme) {
           bounds = this.calculateBoundsByCenter(gmlatlng, [dlatlng]);
         } else {
-          bounds = new google.maps.LatLngBounds()
+          bounds = new google.maps.LatLngBounds();
           if (p.x < 50) {
             p = this.fromContainerPixelToLatLng(new google.maps.Point(p.x - 50, p.y));
             bounds.extend(p);

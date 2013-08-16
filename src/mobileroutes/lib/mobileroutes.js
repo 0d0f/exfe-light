@@ -367,8 +367,6 @@ define('mobileroutes', function (require, exports, module) {
 
     // `routex`
     routex: function (req, res) {
-      // smith: identity_id = 916, user_id = 646
-      // smith的wechat群: id = 100730
 
       document.title = '活点地图';
 
@@ -381,7 +379,7 @@ define('mobileroutes', function (require, exports, module) {
         , cross_access_token = response.cross_access_token
         // , authorization = response.authorization
         , browsing_identity = response.browsing_identity
-        , free_identities = response.free_identities
+        //, free_identities = response.free_identities
 
         , cats = (Store.get('cats') || {})
         // , token = ((cats && cats[ctoken]) || (authorization && authorization.token));
@@ -404,8 +402,9 @@ define('mobileroutes', function (require, exports, module) {
         , token: token || tokenInfos[0] || ctoken
         , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
         , myUserId: (browsing_identity && browsing_identity.connected_user_id) || 0
-        , isSmithToken: action === 'CLAIM_IDENTITY'
-        , freeIdentities: free_identities
+        , smith_id: window._ENV_.smith_id
+        , isSmithToken: !!window._ENV_.smith_id
+        //, freeIdentities: free_identities
       });
 
       routexCont.emit('show');
