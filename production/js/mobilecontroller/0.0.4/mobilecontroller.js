@@ -1888,7 +1888,7 @@ define('mobilecontroller', function (require, exports, module) {
         self.on('show', function () {
           // weixin
           // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
-          alert('Weixin ' + self.isWeixin);
+          //alert('Weixin ' + self.isWeixin);
           $('html, body').css({
               'min-height': $win.height()
             //, 'overflow': 'hidden'
@@ -1899,14 +1899,14 @@ define('mobilecontroller', function (require, exports, module) {
           $win.trigger('orientationchange');
 
           // 授权页面
-          if (self.isSmithToken) {
-            alert('It is Smith-Token.');
-            //element.find('#free-identities').removeClass('hide');
-            //self.getFreeIdentities();
-          } else {
+          // if (self.isSmithToken) {
+          //   alert('It is Smith-Token.');
+          //   //element.find('#free-identities').removeClass('hide');
+          //   //self.getFreeIdentities();
+          // } else {
             self.createIdentitiesList();
             self.streaming();
-          }
+          // }
         });
 
       }
@@ -1989,8 +1989,6 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
       }
-
-    , isWeixin: !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent))
 
     , mapReadyStatus: false
 
@@ -2141,12 +2139,14 @@ define('mobilecontroller', function (require, exports, module) {
           , $identities = this.$('#identities')
           , myUserId = this.myUserId
           , myIdentityId = this.myIdentityId
+          , smith_id = this.smith_id
           , invitations = exfee.invitations.slice(0)
           , invitation
           , identity;
 
         while ((invitation = invitations.shift())) {
           identity = invitation.identity;
+          if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myuid = identity.connected_user_id;
             this.updateMe(identity);

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-14 06:08:09 */
+/*! mobile@2a 2013-08-16 03:08:07 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5430,11 +5430,10 @@ TWEEN.Tween = function(object) {
       }), $identities.on("touchmove.maps", function(e) {
         isScroll = !0, e.preventDefault(), this.scrollTop = pageY - e.pageY + scrollTop;
       }), self.on("show", function() {
-        alert("Weixin " + self.isWeixin), $("html, body").css({
+        $("html, body").css({
           "min-height": $win.height()
         }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
-        self.isSmithToken ? alert("It is Smith-Token.") : (self.createIdentitiesList(), 
-        self.streaming());
+        self.createIdentitiesList(), self.streaming();
       });
     },
     updateExfeeName: function() {
@@ -5467,7 +5466,6 @@ TWEEN.Tween = function(object) {
         }
       });
     },
-    isWeixin: !(!window.WeixinJSBridge || !/MicroMessenger/.test(navigator.userAgent)),
     mapReadyStatus: !1,
     editDestination: function(destination) {
       destination && $.ajax({
@@ -5553,9 +5551,9 @@ TWEEN.Tween = function(object) {
       div.find("img").attr("src", myIdentity.avatar_filename), div.data("identity", myIdentity);
     },
     createIdentitiesList: function() {
-      for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, invitations = (this.myIdentityId, 
-      exfee.invitations.slice(0)); invitation = invitations.shift(); ) if (identity = invitation.identity, 
-      myUserId !== identity.connected_user_id) {
+      for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, smith_id = (this.myIdentityId, 
+      this.smith_id), invitations = exfee.invitations.slice(0); invitation = invitations.shift(); ) if (identity = invitation.identity, 
+      smith_id !== identity.id) if (myUserId !== identity.connected_user_id) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>');
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
@@ -5703,7 +5701,8 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokenInfos = _ENV_._data_.tokenInfos, cross = response.cross, action = response.action, cross_access_token = response.cross_access_token, browsing_identity = response.browsing_identity, free_identities = response.free_identities, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokenInfos = _ENV_._data_.tokenInfos, cross = response.cross, cross_access_token = (response.action, 
+      response.cross_access_token), browsing_identity = response.browsing_identity, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
         options: {
@@ -5716,8 +5715,8 @@ TWEEN.Tween = function(object) {
         token: token || tokenInfos[0] || ctoken,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
         myUserId: browsing_identity && browsing_identity.connected_user_id || 0,
-        isSmithToken: "CLAIM_IDENTITY" === action,
-        freeIdentities: free_identities
+        smith_id: window._ENV_.smith_id,
+        isSmithToken: !!window._ENV_.smith_id
       });
       routexCont.emit("show");
     }
