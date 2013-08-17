@@ -28,7 +28,8 @@
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
-  window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
+  //window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
+  window.isWeixin = !!(/MicroMessenger/.test(navigator.userAgent));
 
   window.launchApp = function (url, cb) {
     url = url || app_url;
