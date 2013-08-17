@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 12:08:03 */
+/*! mobile@2a 2013-08-18 01:08:51 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5689,8 +5689,9 @@ TWEEN.Tween = function(object) {
         options: {
           template: $("#routex-tmpl").html()
         },
-        lastGPS: Store.get("last-latlng"),
+        lastGPS: Store.get("position"),
         cross: cross,
+        cross_id: cross && cross.id,
         ctoken: ctoken,
         token: token || tokenInfos[0] || ctoken,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
