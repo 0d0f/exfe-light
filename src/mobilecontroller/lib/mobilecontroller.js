@@ -6,6 +6,7 @@ define('mobilecontroller', function (require, exports, module) {
       TWEEN = require('tween'),
       _ENV_ = window._ENV_,
       api_url = _ENV_.api_url,
+      apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + '://crosses/',
       AMAP_KEY = _ENV_.AMAP_KEY,
@@ -1636,7 +1637,6 @@ define('mobilecontroller', function (require, exports, module) {
 
   exports.RouteXController = Controller.extend({
 
-
       init: function () {
         this.render();
         this.listen();
@@ -1721,6 +1721,7 @@ define('mobilecontroller', function (require, exports, module) {
             self.mapController.fitBoundsWithDestination(uid);
           }
 
+          /*
           if (self.tapElement === this) {
             $infoWins.addClass('hide');
             self.tapElement = null;
@@ -1738,6 +1739,7 @@ define('mobilecontroller', function (require, exports, module) {
           var bound = this.getBoundingClientRect();
           $infoWins.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
           self.tapElement = this;
+          */
         });
 
         element.on('tap.maps', '#open-exfe', function (e) {
@@ -1957,6 +1959,7 @@ define('mobilecontroller', function (require, exports, module) {
               }
         });
         mc.myuid = this.myuid;
+        mc.myIdentity = this.myIdentity;
         this.setLatLngOffset();
         // defaults to true
         mc.tracking = true
@@ -2054,13 +2057,13 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.init(
             self.cross.id
           , self.token
-          , function (type, result) {
+          , function (result) {
               if (self.mapReadyStatus && self.mapController) {
                 //self.setLatLngOffset();
                 if (!self.mapController.myuid) {
                   self.mapController.myuid = self.myuid;
                 }
-                self.mapController.draw(type, result);
+                self.mapController.draw(result);
               }
             }
           , function (e) {

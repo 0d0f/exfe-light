@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 01:08:51 */
+/*! mobile@2a 2013-08-18 01:08:10 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4593,7 +4593,7 @@ TWEEN.Tween = function(object) {
   };
 }), define("mobilecontroller", function(require, exports, module) {
   "use strict";
-  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
+  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, apiv3_url = _ENV_.apiv3_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
   window.openExfe), Handlebars = require("handlebars"), $ = require("zepto"), util = require("util"), trim = util.trim, parseId = util.parseId, iPad = navigator.userAgent.match(/iPad/), Live = require("live"), escape = function(html, encode) {
     return html.replace(encode ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }, now = Date.now || function() {
@@ -5374,14 +5374,7 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
-          if (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
-          self.tapElement === this) return $infoWins.addClass("hide"), self.tapElement = null, 
-          !1;
-          $infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $d.data("name"), $infoWins.find("#my-info").addClass("hide"), 
-          $infoWins.find("#other-info").removeClass("hide"), $infoWins.find("#other-info").find(".name").text($d.data("name"));
-          var bound = this.getBoundingClientRect();
-          $infoWins.css("-webkit-transform", "translate3d(50px," + (bound.top + bound.height / 2 - 62.5) + "px, 0)"), 
-          self.tapElement = this;
+          self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid));
         }
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng");
@@ -5436,8 +5429,8 @@ TWEEN.Tween = function(object) {
           self.mapReadyStatus = !0, self.mapController.updateGeoLocation(mc.myuid, self.position);
         }
       });
-      mc.myuid = this.myuid, this.setLatLngOffset(), mc.tracking = !0, mc.load(), mc.controller = self, 
-      this.token && this.cross_id && $.ajax({
+      mc.myuid = this.myuid, mc.myIdentity = this.myIdentity, this.setLatLngOffset(), 
+      mc.tracking = !0, mc.load(), mc.controller = self, this.token && this.cross_id && $.ajax({
         url: apiv3_url + "/routex/breadcrumbs/crosses/" + this.cross_id + "?coordinate=mars&token=" + this.token,
         type: "GET",
         dataType: "json",
@@ -5492,9 +5485,9 @@ TWEEN.Tween = function(object) {
     },
     initStream: function() {
       var self = this;
-      routexStream.init(self.cross.id, self.token, function(type, result) {
+      routexStream.init(self.cross.id, self.token, function(result) {
         self.mapReadyStatus && self.mapController && (self.mapController.myuid || (self.mapController.myuid = self.myuid), 
-        self.mapController.draw(type, result));
+        self.mapController.draw(result));
       }, function(e) {
         console.log(e);
       });
