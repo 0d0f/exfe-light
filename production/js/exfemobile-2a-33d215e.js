@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-16 04:08:15 */
+/*! mobile@2a 2013-08-18 12:08:03 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3787,7 +3787,7 @@ TWEEN.Tween = function(object) {
     lat: 0,
     lng: 0,
     acc: 0
-  }, lstLocat = "", lstRoute = "", submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
+  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
       type: "POST",
@@ -3851,8 +3851,7 @@ TWEEN.Tween = function(object) {
   }, streamDead = function() {
     log("Streaming is dead");
   }, breatheFunc = function() {
-    console.log(stream.live, token), checkGps(myData) && ++secCnt >= secInt && submitGps(), 
-    !stream.live && token && (stream.init(api_url + "/crosses/" + cross_id + "/routex?_method=WATCH&coordinate=earth&token=" + token, streamCallback, streamDead), 
+    checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/routex/crosses/" + cross_id + "?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
     return data && data.ts && data.lat && data.lng && data.acc;
@@ -3917,21 +3916,7 @@ TWEEN.Tween = function(object) {
     }
   }, streamCallback = function(rawData) {
     var data = JSON.parse(rawData);
-    if (data && data.type && data.data) {
-      var type = data.type.replace(/^.*\/([^\/]*)$/, "$1"), result = data.data;
-      switch (type) {
-       case "breadcrumbs":
-        var curLocat = JSON.stringify(result);
-        log("Streaming pops: " + curLocat, result), echo && lstLocat !== curLocat && (log("Callback"), 
-        echo(type, result), lstLocat = curLocat);
-        break;
-
-       case "geomarks":
-        var curRoute = JSON.stringify(result);
-        log("Streaming pops: " + curRoute, result), echo && lstRoute !== curRoute && (log("Callback"), 
-        echo(type, result), lstRoute = curRoute);
-      }
-    }
+    data && data.type && (log("Streaming pops: " + data.type), echo(data));
   }, routexStream = {
     init: function(intCrossId, strToken, callback, unauthorized_callback) {
       return intCrossId ? strToken ? callback ? unauthorized_callback ? (cross_id = intCrossId, 
