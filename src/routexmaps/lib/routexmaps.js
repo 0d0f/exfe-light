@@ -72,6 +72,10 @@
 
     , MAX_INDEX = 610
 
+    // type
+    , ROUTE = 'route'
+    , LOCATION = 'location'
+
     // tags
     , DESTINATION = 'destination'
     , BREADCRUMBS = 'breadcrumbs'
@@ -95,6 +99,8 @@
     this.icons = {};
 
     this.updated = {};
+
+    this._breadcrumbs = {};
 
     this.boundsOffset = {
         left: 50
@@ -437,8 +443,6 @@
       r = null;
       delete routes[id];
     }
-
-    route.setPath(coords);
   };
 
   proto.addPolyline = function (data) {
@@ -583,8 +587,8 @@
     }
   };
 
-  proto.toLatLng = function (latitude, longitude) {
-    return new google.maps.LatLng(latitude * 1, longitude * 1);
+  proto.toLatLng = function (lat, lng) {
+    return new google.maps.LatLng(lat * 1, lng * 1);
   };
 
   proto.drawBreadcrumbs = function (data) {
@@ -884,6 +888,7 @@
   };
 
   proto.showBreadcrumbs = function (uid) {
+    if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
       , puid = this.uid
       , b = bds[uid]
@@ -928,7 +933,7 @@
     console.log('current breadcrumbs', uid);
   };
 
-  proto.addPoint = function (data) {
+  proto.addPoint = function (data, isDestination) {
     var self = this
       , GMaps = google.maps
       , map = this.map
@@ -948,6 +953,8 @@
       })
     , GEvent = GMaps.event;
 
+    m.isDestination = isDestination;
+
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
       e && e.stop();
 
@@ -956,7 +963,7 @@
       var infobox = self.infobox = new GMaps.InfoBox({
           content: self.infoWindowTemplate.replace('{{title}}', data.title).replace('{{description}}', data.description)
         , maxWidth: 200
-        , pixelOffset: new GMaps.Size(-80, -38)
+        , pixelOffset: new GMaps.Size(-100, -38)
         , boxClass: 'park'
         , closeBoxMargin: ''
         , closeBoxURL: ''
@@ -964,16 +971,50 @@
         , enableEventPropagation: false
         , leftBoundary: 60
         , zIndex: 610
+        , boxId: (isDestination ? 'destination' : '')
+        , events: function () {
+            if (isDestination) {
+              var ib = this;
+              ib.editing = false;
+              GEvent.addDomListener(this.div_, 'touchstart', function () {
+                if (ib.editing) { return; }
+                var infoWindown = this.querySelector('.info-windown');
+                var title = this.querySelector('.title').innerHTML;
+                var description = this.querySelector('.description').innerHTML;
+                var ct = document.createElement('input');
+                ct.type = 'text';
+                ct.value = title;
+                var cd = document.createElement('textarea');
+                cd.value = description;
+                infoWindown.appendChild(ct)
+                infoWindown.appendChild(cd)
+                this.querySelector('.title').className = 'title hide';
+                this.querySelector('.description').className = 'description hide';
+                ib.editing = true;
+              });
+            }
+          }
       });
       infobox._marker = this;
       infobox.open(map, this);
 
       GEvent.addListenerOnce(this, 'mouseout', function mouseout() {
+        if (infobox.editing) {
+          var data = infobox._marker.data;
+          var title = $('#destination input').val().trim();
+          var description = $('#destination textarea').val().trim();
+          data.title = title;
+          data.description = description;
+          data.updated_at = Math.round(Date.now() / 1000);
+          $('#destination input, #description textarea').remove();
+          $('#destination .title').text(title).removeClass('hide');
+          $('#destination .description').text(description).removeClass('hide');
+          self.controller.editDestination(data);
+        }
         infobox.close();
         delete infobox._marker;
         infobox = self.infobox = null;
       });
-
     });
 
     return m;
@@ -1109,7 +1150,7 @@
         , optimized: false
       });
       geoLocation._status = 0;
-      var lastlatlng = JSON.parse(window.localStorage.getItem('last-latlng'));
+      var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
       if (lastlatlng) {
         geoLocation._status = 1;
         latlng = this.toLatLng(lastlatlng.lat * 1 + this.latOffset, lastlatlng.lng * 1 + this.lngOffset);
