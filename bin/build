@@ -4,7 +4,6 @@ rm -rf production/js/exfemobile-2a-*
 rm -rf production/js/exfe-2a-*
 rm -rf production/css/exfemobile-*
 rm -rf production/css/exfe.*
-
 echo "exfe & exfemobile JS CSS files."
 
 grunt publish:all --force --no-color
