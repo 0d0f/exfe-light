@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 01:08:10 */
+/*! mobile@2a 2013-08-18 01:08:07 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3946,7 +3946,7 @@ TWEEN.Tween = function(object) {
     options = this.options = options || {}, this.svgLayer = this.options.svg, delete this.options.svg, 
     this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.tiplines = {}, 
     this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, this.updated = {}, 
-    this.boundsOffset = {
+    this._breadcrumbs = {}, this.boundsOffset = {
       left: 50,
       top: 0
     }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -4014,7 +4014,7 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
   proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4033,7 +4033,7 @@ TWEEN.Tween = function(object) {
     var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return 100 >= d;
   }, proto.showNearBy = function(point) {
-    if (e) {
+    if (point) {
       var latlng, p, center = point, status = !1, places = (this.myuid, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3;
       console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
@@ -4099,7 +4099,7 @@ TWEEN.Tween = function(object) {
     }
   }, proto.removeRoute = function(data) {
     var routes = this.routes, id = data.id, r = routes[id];
-    r && (r.setMap(null), r = null, delete routes[id]), route.setPath(coords);
+    r && (r.setMap(null), r = null, delete routes[id]);
   }, proto.addPolyline = function(data) {
     var rgba = data.color && data.color.split(",") || [], color = "#" + (rgba.length ? pad0(toHex(rgba[0])) + pad0(toHex(rgba[1])) + pad0(toHex(rgba[2])) : "007BFF"), alpha = rgba[3] || 1, p = new google.maps.Polyline({
       map: this.map,
@@ -4163,8 +4163,8 @@ TWEEN.Tween = function(object) {
       }), isme) continue;
       tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
     }
-  }, proto.toLatLng = function(latitude, longitude) {
-    return new google.maps.LatLng(1 * latitude, 1 * longitude);
+  }, proto.toLatLng = function(lat, lng) {
+    return new google.maps.LatLng(1 * lat, 1 * lng);
   }, proto.drawBreadcrumbs = function(data) {
     this.breadcrumbs, data.uid;
   }, proto.drawGeoMarker = function(data) {
@@ -4288,37 +4288,61 @@ TWEEN.Tween = function(object) {
       }
     }
   }, proto.showBreadcrumbs = function(uid) {
-    var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
-    if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
-    uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null, 
-    this.removeTextLabels()), b && (b.setVisible(!0), this.uid = uid); else if (b) {
-      var v = !b.getVisible();
-      b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null, 
-      this.removeTextLabels());
+    if (this._breadcrumbs[uid]) {
+      var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
+      if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
+      uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null, 
+      this.removeTextLabels()), b && (b.setVisible(!0), this.uid = uid); else if (b) {
+        var v = !b.getVisible();
+        b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null, 
+        this.removeTextLabels());
+      }
+      console.log("current breadcrumbs", uid);
     }
-    console.log("current breadcrumbs", uid);
-  }, proto.addPoint = function(data) {
+  }, proto.addPoint = function(data, isDestination) {
     var self = this, GMaps = google.maps, map = this.map, m = new GMaps.Marker({
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
       icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     }), GEvent = GMaps.event;
-    return GEvent.addListener(m, "mousedown", function(e) {
+    return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description),
         maxWidth: 200,
-        pixelOffset: new GMaps.Size(-80, -38),
+        pixelOffset: new GMaps.Size(-100, -38),
         boxClass: "park",
         closeBoxMargin: "",
         closeBoxURL: "",
         alignBottom: !0,
         enableEventPropagation: !1,
         leftBoundary: 60,
-        zIndex: 610
+        zIndex: 610,
+        boxId: isDestination ? "destination" : "",
+        events: function() {
+          if (isDestination) {
+            var ib = this;
+            ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
+              if (!ib.editing) {
+                var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
+                ct.type = "text", ct.value = title;
+                var cd = document.createElement("textarea");
+                cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
+                this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
+                ib.editing = !0;
+              }
+            });
+          }
+        }
       });
       infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
+        if (infobox.editing) {
+          var data = infobox._marker.data, title = $("#destination input").val().trim(), description = $("#destination textarea").val().trim();
+          data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
+          $("#destination input, #description textarea").remove(), $("#destination .title").text(title).removeClass("hide"), 
+          $("#destination .description").text(description).removeClass("hide"), self.controller.editDestination(data);
+        }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;
       });
     }), m;
@@ -4372,7 +4396,7 @@ TWEEN.Tween = function(object) {
         },
         optimized: !1
       }), geoLocation._status = 0;
-      var lastlatlng = JSON.parse(window.localStorage.getItem("last-latlng"));
+      var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
       lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
       geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
     }
@@ -5349,7 +5373,7 @@ TWEEN.Tween = function(object) {
       $("#app-routex").remove(), this.element.appendTo($("#app-container")), this.loadMaps();
     },
     listen: function() {
-      var self = this, element = self.element, $win = $(window), $infoWins = self.$("#info-wins"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate"), isScroll = !1;
+      var self = this, element = self.element, $win = $(window), $myInfo = self.$("#my-info"), $openExfe = self.$("#open-exfe"), $locate = self.$("#locate"), isScroll = !1;
       $win.on("orientationchange", function() {
         var height = $win.height();
         $win.width(), $locate.css("-webkit-transform", "translate3d(0, 0, 0)"), $openExfe.css("-webkit-transform", "translate3d(0, 0, 0)"), 
@@ -5364,12 +5388,11 @@ TWEEN.Tween = function(object) {
         2 === status || 1 === status && self.startStream();
       };
       element.on("tap.maps", function(e) {
-        self.tapElement && e.target !== self.tapElement && !$.contains($infoWins[0], e.target) && ($infoWins.addClass("hide"), 
+        self.tapElement && e.target !== self.tapElement && !$.contains($myInfo[0], e.target) && ($myInfo.addClass("hide"), 
         self.tapElement = null);
       }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
-        return gotoGPS(e, !0), self.tapElement === this ? ($infoWins.addClass("hide"), self.tapElement = null, 
-        !1) : ($infoWins.hasClass("hide") && $infoWins.removeClass("hide"), $infoWins.find("#other-info").addClass("hide"), 
-        $infoWins.find("#my-info").removeClass("hide"), $infoWins.css("-webkit-transform", "translate3d(50px, 6px, 0)"), 
+        return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
+        !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
         self.tapElement = this, void 0);
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
@@ -5381,7 +5404,7 @@ TWEEN.Tween = function(object) {
       });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function() {
-        $infoWins.hasClass("hide") || $infoWins.addClass("hide");
+        $myInfo.hasClass("hide") || $myInfo.addClass("hide");
         var $avatars = $(this).find(".avatar"), pb = this.getBoundingClientRect(), height = pb.height, minT = (this.scrollTop, 
         pb.top), maxT = height + minT, ids = this._ids = {};
         $avatars.each(function(i) {

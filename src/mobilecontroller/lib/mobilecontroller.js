@@ -1652,7 +1652,7 @@ define('mobilecontroller', function (require, exports, module) {
         var self = this
           , element = self.element
           , $win = $(window)
-          , $infoWins = self.$('#info-wins')
+          , $myInfo = self.$('#my-info')
           , $openExfe = self.$('#open-exfe')
           , $locate = self.$('#locate')
           , isScroll = false;
@@ -1685,8 +1685,8 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('tap.maps', function (e) {
           if (self.tapElement
             && e.target !== self.tapElement
-            && !$.contains($infoWins[0], e.target)) {
-              $infoWins.addClass('hide');
+            && !$.contains($myInfo[0], e.target)) {
+              $myInfo.addClass('hide');
               self.tapElement = null;
           }
         });
@@ -1695,18 +1695,16 @@ define('mobilecontroller', function (require, exports, module) {
           gotoGPS(e, true);
 
           if (self.tapElement === this) {
-            $infoWins.addClass('hide');
+            $myInfo.addClass('hide');
             self.tapElement = null;
             return false;
           }
 
-          if ($infoWins.hasClass('hide')) {
-            $infoWins.removeClass('hide');
+          if ($myInfo.hasClass('hide')) {
+            $myInfo.removeClass('hide');
           }
 
-          $infoWins.find('#other-info').addClass('hide');
-          $infoWins.find('#my-info').removeClass('hide');
-          $infoWins.css('-webkit-transform', 'translate3d(50px, 6px, 0)');
+          $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           self.tapElement = this;
         });
 
@@ -1723,21 +1721,21 @@ define('mobilecontroller', function (require, exports, module) {
 
           /*
           if (self.tapElement === this) {
-            $infoWins.addClass('hide');
+            $myInfo.addClass('hide');
             self.tapElement = null;
             return false;
           }
 
-          if ($infoWins.hasClass('hide')) {
-            $infoWins.removeClass('hide');
+          if ($myInfo.hasClass('hide')) {
+            $myInfo.removeClass('hide');
           }
 
           var name = $d.data('name');
-          $infoWins.find('#my-info').addClass('hide');
-          $infoWins.find('#other-info').removeClass('hide');
-          $infoWins.find('#other-info').find('.name').text($d.data('name'));
+          $myInfo.find('#my-info').addClass('hide');
+          $myInfo.find('#other-info').removeClass('hide');
+          $myInfo.find('#other-info').find('.name').text($d.data('name'));
           var bound = this.getBoundingClientRect();
-          $infoWins.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
+          $myInfo.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
           self.tapElement = this;
           */
         });
@@ -1831,8 +1829,8 @@ define('mobilecontroller', function (require, exports, module) {
         var $identities = element.find('#identities');
 
         $identities.on('scroll.maps', function (e) {
-          if (!$infoWins.hasClass('hide')) {
-            $infoWins.addClass('hide');
+          if (!$myInfo.hasClass('hide')) {
+            $myInfo.addClass('hide');
           }
           var $avatars = $(this).find('.avatar')
             , pb = this.getBoundingClientRect()
