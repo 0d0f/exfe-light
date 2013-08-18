@@ -2502,6 +2502,7 @@ button .exfe {
   font-weight: lighter;
   line-height: 16px;
   padding: 0 5px;
+  overflow: hidden;
 }
 #routex #my-info > div {
   position: relative;
