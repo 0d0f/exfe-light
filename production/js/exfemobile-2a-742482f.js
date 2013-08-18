@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 06:08:35 */
+/*! mobile@2a 2013-08-18 06:08:51 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5526,7 +5526,7 @@ TWEEN.Tween = function(object) {
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {
-      exfee_id = this.cross.exfee_id, token = this.token;
+      exfee_id = this.cross.exfee.id, token = this.token;
       var identity = parseId(email);
       return identity && "email" !== identity.provider && "phone" !== identity.provider ? ($("#notify-provider.email").attr("placeholder", "请输入正确的手机号或电子邮件。"), 
       void 0) : ($.ajax({

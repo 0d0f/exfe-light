@@ -2091,7 +2091,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , addNotificationIdentity: function (email, exfee_id, token) {
-        exfee_id = this.cross.exfee_id;
+        exfee_id = this.cross.exfee.id;
         token = this.token;
         var identity = parseId(email);
         if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
