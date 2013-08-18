@@ -707,7 +707,7 @@
 
         map.fitBounds(bounds);
       } else {
-        if (!map.getBounds().contains(gmlatlng)) {
+        if (isme || !map.getBounds().contains(gmlatlng)) {
           if (map.getZoom() < 7) {
             map.setZoom(15);
           }
