@@ -682,7 +682,7 @@
 
   proto.fitBoundsWithDestination = function (uid) {
     var destinationPlace = this.destinationPlace
-      , isme = this.myuid === uid
+      , isme = this.myuid == uid
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition()
