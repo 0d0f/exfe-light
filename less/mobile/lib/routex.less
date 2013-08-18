@@ -746,4 +746,84 @@
       }
     }
   }
+
+  #shuidi-dialog {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .85);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 300;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    -webkit-appearance: none;
+    -webkit-transform: translate3d(0, 0, 377px);
+
+    .main {
+      position: relative;
+      left: 5px;
+      width: 310px;
+      padding: 30px 15px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      @d: 90deg - 270deg;
+      @startColor: #153353;
+      @endColor: #191919;
+      background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+      background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
+
+      .title {
+        font-size: 21px;
+        font-weight: 300;
+        padding-bottom: 30px;
+        text-align: center;
+      }
+
+      .desc {
+        .name {
+          font-size: 18px;
+          font-weight: 300;
+          color: #82afea;
+        }
+      }
+
+      .app-btn{
+        position: relative;
+        margin: 20px auto 30px;
+        width: 260px;
+        height: 100px;
+        background: rgba(255, 255, 255, .08);
+        border: 1px solid rgba(255, 255, 255, .16);
+      }
+
+      .app-icon {
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        display: block;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .app-info {
+        position: absolute;
+        width: 112px;
+        top: 20px;
+        right: 30px;
+        text-align: center;
+
+        .app-title {
+          font-size: 21px;
+          padding-bottom: 4px;
+        }
+        .app-keywords {
+          font-weight: normal;
+        }
+      }
+
+    }
+  }
 }
