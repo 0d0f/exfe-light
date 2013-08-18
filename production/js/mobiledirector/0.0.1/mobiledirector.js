@@ -115,9 +115,11 @@
 
     inject = function (cb) {
       var css = 'mobile-css';
+      /*
       if (!checkNodeExsits(css)) {
         injectCss('/static/css/' + CSSFILE, css);
       }
+      */
       var js = 'mobile-js';
       if (!checkNodeExsits(js)) {
         injectScript('/static/js/' + JSFILE, js, cb);
