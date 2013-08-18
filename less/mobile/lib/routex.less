@@ -760,6 +760,8 @@
     font-size: 14px;
     font-weight: 300;
     text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    z-index: 2;
     -webkit-appearance: none;
     -webkit-transform: translate3d(0, 0, 377px);
 
@@ -774,6 +776,12 @@
       @endColor: #191919;
       background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
       background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
+      border-radius: 2px;
+
+      h3 {
+        margin: 0;
+        padding: 0;
+      }
 
       .title {
         font-size: 21px;
@@ -814,9 +822,11 @@
         top: 20px;
         right: 30px;
         text-align: center;
+        margin-top: 7px;
 
         .app-title {
           font-size: 21px;
+          font-weight: 300;
           padding-bottom: 4px;
         }
         .app-keywords {
