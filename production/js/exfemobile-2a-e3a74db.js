@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 05:08:27 */
+/*! mobile@2a 2013-08-18 05:08:31 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5396,6 +5396,14 @@ TWEEN.Tween = function(object) {
         return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
         !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
         self.tapElement = this, void 0);
+      }), element.on("touchstart.maps", "#my-info .discover", function() {
+        $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
+      }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
+        e.preventDefault();
+        var v = $("#notify-provider").val();
+        self.addNotificationIdentity(v);
+      }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
+        e.stopPropagation(), $("#shuidi-dialog").addClass("hide");
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
@@ -5516,6 +5524,25 @@ TWEEN.Tween = function(object) {
       }, function(e) {
         console.log(e);
       });
+    },
+    addNotificationIdentity: function(email, exfee_id, token) {
+      exfee_id = this.cross.exfee_id, token = this.token;
+      var identity = parseId(email);
+      return identity && "email" !== identity.provider && "phone" !== identity.provider ? ($("#notify-provider.email").attr("placeholder", "请输入正确的手机号或电子邮件。"), 
+      void 0) : ($.ajax({
+        type: "POST",
+        url: api_url + "/Exfee/" + exfee_id + "/AddNotificationIdentity" + "?token=" + token,
+        data: {
+          provider: identity.provider,
+          external_username: identity.external_username
+        },
+        success: function(data) {
+          data && data.meta && 200 === data.meta.code && $("#shuidi-dialog").addClass("hide");
+        },
+        error: function() {
+          alert("Failed, please retry later.");
+        }
+      }), void 0);
     },
     startStream: function() {
       var self = this;

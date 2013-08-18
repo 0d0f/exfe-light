@@ -1708,6 +1708,23 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
+        element.on('touchstart.maps', '#my-info .discover', function (e) {
+          $myInfo.addClass('hide');
+          self.tapElement = null;
+          $('#shuidi-dialog').removeClass('hide');
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
+          e.preventDefault();
+          var v = $('#notify-provider').val();
+          self.addNotificationIdentity(v);
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
+          e.stopPropagation();
+          $('#shuidi-dialog').addClass('hide');
+        });
+
         element.on('tap.maps', '#identities .avatar', function (e) {
           if (isScroll) { return; }
           var $that = $(this)
@@ -2068,6 +2085,32 @@ define('mobilecontroller', function (require, exports, module) {
               console.log(e);
             }
         );
+      }
+
+    , addNotificationIdentity: function (email, exfee_id, token) {
+        exfee_id = this.cross.exfee_id;
+        token = this.token;
+        var identity = parseId(email);
+        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
+          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
+          return;
+        }
+        $.ajax({
+          type: 'POST',
+          url: api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
+          data: {
+            provider: identity.provider,
+            external_username: identity.external_username
+          },
+          success : function(data) {
+            if (data && data.meta && data.meta.code === 200) {
+              $('#shuidi-dialog').addClass('hide');
+            }
+          },
+          error   : function() {
+            alert('Failed, please retry later.');
+          }
+        });
       }
 
     , startStream: function () {

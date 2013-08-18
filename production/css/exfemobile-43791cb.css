@@ -2633,6 +2633,10 @@ button .exfe {
   padding-bottom: 20px;
   text-align: center;
 }
+#routex #shuidi-dialog .main .desc {
+  margin: 0;
+  padding: 0;
+}
 #routex #shuidi-dialog .main .desc .name {
   font-size: 18px;
   font-weight: 300;
