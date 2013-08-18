@@ -1714,15 +1714,18 @@ define('mobilecontroller', function (require, exports, module) {
           $('#shuidi-dialog').removeClass('hide');
         });
 
+        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
+          if (e.target.id === 'shuidi-dialog') {
+            e.stopPropagation();
+            $('#shuidi-dialog').addClass('hide');
+          }
+        });
+
         element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
           e.preventDefault();
           var v = $('#notify-provider').val();
           self.addNotificationIdentity(v);
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
-          e.stopPropagation();
-          $('#shuidi-dialog').addClass('hide');
+          return false;
         });
 
         element.on('tap.maps', '#identities .avatar', function (e) {
