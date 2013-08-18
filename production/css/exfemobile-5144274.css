@@ -2402,11 +2402,12 @@ button .exfe {
   position: absolute;
   content: '';
   height: 1px;
-  left: -6px;
-  right: -6px;
+  left: -7px;
+  right: -7px;
   bottom: 0;
-  background-color: #ccc;
-  box-shadow: 0 1px 1px #ffffff;
+  background-repeat: repeat-x;
+  background-size: 100% 100%;
+  background-image: url(/static/img/line@2x.png);
 }
 #routex .park {
   max-width: 200px;
@@ -2515,6 +2516,9 @@ button .exfe {
   color: #007CFF;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   font-size: 16px;
+}
+#routex #my-info .discover {
+  color: #191919;
 }
 #routex .text-label {
   background-color: rgba(204, 204, 204, 0.88);
