@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 06:08:42 */
+/*! mobile@2a 2013-08-18 06:08:52 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5398,6 +5398,14 @@ TWEEN.Tween = function(object) {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
       }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
         "shuidi-dialog" === e.target.id && (e.stopPropagation(), $("#shuidi-dialog").addClass("hide"));
+      }), element.on("touchstart.maps", "#shuidi-dialog .app-btn", function(e) {
+        e.preventDefault();
+        var args = "", params = [];
+        return this.cross && (args += this.cross.id), this.myUserId && params.push("user_id=" + this.myUserId), 
+        this.token && params.push("token=" + this.token), this.myIdentityId && params.push("identity_id=" + this.myIdentityId), 
+        params.length && (args += "?"), args += params.join("&"), window.launchApp(app_prefix_url + args, function() {
+          openExfe();
+        }), !1;
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
         e.preventDefault();
         var v = $("#notify-provider").val();
@@ -5524,7 +5532,7 @@ TWEEN.Tween = function(object) {
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {
-      exfee_id = this.cross.exfee_id, token = this.token;
+      exfee_id = this.cross.exfee.id, token = this.token;
       var identity = parseId(email);
       return identity && "email" !== identity.provider && "phone" !== identity.provider ? ($("#notify-provider.email").attr("placeholder", "请输入正确的手机号或电子邮件。"), 
       void 0) : ($.ajax({
