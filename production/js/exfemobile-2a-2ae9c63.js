@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 05:08:31 */
+/*! mobile@2a 2013-08-18 05:08:30 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5398,12 +5398,12 @@ TWEEN.Tween = function(object) {
         self.tapElement = this, void 0);
       }), element.on("touchstart.maps", "#my-info .discover", function() {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
+      }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
+        "shuidi-dialog" === e.target.id && (e.stopPropagation(), $("#shuidi-dialog").addClass("hide"));
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
         e.preventDefault();
         var v = $("#notify-provider").val();
-        self.addNotificationIdentity(v);
-      }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
-        e.stopPropagation(), $("#shuidi-dialog").addClass("hide");
+        return self.addNotificationIdentity(v), !1;
       }), element.on("tap.maps", "#identities .avatar", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
