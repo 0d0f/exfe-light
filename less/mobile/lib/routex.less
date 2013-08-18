@@ -657,6 +657,28 @@
     .discover { color: #191919; }
   }
 
+  #other-info {
+    -webkit-transform: translate3d(50px, 0, 233px);
+    -webkit-transition: -webkit-transform 144ms ease-in;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    min-height: 44px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: lighter;
+    line-height: 16px;
+    padding: 0 5px;
+    overflow: hidden;
+    //letter-spacing: 1.5px;
+
+    & > div {
+      position: relative;
+      line-height: 44px;
+    }
+  }
+
   .text-label {
     background-color: rgba(204, 204, 204, .88);
     border-radius: 3px;
