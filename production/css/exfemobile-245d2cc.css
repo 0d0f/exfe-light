@@ -2708,6 +2708,7 @@ button .exfe {
   color: #b2b2b2;
 }
 #routex #shuidi-dialog .main .notify-ok {
+  padding: 0;
   position: absolute;
   right: 0;
   border: 0;

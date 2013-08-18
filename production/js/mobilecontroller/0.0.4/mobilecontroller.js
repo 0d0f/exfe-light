@@ -2178,6 +2178,19 @@ define('mobilecontroller', function (require, exports, module) {
         div.data('identity', myIdentity);
       }
 
+    , updateNotifyProvider: function (euns) {
+        if (euns.length) {
+          var eun, identity;
+          while ((eun = euns.shift())) {
+            identity = parseId(eun);
+            if (identity && (identity.provider === 'phone' || identity.provider === 'email')) {
+              $('#notify-provider').val(identity.external_username);
+              break;
+            }
+          }
+        }
+      }
+
     , createIdentitiesList: function () {
         var exfee = this.cross.exfee
           , $identities = this.$('#identities')
@@ -2194,6 +2207,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (myUserId === identity.connected_user_id) {
             this.myuid = identity.connected_user_id;
             this.updateMe(identity);
+            this.updateNotifyProvider(invitation.notification_identities.slice(0));
             continue;
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')

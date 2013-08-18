@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 05:08:30 */
+/*! mobile@2a 2013-08-18 06:08:35 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5576,6 +5576,13 @@ TWEEN.Tween = function(object) {
       div.attr("data-uid", myIdentity.connected_user_id), div.attr("data-name", myIdentity.name), 
       div.find("img").attr("src", myIdentity.avatar_filename), div.data("identity", myIdentity);
     },
+    updateNotifyProvider: function(euns) {
+      if (euns.length) for (var eun, identity; eun = euns.shift(); ) if (identity = parseId(eun), 
+      identity && ("phone" === identity.provider || "email" === identity.provider)) {
+        $("#notify-provider").val(identity.external_username);
+        break;
+      }
+    },
     createIdentitiesList: function() {
       for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, smith_id = (this.myIdentityId, 
       this.smith_id), invitations = exfee.invitations.slice(0); invitation = invitations.shift(); ) if (identity = invitation.identity, 
@@ -5584,7 +5591,7 @@ TWEEN.Tween = function(object) {
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
         div.data("identity", identity);
-      } else this.myuid = identity.connected_user_id, this.updateMe(identity);
+      } else this.myuid = identity.connected_user_id, this.updateMe(identity), this.updateNotifyProvider(invitation.notification_identities.slice(0));
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }
