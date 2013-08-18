@@ -254,6 +254,67 @@
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
+  proto.showIdentityPanel = function (uid) {
+    this.hideNearBy();
+    var gm = this.geoMarkers[uid]
+      , geoLocation = this.geoLocation
+      , destinationPlace = this.destinationPlace
+      , identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity')
+      , $otherInfo = $('#other-info')
+      , now = Math.round(Date.now() / 1000)
+      , data, t;
+    if (gm) {
+      data = gm.data.positions[0];
+      t = Math.floor((now - data.ts) / 60);
+      $otherInfo.find('.name').text(identity.name);
+      if (t > 1) {
+        $otherInfo.find('.update')
+          .removeClass('hide')
+          .find('.time')
+          .text(t);
+        $otherInfo.find('.please-update').removeClass('hide');
+      } else {
+        $otherInfo.find('.update').addClass('hide');
+        $otherInfo.find('.please-update').addClass('hide');
+      }
+      if (destinationPlace) {
+        var p2 = destinationPlace.getPosition();
+        var d = distance(p2.lat(), p2.lng(), data.lat, data.lng)
+          //, r = bearing(lat2, lng2, lat1, lng1)
+          , result = distanceOutput(d);
+        $otherInfo.find('.dest').removeClass('hide')
+          .find('.m').text(result.text);
+      } else {
+        $otherInfo.find('.dest').addClass('hide');
+      }
+      if (geoLocation) {
+        var p2 = geoLocation.getPosition();
+        var d = distance(p2.lat(), p2.lng(), data.lat, data.lng)
+          //, r = bearing(lat2, lng2, lat1, lng1)
+          , result = distanceOutput(d);
+        $otherInfo.find('.dest-me').removeClass('hide')
+          .find('.m').text(result.text);
+      } else {
+        $otherInfo.find('.dest-me').removeClass('hide');
+      }
+
+      $otherInfo.removeClass('hide');
+
+      var point = this.fromLatLngToContainerPixel(gm.getPosition());
+      var left = point.x - 100;
+      var top = point.y - $otherInfo.height() / 2;
+
+      if (left < 0) { left = 50; }
+      if (top < 0) { top = 0; }
+
+      $otherInfo.css({ left: left, top: top });
+    }
+  };
+
+  proto.hideIdentityPanel = function () {
+    $('#other-info').addClass('hide');
+  };
+
 
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>';
   var PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>';
@@ -307,6 +368,7 @@
           var tmp = $(IDENTITY_TMP);
           tmp.find('img').attr('src', identity.avatar_filename);
           tmp.find('.name').text(identity.name);
+          tmp.attr('data-uid', k);
           var position = p.data.positions[0];
           var n = Math.floor((now - position.ts) / 60);
           var dm = '', dd = '', str = '';

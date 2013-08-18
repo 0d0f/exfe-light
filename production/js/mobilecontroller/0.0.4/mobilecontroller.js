@@ -1708,6 +1708,14 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
+        element.on('touchstart.maps', '#nearby .geo-marker', function (e) {
+          e.preventDefault();
+          if (self.mapReadyStatus) {
+            var uid = $(this).data('uid');
+            self.mapController.showIdentityPanel(uid);
+          }
+        });
+
         element.on('touchstart.maps', '#my-info .discover', function (e) {
           $myInfo.addClass('hide');
           self.tapElement = null;

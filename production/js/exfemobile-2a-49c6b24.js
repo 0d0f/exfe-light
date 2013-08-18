@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 07:08:31 */
+/*! mobile@2a 2013-08-19 01:08:14 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4025,6 +4025,29 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
+  }, proto.showIdentityPanel = function(uid) {
+    this.hideNearBy();
+    var data, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
+    if (gm) {
+      if (data = gm.data.positions[0], t = Math.floor((now - data.ts) / 60), $otherInfo.find(".name").text(identity.name), 
+      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
+      $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
+        var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
+        $otherInfo.find(".dest").removeClass("hide").find(".m").text(result.text);
+      } else $otherInfo.find(".dest").addClass("hide");
+      if (geoLocation) {
+        var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
+        $otherInfo.find(".dest-me").removeClass("hide").find(".m").text(result.text);
+      } else $otherInfo.find(".dest-me").removeClass("hide");
+      $otherInfo.removeClass("hide");
+      var point = this.fromLatLngToContainerPixel(gm.getPosition()), left = point.x - 100, top = point.y - $otherInfo.height() / 2;
+      0 > left && (left = 50), 0 > top && (top = 0), $otherInfo.css({
+        left: left,
+        top: top
+      });
+    }
+  }, proto.hideIdentityPanel = function() {
+    $("#other-info").addClass("hide");
   };
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
   return proto.hideNearBy = function() {
@@ -4046,7 +4069,8 @@ TWEEN.Tween = function(object) {
       for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
         status || (status = !0), p.data.id.split("@")[0];
         var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
-        tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name);
+        tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name), 
+        tmp.attr("data-uid", k);
         var position = p.data.positions[0], n = Math.floor((now - position.ts) / 60), dm = "", dd = "", str = "";
         if (geoPosition) {
           var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()));
@@ -5394,6 +5418,11 @@ TWEEN.Tween = function(object) {
         return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
         !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
         self.tapElement = this, void 0);
+      }), element.on("touchstart.maps", "#nearby .geo-marker", function(e) {
+        if (e.preventDefault(), self.mapReadyStatus) {
+          var uid = $(this).data("uid");
+          self.mapController.showIdentityPanel(uid);
+        }
       }), element.on("touchstart.maps", "#my-info .discover", function() {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
       }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
