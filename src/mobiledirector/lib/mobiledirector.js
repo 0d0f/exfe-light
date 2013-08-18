@@ -39,11 +39,12 @@
     redirectIframe(url);
   };
 
-  window.openExfe = function () {
+  window.openExfe = function (url) {
+    url = url || '';
     startTime = now();
-    window.launchApp('', function () {
+    window.launchApp(url, function () {
       redirectIframe(itunes);
-    }, 1000);
+    });
   };
 
   var redirectIframe = function (url, id) {

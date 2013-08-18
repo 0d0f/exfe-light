@@ -1730,9 +1730,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId); }
           if (params.length) { args += '?'; }
           args += params.join('&');
-          window.launchApp(app_prefix_url + args, function () {
-            openExfe();
-          });
+          openExfe(app_prefix_url + args);
           return false;
         });
 
