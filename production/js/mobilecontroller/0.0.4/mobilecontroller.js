@@ -1721,6 +1721,21 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
+        element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
+          e.preventDefault();
+          var args = '', params = [];
+          if (this.cross) { args += this.cross.id; }
+          if (this.myUserId) { params.push('user_id=' + this.myUserId); }
+          if (this.token) { params.push('token=' + this.token); }
+          if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId); }
+          if (params.length) { args += '?'; }
+          args += params.join('&');
+          window.launchApp(app_prefix_url + args, function () {
+            openExfe();
+          });
+          return false;
+        });
+
         element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
           e.preventDefault();
           var v = $('#notify-provider').val();

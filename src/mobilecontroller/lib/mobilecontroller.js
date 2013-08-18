@@ -1725,9 +1725,9 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
           var args = '', params = [];
           if (this.cross) { args += this.cross.id; }
-          if (this.myUserId) { params.push('user_id=' + this.myUserId; }
-          if (this.token) { params.push('token=' + this.token; }
-          if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId; }
+          if (this.myUserId) { params.push('user_id=' + this.myUserId); }
+          if (this.token) { params.push('token=' + this.token); }
+          if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId); }
           if (params.length) { args += '?'; }
           args += params.join('&');
           window.launchApp(app_prefix_url + args, function () {

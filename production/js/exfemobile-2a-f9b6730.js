@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 06:08:51 */
+/*! mobile@2a 2013-08-18 06:08:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5400,6 +5400,14 @@ TWEEN.Tween = function(object) {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
       }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
         "shuidi-dialog" === e.target.id && (e.stopPropagation(), $("#shuidi-dialog").addClass("hide"));
+      }), element.on("touchstart.maps", "#shuidi-dialog .app-btn", function(e) {
+        e.preventDefault();
+        var args = "", params = [];
+        return this.cross && (args += this.cross.id), this.myUserId && params.push("user_id=" + this.myUserId), 
+        this.token && params.push("token=" + this.token), this.myIdentityId && params.push("identity_id=" + this.myIdentityId), 
+        params.length && (args += "?"), args += params.join("&"), window.launchApp(app_prefix_url + args, function() {
+          openExfe();
+        }), !1;
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
         e.preventDefault();
         var v = $("#notify-provider").val();
