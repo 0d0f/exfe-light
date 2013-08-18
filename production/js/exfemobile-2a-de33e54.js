@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-18 02:08:48 */
+/*! mobile@2a 2013-08-18 02:08:39 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4209,7 +4209,7 @@ TWEEN.Tween = function(object) {
         isme ? bounds = this.calculateBoundsByCenter(gmlatlng, [ dlatlng ]) : (bounds = new google.maps.LatLngBounds(), 
         50 > p.x && (p = this.fromContainerPixelToLatLng(new google.maps.Point(p.x - 50, p.y)), 
         bounds.extend(p)), bounds.extend(gmlatlng), bounds.extend(dlatlng)), map.fitBounds(bounds);
-      } else map.getBounds().contains(gmlatlng) || (7 > map.getZoom() && map.setZoom(15), 
+      } else (isme || !map.getBounds().contains(gmlatlng)) && (7 > map.getZoom() && map.setZoom(15), 
       map.panTo(gmlatlng));
     }
   }, proto.panToDestination = function(position) {
