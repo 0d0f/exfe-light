@@ -267,7 +267,7 @@
     return d <= 100;
   };
   proto.showNearBy = function (point) {
-    if (e) {
+    if (point) {
       var center = point
         , status = false
         , myuid = this.myuid
