@@ -2017,9 +2017,11 @@ define('mobilecontroller', function (require, exports, module) {
             , type: 'GET'
             , dataType: 'json'
             , success: function (data) {
-                if (data && data.length) {
-                  var d, id;
-                  while ((d = data.shift())) {
+                var len = data && data.length;
+                if (len) {
+                  var d, id, i;
+                  for (i = 0; i < len; ++i) {
+                    d = data[i];
                     id = d.id.split('@')[0];
                     if (mc._breadcrumbs[id]) {
                       mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions);
