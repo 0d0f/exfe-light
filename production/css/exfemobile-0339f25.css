@@ -2491,7 +2491,7 @@ button .exfe {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 #routex #my-info {
-  -webkit-transform: translate3d(0, 0, 233px);
+  -webkit-transform: translate3d(50px, 0, 233px);
   -webkit-transition: -webkit-transform 144ms ease-in;
   position: absolute;
   top: 0;
@@ -2521,7 +2521,7 @@ button .exfe {
   color: #191919;
 }
 #routex #other-info {
-  -webkit-transform: translate3d(50px, 0, 233px);
+  -webkit-transform: translate3d(0, 0, 233px);
   -webkit-transition: -webkit-transform 144ms ease-in;
   position: absolute;
   top: 0;
