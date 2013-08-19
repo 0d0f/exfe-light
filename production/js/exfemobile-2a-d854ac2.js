@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 10:08:27 */
+/*! mobile@2a 2013-08-19 10:08:28 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5557,7 +5557,7 @@ TWEEN.Tween = function(object) {
         $.ajax({
           type: "POST",
           url: apiv3_url + "/routex/users/crosses/" + this.cross_id + "?token=" + this.token,
-          data: JSON.stringify([ data ]),
+          data: JSON.stringify(data),
           success: function(data) {
             console.log("success", data);
           },
