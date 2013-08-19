@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 10:08:43 */
+/*! mobile@2a 2013-08-19 10:08:46 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3972,7 +3972,8 @@ TWEEN.Tween = function(object) {
           });
           var t, MD_TIME, time = 377;
           GEvent.addDomListener(mapDiv, "touchstart", function(e) {
-            console.dir(e), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), t = setTimeout(function() {
+            console.dir(e), rm.hideIdentityPanel(), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), 
+            t = setTimeout(function() {
               e.preventDefault();
               var touch = e.touches[0], point = {
                 x: touch.pageX,
@@ -4039,8 +4040,8 @@ TWEEN.Tween = function(object) {
       } else $otherInfo.find(".dest-me").removeClass("hide");
       $otherInfo.removeClass("hide");
       var w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width(), point = this.fromLatLngToContainerPixel(gm.getPosition()), left = point.x - ow / 2, top = point.y - oh / 2;
-      0 > left && (left = 50), left > w - ow && (left = w - ow), 0 > top && (top = 0), 
-      top > h - oh && (top = h - oh), $otherInfo.css({
+      0 > left && (left = 50), left + ow > w && (left = w - ow), 0 > top && (top = 20), 
+      top + oh > h && (top = h - oh), $otherInfo.css({
         left: left,
         top: top
       });

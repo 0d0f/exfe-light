@@ -193,6 +193,7 @@
           var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             console.dir(e)
+            rm.hideIdentityPanel();
             rm.hideNearBy();
 
             MD_TIME = Date.now();
@@ -309,9 +310,9 @@
       var top = point.y - oh / 2;
 
       if (left < 0) { left = 50; }
-      if (left > w - ow) { left = w - ow; }
-      if (top < 0) { top = 0; }
-      if (top > h - oh) { top = h - oh; }
+      if (left + ow > w) { left = w - ow; }
+      if (top < 0) { top = 20; }
+      if (top + oh > h) { top = h - oh; }
 
       $otherInfo.css({ left: left, top: top });
     }
