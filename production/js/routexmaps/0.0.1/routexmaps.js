@@ -293,7 +293,7 @@
           //, r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d);
         $otherInfo.find('.dest-me').removeClass('hide')
-          .find('.m').text(result.text);
+          .find('.m').html(result.text);
       } else {
         $otherInfo.find('.dest-me').removeClass('hide');
       }
