@@ -259,7 +259,7 @@
     var gm = this.geoMarkers[uid]
       , geoLocation = this.geoLocation
       , destinationPlace = this.destinationPlace
-      , identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity')
+      , identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data('identity')
       , $otherInfo = $('#other-info')
       , now = Math.round(Date.now() / 1000)
       , data, t;
