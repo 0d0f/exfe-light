@@ -524,6 +524,9 @@
       background-image: url(/static/img/line@2x.png);
     }
 
+    .splitline:last-child:after {
+      display: none;
+    }
   }
 
   .park {
@@ -671,11 +674,30 @@
     line-height: 16px;
     padding: 0 5px;
     overflow: hidden;
+    color: #191919;
+    font-size: 14px;
+    font-weight: 300;
     //letter-spacing: 1.5px;
 
     & > div {
       position: relative;
       line-height: 44px;
+    }
+
+    .name {
+      font-size: 21px;
+      line-height: 21px;
+    }
+    .update {
+      font-size: 9px;
+      line-height: 9px;
+      color: #333;
+      padding-bottom: 2px;
+    }
+    .please-update {
+      font-size: 16px;
+      line-height: 16px;
+      color: #007cff;
     }
   }
 

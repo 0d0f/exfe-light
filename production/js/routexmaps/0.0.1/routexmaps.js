@@ -283,7 +283,7 @@
           //, r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d);
         $otherInfo.find('.dest').removeClass('hide')
-          .find('.m').text(result.text);
+          .find('.m').html(result.text);
       } else {
         $otherInfo.find('.dest').addClass('hide');
       }
@@ -300,12 +300,18 @@
 
       $otherInfo.removeClass('hide');
 
+      var w = $(window).width();
+      var h = $(window).height();
+      var oh = $otherInfo.height();
+      var ow = $otherInfo.width();
       var point = this.fromLatLngToContainerPixel(gm.getPosition());
-      var left = point.x - 100;
-      var top = point.y - $otherInfo.height() / 2;
+      var left = point.x - ow / 2;
+      var top = point.y - oh / 2;
 
       if (left < 0) { left = 50; }
+      if (left > w - ow) { left = w - ow; }
       if (top < 0) { top = 0; }
+      if (top > h - oh) { top = h - oh; }
 
       $otherInfo.css({ left: left, top: top });
     }
