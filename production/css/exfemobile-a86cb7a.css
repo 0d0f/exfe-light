@@ -2404,13 +2404,10 @@ button .exfe {
   height: 1px;
   left: -7px;
   right: -7px;
-  bottom: 0;
+  top: 0;
   background-repeat: repeat-x;
   background-size: 100% 100%;
   background-image: url(/static/img/line@2x.png);
-}
-#routex .info-windown .splitline:last-child:after {
-  display: none;
 }
 #routex .park {
   max-width: 200px;
@@ -2545,6 +2542,9 @@ button .exfe {
   position: relative;
   line-height: 44px;
 }
+#routex #other-info .info {
+  padding: 14px 0;
+}
 #routex #other-info .name {
   font-size: 21px;
   line-height: 21px;
@@ -2561,7 +2561,6 @@ button .exfe {
 }
 #routex #other-info .please-update {
   font-size: 16px;
-  line-height: 16px;
   color: #007cff;
 }
 #routex .text-label {
@@ -2593,11 +2592,12 @@ button .exfe {
   position: absolute;
   content: '';
   height: 1px;
-  left: -6px;
-  right: -6px;
+  left: -7px;
+  right: -7px;
   bottom: 0;
-  background-color: #ccc;
-  box-shadow: 0 1px 1px #ffffff;
+  background-repeat: repeat-x;
+  background-size: 100% 100%;
+  background-image: url(/static/img/line@2x.png);
 }
 #routex #nearby > div:last-child:before {
   display: none;

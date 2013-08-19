@@ -518,16 +518,10 @@
       height: 1px;
       left: -7px;
       right: -7px;
-      bottom: 0;
+      top: 0;
       background-repeat: repeat-x;
       background-size: 100% 100%;
       background-image: url(/static/img/line@2x.png);
-    }
-
-    .splitline:last-child {
-      &:after {
-        display: none;
-      }
     }
   }
 
@@ -686,6 +680,9 @@
       line-height: 44px;
     }
 
+    .info {
+      padding: 14px 0;
+    }
     .name {
       font-size: 21px;
       line-height: 21px;
@@ -701,7 +698,6 @@
     }
     .please-update {
       font-size: 16px;
-      line-height: 16px;
       color: #007cff;
     }
   }
@@ -736,11 +732,12 @@
         position: absolute;
         content: '';
         height: 1px;
-        left: -6px;
-        right: -6px;
+        left: -7px;
+        right: -7px;
         bottom: 0;
-        background-color: #ccc;
-        box-shadow: 0 1px 1px rgba(255, 255, 255, 1);
+        background-repeat: repeat-x;
+        background-size: 100% 100%;
+        background-image: url(/static/img/line@2x.png);
       }
 
       &:last-child {
