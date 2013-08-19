@@ -2069,13 +2069,12 @@ define('mobilecontroller', function (require, exports, module) {
         // 开启跟踪
         if (this.cross_id && this.token) {
           var data = {
-              cross_id: this.cross_id
-            , save_breadcrumbs: true
+              save_breadcrumbs: true
             , after_in_seconds: 7200
           };
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/users/crosses?token=' + this.token
+            , url: apiv3_url + '/routex/users/crosses/' + this.cross_id + '?token=' + this.token
             , data: JSON.stringify([data])
             , success: function (data) {
                 console.log('success', data)
