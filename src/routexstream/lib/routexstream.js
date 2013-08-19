@@ -208,7 +208,7 @@ define('routexstream', function (require) {
 
 
     var checkGps = function (data) {
-      return data && data.ts && data.lat && data.lng && data.acc;
+      return data && data.t && data.gps && data.gps[0] && data.gps[1] && data.gps[2];
     };
 
 
