@@ -2409,6 +2409,9 @@ button .exfe {
   background-size: 100% 100%;
   background-image: url(/static/img/line@2x.png);
 }
+#routex .info-windown .splitline:last-child:after {
+  display: none;
+}
 #routex .park {
   max-width: 200px;
   min-width: 100px;
@@ -2534,10 +2537,28 @@ button .exfe {
   line-height: 16px;
   padding: 0 5px;
   overflow: hidden;
+  color: #191919;
+  font-size: 14px;
+  font-weight: 300;
 }
 #routex #other-info > div {
   position: relative;
   line-height: 44px;
+}
+#routex #other-info .name {
+  font-size: 21px;
+  line-height: 21px;
+}
+#routex #other-info .update {
+  font-size: 9px;
+  line-height: 9px;
+  color: #333;
+  padding-bottom: 2px;
+}
+#routex #other-info .please-update {
+  font-size: 16px;
+  line-height: 16px;
+  color: #007cff;
 }
 #routex .text-label {
   background-color: rgba(204, 204, 204, 0.88);
