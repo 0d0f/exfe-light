@@ -1749,11 +1749,15 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
           var args = '', params = [];
           if (this.cross) { args += this.cross.id; }
-          if (this.myUserId) { params.push('user_id=' + this.myUserId); }
-          if (this.token) { params.push('token=' + this.token); }
+          if (this.myuid && this.token) {
+            params.push('user_id=' + this.myuid);
+            params.push('token=' + this.token);
+          }
           if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId); }
-          if (params.length) { args += '?'; }
-          args += params.join('&');
+          if (params.length) {
+            args += '?' + params.join('&');
+          }
+          console.log(app_prefix_url + args);
           openExfe(app_prefix_url + args);
           return false;
         });
