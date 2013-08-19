@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 10:08:28 */
+/*! mobile@2a 2013-08-19 11:08:15 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5822,7 +5822,7 @@ TWEEN.Tween = function(object) {
   app.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), 
-  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), app.get(/^\/+!\d+\/routex\/?\?xcode=([a-zA-Z0-9]{4,})$/, routes.routex), 
+  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), app.get(/^\/+!\d+\/routex\/?\?.*$/, routes.routex), 
   app.on("launched", function() {
     function animate() {
       requestAnimationFrame(animate), TWEEN.update();
