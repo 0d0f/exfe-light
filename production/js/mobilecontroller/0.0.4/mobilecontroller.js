@@ -1748,12 +1748,12 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
           e.preventDefault();
           var args = '', params = [];
-          if (this.cross) { args += this.cross.id; }
-          if (this.myuid && this.token) {
-            params.push('user_id=' + this.myuid);
-            params.push('token=' + this.token);
+          if (self.cross) { args += self.cross.id; }
+          if (self.myuid && self.token) {
+            params.push('user_id=' + self.myuid);
+            params.push('token=' + self.token);
           }
-          if (this.myIdentityId) { params.push('identity_id=' + this.myIdentityId); }
+          if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
           if (params.length) {
             args += '?' + params.join('&');
           }

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 02:08:38 */
+/*! mobile@2a 2013-08-19 02:08:53 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5447,8 +5447,8 @@ TWEEN.Tween = function(object) {
       }), element.on("touchstart.maps", "#shuidi-dialog .app-btn", function(e) {
         e.preventDefault();
         var args = "", params = [];
-        return this.cross && (args += this.cross.id), this.myuid && this.token && (params.push("user_id=" + this.myuid), 
-        params.push("token=" + this.token)), this.myIdentityId && params.push("identity_id=" + this.myIdentityId), 
+        return self.cross && (args += self.cross.id), self.myuid && self.token && (params.push("user_id=" + self.myuid), 
+        params.push("token=" + self.token)), self.myIdentityId && params.push("identity_id=" + self.myIdentityId), 
         params.length && (args += "?" + params.join("&")), console.log(app_prefix_url + args), 
         openExfe(app_prefix_url + args), !1;
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
