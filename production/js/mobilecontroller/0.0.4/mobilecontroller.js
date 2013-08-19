@@ -1893,7 +1893,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
-        }
+          }
           console.log(pb, ids);
         });
 
@@ -2143,11 +2143,11 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.stopGeo();
         routexStream.startGeo(
             function (r) {
-              self.position = { lat: r.latitude + '',  lng: r.longitude + '', ts: r.timestamp, acc: r.accuracy };
+              //self.position = { lat: r.latitude + '',  lng: r.longitude + '', ts: r.timestamp, acc: r.accuracy };
+              self.position = { gps: [ r.latitude + '',  r.longitude + '', r.accuracy], t: r.timestamp };
               Store.set('position', self.position);
               self.switchGPSStyle(2);
               self.trackGeoLocation();
-              console.log('GPS', r.lat, r.lng, r);
             }
           , function (r) {
               self.switchGPSStyle(1);

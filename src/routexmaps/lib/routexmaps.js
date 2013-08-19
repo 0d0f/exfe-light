@@ -370,7 +370,7 @@
           tmp.find('.name').text(identity.name);
           tmp.attr('data-uid', k);
           var position = p.data.positions[0];
-          var n = Math.floor((now - position.ts) / 60);
+          var n = Math.floor((now - position.t) / 60);
           var dm = '', dd = '', str = '';
 
           if (geoPosition) {
@@ -433,6 +433,10 @@
           while ((tag = tags.shift())) {
             if (tag === DESTINATION) {
               isDestination = true;
+              var i = data.tags.indexOf('cross_place');
+              if (i > 0) {
+                data.tags.splice(i, 1);
+              }
               break;
             }
           }
@@ -476,7 +480,7 @@
       , id = data.id
       , positions = data.positions.slice(0)
       , coords = []
-      , r, d, p;
+      , r, d, p, gps;
     if (routes.hasOwnProperty(id)) {
       r = routes[id];
       d = r.data;
@@ -491,7 +495,8 @@
     }
 
     while ((p = positions.shift())) {
-      coords.push(this.toLatLng(p.lat, p.lng));
+      gps = p.gps;
+      coords.push(this.toLatLng(gps[0], gps[1]));
     }
 
     r.setPath(coords);
@@ -571,7 +576,7 @@
       if (u.hasOwnProperty(uid)) {
         d = u[uid];
         isme = myuid == uid;
-        n = Math.floor((now - d.ts) / 60);
+        n = Math.floor((now - d.t) / 60);
         gm = isme ? geo : gms[uid];
         this.distanceMatrix(uid, gm ,dp, n);
 
@@ -660,7 +665,7 @@
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
       , uid = data.id.split('@')[0]
-      , g, d, position, latlng;
+      , g, d, latlng, gps;
 
     this.updatePositions(data);
     if (uid != this.myuid) {
@@ -675,8 +680,8 @@
       if (!g) {
         g = gms[uid] = this.addGeoMarker();
       }
-      position = data.positions[0];
-      latlng = this.toLatLng(position.lat, position.lng);
+      gps = data.positions[0].gps;
+      latlng = this.toLatLng(gps[0], gps[1]);
       g.setPosition(latlng);
       g.data = data;
 
@@ -845,8 +850,8 @@
 
   proto.distanceMatrixPixl = function (p0, p1, n) {
     n = n || 50;
-    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng))
-      , b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng))
+    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0[0], p0[1]))
+      , b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1[0], p1[1]))
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
     return d >= n;
@@ -868,7 +873,7 @@
         , p, t, n, prev;
 
       while ((p = ps.shift())) {
-        t = Math.floor((now - p.ts) / 600) * 10;
+        t = Math.floor((now - p.t) / 600) * 10;
 
         if (ignore === t) { continue; }
 
@@ -877,7 +882,7 @@
         if (t > end) { break; }
 
         if (prev) {
-          b = this.distanceMatrixPixl(p, prev);
+          b = this.distanceMatrixPixl(p.gps, prev.gps);
         }
 
         if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
@@ -899,7 +904,7 @@
             marker = label.marker;
           }
           if (marker) {
-            marker.setPosition(this.toLatLng(p.lat, p.lng));
+            marker.setPosition(this.toLatLng(p.gps[0], p.gps[1]));
             marker.setIcon({
                 path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
               , fillColor: bool ? '#FF7E98' : '#b2b2b2'
@@ -935,7 +940,7 @@
   };
 
   proto.updateBreadcrumbs = function (uid) {
-    var data, b, p, coords = [];
+    var data, b, p, gps, coords = [];
     if (!(data = this._breadcrumbs[uid])) { return; }
     var positions0 = data.positions.slice(0);
     var positions1 = positions0.slice(0);
@@ -943,7 +948,8 @@
 
     if ((b = this.breadcrumbs[uid])) {
       while ((p = positions1.pop())) {
-        coords.push(this.toLatLng(p.lat, p.lng));
+        gps = p.gps;
+        coords.push(this.toLatLng(gps[0], gps[1]));
       }
       b.setPath(coords);
     }
@@ -1189,7 +1195,7 @@
   };
 
   proto.updateGeoLocation = function (uid, position) {
-    var geoLocation = this.geoLocation, latlng;
+    var geoLocation = this.geoLocation, latlng, gps;
     if (!geoLocation) {
       // status: 0-init, 1-last-latlng, 2: new-latlng
       geoLocation = this.geoLocation = new google.maps.Marker({
@@ -1214,15 +1220,17 @@
       geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
       if (lastlatlng) {
+        gps = lastlatlng.gps;
         geoLocation._status = 1;
-        latlng = this.toLatLng(lastlatlng.lat * 1 + this.latOffset, lastlatlng.lng * 1 + this.lngOffset);
+        latlng = this.toLatLng(gps[0] * 1 + this.latOffset, gps[1] * 1 + this.lngOffset);
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
       }
     }
     if (position) {
-      latlng = this.toLatLng(position.lat * 1 + this.latOffset, position.lng * 1 + this.lngOffset)
+      gps = position.gps;
+      latlng = this.toLatLng(gps[0] * 1 + this.latOffset, gps[1] * 1 + this.lngOffset)
       geoLocation.setIcon(this.icons.arrowBlue);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {

@@ -579,6 +579,7 @@
       crossFunc(data, true);
       */
 
+
       var authorization = JSON.parse(localStorage.getItem('authorization'))
         , user_id = authorization && authorization.user_id
         , user_token = authorization && authorization.token
@@ -594,6 +595,7 @@
           , token: user_token
         }));
       }
+
 
       if (window.isWeixin) {
         // has user-token

@@ -19,8 +19,8 @@ define('routexstream', function (require) {
     var unat_cbf = null;
 
     var bolDebug = !true;
-
-    var myData   = { ts: 0, lat : 0, lng : 0, acc : 0 };
+    //                          lat, lng, acc
+    var myData   = { t: 0, gps: [0, 0, 0] };
 
     var lstLocat = '';
 
@@ -219,17 +219,17 @@ define('routexstream', function (require) {
     var getGeo = function (done, fail) {
       geoService.get(
           function (result) {
-            myData.ts = result.timestamp;
-            myData.lat  = result.latitude;
-            myData.lng = result.longitude;
-            myData.acc  = result.accuracy;
+            myData.t = result.timestamp;
+            myData.gps[0] = result.latitude;
+            myData.gps[1] = result.longitude;
+            myData.gps[2] = result.accuracy;
             done && done(result);
             log(
                 'Location update: '
-              + 'time = ' + myData.ts + ', '
-              + 'lat  = ' + myData.lat + ', '
-              + 'lng  = ' + myData.lng + ', '
-              + 'acu  = ' + myData.acc
+              + 'time = ' + myData.t + ', '
+              + 'lat  = ' + myData.gps[0]  + ', '
+              + 'lng  = ' + myData.gps[1] + ', '
+              + 'acu  = ' + myData.gps[2]
             );
           }
         , function (result) {
@@ -241,17 +241,17 @@ define('routexstream', function (require) {
     var startGeo = function (done, fail) {
       intGeoWatch = geoService.watch(
           function (result) {
-            myData.ts = result.timestamp;
-            myData.lat = result.latitude;
-            myData.lng = result.longitude;
-            myData.acc  = result.accuracy;
+            myData.t = result.timestamp;
+            myData.gps[0] = result.latitude;
+            myData.gps[1] = result.longitude;
+            myData.gps[2] = result.accuracy;
             done && done(result);
             log(
                 'Location update: '
-              + 'time = ' + myData.ts + ', '
-              + 'lat  = ' + myData.lat  + ', '
-              + 'lng  = ' + myData.lng + ', '
-              + 'acu  = ' + myData.acc
+              + 'time = ' + myData.t + ', '
+              + 'lat  = ' + myData.gps[0]  + ', '
+              + 'lng  = ' + myData.gps[1] + ', '
+              + 'acu  = ' + myData.gps[2]
             );
           }
         , function (result) {
