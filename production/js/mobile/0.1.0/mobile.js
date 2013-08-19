@@ -61,7 +61,7 @@ define(function (require) {
 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
   app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
-  app.get(/^\/+!\d+\/routex\/?\?xcode=([a-zA-Z0-9]{4,})$/, routes.routex);
+  app.get(/^\/+!\d+\/routex\/?\?.*$/, routes.routex);
 
   app.on('launched', function () {
     function animate() {
