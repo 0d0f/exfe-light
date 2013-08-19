@@ -1716,6 +1716,22 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
+        element.on('touchstart.maps', '#other-info .please-update', function (e) {
+          var $t = $(this)
+            , status = $t.data('status');
+          if (status) { return; }
+          var external_username = $t.data('external-username')
+            , provider = $t.data('provider');
+          $t.data('status', true);
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/notification/crosses/' + this.cross_id + '/' + external_username + '@' + provider + '?token=' + this.token
+            , success : function () {}
+            , error   : function () {}
+            , complete: function () { $t.data('status', false); }
+          });
+        });
+
         element.on('touchstart.maps', '#my-info .discover', function (e) {
           $myInfo.addClass('hide');
           self.tapElement = null;
@@ -1937,15 +1953,8 @@ define('mobilecontroller', function (require, exports, module) {
 
           $win.trigger('orientationchange');
 
-          // 授权页面
-          // if (self.isSmithToken) {
-          //   alert('It is Smith-Token.');
-          //   //element.find('#free-identities').removeClass('hide');
-          //   //self.getFreeIdentities();
-          // } else {
-            self.createIdentitiesList();
-            self.streaming();
-          // }
+          self.createIdentitiesList();
+          self.streaming();
         });
 
       }
@@ -1972,13 +1981,6 @@ define('mobilecontroller', function (require, exports, module) {
           );
         }
       }
-
-    /*
-    , getFreeIdentities: function () {
-        this.updateExfeeName();
-        this.createFreeIdentitiesList(this.freeIdentities);
-      }
-    */
 
     , loadMaps: function (p) {
         var self = this

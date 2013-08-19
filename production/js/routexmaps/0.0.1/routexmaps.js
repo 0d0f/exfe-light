@@ -266,14 +266,17 @@
       , data, t;
     if (gm) {
       data = gm.data.positions[0];
-      t = Math.floor((now - data.ts) / 60);
+      t = Math.floor((now - data.t) / 60);
       $otherInfo.find('.name').text(identity.name);
       if (t > 1) {
         $otherInfo.find('.update')
           .removeClass('hide')
           .find('.time')
           .text(t);
-        $otherInfo.find('.please-update').removeClass('hide');
+        $otherInfo.find('.please-update')
+          .attr('data-external-username', identity.external_username)
+          .attr('data-provider', identity.provider)
+          .removeClass('hide');
       } else {
         $otherInfo.find('.update').addClass('hide');
         $otherInfo.find('.please-update').addClass('hide');
