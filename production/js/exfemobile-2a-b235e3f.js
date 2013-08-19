@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 01:08:41 */
+/*! mobile@2a 2013-08-19 09:08:12 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3783,10 +3783,8 @@ TWEEN.Tween = function(object) {
 }), define("routexstream", function() {
   "use strict";
   var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
-    ts: 0,
-    lat: 0,
-    lng: 0,
-    acc: 0
+    t: 0,
+    gps: [ 0, 0, 0 ]
   }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
@@ -3859,15 +3857,15 @@ TWEEN.Tween = function(object) {
     geoService.stopWatch(intGeoWatch);
   }, getGeo = function(done, fail) {
     geoService.get(function(result) {
-      myData.ts = result.timestamp, myData.lat = result.latitude, myData.lng = result.longitude, 
-      myData.acc = result.accuracy, done && done(result), log("Location update: time = " + myData.ts + ", " + "lat  = " + myData.lat + ", " + "lng  = " + myData.lng + ", " + "acu  = " + myData.acc);
+      myData.t = result.timestamp, myData.gps[0] = result.latitude, myData.gps[1] = result.longitude, 
+      myData.gps[2] = result.accuracy, done && done(result), log("Location update: time = " + myData.t + ", " + "lat  = " + myData.gps[0] + ", " + "lng  = " + myData.gps[1] + ", " + "acu  = " + myData.gps[2]);
     }, function(result) {
       fail && fail(result);
     });
   }, startGeo = function(done, fail) {
     intGeoWatch = geoService.watch(function(result) {
-      myData.ts = result.timestamp, myData.lat = result.latitude, myData.lng = result.longitude, 
-      myData.acc = result.accuracy, done && done(result), log("Location update: time = " + myData.ts + ", " + "lat  = " + myData.lat + ", " + "lng  = " + myData.lng + ", " + "acu  = " + myData.acc);
+      myData.t = result.timestamp, myData.gps[0] = result.latitude, myData.gps[1] = result.longitude, 
+      myData.gps[2] = result.accuracy, done && done(result), log("Location update: time = " + myData.t + ", " + "lat  = " + myData.gps[0] + ", " + "lng  = " + myData.gps[1] + ", " + "acu  = " + myData.gps[2]);
     }, function(result) {
       fail && fail(result);
     });
@@ -4071,7 +4069,7 @@ TWEEN.Tween = function(object) {
         var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
         tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name), 
         tmp.attr("data-uid", k);
-        var position = p.data.positions[0], n = Math.floor((now - position.ts) / 60), dm = "", dd = "", str = "";
+        var position = p.data.positions[0], n = Math.floor((now - position.t) / 60), dm = "", dd = "", str = "";
         if (geoPosition) {
           var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()));
           dm = s.text;
@@ -4099,6 +4097,8 @@ TWEEN.Tween = function(object) {
       var isDestination;
       if (hasTags) for (;tag = tags.shift(); ) if (tag === DESTINATION) {
         isDestination = !0;
+        var i = data.tags.indexOf("cross_place");
+        i > 0 && data.tags.splice(i, 1);
         break;
       }
       isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
@@ -4116,9 +4116,10 @@ TWEEN.Tween = function(object) {
     var places = this.places, id = data.id, p = places[id];
     p && (p.setMap(null), p = null, delete places[id]);
   }, proto.drawRoute = function(data) {
-    var r, d, p, routes = this.routes, id = data.id, positions = data.positions.slice(0), coords = [];
+    var r, d, p, gps, routes = this.routes, id = data.id, positions = data.positions.slice(0), coords = [];
     if (!routes.hasOwnProperty(id) || (r = routes[id], d = r.data, d.updated_at !== data.updated_at)) {
-      for (r || (r = routes[id] = this.addPolyline(data)); p = positions.shift(); ) coords.push(this.toLatLng(p.lat, p.lng));
+      for (r || (r = routes[id] = this.addPolyline(data)); p = positions.shift(); ) gps = p.gps, 
+      coords.push(this.toLatLng(gps[0], gps[1]));
       r.setPath(coords), r.data = data;
     }
   }, proto.removeRoute = function(data) {
@@ -4145,7 +4146,7 @@ TWEEN.Tween = function(object) {
     }
   }, proto.monit = function() {
     var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, curr_uid = this.uid, now = Math.round(new Date().getTime() / 1e3);
-    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid == uid, n = Math.floor((now - d.ts) / 60), 
+    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid == uid, n = Math.floor((now - d.t) / 60), 
     gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), b = bs[uid], tl = tiplines[uid], 
     $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
     1 >= n) {
@@ -4192,10 +4193,10 @@ TWEEN.Tween = function(object) {
   }, proto.drawBreadcrumbs = function(data) {
     this.breadcrumbs, data.uid;
   }, proto.drawGeoMarker = function(data) {
-    var g, d, position, latlng, gms = this.geoMarkers, uid = data.id.split("@")[0];
+    var g, d, latlng, gps, gms = this.geoMarkers, uid = data.id.split("@")[0];
     if (this.updatePositions(data), uid != this.myuid) {
       if (gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at)) return;
-      g || (g = gms[uid] = this.addGeoMarker()), position = data.positions[0], latlng = this.toLatLng(position.lat, position.lng), 
+      g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
       g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng);
     }
   }, proto.updatePositions = function(data) {
@@ -4270,14 +4271,14 @@ TWEEN.Tween = function(object) {
     return p;
   }, proto.MIN_PIXL = 50, proto.distanceMatrixPixl = function(p0, p1, n) {
     n = n || 50;
-    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0.lat, p0.lng)), b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1.lat, p1.lng)), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+    var a = this.fromLatLngToContainerPixel(new google.maps.LatLng(p0[0], p0[1])), b = this.fromLatLngToContainerPixel(new google.maps.LatLng(p1[0], p1[1])), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return d >= n;
   }, proto.showTextLabels = function(uid, positions, bool) {
     if (uid) {
-      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.ts) / 600), 
+      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
       ignore !== t) {
         if (ignore = t, t > end) break;
-        prev && (b = this.distanceMatrixPixl(p, prev)), t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) && (start = t, 
+        prev && (b = this.distanceMatrixPixl(p.gps, prev.gps)), t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) && (start = t, 
         label = labels[i], label ? marker = label.marker : (marker = new google.maps.Marker({
           map: map,
           zIndex: MAX_INDEX - 4,
@@ -4285,7 +4286,7 @@ TWEEN.Tween = function(object) {
         }), label = labels[i] = new google.maps.TextLabel({
           map: map,
           zIndex: MAX_INDEX - 3
-        }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.lat, p.lng)), 
+        }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.gps[0], p.gps[1])), 
         marker.setIcon({
           path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
           fillColor: bool ? "#FF7E98" : "#b2b2b2",
@@ -4303,11 +4304,11 @@ TWEEN.Tween = function(object) {
     for (var label, labels = this.labels; label = labels.shift(); ) label.setMap(null);
     labels.length = 0;
   }, proto.updateBreadcrumbs = function(uid) {
-    var data, b, p, coords = [];
+    var data, b, p, gps, coords = [];
     if (data = this._breadcrumbs[uid]) {
       var positions0 = data.positions.slice(0), positions1 = positions0.slice(0);
       if (this.showTextLabels(uid, positions0), b = this.breadcrumbs[uid]) {
-        for (;p = positions1.pop(); ) coords.push(this.toLatLng(p.lat, p.lng));
+        for (;p = positions1.pop(); ) gps = p.gps, coords.push(this.toLatLng(gps[0], gps[1]));
         b.setPath(coords);
       }
     }
@@ -4406,7 +4407,7 @@ TWEEN.Tween = function(object) {
     var tl = this.tiplines[uid];
     tl && tl.setAttributeNS(null, "display", "none");
   }, proto.updateGeoLocation = function(uid, position) {
-    var latlng, geoLocation = this.geoLocation;
+    var latlng, gps, geoLocation = this.geoLocation;
     if (!geoLocation) {
       geoLocation = this.geoLocation = new google.maps.Marker({
         map: this.map,
@@ -4421,10 +4422,10 @@ TWEEN.Tween = function(object) {
         optimized: !1
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
-      lastlatlng && (geoLocation._status = 1, latlng = this.toLatLng(1 * lastlatlng.lat + this.latOffset, 1 * lastlatlng.lng + this.lngOffset), 
+      lastlatlng && (gps = lastlatlng.gps, geoLocation._status = 1, latlng = this.toLatLng(1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset), 
       geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
     }
-    position && (latlng = this.toLatLng(1 * position.lat + this.latOffset, 1 * position.lng + this.lngOffset), 
+    position && (gps = position.gps, latlng = this.toLatLng(1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
     this.map.panTo(latlng)), geoLocation._status = 2, uid && position && this.updatePositions({
       id: uid + "",
@@ -5584,12 +5585,9 @@ TWEEN.Tween = function(object) {
       var self = this;
       self.switchGPSStyle(0), routexStream.stopGeo(), routexStream.startGeo(function(r) {
         self.position = {
-          lat: r.latitude + "",
-          lng: r.longitude + "",
-          ts: r.timestamp,
-          acc: r.accuracy
-        }, Store.set("position", self.position), self.switchGPSStyle(2), self.trackGeoLocation(), 
-        console.log("GPS", r.lat, r.lng, r);
+          gps: [ r.latitude + "", r.longitude + "", r.accuracy ],
+          t: r.timestamp
+        }, Store.set("position", self.position), self.switchGPSStyle(2), self.trackGeoLocation();
       }, function(r) {
         self.switchGPSStyle(1), console.log(r.status, r), routexStream.stopGeo(), self.mapController && self.mapController.switchGEOStyle(0);
       });
