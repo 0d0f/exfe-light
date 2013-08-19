@@ -2075,7 +2075,7 @@ define('mobilecontroller', function (require, exports, module) {
           $.ajax({
               type: 'POST'
             , url: apiv3_url + '/routex/users/crosses/' + this.cross_id + '?token=' + this.token
-            , data: JSON.stringify([data])
+            , data: JSON.stringify(data)
             , success: function (data) {
                 console.log('success', data)
               }
