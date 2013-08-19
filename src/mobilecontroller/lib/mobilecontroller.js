@@ -1673,7 +1673,7 @@ define('mobilecontroller', function (require, exports, module) {
         var gotoGPS = function (e, showBreadcrumbs) {
           var status = self.checkGPSStyle();
           if (self.mapReadyStatus) {
-            var uid = self.mapController.myuid;
+            var uid = self.mapController.myUserId;
             showBreadcrumbs && self.mapController.showBreadcrumbs(uid);
             self.mapController.fitBoundsWithDestination(uid);
           }
@@ -1749,8 +1749,8 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
           var args = '', params = [];
           if (self.cross) { args += self.cross.id; }
-          if (self.myuid && self.token) {
-            params.push('user_id=' + self.myuid);
+          if (self.myUserId && self.token) {
+            params.push('user_id=' + self.myUserId);
             params.push('token=' + self.token);
           }
           if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
@@ -2000,10 +2000,10 @@ define('mobilecontroller', function (require, exports, module) {
             , svg: this.$('#svg')[0]
             , callback: function (map) {
                 self.mapReadyStatus = true;
-                self.mapController.updateGeoLocation(mc.myuid, self.position);
+                self.mapController.updateGeoLocation(mc.myUserId, self.position);
               }
         });
-        mc.myuid = this.myuid;
+        mc.myUserId = this.myUserId;
         mc.myIdentity = this.myIdentity;
         this.setLatLngOffset();
         // defaults to true
@@ -2105,8 +2105,8 @@ define('mobilecontroller', function (require, exports, module) {
           , function (result) {
               if (self.mapReadyStatus && self.mapController) {
                 //self.setLatLngOffset();
-                if (!self.mapController.myuid) {
-                  self.mapController.myuid = self.myuid;
+                if (!self.mapController.myUserId) {
+                  self.mapController.myUserId = self.myUserId;
                 }
                 self.mapController.draw(result);
               }
@@ -2191,7 +2191,7 @@ define('mobilecontroller', function (require, exports, module) {
         if (mapReadyStatus && mapController) {
           console.log('tracking');
           this.setLatLngOffset();
-          mapController.updateGeoLocation(this.myuid, position);
+          mapController.updateGeoLocation(this.myUserId, position);
         }
       }
 
@@ -2232,7 +2232,7 @@ define('mobilecontroller', function (require, exports, module) {
           identity = invitation.identity;
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
-            this.myuid = identity.connected_user_id;
+            this.myUserId = identity.connected_user_id;
             this.updateMe(identity);
             this.updateNotifyProvider(invitation.notification_identities.slice(0));
             continue;

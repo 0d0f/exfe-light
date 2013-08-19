@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 05:08:58 */
+/*! mobile@2a 2013-08-19 06:08:01 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4057,7 +4057,7 @@ TWEEN.Tween = function(object) {
     return 100 >= d;
   }, proto.showNearBy = function(point) {
     if (point) {
-      var latlng, p, center = point, status = !1, places = (this.myuid, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3;
+      var latlng, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3;
       console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
       for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
@@ -4147,10 +4147,11 @@ TWEEN.Tween = function(object) {
       this.destinationPlace = p, p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
-    var uid, isme, d, n, gm, b, $e, tl, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myuid = this.myuid, curr_uid = this.uid, now = Math.round(new Date().getTime() / 1e3);
-    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myuid == uid, n = Math.floor((now - d.t) / 60), 
-    gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), b = bs[uid], tl = tiplines[uid], 
-    $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
+    var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
+    for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
+    n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
+    b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
     1 >= n) {
       if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({
@@ -4196,7 +4197,7 @@ TWEEN.Tween = function(object) {
     this.breadcrumbs, data.uid;
   }, proto.drawGeoMarker = function(data) {
     var g, d, latlng, gps, gms = this.geoMarkers, uid = data.id.split("@")[0];
-    if (this.updatePositions(data), uid != this.myuid) {
+    if (this.updatePositions(data), uid != this.myUserId) {
       if (gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at)) return;
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
       g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng);
@@ -4228,7 +4229,7 @@ TWEEN.Tween = function(object) {
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
     $distance.html((time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
-    var destinationPlace = this.destinationPlace, isme = this.myuid == uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
+    var destinationPlace = this.destinationPlace, isme = this.myUserId == uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition(), map = this.map;
       if (destinationPlace) {
@@ -5411,7 +5412,7 @@ TWEEN.Tween = function(object) {
       var gotoGPS = function(e, showBreadcrumbs) {
         var status = self.checkGPSStyle();
         if (self.mapReadyStatus) {
-          var uid = self.mapController.myuid;
+          var uid = self.mapController.myUserId;
           showBreadcrumbs && self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid);
         }
         2 === status || 1 === status && self.startStream();
@@ -5449,7 +5450,7 @@ TWEEN.Tween = function(object) {
       }), element.on("touchstart.maps", "#shuidi-dialog .app-btn", function(e) {
         e.preventDefault();
         var args = "", params = [];
-        return self.cross && (args += self.cross.id), self.myuid && self.token && (params.push("user_id=" + self.myuid), 
+        return self.cross && (args += self.cross.id), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
         params.push("token=" + self.token)), self.myIdentityId && params.push("identity_id=" + self.myIdentityId), 
         params.length && (args += "?" + params.join("&")), console.log(app_prefix_url + args), 
         openExfe(app_prefix_url + args), !1;
@@ -5512,10 +5513,10 @@ TWEEN.Tween = function(object) {
         },
         svg: this.$("#svg")[0],
         callback: function() {
-          self.mapReadyStatus = !0, self.mapController.updateGeoLocation(mc.myuid, self.position);
+          self.mapReadyStatus = !0, self.mapController.updateGeoLocation(mc.myUserId, self.position);
         }
       });
-      mc.myuid = this.myuid, mc.myIdentity = this.myIdentity, this.setLatLngOffset(), 
+      mc.myUserId = this.myUserId, mc.myIdentity = this.myIdentity, this.setLatLngOffset(), 
       mc.tracking = !0, mc.load(), mc.controller = self, this.token && this.cross_id && $.ajax({
         url: apiv3_url + "/routex/breadcrumbs/crosses/" + this.cross_id + "?coordinate=mars&token=" + this.token,
         type: "GET",
@@ -5572,7 +5573,7 @@ TWEEN.Tween = function(object) {
     initStream: function() {
       var self = this;
       routexStream.init(self.cross.id, self.token, function(result) {
-        self.mapReadyStatus && self.mapController && (self.mapController.myuid || (self.mapController.myuid = self.myuid), 
+        self.mapReadyStatus && self.mapController && (self.mapController.myUserId || (self.mapController.myUserId = self.myUserId), 
         self.mapController.draw(result));
       }, function(e) {
         console.log(e);
@@ -5618,7 +5619,7 @@ TWEEN.Tween = function(object) {
     trackGeoLocation: function() {
       var mapController = this.mapController, position = this.position, mapReadyStatus = this.mapReadyStatus;
       mapReadyStatus && mapController && (console.log("tracking"), this.setLatLngOffset(), 
-      mapController.updateGeoLocation(this.myuid, position));
+      mapController.updateGeoLocation(this.myUserId, position));
     },
     updateMe: function(myIdentity) {
       this.myIdentity = myIdentity, console.log("my identity", this.myIdentity);
@@ -5641,7 +5642,7 @@ TWEEN.Tween = function(object) {
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
         div.data("identity", identity);
-      } else this.myuid = identity.connected_user_id, this.updateMe(identity), this.updateNotifyProvider(invitation.notification_identities.slice(0));
+      } else this.myUserId = identity.connected_user_id, this.updateMe(identity), this.updateNotifyProvider(invitation.notification_identities.slice(0));
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }
