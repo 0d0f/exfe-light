@@ -341,7 +341,7 @@
     if (point) {
       var center = point
         , status = false
-        , myuid = this.myuid
+        , myUserId = this.myUserId
         , places = this.places
         , geoMarkers = this.geoMarkers
         , geoLocation = this.geoLocation
@@ -577,15 +577,15 @@
       , tiplines = this.tiplines
       , dp = this.destinationPlace
       , geo = this.geoLocation
-      , myuid = this.myuid
+      , myUserId = this.myUserId
       , curr_uid = this.uid
-      , uid, isme, d, now = Math.round((new Date()).getTime() / 1000), n;
-    var gm, b, $e, tl;
+      , uid, isme, d, now = Math.round(Date.now() / 1000)
+      , gm, b, $e, tl, n;
 
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
         d = u[uid];
-        isme = myuid == uid;
+        isme = myUserId == uid;
         n = Math.floor((now - d.t) / 60);
         gm = isme ? geo : gms[uid];
         this.distanceMatrix(uid, gm ,dp, n);
@@ -678,7 +678,7 @@
       , g, d, latlng, gps;
 
     this.updatePositions(data);
-    if (uid != this.myuid) {
+    if (uid != this.myUserId) {
       if (gms.hasOwnProperty(uid)) {
         g = gms[uid];
         d = g.data;
@@ -759,7 +759,7 @@
 
   proto.fitBoundsWithDestination = function (uid) {
     var destinationPlace = this.destinationPlace
-      , isme = this.myuid == uid
+      , isme = this.myUserId == uid
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {
       var gmlatlng = gm.getPosition()
