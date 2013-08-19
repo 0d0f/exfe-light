@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 02:08:53 */
+/*! mobile@2a 2013-08-19 02:08:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5432,7 +5432,7 @@ TWEEN.Tween = function(object) {
           var external_username = $t.data("external-username"), provider = $t.data("provider");
           $t.data("status", !0), $.ajax({
             type: "POST",
-            url: apiv3_url + "/routex/notification/crosses/" + this.cross_id + "/" + external_username + "@" + provider + "?token=" + this.token,
+            url: apiv3_url + "/routex/notification/crosses/" + this.cross_id + "/" + external_username + "@" + provider + "?token=" + self.token,
             success: function() {},
             error: function() {},
             complete: function() {
