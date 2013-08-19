@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 02:08:40 */
+/*! mobile@2a 2013-08-19 05:08:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3852,7 +3852,7 @@ TWEEN.Tween = function(object) {
     checkGps(myData) && ++secCnt >= secInt && submitGps(), !stream.live && token && (stream.init(api_url + "/routex/crosses/" + cross_id + "?_method=WATCH&coordinate=mars&token=" + token, streamCallback, streamDead), 
     log("Streaming with token: " + token));
   }, checkGps = function(data) {
-    return data && data.ts && data.lat && data.lng && data.acc;
+    return data && data.t && data.gps && data.gps[0] && data.gps[1] && data.gps[2];
   }, stopGeo = function() {
     geoService.stopWatch(intGeoWatch);
   }, getGeo = function(done, fail) {
