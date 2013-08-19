@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 10:08:39 */
+/*! mobile@2a 2013-08-19 11:08:54 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4028,8 +4028,8 @@ TWEEN.Tween = function(object) {
     this.hideNearBy();
     var data, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if (gm) {
-      if (data = gm.data.positions[0], t = Math.floor((now - data.ts) / 60), $otherInfo.find(".name").text(identity.name), 
-      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
+      if (data = gm.data.positions[0], t = Math.floor((now - data.t) / 60), $otherInfo.find(".name").text(identity.name), 
+      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
         var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text);
@@ -5425,6 +5425,20 @@ TWEEN.Tween = function(object) {
         if (e.preventDefault(), self.mapReadyStatus) {
           var uid = $(this).data("uid");
           self.mapController.showIdentityPanel(uid);
+        }
+      }), element.on("touchstart.maps", "#other-info .please-update", function() {
+        var $t = $(this), status = $t.data("status");
+        if (!status) {
+          var external_username = $t.data("external-username"), provider = $t.data("provider");
+          $t.data("status", !0), $.ajax({
+            type: "POST",
+            url: apiv3_url + "/routex/notification/crosses/" + this.cross_id + "/" + external_username + "@" + provider + "?token=" + this.token,
+            success: function() {},
+            error: function() {},
+            complete: function() {
+              $t.data("status", !1);
+            }
+          });
         }
       }), element.on("touchstart.maps", "#my-info .discover", function() {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
