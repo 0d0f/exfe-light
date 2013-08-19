@@ -524,8 +524,10 @@
       background-image: url(/static/img/line@2x.png);
     }
 
-    .splitline:last-child:after {
-      display: none;
+    .splitline:last-child {
+      &:after {
+        display: none;
+      }
     }
   }
 
@@ -693,6 +695,9 @@
       line-height: 9px;
       color: #333;
       padding-bottom: 2px;
+    }
+    .dest, .dest-me {
+      line-height: 14px;
     }
     .please-update {
       font-size: 16px;

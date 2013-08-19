@@ -2555,6 +2555,10 @@ button .exfe {
   color: #333;
   padding-bottom: 2px;
 }
+#routex #other-info .dest,
+#routex #other-info .dest-me {
+  line-height: 14px;
+}
 #routex #other-info .please-update {
   font-size: 16px;
   line-height: 16px;
