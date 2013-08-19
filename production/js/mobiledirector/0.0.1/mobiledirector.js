@@ -6,14 +6,13 @@
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
     , app_scheme = _ENV_.app_scheme
-    , JSFILE = _ENV_.JSFILE
-    , CSSFILE = _ENV_.CSSFILE
+    //, JSFILE = _ENV_.JSFILE
+    //, CSSFILE = _ENV_.CSSFILE
     , supportHistory = window.history
     , localStorage = window.localStorage
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    //, xframe = document.getElementById('xframe')
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
@@ -35,7 +34,6 @@
     url = url || app_url;
     startTime = now();
     failBack(cb, 200);
-    //xframe.src = url;
     redirectIframe(url);
   };
 
@@ -115,18 +113,19 @@
     },
 
     inject = function (cb) {
-      var css = 'mobile-css';
       /*
+      var css = 'mobile-css';
       if (!checkNodeExsits(css)) {
         injectCss('/static/css/' + CSSFILE, css);
       }
-      */
       var js = 'mobile-js';
       if (!checkNodeExsits(js)) {
         injectScript('/static/js/' + JSFILE, js, cb);
       } else {
         cb();
       }
+      */
+      cb();
     },
 
     handle = function () {
@@ -579,7 +578,6 @@
       crossFunc(data, true);
       */
 
-
       var authorization = JSON.parse(localStorage.getItem('authorization'))
         , user_id = authorization && authorization.user_id
         , user_token = authorization && authorization.token
@@ -595,7 +593,6 @@
           , token: user_token
         }));
       }
-
 
       if (window.isWeixin) {
         // has user-token
