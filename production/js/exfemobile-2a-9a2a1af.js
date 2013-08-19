@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 09:08:54 */
+/*! mobile@2a 2013-08-19 10:08:03 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4035,7 +4035,7 @@ TWEEN.Tween = function(object) {
       } else $otherInfo.find(".dest").addClass("hide");
       if (geoLocation) {
         var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
-        $otherInfo.find(".dest-me").removeClass("hide").find(".m").text(result.text);
+        $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest-me").removeClass("hide");
       $otherInfo.removeClass("hide");
       var w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width(), point = this.fromLatLngToContainerPixel(gm.getPosition()), left = point.x - ow / 2, top = point.y - oh / 2;
