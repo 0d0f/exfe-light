@@ -264,9 +264,9 @@
       , identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data('identity')
       , $otherInfo = $('#other-info')
       , now = Math.round(Date.now() / 1000)
-      , data, t;
+      , p, t;
     if (gm) {
-      data = gm.data.positions[0];
+      p = gm.getPosition();
       t = Math.floor((now - data.t) / 60);
       $otherInfo.find('.name').text(identity.name);
       if (t > 1) {
@@ -284,7 +284,7 @@
       }
       if (destinationPlace) {
         var p2 = destinationPlace.getPosition();
-        var d = distance(p2.lat(), p2.lng(), data.lat, data.lng)
+        var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
           //, r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d);
         $otherInfo.find('.dest').removeClass('hide')
@@ -294,7 +294,7 @@
       }
       if (geoLocation) {
         var p2 = geoLocation.getPosition();
-        var d = distance(p2.lat(), p2.lng(), data.lat, data.lng)
+        var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
           //, r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d);
         $otherInfo.find('.dest-me').removeClass('hide')
@@ -309,7 +309,7 @@
       var h = $(window).height();
       var oh = $otherInfo.height();
       var ow = $otherInfo.width();
-      var point = this.fromLatLngToContainerPixel(gm.getPosition());
+      var point = this.fromLatLngToContainerPixel(p);
       var left = point.x - ow / 2;
       var top = point.y - oh / 2;
 

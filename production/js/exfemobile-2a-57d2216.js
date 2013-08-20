@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 03:08:43 */
+/*! mobile@2a 2013-08-20 04:08:37 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4026,20 +4026,20 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   }, proto.showIdentityPanel = function(uid) {
     this.hideNearBy();
-    var data, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
+    var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if (gm) {
-      if (data = gm.data.positions[0], t = Math.floor((now - data.t) / 60), $otherInfo.find(".name").text(identity.name), 
+      if (p = gm.getPosition(), t = Math.floor((now - data.t) / 60), $otherInfo.find(".name").text(identity.name), 
       t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
-        var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
+        var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest").addClass("hide");
       if (geoLocation) {
-        var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), data.lat, data.lng), result = distanceOutput(d);
+        var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d);
         $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest-me").removeClass("hide");
       $otherInfo.removeClass("hide");
-      var w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width(), point = this.fromLatLngToContainerPixel(gm.getPosition()), left = point.x - ow / 2, top = point.y - oh / 2;
+      var w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width(), point = this.fromLatLngToContainerPixel(p), left = point.x - ow / 2, top = point.y - oh / 2;
       0 > left && (left = 50), left + ow > w && (left = w - ow), 0 > top && (top = 20), 
       top + oh > h && (top = h - oh), $otherInfo.css({
         left: left,
