@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 04:08:37 */
+/*! mobile@2a 2013-08-20 04:08:46 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4028,7 +4028,7 @@ TWEEN.Tween = function(object) {
     this.hideNearBy();
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if (gm) {
-      if (p = gm.getPosition(), t = Math.floor((now - data.t) / 60), $otherInfo.find(".name").text(identity.name), 
+      if (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60), $otherInfo.find(".name").text(identity.name), 
       t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
         var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d);
