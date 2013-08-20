@@ -286,7 +286,7 @@
         var p2 = destinationPlace.getPosition();
         var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
           //, r = bearing(lat2, lng2, lat1, lng1)
-          , result = distanceOutput(d);
+          , result = distanceOutput(d, true);
         $otherInfo.find('.dest').removeClass('hide')
           .find('.m').html(result.text);
       } else {

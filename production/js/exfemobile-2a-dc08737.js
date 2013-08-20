@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 05:08:23 */
+/*! mobile@2a 2013-08-20 05:08:41 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4031,7 +4031,7 @@ TWEEN.Tween = function(object) {
       if (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60), $otherInfo.find(".name").text(identity.name), 
       t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
-        var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d);
+        var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest").addClass("hide");
       if (geoLocation) {
