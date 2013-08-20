@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 05:08:31 */
+/*! mobile@2a 2013-08-20 05:08:12 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4229,7 +4229,8 @@ TWEEN.Tween = function(object) {
       result.rotate = r, $distance.html(result.text), $icon.css("-webkit-transform", "rotate(" + r + "deg)"), 
       $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
-    $distance.html((time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
+    $distance.html(1 >= time ? "在线" : (time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), 
+    $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
     var destinationPlace = this.destinationPlace, isme = this.myUserId == uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
     if (gm) {

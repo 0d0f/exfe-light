@@ -755,7 +755,7 @@
       if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {
         $icon.attr('class', 'icon icon-dot' + (time <= 1 ? 'red' : 'grey'));
       }
-      $distance.html((time >= 9 ? '9+' : time) + '<span class="unit">分钟前</span>');
+      $distance.html(time <= 1 ? '在线' : ((time >= 9 ? '9+' : time) + '<span class="unit">分钟前</span>'));
       $detial.css('visibility', 'visible');
     } else {
       $detial.css('visibility', 'hidden');
