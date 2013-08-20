@@ -39,7 +39,7 @@
 
         return toDeg(angle);
      }
-    , distanceOutput = function (n, s, t, r) {
+    , distanceOutput = function (n, m, s, t, r) {
         t = '<span class="unit">{{u}}</span>';
         n = Math.floor(n);
         r = {
@@ -47,7 +47,7 @@
           , status: 0
           , distance: n
         };
-        if (n < 30) {
+        if (n < 30 && !m) {
           r.status = 4;
           r.text = '抵达';
         } else if (n < 1000) {
@@ -296,7 +296,7 @@
         var p2 = geoLocation.getPosition();
         var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
           //, r = bearing(lat2, lng2, lat1, lng1)
-          , result = distanceOutput(d);
+          , result = distanceOutput(d, true);
         $otherInfo.find('.dest-me').removeClass('hide')
           .find('.m').html(result.text);
       } else {
