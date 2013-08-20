@@ -1805,6 +1805,7 @@ define('mobilecontroller', function (require, exports, module) {
           console.log('remove cats...');
           Store.remove('cats');
           Store.remove('offset-latlng');
+          Store.remove('authorization');
         });
 
         /*
