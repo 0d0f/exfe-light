@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 04:08:46 */
+/*! mobile@2a 2013-08-20 05:08:41 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4002,12 +4002,12 @@ TWEEN.Tween = function(object) {
     lat1 = toRad(lat1), lon1 = toRad(lon1), lat2 = toRad(lat2), lon2 = toRad(lon2);
     var dLon = lon2 - lon1, y = Math.sin(dLon) * Math.cos(lat2), x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon), angle = Math.atan2(y, x);
     return 0 > angle && (angle += 2 * Math.PI), toDeg(angle);
-  }, distanceOutput = function(n, s, t, r) {
+  }, distanceOutput = function(n, m, s, t, r) {
     return t = '<span class="unit">{{u}}</span>', n = Math.floor(n), r = {
       text: "",
       status: 0,
       distance: n
-    }, 30 > n ? (r.status = 4, r.text = "抵达") : r.text = 1e3 > n ? n + t.replace("{{u}}", "米") : 9e3 > n ? (n / 1e3 + "").slice(0, 3) + t.replace("{{u}}", "公里") : "9+" + t.replace("{{u}}", "公里"), 
+    }, 30 > n && !m ? (r.status = 4, r.text = "抵达") : r.text = 1e3 > n ? n + t.replace("{{u}}", "米") : 9e3 > n ? (n / 1e3 + "").slice(0, 3) + t.replace("{{u}}", "公里") : "9+" + t.replace("{{u}}", "公里"), 
     r;
   }, toHex = function(n) {
     return (1 * n).toString(16);
@@ -4035,7 +4035,7 @@ TWEEN.Tween = function(object) {
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest").addClass("hide");
       if (geoLocation) {
-        var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d);
+        var p2 = geoLocation.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text);
       } else $otherInfo.find(".dest-me").removeClass("hide");
       $otherInfo.removeClass("hide");
