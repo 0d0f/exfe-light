@@ -21,6 +21,8 @@ define(function (require) {
   app.initRouter();
   app.use(middleware.errorHandler);
 
+  app.request.enableFullUrlPath = true;
+
   app.controllers = {};
 
   // @todo: 优化这种引用 或者 改掉
@@ -56,6 +58,10 @@ define(function (require) {
   app.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken);
   // cross-token - `/#!token=63435bc8d599a857c215c9a628f2b4f8`
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken);
+
+  app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
+  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
+  app.get(/^\/+!\d+\/routex\/?\?.*$/, routes.routex);
 
   app.on('launched', function () {
     function animate() {

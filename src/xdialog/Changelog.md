@@ -1,3 +1,7 @@
+* v0.1.18 2013-08-02T22:00:00 UTC+0800
+  - Bugs Fix
+    * L2357 `invitation_token` => `originToken`
+
 * v0.1.17 2013-05-29T16:43:00 UTC+0800
   - Bugs Fix
     * redirect to profile or home when clicked `setpassword` dialog

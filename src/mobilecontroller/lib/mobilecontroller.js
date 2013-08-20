@@ -4,11 +4,21 @@ define('mobilecontroller', function (require, exports, module) {
   var Base = require('base'),
       Store = require('store'),
       TWEEN = require('tween'),
-      api_url = window._ENV_.api_url,
-      app_scheme = window._ENV_.app_scheme,
+      _ENV_ = window._ENV_,
+      api_url = _ENV_.api_url,
+      apiv3_url = _ENV_.apiv3_url,
+      app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + '://crosses/',
+      AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
+
+      $ = require('zepto'),
+
+      // animation {{{
+      //AF = require('af'),
+      //requestAnimationFrame = AF.request,
+      // animation }}}
 
       util   = require('util'),
       trim = util.trim,
@@ -227,7 +237,7 @@ define('mobilecontroller', function (require, exports, module) {
       });
 
       this.on('redirect', function (args, cb) {
-        window.launchApp(app_prefix_url + args, cb, 500);
+        window.launchApp(app_prefix_url + args, cb);
       });
     },
 
@@ -307,7 +317,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         var done = function (args) {
           App.controllers.footer.emit('redirect', args, function () {
-            var search = window.location.search.substr(1);
+            var search = window.search.substr(1);
             if (search) {
               search = '&' + search;
             }
@@ -1619,6 +1629,628 @@ define('mobilecontroller', function (require, exports, module) {
       this.a.stop();
       this.b.stop();
     }
+
+  });
+
+  var routexStream = require('routexstream')
+    , geoService = routexStream.geoService;
+
+  exports.RouteXController = Controller.extend({
+
+      init: function () {
+        this.render();
+        this.listen();
+      }
+
+    , render: function () {
+        $('#app-routex').remove();
+        this.element.appendTo($('#app-container'));
+        this.loadMaps();
+      }
+
+    , listen: function () {
+        var self = this
+          , element = self.element
+          , $win = $(window)
+          , $myInfo = self.$('#my-info')
+          , $openExfe = self.$('#open-exfe')
+          , $locate = self.$('#locate')
+          , isScroll = false;
+
+        // 监听横竖屏切换
+        $win.on('orientationchange', function () {
+          var height = $win.height()
+            , width = $win.width();
+
+          $locate.css('-webkit-transform', 'translate3d(0, 0, 0)');
+          $openExfe.css('-webkit-transform', 'translate3d(0, 0, 0)');
+          $('#identities').css('max-height', Math.round(height / 60) * 60 - 60 - 100 + 5);
+          //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
+          //https://gist.github.com/callmephilip/3626669
+          //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
+        });
+
+        var gotoGPS = function (e, showBreadcrumbs) {
+          var status = self.checkGPSStyle();
+          if (self.mapReadyStatus) {
+            var uid = self.mapController.myUserId;
+            showBreadcrumbs && self.mapController.showBreadcrumbs(uid);
+            self.mapController.fitBoundsWithDestination(uid);
+          }
+          if (2 === status) {
+          } else if (1 === status) {
+            self.startStream();
+          }
+        };
+        element.on('tap.maps', function (e) {
+          if (self.tapElement
+            && e.target !== self.tapElement
+            && !$.contains($myInfo[0], e.target)) {
+              $myInfo.addClass('hide');
+              self.tapElement = null;
+          }
+        });
+        element.on('tap.maps', '#locate', gotoGPS);
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
+          gotoGPS(e, true);
+
+          if (self.tapElement === this) {
+            $myInfo.addClass('hide');
+            self.tapElement = null;
+            return false;
+          }
+
+          if ($myInfo.hasClass('hide')) {
+            $myInfo.removeClass('hide');
+          }
+
+          $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
+          self.tapElement = this;
+        });
+
+        element.on('touchstart.maps', '#nearby .geo-marker', function (e) {
+          e.preventDefault();
+          if (self.mapReadyStatus) {
+            var uid = $(this).data('uid');
+            self.mapController.showIdentityPanel(uid);
+          }
+        });
+
+        element.on('touchstart.maps', '#other-info .please-update', function (e) {
+          var $t = $(this)
+            , status = $t.data('status');
+          if (status) { return; }
+          var external_username = $t.data('external-username')
+            , provider = $t.data('provider');
+          $t.data('status', true);
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '/' + external_username + '@' + provider + '?token=' + self.token
+            , success : function () {}
+            , error   : function () {}
+            , complete: function () { $t.data('status', false); }
+          });
+        });
+
+        element.on('touchstart.maps', '#my-info .discover', function (e) {
+          $myInfo.addClass('hide');
+          self.tapElement = null;
+          $('#shuidi-dialog').removeClass('hide');
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
+          if (e.target.id === 'shuidi-dialog') {
+            e.stopPropagation();
+            $('#shuidi-dialog').addClass('hide');
+          }
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
+          e.preventDefault();
+          var args = '', params = [];
+          if (self.cross) { args += self.cross.id; }
+          if (self.myUserId && self.token) {
+            params.push('user_id=' + self.myUserId);
+            params.push('token=' + self.token);
+          }
+          if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
+          if (params.length) {
+            args += '?' + params.join('&');
+          }
+          console.log(app_prefix_url + args);
+          openExfe(app_prefix_url + args);
+          return false;
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
+          e.preventDefault();
+          var v = $('#notify-provider').val();
+          self.addNotificationIdentity(v);
+          return false;
+        });
+
+        element.on('tap.maps', '#identities .avatar', function (e) {
+          if (isScroll) { return; }
+          var $that = $(this)
+            , $d = $that.parent().parent()
+            , uid = $d.data('uid');
+
+          if (self.mapReadyStatus) {
+            self.mapController.showBreadcrumbs(uid);
+            self.mapController.fitBoundsWithDestination(uid);
+          }
+
+          /*
+          if (self.tapElement === this) {
+            $myInfo.addClass('hide');
+            self.tapElement = null;
+            return false;
+          }
+
+          if ($myInfo.hasClass('hide')) {
+            $myInfo.removeClass('hide');
+          }
+
+          var name = $d.data('name');
+          $myInfo.find('#my-info').addClass('hide');
+          $myInfo.find('#other-info').removeClass('hide');
+          $myInfo.find('#other-info').find('.name').text($d.data('name'));
+          var bound = this.getBoundingClientRect();
+          $myInfo.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
+          self.tapElement = this;
+          */
+        });
+
+        element.on('tap.maps', '#open-exfe', function (e) {
+          console.log('remove cats...');
+          Store.remove('cats');
+          Store.remove('offset-latlng');
+        });
+
+        /*
+        var tapDelay = 270, tapTimeout, now;
+        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
+          var $that = $(this)
+            , id = $that.data('identity-id')
+            , uid = $that.data('uid')
+            , free = $that.data('free')
+            , touched = !!$that.hasClass('touched')
+            , c = true;
+          now = Date.now();
+          tapTimeout = setTimeout(function () {
+            $('#iavatar .avatar').css('background', 'url(' + $that.find('.avatar').attr('src') + ')');
+          }, tapDelay);
+        });
+
+        element.on('touchmove.maps', '#free-identities .identities li', function (e) {
+          clearTimeout(tapTimeout); tapTimeout = null;
+        });
+
+        element.on('touchend.maps', '#free-identities .identities li', function (e) {
+          clearTimeout(tapTimeout); tapTimeout = null;
+          if (Date.now() - now > 1000) {
+            $(this).trigger('select:maps');
+          } else {
+            $('#iavatar .avatar').css('background', '');
+          }
+        });
+
+        element.on('select:maps', '#free-identities .identities li', function (e) {
+          var $that = $(this)
+            , id = $that.data('identity-id')
+            , uid = $that.data('uid')
+            , free = $that.data('free')
+            , touched = !!$that.hasClass('touched')
+            , c = true;
+
+          if (touched) { return; }
+
+          if (free) {
+            c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
+          }
+
+          if (c) {
+
+            $that.addClass('touched');
+            $.ajax({
+                type: 'get'
+              , url: api_url + '/crosses/' + self.cross.id + '/freeidentities/' + id + '/itsme?token=' + self.token
+              , beforeSend: function () {console.log('itsme before')}
+              , complete: function () { $that.removeClass('touched'); }
+              , success: function (data) {
+                  var code = data.meta && data.meta.code;
+                  if (200 === code) {
+                    console.log('success', data)
+                    var cats = Store.get('cats') || {}
+                      , token = data.response.cross_access_token;
+                    cats[self.ctoken] = token;
+                    self.myIdentityId = id;
+                    self.myuid = uid;
+                    self.token = token;
+                    Store.set('cats', cats);
+
+                    self.$('#free-identities').hide().empty();
+                    self.createIdentitiesList();
+                    self.streaming();
+                  }
+                }
+              , error: function (data) {
+                  console.log('fail')
+                  console.dir(data)
+                }
+            });
+
+          } else {
+            $('#iavatar .avatar').css('background', '');
+          }
+
+        });
+        */
+
+        var $identities = element.find('#identities');
+
+        $identities.on('scroll.maps', function (e) {
+          if (!$myInfo.hasClass('hide')) {
+            $myInfo.addClass('hide');
+          }
+          var $avatars = $(this).find('.avatar')
+            , pb = this.getBoundingClientRect()
+            , height = pb.height
+            , scrollTop = this.scrollTop
+            , minT = pb.top
+            , maxT = height + minT
+            , ids =  this._ids = {};
+
+          $avatars.each(function (i) {
+            var bound = this.getBoundingClientRect()
+              , uid = $(this).parents('.identity').data('uid')
+              // , l = bound.left + bound.width
+              , t = bound.height / 2 + bound.top;
+            if (minT <= t &&  t <= maxT) {
+              ids[uid] = [i, 46, t];
+            }
+          });
+
+          if (self.mapReadyStatus && self.mapController) {
+            self.mapController.contains();
+          }
+          console.log(pb, ids);
+        });
+
+        element.on('touchmove.maps', '#identities-overlay', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        });
+
+        element.on('touchmove', '.info-windown', function (e) {
+          e.preventDefault();
+        });
+
+        var pageY = 0, scrollTop = 0, _t;
+        $identities.on('touchstart.maps', function (e) {
+          isScroll = false;
+          pageY = e.pageY;
+          scrollTop = this.scrollTop;
+        });
+        $identities.on('touchend.maps', function (e) {
+          if (_t) clearTimeout(_t);
+          _t = setTimeout(function () {
+            isScroll = false;
+          }, 233);
+        });
+        $identities.on('touchmove.maps', function (e) {
+          isScroll = true;
+          e.preventDefault();
+          this.scrollTop = (pageY - e.pageY) + scrollTop;
+        });
+
+        self.on('show', function () {
+          // weixin
+          // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
+          //alert('Weixin ' + self.isWeixin);
+          $('html, body').css({
+              'min-height': $win.height()
+            //, 'overflow': 'hidden'
+          });
+
+          console.log('This is Smith-Token.', self.isSmithToken);
+
+          $win.trigger('orientationchange');
+
+          self.createIdentitiesList();
+          self.streaming();
+        });
+
+      }
+
+    , updateExfeeName: function () {
+        this.element.find('#exfee-name').text(this.cross.exfee.name);
+      }
+
+    , createFreeIdentitiesList: function (identities) {
+        var tmp ='<li data-identity-id="{{id}}" data-free="{{free}}" data-uid="{{external_username}}@{{provider}}"><img src="{{avatar_filename}}" alt="" class="avatar{{is_free}}" /><div class="name">{{external_username}}</div></li>'
+          , $identities = this.element.find('#free-identities .identities')
+          , identity;
+
+        identities = identities.slice(0);
+        while ((identity = identities.shift())) {
+          $identities.append(
+            tmp
+              .replace('{{id}}', identity.id)
+              .replace('{{avatar_filename}}', identity.avatar_filename)
+              .replace(/\{\{external_username\}\}/g, identity.external_username)
+              .replace('{{provider}}', identity.provider)
+              .replace('{{is_free}}', (identity.free ? ' ': ' no-') + 'free')
+              .replace('{{free}}', identity.free)
+          );
+        }
+      }
+
+    , loadMaps: function (p) {
+        var self = this
+          , RoutexMaps = require('routexmaps')
+          , mc = this.mapController = new RoutexMaps({
+              // production use `key`
+              //url: '//ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
+              url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            , mapDiv: this.$('#map')[0]
+            , mapOptions: {
+                zoom: 5
+              }
+            , svg: this.$('#svg')[0]
+            , callback: function (map) {
+                self.mapReadyStatus = true;
+                self.mapController.updateGeoLocation(mc.myUserId, self.position);
+              }
+        });
+        mc.myUserId = this.myUserId;
+        mc.myIdentity = this.myIdentity;
+        this.setLatLngOffset();
+        // defaults to true
+        mc.tracking = true
+        mc.load();
+        mc.controller = self;
+
+        if (this.token && this.cross_id) {
+          $.ajax({
+              url: apiv3_url + '/routex/breadcrumbs/crosses/' + this.cross_id + '?coordinate=mars&token=' + this.token
+            , type: 'GET'
+            , dataType: 'json'
+            , success: function (data) {
+                var len = data && data.length;
+                if (len) {
+                  var d, id, i;
+                  for (i = 0; i < len; ++i) {
+                    d = data[i];
+                    id = d.id.split('@')[0];
+                    if (mc._breadcrumbs[id]) {
+                      mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions);
+                      } else {
+                      mc._breadcrumbs[id] = d;
+                    }
+                  }
+                }
+              }
+            //, error: function () { }
+          });
+        }
+
+      }
+
+    , mapReadyStatus: false
+
+    , editDestination: function (destination) {
+        // 等待 google 修复
+        if (destination) {
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
+            , data: JSON.stringify(destination)
+            , success: function (data) {
+                console.log(data)
+              }
+            , error: function (data) {
+                console.log(data)
+              }
+          });
+        }
+      }
+
+    , setLatLngOffset: function () {
+        var offset = Store.get('offset-latlng');
+        if (offset) {
+          this.mapController.latOffset = offset.earth_to_mars_latitude * 1;
+          this.mapController.lngOffset = offset.earth_to_mars_longitude * 1;
+        }
+      }
+
+    , streaming: function () {
+
+        // 开启跟踪
+        if (this.cross_id && this.token) {
+          var data = {
+              save_breadcrumbs: true
+            , after_in_seconds: 7200
+          };
+          $.ajax({
+              type: 'POST'
+            , url: apiv3_url + '/routex/users/crosses/' + this.cross_id + '?token=' + this.token
+            , data: JSON.stringify(data)
+            , success: function (data) {
+                console.log('success', data)
+              }
+            , error: function (data) {
+                console.log('error', data)
+              }
+          });
+        }
+
+        var self = this;
+        this.initStream();
+        this.startStream();
+        console.log('start streaming');
+        console.log('start monit')
+        this.timer = setInterval(function () {
+          if (self.mapReadyStatus) {
+            console.log(new Date());
+            self.mapController.monit();
+          }
+        }, 1000);
+      }
+
+    , initStream: function () {
+        var self = this;
+        routexStream.init(
+            self.cross.id
+          , self.token
+          , function (result) {
+              if (self.mapReadyStatus && self.mapController) {
+                //self.setLatLngOffset();
+                if (!self.mapController.myUserId) {
+                  self.mapController.myUserId = self.myUserId;
+                }
+                self.mapController.draw(result);
+              }
+            }
+          , function (e) {
+              console.log(e);
+            }
+        );
+      }
+
+    , addNotificationIdentity: function (email, exfee_id, token) {
+        exfee_id = this.cross.exfee.id;
+        token = this.token;
+        var identity = parseId(email);
+        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
+          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
+          return;
+        }
+        $.ajax({
+          type: 'POST',
+          url: api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
+          data: {
+            provider: identity.provider,
+            external_username: identity.external_username
+          },
+          success : function(data) {
+            if (data && data.meta && data.meta.code === 200) {
+              $('#shuidi-dialog').addClass('hide');
+            }
+          },
+          error   : function() {
+            alert('Failed, please retry later.');
+          }
+        });
+      }
+
+    , startStream: function () {
+        var self = this;
+        self.switchGPSStyle(0);
+        routexStream.stopGeo();
+        routexStream.startGeo(
+            function (r) {
+              //self.position = { lat: r.latitude + '',  lng: r.longitude + '', ts: r.timestamp, acc: r.accuracy };
+              self.position = { gps: [ r.latitude + '',  r.longitude + '', r.accuracy], t: r.timestamp };
+              Store.set('position', self.position);
+              self.switchGPSStyle(2);
+              self.trackGeoLocation();
+            }
+          , function (r) {
+              self.switchGPSStyle(1);
+              console.log(r.status, r);
+              routexStream.stopGeo();
+
+              if (self.mapController) {
+                self.mapController.switchGEOStyle(0);
+              }
+            }
+        );
+      }
+
+    , checkGPSStyle: function () {
+        return ~~this.$('#locate').attr('data-status');
+      }
+
+      // status: 0 - load, 1 - fail-grey, 2 - succes - blue
+    , switchGPSStyle: function (status, c) {
+        if (0 === status) {
+          c = 'load';
+        } else if (1 === status) {
+          c = 'grey';
+        } else {
+          status = 2;
+          c = 'blue';
+        }
+        this.$('#locate').removeClass().addClass(c).attr('data-status', status);;
+      }
+
+    , trackGeoLocation: function () {
+        var mapController = this.mapController
+          , position = this.position
+          , mapReadyStatus = this.mapReadyStatus;
+        if (mapReadyStatus && mapController) {
+          console.log('tracking');
+          this.setLatLngOffset();
+          mapController.updateGeoLocation(this.myUserId, position);
+        }
+      }
+
+    , updateMe: function (myIdentity) {
+        this.myIdentity = myIdentity;
+        console.log('my identity', this.myIdentity);
+        var div = this.$('#isme');
+        div.attr('data-uid', myIdentity.connected_user_id);
+        div.attr('data-name', myIdentity.name);
+        div.find('img').attr('src', myIdentity.avatar_filename);
+        div.data('identity', myIdentity);
+      }
+
+    , updateNotifyProvider: function (euns) {
+        if (euns.length) {
+          var eun, identity;
+          while ((eun = euns.shift())) {
+            identity = parseId(eun);
+            if (identity && (identity.provider === 'phone' || identity.provider === 'email')) {
+              $('#notify-provider').val(identity.external_username);
+              break;
+            }
+          }
+        }
+      }
+
+    , createIdentitiesList: function () {
+        var exfee = this.cross.exfee
+          , $identities = this.$('#identities')
+          , myUserId = this.myUserId
+          , myIdentityId = this.myIdentityId
+          , smith_id = this.smith_id
+          , invitations = exfee.invitations.slice(0)
+          , invitation
+          , identity;
+
+        while ((invitation = invitations.shift())) {
+          identity = invitation.identity;
+          if (smith_id === identity.id) { continue; }
+          if (myUserId === identity.connected_user_id) {
+            this.myUserId = identity.connected_user_id;
+            this.updateMe(identity);
+            this.updateNotifyProvider(invitation.notification_identities.slice(0));
+            continue;
+          }
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')
+          div.attr('data-uid', identity.connected_user_id);
+          div.attr('data-name', identity.name);
+          div.find('img').attr('src', identity.avatar_filename);
+          $identities.append(div);
+          div.data('identity', identity);
+        }
+        window.getComputedStyle($identities[0]).webkitTransform;
+        $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
+
+        console.log('trigger handler scroll.maps');
+        $('#identities').triggerHandler('scroll');
+      }
 
   });
 

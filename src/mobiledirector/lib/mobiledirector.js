@@ -6,14 +6,13 @@
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
     , app_scheme = _ENV_.app_scheme
-    , JSFILE = _ENV_.JSFILE
-    , CSSFILE = _ENV_.CSSFILE
+    //, JSFILE = _ENV_.JSFILE
+    //, CSSFILE = _ENV_.CSSFILE
     , supportHistory = window.history
     , localStorage = window.localStorage
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , xframe = document.getElementById('xframe')
     , app_url = app_scheme + '://crosses/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
@@ -21,25 +20,46 @@
         , resolveToken: /^\/+(?:\?(redirect)?)?#token=([a-zA-Z0-9]{64})\/?$/
         , crossTokenForPhone: /^\/+(?:\?(redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/
         , crossToken: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/
+        , routex0: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
+//        , routex1: /^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?(?:\?(redirect)?)?$/
+        , routex1: /^\/+!(\d+)\/routex\/?.*$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
-  window.launchApp = function (url, cb, ttl) {
+  //window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
+  window.isWeixin = !!(/MicroMessenger/.test(navigator.userAgent));
+
+  window.launchApp = function (url, cb) {
     url = url || app_url;
     startTime = now();
-    failBack(cb, ttl);
-    xframe.src = url;
+    failBack(cb, 200);
+    redirectIframe(url);
   };
 
-
-  window.openExfe = function () {
-    window.launchApp('', function () {
-      xframe.src = itunes;
+  window.openExfe = function (url) {
+    url = url || '';
+    startTime = now();
+    window.launchApp(url, function () {
+      redirectIframe(itunes);
     });
   };
 
-  var failBack = function (cb, ttl) {
+  var redirectIframe = function (url, id) {
+      !id && (id = 'app-redirect');
+      var i = document.getElementById(id);
+      if (i) { document.body.removeChild(i); }
+      i = document.createElement('iframe')
+      document.body.appendChild(i);
+      i.id = id;
+      i.src = url;
+      i.setAttribute('frameborder', 0);
+      i.className = 'hide';
+      i.style.display = 'none';
+      return i;
+    },
+
+    failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
         currentTime = now();
         // 时间摄长点，避免两次弹窗
@@ -47,10 +67,10 @@
           if (cb) {
             cb();
           } else {
-            window.location = '/';
+            window.location.href = '/';
           }
         }
-        //clearTimeout(failTimeout);
+        clearTimeout(failTimeout);
       }, ttl || 200);
     },
 
@@ -93,6 +113,7 @@
     },
 
     inject = function (cb) {
+      /*
       var css = 'mobile-css';
       if (!checkNodeExsits(css)) {
         injectCss('/static/css/' + CSSFILE, css);
@@ -103,6 +124,8 @@
       } else {
         cb();
       }
+      */
+      cb();
     },
 
     handle = function () {
@@ -191,6 +214,7 @@
         if (response.browsing_identity) {
           myIdId = response.browsing_identity.id;
         }
+        localStorage.setItem('authorization', JSON.stringify(authorization));
       } else if (response.browsing_identity
         && response.browsing_identity.connected_user_id) {
         user_id = response.browsing_identity.connected_user_id;
@@ -215,10 +239,10 @@
         } else if (authorization = localStorage.getItem('authorization')) {
           authorization = JSON.parse(authorization);
           if (authorization.user_id === user_id) {
-            args += '?user_id='     + user_id
-                  + '&token='       + authorization.token
-                  + '&identity_id=' + myIdId;
             token = authorization.token;
+            args += '?user_id='     + user_id
+                  + '&token='       + token
+                  + '&identity_id=' + myIdId;
           }
         }
       }
@@ -226,12 +250,51 @@
       return [token, args];
     },
 
+    checkSmithToken = function (d) {
+      var authorization = d.authorization
+        //, action = d.action
+        , user_id
+        // my identity id
+        , myIdentityId
+        , t
+        , token;
+
+      /*
+      if (action !== 'CLAIM_IDENTITY') {
+        return token;
+      }
+      */
+
+      if (authorization) {
+        t = authorization.token;
+        user_id = authorization.user_id;
+        localStorage.setItem('authorization', JSON.stringify(authorization));
+      } else if ((authorization = JSON.parse(localStorage.getItem('authorization')))) {
+        t = authorization.token;
+        user_id = authorization.user_id;
+      }
+
+      if (t) {
+        var invitations = d.cross.exfee.invitations, invitation;
+        for (var i = 0, len = invitations.length; i < len; ++i) {
+          invitation = invitations[i];
+          if (user_id === invitation.identity.connected_user_id) {
+            token = t;
+            myIdentityId = invitation.identity.id;
+            break;
+          }
+        }
+      }
+
+      return [token, myIdentityId];
+    },
+
     redirectByError = function (errorMeta) {
       setError(errorMeta);
       window.location = '/';
     },
 
-    crossFunc = function (data) {
+    crossFunc = function (data, noCheckApp) {
       request({
           url: apiUrl + '/Crosses/GetCrossByInvitationToken'
         , type: 'POST'
@@ -240,8 +303,9 @@
             _ENV_._data_ = data;
             if (data.meta && data.meta.code === 200) {
               var c = crossCallback(data.response);
+              _ENV_._data_.tokenInfos = checkSmithToken(data.response);
               if (c[0] && c[1]) {
-                if (window.noExfeApp) {
+                if (noCheckApp || window.noExfeApp) {
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
@@ -261,6 +325,111 @@
         });
     };
 
+  var getBrowsingIdentity = function (exfee, user_id, identity_id) {
+      var invitations = exfee.invitations;
+      for (var i = 0, len = invitations.length; i < len; ++i) {
+        var invitation = invitations[i];
+        if ((user_id && user_id === invitation.identity.connected_user_id)
+              || identity_id === invitation.identity.id) {
+          return invitation.identity;
+          break;
+        }
+      }
+    };
+
+  var getCrossByUserToken = function (user_token, cross_id, done, error) {
+    request({
+        url: apiUrl + '/Crosses/' + cross_id + '?token=' + user_token
+      , type: 'GET'
+      , done: function (d) {
+          var code = d.meta.code;
+          if (code === 200) {
+            done(d);
+          } else {
+            error(d);
+          }
+        }
+      , error: function (d) {
+          error(d);
+        }
+    });
+  };
+
+  var getCrossByXCode = function (xcode, done, error) {
+    var formData = { invitation_token: xcode }, cat;
+
+    var cats = JSON.parse(localStorage.getItem('cats'));
+    if (cats && (cat = cats[xcode])) {
+      formData.cross_access_token = cat;
+    }
+
+    request({
+        url: apiUrl + '/Crosses/GetCrossByInvitationToken'
+      , type: 'POST'
+      , data: formData
+      , done: function (d) {
+          var code = d.meta.code;
+          if (code === 200) {
+            done(d);
+          } else {
+            error(d);
+          }
+        }
+      , error: function (d) {
+          error(d);
+        }
+    });
+  };
+
+  var doOAuth = function (provider, data, done, error) {
+    request({
+        url: '/oauth/authenticate?provider=' + provider
+      , type: 'POST'
+      , data: data
+      , done: function (d) {
+          var code = d.meta.code;
+          if (code === 200) {
+            done(d);
+          } else {
+            error(d);
+          }
+        }
+      , error: function (data) {
+          error(data);
+        }
+    });
+  };
+
+  var addUserToExfee = function (exfee_id, formData, done, error) {
+    request({
+        url: apiUrl + '/exfee/' + exfee_id + '/invite'
+      , type: 'POST'
+      , data: formData
+      , done: function (d) {
+          var code = d.meta.code;
+          if (code === 200) {
+            done(d);
+          } else {
+            error(d);
+          }
+        }
+      , error: function (d) {
+          error(d)
+        }
+    });
+  };
+
+  var getAuthFromHeader = function () {
+    var header = document.getElementsByTagName('head')[0]
+      , meta = document.getElementsByName('authorization')[0]
+      , authMeta = null;
+    if (meta) {
+      authMeta = JSON.parse(meta.content);
+      header.removeChild(meta);
+    }
+    return authMeta;
+  };
+
   var Director = function () {};
 
   Director.dispatch = function (url) {
@@ -271,7 +440,8 @@
     if (routes.home.test(url)) {
       handle();
 
-    } else if (url.match(routes.smsToken)) {
+    } else if ((params = url.match(routes.smsToken))) {
+      window.noExfeApp = !!params[1];
 
       var __t;
       if (window.noExfeApp) {
@@ -361,13 +531,258 @@
 
       crossFunc(data);
 
+    } else if ((params = url.match(routes.routex0))) {
+      var ctoken = params[2]
+        , cats = localStorage.getItem('cats')
+        , data = { invitation_token: ctoken }
+        , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      crossFunc(data, true);
+    } else if ((params = url.match(routes.routex1))) {
+      var querystring = location.search.substr(1);
+      var items = querystring.split('&'), item, datas = {}, key, val;
+      while ((item = items.shift())) {
+        item = item.split('=');
+        key = item[0];
+        val = item[1] || '';
+        datas[decodeURIComponent(key.replace(/\+/g, ' '))] = decodeURIComponent(val.replace(/\+/g, ' '));
+      }
+
+      var cross_id = params[1]
+        , xcode = datas.xcode
+        , via = datas.via;
+
+      /*
+
+      var ctoken = datas.xcode
+        , cats = localStorage.getItem('cats')
+        , data = { invitation_token: ctoken }
+        , token;
+
+      if (cats) {
+        cats = JSON.parse(cats);
+      }
+
+      if (cats && (token = cats[ctoken])) {
+        data.cross_access_token = token;
+      }
+
+      crossFunc(data, true);
+      */
+
+      var authorization = JSON.parse(localStorage.getItem('authorization'))
+        , user_id = authorization && authorization.user_id
+        , user_token = authorization && authorization.token
+        , auth = getAuthFromHeader();
+
+      // 是否跟本地的 user-token 进行合并？
+      if (auth && auth.authorization) {
+        authorization = auth.authorization;
+        user_id = authorization.user_id;
+        user_token = authorization.token;
+        localStorage.setItem('authorization', JSON.stringify({
+            user_id: user_id
+          , token: user_token
+        }));
+      }
+
+      if (window.isWeixin) {
+        // has user-token
+        if (user_id && user_token) {
+          if (window._ENV_.smith_id && window._ENV_.exfee_id) {
+            var formData = {
+                user_id: user_id
+              , xcode: xcode
+              , widget: 'routex'
+            };
+            if (via) {
+              formData.via = via;
+            }
+            addUserToExfee(
+                window._ENV_.exfee_id
+              , formData
+              , function (d) {
+                  _ENV_._data_ = d;
+                  var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                  _ENV_._data_.response.browsing_identity = browsing_identity;
+                  _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
+                  _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  handle();
+                }
+              , function (d) {
+                  var code = d.meta.code
+                    , errorType = d.meta.errorType;
+                  if (code === 400) {
+                    switch (errorType) {
+                    case 'already_in':
+                      break;
+                    }
+                  }
+
+                  // -------------------------- get cross by user-token
+                  getCrossByUserToken(
+                      user_token
+                    , cross_id
+                    , function (d) {
+                        // go to routex
+                        _ENV_._data_ = d;
+                        var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                        _ENV_._data_.response.browsing_identity = browsing_identity;
+                        _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
+                        _ENV_._data_.smith_id = window._ENV_.smith_id;
+                        handle();
+                      }
+                    , function (d) {
+                        // wechat OAuth
+
+                        if (!auth) {
+                          doOAuth(
+                              'wechat'
+                            , { refere: window.location.href }
+                            , function (d) {
+                                window.location.href = d.response.redirect;
+                              }
+                            , function (d) {
+                                // 提示用户 OAuth
+                              }
+                          );
+                        } else {
+                          getCrossByXCode(
+                              xcode
+                            , function (d) {
+                                var response = d.response;
+                                var _auth = response.authorization;
+                                // 进行合并
+                                if (_auth) {
+                                  localStorage.setItem('authorization', JSON.stringify({
+                                      user_id: _auth.user_id
+                                    , token: _auth.token
+                                  }));
+                                }
+                                var cross_access_token = response.cross_access_token;
+                                if (cross_access_token) {
+                                  var cats = JSON.parse(localStorage.getItem('cats'));
+                                  if (!cats) { cats = {}; }
+                                  cats[xcode] = cross_access_token;
+                                }
+                                _ENV_._data_ = d;
+                                var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                                _ENV_._data_.response.browsing_identity = browsing_identity;
+                                _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
+                                _ENV_._data_.smith_id = window._ENV_.smith_id;
+                                handle();
+                              }
+                            , function (d) {
+                                // invalid link
+                                redirectByError(d.meta);
+                              }
+                          );
+
+                        }
+
+                      }
+                  );
+                  // --------------------------------------------------
+
+                }
+            );
+          } else {
+            getCrossByUserToken(
+                user_token
+              , cross_id
+              , function (d) {
+                  // go to routex
+                  _ENV_._data_ = d;
+                  var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                  _ENV_._data_.response.browsing_identity = browsing_identity;
+                  _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
+                  _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  handle();
+                }
+              , function (d) {
+                  // wechat OAuth
+
+                  if (!auth) {
+                    doOAuth(
+                        'wechat'
+                      , { refere: window.location.href }
+                      , function (d) {
+                          window.location.href = d.response.redirect;
+                        }
+                      , function (d) {
+                          // 提示用户 OAuth
+                          alert('Wechat OAuth fail.')
+                        }
+                    );
+                  } else {
+                    getCrossByXCode(
+                        xcode
+                      , function (d) {
+                          var response = d.response;
+                          var _auth = response.authorization;
+                          // 进行合并 ?
+                          if (_auth) {
+                            localStorage.setItem('authorization', JSON.stringify({
+                                user_id: _auth.user_id
+                              , token: _auth.token
+                            }));
+                          }
+                          var cross_access_token = response.cross_access_token;
+                          if (cross_access_token) {
+                            var cats = JSON.parse(localStorage.getItem('cats'));
+                            if (!cats) { cats = {}; }
+                            cats[xcode] = cross_access_token;
+                          }
+                          _ENV_._data_ = d;
+                          var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                          _ENV_._data_.response.browsing_identity = browsing_identity;
+                          _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
+                          _ENV_._data_.smith_id = window._ENV_.smith_id;
+                          handle();
+                        }
+                      , function (d) {
+                          // invalid link
+                          redirectByError(d.meta);
+                        }
+                    );
+
+                  }
+
+                }
+            );
+          }
+
+        // wechat OAuth
+        } else {
+          doOAuth(
+              'wechat'
+            , { refere: window.location.href }
+            , function (d) {
+                window.location.href = d.response.redirect;
+              }
+            , function (d) {
+                alert('Wechat OAuth fail.')
+                // 提醒用户 OAuth
+              }
+          );
+        }
+      }
+
     } else {
       window.location = '/';
     }
   };
 
   Director.getPath = function () {
-    return '/' + location.search + location.hash;
+    return location.pathname + location.search + location.hash;
   };
 
   Director.handle = function (e) {
@@ -402,9 +817,4 @@
   };
 
   Director.start();
-
-  /**
-   * 跳 App 逻辑
-   * 由于当前 App 还不支持 read-only 跳转, 此时不跳
-   */
 })();

@@ -18,7 +18,8 @@ define('mobileroutes', function (require, exports, module) {
       SetPasswordController = Controllers.SetPasswordController,
       VerifyController = Controllers.VerifyController,
       CrossController = Controllers.CrossController,
-      LiveController = Controllers.LiveController;
+      LiveController = Controllers.LiveController,
+      RouteXController = Controllers.RouteXController;
 
   var showCross = function (req, res, data, cats, ctoken, token) {
       cats || (cats = {});
@@ -361,6 +362,51 @@ define('mobileroutes', function (require, exports, module) {
       liveCont.emit('show', app.screen, app.ios);
 
       app.currPageName = 'LIVE' ;
+    },
+
+
+    // `routex`
+    routex: function (req, res) {
+
+      document.title = '活点地图';
+
+      var app = req.app
+        , ctoken = req.params[0]
+        , response = _ENV_._data_.response
+        , tokenInfos = _ENV_._data_.tokenInfos
+        , cross = response.cross
+        , action = response.action
+        , cross_access_token = response.cross_access_token
+        // , authorization = response.authorization
+        , browsing_identity = response.browsing_identity
+        //, free_identities = response.free_identities
+
+        , cats = (Store.get('cats') || {})
+        // , token = ((cats && cats[ctoken]) || (authorization && authorization.token));
+        , token = cats && cats[ctoken];
+
+      if (cross_access_token) {
+        token = cats[ctoken] = cross_access_token;
+        Store.set('cats', cats);
+      }
+
+      var routexCont = app.controllers.routex = new RouteXController({
+          options: {
+            template: $('#routex-tmpl').html()
+          }
+        , lastGPS: Store.get('position')
+        , cross: cross
+        , cross_id: cross && cross.id
+        , ctoken: ctoken
+        , token: token || tokenInfos[0] || ctoken
+        , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
+        , myUserId: (browsing_identity && browsing_identity.connected_user_id) || 0
+        , smith_id: window._ENV_.smith_id
+        , isSmithToken: !!window._ENV_.smith_id
+        //, freeIdentities: free_identities
+      });
+
+      routexCont.emit('show');
     }
 
   };
