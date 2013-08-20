@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 05:08:41 */
+/*! mobile@2a 2013-08-20 06:08:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4075,11 +4075,11 @@ TWEEN.Tween = function(object) {
         tmp.attr("data-uid", k);
         var position = p.data.positions[0], n = Math.floor((now - position.t) / 60), dm = "", dd = "", str = "";
         if (geoPosition) {
-          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()));
+          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()), !0);
           dm = s.text;
         }
         if (destinationPosition) {
-          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()));
+          var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()), !0);
           dd = s.text;
         }
         1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += "<span>" + n + "分钟前所处位置</span>", 
