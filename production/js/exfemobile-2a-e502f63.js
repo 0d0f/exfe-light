@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-19 11:08:41 */
+/*! mobile@2a 2013-08-20 02:08:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3972,8 +3972,8 @@ TWEEN.Tween = function(object) {
           });
           var t, MD_TIME, time = 377;
           GEvent.addDomListener(mapDiv, "touchstart", function(e) {
-            console.dir(e), rm.hideIdentityPanel(), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), 
-            t = setTimeout(function() {
+            console.dir(e), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.hideNearBy(), MD_TIME = Date.now(), 
+            clear(t), t = setTimeout(function() {
               e.preventDefault();
               var touch = e.touches[0], point = {
                 x: touch.pageX,
@@ -4046,6 +4046,8 @@ TWEEN.Tween = function(object) {
         top: top
       });
     }
+  }, proto.hideMyPanel = function() {
+    $("#my-info").addClass("hide");
   }, proto.hideIdentityPanel = function() {
     $("#other-info").addClass("hide");
   };

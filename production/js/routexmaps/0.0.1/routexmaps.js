@@ -193,6 +193,7 @@
           var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             console.dir(e)
+            rm.hideMyPanel();
             rm.hideIdentityPanel();
             rm.hideNearBy();
 
@@ -319,6 +320,10 @@
 
       $otherInfo.css({ left: left, top: top });
     }
+  };
+
+  proto.hideMyPanel = function () {
+    $('#my-info').addClass('hide');
   };
 
   proto.hideIdentityPanel = function () {
