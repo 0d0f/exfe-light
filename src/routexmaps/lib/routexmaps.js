@@ -389,12 +389,12 @@
           var dm = '', dd = '', str = '';
 
           if (geoPosition) {
-            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()))
+            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), geoPosition.lat(), geoPosition.lng()), true)
             dm = s.text;
           }
 
           if (destinationPosition) {
-            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()))
+            var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()), true)
             dd = s.text;
           }
 
