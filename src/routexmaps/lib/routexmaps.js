@@ -267,7 +267,7 @@
       , p, t;
     if (gm) {
       p = gm.getPosition();
-      t = Math.floor((now - data.t) / 60);
+      t = Math.floor((now - gm.data.positions[0].t) / 60);
       $otherInfo.find('.name').text(identity.name);
       if (t > 1) {
         $otherInfo.find('.update')
