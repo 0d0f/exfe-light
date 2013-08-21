@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-21 03:08:55 */
+/*! mobile@2a 2013-08-21 04:08:08 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3986,7 +3986,7 @@ TWEEN.Tween = function(object) {
           }), GEvent.addDomListener(mapDiv, "touchend", function() {
             377 > Date.now() - MD_TIME && clear(t);
           }), GEvent.removeListener(initListener);
-        });
+        }, !1);
         callback(map), cb = null;
       };
     }(this, options.mapDiv, options.mapOptions, options.callback);
