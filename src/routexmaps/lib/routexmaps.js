@@ -1,4 +1,4 @@
-  define('routexmaps', function (require) {
+define('routexmaps', function (require) {
 
   'use strict';
 
@@ -698,6 +698,7 @@
       gps = data.positions[0].gps;
       latlng = this.toLatLng(gps[0], gps[1]);
       g.setPosition(latlng);
+      g.uid = uid;
       g.data = data;
 
       this.updateTipline(uid, latlng);
@@ -716,16 +717,21 @@
   };
 
   proto.addGeoMarker = function () {
-    var gm = new google.maps.Marker({
-        map: this.map
-      , animation: 2
-      , zIndex: MAX_INDEX - 2
-      , icon: this.icons.dotGrey
-      , shape: {
-            type: 'circle'
-          , circle: [9, 9, 9]
-        }
-      , optimized: false
+    var self = this
+      , gm = new google.maps.Marker({
+            map: this.map
+          , animation: 2
+          , zIndex: MAX_INDEX - 2
+          , icon: this.icons.dotGrey
+          , shape: {
+                type: 'circle'
+              , circle: [9, 9, 9]
+            }
+          , optimized: false
+        });
+
+    google.maps.event.addListener(gm, 'mousedown', function () {
+      self.showIdentityPanel(this.uid);
     });
     return gm;
   };
