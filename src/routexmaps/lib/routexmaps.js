@@ -220,7 +220,7 @@ define('routexmaps', function (require) {
 
           GEvent.removeListener(initListener);
 
-        });
+        }, false);
 
         callback(map);
 
