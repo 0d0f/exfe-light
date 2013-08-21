@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-20 06:08:58 */
+/*! mobile@2a 2013-08-21 03:08:33 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4202,14 +4202,14 @@ TWEEN.Tween = function(object) {
     if (this.updatePositions(data), uid != this.myUserId) {
       if (gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at)) return;
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
-      g.setPosition(latlng), g.data = data, this.updateTipline(uid, latlng);
+      g.setPosition(latlng), g.uid = uid, g.data = data, this.updateTipline(uid, latlng);
     }
   }, proto.updatePositions = function(data) {
     var id = data.id.split("@")[0];
     this._breadcrumbs[id] ? this._breadcrumbs[id].positions.unshift(data.positions[0]) : this._breadcrumbs[id] = data, 
     this.updated[id] = this._breadcrumbs[id].positions[0];
   }, proto.addGeoMarker = function() {
-    var gm = new google.maps.Marker({
+    var self = this, gm = new google.maps.Marker({
       map: this.map,
       animation: 2,
       zIndex: MAX_INDEX - 2,
@@ -4220,7 +4220,9 @@ TWEEN.Tween = function(object) {
       },
       optimized: !1
     });
-    return gm;
+    return google.maps.event.addListener(gm, "mousedown", function() {
+      self.showIdentityPanel(this.uid);
+    }), gm;
   }, proto.distanceMatrix = function(uid, gm, dp, time) {
     time = time || 0;
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
