@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-21 04:08:29 */
+/*! mobile@2a 2013-08-21 04:08:32 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3969,11 +3969,13 @@ TWEEN.Tween = function(object) {
             GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
+          }), GEvent.addListener(map, "mousedown", function(e) {
+            e.stop(), rm.hideIdentityPanel();
           });
           var t, MD_TIME, time = 377;
           GEvent.addDomListener(mapDiv, "touchstart", function(e) {
-            console.dir(e), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.hideNearBy(), MD_TIME = Date.now(), 
-            clear(t), t = setTimeout(function() {
+            console.dir(e), rm.hideMyPanel(), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), 
+            t = setTimeout(function() {
               e.preventDefault();
               var touch = e.touches[0], point = {
                 x: touch.pageX,
@@ -3986,7 +3988,7 @@ TWEEN.Tween = function(object) {
           }), GEvent.addDomListener(mapDiv, "touchend", function() {
             377 > Date.now() - MD_TIME && clear(t);
           }), GEvent.removeListener(initListener);
-        }, !1);
+        });
         callback(map), cb = null;
       };
     }(this, options.mapDiv, options.mapOptions, options.callback);
