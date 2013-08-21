@@ -599,9 +599,9 @@
         if (user_id && user_token) {
           if (window._ENV_.smith_id && window._ENV_.exfee_id) {
             var formData = {
-                user_id: user_id
-              , xcode: xcode
-              , widget: 'routex'
+                xcode: xcode
+              , user_token: user_token
+              , widget_type: 'routex'
             };
             if (via) {
               formData.via = via;
@@ -620,13 +620,19 @@
               , function (d) {
                   var code = d.meta.code
                     , errorType = d.meta.errorType;
-                  if (code === 400) {
-                    switch (errorType) {
-                    case 'already_in':
-                      break;
-                    }
+                  if (code === 400 && errorType === 'error_user_token') {
+                    doOAuth(
+                        'wechat'
+                      , { refere: window.location.href }
+                      , function (d) {
+                          window.location.href = d.response.redirect;
+                        }
+                        // 提示用户 OAuth
+                      , function (d) {}
+                    );
                   }
 
+                  /*
                   // -------------------------- get cross by user-token
                   getCrossByUserToken(
                       user_token
@@ -650,9 +656,8 @@
                             , function (d) {
                                 window.location.href = d.response.redirect;
                               }
-                            , function (d) {
-                                // 提示用户 OAuth
-                              }
+                              // 提示用户 OAuth
+                            , function (d) {}
                           );
                         } else {
                           getCrossByXCode(
@@ -691,6 +696,7 @@
                       }
                   );
                   // --------------------------------------------------
+                  */
 
                 }
             );
