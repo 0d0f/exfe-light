@@ -1075,7 +1075,7 @@ define('routexmaps', function (require) {
         , enableEventPropagation: false
         , leftBoundary: 60
         , zIndex: 610
-        , boxId: (isDestination ? 'destination' : '')
+        , boxId: '#place-editor'
         , events: function () {
             //if (isDestination) {
               var ib = this;
@@ -1105,15 +1105,15 @@ define('routexmaps', function (require) {
       GEvent.addListenerOnce(this, 'mouseout', function mouseout() {
         if (infobox.editing) {
           var data = infobox._marker.data;
-          var title = $('#destination input').val().trim();
-          var description = $('#destination textarea').val().trim();
+          var title = $('#place-editor input').val().trim();
+          var description = $('#place-editor textarea').val().trim();
           data.title = title;
           data.description = description;
           data.updated_at = Math.round(Date.now() / 1000);
           data.updated_by = myIdentity.external_username + '@' + myIdentity.provider
-          $('#destination input, #description textarea').remove();
-          $('#destination .title').text(title).removeClass('hide');
-          $('#destination .description').text(description).removeClass('hide');
+          $('#place-editor input, #place-editor textarea').remove();
+          $('#place-editor .title').text(title).removeClass('hide');
+          $('#place-editor .description').text(description).removeClass('hide');
           self.controller.editPlace(data);
         }
         infobox.close();
