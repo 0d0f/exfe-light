@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 07:08:14 */
+/*! mobile@2a 2013-08-22 11:08:36 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3787,7 +3787,7 @@ TWEEN.Tween = function(object) {
     gps: [ 0, 0, 0 ]
   }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, updateGPS = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
-    submit_request = $.ajax({
+    myData.t = Math.round(Date.now() / 1e3), submit_request = $.ajax({
       type: "POST",
       url: api_url + "/routex/breadcrumbs?coordinate=earth&token=" + token,
       data: JSON.stringify([ myData ]),
