@@ -326,6 +326,11 @@ define('routexmaps', function (require) {
     }
   };
 
+  proto.setOffset = function (offset) {
+    this.latOffset = offset.earth_to_mars_latitude * 1;
+    this.lngOffset = offset.earth_to_mars_longitude * 1;
+  };
+
   proto.hideMyPanel = function () {
     $('#my-info').addClass('hide');
   };

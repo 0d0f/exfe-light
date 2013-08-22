@@ -2060,8 +2060,7 @@ define('mobilecontroller', function (require, exports, module) {
     , setLatLngOffset: function () {
         var offset = Store.get('offset-latlng');
         if (offset) {
-          this.mapController.latOffset = offset.earth_to_mars_latitude * 1;
-          this.mapController.lngOffset = offset.earth_to_mars_longitude * 1;
+          this.mapController.setOffset(offset);
         }
       }
 
@@ -2106,7 +2105,6 @@ define('mobilecontroller', function (require, exports, module) {
           , self.token
           , function (result) {
               if (self.mapReadyStatus && self.mapController) {
-                //self.setLatLngOffset();
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
                 }
@@ -2115,6 +2113,10 @@ define('mobilecontroller', function (require, exports, module) {
             }
           , function (e) {
               console.log(e);
+            }
+          // updateGPS
+          , function () {
+              self.trackGeoLocation();
             }
         );
       }
