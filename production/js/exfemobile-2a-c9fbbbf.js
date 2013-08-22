@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-21 04:08:32 */
+/*! mobile@2a 2013-08-22 02:08:46 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3785,14 +3785,14 @@ TWEEN.Tween = function(object) {
   var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
     t: 0,
     gps: [ 0, 0, 0 ]
-  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, submitGps = function() {
+  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, updateGPS = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     submit_request = $.ajax({
       type: "POST",
       url: api_url + "/routex/breadcrumbs?coordinate=earth&token=" + token,
       data: JSON.stringify([ myData ]),
       success: function(data) {
-        data && localStorage.setItem("offset-latlng", JSON.stringify(data));
+        data && (localStorage.setItem("offset-latlng", JSON.stringify(data)), updateGPS && updateGPS(data));
       },
       error: function(data) {
         var status = data.status;
@@ -3884,9 +3884,9 @@ TWEEN.Tween = function(object) {
     freshness_threshold: 4999.999999,
     accuracy_threshold: 500,
     _success: function(done) {
-      var self = this, freshness_threshold = this.freshness_threshold, accuracy_threshold = this.accuracy_threshold, prev = new Date().getTime();
+      var self = this, freshness_threshold = this.freshness_threshold, accuracy_threshold = this.accuracy_threshold, prev = Date.now();
       return function d(p) {
-        var coords = p.coords, result = coords, curr = new Date().getTime(), status = !1;
+        var coords = p.coords, result = coords, curr = Date.now(), status = !1;
         0 === self.STATUS && (status = !0), curr - prev > freshness_threshold && (status = !0), 
         status && (prev = curr + freshness_threshold, result.status = "success", result.timestamp = Math.round(p.timestamp / 1e3), 
         result.accuracy = parseInt(coords.accuracy || accuracy_threshold), done && done(result), 
@@ -3916,13 +3916,13 @@ TWEEN.Tween = function(object) {
     var data = JSON.parse(rawData);
     data && data.type && (log("Streaming pops: " + data.type), echo(data));
   }, routexStream = {
-    init: function(intCrossId, strToken, callback, unauthorized_callback) {
+    init: function(intCrossId, strToken, callback, unauthorized_callback, update) {
       return intCrossId ? strToken ? callback ? unauthorized_callback ? (cross_id = intCrossId, 
       log("Set cross_id: " + intCrossId), token = strToken, log("Set token: " + strToken), 
       echo = callback, log("Set callback function"), unat_cbf = unauthorized_callback, 
-      log("Set unauthorized callback function"), secCnt = secInt, void 0) : (log("Error unauthorized callback!"), 
-      void 0) : (log("Error callback!"), void 0) : (log("Error token!"), void 0) : (log("Error cross id!"), 
-      void 0);
+      log("Set unauthorized callback function"), secCnt = secInt, updateGPS = update, 
+      void 0) : (log("Error unauthorized callback!"), void 0) : (log("Error callback!"), 
+      void 0) : (log("Error token!"), void 0) : (log("Error cross id!"), void 0);
     },
     shake: function(start_callback, end_callback) {
       shake_start_callback = start_callback, shake_end_callback = end_callback;
@@ -4048,6 +4048,8 @@ TWEEN.Tween = function(object) {
         top: top
       });
     }
+  }, proto.setOffset = function(offset) {
+    this.latOffset = 1 * offset.earth_to_mars_latitude, this.lngOffset = 1 * offset.earth_to_mars_longitude;
   }, proto.hideMyPanel = function() {
     $("#my-info").addClass("hide");
   }, proto.hideIdentityPanel = function() {
@@ -5554,7 +5556,7 @@ TWEEN.Tween = function(object) {
     },
     setLatLngOffset: function() {
       var offset = Store.get("offset-latlng");
-      offset && (this.mapController.latOffset = 1 * offset.earth_to_mars_latitude, this.mapController.lngOffset = 1 * offset.earth_to_mars_longitude);
+      offset && this.mapController.setOffset(offset);
     },
     streaming: function() {
       if (this.cross_id && this.token) {
@@ -5587,6 +5589,8 @@ TWEEN.Tween = function(object) {
         self.mapController.draw(result));
       }, function(e) {
         console.log(e);
+      }, function() {
+        self.trackGeoLocation();
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {

@@ -34,8 +34,9 @@ define('routexstream', function (require) {
 
     var intGeoWatch          = null;
 
+    var updateGPS = null;
 
-    var submitGps = function() {
+    var submitGps = function () {
         secCnt = 0;
         if (!token) {
             log('No token!');
@@ -50,7 +51,12 @@ define('routexstream', function (require) {
             url     : api_url + '/routex/breadcrumbs?coordinate=earth&token=' + token,
             data    : JSON.stringify([myData]),
             success : function (data) {
-              data && localStorage.setItem('offset-latlng', JSON.stringify(data));
+              if (data) {
+                localStorage.setItem('offset-latlng', JSON.stringify(data));
+                if (updateGPS) {
+                  updateGPS(data);
+                }
+              }
             },
             error   : function (data) {
                 var status = data.status;
@@ -287,12 +293,12 @@ define('routexstream', function (require) {
         var self = this
           , freshness_threshold = this.freshness_threshold
           , accuracy_threshold = this.accuracy_threshold
-          , prev = (new Date()).getTime();
+          , prev = Date.now()
         // position
         return function d(p) {
           var coords = p.coords
             , result = coords
-            , curr = (new Date()).getTime()
+            , curr = Date.now()
             , status = false;
 
           if (self.STATUS === 0) {
@@ -386,7 +392,7 @@ define('routexstream', function (require) {
 
 
     var routexStream = {
-        init : function(intCrossId, strToken, callback, unauthorized_callback) {
+        init : function(intCrossId, strToken, callback, unauthorized_callback, update) {
             if (!intCrossId) {
                 log('Error cross id!');
                 return;
@@ -412,6 +418,8 @@ define('routexstream', function (require) {
             unat_cbf = unauthorized_callback;
             log('Set unauthorized callback function');
             secCnt   = secInt;
+
+            updateGPS = update
         },
         shake : function(start_callback, end_callback) {
             shake_start_callback = start_callback;
