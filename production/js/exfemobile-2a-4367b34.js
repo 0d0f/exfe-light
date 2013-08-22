@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 11:08:17 */
+/*! mobile@2a 2013-08-23 12:08:16 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4481,7 +4481,8 @@ TWEEN.Tween = function(object) {
     this.disableAutoPan_ = opt_opts.disableAutoPan || !1, this.maxWidth_ = opt_opts.maxWidth || 0, 
     this.pixelOffset_ = opt_opts.pixelOffset || new google.maps.Size(0, 0), this.position_ = opt_opts.position || new google.maps.LatLng(0, 0), 
     this.zIndex_ = opt_opts.zIndex || null, this.leftBoundary = opt_opts.leftBoundary || 0, 
-    this.boxClass_ = opt_opts.boxClass || "infoBox", this.boxStyle_ = opt_opts.boxStyle || {}, 
+    this.events = opt_opts.events || function() {}, this.boxClass_ = opt_opts.boxClass || "infoBox", 
+    this.boxId_ = opt_opts.boxId || "infobox", this.boxStyle_ = opt_opts.boxStyle || {}, 
     this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px", this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif", 
     "" === opt_opts.closeBoxURL && (this.closeBoxURL_ = ""), this.infoBoxClearance_ = opt_opts.infoBoxClearance || new google.maps.Size(1, 1), 
     opt_opts.visible === void 0 && (opt_opts.visible = opt_opts.isHidden === void 0 ? !0 : !opt_opts.isHidden), 
@@ -4538,7 +4539,8 @@ TWEEN.Tween = function(object) {
   }, InfoBox.prototype.setBoxStyle_ = function() {
     var i, boxStyle;
     if (this.div_) {
-      this.div_.className = this.boxClass_, this.div_.style.cssText = "", boxStyle = this.boxStyle_;
+      this.div_.className = this.boxClass_, this.div_.id = this.boxId_, this.div_.style.cssText = "", 
+      boxStyle = this.boxStyle_;
       for (i in boxStyle) boxStyle.hasOwnProperty(i) && (this.div_.style[i] = boxStyle[i]);
       this.div_.style.opacity !== void 0 && "" !== this.div_.style.opacity && (this.div_.style.filter = "alpha(opacity=" + 100 * this.div_.style.opacity + ")"), 
       this.div_.style.position = "absolute", this.div_.style.visibility = "hidden", null !== this.zIndex_ && (this.div_.style.zIndex = this.zIndex_);
@@ -4561,7 +4563,7 @@ TWEEN.Tween = function(object) {
     this.createInfoBoxDiv_();
     var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
     this.div_.style.left = pixPosition.x + this.pixelOffset_.width + "px", this.alignBottom_ ? this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px" : this.div_.style.top = pixPosition.y + this.pixelOffset_.height + "px", 
-    this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible";
+    this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible", this.events && this.events();
   }, InfoBox.prototype.setOptions = function(opt_opts) {
     opt_opts.boxClass !== void 0 && (this.boxClass_ = opt_opts.boxClass, this.setBoxStyle_()), 
     opt_opts.boxStyle !== void 0 && (this.boxStyle_ = opt_opts.boxStyle, this.setBoxStyle_()), 
