@@ -2025,8 +2025,8 @@ define('mobilecontroller', function (require, exports, module) {
                     d = data[i];
                     id = d.id.split('@')[0];
                     if (mc._breadcrumbs[id]) {
-                      mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions);
-                      } else {
+                      mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions);
+                    } else {
                       mc._breadcrumbs[id] = d;
                     }
                   }
