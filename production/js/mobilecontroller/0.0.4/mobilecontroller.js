@@ -2098,8 +2098,11 @@ define('mobilecontroller', function (require, exports, module) {
         }, 1000);
       }
 
+    , _cache: []
+
     , initStream: function () {
-        var self = this;
+        var self = this
+          , _cache = this._cache;
         routexStream.init(
             self.cross.id
           , self.token
@@ -2108,7 +2111,15 @@ define('mobilecontroller', function (require, exports, module) {
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
                 }
+                if (_cache.length) {
+                  var c;
+                  while((c = _cache.shift())) {
+                    self.mapController.draw(c);
+                  }
+                }
                 self.mapController.draw(result);
+              } else {
+                _cache.push(result);
               }
             }
           , function (e) {
