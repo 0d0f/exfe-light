@@ -465,12 +465,6 @@ define('routexmaps', function (require) {
           while ((tag = tags.shift())) {
             if (tag === DESTINATION) {
               isDestination = true;
-              /*
-              var i = data.tags.indexOf('cross_place');
-              if (i > 0) {
-                data.tags.splice(i, 1);
-              }
-              */
               break;
             }
           }

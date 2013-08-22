@@ -2258,7 +2258,7 @@ define('mobilecontroller', function (require, exports, module) {
             this.updateNotifyProvider(invitation.notification_identities.slice(0));
             continue;
           }
-          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位？</span></div></div>')
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
           div.attr('data-uid', identity.connected_user_id);
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
