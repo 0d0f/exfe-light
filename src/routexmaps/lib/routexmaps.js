@@ -457,10 +457,12 @@ define('routexmaps', function (require) {
           while ((tag = tags.shift())) {
             if (tag === DESTINATION) {
               isDestination = true;
+              /*
               var i = data.tags.indexOf('cross_place');
               if (i > 0) {
                 data.tags.splice(i, 1);
               }
+              */
               break;
             }
           }
@@ -1074,7 +1076,7 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: (isDestination ? 'destination' : '')
         , events: function () {
-            if (isDestination) {
+            //if (isDestination) {
               var ib = this;
               ib.editing = false;
               GEvent.addDomListener(this.div_, 'touchstart', function () {
@@ -1093,7 +1095,7 @@ define('routexmaps', function (require) {
                 this.querySelector('.description').className = 'description hide';
                 ib.editing = true;
               });
-            }
+            //}
           }
       });
       infobox._marker = this;
@@ -1110,7 +1112,7 @@ define('routexmaps', function (require) {
           $('#destination input, #description textarea').remove();
           $('#destination .title').text(title).removeClass('hide');
           $('#destination .description').text(description).removeClass('hide');
-          self.controller.editDestination(data);
+          self.controller.editPlace(data);
         }
         infobox.close();
         delete infobox._marker;

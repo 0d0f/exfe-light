@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 03:08:54 */
+/*! mobile@2a 2013-08-22 04:08:02 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4105,8 +4105,6 @@ TWEEN.Tween = function(object) {
       var isDestination;
       if (hasTags) for (;tag = tags.shift(); ) if (tag === DESTINATION) {
         isDestination = !0;
-        var i = data.tags.indexOf("cross_place");
-        i > 0 && data.tags.splice(i, 1);
         break;
       }
       isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
@@ -4358,19 +4356,17 @@ TWEEN.Tween = function(object) {
         zIndex: 610,
         boxId: isDestination ? "destination" : "",
         events: function() {
-          if (isDestination) {
-            var ib = this;
-            ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
-              if (!ib.editing) {
-                var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
-                ct.type = "text", ct.value = title;
-                var cd = document.createElement("textarea");
-                cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
-                this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
-                ib.editing = !0;
-              }
-            });
-          }
+          var ib = this;
+          ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
+            if (!ib.editing) {
+              var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
+              ct.type = "text", ct.value = title;
+              var cd = document.createElement("textarea");
+              cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
+              this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
+              ib.editing = !0;
+            }
+          });
         }
       });
       infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
@@ -4378,7 +4374,7 @@ TWEEN.Tween = function(object) {
           var data = infobox._marker.data, title = $("#destination input").val().trim(), description = $("#destination textarea").val().trim();
           data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
           $("#destination input, #description textarea").remove(), $("#destination .title").text(title).removeClass("hide"), 
-          $("#destination .description").text(description).removeClass("hide"), self.controller.editDestination(data);
+          $("#destination .description").text(description).removeClass("hide"), self.controller.editPlace(data);
         }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;
       });
@@ -5539,11 +5535,11 @@ TWEEN.Tween = function(object) {
       });
     },
     mapReadyStatus: !1,
-    editDestination: function(destination) {
-      destination && $.ajax({
+    editPlace: function(place) {
+      place && $.ajax({
         type: "POST",
-        url: apiv3_url + "/routex/geomarks/crosses/" + this.cross_id + "/location/" + destination.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
-        data: JSON.stringify(destination),
+        url: apiv3_url + "/routex/geomarks/crosses/" + this.cross_id + "/location/" + place.id + "?coordinate=mars&token=" + this.token + "&_method=PUT",
+        data: JSON.stringify(place),
         success: function(data) {
           console.log(data);
         },
