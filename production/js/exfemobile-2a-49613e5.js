@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 05:08:39 */
+/*! mobile@2a 2013-08-22 05:08:15 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4354,7 +4354,7 @@ TWEEN.Tween = function(object) {
         enableEventPropagation: !1,
         leftBoundary: 60,
         zIndex: 610,
-        boxId: isDestination ? "destination" : "",
+        boxId: "#place-editor",
         events: function() {
           var ib = this;
           ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
@@ -4371,10 +4371,10 @@ TWEEN.Tween = function(object) {
       });
       infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
         if (infobox.editing) {
-          var data = infobox._marker.data, title = $("#destination input").val().trim(), description = $("#destination textarea").val().trim();
+          var data = infobox._marker.data, title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
           data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
-          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, $("#destination input, #description textarea").remove(), 
-          $("#destination .title").text(title).removeClass("hide"), $("#destination .description").text(description).removeClass("hide"), 
+          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, $("#place-editor input, #place-editor textarea").remove(), 
+          $("#place-editor .title").text(title).removeClass("hide"), $("#place-editor .description").text(description).removeClass("hide"), 
           self.controller.editPlace(data);
         }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;

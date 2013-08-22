@@ -2457,7 +2457,7 @@ button .exfe {
 #routex .icon-arrow-red {
   background-image: url(/static/img/map_arrow_14red@2x.png);
 }
-#routex #destination input {
+#routex #place-editor input {
   position: relative;
   width: 100%;
   border: none;
@@ -2472,7 +2472,7 @@ button .exfe {
   padding: 0;
   margin: 0;
 }
-#routex #destination input:before {
+#routex #place-editor input:before {
   position: absolute;
   content: '';
   bottom: -1px;
@@ -2481,7 +2481,7 @@ button .exfe {
   height: 1px;
   background: #555;
 }
-#routex #destination textarea {
+#routex #place-editor textarea {
   margin-top: 1px;
   padding: 0;
   width: 100%;
