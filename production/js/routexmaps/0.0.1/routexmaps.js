@@ -586,11 +586,15 @@ define('routexmaps', function (require) {
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
-      if (this.destinationPlace && this.destinationPlace !== p) {
-        delete this.destinationPlace.isDestination;
-        this.destinationPlace.setIcon(this.icons.placeMarker);
-        this.destinationPlace = p;
+      var destinationPlace = this.destinationPlace;
+      if (destinationPlace) {
+        var cd = destinationPlace.data;
+        if (data.updated_at > cd.updated_at) {
+          delete destinationPlace.isDestination;
+          destinationPlace.setIcon(this.icons.placeMarker);
+        }
       }
+      this.destinationPlace = p;
       p.setZIndex(MAX_INDEX);
     }
   };
