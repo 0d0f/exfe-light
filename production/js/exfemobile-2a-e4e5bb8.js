@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 12:08:16 */
+/*! mobile@2a 2013-08-23 12:08:54 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5586,9 +5586,10 @@ TWEEN.Tween = function(object) {
     initStream: function() {
       var self = this, _cache = this._cache;
       routexStream.init(self.cross.id, self.token, function(result) {
-        if (self.mapReadyStatus && self.mapController) {
-          if (self.mapController.myUserId || (self.mapController.myUserId = self.myUserId, 
-          self.mapController.myIdentity = self.myIdentity), _cache.length) for (var c; c = _cache.shift(); ) self.mapController.draw(c);
+        if (self.mapController && (self.mapController.myUserId || (self.mapController.myUserId = self.myUserId), 
+        self.mapController.myIdentity || (self.mapController.myIdentity = self.myIdentity)), 
+        self.mapReadyStatus) {
+          if (_cache.length) for (var c; c = _cache.shift(); ) self.mapController.draw(c);
           self.mapController.draw(result);
         } else _cache.push(result);
       }, function(e) {
