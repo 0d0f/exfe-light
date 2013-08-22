@@ -1246,7 +1246,7 @@ define('routexmaps', function (require) {
         , icon: this.icons.arrowGrey
         , shape: {
               type: 'rect'
-            , rect: [0, 0, 20, 20]
+            , rect: [0, 0, 22, 22]
           }
         , optimized: false
       });

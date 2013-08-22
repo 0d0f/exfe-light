@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 03:08:20 */
+/*! mobile@2a 2013-08-22 03:08:54 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4429,7 +4429,7 @@ TWEEN.Tween = function(object) {
         icon: this.icons.arrowGrey,
         shape: {
           type: "rect",
-          rect: [ 0, 0, 20, 20 ]
+          rect: [ 0, 0, 22, 22 ]
         },
         optimized: !1
       }), geoLocation._status = 0;
