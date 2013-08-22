@@ -1278,10 +1278,6 @@ define('routexmaps', function (require) {
         this.map.panTo(latlng);
       }
       geoLocation._status = 2;
-
-      if (uid && position) {
-        //this.updatePositions({ id: String(uid), positions: [position] });
-      }
     }
     if (uid) {
       this.updated[uid] = position || lastlatlng;
