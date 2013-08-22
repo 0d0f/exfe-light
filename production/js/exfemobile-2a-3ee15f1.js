@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 06:08:53 */
+/*! mobile@2a 2013-08-22 07:08:32 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3956,6 +3956,7 @@ TWEEN.Tween = function(object) {
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
+        icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
         mapOptions.minZoom = 1;
@@ -3993,7 +3994,7 @@ TWEEN.Tween = function(object) {
       };
     }(this, options.mapDiv, options.mapOptions, options.callback);
   }
-  var SITE_URL = window._ENV_.site_url, EarthRadiusMeters = 6378137, distance = function(lat1, lng1, lat2, lng2) {
+  var SITE_URL = window._ENV_.site_url, apiv3_url = window._ENV_.apiv3_url, EarthRadiusMeters = 6378137, distance = function(lat1, lng1, lat2, lng2) {
     var R = EarthRadiusMeters, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lng2 - lng1) * Math.PI / 180, a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2), c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)), d = R * c;
     return d;
   }, toRad = function(l) {
@@ -4148,7 +4149,9 @@ TWEEN.Tween = function(object) {
     isDestination) {
       var geoLocation = this.geoLocation;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
-      this.destinationPlace = p, p.setZIndex(MAX_INDEX);
+      this.destinationPlace && this.destinationPlace !== p && (delete this.destinationPlace.isDestination, 
+      this.destinationPlace.setIcon(this.icons.placeMarker), this.destinationPlace = p), 
+      p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
@@ -4339,7 +4342,7 @@ TWEEN.Tween = function(object) {
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
-      icon: new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
+      icon: new GMaps.MarkerImage(data.icon || apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     }), GEvent = GMaps.event;
     return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;

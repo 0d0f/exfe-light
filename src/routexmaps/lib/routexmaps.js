@@ -3,6 +3,7 @@ define('routexmaps', function (require) {
   'use strict';
 
   var SITE_URL = window._ENV_.site_url
+    , apiv3_url = window._ENV_.apiv3_url
     //htt://www.geocodezip.com/scripts/v3_epoly_proj.js
     //http://www.geocodezip.com/
 
@@ -143,6 +144,13 @@ define('routexmaps', function (require) {
           );
         icons.arrowGrey = new GMaps.MarkerImage(
               SITE_URL + '/static/img/map_arrow_22g5@2x.png'
+            , new GMaps.Size(44, 44)
+            , new GMaps.Point(0, 0)
+            , new GMaps.Point(11, 11)
+            , new GMaps.Size(22, 22)
+          );
+        icons.placeMarker = new GMaps.MarkerImage(
+              apiv3_url + '/icons/mapmark'
             , new GMaps.Size(44, 44)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(11, 11)
@@ -578,7 +586,11 @@ define('routexmaps', function (require) {
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
-      this.destinationPlace = p;
+      if (this.destinationPlace && this.destinationPlace !== p) {
+        delete this.destinationPlace.isDestination;
+        this.destinationPlace.setIcon(this.icons.placeMarker);
+        this.destinationPlace = p;
+      }
       p.setZIndex(MAX_INDEX);
     }
   };
@@ -1045,7 +1057,7 @@ define('routexmaps', function (require) {
         //, visible: false
         , zIndex: MAX_INDEX - 5
         , icon: new GMaps.MarkerImage(
-              data.icon
+              data.icon || (apiv3_url + '/icons/mapmark')
             , new GMaps.Size(48, 68)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(12, 34)
