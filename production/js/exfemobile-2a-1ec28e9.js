@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 04:08:31 */
+/*! mobile@2a 2013-08-22 04:08:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4335,7 +4335,7 @@ TWEEN.Tween = function(object) {
       console.log("current breadcrumbs", uid);
     }
   }, proto.addPoint = function(data, isDestination) {
-    var self = this, GMaps = google.maps, map = this.map, m = new GMaps.Marker({
+    var self = this, GMaps = google.maps, map = this.map, myIdentity = this.myIdentity, m = new GMaps.Marker({
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
@@ -4373,8 +4373,9 @@ TWEEN.Tween = function(object) {
         if (infobox.editing) {
           var data = infobox._marker.data, title = $("#destination input").val().trim(), description = $("#destination textarea").val().trim();
           data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
-          $("#destination input, #description textarea").remove(), $("#destination .title").text(title).removeClass("hide"), 
-          $("#destination .description").text(description).removeClass("hide"), self.controller.editPlace(data);
+          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, $("#destination input, #description textarea").remove(), 
+          $("#destination .title").text(title).removeClass("hide"), $("#destination .description").text(description).removeClass("hide"), 
+          self.controller.editPlace(data);
         }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;
       });
