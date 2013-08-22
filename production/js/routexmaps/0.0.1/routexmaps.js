@@ -135,18 +135,18 @@ define('routexmaps', function (require) {
             , new GMaps.Size(18, 18)
           );
         icons.arrowBlue = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_arrow_blue@2x.png'
-            , new GMaps.Size(40, 40)
+              SITE_URL + '/static/img/map_arrow_22blue@2x.png'
+            , new GMaps.Size(44, 44)
             , new GMaps.Point(0, 0)
-            , new GMaps.Point(10, 10)
-            , new GMaps.Size(20, 20)
+            , new GMaps.Point(11, 11)
+            , new GMaps.Size(22, 22)
           );
         icons.arrowGrey = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_arrow_g5@2x.png'
-            , new GMaps.Size(40, 40)
+              SITE_URL + '/static/img/map_arrow_22g5@2x.png'
+            , new GMaps.Size(44, 44)
             , new GMaps.Point(0, 0)
-            , new GMaps.Point(10, 10)
-            , new GMaps.Size(20, 20)
+            , new GMaps.Point(11, 11)
+            , new GMaps.Size(22, 22)
           );
 
         // hdpi
