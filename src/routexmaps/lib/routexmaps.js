@@ -643,14 +643,14 @@ define('routexmaps', function (require) {
                 {
                     icon: {
                         path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
-                      , fillColor: '#FF7E98'
-                      , fillOpacity: .8
+                      , fillColor: '#ff325b'
+                      , fillOpacity: .5
                       , strokeColor: '#fff'
-                      , strokeOpacity: .8
+                      , strokeOpacity: .66
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '25px'
+                  , repeat: '13px'
                   , offset: '0'
                 }
               ]
@@ -673,14 +673,14 @@ define('routexmaps', function (require) {
                 {
                     icon: {
                         path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
-                      , fillColor: '#b2b2b2'
-                      , fillOpacity: .8
+                      , fillColor: '#7f7f7f'
+                      , fillOpacity: .5
                       , strokeColor: '#fff'
-                      , strokeOpacity: .8
+                      , strokeOpacity: .66
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '25px'
+                  , repeat: '13px'
                   , offset: '0'
                 }
               ]
@@ -857,8 +857,8 @@ define('routexmaps', function (require) {
   };
 
   proto.addBreadcrumbs = function () {
-    var color = '#b2b2b2'
-      , alpha = 0.8
+    var color = '#7f7f7f'
+      , alpha = 0.5
       , p = new google.maps.Polyline({
         map: this.map
       , visible: false
@@ -874,12 +874,12 @@ define('routexmaps', function (require) {
                 , fillColor: color
                 , fillOpacity: alpha
                 , strokeColor: '#fff'
-                , strokeOpacity: .8
+                , strokeOpacity: .66
                 , strokeWeight: 1
                 , scale: .5
               }
             , fixedRotation: true
-            , repeat: '25px'
+            , repeat: '13px'
             , offset: '0'
           }
         ]
@@ -948,10 +948,10 @@ define('routexmaps', function (require) {
             marker.setPosition(this.toLatLng(p.gps[0], p.gps[1]));
             marker.setIcon({
                 path: 'M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z'
-              , fillColor: bool ? '#FF7E98' : '#b2b2b2'
-              , fillOpacity: .8
+              , fillColor: bool ? '#ff325b' : '#7f7f7f'
+              , fillOpacity: .5
               , strokeColor: '#fff'
-              , strokeOpacity: .8
+              , strokeOpacity: .66
               , strokeWeight: 1
               , scale: .5
             });
