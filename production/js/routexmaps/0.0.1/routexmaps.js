@@ -468,7 +468,7 @@ define('routexmaps', function (require) {
           }
         }
 
-        isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
+        isDelete ? this.removePlace(data, isDestination) : this.drawPlace(data, isDestination);
         break;
 
       case ROUTE:
@@ -492,12 +492,15 @@ define('routexmaps', function (require) {
     }
   };
 
-  proto.removePlace = function (data) {
+  proto.removePlace = function (data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
     if (p) {
       p.setMap(null);
       p = null;
       delete places[id];
+      if (isDestination) {
+        this.destinationPlace = null;
+      }
     }
   };
 
@@ -558,11 +561,6 @@ define('routexmaps', function (require) {
       , id = data.id, p, d, latlng;
     if (places.hasOwnProperty(id)) {
       p = places[id];
-      d = p.data;
-      // no update
-      if (d.updated_at === data.updated_at) {
-        return;
-      }
     }
 
     if (!p) {
