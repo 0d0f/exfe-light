@@ -2442,15 +2442,15 @@ button .exfe {
 }
 #routex .icon-arrow-grey,
 #routex .icon-arrow-red {
-  width: 12px;
-  height: 12px;
-  -webkit-transform-origin: 50% 7.5px;
+  width: 14px;
+  height: 14px;
+  -webkit-transform-origin: 50% 50%;
 }
 #routex .icon-arrow-grey {
-  background-image: url(/static/img/map_arrow_12g5@2x.png);
+  background-image: url(/static/img/map_arrow_14g5@2x.png);
 }
 #routex .icon-arrow-red {
-  background-image: url(/static/img/map_arrow_12red@2x.png);
+  background-image: url(/static/img/map_arrow_14red@2x.png);
 }
 #routex #destination input {
   position: relative;
