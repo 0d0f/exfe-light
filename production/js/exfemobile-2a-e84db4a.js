@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 06:08:08 */
+/*! mobile@2a 2013-08-22 06:08:53 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4107,7 +4107,7 @@ TWEEN.Tween = function(object) {
         isDestination = !0;
         break;
       }
-      isDelete ? this.removePlace(data) : this.drawPlace(data, isDestination);
+      isDelete ? this.removePlace(data, isDestination) : this.drawPlace(data, isDestination);
       break;
 
      case ROUTE:
@@ -4118,9 +4118,9 @@ TWEEN.Tween = function(object) {
       }
       isBreadcrumbs ? this.drawGeoMarker(data) : isDelete ? this.removeRoute(data) : this.drawRoute(data);
     }
-  }, proto.removePlace = function(data) {
+  }, proto.removePlace = function(data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
-    p && (p.setMap(null), p = null, delete places[id]);
+    p && (p.setMap(null), p = null, delete places[id], isDestination && (this.destinationPlace = null));
   }, proto.drawRoute = function(data) {
     var r, d, p, gps, routes = this.routes, id = data.id, positions = data.positions.slice(0), coords = [];
     if (!routes.hasOwnProperty(id) || (r = routes[id], d = r.data, d.updated_at !== data.updated_at)) {
@@ -4142,10 +4142,10 @@ TWEEN.Tween = function(object) {
     });
     return p;
   }, proto.drawPlace = function(data, isDestination) {
-    var p, d, latlng, places = this.places, id = data.id;
-    if ((!places.hasOwnProperty(id) || (p = places[id], d = p.data, d.updated_at !== data.updated_at)) && (p || (p = places[id] = this.addPoint(data, isDestination)), 
+    var p, latlng, places = this.places, id = data.id;
+    if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data, isDestination)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
-    isDestination)) {
+    isDestination) {
       var geoLocation = this.geoLocation;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng), 
       this.destinationPlace = p, p.setZIndex(MAX_INDEX);
