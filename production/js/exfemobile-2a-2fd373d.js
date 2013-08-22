@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 02:08:00 */
+/*! mobile@2a 2013-08-23 02:08:40 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3956,7 +3956,7 @@ TWEEN.Tween = function(object) {
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
-        icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
+        icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
         mapOptions.minZoom = 1;
@@ -4144,7 +4144,7 @@ TWEEN.Tween = function(object) {
     return p;
   }, proto.drawPlace = function(data, isDestination) {
     var p, latlng, places = this.places, id = data.id;
-    if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data, isDestination)), 
+    if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
     isDestination) {
       var geoLocation = this.geoLocation;
@@ -4152,9 +4152,9 @@ TWEEN.Tween = function(object) {
       var destinationPlace = this.destinationPlace;
       if (destinationPlace) {
         var cd = destinationPlace.data;
-        data.updated_at > cd.updated_at ? (delete destinationPlace.isDestination, destinationPlace.setIcon(this.icons.placeMarker), 
-        this.destinationPlace = p) : p.setIcon(this.icons.placeMarker);
-      } else this.destinationPlace = p;
+        data.updated_at > cd.updated_at ? (destinationPlace.setIcon(this.icons.placeMarker), 
+        this.destinationPlace = p, this.destinationPlace.isDestination = !0) : p.setIcon(this.icons.placeMarker);
+      } else this.destinationPlace = p, this.destinationPlace.isDestination = !0;
       p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
@@ -4339,14 +4339,14 @@ TWEEN.Tween = function(object) {
       }
       console.log("current breadcrumbs", uid);
     }
-  }, proto.addPoint = function(data, isDestination) {
+  }, proto.addPoint = function(data) {
     var self = this, GMaps = google.maps, map = this.map, myIdentity = this.myIdentity, m = new GMaps.Marker({
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
       icon: new GMaps.MarkerImage(data.icon || apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     }), GEvent = GMaps.event;
-    return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
+    return GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", this.data.title).replace("{{description}}", this.data.description),
@@ -4379,7 +4379,11 @@ TWEEN.Tween = function(object) {
           var data = infobox._marker.data, title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
           data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
           data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, $("#place-editor input, #place-editor textarea").remove(), 
-          $("#place-editor .title").text(title).removeClass("hide"), $("#place-editor .description").text(description).removeClass("hide"), 
+          $("#place-editor .title").text(title).removeClass("hide"), $("#place-editor .description").text(description).removeClass("hide");
+          for (var i = 0, tags = data.tags, len = tags.length; len > i; ++i) if ("xplace" === tags[i]) {
+            tags.splice(i, 1), this.setIcon(self.icons.placeMarker);
+            break;
+          }
           self.controller.editPlace(data);
         }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;

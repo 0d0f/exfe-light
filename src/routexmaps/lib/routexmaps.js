@@ -151,10 +151,10 @@ define('routexmaps', function (require) {
           );
         icons.placeMarker = new GMaps.MarkerImage(
               apiv3_url + '/icons/mapmark'
-            , new GMaps.Size(44, 44)
+            , new GMaps.Size(48, 68)
             , new GMaps.Point(0, 0)
-            , new GMaps.Point(11, 11)
-            , new GMaps.Size(22, 22)
+            , new GMaps.Point(12, 34)
+            , new GMaps.Size(24, 34)
           );
 
         // hdpi
@@ -572,7 +572,7 @@ define('routexmaps', function (require) {
     }
 
     if (!p) {
-      p = places[id] = this.addPoint(data, isDestination);
+      p = places[id] = this.addPoint(data);
     }
 
     latlng = this.toLatLng(data.lat, data.lng);
@@ -590,14 +590,15 @@ define('routexmaps', function (require) {
       if (destinationPlace) {
         var cd = destinationPlace.data;
         if (data.updated_at > cd.updated_at) {
-          delete destinationPlace.isDestination;
           destinationPlace.setIcon(this.icons.placeMarker);
           this.destinationPlace = p;
+          this.destinationPlace.isDestination = true;
         } else {
           p.setIcon(this.icons.placeMarker);
         }
       } else {
         this.destinationPlace = p;
+        this.destinationPlace.isDestination = true;
       }
       p.setZIndex(MAX_INDEX);
     }
@@ -1050,7 +1051,7 @@ define('routexmaps', function (require) {
     console.log('current breadcrumbs', uid);
   };
 
-  proto.addPoint = function (data, isDestination) {
+  proto.addPoint = function (data) {
     var self = this
       , GMaps = google.maps
       , map = this.map
@@ -1071,8 +1072,6 @@ define('routexmaps', function (require) {
       })
     , GEvent = GMaps.event;
 
-    m.isDestination = isDestination;
-
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
       e && e.stop();
 
@@ -1091,26 +1090,24 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: 'place-editor'
         , events: function () {
-            //if (isDestination) {
-              var ib = this;
-              ib.editing = false;
-              GEvent.addDomListener(this.div_, 'touchstart', function () {
-                if (ib.editing) { return; }
-                var infoWindown = this.querySelector('.info-windown');
-                var title = this.querySelector('.title').innerHTML;
-                var description = this.querySelector('.description').innerHTML;
-                var ct = document.createElement('input');
-                ct.type = 'text';
-                ct.value = title;
-                var cd = document.createElement('textarea');
-                cd.value = description;
-                infoWindown.appendChild(ct)
-                infoWindown.appendChild(cd)
-                this.querySelector('.title').className = 'title hide';
-                this.querySelector('.description').className = 'description hide';
-                ib.editing = true;
-              });
-            //}
+            var ib = this;
+            ib.editing = false;
+            GEvent.addDomListener(this.div_, 'touchstart', function () {
+              if (ib.editing) { return; }
+              var infoWindown = this.querySelector('.info-windown');
+              var title = this.querySelector('.title').innerHTML;
+              var description = this.querySelector('.description').innerHTML;
+              var ct = document.createElement('input');
+              ct.type = 'text';
+              ct.value = title;
+              var cd = document.createElement('textarea');
+              cd.value = description;
+              infoWindown.appendChild(ct)
+              infoWindown.appendChild(cd)
+              this.querySelector('.title').className = 'title hide';
+              this.querySelector('.description').className = 'description hide';
+              ib.editing = true;
+            });
           }
       });
       infobox._marker = this;
@@ -1128,6 +1125,15 @@ define('routexmaps', function (require) {
           $('#place-editor input, #place-editor textarea').remove();
           $('#place-editor .title').text(title).removeClass('hide');
           $('#place-editor .description').text(description).removeClass('hide');
+
+          for (var i = 0, tags = data.tags, len = tags.length; i < len; ++i) {
+            if (tags[i] === 'xplace') {
+              tags.splice(i, 1);
+              this.setIcon(self.icons.placeMarker);
+              break;
+            }
+          }
+
           self.controller.editPlace(data);
         }
         infobox.close();
