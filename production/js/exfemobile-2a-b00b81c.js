@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 01:08:20 */
+/*! mobile@2a 2013-08-23 02:08:01 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4152,9 +4152,10 @@ TWEEN.Tween = function(object) {
       var destinationPlace = this.destinationPlace;
       if (destinationPlace) {
         var cd = destinationPlace.data;
-        data.updated_at > cd.updated_at && (delete destinationPlace.isDestination, destinationPlace.setIcon(this.icons.placeMarker));
-      }
-      this.destinationPlace = p, p.setZIndex(MAX_INDEX);
+        data.updated_at > cd.updated_at ? (delete destinationPlace.isDestination, destinationPlace.setIcon(this.icons.placeMarker), 
+        this.destinationPlace = p) : p.setIcon(this.icons.placeMarker);
+      } else this.destinationPlace = p;
+      p.setZIndex(MAX_INDEX);
     }
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);

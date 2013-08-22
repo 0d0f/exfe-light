@@ -592,9 +592,13 @@ define('routexmaps', function (require) {
         if (data.updated_at > cd.updated_at) {
           delete destinationPlace.isDestination;
           destinationPlace.setIcon(this.icons.placeMarker);
+          this.destinationPlace = p;
+        } else {
+          p.setIcon(this.icons.placeMarker);
         }
+      } else {
+        this.destinationPlace = p;
       }
-      this.destinationPlace = p;
       p.setZIndex(MAX_INDEX);
     }
   };
