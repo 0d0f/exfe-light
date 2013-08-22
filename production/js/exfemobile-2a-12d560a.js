@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 03:08:26 */
+/*! mobile@2a 2013-08-23 03:08:06 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4164,7 +4164,7 @@ TWEEN.Tween = function(object) {
     b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
     curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
     1 >= n) {
-      if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
+      if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4177,13 +4177,13 @@ TWEEN.Tween = function(object) {
             strokeWeight: 1,
             scale: .5
           },
-          repeat: "13px",
+          repeat: "16px",
           offset: "0"
         } ]
       }), isme) continue;
       tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed);
     } else {
-      if ($e.length && ($e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
+      if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       b && b.setOptions({
         strokeOpacity: 0,
         icons: [ {
@@ -4196,7 +4196,7 @@ TWEEN.Tween = function(object) {
             strokeWeight: 1,
             scale: .5
           },
-          repeat: "13px",
+          repeat: "16px",
           offset: "0"
         } ]
       }), isme) continue;
@@ -4279,7 +4279,7 @@ TWEEN.Tween = function(object) {
           scale: .5
         },
         fixedRotation: !0,
-        repeat: "13px",
+        repeat: "16px",
         offset: "0"
       } ]
     });

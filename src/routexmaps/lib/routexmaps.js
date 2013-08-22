@@ -630,6 +630,7 @@ define('routexmaps', function (require) {
         if (n <= 1) {
 
           if ($e.length) {
+            $e.parent().removeClass('unknown');
             if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-red');
             } else {
@@ -660,6 +661,7 @@ define('routexmaps', function (require) {
           gm && gm.setIcon(icons.dotRed);
         } else {
           if ($e.length) {
+            $e.parent().removeClass('unknown');
             if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-grey');
             } else {

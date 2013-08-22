@@ -630,6 +630,7 @@ define('routexmaps', function (require) {
         if (n <= 1) {
 
           if ($e.length) {
+            $e.parent().removeClass('unknown');
             if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-red');
             } else {
@@ -650,7 +651,7 @@ define('routexmaps', function (require) {
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '13px'
+                  , repeat: '16px'
                   , offset: '0'
                 }
               ]
@@ -660,6 +661,7 @@ define('routexmaps', function (require) {
           gm && gm.setIcon(icons.dotRed);
         } else {
           if ($e.length) {
+            $e.parent().removeClass('unknown');
             if ($e.hasClass('icon-arrow-grey') || $e.hasClass('icon-arrow-red')) {
               $e.attr('class', 'icon icon-arrow-grey');
             } else {
@@ -680,7 +682,7 @@ define('routexmaps', function (require) {
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '13px'
+                  , repeat: '16px'
                   , offset: '0'
                 }
               ]
@@ -879,7 +881,7 @@ define('routexmaps', function (require) {
                 , scale: .5
               }
             , fixedRotation: true
-            , repeat: '13px'
+            , repeat: '16px'
             , offset: '0'
           }
         ]
