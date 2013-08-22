@@ -2107,11 +2107,15 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
-              if (self.mapReadyStatus && self.mapController) {
+              if (self.mapController) {
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
+                }
+                if (!self.mapController.myIdentity) {
                   self.mapController.myIdentity = self.myIdentity;
                 }
+              }
+              if (self.mapReadyStatus) {
                 if (_cache.length) {
                   var c;
                   while((c = _cache.shift())) {
