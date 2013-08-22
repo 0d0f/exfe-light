@@ -1065,7 +1065,7 @@ define('routexmaps', function (require) {
       if (self.removeInfobox(this)) { return false; }
 
       var infobox = self.infobox = new GMaps.InfoBox({
-          content: self.infoWindowTemplate.replace('{{title}}', data.title).replace('{{description}}', data.description)
+          content: self.infoWindowTemplate.replace('{{title}}', this.data.title).replace('{{description}}', this.data.description)
         , maxWidth: 200
         , pixelOffset: new GMaps.Size(-100, -38)
         , boxClass: 'park'
@@ -1110,7 +1110,7 @@ define('routexmaps', function (require) {
           data.title = title;
           data.description = description;
           data.updated_at = Math.round(Date.now() / 1000);
-          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider
+          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
           $('#place-editor input, #place-editor textarea').remove();
           $('#place-editor .title').text(title).removeClass('hide');
           $('#place-editor .description').text(description).removeClass('hide');
