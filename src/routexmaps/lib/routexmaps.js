@@ -1072,7 +1072,7 @@ define('routexmaps', function (require) {
         , enableEventPropagation: false
         , leftBoundary: 60
         , zIndex: 610
-        , boxId: '#place-editor'
+        , boxId: 'place-editor'
         , events: function () {
             //if (isDestination) {
               var ib = this;
