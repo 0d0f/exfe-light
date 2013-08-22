@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 11:08:00 */
+/*! mobile@2a 2013-08-22 11:08:17 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5533,7 +5533,7 @@ TWEEN.Tween = function(object) {
           var len = data && data.length;
           if (len) {
             var d, id, i;
-            for (i = 0; len > i; ++i) d = data[i], id = d.id.split("@")[0], mc._breadcrumbs[id] ? mc._breadcrumbs[id].positions = [].contact(d.positions, mc._breadcrumbs[id].positions) : mc._breadcrumbs[id] = d;
+            for (i = 0; len > i; ++i) d = data[i], id = d.id.split("@")[0], mc._breadcrumbs[id] ? mc._breadcrumbs[id].positions = [].contact(mc._breadcrumbs[id].positions, d.positions) : mc._breadcrumbs[id] = d;
           }
         }
       });
