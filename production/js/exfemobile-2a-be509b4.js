@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 03:08:18 */
+/*! mobile@2a 2013-08-23 03:08:14 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5664,7 +5664,7 @@ TWEEN.Tween = function(object) {
       for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, smith_id = (this.myIdentityId, 
       this.smith_id), invitations = exfee.invitations.slice(0); invitation = invitations.shift(); ) if (identity = invitation.identity, 
       smith_id !== identity.id) if (myUserId !== identity.connected_user_id) {
-        var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>');
+        var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>');
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
         div.data("identity", identity);
