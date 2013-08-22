@@ -46,6 +46,7 @@ define('routexstream', function (require) {
         if (submit_request) {
             submit_request.abort();
         }
+        myData.t = Math.round(Date.now() / 1000);
         submit_request = $.ajax({
             type    : 'POST',
             url     : api_url + '/routex/breadcrumbs?coordinate=earth&token=' + token,
@@ -293,7 +294,7 @@ define('routexstream', function (require) {
         var self = this
           , freshness_threshold = this.freshness_threshold
           , accuracy_threshold = this.accuracy_threshold
-          , prev = Date.now()
+          , prev = Date.now();
         // position
         return function d(p) {
           var coords = p.coords
