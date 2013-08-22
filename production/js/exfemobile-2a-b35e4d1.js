@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 02:08:58 */
+/*! mobile@2a 2013-08-22 03:08:20 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3954,8 +3954,8 @@ TWEEN.Tween = function(object) {
         var icons = rm.icons;
         icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
-        icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_blue@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
-        icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_g5@2x.png", new GMaps.Size(40, 40), new GMaps.Point(0, 0), new GMaps.Point(10, 10), new GMaps.Size(20, 20)), 
+        icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
+        icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
         mapOptions.minZoom = 1;
