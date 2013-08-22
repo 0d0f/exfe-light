@@ -2166,10 +2166,10 @@ button .exfe {
 #routex #identities-overlay .identity .detial .distance .unit {
   font-size: 8px;
 }
-#routex #identities-overlay .identity .detial .unknown .icon {
+#routex #identities-overlay .identity .detial.unknown .icon {
   display: none !important;
 }
-#routex #identities-overlay .identity .detial .unknown .distance {
+#routex #identities-overlay .identity .detial.unknown .distance {
   padding-left: 0;
 }
 #routex #open-exfe {
