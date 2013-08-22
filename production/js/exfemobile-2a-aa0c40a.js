@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 05:08:53 */
+/*! mobile@2a 2013-08-22 05:08:03 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4354,7 +4354,7 @@ TWEEN.Tween = function(object) {
         enableEventPropagation: !1,
         leftBoundary: 60,
         zIndex: 610,
-        boxId: "#place-editor",
+        boxId: "place-editor",
         events: function() {
           var ib = this;
           ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
