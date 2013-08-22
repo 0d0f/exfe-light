@@ -2040,13 +2040,13 @@ define('mobilecontroller', function (require, exports, module) {
 
     , mapReadyStatus: false
 
-    , editDestination: function (destination) {
+    , editPlace: function (place) {
         // 等待 google 修复
-        if (destination) {
+        if (place) {
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + destination.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
-            , data: JSON.stringify(destination)
+            , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + place.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
+            , data: JSON.stringify(place)
             , success: function (data) {
                 console.log(data)
               }
