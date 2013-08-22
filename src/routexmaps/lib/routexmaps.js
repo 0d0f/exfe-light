@@ -1040,6 +1040,7 @@ define('routexmaps', function (require) {
     var self = this
       , GMaps = google.maps
       , map = this.map
+      , myIdentity = this.myIdentity
       , m = new GMaps.Marker({
           map: map
         , animation: 2
@@ -1109,6 +1110,7 @@ define('routexmaps', function (require) {
           data.title = title;
           data.description = description;
           data.updated_at = Math.round(Date.now() / 1000);
+          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider
           $('#destination input, #description textarea').remove();
           $('#destination .title').text(title).removeClass('hide');
           $('#destination .description').text(description).removeClass('hide');
