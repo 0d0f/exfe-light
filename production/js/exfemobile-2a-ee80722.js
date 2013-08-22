@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 06:08:51 */
+/*! mobile@2a 2013-08-22 06:08:07 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4344,7 +4344,7 @@ TWEEN.Tween = function(object) {
     return m.isDestination = isDestination, GEvent.addListener(m, "mousedown", function(e) {
       if (e && e.stop(), self.removeInfobox(this)) return !1;
       var infobox = self.infobox = new GMaps.InfoBox({
-        content: self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description),
+        content: self.infoWindowTemplate.replace("{{title}}", this.data.title).replace("{{description}}", this.data.description),
         maxWidth: 200,
         pixelOffset: new GMaps.Size(-100, -38),
         boxClass: "park",
