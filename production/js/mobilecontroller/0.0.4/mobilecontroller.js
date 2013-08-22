@@ -2110,6 +2110,7 @@ define('mobilecontroller', function (require, exports, module) {
               if (self.mapReadyStatus && self.mapController) {
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
+                  self.mapController.myIdentity = self.myIdentity;
                 }
                 if (_cache.length) {
                   var c;
