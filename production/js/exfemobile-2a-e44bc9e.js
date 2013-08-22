@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-22 05:08:48 */
+/*! mobile@2a 2013-08-22 05:08:13 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5577,11 +5577,15 @@ TWEEN.Tween = function(object) {
         self.mapReadyStatus && (console.log(new Date()), self.mapController.monit());
       }, 1e3);
     },
+    _cache: [],
     initStream: function() {
-      var self = this;
+      var self = this, _cache = this._cache;
       routexStream.init(self.cross.id, self.token, function(result) {
-        self.mapReadyStatus && self.mapController && (self.mapController.myUserId || (self.mapController.myUserId = self.myUserId), 
-        self.mapController.draw(result));
+        if (self.mapReadyStatus && self.mapController) {
+          if (self.mapController.myUserId || (self.mapController.myUserId = self.myUserId), 
+          _cache.length) for (var c; c = _cache.shift(); ) self.mapController.draw(c);
+          self.mapController.draw(result);
+        } else _cache.push(result);
       }, function(e) {
         console.log(e);
       }, function() {
