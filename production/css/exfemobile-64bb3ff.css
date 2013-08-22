@@ -2657,8 +2657,8 @@ button .exfe {
   -webkit-transform: translate3d(0, 0, 377px);
 }
 #routex #shuidi-dialog .main {
-  position: relative;
-  top: 80px;
+  position: absolute;
+  bottom: -10px;
   left: 5px;
   width: 310px;
   padding: 30px 15px;
@@ -2688,12 +2688,20 @@ button .exfe {
 }
 #routex #shuidi-dialog .main .app-btn {
   position: relative;
-  margin: 20px auto 30px;
+  margin: 20px auto 40px;
   width: 260px;
   height: 100px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 2px;
+}
+#routex #shuidi-dialog .main .app-btn:after {
+  position: absolute;
+  content: '';
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.33);
+  left: -24px;
+  right: -24px;
+  bottom: -30px;
 }
 #routex #shuidi-dialog .main .app-icon {
   position: absolute;
