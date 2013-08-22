@@ -811,8 +811,8 @@
     -webkit-transform: translate3d(0, 0, 377px);
 
     .main {
-      position: relative;
-      top: 80px;
+      position: absolute;
+      bottom: -10px;
       left: 5px;
       width: 310px;
       padding: 30px 15px;
@@ -848,12 +848,21 @@
 
       .app-btn{
         position: relative;
-        margin: 20px auto 30px;
+        margin: 20px auto 40px;
         width: 260px;
         height: 100px;
         background: rgba(255, 255, 255, .08);
         border: 1px solid rgba(255, 255, 255, .16);
         border-radius: 2px;
+
+        &:after {
+          position: absolute;
+          content: '';
+          border-bottom: 1px dotted rgba(255, 255, 255, 0.33);
+          left: -24px;
+          right: -24px;
+          bottom: -30px;
+        }
       }
 
       .app-icon {
