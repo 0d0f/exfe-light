@@ -650,7 +650,7 @@ define('routexmaps', function (require) {
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '50px'
+                  , repeat: '25px'
                   , offset: '0'
                 }
               ]
@@ -680,7 +680,7 @@ define('routexmaps', function (require) {
                       , strokeWeight: 1
                       , scale: .5
                     }
-                  , repeat: '50px'
+                  , repeat: '25px'
                   , offset: '0'
                 }
               ]
@@ -879,7 +879,7 @@ define('routexmaps', function (require) {
                 , scale: .5
               }
             , fixedRotation: true
-            , repeat: '50px'
+            , repeat: '25px'
             , offset: '0'
           }
         ]
