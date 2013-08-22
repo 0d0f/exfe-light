@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 12:08:57 */
+/*! mobile@2a 2013-08-23 01:08:18 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4200,8 +4200,6 @@ TWEEN.Tween = function(object) {
     }
   }, proto.toLatLng = function(lat, lng) {
     return new google.maps.LatLng(1 * lat, 1 * lng);
-  }, proto.drawBreadcrumbs = function(data) {
-    this.breadcrumbs, data.uid;
   }, proto.drawGeoMarker = function(data) {
     var g, d, latlng, gps, gms = this.geoMarkers, uid = data.id.split("@")[0];
     if (this.updatePositions(data), uid != this.myUserId) {
@@ -4439,10 +4437,8 @@ TWEEN.Tween = function(object) {
     }
     position && (gps = position.gps, latlng = this.toLatLng(1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2, uid && position && this.updatePositions({
-      id: uid + "",
-      positions: [ position ]
-    })), uid && (this.updated[uid] = position || lastlatlng), geoLocation._uid = uid;
+    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
+    geoLocation._uid = uid;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);

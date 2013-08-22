@@ -694,10 +694,6 @@ define('routexmaps', function (require) {
     return new google.maps.LatLng(lat * 1, lng * 1);
   };
 
-  proto.drawBreadcrumbs = function (data) {
-    var bs = this.breadcrumbs, uid = data.uid;
-  };
-
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
       , uid = data.id.split('@')[0]
@@ -1287,7 +1283,7 @@ define('routexmaps', function (require) {
       geoLocation._status = 2;
 
       if (uid && position) {
-        this.updatePositions({ id: String(uid), positions: [position] });
+        //this.updatePositions({ id: String(uid), positions: [position] });
       }
     }
     if (uid) {
