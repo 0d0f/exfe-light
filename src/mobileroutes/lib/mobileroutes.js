@@ -66,7 +66,7 @@ define('mobileroutes', function (require, exports, module) {
         var scale = window.devicePixelRatio >= 2 ? 2 : 1;
         cross.place.map = 'https://maps.googleapis.com/maps/api/staticmap?center='
           + lat + ',' + lng + '&markers=icon%3a'
-          + encodeURIComponent('http://img.exfe.com/web/map_pin_blue.png')
+          + encodeURIComponent('http://img.exfe.com/web/map_mark_diamond_blue@2x.png')
           + '%7C'
           + lat + ',' + lng
           + '&zoom=13&size=290x100&maptype=road&sensor=false&scale='
