@@ -597,7 +597,7 @@ define('routexmaps', function (require) {
         this.panToDestination(latlng);
       }
       var destinationPlace = this.destinationPlace;
-      if (destinationPlace) {
+      if (destinationPlace && destinationPlace !== p) {
         var cd = destinationPlace.data;
         if (data.updated_at > cd.updated_at) {
           if (data.id != cd.id) {
