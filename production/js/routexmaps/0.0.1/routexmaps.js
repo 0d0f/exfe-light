@@ -1300,17 +1300,19 @@ define('routexmaps', function (require) {
       geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
       if (lastlatlng) {
+        lastlatlng = this.toMars(lastlatlng, true);
         gps = lastlatlng.gps;
         geoLocation._status = 1;
-        latlng = this.toLatLng(gps[0] * 1 + this.latOffset, gps[1] * 1 + this.lngOffset);
+        latlng = this.toLatLng(gps[0], gps[1]);
         geoLocation.setPosition(latlng);
         this.map.setZoom(15);
         this.map.panTo(latlng);
       }
     }
     if (position) {
+      position = this.toMars(position, true);
       gps = position.gps;
-      latlng = this.toLatLng(gps[0] * 1 + this.latOffset, gps[1] * 1 + this.lngOffset)
+      latlng = this.toLatLng(gps[0], gps[1])
       geoLocation.setIcon(this.icons.arrowBlue);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {
@@ -1323,6 +1325,17 @@ define('routexmaps', function (require) {
       this.updated[uid] = position || lastlatlng;
     }
     geoLocation._uid = uid;
+  };
+
+  proto.toMars = function (position, fresh) {
+    if (fresh) {
+      position.t = Math.floor(Date.now() / 1000);
+    }
+    position.gps[0] *= 1;
+    position.gps[0] += this.latOffset;
+    position.gps[1] *= 1;
+    position.gps[1] += this.lngOffset;
+    return position;
   };
 
   // status: 0-grey, 1-blue
