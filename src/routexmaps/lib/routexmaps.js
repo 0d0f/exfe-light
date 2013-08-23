@@ -600,17 +600,17 @@ define('routexmaps', function (require) {
       if (destinationPlace) {
         var cd = destinationPlace.data;
         if (data.updated_at > cd.updated_at) {
-          destinationPlace.setIcon(this.icons.placeMarker);
-          destinationPlace.setZIndex(zIndex - 5);
+          if (data.id != cd.id) {
+            destinationPlace.setIcon(this.icons.placeMarker);
+            destinationPlace.setZIndex(zIndex - 5);
+          }
           this.destinationPlace = p;
-          this.destinationPlace.isDestination = true;
         } else {
           zIndex -= 5;
           icon = this.icons.placeMarker;
         }
       } else {
         this.destinationPlace = p;
-        this.destinationPlace.isDestination = true;
       }
       p.setIcon(icon);
       p.setZIndex(zIndex);
