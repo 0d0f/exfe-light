@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 04:08:49 */
+/*! mobile@2a 2013-08-23 06:08:43 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4450,13 +4450,18 @@ TWEEN.Tween = function(object) {
         optimized: !1
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
-      lastlatlng && (gps = lastlatlng.gps, geoLocation._status = 1, latlng = this.toLatLng(1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset), 
-      geoLocation.setPosition(latlng), this.map.setZoom(15), this.map.panTo(latlng));
+      lastlatlng && (lastlatlng = this.toMars(lastlatlng, !0), gps = lastlatlng.gps, geoLocation._status = 1, 
+      latlng = this.toLatLng(gps[0], gps[1]), geoLocation.setPosition(latlng), this.map.setZoom(15), 
+      this.map.panTo(latlng));
     }
-    position && (gps = position.gps, latlng = this.toLatLng(1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset), 
+    position && (position = this.toMars(position, !0), gps = position.gps, latlng = this.toLatLng(gps[0], gps[1]), 
     geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
     this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
+  }, proto.toMars = function(position, fresh) {
+    return fresh && (position.t = Math.floor(Date.now() / 1e3)), position.gps[0] *= 1, 
+    position.gps[0] += this.latOffset, position.gps[1] *= 1, position.gps[1] += this.lngOffset, 
+    position;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
