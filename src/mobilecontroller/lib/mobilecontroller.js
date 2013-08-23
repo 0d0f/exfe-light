@@ -2217,7 +2217,8 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , getExfee: function () {
-        var cross = this.cross;
+        var self = this
+          , cross = this.cross;
         $.ajax({
             type: 'GET'
           , url: api_url +  '/v2/exfee/' + this.cross.exfee_id + '?token=' + this.token

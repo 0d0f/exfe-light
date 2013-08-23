@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 03:08:19 */
+/*! mobile@2a 2013-08-23 03:08:20 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5658,7 +5658,7 @@ TWEEN.Tween = function(object) {
       mapController.updateGeoLocation(this.myUserId, position));
     },
     getExfee: function() {
-      var cross = this.cross;
+      var self = this, cross = this.cross;
       $.ajax({
         type: "GET",
         url: api_url + "/v2/exfee/" + this.cross.exfee_id + "?token=" + this.token,
