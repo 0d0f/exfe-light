@@ -1114,23 +1114,23 @@ define('routexmaps', function (require) {
           var data = infobox._marker.data;
           var title = $('#place-editor input').val().trim();
           var description = $('#place-editor textarea').val().trim();
-          data.title = title;
-          data.description = description;
-          data.updated_at = Math.round(Date.now() / 1000);
-          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+          if (title !== data.title || description !== data.description) {
+            data.title = title;
+            data.description = description;
+            data.updated_at = Math.round(Date.now() / 1000);
+            data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+            for (var i = 0, tags = data.tags, len = tags.length; i < len; ++i) {
+              if (tags[i] === 'xplace') {
+                tags.splice(i, 1);
+                this.setIcon(self.icons.placeMarker);
+                break;
+              }
+            }
+            self.controller.editPlace(data);
+          }
           $('#place-editor input, #place-editor textarea').remove();
           $('#place-editor .title').text(title).removeClass('hide');
           $('#place-editor .description').text(description).removeClass('hide');
-
-          for (var i = 0, tags = data.tags, len = tags.length; i < len; ++i) {
-            if (tags[i] === 'xplace') {
-              tags.splice(i, 1);
-              this.setIcon(self.icons.placeMarker);
-              break;
-            }
-          }
-
-          self.controller.editPlace(data);
         }
         infobox.close();
         delete infobox._marker;

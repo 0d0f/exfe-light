@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 04:08:37 */
+/*! mobile@2a 2013-08-23 12:08:02 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4377,14 +4377,17 @@ TWEEN.Tween = function(object) {
       infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
         if (infobox.editing) {
           var data = infobox._marker.data, title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
-          data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
-          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, $("#place-editor input, #place-editor textarea").remove(), 
-          $("#place-editor .title").text(title).removeClass("hide"), $("#place-editor .description").text(description).removeClass("hide");
-          for (var i = 0, tags = data.tags, len = tags.length; len > i; ++i) if ("xplace" === tags[i]) {
-            tags.splice(i, 1), this.setIcon(self.icons.placeMarker);
-            break;
+          if (title !== data.title || description !== data.description) {
+            data.title = title, data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
+            data.updated_by = myIdentity.external_username + "@" + myIdentity.provider;
+            for (var i = 0, tags = data.tags, len = tags.length; len > i; ++i) if ("xplace" === tags[i]) {
+              tags.splice(i, 1), this.setIcon(self.icons.placeMarker);
+              break;
+            }
+            self.controller.editPlace(data);
           }
-          self.controller.editPlace(data);
+          $("#place-editor input, #place-editor textarea").remove(), $("#place-editor .title").text(title).removeClass("hide"), 
+          $("#place-editor .description").text(description).removeClass("hide");
         }
         infobox.close(), delete infobox._marker, infobox = self.infobox = null;
       });
