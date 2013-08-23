@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 01:08:54 */
+/*! mobile@2a 2013-08-23 02:08:00 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4154,10 +4154,10 @@ TWEEN.Tween = function(object) {
       var destinationPlace = this.destinationPlace;
       if (destinationPlace) {
         var cd = destinationPlace.data;
-        data.updated_at > cd.updated_at ? (destinationPlace.setIcon(this.icons.placeMarker), 
-        destinationPlace.setZIndex(zIndex - 5), this.destinationPlace = p, this.destinationPlace.isDestination = !0) : (zIndex -= 5, 
+        data.updated_at > cd.updated_at ? (data.id != cd.id && (destinationPlace.setIcon(this.icons.placeMarker), 
+        destinationPlace.setZIndex(zIndex - 5)), this.destinationPlace = p) : (zIndex -= 5, 
         icon = this.icons.placeMarker);
-      } else this.destinationPlace = p, this.destinationPlace.isDestination = !0;
+      } else this.destinationPlace = p;
       p.setIcon(icon), p.setZIndex(zIndex);
     }
   }, proto.monit = function() {
