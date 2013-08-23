@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 03:08:48 */
+/*! mobile@2a 2013-08-23 04:08:49 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5659,11 +5659,11 @@ TWEEN.Tween = function(object) {
     },
     getExfee: function() {
       var self = this, cross = this.cross;
-      alert(this.cross.exfee.id + " - " + this.token), $.ajax({
+      $.ajax({
         type: "GET",
         url: api_url + "/exfee/" + this.cross.exfee.id + "?token=" + this.token,
         success: function(data) {
-          data && data.meta && 200 === data.meta.code && (alert(data.response.exfee.id), cross.exfee = data.response.exfee, 
+          data && data.meta && 200 === data.meta.code && (cross.exfee = data.response.exfee, 
           self.createIdentitiesList());
         },
         error: function(data) {
