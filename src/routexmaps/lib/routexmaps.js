@@ -1149,13 +1149,6 @@ define('routexmaps', function (require) {
             data.description = description;
             data.updated_at = Math.round(Date.now() / 1000);
             data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-            for (var i = 0, tags = data.tags, len = tags.length; i < len; ++i) {
-              if (tags[i] === 'xplace') {
-                tags.splice(i, 1);
-                this.setIcon(self.icons.placeMarker);
-                break;
-              }
-            }
             self.controller.editPlace(data);
           }
           $('#place-editor input, #place-editor textarea').remove();
