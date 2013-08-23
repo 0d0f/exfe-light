@@ -156,6 +156,20 @@ define('routexmaps', function (require) {
             , new GMaps.Point(12, 34)
             , new GMaps.Size(24, 34)
           );
+        icons.xplaceMarker = new GMaps.MarkerImage(
+              SITE_URL + '/static/img/map_pin_blue@2x'
+            , new GMaps.Size(48, 68)
+            , new GMaps.Point(0, 0)
+            , new GMaps.Point(12, 34)
+            , new GMaps.Size(24, 34)
+          );
+        icons.destinationMarker = new GMaps.MarkerImage(
+              SITE_URL + '/static/img/map_mark_diamond_blue@2x.png'
+            , new GMaps.Size(48, 68)
+            , new GMaps.Point(0, 0)
+            , new GMaps.Point(12, 34)
+            , new GMaps.Size(24, 34)
+          );
 
         // hdpi
         GMaps.visualRefresh = true;
@@ -578,6 +592,7 @@ define('routexmaps', function (require) {
       // 如果还没 GPS 自动定位到 destination
       var geoLocation = this.geoLocation;
       var zIndex = MAX_INDEX;
+      var icon = this.icons.destinationMarker;
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
@@ -586,16 +601,18 @@ define('routexmaps', function (require) {
         var cd = destinationPlace.data;
         if (data.updated_at > cd.updated_at) {
           destinationPlace.setIcon(this.icons.placeMarker);
+          destinationPlace.setZIndex(zIndex - 5);
           this.destinationPlace = p;
           this.destinationPlace.isDestination = true;
         } else {
-          p.setIcon(this.icons.placeMarker);
           zIndex -= 5;
+          icon = this.icons.placeMarker;
         }
       } else {
         this.destinationPlace = p;
         this.destinationPlace.isDestination = true;
       }
+      p.setIcon(icon);
       p.setZIndex(zIndex);
     }
   };

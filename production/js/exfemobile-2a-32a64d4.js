@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 01:08:27 */
+/*! mobile@2a 2013-08-23 01:08:51 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3957,6 +3957,8 @@ TWEEN.Tween = function(object) {
         icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
+        icons.xplaceMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_pin_blue@2x", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
+        icons.destinationMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_diamond_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
         mapOptions.minZoom = 1;
@@ -4147,16 +4149,16 @@ TWEEN.Tween = function(object) {
     if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
     isDestination) {
-      var geoLocation = this.geoLocation, zIndex = MAX_INDEX;
+      var geoLocation = this.geoLocation, zIndex = MAX_INDEX, icon = this.icons.destinationMarker;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng);
       var destinationPlace = this.destinationPlace;
       if (destinationPlace) {
         var cd = destinationPlace.data;
         data.updated_at > cd.updated_at ? (destinationPlace.setIcon(this.icons.placeMarker), 
-        this.destinationPlace = p, this.destinationPlace.isDestination = !0) : (p.setIcon(this.icons.placeMarker), 
-        zIndex -= 5);
+        destinationPlace.setZIndex(zIndex - 5), this.destinationPlace = p, this.destinationPlace.isDestination = !0) : (zIndex -= 5, 
+        icon = this.icons.placeMarker);
       } else this.destinationPlace = p, this.destinationPlace.isDestination = !0;
-      p.setZIndex(zIndex);
+      p.setIcon(icon), p.setZIndex(zIndex);
     }
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
