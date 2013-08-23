@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 03:08:27 */
+/*! mobile@2a 2013-08-23 03:08:06 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4214,7 +4214,7 @@ TWEEN.Tween = function(object) {
     if (this.updatePositions(data), uid != this.myUserId) {
       if (gms.hasOwnProperty(uid)) {
         if (g = gms[uid], d = g.data, d.updated_at === data.updated_at) return;
-      } else this.freshExfee();
+      } else $('#identities .identity[data-uid="' + uid + '"]').length || this.freshExfee();
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
       g.setPosition(latlng), g.uid = uid, g.data = data, this.updateTipline(uid, latlng);
     }
@@ -5661,7 +5661,7 @@ TWEEN.Tween = function(object) {
       var self = this, cross = this.cross;
       alert(this.cross.exfee.id + " - " + this.token), $.ajax({
         type: "GET",
-        url: api_url + "/v2/exfee/" + this.cross.exfee.id + "?token=" + this.token,
+        url: api_url + "/exfee/" + this.cross.exfee.id + "?token=" + this.token,
         success: function(data) {
           data && data.meta && 200 === data.meta.code && (alert(data.response.exfee.id), cross.exfee = data.response.exfee, 
           self.createIdentitiesList());

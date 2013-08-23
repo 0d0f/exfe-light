@@ -738,7 +738,7 @@ define('routexmaps', function (require) {
         if (d.updated_at === data.updated_at) {
           return;
         }
-      } else {
+      } else if (!$('#identities .identity[data-uid="' + uid + '"]').length) {
         this.freshExfee();
       }
       if (!g) {
