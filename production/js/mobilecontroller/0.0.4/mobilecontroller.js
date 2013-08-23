@@ -2222,7 +2222,7 @@ define('mobilecontroller', function (require, exports, module) {
         alert(this.cross.exfee.id + ' - ' + this.token);
         $.ajax({
             type: 'GET'
-          , url: api_url +  '/v2/exfee/' + this.cross.exfee.id + '?token=' + this.token
+          , url: api_url +  '/exfee/' + this.cross.exfee.id + '?token=' + this.token
           , success: function (data) {
               if (data && data.meta && data.meta.code === 200) {
                 alert(data.response.exfee.id);
