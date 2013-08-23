@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 06:08:43 */
+/*! mobile@2a 2013-08-23 10:08:45 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3957,8 +3957,8 @@ TWEEN.Tween = function(object) {
         icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
-        icons.xplaceMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_pin_blue@2x", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
-        icons.destinationMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_diamond_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
+        icons.xplaceMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_diamond_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
+        icons.destinationMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_ring_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
         GMaps.visualRefresh = !0, mapOptions.center = rm.toLatLng(35.86166, 104.195397), 
         mapOptions.mapTypeId = GMaps.MapTypeId.ROADMAP, mapOptions.disableDefaultUI = !0, 
         mapOptions.minZoom = 1;
@@ -4018,7 +4018,7 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", XPLACE = "xplace", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
   proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4105,12 +4105,8 @@ TWEEN.Tween = function(object) {
     var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, hasTags = data.tags, tags = hasTags && data.tags.slice(0);
     switch (console.log(type, action, isDelete, tags, data), type) {
      case LOCATION:
-      var isDestination;
-      if (hasTags) for (;tag = tags.shift(); ) if (tag === DESTINATION) {
-        isDestination = !0;
-        break;
-      }
-      isDelete ? this.removePlace(data, isDestination) : this.drawPlace(data, isDestination);
+      if (hasTags) for (;(tag = tags.shift()) && tag !== XPLACE && tag !== DESTINATION; ) ;
+      isDelete ? this.removePlace(data, tag === DESTINATION) : this.drawPlace(data, tag);
       break;
 
      case ROUTE:
@@ -4144,11 +4140,11 @@ TWEEN.Tween = function(object) {
       strokeOpacity: alpha
     });
     return p;
-  }, proto.drawPlace = function(data, isDestination) {
+  }, proto.drawPlace = function(data, tag) {
     var p, latlng, places = this.places, id = data.id;
     if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
-    isDestination) {
+    tag === XPLACE) p.setIcon(this.icons.xplaceMarker), p.setZIndex(MAX_INDEX - 1); else if (tag === DESTINATION) {
       var geoLocation = this.geoLocation, zIndex = MAX_INDEX, icon = this.icons.destinationMarker;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng);
       var destinationPlace = this.destinationPlace;
@@ -4459,9 +4455,11 @@ TWEEN.Tween = function(object) {
     this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.toMars = function(position, fresh) {
-    return fresh && (position.t = Math.floor(Date.now() / 1e3)), position.gps[0] *= 1, 
-    position.gps[0] += this.latOffset, position.gps[1] *= 1, position.gps[1] += this.lngOffset, 
-    position;
+    var gps = position.gps, p = {
+      t: fresh ? Math.floor(Date.now() / 1e3) : position.t,
+      gps: [ 1 * gps[0] + this.latOffset, 1 * gps[1] + this.lngOffset, gps[2] ]
+    };
+    return p;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
@@ -5735,7 +5733,7 @@ TWEEN.Tween = function(object) {
     var lat = place.lat, lng = place.lng;
     if (lat && lng) {
       var scale = window.devicePixelRatio >= 2 ? 2 : 1;
-      cross.place.map = "https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lng + "&markers=icon%3a" + encodeURIComponent("http://img.exfe.com/web/map_pin_blue.png") + "%7C" + lat + "," + lng + "&zoom=13&size=290x100&maptype=road&sensor=false&scale=" + scale, 
+      cross.place.map = "https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lng + "&markers=icon%3a" + encodeURIComponent("http://img.exfe.com/web/map_mark_diamond_blue@2x.png") + "%7C" + lat + "," + lng + "&zoom=13&size=290x100&maptype=road&sensor=false&scale=" + scale, 
       cross.place.href = "http://maps.google.com/maps?daddr=" + encodeURIComponent(cross.place.title) + "@" + lat + "," + lng;
     } else cross.place.tobe = "tobe";
     var wl, widget = originCross.widget;

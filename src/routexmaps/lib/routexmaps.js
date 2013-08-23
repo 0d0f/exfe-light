@@ -78,6 +78,7 @@ define('routexmaps', function (require) {
     , LOCATION = 'location'
 
     // tags
+    , XPLACE      = 'xplace'
     , DESTINATION = 'destination'
     , BREADCRUMBS = 'breadcrumbs'
     , PARK = 'park'
@@ -157,14 +158,14 @@ define('routexmaps', function (require) {
             , new GMaps.Size(24, 34)
           );
         icons.xplaceMarker = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_pin_blue@2x'
+              SITE_URL + '/static/img/map_mark_diamond_blue@2x.png'
             , new GMaps.Size(48, 68)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(12, 34)
             , new GMaps.Size(24, 34)
           );
         icons.destinationMarker = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_mark_diamond_blue@2x.png'
+              SITE_URL + '/static/img/map_mark_ring_blue@2x.png'
             , new GMaps.Size(48, 68)
             , new GMaps.Point(0, 0)
             , new GMaps.Point(12, 34)
@@ -473,18 +474,20 @@ define('routexmaps', function (require) {
     console.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
-        var isDestination;
 
         if (hasTags) {
           while ((tag = tags.shift())) {
+            if (tag === XPLACE) {
+              break;
+            }
+
             if (tag === DESTINATION) {
-              isDestination = true;
               break;
             }
           }
         }
 
-        isDelete ? this.removePlace(data, isDestination) : this.drawPlace(data, isDestination);
+        isDelete ? this.removePlace(data, tag === DESTINATION) : this.drawPlace(data, tag);
         break;
 
       case ROUTE:
@@ -572,7 +575,7 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  proto.drawPlace = function (data, isDestination) {
+  proto.drawPlace = function (data, tag) {
     var places = this.places
       , id = data.id, p, d, latlng;
     if (places.hasOwnProperty(id)) {
@@ -588,7 +591,10 @@ define('routexmaps', function (require) {
     p.setPosition(latlng);
     p.data = data;
 
-    if (isDestination) {
+    if (tag === XPLACE) {
+      p.setIcon(this.icons.xplaceMarker);
+      p.setZIndex(MAX_INDEX - 1);
+    } else if (tag === DESTINATION) {
       // 如果还没 GPS 自动定位到 destination
       var geoLocation = this.geoLocation;
       var zIndex = MAX_INDEX;
