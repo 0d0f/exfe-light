@@ -2216,6 +2216,23 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , getExfee: function () {
+        var cross = this.cross;
+        $.ajax({
+            type: 'GET'
+          , url: api_url +  '/v2/exfee/' + this.cross.exfee_id + '?token=' + this.token
+          , success: function (data) {
+              if (data && data.meta && data.meta.code === 200) {
+                cross.exfee = data.response.exfee;
+                self.createIdentitiesList();
+              }
+            }
+          , error: function (data) {
+              console.dir(data);
+            }
+        })
+      }
+
     , updateMe: function (myIdentity) {
         this.myIdentity = myIdentity;
         console.log('my identity', this.myIdentity);
@@ -2248,6 +2265,8 @@ define('mobilecontroller', function (require, exports, module) {
           , invitations = exfee.invitations.slice(0)
           , invitation
           , identity;
+
+        $identities.empty();
 
         while ((invitation = invitations.shift())) {
           identity = invitation.identity;
