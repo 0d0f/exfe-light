@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-23 02:08:06 */
+/*! mobile@2a 2013-08-23 03:08:19 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4207,10 +4207,14 @@ TWEEN.Tween = function(object) {
     }
   }, proto.toLatLng = function(lat, lng) {
     return new google.maps.LatLng(1 * lat, 1 * lng);
+  }, proto.freshExfee = function() {
+    this.controller && this.controller.getExfee();
   }, proto.drawGeoMarker = function(data) {
     var g, d, latlng, gps, gms = this.geoMarkers, uid = data.id.split("@")[0];
     if (this.updatePositions(data), uid != this.myUserId) {
-      if (gms.hasOwnProperty(uid) && (g = gms[uid], d = g.data, d.updated_at === data.updated_at)) return;
+      if (gms.hasOwnProperty(uid)) {
+        if (g = gms[uid], d = g.data, d.updated_at === data.updated_at) return;
+      } else this.freshExfee();
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
       g.setPosition(latlng), g.uid = uid, g.data = data, this.updateTipline(uid, latlng);
     }
@@ -5653,6 +5657,20 @@ TWEEN.Tween = function(object) {
       mapReadyStatus && mapController && (console.log("tracking"), this.setLatLngOffset(), 
       mapController.updateGeoLocation(this.myUserId, position));
     },
+    getExfee: function() {
+      var cross = this.cross;
+      $.ajax({
+        type: "GET",
+        url: api_url + "/v2/exfee/" + this.cross.exfee_id + "?token=" + this.token,
+        success: function(data) {
+          data && data.meta && 200 === data.meta.code && (cross.exfee = data.response.exfee, 
+          self.createIdentitiesList());
+        },
+        error: function(data) {
+          console.dir(data);
+        }
+      });
+    },
     updateMe: function(myIdentity) {
       this.myIdentity = myIdentity, console.log("my identity", this.myIdentity);
       var div = this.$("#isme");
@@ -5667,8 +5685,9 @@ TWEEN.Tween = function(object) {
       }
     },
     createIdentitiesList: function() {
-      for (var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, smith_id = (this.myIdentityId, 
-      this.smith_id), invitations = exfee.invitations.slice(0); invitation = invitations.shift(); ) if (identity = invitation.identity, 
+      var invitation, identity, exfee = this.cross.exfee, $identities = this.$("#identities"), myUserId = this.myUserId, smith_id = (this.myIdentityId, 
+      this.smith_id), invitations = exfee.invitations.slice(0);
+      for ($identities.empty(); invitation = invitations.shift(); ) if (identity = invitation.identity, 
       smith_id !== identity.id) if (myUserId !== identity.connected_user_id) {
         var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>');
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 

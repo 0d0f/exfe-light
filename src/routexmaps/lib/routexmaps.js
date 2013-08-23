@@ -718,6 +718,12 @@ define('routexmaps', function (require) {
     return new google.maps.LatLng(lat * 1, lng * 1);
   };
 
+  proto.freshExfee = function () {
+    if (this.controller) {
+      this.controller.getExfee();
+    }
+  };
+
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
       , uid = data.id.split('@')[0]
@@ -732,6 +738,8 @@ define('routexmaps', function (require) {
         if (d.updated_at === data.updated_at) {
           return;
         }
+      } else {
+        this.freshExfee();
       }
       if (!g) {
         g = gms[uid] = this.addGeoMarker();
