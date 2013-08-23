@@ -577,6 +577,7 @@ define('routexmaps', function (require) {
     if (isDestination) {
       // 如果还没 GPS 自动定位到 destination
       var geoLocation = this.geoLocation;
+      var zIndex = MAX_INDEX;
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
@@ -589,12 +590,13 @@ define('routexmaps', function (require) {
           this.destinationPlace.isDestination = true;
         } else {
           p.setIcon(this.icons.placeMarker);
+          zIndex -= 5;
         }
       } else {
         this.destinationPlace = p;
         this.destinationPlace.isDestination = true;
       }
-      p.setZIndex(MAX_INDEX);
+      p.setZIndex(zIndex);
     }
   };
 
