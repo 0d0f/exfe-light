@@ -1328,14 +1328,16 @@ define('routexmaps', function (require) {
   };
 
   proto.toMars = function (position, fresh) {
-    if (fresh) {
-      position.t = Math.floor(Date.now() / 1000);
-    }
-    position.gps[0] *= 1;
-    position.gps[0] += this.latOffset;
-    position.gps[1] *= 1;
-    position.gps[1] += this.lngOffset;
-    return position;
+    var gps = position.gps;
+    var p = {
+          t: fresh ? Math.floor(Date.now() / 1000) : position.t
+        , gps: [
+              gps[0] * 1 + this.latOffset
+            , gps[1] * 1 + this.lngOffset
+            , gps[2]
+          ]
+      };
+    return p;
   };
 
   // status: 0-grey, 1-blue
