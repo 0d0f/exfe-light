@@ -1241,6 +1241,7 @@ define('routexmaps', function (require) {
           }
       });
       infobox._marker = this;
+      this.infobox = infobox;
       infobox.open(map, this);
 
       self.bindEventsForPoint(this);
@@ -1250,12 +1251,12 @@ define('routexmaps', function (require) {
   };
 
   proto.bindEventsForPoint = function (place) {
-    var self = this, infobox = self.infobox;
+    var self = thisl
     var myIdentity = this.myIdentity;
     console.log('bind mouseout');
     google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
       console.log('mouseout');
-      if (infobox.editing) {
+      if (this.infobox.editing) {
         var data = this.data;
         var title = $('#place-editor input').val().trim();
         var description = $('#place-editor textarea').val().trim();
@@ -1270,8 +1271,9 @@ define('routexmaps', function (require) {
         $('#place-editor .title').text(title).removeClass('hide');
         $('#place-editor .description').text(description).removeClass('hide');
       }
-      infobox.close();
-      delete infobox._marker;
+      this.infobox.close();
+      delete this.infobox._marker;
+      delete this.infobox;
       infobox = self.infobox = null;
     });
   };
@@ -1282,6 +1284,7 @@ define('routexmaps', function (require) {
       m = infobox._marker;
       infobox.close();
       delete infobox._marker;
+      delete m.infobox;
       infobox = this.infobox = null;
       if (m === marker) { return true; }
     }
