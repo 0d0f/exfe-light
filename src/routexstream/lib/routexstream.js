@@ -184,7 +184,7 @@ define('routexstream', function (require) {
                 stream.kill();
             }
         },
-        onError: function () { alert(233); stream.live = false; },
+        onError: function () { stream.live = false; },
         kill   : function () {
             clearInterval(this.timer);
             if (this.http) {
