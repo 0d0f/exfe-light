@@ -1812,10 +1812,11 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#open-exfe', function (e) {
-          console.log('remove cats...');
-          Store.remove('cats');
-          Store.remove('offset-latlng');
-          Store.remove('authorization');
+          alert('restart stream');
+          self.stopStream();
+          //Store.remove('cats');
+          //Store.remove('offset-latlng');
+          //Store.remove('authorization');
         });
 
         /*
@@ -2092,6 +2093,10 @@ define('mobilecontroller', function (require, exports, module) {
         if (offset) {
           this.mapController.setOffset(offset);
         }
+      }
+
+    , stopStream: function () {
+        routexStream.stop();
       }
 
     , streaming: function () {
