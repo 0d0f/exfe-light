@@ -1043,6 +1043,7 @@ define('routexmaps', function (require) {
   };
 
   proto.showBreadcrumbs = function (uid) {
+    this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
       , puid = this.uid
@@ -1050,9 +1051,6 @@ define('routexmaps', function (require) {
       , pb;
 
     delete this.uid;
-
-    this.removeTextLabels();
-
     if (!b) {
       b = bds[uid] = this.addBreadcrumbs();
     }
