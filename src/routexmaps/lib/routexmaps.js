@@ -1203,8 +1203,10 @@ define('routexmaps', function (require) {
       })
     , GEvent = GMaps.event;
 
-    GEvent.addListener(m, 'mousedown', function mousedown(e, status) {
-      e && e.stop();
+    GEvent.addListener(m, 'mousedown', function mousedown(e) {
+      if (e && e !== true) {
+        e.stop();
+      }
 
       if (self.removeInfobox(this)) { return false; }
 
@@ -1243,7 +1245,7 @@ define('routexmaps', function (require) {
       this.infobox = self.infobox;
       this.infobox._marker = this;
       this.infobox.open(map, this);
-      if (!status) self.bindEventsForPoint(this);
+      if (!(status === true)) self.bindEventsForPoint(this);
     });
 
     return m;
