@@ -192,11 +192,9 @@
         width: 44px;
         height: 44px;
         display: block;
-        background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
-        -webkit-appearance: none;
-        background-size: 100% 100%;
         -webkit-user-select: none;
         -webkit-transform: translate3d(0, 0, 0);
+        -webkit-appearance: none;
       }
       .avatar {
         position: absolute;
@@ -214,6 +212,17 @@
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
         -webkit-transform: translate3d(0, 0, 0);
+
+        &:after {
+          position: absolute;
+          content: '';
+          top: -2px;
+          left: -2px;
+          right: -2px;
+          bottom: -2px;
+          background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
+          background-size: 100% 100%;
+        }
       }
 
       .detial {
