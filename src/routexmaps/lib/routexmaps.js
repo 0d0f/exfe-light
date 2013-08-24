@@ -642,6 +642,11 @@ define('routexmaps', function (require) {
         isme = myUserId == uid;
         n = Math.floor((now - d.t) / 60);
         gm = isme ? geo : gms[uid];
+
+        if (!gm) {
+          gm = this.drawGeoMarker(this._breadcrumbs[uid]);
+        }
+
         this.distanceMatrix(uid, gm ,dp, n);
 
         b = bs[uid];
