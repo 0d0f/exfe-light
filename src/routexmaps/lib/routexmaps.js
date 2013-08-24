@@ -682,10 +682,6 @@ define('routexmaps', function (require) {
       var geoLocation = this.geoLocation;
       var zIndex = MAX_INDEX;
       var icon = this.icons.destinationMarker;
-      if (t !== 2) {
-        zIndex = MAX_INDEX - 5;
-        icon = this.icons.placeMarker;
-      }
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
@@ -705,8 +701,10 @@ define('routexmaps', function (require) {
       } else {
         this.destinationPlace = p;
       }
-      p.setIcon(icon);
-      p.setZIndex(zIndex);
+      if (t !== 3) {
+        p.setIcon(icon);
+        p.setZIndex(zIndex);
+      }
     }
   };
 
