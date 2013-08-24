@@ -205,10 +205,16 @@ define('routexmaps', function (require) {
             //rm.showNearBy(e.pixel);
           });
 
-          $(mapDiv).on('tap.maps', function (e) {
-            var touch = e.originalEvent.touches[0];
-            rm.showNearBy({ x: touch.pageX, y: touch.pageY });
-          });
+          var px, py;
+          $(mapDiv)
+            .on('touchstart.maps', function (e) {
+              var touch = e.originalEvent.touches[0];
+              px = touch.pageX;
+              py = touch.pageY;
+            })
+            .on('tap.maps', function (e) {
+              rm.showNearBy({ x: px, y: py });
+            });
 
           /*
           function clear(t) {
