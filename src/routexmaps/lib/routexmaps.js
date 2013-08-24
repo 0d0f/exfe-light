@@ -1252,8 +1252,8 @@ define('routexmaps', function (require) {
 
   proto.bindEventsForPoint = function (place) {
     var myIdentity = this.myIdentity;
-    var infobox = place.infobox;
     google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
+      var infobox = this.infobox;
       if (infobox.editing) {
         var data = infobox._marker.data;
         var title = $('#place-editor input').val().trim();
