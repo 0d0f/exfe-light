@@ -208,7 +208,7 @@ define('routexmaps', function (require) {
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
-              var touch = e.originalEvent.touches[0];
+              var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
             })
