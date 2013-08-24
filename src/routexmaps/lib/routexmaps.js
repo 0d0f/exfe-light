@@ -1273,7 +1273,7 @@ define('routexmaps', function (require) {
       this.infobox.close();
       delete this.infobox._marker;
       delete this.infobox;
-      infobox = self.infobox = null;
+      self.infobox = null;
     });
   };
 
