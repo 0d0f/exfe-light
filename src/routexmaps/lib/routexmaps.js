@@ -292,7 +292,7 @@ define('routexmaps', function (require) {
     var marker = this.places[id];
     if (marker) {
       google.maps.event.trigger(marker, 'mousedown');
-      this.bindEventsForPoint(marker);
+      //this.bindEventsForPoint(marker);
     }
     this.hideNearBy();
   };
