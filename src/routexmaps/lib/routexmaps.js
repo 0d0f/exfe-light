@@ -198,13 +198,14 @@ define('routexmaps', function (require) {
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
             rm.hideMyPanel();
-            rm.hideIdentityPanel();
+            //rm.hideIdentityPanel();
             rm.editPlace();
           });
 
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
+              rm.hideIdentityPanel();
               var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
