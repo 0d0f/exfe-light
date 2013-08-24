@@ -28,7 +28,7 @@
     , startTime, currentTime, failTimeout;
 
   //window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
-  window.isWeixin = !!(/MicroMessenger/.test(navigator.userAgent));
+  window.isWeixin = !!(/MicroMessenger/i.test(navigator.userAgent));
 
   window.launchApp = function (url, cb) {
     url = url || app_url;
@@ -620,7 +620,7 @@
               , function (d) {
                   var code = d.meta.code
                     , errorType = d.meta.errorType;
-                  if (code === 400 && errorType === 'error_user_token') {
+                  if (code === 400) {
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
