@@ -1009,6 +1009,7 @@ define('routexmaps', function (require) {
       for (var len = labels.length - 1; len > i; len--) {
         label = labels[len];
         if (label) {
+          label.marker.setMap(null);
           label.setMap(null);
         }
         labels.splice(len, 1);
