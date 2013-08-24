@@ -952,6 +952,7 @@ define('routexmaps', function (require) {
         , ignore = 0
         , label
         , marker
+        , j = 0
         , p, t, n, prev;
 
       while ((p = ps.shift())) {
@@ -969,7 +970,7 @@ define('routexmaps', function (require) {
 
         if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
 
-          if (i === 0 && bool) { continue; }
+          if (j === 0 && bool) { j = 1; continue; }
 
           start = t;
           label = labels[i];
@@ -1063,7 +1064,7 @@ define('routexmaps', function (require) {
     if (uid !== puid) {
       pb = bds[puid];
       if (pb) {
-        pb.setMap(null)
+        pb.setMap(null);
         delete bds[puid];
         pb = null;
         //pb.setVisible(false);

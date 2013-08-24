@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 12:08:21 */
+/*! mobile@2a 2013-08-24 01:08:20 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4294,10 +4294,13 @@ TWEEN.Tween = function(object) {
     return d >= n;
   }, proto.showTextLabels = function(uid, positions, bool) {
     if (uid) {
-      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
+      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, i = 0, ignore = 0, j = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
       ignore !== t && (ignore = t, prev && (b = this.distanceMatrixPixl(p.gps, prev.gps)), 
       t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15))) {
-        if (0 === i && bool) continue;
+        if (0 === j && bool) {
+          j = 1;
+          continue;
+        }
         start = t, label = labels[i], label ? marker = label.marker : (marker = new google.maps.Marker({
           map: map,
           zIndex: MAX_INDEX - 4,
@@ -4316,8 +4319,8 @@ TWEEN.Tween = function(object) {
           scale: .5
         })), label.set("text", t + "分钟前"), prev = p, i++;
       }
-      for (var len = labels.length - 1; len > i; len--) label = labels[len], label && label.setMap(null), 
-      labels.splice(len, 1);
+      for (var len = labels.length - 1; len > i; len--) label = labels[len], label && (label.marker.setMap(null), 
+      label.setMap(null)), labels.splice(len, 1);
     }
   }, proto.removeTextLabels = function() {
     for (var label, labels = this.labels; label = labels.shift(); ) label.marker.setMap(null), 
@@ -4333,11 +4336,11 @@ TWEEN.Tween = function(object) {
       }
     }
   }, proto.showBreadcrumbs = function(uid) {
-    if (this._breadcrumbs[uid]) {
+    if (this.removeTextLabels(), this._breadcrumbs[uid]) {
       var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
-      if (delete this.uid, this.removeTextLabels(), b || (b = bds[uid] = this.addBreadcrumbs()), 
-      b && this.updateBreadcrumbs(uid), uid !== puid) pb = bds[puid], pb && (pb.setMap(null), 
-      delete bds[puid], pb = null), b && (b.setVisible(!0), this.uid = uid); else if (b) {
+      if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
+      uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null), 
+      b && (b.setVisible(!0), this.uid = uid); else if (b) {
         var v = !b.getVisible();
         b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null);
       }
