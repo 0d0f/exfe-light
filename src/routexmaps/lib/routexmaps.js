@@ -1255,7 +1255,7 @@ define('routexmaps', function (require) {
     var self = this;
     var myIdentity = this.myIdentity;
     console.log('bind mouseout');
-    google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
+    google.maps.event.addListener(place, 'mouseout', function mouseout() {
       console.log('mouseout');
       if (this.infobox.editing) {
         var data = this.data;
