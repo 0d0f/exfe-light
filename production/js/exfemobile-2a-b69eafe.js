@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 02:08:44 */
+/*! mobile@2a 2013-08-24 04:08:01 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3965,31 +3965,16 @@ TWEEN.Tween = function(object) {
         var map = rm.map = new GMaps.Map(mapDiv, mapOptions), overlay = rm.overlay = new GMaps.OverlayView();
         overlay.draw = function() {}, overlay.setMap(map);
         var initListener = GEvent.addListener(map, "tilesloaded", function() {
-          function clear(t) {
-            clearTimeout(t), t = null;
-          }
           GEvent.addListener(map, "bounds_changed", function() {
             GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
           }), GEvent.addListener(map, "mousedown", function(e) {
-            e.stop(), rm.hideIdentityPanel();
-          });
-          var t, MD_TIME, time = 377;
-          GEvent.addDomListener(mapDiv, "touchstart", function(e) {
-            console.dir(e), rm.hideMyPanel(), rm.hideNearBy(), MD_TIME = Date.now(), clear(t), 
-            t = setTimeout(function() {
-              e.preventDefault();
-              var touch = e.touches[0], point = {
-                x: touch.pageX,
-                y: touch.pageY
-              };
-              rm.showNearBy(point);
-            }, time), GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
-              clear(t), rm.hideTiplines();
+            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.showNearBy(e.pixel);
+          }), GEvent.addDomListener(mapDiv, "touchstart", function() {
+            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+              rm.hideTiplines();
             });
-          }), GEvent.addDomListener(mapDiv, "touchend", function() {
-            377 > Date.now() - MD_TIME && clear(t);
           }), GEvent.removeListener(initListener);
         });
         callback(map), cb = null;
@@ -4065,18 +4050,19 @@ TWEEN.Tween = function(object) {
     var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return 100 >= d;
   }, proto.showNearBy = function(point) {
+    if ($("#nearby").length) return this.hideNearBy(), void 0;
     if (point) {
-      var latlng, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3;
+      var latlng, pk, gk, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3, pn = 0, gn = 0;
       console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
       for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
-        status || (status = !0);
+        status || (status = !0), pn++, pk = k;
         var tmp = $(PLACE_TMP);
         tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
         nbDiv.append($("<div></div>").append(tmp));
       }
       for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
-        status || (status = !0), p.data.id.split("@")[0];
+        status || (status = !0), gn++, gk = k, p.data.id.split("@")[0];
         var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
         tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name), 
         tmp.attr("data-uid", k);
@@ -4089,11 +4075,11 @@ TWEEN.Tween = function(object) {
           var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()), !0);
           dd = s.text;
         }
-        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += "<span>" + n + "分钟前所处位置</span>", 
+        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += 60 > n ? "<span>" + n + "分钟前所处位置</span>" : "<span>" + Math.floor(n / 60) + "小时前所处位置</span>", 
         dd && (str += "<span>距离目的地" + dd + "</span>")), str && tmp.find(".status").html(str), 
         nbDiv.append($("<div></div>").append(tmp));
       }
-      if (status) {
+      if (status) if (0 === pn && 1 === gn) this.showIdentityPanel(gk); else {
         var width = $(window).width(), height = $(window).height();
         nbDiv.css({
           left: (width - 200 + 50) / 2,
@@ -4231,8 +4217,8 @@ TWEEN.Tween = function(object) {
       },
       optimized: !1
     });
-    return google.maps.event.addListener(gm, "mousedown", function() {
-      self.showIdentityPanel(this.uid);
+    return google.maps.event.addListener(gm, "mousedown", function(e) {
+      e && e.stop(), self.showIdentityPanel(this.uid);
     }), gm;
   }, proto.distanceMatrix = function(uid, gm, dp, time) {
     time = time || 0;
@@ -4442,7 +4428,7 @@ TWEEN.Tween = function(object) {
         icon: this.icons.arrowGrey,
         shape: {
           type: "rect",
-          rect: [ 0, 0, 22, 22 ]
+          rect: [ 0, 0, 1, 1 ]
         },
         optimized: !1
       }), geoLocation._status = 0;
