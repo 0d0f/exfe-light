@@ -288,6 +288,13 @@ define('routexmaps', function (require) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
+  proto.showPlacePanel = function (id) {
+    var marker = this.places[id];
+    if (marker) {
+      google.maps.event.trigger(marker, 'mousedown');
+    }
+  };
+
   proto.showIdentityPanel = function (uid) {
     this.hideNearBy();
     var gm = this.geoMarkers[uid]
@@ -413,6 +420,7 @@ define('routexmaps', function (require) {
           pn++;
           pk = k;
           var tmp = $(PLACE_TMP);
+          tmp.attr('data-id', p.data.id);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description);
           nbDiv.append($('<div></div>').append(tmp));
