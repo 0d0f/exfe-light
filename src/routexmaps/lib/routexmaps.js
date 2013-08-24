@@ -1251,7 +1251,7 @@ define('routexmaps', function (require) {
   };
 
   proto.bindEventsForPoint = function (place) {
-    var self = thisl
+    var self = this;
     var myIdentity = this.myIdentity;
     console.log('bind mouseout');
     google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
