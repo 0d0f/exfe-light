@@ -1127,7 +1127,6 @@ define('routexmaps', function (require) {
       })
     , GEvent = GMaps.event;
 
-    /*
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
       e && e.stop();
 
@@ -1190,7 +1189,6 @@ define('routexmaps', function (require) {
         infobox = self.infobox = null;
       });
     });
-    */
 
     return m;
   };
