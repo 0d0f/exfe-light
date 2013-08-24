@@ -1019,6 +1019,7 @@ define('routexmaps', function (require) {
   proto.removeTextLabels = function () {
     var labels = this.labels, label;
     while ((label = labels.shift())) {
+      label.marker.setMap(null);
       label.setMap(null);
     }
     labels.length = 0;
@@ -1029,7 +1030,8 @@ define('routexmaps', function (require) {
     if (!(data = this._breadcrumbs[uid])) { return; }
     var positions0 = data.positions.slice(0);
     var positions1 = positions0.slice(0);
-    this.showTextLabels(uid, positions0);
+    var t = Math.floor((Date.now() / 1000 - positions0[0].t) / 60);
+    this.showTextLabels(uid, positions0, t <= 1);
 
     if ((b = this.breadcrumbs[uid])) {
       while ((p = positions1.pop())) {

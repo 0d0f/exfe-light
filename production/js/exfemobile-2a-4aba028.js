@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 12:08:29 */
+/*! mobile@2a 2013-08-24 12:08:21 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4320,13 +4320,14 @@ TWEEN.Tween = function(object) {
       labels.splice(len, 1);
     }
   }, proto.removeTextLabels = function() {
-    for (var label, labels = this.labels; label = labels.shift(); ) label.setMap(null);
+    for (var label, labels = this.labels; label = labels.shift(); ) label.marker.setMap(null), 
+    label.setMap(null);
     labels.length = 0;
   }, proto.updateBreadcrumbs = function(uid) {
     var data, b, p, gps, coords = [];
     if (data = this._breadcrumbs[uid]) {
-      var positions0 = data.positions.slice(0), positions1 = positions0.slice(0);
-      if (this.showTextLabels(uid, positions0), b = this.breadcrumbs[uid]) {
+      var positions0 = data.positions.slice(0), positions1 = positions0.slice(0), t = Math.floor((Date.now() / 1e3 - positions0[0].t) / 60);
+      if (this.showTextLabels(uid, positions0, 1 >= t), b = this.breadcrumbs[uid]) {
         for (;p = positions1.pop(); ) gps = p.gps, coords.push(this.toLatLng(gps[0], gps[1]));
         b.setPath(coords);
       }
