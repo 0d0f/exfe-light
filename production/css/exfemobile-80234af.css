@@ -2112,11 +2112,9 @@ button .exfe {
   width: 44px;
   height: 44px;
   display: block;
-  background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
-  -webkit-appearance: none;
-  background-size: 100% 100%;
   -webkit-user-select: none;
   -webkit-transform: translate3d(0, 0, 0);
+  -webkit-appearance: none;
 }
 #routex #identities-overlay .identity .avatar {
   position: absolute;
@@ -2133,6 +2131,17 @@ button .exfe {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #identities-overlay .identity .avatar:after {
+  position: absolute;
+  display: block;
+  content: '';
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
+  background-size: 100% 100%;
 }
 #routex #identities-overlay .identity .detial {
   position: absolute;

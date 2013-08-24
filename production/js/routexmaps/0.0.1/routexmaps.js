@@ -199,15 +199,17 @@ define('routexmaps', function (require) {
 
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
+            rm.hideMyPanel();
             rm.hideIdentityPanel();
+            rm.showNearBy(e.pixel);
           });
 
+          /*
           function clear(t) {
             clearTimeout(t);
             t = null;
           }
 
-          /*
           GEvent.addDomListener(mapDiv, 'mousedown', function (e) {
             MD_TIME = Date.now();
             clear(t);
@@ -218,12 +220,12 @@ define('routexmaps', function (require) {
           });
           */
 
-          var time = 377, t, MD_TIME;
+          ///var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
-            console.dir(e)
-            rm.hideMyPanel();
-            rm.hideNearBy();
+            //console.dir(e)
+            //rm.hideNearBy();
 
+            /*
             MD_TIME = Date.now();
             clear(t);
             t = setTimeout(function () {
@@ -232,18 +234,21 @@ define('routexmaps', function (require) {
                 , point = { x: touch.pageX, y: touch.pageY };
               rm.showNearBy(point);
             }, time);
+            */
 
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              clear(t);
+              //clear(t);
               rm.hideTiplines();
             });
           });
+          /*
           GEvent.addDomListener(mapDiv, 'touchend', function () {
             if (Date.now() - MD_TIME < 377) {
               clear(t);
             }
           });
+          */
 
           GEvent.removeListener(initListener);
 
@@ -375,6 +380,10 @@ define('routexmaps', function (require) {
     return d <= 100;
   };
   proto.showNearBy = function (point) {
+    if ($('#nearby').length) {
+      this.hideNearBy();
+      return;
+    }
     if (point) {
       var center = point
         , status = false
@@ -385,9 +394,11 @@ define('routexmaps', function (require) {
         , geoPosition = geoLocation && geoLocation.getPosition()
         , destinationPlace = this.destinationPlace
         , destinationPosition = destinationPlace && destinationPlace.getPosition()
-        , list = []
+        //, list = { places: [], geomarkers: [] }
         , now = Date.now() / 1000
         , latlng
+        , pn = 0, gn = 0
+        , pk, gk
         , uid, p;
       console.log('-----------------------', geoPosition, destinationPosition);
 
@@ -398,6 +409,9 @@ define('routexmaps', function (require) {
         latlng = p.getPosition()
         if (this.distance100px(latlng, center)) {
           if (!status) { status = true; }
+          //list.places.push(p)
+          pn++;
+          pk = k;
           var tmp = $(PLACE_TMP);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description);
@@ -410,6 +424,9 @@ define('routexmaps', function (require) {
         latlng = p.getPosition();
         if (this.distance100px(latlng, center)) {
           if (!status) { status = true; }
+          //list.geomarkers.push(p);
+          gn++;
+          gk = k;
           var id = p.data.id.split('@')[0];
           var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
           var tmp = $(IDENTITY_TMP);
@@ -438,7 +455,11 @@ define('routexmaps', function (require) {
               str += '<span>与您相距' + dm + '</span>'
             }
           } else {
-            str += '<span>' + n + '分钟前所处位置</span>'
+            if (n < 60) {
+              str += '<span>' + n + '分钟前所处位置</span>'
+            } else {
+              str += '<span>' + Math.floor(n / 60) + '小时前所处位置</span>'
+            }
             if (dd) {
               str += '<span>距离目的地' + dd + '</span>';
             }
@@ -452,13 +473,17 @@ define('routexmaps', function (require) {
       }
 
       if (status) {
-        var width = $(window).width()
-          , height = $(window).height();
-        nbDiv.css({
-            left: (width - 200 + 50) / 2
-          , top: (height - 132) / 2
-        });
-        $('#routex').append(nbDiv);
+        if (pn === 0 && gn === 1) {
+          this.showIdentityPanel(gk);
+        } else {
+          var width = $(window).width()
+            , height = $(window).height();
+          nbDiv.css({
+              left: (width - 200 + 50) / 2
+            , top: (height - 132) / 2
+          });
+          $('#routex').append(nbDiv);
+        }
       }
     }
   };
@@ -796,7 +821,8 @@ define('routexmaps', function (require) {
           , optimized: false
         });
 
-    google.maps.event.addListener(gm, 'mousedown', function () {
+    google.maps.event.addListener(gm, 'mousedown', function (e) {
+      e && e.stop();
       self.showIdentityPanel(this.uid);
     });
     return gm;
@@ -1313,7 +1339,7 @@ define('routexmaps', function (require) {
         , icon: this.icons.arrowGrey
         , shape: {
               type: 'rect'
-            , rect: [0, 0, 22, 22]
+            , rect: [0, 0, 1, 1]
           }
         , optimized: false
       });
