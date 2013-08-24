@@ -291,8 +291,8 @@ define('routexmaps', function (require) {
   proto.showPlacePanel = function (id) {
     var marker = this.places[id];
     if (marker) {
-      this.bindEventsForPoint(marker);
       google.maps.event.trigger(marker, 'mousedown');
+      this.bindEventsForPoint(marker);
     }
     this.hideNearBy();
   };
