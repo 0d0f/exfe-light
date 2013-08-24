@@ -213,6 +213,7 @@ define('routexmaps', function (require) {
               py = touch.pageY;
             })
             .on('tap.maps', function (e) {
+              e.stopPropagation();
               rm.showNearBy({ x: px, y: py });
             });
 
