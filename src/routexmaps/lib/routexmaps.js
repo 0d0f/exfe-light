@@ -202,7 +202,12 @@ define('routexmaps', function (require) {
             rm.hideMyPanel();
             rm.hideIdentityPanel();
             rm.editPlace();
-            rm.showNearBy(e.pixel);
+            //rm.showNearBy(e.pixel);
+          });
+
+          mapDiv.on('tap.maps', function (e) {
+            var touch = e.originalEvent.touches[0];
+            rm.showNearBy({ x: touch.pageX, y: touch.pageY });
           });
 
           /*
