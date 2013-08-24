@@ -504,25 +504,26 @@ define('routexmaps', function (require) {
       , isDelete = action && action === 'delete'
       , hasTags = data.tags
       , tags = hasTags && data.tags.slice(0)
-      , tag;
+      , tag, dest;
 
     console.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
+        var t = 0;
 
         if (hasTags) {
           while ((tag = tags.shift())) {
             if (tag === XPLACE) {
-              break;
+              t ^= 1; // t = 1
+            } else if (tag === DESTINATION) {
+              t ^= 2; // t = 2
+              dest = tag;
             }
-
-            if (tag === DESTINATION) {
-              break;
-            }
+            // has xplace and destination t = 3
           }
         }
 
-        isDelete ? this.removePlace(data, tag === DESTINATION) : this.drawPlace(data, tag);
+        isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
         break;
 
       case ROUTE:
@@ -655,7 +656,7 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  proto.drawPlace = function (data, tag) {
+  proto.drawPlace = function (data, t) {
     var places = this.places
       , id = data.id, p, d, latlng;
     if (places.hasOwnProperty(id)) {
@@ -671,14 +672,20 @@ define('routexmaps', function (require) {
     p.setPosition(latlng);
     p.data = data;
 
-    if (tag === XPLACE) {
+    if (t === 1 || t === 3) {
       p.setIcon(this.icons.xplaceMarker);
       p.setZIndex(MAX_INDEX - 1);
-    } else if (tag === DESTINATION) {
+    }
+
+    if (t === 2 || t === 3) {
       // 如果还没 GPS 自动定位到 destination
       var geoLocation = this.geoLocation;
       var zIndex = MAX_INDEX;
       var icon = this.icons.destinationMarker;
+      if (t !== 2) {
+        zIndex = MAX_INDEX - 5;
+        icon = this.icons.placeMarker;
+      }
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
         this.panToDestination(latlng);
       }
@@ -692,7 +699,7 @@ define('routexmaps', function (require) {
           }
           this.destinationPlace = p;
         } else {
-          zIndex -= 5;
+          zIndex = MAX_INDEX - 5;
           icon = this.icons.placeMarker;
         }
       } else {
@@ -866,7 +873,7 @@ define('routexmaps', function (require) {
     var self = this
       , gm = new google.maps.Marker({
             map: this.map
-          , animation: 2
+          //, animation: 2
           , zIndex: MAX_INDEX - 2
           , icon: this.icons.dotGrey
           , shape: {
@@ -1189,7 +1196,7 @@ define('routexmaps', function (require) {
       , myIdentity = this.myIdentity
       , m = new GMaps.Marker({
           map: map
-        , animation: 2
+        //, animation: 2
         //, visible: false
         , zIndex: MAX_INDEX - 5
         , icon: new GMaps.MarkerImage(
@@ -1389,7 +1396,7 @@ define('routexmaps', function (require) {
          *  b: 4
          *  d: 3
          */
-        , animation: 2
+        //, animation: 2
         , icon: this.icons.arrowGrey
         , shape: {
               type: 'rect'
