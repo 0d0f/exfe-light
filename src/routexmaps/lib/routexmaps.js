@@ -1259,7 +1259,7 @@ define('routexmaps', function (require) {
         data.description = description;
         data.updated_at = Math.round(Date.now() / 1000);
         data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-        self.controller.editPlace(data);
+        this.controller.editPlace(data);
       }
       $('#place-editor input, #place-editor textarea').remove();
       $('#place-editor .title').text(title).removeClass('hide');
