@@ -136,6 +136,7 @@ define('routexstream', function (require) {
         dead   : null,
         live   : false,
         init   : function(url, pop, dead) {
+            reStart();
             console.log(url);
             this.prvLen = 0;
             this.nxtIdx = 0;
