@@ -1271,7 +1271,7 @@ define('routexmaps', function (require) {
       }
       infobox.close();
       delete infobox._marker;
-      infobox = self.infobox = null;
+      infobox = this.infobox = null;
     });
   };
 
