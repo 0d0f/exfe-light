@@ -1240,6 +1240,7 @@ define('routexmaps', function (require) {
             });
           }
       });
+      this.infobox = infobox;
       infobox._marker = this;
       infobox.open(map, this);
 
