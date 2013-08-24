@@ -398,7 +398,7 @@ define('routexmaps', function (require) {
   proto.distance60px = function (p0, b) {
     var a = this.fromLatLngToContainerPixel(p0)
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return d <= 60px;
+    return d <= 60;
   };
   proto.showNearBy = function (point) {
     if ($('#nearby').length) {

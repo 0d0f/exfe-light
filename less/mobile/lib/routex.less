@@ -746,7 +746,7 @@
   #nearby {
     position: absolute;
     width: 200px;
-    max-height: 150px;
+    max-height: 160px;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 2;
@@ -754,6 +754,7 @@
     font-weight: 300;
     -webkit-appearance: none;
     -webkit-transform: translate3d(0,0,1px);
+    padding: 0 5px;
 
     > div {
       position: relative;
@@ -801,10 +802,10 @@
     }
 
     .geo-marker {
-      padding: 2px 0;
       img {
         float: left;
         border-radius: 2px;
+        margin: 2px 0;
       }
       .detial {
         width: 188px - 30px - 10px;
@@ -815,8 +816,15 @@
         text-overflow: ellipsis;
         white-space: nowrap;
 
+        .name {
+          padding-bottom: 4px;
+          line-height: 16px;
+        }
+
         .status {
-          font-size: 9px;
+          font-size: 10px;
+          padding-bottom: 4px;
+          line-height: 16px;
           font-weight: 300;
 
           > span:last-child {

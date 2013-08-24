@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 09:08:08 */
+/*! mobile@2a 2013-08-25 12:08:53 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3931,6 +3931,9 @@ TWEEN.Tween = function(object) {
     shake: function(start_callback, end_callback) {
       shake_start_callback = start_callback, shake_end_callback = end_callback;
     },
+    stop: function() {
+      stream.kill();
+    },
     getGeo: getGeo,
     startGeo: startGeo,
     stopGeo: stopGeo,
@@ -3974,7 +3977,17 @@ TWEEN.Tween = function(object) {
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
           }), GEvent.addListener(map, "mousedown", function(e) {
-            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.editPlace(), rm.showNearBy(e.pixel);
+            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.editPlace();
+          });
+          var px, py;
+          $(mapDiv).on("touchstart.maps", function(e) {
+            var touch = e.touches[0];
+            px = touch.pageX, py = touch.pageY;
+          }).on("tap.maps", function() {
+            rm.showNearBy({
+              x: px,
+              y: py
+            });
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
             GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
               rm.hideTiplines();
@@ -4026,7 +4039,8 @@ TWEEN.Tween = function(object) {
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if (gm) {
       if (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60), $otherInfo.find(".name").text(identity.name), 
-      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").text(t), $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
+      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时"), 
+      $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
         var p2 = destinationPlace.getPosition(), d = distance(p2.lat(), p2.lng(), p.lat(), p.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text);
@@ -4053,22 +4067,22 @@ TWEEN.Tween = function(object) {
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
   return proto.hideNearBy = function() {
     $("#nearby").remove();
-  }, proto.distance100px = function(p0, b) {
+  }, proto.distance60px = function(p0, b) {
     var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return 100 >= d;
+    return 60 >= d;
   }, proto.showNearBy = function(point) {
     if ($("#nearby").length) return this.hideNearBy(), void 0;
     if (point) {
       var latlng, pk, gk, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3, pn = 0, gn = 0;
       console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
-      for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
+      for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance60px(latlng, center)) {
         status || (status = !0), pn++, pk = k;
         var tmp = $(PLACE_TMP);
         tmp.attr("data-id", p.data.id), tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
         nbDiv.append($("<div></div>").append(tmp));
       }
-      for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
+      for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance60px(latlng, center)) {
         status || (status = !0), gn++, gk = k, p.data.id.split("@")[0];
         var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
         tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name), 
@@ -4095,11 +4109,13 @@ TWEEN.Tween = function(object) {
       }
     }
   }, proto.draw = function(data) {
-    var tag, type = data.type, action = data.action, isDelete = action && "delete" === action, hasTags = data.tags, tags = hasTags && data.tags.slice(0);
+    var tag, dest, type = data.type, action = data.action, isDelete = action && "delete" === action, hasTags = data.tags, tags = hasTags && data.tags.slice(0);
     switch (console.log(type, action, isDelete, tags, data), type) {
      case LOCATION:
-      if (hasTags) for (;(tag = tags.shift()) && tag !== XPLACE && tag !== DESTINATION; ) ;
-      isDelete ? this.removePlace(data, tag === DESTINATION) : this.drawPlace(data, tag);
+      var t = 0;
+      if (hasTags) for (;tag = tags.shift(); ) tag === XPLACE ? t ^= 1 : tag === DESTINATION && (t ^= 2, 
+      dest = tag);
+      isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
       break;
 
      case ROUTE:
@@ -4123,7 +4139,7 @@ TWEEN.Tween = function(object) {
     var tiplines = this.tiplines;
     for (k in tiplines) this.svgLayer.removeChild(tiplines[k]), tiplines[k] = null, 
     delete tiplines[k];
-    this.updated = {}, this._breadcrumbs = {};
+    this.uid = null;
   }, proto.removePlace = function(data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
     p && (p.setMap(null), p = null, delete places[id], isDestination && (this.destinationPlace = null));
@@ -4147,21 +4163,22 @@ TWEEN.Tween = function(object) {
       strokeOpacity: alpha
     });
     return p;
-  }, proto.drawPlace = function(data, tag) {
+  }, proto.drawPlace = function(data, t) {
     var p, latlng, places = this.places, id = data.id;
     if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
-    tag === XPLACE) p.setIcon(this.icons.xplaceMarker), p.setZIndex(MAX_INDEX - 1); else if (tag === DESTINATION) {
+    (1 === t || 3 === t) && (p.setIcon(this.icons.xplaceMarker), p.setZIndex(MAX_INDEX - 1)), 
+    2 === t || 3 === t) {
       var geoLocation = this.geoLocation, zIndex = MAX_INDEX, icon = this.icons.destinationMarker;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng);
       var destinationPlace = this.destinationPlace;
       if (destinationPlace && destinationPlace !== p) {
         var cd = destinationPlace.data;
         data.updated_at > cd.updated_at ? (data.id != cd.id && (destinationPlace.setIcon(this.icons.placeMarker), 
-        destinationPlace.setZIndex(zIndex - 5)), this.destinationPlace = p) : (zIndex -= 5, 
+        destinationPlace.setZIndex(zIndex - 5)), this.destinationPlace = p) : (zIndex = MAX_INDEX - 5, 
         icon = this.icons.placeMarker);
       } else this.destinationPlace = p;
-      p.setIcon(icon), p.setZIndex(zIndex);
+      3 !== t && (p.setIcon(icon), p.setZIndex(zIndex));
     }
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
@@ -4229,7 +4246,6 @@ TWEEN.Tween = function(object) {
   }, proto.addGeoMarker = function() {
     var self = this, gm = new google.maps.Marker({
       map: this.map,
-      animation: 2,
       zIndex: MAX_INDEX - 2,
       icon: this.icons.dotGrey,
       shape: {
@@ -4359,7 +4375,6 @@ TWEEN.Tween = function(object) {
   }, proto.addPoint = function(data) {
     var self = this, GMaps = google.maps, map = this.map, m = (this.myIdentity, new GMaps.Marker({
       map: map,
-      animation: 2,
       zIndex: MAX_INDEX - 5,
       icon: new GMaps.MarkerImage(data.icon || apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
     })), GEvent = GMaps.event;
@@ -4445,7 +4460,6 @@ TWEEN.Tween = function(object) {
         map: this.map,
         zIndex: MAX_INDEX - 1,
         visible: !0,
-        animation: 2,
         icon: this.icons.arrowGrey,
         shape: {
           type: "rect",
@@ -5503,8 +5517,7 @@ TWEEN.Tween = function(object) {
           self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid));
         }
       }), element.on("tap.maps", "#open-exfe", function() {
-        console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng"), 
-        Store.remove("authorization");
+        alert("restart stream"), self.stopStream();
       });
       var _t, pageY = 0, scrollTop = 0;
       element.on("touchstart.maps", "#nearby", function(e) {
@@ -5603,6 +5616,9 @@ TWEEN.Tween = function(object) {
     setLatLngOffset: function() {
       var offset = Store.get("offset-latlng");
       offset && this.mapController.setOffset(offset);
+    },
+    stopStream: function() {
+      routexStream.stop();
     },
     streaming: function() {
       if (this.cross_id && this.token) {

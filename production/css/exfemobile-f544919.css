@@ -2601,7 +2601,7 @@ button .exfe {
 #routex #nearby {
   position: absolute;
   width: 200px;
-  max-height: 150px;
+  max-height: 160px;
   overflow-x: hidden;
   overflow-y: auto;
   z-index: 2;
@@ -2609,6 +2609,7 @@ button .exfe {
   font-weight: 300;
   -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 1px);
+  padding: 0 5px;
 }
 #routex #nearby > div {
   position: relative;
@@ -2647,12 +2648,10 @@ button .exfe {
   font-weight: 300;
   width: 100%;
 }
-#routex #nearby .geo-marker {
-  padding: 2px 0;
-}
 #routex #nearby .geo-marker img {
   float: left;
   border-radius: 2px;
+  margin: 2px 0;
 }
 #routex #nearby .geo-marker .detial {
   width: 148px;
@@ -2663,8 +2662,14 @@ button .exfe {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+#routex #nearby .geo-marker .detial .name {
+  padding-bottom: 4px;
+  line-height: 16px;
+}
 #routex #nearby .geo-marker .detial .status {
-  font-size: 9px;
+  font-size: 10px;
+  padding-bottom: 4px;
+  line-height: 16px;
   font-weight: 300;
 }
 #routex #nearby .geo-marker .detial .status > span:last-child {
