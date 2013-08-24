@@ -36,6 +36,8 @@ define('routexstream', function (require) {
 
     var updateGPS = null;
 
+    var reStart = null;
+
     var submitGps = function () {
         secCnt = 0;
         if (!token) {
@@ -143,6 +145,7 @@ define('routexstream', function (require) {
             var http = this.http = new XMLHttpRequest();
             http.open('post', url);
             http.onreadystatechange = this.listen;
+            http.onerror = this.onError;
             http.send();
             this.timer  = setInterval(this.listen, 1000);
         },
@@ -180,6 +183,7 @@ define('routexstream', function (require) {
                 stream.kill();
             }
         },
+        onError: function () {},
         kill   : function () {
             clearInterval(this.timer);
             if (this.http) {
@@ -393,7 +397,7 @@ define('routexstream', function (require) {
 
 
     var routexStream = {
-        init : function(intCrossId, strToken, callback, unauthorized_callback, update) {
+        init : function(intCrossId, strToken, callback, unauthorized_callback, update, reset) {
             if (!intCrossId) {
                 log('Error cross id!');
                 return;
@@ -420,7 +424,8 @@ define('routexstream', function (require) {
             log('Set unauthorized callback function');
             secCnt   = secInt;
 
-            updateGPS = update
+            updateGPS = update;
+            reStart   = reset;
         },
         shake : function(start_callback, end_callback) {
             shake_start_callback = start_callback;

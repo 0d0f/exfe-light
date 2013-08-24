@@ -2155,6 +2155,11 @@ define('mobilecontroller', function (require, exports, module) {
           , function () {
               self.trackGeoLocation();
             }
+          , function () {
+              if (self.mapReadyStatus) {
+                self.mapController.clearup();
+              }
+            }
         );
       }
 
