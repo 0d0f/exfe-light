@@ -588,8 +588,8 @@ define('routexmaps', function (require) {
       delete tiplines[k];
     }
 
-    this.updated = {};
-    this._breadcrumbs = {};
+    //this.updated = {};
+    //this._breadcrumbs = {};
   };
 
   proto.removePlace = function (data, isDestination) {
