@@ -536,6 +536,51 @@ define('routexmaps', function (require) {
     }
   };
 
+  proto.clearup = function () {
+    var k;
+    var places = this.places;
+    for (k in places) {
+      places[k].setMap(null);
+      places[k] = null;
+      delete places[k];
+    }
+
+    var breadcrumbs = this.breadcrumbs;
+    for (k in breadcrumbs) {
+      breadcrumbs[k].setMap(null);
+      breadcrumbs[k] = null;
+      delete breadcrumbs[k];
+    }
+
+    var geoMarkers = this.geoMarkers;
+    for (k in geoMarkers) {
+      geoMarkers[k].setMap(null);
+      geoMarkers[k] = null;
+      delete geoMarkers[k];
+    }
+
+    var routes = this.routes;
+    for (k in routes) {
+      routes[k].setMap(null);
+      routes[k] = null;
+      delete routes[k];
+    }
+
+    this.destinationPlace = null;
+
+    this.removeTextLabels();
+
+    var tiplines = this.tiplines;
+    for (k in tiplines) {
+      this.svgLayer.removeChild(tiplines[k]);
+      tiplines[k] = null;
+      delete tiplines[k];
+    }
+
+    this.updated = {};
+    this._breadcrumbs = {};
+  };
+
   proto.removePlace = function (data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
     if (p) {
