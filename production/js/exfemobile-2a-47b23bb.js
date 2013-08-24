@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 12:08:49 */
+/*! mobile@2a 2013-08-24 12:08:29 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4334,12 +4334,11 @@ TWEEN.Tween = function(object) {
   }, proto.showBreadcrumbs = function(uid) {
     if (this._breadcrumbs[uid]) {
       var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
-      if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
-      uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null, 
-      this.removeTextLabels()), b && (b.setVisible(!0), this.uid = uid); else if (b) {
+      if (delete this.uid, this.removeTextLabels(), b || (b = bds[uid] = this.addBreadcrumbs()), 
+      b && this.updateBreadcrumbs(uid), uid !== puid) pb = bds[puid], pb && (pb.setMap(null), 
+      delete bds[puid], pb = null), b && (b.setVisible(!0), this.uid = uid); else if (b) {
         var v = !b.getVisible();
-        b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null, 
-        this.removeTextLabels());
+        b.setVisible(v), v ? this.uid = uid : (b.setMap(null), delete bds[uid], b = null);
       }
       console.log("current breadcrumbs", uid);
     }

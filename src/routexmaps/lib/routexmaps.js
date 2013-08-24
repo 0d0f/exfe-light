@@ -1049,6 +1049,8 @@ define('routexmaps', function (require) {
 
     delete this.uid;
 
+    this.removeTextLabels();
+
     if (!b) {
       b = bds[uid] = this.addBreadcrumbs();
     }
@@ -1063,7 +1065,6 @@ define('routexmaps', function (require) {
         pb.setMap(null)
         delete bds[puid];
         pb = null;
-        this.removeTextLabels();
         //pb.setVisible(false);
       }
       if (b) {
@@ -1079,7 +1080,6 @@ define('routexmaps', function (require) {
           b.setMap(null);
           delete bds[uid];
           b = null;
-          this.removeTextLabels();
         }
       }
     }
