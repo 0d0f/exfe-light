@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 04:08:01 */
+/*! mobile@2a 2013-08-24 09:08:08 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3785,7 +3785,7 @@ TWEEN.Tween = function(object) {
   var _ENV_ = window._ENV_, api_url = _ENV_.apiv3_url, cross_id = 0, token = "", secInt = 10, secCnt = secInt, echo = null, unat_cbf = null, bolDebug = !!0, myData = {
     t: 0,
     gps: [ 0, 0, 0 ]
-  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, updateGPS = null, submitGps = function() {
+  }, submit_request = null, shake_start_callback = null, shake_end_callback = null, intGeoWatch = null, updateGPS = null, reStart = null, submitGps = function() {
     return secCnt = 0, token ? (log("Breathe with token: " + token), submit_request && submit_request.abort(), 
     myData.t = Math.round(Date.now() / 1e3), submit_request = $.ajax({
       type: "POST",
@@ -3825,10 +3825,11 @@ TWEEN.Tween = function(object) {
     dead: null,
     live: !1,
     init: function(url, pop, dead) {
-      console.log(url), this.prvLen = 0, this.nxtIdx = 0, this.live = !0, this.pop = pop, 
+      reStart(), console.log(url), this.prvLen = 0, this.nxtIdx = 0, this.live = !0, this.pop = pop, 
       this.dead = dead;
       var http = this.http = new XMLHttpRequest();
-      http.open("post", url), http.onreadystatechange = this.listen, http.send(), this.timer = setInterval(this.listen, 1e3);
+      http.open("post", url), http.onreadystatechange = this.listen, http.onerror = this.onError, 
+      http.send(), this.timer = setInterval(this.listen, 1e3);
     },
     listen: function() {
       var http = stream.http;
@@ -3841,6 +3842,9 @@ TWEEN.Tween = function(object) {
         }
         4 === http.readyState && stream.prvLen === http.responseText.length && stream.kill();
       }
+    },
+    onError: function() {
+      stream.live = !1;
     },
     kill: function() {
       clearInterval(this.timer), this.http && this.http.abort(), this.dead && this.dead(), 
@@ -3916,12 +3920,12 @@ TWEEN.Tween = function(object) {
     var data = JSON.parse(rawData);
     data && data.type && (log("Streaming pops: " + data.type), echo(data));
   }, routexStream = {
-    init: function(intCrossId, strToken, callback, unauthorized_callback, update) {
+    init: function(intCrossId, strToken, callback, unauthorized_callback, update, reset) {
       return intCrossId ? strToken ? callback ? unauthorized_callback ? (cross_id = intCrossId, 
       log("Set cross_id: " + intCrossId), token = strToken, log("Set token: " + strToken), 
       echo = callback, log("Set callback function"), unat_cbf = unauthorized_callback, 
       log("Set unauthorized callback function"), secCnt = secInt, updateGPS = update, 
-      void 0) : (log("Error unauthorized callback!"), void 0) : (log("Error callback!"), 
+      reStart = reset, void 0) : (log("Error unauthorized callback!"), void 0) : (log("Error callback!"), 
       void 0) : (log("Error token!"), void 0) : (log("Error cross id!"), void 0);
     },
     shake: function(start_callback, end_callback) {
@@ -3970,7 +3974,7 @@ TWEEN.Tween = function(object) {
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
           }), GEvent.addListener(map, "mousedown", function(e) {
-            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.showNearBy(e.pixel);
+            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.editPlace(), rm.showNearBy(e.pixel);
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
             GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
               rm.hideTiplines();
@@ -4014,6 +4018,9 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
+  }, proto.showPlacePanel = function(id) {
+    var marker = this.places[id];
+    marker && google.maps.event.trigger(marker, "mousedown"), this.hideNearBy();
   }, proto.showIdentityPanel = function(uid) {
     this.hideNearBy();
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
@@ -4058,7 +4065,7 @@ TWEEN.Tween = function(object) {
       for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
         status || (status = !0), pn++, pk = k;
         var tmp = $(PLACE_TMP);
-        tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
+        tmp.attr("data-id", p.data.id), tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
         nbDiv.append($("<div></div>").append(tmp));
       }
       for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance100px(latlng, center)) {
@@ -4103,6 +4110,20 @@ TWEEN.Tween = function(object) {
       }
       isBreadcrumbs ? this.drawGeoMarker(data) : isDelete ? this.removeRoute(data) : this.drawRoute(data);
     }
+  }, proto.clearup = function() {
+    var k, places = this.places;
+    for (k in places) places[k].setMap(null), places[k] = null, delete places[k];
+    var breadcrumbs = this.breadcrumbs;
+    for (k in breadcrumbs) breadcrumbs[k].setMap(null), breadcrumbs[k] = null, delete breadcrumbs[k];
+    var geoMarkers = this.geoMarkers;
+    for (k in geoMarkers) geoMarkers[k].setMap(null), geoMarkers[k] = null, delete geoMarkers[k];
+    var routes = this.routes;
+    for (k in routes) routes[k].setMap(null), routes[k] = null, delete routes[k];
+    this.destinationPlace = null, this.removeTextLabels();
+    var tiplines = this.tiplines;
+    for (k in tiplines) this.svgLayer.removeChild(tiplines[k]), tiplines[k] = null, 
+    delete tiplines[k];
+    this.updated = {}, this._breadcrumbs = {};
   }, proto.removePlace = function(data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
     p && (p.setMap(null), p = null, delete places[id], isDestination && (this.destinationPlace = null));
@@ -4336,15 +4357,14 @@ TWEEN.Tween = function(object) {
       console.log("current breadcrumbs", uid);
     }
   }, proto.addPoint = function(data) {
-    var self = this, GMaps = google.maps, map = this.map, myIdentity = this.myIdentity, m = new GMaps.Marker({
+    var self = this, GMaps = google.maps, map = this.map, m = (this.myIdentity, new GMaps.Marker({
       map: map,
       animation: 2,
       zIndex: MAX_INDEX - 5,
       icon: new GMaps.MarkerImage(data.icon || apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
-    }), GEvent = GMaps.event;
+    })), GEvent = GMaps.event;
     return GEvent.addListener(m, "mousedown", function(e) {
-      if (e && e.stop(), self.removeInfobox(this)) return !1;
-      var infobox = self.infobox = new GMaps.InfoBox({
+      return e && e.stop(), self.removeInfobox(this) ? !1 : (self.infobox = new GMaps.InfoBox({
         content: self.infoWindowTemplate.replace("{{title}}", this.data.title).replace("{{description}}", this.data.description),
         maxWidth: 200,
         pixelOffset: new GMaps.Size(-100, -38),
@@ -4357,35 +4377,36 @@ TWEEN.Tween = function(object) {
         zIndex: 610,
         boxId: "place-editor",
         events: function() {
-          var ib = this;
-          ib.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
-            if (!ib.editing) {
+          self.infobox.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
+            if (!self.infobox.editing) {
               var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
               ct.type = "text", ct.value = title;
               var cd = document.createElement("textarea");
               cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
               this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
-              ib.editing = !0;
+              self.infobox.editing = !0;
             }
           });
         }
-      });
-      infobox._marker = this, infobox.open(map, this), GEvent.addListenerOnce(this, "mouseout", function() {
-        if (infobox.editing) {
-          var data = infobox._marker.data, title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
-          (title !== data.title || description !== data.description) && (data.title = title, 
-          data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
-          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, self.controller.editPlace(data)), 
-          $("#place-editor input, #place-editor textarea").remove(), $("#place-editor .title").text(title).removeClass("hide"), 
-          $("#place-editor .description").text(description).removeClass("hide");
-        }
-        infobox.close(), delete infobox._marker, infobox = self.infobox = null;
-      });
+      }), self.infobox.marker = this, self.infobox.open(map, this), void 0);
     }), m;
+  }, proto.editPlace = function() {
+    if (this.infobox) {
+      var data = this.infobox.marker.data, myIdentity = this.myIdentity;
+      if (this.infobox.editing) {
+        var title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
+        (title !== data.title || description !== data.description) && (data.title = title, 
+        data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
+        data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, this.controller.editPlace(data)), 
+        $("#place-editor input, #place-editor textarea").remove(), $("#place-editor .title").text(title).removeClass("hide"), 
+        $("#place-editor .description").text(description).removeClass("hide");
+      }
+      this.removeInfobox();
+    }
   }, proto.removeInfobox = function(marker) {
     var m, infobox = this.infobox;
-    return infobox && (m = infobox._marker, infobox.close(), delete infobox._marker, 
-    infobox = this.infobox = null, m === marker) ? !0 : void 0;
+    return infobox && (m = infobox.marker, infobox.close(), delete infobox.marker, infobox = this.infobox = null, 
+    m === marker) ? !0 : void 0;
   }, proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>', 
   proto.contains = function() {
     var uid, gm, latlng, mapBounds = this.map.getBounds(), GMaps = google.maps, sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new GMaps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
@@ -5437,8 +5458,13 @@ TWEEN.Tween = function(object) {
         return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
         !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
         self.tapElement = this, void 0);
-      }), element.on("touchstart.maps", "#nearby .geo-marker", function(e) {
-        if (e.preventDefault(), self.mapReadyStatus) {
+      }), element.on("tap.maps", "#nearby .place-marker", function(e) {
+        if (!isScroll && (e.preventDefault(), self.mapReadyStatus)) {
+          var id = $(this).data("id");
+          self.mapController.showPlacePanel(id);
+        }
+      }), element.on("tap.maps", "#nearby .geo-marker", function(e) {
+        if (!isScroll && (e.preventDefault(), self.mapReadyStatus)) {
           var uid = $(this).data("uid");
           self.mapController.showIdentityPanel(uid);
         }
@@ -5479,6 +5505,16 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#open-exfe", function() {
         console.log("remove cats..."), Store.remove("cats"), Store.remove("offset-latlng"), 
         Store.remove("authorization");
+      });
+      var _t, pageY = 0, scrollTop = 0;
+      element.on("touchstart.maps", "#nearby", function(e) {
+        isScroll = !1, pageY = e.originalEvent.touches[0].pageY, scrollTop = this.scrollTop;
+      }), element.on("touchend.maps", "#nearby", function() {
+        _t && clearTimeout(_t), _t = setTimeout(function() {
+          isScroll = !1;
+        }, 233);
+      }), element.on("touchmove.maps", "#nearby", function(e) {
+        isScroll = !0, e.preventDefault(), this.scrollTop = pageY - e.originalEvent.touches[0].pageY + scrollTop;
       });
       var $identities = element.find("#identities");
       $identities.on("scroll.maps", function() {
@@ -5606,6 +5642,8 @@ TWEEN.Tween = function(object) {
         console.log(e);
       }, function() {
         self.trackGeoLocation();
+      }, function() {
+        self.mapReadyStatus && self.mapController.clearup();
       });
     },
     addNotificationIdentity: function(email, exfee_id, token) {
@@ -5682,7 +5720,7 @@ TWEEN.Tween = function(object) {
       this.smith_id), invitations = exfee.invitations.slice(0);
       for ($identities.empty(); invitation = invitations.shift(); ) if (identity = invitation.identity, 
       smith_id !== identity.id) if (myUserId !== identity.connected_user_id) {
-        var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>');
+        var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>');
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
         div.data("identity", identity);

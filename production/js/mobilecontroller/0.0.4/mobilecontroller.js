@@ -1708,7 +1708,17 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
-        element.on('touchstart.maps', '#nearby .geo-marker', function (e) {
+        element.on('tap.maps', '#nearby .place-marker', function (e) {
+          if (isScroll) { return; }
+          e.preventDefault();
+          if (self.mapReadyStatus) {
+            var id = $(this).data('id'), marker;
+            self.mapController.showPlacePanel(id);
+          }
+        });
+
+        element.on('tap.maps', '#nearby .geo-marker', function (e) {
+          if (isScroll) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var uid = $(this).data('uid');
@@ -1887,6 +1897,24 @@ define('mobilecontroller', function (require, exports, module) {
 
         });
         */
+
+        var pageY = 0, scrollTop = 0, _t;
+        element.on('touchstart.maps', '#nearby', function (e) {
+          isScroll = false;
+          pageY = e.originalEvent.touches[0].pageY;
+          scrollTop = this.scrollTop;
+        });
+        element.on('touchend.maps', '#nearby', function (e) {
+          if (_t) clearTimeout(_t);
+          _t = setTimeout(function () {
+            isScroll = false;
+          }, 233);
+        });
+        element.on('touchmove.maps', '#nearby', function (e) {
+          isScroll = true;
+          e.preventDefault();
+          this.scrollTop = (pageY - e.originalEvent.touches[0].pageY) + scrollTop;
+        });
 
         var $identities = element.find('#identities');
 
@@ -2136,6 +2164,11 @@ define('mobilecontroller', function (require, exports, module) {
           , function () {
               self.trackGeoLocation();
             }
+          , function () {
+              if (self.mapReadyStatus) {
+                self.mapController.clearup();
+              }
+            }
         );
       }
 
@@ -2279,7 +2312,7 @@ define('mobilecontroller', function (require, exports, module) {
             this.updateNotifyProvider(invitation.notification_identities.slice(0));
             continue;
           }
-          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
           div.attr('data-uid', identity.connected_user_id);
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);

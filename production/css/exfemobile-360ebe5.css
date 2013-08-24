@@ -2132,16 +2132,16 @@ button .exfe {
   -webkit-tap-highlight-color: transparent;
   -webkit-transform: translate3d(0, 0, 0);
 }
-#routex #identities-overlay .identity .avatar:after {
+#routex #identities-overlay .identity .avatar-wrapper {
   position: absolute;
   display: block;
-  content: '';
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  width: 44px;
+  height: 44px;
+  top: 0;
+  left: 0;
   background: url('/static/img/portrait_frame_40@2x.png') no-repeat;
   background-size: 100% 100%;
+  pointer-events: none;
 }
 #routex #identities-overlay .identity .detial {
   position: absolute;
@@ -2613,7 +2613,7 @@ button .exfe {
 #routex #nearby > div {
   position: relative;
   padding: 5px 0;
-  height: 40px;
+  height: 44px;
 }
 #routex #nearby > div:before {
   position: absolute;
@@ -2645,6 +2645,10 @@ button .exfe {
   white-space: nowrap;
   font-size: 9px;
   font-weight: 300;
+  width: 100%;
+}
+#routex #nearby .geo-marker {
+  padding: 2px 0;
 }
 #routex #nearby .geo-marker img {
   float: left;
