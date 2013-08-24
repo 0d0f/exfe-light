@@ -588,6 +588,8 @@ define('routexmaps', function (require) {
       delete tiplines[k];
     }
 
+    this.uid = null;
+
     //this.updated = {};
     //this._breadcrumbs = {};
   };
