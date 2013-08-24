@@ -473,7 +473,7 @@ define('routexmaps', function (require) {
       }
 
       if (status) {
-        if (pn === 0 && pe === 1) {
+        if (pn === 0 && gn === 1) {
           this.showIdentityPanel(gk);
         } else {
           var width = $(window).width()
