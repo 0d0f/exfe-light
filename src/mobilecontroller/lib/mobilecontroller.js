@@ -1708,6 +1708,15 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
+        element.on('tap.maps', '#nearby .place-marker', function (e) {
+          if (isScroll) { return; }
+          e.preventDefault();
+          if (self.mapReadyStatus) {
+            var id = $(this).data('id'), marker;
+            self.mapController.showPlacePanel(id);
+          }
+        });
+
         element.on('tap.maps', '#nearby .geo-marker', function (e) {
           if (isScroll) { return; }
           e.preventDefault();
