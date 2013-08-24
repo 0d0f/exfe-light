@@ -648,10 +648,8 @@ define('routexmaps', function (require) {
         tl = tiplines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
 
-        if (curr_uid && (curr_uid == uid) && this._breadcrumbs[curr_uid]) {
-          this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), n <= 1);
-        } else {
-          this.removeTextLabels();
+        if (curr_uid && (curr_uid == uid) && this._breadcrumbs[uid]) {
+          this.showTextLabels(uid, this._breadcrumbs[uid].positions.slice(0), n <= 1);
         }
 
         if (n <= 1) {
@@ -824,7 +822,11 @@ define('routexmaps', function (require) {
       if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {
         $icon.attr('class', 'icon icon-dot' + (time <= 1 ? 'red' : 'grey'));
       }
-      $distance.html(time <= 1 ? '在线' : ((time >= 9 ? '9+' : time) + '<span class="unit">分钟前</span>'));
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
+      $detial.css('visibility', 'visible');
+    } else if (this.updated[uid]) {
+      time = Math.floor((Date.now() / 1000 - this.updated[uid].t) / 60);
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
       $detial.css('visibility', 'visible');
     } else {
       $detial.css('visibility', 'hidden');
