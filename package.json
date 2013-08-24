@@ -296,12 +296,12 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-b69eafe"
+    "sha1": "2a-c8f9620"
   },
   "css": {
     "exfe": "exfe-f30ce90.css",
     "exfemin": "exfe-1959468.min.css",
-    "exfemobile": "exfemobile-80234af.css",
-    "exfemobilemin": "exfemobile-8a64380.min.css"
+    "exfemobile": "exfemobile-360ebe5.css",
+    "exfemobilemin": "exfemobile-cfcdf03.min.css"
   }
 }

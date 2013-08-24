@@ -201,6 +201,7 @@ define('routexmaps', function (require) {
             e.stop();
             rm.hideMyPanel();
             rm.hideIdentityPanel();
+            rm.editPlace();
             rm.showNearBy(e.pixel);
           });
 
@@ -286,6 +287,14 @@ define('routexmaps', function (require) {
 
   proto.fromLatLngToContainerPixel = function (latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
+  };
+
+  proto.showPlacePanel = function (id) {
+    var marker = this.places[id];
+    if (marker) {
+      google.maps.event.trigger(marker, 'mousedown');
+    }
+    this.hideNearBy();
   };
 
   proto.showIdentityPanel = function (uid) {
@@ -413,6 +422,7 @@ define('routexmaps', function (require) {
           pn++;
           pk = k;
           var tmp = $(PLACE_TMP);
+          tmp.attr('data-id', p.data.id);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description);
           nbDiv.append($('<div></div>').append(tmp));
@@ -534,6 +544,51 @@ define('routexmaps', function (require) {
         }
         break;
     }
+  };
+
+  proto.clearup = function () {
+    var k;
+    var places = this.places;
+    for (k in places) {
+      places[k].setMap(null);
+      places[k] = null;
+      delete places[k];
+    }
+
+    var breadcrumbs = this.breadcrumbs;
+    for (k in breadcrumbs) {
+      breadcrumbs[k].setMap(null);
+      breadcrumbs[k] = null;
+      delete breadcrumbs[k];
+    }
+
+    var geoMarkers = this.geoMarkers;
+    for (k in geoMarkers) {
+      geoMarkers[k].setMap(null);
+      geoMarkers[k] = null;
+      delete geoMarkers[k];
+    }
+
+    var routes = this.routes;
+    for (k in routes) {
+      routes[k].setMap(null);
+      routes[k] = null;
+      delete routes[k];
+    }
+
+    this.destinationPlace = null;
+
+    this.removeTextLabels();
+
+    var tiplines = this.tiplines;
+    for (k in tiplines) {
+      this.svgLayer.removeChild(tiplines[k]);
+      tiplines[k] = null;
+      delete tiplines[k];
+    }
+
+    this.updated = {};
+    this._breadcrumbs = {};
   };
 
   proto.removePlace = function (data, isDestination) {
@@ -1153,7 +1208,7 @@ define('routexmaps', function (require) {
 
       if (self.removeInfobox(this)) { return false; }
 
-      var infobox = self.infobox = new GMaps.InfoBox({
+      self.infobox = new GMaps.InfoBox({
           content: self.infoWindowTemplate.replace('{{title}}', this.data.title).replace('{{description}}', this.data.description)
         , maxWidth: 200
         , pixelOffset: new GMaps.Size(-100, -38)
@@ -1166,10 +1221,9 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: 'place-editor'
         , events: function () {
-            var ib = this;
-            ib.editing = false;
+            self.infobox.editing = false;
             GEvent.addDomListener(this.div_, 'touchstart', function () {
-              if (ib.editing) { return; }
+              if (self.infobox.editing) { return; }
               var infoWindown = this.querySelector('.info-windown');
               var title = this.querySelector('.title').innerHTML;
               var description = this.querySelector('.description').innerHTML;
@@ -1182,44 +1236,44 @@ define('routexmaps', function (require) {
               infoWindown.appendChild(cd)
               this.querySelector('.title').className = 'title hide';
               this.querySelector('.description').className = 'description hide';
-              ib.editing = true;
+              self.infobox.editing = true;
             });
           }
       });
-      infobox._marker = this;
-      infobox.open(map, this);
-
-      GEvent.addListenerOnce(this, 'mouseout', function mouseout() {
-        if (infobox.editing) {
-          var data = infobox._marker.data;
-          var title = $('#place-editor input').val().trim();
-          var description = $('#place-editor textarea').val().trim();
-          if (title !== data.title || description !== data.description) {
-            data.title = title;
-            data.description = description;
-            data.updated_at = Math.round(Date.now() / 1000);
-            data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-            self.controller.editPlace(data);
-          }
-          $('#place-editor input, #place-editor textarea').remove();
-          $('#place-editor .title').text(title).removeClass('hide');
-          $('#place-editor .description').text(description).removeClass('hide');
-        }
-        infobox.close();
-        delete infobox._marker;
-        infobox = self.infobox = null;
-      });
+      self.infobox.marker = this;
+      self.infobox.open(map, this);
     });
 
     return m;
   };
 
+  proto.editPlace = function () {
+    if (!this.infobox) { return; }
+    var data = this.infobox.marker.data
+      , myIdentity = this.myIdentity;
+    if (this.infobox.editing) {
+      var title = $('#place-editor input').val().trim();
+      var description = $('#place-editor textarea').val().trim();
+      if (title !== data.title || description !== data.description) {
+        data.title = title;
+        data.description = description;
+        data.updated_at = Math.round(Date.now() / 1000);
+        data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+        this.controller.editPlace(data);
+      }
+      $('#place-editor input, #place-editor textarea').remove();
+      $('#place-editor .title').text(title).removeClass('hide');
+      $('#place-editor .description').text(description).removeClass('hide');
+    }
+    this.removeInfobox();
+  };
+
   proto.removeInfobox = function (marker) {
     var infobox = this.infobox, m;
     if (infobox) {
-      m = infobox._marker;
+      m = infobox.marker;
       infobox.close();
-      delete infobox._marker;
+      delete infobox.marker;
       infobox = this.infobox = null;
       if (m === marker) { return true; }
     }
