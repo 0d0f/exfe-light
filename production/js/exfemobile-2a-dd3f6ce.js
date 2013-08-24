@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 01:08:22 */
+/*! mobile@2a 2013-08-24 02:08:44 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4159,9 +4159,9 @@ TWEEN.Tween = function(object) {
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
-    n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
-    b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] ? this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n) : this.removeTextLabels(), 
+    n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], gm || (gm = this.drawGeoMarker(this._breadcrumbs[uid])), 
+    this.distanceMatrix(uid, gm, dp, n), b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    curr_uid && curr_uid == uid && this._breadcrumbs[uid] && this.showTextLabels(uid, this._breadcrumbs[uid].positions.slice(0), 1 >= n), 
     1 >= n) {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({
@@ -4242,7 +4242,9 @@ TWEEN.Tween = function(object) {
       result.rotate = r, $distance.html(result.text), $icon.css("-webkit-transform", "rotate(" + r + "deg)"), 
       $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
-    $distance.html(1 >= time ? "在线" : (time >= 9 ? "9+" : time) + '<span class="unit">分钟前</span>'), 
+    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟前</span>' : Math.floor(time / 60) + '<span class="unit">小时前</span>'), 
+    $detial.css("visibility", "visible")) : this.updated[uid] ? (time = Math.floor((Date.now() / 1e3 - this.updated[uid].t) / 60), 
+    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟前</span>' : Math.floor(time / 60) + '<span class="unit">小时前</span>'), 
     $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
     var destinationPlace = this.destinationPlace, isme = this.myUserId == uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -4317,7 +4319,8 @@ TWEEN.Tween = function(object) {
           strokeOpacity: .66,
           strokeWeight: 1,
           scale: .5
-        })), label.set("text", t + "分钟前"), prev = p, i++;
+        })), 60 > t ? label.set("text", t + "分钟前") : label.set("text", Math.floor(t / 60) + "小时前"), 
+        prev = p, i++;
       }
       for (var len = labels.length - 1; len > i; len--) label = labels[len], label && (label.marker.setMap(null), 
       label.setMap(null)), labels.splice(len, 1);
@@ -4329,8 +4332,8 @@ TWEEN.Tween = function(object) {
   }, proto.updateBreadcrumbs = function(uid) {
     var data, b, p, gps, coords = [];
     if (data = this._breadcrumbs[uid]) {
-      var positions0 = data.positions.slice(0), positions1 = positions0.slice(0), t = Math.floor((Date.now() / 1e3 - positions0[0].t) / 60);
-      if (this.showTextLabels(uid, positions0, 1 >= t), b = this.breadcrumbs[uid]) {
+      var positions0 = data.positions.slice(0), positions1 = positions0.slice(0);
+      if (b = this.breadcrumbs[uid]) {
         for (;p = positions1.pop(); ) gps = p.gps, coords.push(this.toLatLng(gps[0], gps[1]));
         b.setPath(coords);
       }
