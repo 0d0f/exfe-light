@@ -291,8 +291,8 @@ define('routexmaps', function (require) {
   proto.showPlacePanel = function (id) {
     var marker = this.places[id];
     if (marker) {
-      google.maps.event.trigger(marker, 'mousedown');
-      //this.bindEventsForPoint(marker);
+      google.maps.event.trigger(marker, 'mousedown', true);
+      this.bindEventsForPoint(marker);
     }
     this.hideNearBy();
   };
@@ -1203,7 +1203,7 @@ define('routexmaps', function (require) {
       })
     , GEvent = GMaps.event;
 
-    GEvent.addListener(m, 'mousedown', function mousedown(e) {
+    GEvent.addListener(m, 'mousedown', function mousedown(e, status) {
       e && e.stop();
 
       if (self.removeInfobox(this)) { return false; }
@@ -1243,7 +1243,7 @@ define('routexmaps', function (require) {
       this.infobox = self.infobox;
       this.infobox._marker = this;
       this.infobox.open(map, this);
-      self.bindEventsForPoint(this);
+      if (!status) self.bindEventsForPoint(this);
     });
 
     return m;
