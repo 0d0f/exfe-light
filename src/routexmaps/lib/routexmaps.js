@@ -1320,8 +1320,8 @@ define('routexmaps', function (require) {
               type: 'rect'
             , rect: [0, 0, 22, 22]
           }
-        , optimized: false
         */
+        , optimized: false
       });
       geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
