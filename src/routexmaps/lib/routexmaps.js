@@ -1240,7 +1240,6 @@ define('routexmaps', function (require) {
             });
           }
       });
-      this.infobox = infobox;
       infobox._marker = this;
       infobox.open(map, this);
 
@@ -1251,11 +1250,13 @@ define('routexmaps', function (require) {
   };
 
   proto.bindEventsForPoint = function (place) {
+    var self = this, infobox = self.infobox;
     var myIdentity = this.myIdentity;
+    console.log('bind mouseout');
     google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
-      var infobox = this.infobox;
+      console.log('mouseout');
       if (infobox.editing) {
-        var data = infobox._marker.data;
+        var data = this.data;
         var title = $('#place-editor input').val().trim();
         var description = $('#place-editor textarea').val().trim();
         if (title !== data.title || description !== data.description) {
@@ -1271,7 +1272,7 @@ define('routexmaps', function (require) {
       }
       infobox.close();
       delete infobox._marker;
-      infobox = this.infobox = null;
+      infobox = self.infobox = null;
     });
   };
 
