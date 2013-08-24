@@ -289,11 +289,12 @@ define('routexmaps', function (require) {
   };
 
   proto.showPlacePanel = function (id) {
-    this.hideNearBy();
     var marker = this.places[id];
     if (marker) {
+      this.bindEventsForPoint(marker);
       google.maps.event.trigger(marker, 'mousedown');
     }
+    this.hideNearBy();
   };
 
   proto.showIdentityPanel = function (uid) {
@@ -1243,29 +1244,35 @@ define('routexmaps', function (require) {
       infobox._marker = this;
       infobox.open(map, this);
 
-      GEvent.addListenerOnce(this, 'mouseout', function mouseout() {
-        if (infobox.editing) {
-          var data = infobox._marker.data;
-          var title = $('#place-editor input').val().trim();
-          var description = $('#place-editor textarea').val().trim();
-          if (title !== data.title || description !== data.description) {
-            data.title = title;
-            data.description = description;
-            data.updated_at = Math.round(Date.now() / 1000);
-            data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-            self.controller.editPlace(data);
-          }
-          $('#place-editor input, #place-editor textarea').remove();
-          $('#place-editor .title').text(title).removeClass('hide');
-          $('#place-editor .description').text(description).removeClass('hide');
-        }
-        infobox.close();
-        delete infobox._marker;
-        infobox = self.infobox = null;
-      });
+      self.bindEventsForPoint(this);
     });
 
     return m;
+  };
+
+  proto.bindEventsForPoint = function (place) {
+    var myIdentity = this.myIdentity;
+    var infobox = place.infobox;
+    google.maps.event.addListenerOnce(place, 'mouseout', function mouseout() {
+      if (infobox.editing) {
+        var data = infobox._marker.data;
+        var title = $('#place-editor input').val().trim();
+        var description = $('#place-editor textarea').val().trim();
+        if (title !== data.title || description !== data.description) {
+          data.title = title;
+          data.description = description;
+          data.updated_at = Math.round(Date.now() / 1000);
+          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+          self.controller.editPlace(data);
+        }
+        $('#place-editor input, #place-editor textarea').remove();
+        $('#place-editor .title').text(title).removeClass('hide');
+        $('#place-editor .description').text(description).removeClass('hide');
+      }
+      infobox.close();
+      delete infobox._marker;
+      infobox = self.infobox = null;
+    });
   };
 
   proto.removeInfobox = function (marker) {
