@@ -201,6 +201,7 @@ define('routexmaps', function (require) {
             e.stop();
             rm.hideMyPanel();
             rm.hideIdentityPanel();
+            rm.editPlace();
             rm.showNearBy(e.pixel);
           });
 
