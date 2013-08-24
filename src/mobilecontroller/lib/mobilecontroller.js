@@ -1708,7 +1708,8 @@ define('mobilecontroller', function (require, exports, module) {
           self.tapElement = this;
         });
 
-        element.on('touchstart.maps', '#nearby .geo-marker', function (e) {
+        element.on('tap.maps', '#nearby .geo-marker', function (e) {
+          if (isScroll) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var uid = $(this).data('uid');
@@ -1887,6 +1888,24 @@ define('mobilecontroller', function (require, exports, module) {
 
         });
         */
+
+        var pageY = 0, scrollTop = 0, _t;
+        element.on('touchmove.maps', '#nearby', function (e) {
+          isScroll = false;
+          pageY = e.pageY;
+          scrollTop = this.scrollTop;
+        });
+        element.on('touchmove.maps', '#nearby', function (e) {
+          if (_t) clearTimeout(_t);
+          _t = setTimeout(function () {
+            isScroll = false;
+          }, 233);
+        });
+        element.on('touchmove.maps', '#nearby', function (e) {
+          isScroll = true;
+          e.preventDefault();
+          this.scrollTop = (pageY - e.pageY) + scrollTop;
+        });
 
         var $identities = element.find('#identities');
 
