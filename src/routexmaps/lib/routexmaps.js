@@ -192,17 +192,19 @@ define('routexmaps', function (require) {
           GEvent.addListener(map, 'bounds_changed', function () {
             GEvent.trigger(map, 'zoom_changed');
           });
-
           GEvent.addListener(map, 'zoom_changed', function () {
             rm.contains();
+          });
+          GEvent.addListener(map, 'mousedown', function (e) {
+            e.stop();
+            rm.hideMyPanel();
+            rm.hideIdentityPanel();
+            rm.editPlace();
           });
 
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
-              rm.hideMyPanel();
-              rm.hideIdentityPanel();
-              rm.editPlace();
               var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
