@@ -432,6 +432,9 @@ define('routexstream', function (require) {
             shake_start_callback = start_callback;
             shake_end_callback   = end_callback;
         },
+        stop: function () {
+          stream.kill();
+        },
         getGeo: getGeo,
         startGeo: startGeo,
         stopGeo: stopGeo,
