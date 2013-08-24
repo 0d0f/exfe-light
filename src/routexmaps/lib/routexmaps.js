@@ -199,6 +199,7 @@ define('routexmaps', function (require) {
 
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
+            rm.hideMyPanel();
             rm.hideIdentityPanel();
             rm.showNearBy(e.pixel);
           });
@@ -222,8 +223,7 @@ define('routexmaps', function (require) {
           ///var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             //console.dir(e)
-            rm.hideMyPanel();
-            rm.hideNearBy();
+            //rm.hideNearBy();
 
             /*
             MD_TIME = Date.now();
@@ -380,6 +380,10 @@ define('routexmaps', function (require) {
     return d <= 100;
   };
   proto.showNearBy = function (point) {
+    if ($('#nearby').length) {
+      this.hideNearBy();
+      return;
+    }
     if (point) {
       var center = point
         , status = false
