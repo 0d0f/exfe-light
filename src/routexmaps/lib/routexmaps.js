@@ -1318,12 +1318,10 @@ define('routexmaps', function (require) {
          */
         , animation: 2
         , icon: this.icons.arrowGrey
-        /*
         , shape: {
               type: 'rect'
-            , rect: [0, 0, 22, 22]
+            , rect: [0, 0, 1, 1]
           }
-        */
         , optimized: false
       });
       geoLocation._status = 0;
