@@ -1208,7 +1208,7 @@ define('routexmaps', function (require) {
 
       if (self.removeInfobox(this)) { return false; }
 
-      var infobox = self.infobox = new GMaps.InfoBox({
+      self.infobox = new GMaps.InfoBox({
           content: self.infoWindowTemplate.replace('{{title}}', this.data.title).replace('{{description}}', this.data.description)
         , maxWidth: 200
         , pixelOffset: new GMaps.Size(-100, -38)
@@ -1221,9 +1221,9 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: 'place-editor'
         , events: function () {
-            infobox.editing = false;
+            m.infobox.editing = false;
             GEvent.addDomListener(this.div_, 'touchstart', function () {
-              if (infobox.editing) { return; }
+              if (m.infobox.editing) { return; }
               var infoWindown = this.querySelector('.info-windown');
               var title = this.querySelector('.title').innerHTML;
               var description = this.querySelector('.description').innerHTML;
@@ -1236,14 +1236,13 @@ define('routexmaps', function (require) {
               infoWindown.appendChild(cd)
               this.querySelector('.title').className = 'title hide';
               this.querySelector('.description').className = 'description hide';
-              infobox.editing = true;
+              m.infobox.editing = true;
             });
           }
       });
-      infobox._marker = this;
-      this.infobox = infobox;
-      infobox.open(map, this);
-
+      this.infobox._marker = this;
+      this.infobox = self.infobox;
+      this.infobox.open(map, this);
       self.bindEventsForPoint(this);
     });
 
