@@ -202,12 +202,12 @@ define('routexmaps', function (require) {
             rm.hideIdentityPanel();
           });
 
+          /*
           function clear(t) {
             clearTimeout(t);
             t = null;
           }
 
-          /*
           GEvent.addDomListener(mapDiv, 'mousedown', function (e) {
             MD_TIME = Date.now();
             clear(t);
@@ -221,8 +221,8 @@ define('routexmaps', function (require) {
           ///var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             //console.dir(e)
-            //rm.hideMyPanel();
-            //rm.hideNearBy();
+            rm.hideMyPanel();
+            rm.hideNearBy();
 
             /*
             MD_TIME = Date.now();
