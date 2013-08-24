@@ -61,9 +61,9 @@
 
     failBack = function (cb, ttl) {
       failTimeout = setTimeout(function () {
+        clearTimeout(failTimeout);
         currentTime = now();
-        // 时间摄长点，避免两次弹窗
-        if (currentTime - startTime < 1000) {
+        if (currentTime - startTime < 500) {
           if (cb) {
             cb();
           } else {
@@ -309,8 +309,10 @@
                   handle();
                 } else {
                   window.launchApp(app_url + c[1], function () {
-                    window.location = '/?redirect' + location.hash;
-                  }, 500);
+                    setTimeout(function () {
+                      window.location = '/?redirect' + location.hash;
+                    }, 200)
+                  });
                 }
               } else {
                 handle();
@@ -435,7 +437,6 @@
   Director.dispatch = function (url) {
     /* jshint -W004 */
     delete _ENV_._data_;
-    window.noExfeApp = !!url.match(/\?redirect/);
     var params;
     if (routes.home.test(url)) {
       handle();
@@ -462,6 +463,7 @@
       }
 
     } else if ((params = url.match(routes.resolveToken))) {
+      window.noExfeApp = !!params[1];
       var __t;
       if (window.noExfeApp) {
         __t = localStorage.getItem('tmp-token');
@@ -494,10 +496,11 @@
           });
       }
     } else if ((params = url.match(routes.crossTokenForPhone))) {
+      window.noExfeApp = !!params[1];
       /* jshint -W003 */
       var cross_id = params[2]
         , ctoken = params[3]
-        , cats = localStorage.getItem('cats')
+        , cats = localStorage.cats
         , token;
 
       if (cats) {
@@ -516,14 +519,11 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.crossToken))) {
+      window.noExfeApp = !!params[1];
       var ctoken = params[2]
-        , cats = localStorage.getItem('cats')
+        , cats = localStorage.cats
         , data = { invitation_token: ctoken }
         , token;
-
-      if (cats) {
-        cats = JSON.parse(cats);
-      }
 
       if (cats && (token = cats[ctoken])) {
         data.cross_access_token = token;
