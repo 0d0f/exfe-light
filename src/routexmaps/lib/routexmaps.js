@@ -218,12 +218,13 @@ define('routexmaps', function (require) {
           });
           */
 
-          var time = 377, t, MD_TIME;
+          ///var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             console.dir(e)
             rm.hideMyPanel();
             rm.hideNearBy();
 
+            /*
             MD_TIME = Date.now();
             clear(t);
             t = setTimeout(function () {
@@ -232,18 +233,21 @@ define('routexmaps', function (require) {
                 , point = { x: touch.pageX, y: touch.pageY };
               rm.showNearBy(point);
             }, time);
+            */
 
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              clear(t);
+              //clear(t);
               rm.hideTiplines();
             });
           });
+          /*
           GEvent.addDomListener(mapDiv, 'touchend', function () {
             if (Date.now() - MD_TIME < 377) {
               clear(t);
             }
           });
+          */
 
           GEvent.removeListener(initListener);
 
@@ -387,7 +391,6 @@ define('routexmaps', function (require) {
         , destinationPosition = destinationPlace && destinationPlace.getPosition()
         , list = []
         , now = Date.now() / 1000
-        , n = 0
         , latlng
         , uid, p;
       console.log('-----------------------', geoPosition, destinationPosition);
