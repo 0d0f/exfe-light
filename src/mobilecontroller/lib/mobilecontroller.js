@@ -1890,12 +1890,12 @@ define('mobilecontroller', function (require, exports, module) {
         */
 
         var pageY = 0, scrollTop = 0, _t;
-        element.on('touchmove.maps', '#nearby', function (e) {
+        element.on('touchstart.maps', '#nearby', function (e) {
           isScroll = false;
           pageY = e.originalEvent.touches[0].pageY;
           scrollTop = this.scrollTop;
         });
-        element.on('touchmove.maps', '#nearby', function (e) {
+        element.on('touchend.maps', '#nearby', function (e) {
           if (_t) clearTimeout(_t);
           _t = setTimeout(function () {
             isScroll = false;
