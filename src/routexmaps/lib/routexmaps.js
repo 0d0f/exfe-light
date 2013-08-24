@@ -387,6 +387,7 @@ define('routexmaps', function (require) {
         , destinationPosition = destinationPlace && destinationPlace.getPosition()
         , list = []
         , now = Date.now() / 1000
+        , n = 0
         , latlng
         , uid, p;
       console.log('-----------------------', geoPosition, destinationPosition);
@@ -1122,6 +1123,7 @@ define('routexmaps', function (require) {
       })
     , GEvent = GMaps.event;
 
+    /*
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
       e && e.stop();
 
@@ -1184,6 +1186,7 @@ define('routexmaps', function (require) {
         infobox = self.infobox = null;
       });
     });
+    */
 
     return m;
   };
