@@ -620,7 +620,7 @@
               , function (d) {
                   var code = d.meta.code
                     , errorType = d.meta.errorType;
-                  if (code === 400 && errorType === 'error_user_token') {
+                  if (code === 400) {
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
