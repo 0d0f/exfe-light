@@ -2030,6 +2030,7 @@ define('mobilecontroller', function (require, exports, module) {
                     } else {
                       mc._breadcrumbs[id] = d;
                     }
+                    mc.updated[id] = mc._breadcrumbs[id].positions[0];
                   }
                 }
               }
