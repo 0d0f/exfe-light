@@ -1221,10 +1221,9 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: 'place-editor'
         , events: function () {
-            var ib = this;
-            ib.editing = false;
+            infobox.editing = false;
             GEvent.addDomListener(this.div_, 'touchstart', function () {
-              if (ib.editing) { return; }
+              if (infobox.editing) { return; }
               var infoWindown = this.querySelector('.info-windown');
               var title = this.querySelector('.title').innerHTML;
               var description = this.querySelector('.description').innerHTML;
@@ -1237,7 +1236,7 @@ define('routexmaps', function (require) {
               infoWindown.appendChild(cd)
               this.querySelector('.title').className = 'title hide';
               this.querySelector('.description').className = 'description hide';
-              ib.editing = true;
+              infobox.editing = true;
             });
           }
       });
