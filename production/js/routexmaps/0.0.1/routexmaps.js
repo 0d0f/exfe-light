@@ -952,6 +952,7 @@ define('routexmaps', function (require) {
         , ignore = 0
         , label
         , marker
+        , j = 0
         , p, t, n, prev;
 
       while ((p = ps.shift())) {
@@ -969,7 +970,7 @@ define('routexmaps', function (require) {
 
         if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
 
-          if (i === 0 && bool) { continue; }
+          if (j === 0 && bool) { j = 1; continue; }
 
           start = t;
           label = labels[i];
@@ -1009,6 +1010,7 @@ define('routexmaps', function (require) {
       for (var len = labels.length - 1; len > i; len--) {
         label = labels[len];
         if (label) {
+          label.marker.setMap(null);
           label.setMap(null);
         }
         labels.splice(len, 1);
@@ -1043,6 +1045,7 @@ define('routexmaps', function (require) {
   };
 
   proto.showBreadcrumbs = function (uid) {
+    this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
       , puid = this.uid
@@ -1050,9 +1053,6 @@ define('routexmaps', function (require) {
       , pb;
 
     delete this.uid;
-
-    this.removeTextLabels();
-
     if (!b) {
       b = bds[uid] = this.addBreadcrumbs();
     }
@@ -1064,7 +1064,7 @@ define('routexmaps', function (require) {
     if (uid !== puid) {
       pb = bds[puid];
       if (pb) {
-        pb.setMap(null)
+        pb.setMap(null);
         delete bds[puid];
         pb = null;
         //pb.setVisible(false);
