@@ -202,8 +202,19 @@ define('routexmaps', function (require) {
             rm.hideMyPanel();
             rm.hideIdentityPanel();
             rm.editPlace();
-            rm.showNearBy(e.pixel);
+            //rm.showNearBy(e.pixel);
           });
+
+          var px, py;
+          $(mapDiv)
+            .on('touchstart.maps', function (e) {
+              var touch = e.touches[0];
+              px = touch.pageX;
+              py = touch.pageY;
+            })
+            .on('tap.maps', function (e) {
+              rm.showNearBy({ x: px, y: py });
+            });
 
           /*
           function clear(t) {
@@ -314,7 +325,7 @@ define('routexmaps', function (require) {
         $otherInfo.find('.update')
           .removeClass('hide')
           .find('.time')
-          .text(t);
+          .html(t < 60 ? (t + '分钟') : (Math.floor(t / 60) + '小时'));
         $otherInfo.find('.please-update')
           .attr('data-external-username', identity.external_username)
           .attr('data-provider', identity.provider)
@@ -383,10 +394,11 @@ define('routexmaps', function (require) {
   proto.hideNearBy = function () {
     $('#nearby').remove();
   };
-  proto.distance100px = function (p0, b) {
+  // 30pt = 60px
+  proto.distance60px = function (p0, b) {
     var a = this.fromLatLngToContainerPixel(p0)
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return d <= 100;
+    return d <= 60;
   };
   proto.showNearBy = function (point) {
     if ($('#nearby').length) {
@@ -416,7 +428,7 @@ define('routexmaps', function (require) {
       for (var k in places) {
         p = places[k];
         latlng = p.getPosition()
-        if (this.distance100px(latlng, center)) {
+        if (this.distance60px(latlng, center)) {
           if (!status) { status = true; }
           //list.places.push(p)
           pn++;
@@ -432,7 +444,7 @@ define('routexmaps', function (require) {
       for (var k in geoMarkers) {
         p = geoMarkers[k];
         latlng = p.getPosition();
-        if (this.distance100px(latlng, center)) {
+        if (this.distance60px(latlng, center)) {
           if (!status) { status = true; }
           //list.geomarkers.push(p);
           gn++;
@@ -504,25 +516,26 @@ define('routexmaps', function (require) {
       , isDelete = action && action === 'delete'
       , hasTags = data.tags
       , tags = hasTags && data.tags.slice(0)
-      , tag;
+      , tag, dest;
 
     console.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
+        var t = 0;
 
         if (hasTags) {
           while ((tag = tags.shift())) {
             if (tag === XPLACE) {
-              break;
+              t ^= 1; // t = 1
+            } else if (tag === DESTINATION) {
+              t ^= 2; // t = 2
+              dest = tag;
             }
-
-            if (tag === DESTINATION) {
-              break;
-            }
+            // has xplace and destination t = 3
           }
         }
 
-        isDelete ? this.removePlace(data, tag === DESTINATION) : this.drawPlace(data, tag);
+        isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
         break;
 
       case ROUTE:
@@ -587,8 +600,10 @@ define('routexmaps', function (require) {
       delete tiplines[k];
     }
 
-    this.updated = {};
-    this._breadcrumbs = {};
+    this.uid = null;
+
+    //this.updated = {};
+    //this._breadcrumbs = {};
   };
 
   proto.removePlace = function (data, isDestination) {
@@ -655,7 +670,7 @@ define('routexmaps', function (require) {
     return p;
   };
 
-  proto.drawPlace = function (data, tag) {
+  proto.drawPlace = function (data, t) {
     var places = this.places
       , id = data.id, p, d, latlng;
     if (places.hasOwnProperty(id)) {
@@ -671,10 +686,12 @@ define('routexmaps', function (require) {
     p.setPosition(latlng);
     p.data = data;
 
-    if (tag === XPLACE) {
+    if (t === 1 || t === 3) {
       p.setIcon(this.icons.xplaceMarker);
       p.setZIndex(MAX_INDEX - 1);
-    } else if (tag === DESTINATION) {
+    }
+
+    if (t === 2 || t === 3) {
       // 如果还没 GPS 自动定位到 destination
       var geoLocation = this.geoLocation;
       var zIndex = MAX_INDEX;
@@ -692,14 +709,16 @@ define('routexmaps', function (require) {
           }
           this.destinationPlace = p;
         } else {
-          zIndex -= 5;
+          zIndex = MAX_INDEX - 5;
           icon = this.icons.placeMarker;
         }
       } else {
         this.destinationPlace = p;
       }
-      p.setIcon(icon);
-      p.setZIndex(zIndex);
+      if (t !== 3) {
+        p.setIcon(icon);
+        p.setZIndex(zIndex);
+      }
     }
   };
 
@@ -866,7 +885,7 @@ define('routexmaps', function (require) {
     var self = this
       , gm = new google.maps.Marker({
             map: this.map
-          , animation: 2
+          //, animation: 2
           , zIndex: MAX_INDEX - 2
           , icon: this.icons.dotGrey
           , shape: {
@@ -1189,7 +1208,7 @@ define('routexmaps', function (require) {
       , myIdentity = this.myIdentity
       , m = new GMaps.Marker({
           map: map
-        , animation: 2
+        //, animation: 2
         //, visible: false
         , zIndex: MAX_INDEX - 5
         , icon: new GMaps.MarkerImage(
@@ -1389,7 +1408,7 @@ define('routexmaps', function (require) {
          *  b: 4
          *  d: 3
          */
-        , animation: 2
+        //, animation: 2
         , icon: this.icons.arrowGrey
         , shape: {
               type: 'rect'
