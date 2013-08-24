@@ -291,8 +291,7 @@ define('routexmaps', function (require) {
   proto.showPlacePanel = function (id) {
     var marker = this.places[id];
     if (marker) {
-      google.maps.event.trigger(marker, 'mousedown', true);
-      this.bindEventsForPoint(marker);
+      google.maps.event.trigger(marker, 'mousedown');
     }
     this.hideNearBy();
   };
@@ -1204,9 +1203,7 @@ define('routexmaps', function (require) {
     , GEvent = GMaps.event;
 
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
-      if (e && e !== true) {
-        e.stop();
-      }
+      e && e.stop();
 
       if (self.removeInfobox(this)) { return false; }
 
@@ -1223,9 +1220,9 @@ define('routexmaps', function (require) {
         , zIndex: 610
         , boxId: 'place-editor'
         , events: function () {
-            m.infobox.editing = false;
+            self.infobox.editing = false;
             GEvent.addDomListener(this.div_, 'touchstart', function () {
-              if (m.infobox.editing) { return; }
+              if (self.infobox.editing) { return; }
               var infoWindown = this.querySelector('.info-windown');
               var title = this.querySelector('.title').innerHTML;
               var description = this.querySelector('.description').innerHTML;
@@ -1238,54 +1235,44 @@ define('routexmaps', function (require) {
               infoWindown.appendChild(cd)
               this.querySelector('.title').className = 'title hide';
               this.querySelector('.description').className = 'description hide';
-              m.infobox.editing = true;
+              self.infobox.editing = true;
             });
           }
       });
-      this.infobox = self.infobox;
-      this.infobox._marker = this;
-      this.infobox.open(map, this);
-      if (!(status === true)) self.bindEventsForPoint(this);
+      self.infobox.marker = this;
+      self.infobox.open(map, this);
     });
 
     return m;
   };
 
-  proto.bindEventsForPoint = function (place) {
-    var self = this;
-    var myIdentity = this.myIdentity;
-    console.log('bind mouseout');
-    google.maps.event.addListener(place, 'mouseout', function mouseout() {
-      console.log('mouseout');
-      if (this.infobox.editing) {
-        var data = this.data;
-        var title = $('#place-editor input').val().trim();
-        var description = $('#place-editor textarea').val().trim();
-        if (title !== data.title || description !== data.description) {
-          data.title = title;
-          data.description = description;
-          data.updated_at = Math.round(Date.now() / 1000);
-          data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-          self.controller.editPlace(data);
-        }
-        $('#place-editor input, #place-editor textarea').remove();
-        $('#place-editor .title').text(title).removeClass('hide');
-        $('#place-editor .description').text(description).removeClass('hide');
+  proto.editPlace = function (place) {
+    if (!this.infobox) { return; }
+    var data = place.data
+      , myIdentity = this.myIdentity;
+    if (this.infobox.editing) {
+      var title = $('#place-editor input').val().trim();
+      var description = $('#place-editor textarea').val().trim();
+      if (title !== data.title || description !== data.description) {
+        data.title = title;
+        data.description = description;
+        data.updated_at = Math.round(Date.now() / 1000);
+        data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+        self.controller.editPlace(data);
       }
-      this.infobox.close();
-      delete this.infobox._marker;
-      delete this.infobox;
-      self.infobox = null;
-    });
+      $('#place-editor input, #place-editor textarea').remove();
+      $('#place-editor .title').text(title).removeClass('hide');
+      $('#place-editor .description').text(description).removeClass('hide');
+    }
+    this.removeInfobox();
   };
 
   proto.removeInfobox = function (marker) {
     var infobox = this.infobox, m;
     if (infobox) {
-      m = infobox._marker;
+      m = infobox.marker;
       infobox.close();
-      delete infobox._marker;
-      delete m.infobox;
+      delete infobox.marker;
       infobox = this.infobox = null;
       if (m === marker) { return true; }
     }
