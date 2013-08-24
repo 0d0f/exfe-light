@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 12:08:40 */
+/*! mobile@2a 2013-08-24 12:08:49 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4169,14 +4169,14 @@ TWEEN.Tween = function(object) {
         icons: [ {
           icon: {
             path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-            fillColor: "#FF7E98",
-            fillOpacity: .8,
+            fillColor: "#ff325b",
+            fillOpacity: .5,
             strokeColor: "#fff",
-            strokeOpacity: .8,
+            strokeOpacity: .66,
             strokeWeight: 1,
             scale: .5
           },
-          repeat: "25px",
+          repeat: "16px",
           offset: "0"
         } ]
       }), isme) continue;
@@ -4188,14 +4188,14 @@ TWEEN.Tween = function(object) {
         icons: [ {
           icon: {
             path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-            fillColor: "#b2b2b2",
-            fillOpacity: .8,
+            fillColor: "#7f7f7f",
+            fillOpacity: .5,
             strokeColor: "#fff",
-            strokeOpacity: .8,
+            strokeOpacity: .66,
             strokeWeight: 1,
             scale: .5
           },
-          repeat: "25px",
+          repeat: "16px",
           offset: "0"
         } ]
       }), isme) continue;
@@ -4267,7 +4267,7 @@ TWEEN.Tween = function(object) {
     var sw = this.fromContainerPixelToLatLng(new google.maps.Point(c.x - maxd - 50, c.y - maxd - 50)), ne = this.fromContainerPixelToLatLng(new google.maps.Point(c.x + maxd + 50, c.y + maxd + 50));
     return bounds.extend(sw), bounds.extend(center), bounds.extend(ne), bounds;
   }, proto.addBreadcrumbs = function() {
-    var color = "#b2b2b2", alpha = .8, p = new google.maps.Polyline({
+    var color = "#7f7f7f", alpha = .5, p = new google.maps.Polyline({
       map: this.map,
       visible: !1,
       index: MAX_INDEX - 5,
@@ -4278,12 +4278,12 @@ TWEEN.Tween = function(object) {
           fillColor: color,
           fillOpacity: alpha,
           strokeColor: "#fff",
-          strokeOpacity: .8,
+          strokeOpacity: .66,
           strokeWeight: 1,
           scale: .5
         },
         fixedRotation: !0,
-        repeat: "25px",
+        repeat: "16px",
         offset: "0"
       } ]
     });
@@ -4308,10 +4308,10 @@ TWEEN.Tween = function(object) {
         }), label.marker = marker), marker && (marker.setPosition(this.toLatLng(p.gps[0], p.gps[1])), 
         marker.setIcon({
           path: "M0,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 z",
-          fillColor: bool ? "#FF7E98" : "#b2b2b2",
-          fillOpacity: .8,
+          fillColor: bool ? "#ff325b" : "#7f7f7f",
+          fillOpacity: .5,
           strokeColor: "#fff",
-          strokeOpacity: .8,
+          strokeOpacity: .66,
           strokeWeight: 1,
           scale: .5
         })), label.set("text", t + "分钟前"), prev = p, i++;
