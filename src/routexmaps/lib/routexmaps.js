@@ -1247,9 +1247,9 @@ define('routexmaps', function (require) {
     return m;
   };
 
-  proto.editPlace = function (place) {
+  proto.editPlace = function () {
     if (!this.infobox) { return; }
-    var data = place.data
+    var data = this.infobox.marker.data
       , myIdentity = this.myIdentity;
     if (this.infobox.editing) {
       var title = $('#place-editor input').val().trim();
