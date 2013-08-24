@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 01:08:20 */
+/*! mobile@2a 2013-08-24 01:08:40 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4161,7 +4161,7 @@ TWEEN.Tween = function(object) {
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
     n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], this.distanceMatrix(uid, gm, dp, n), 
     b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
-    curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] && this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n), 
+    curr_uid && curr_uid == uid && this._breadcrumbs[curr_uid] ? this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), 1 >= n) : this.removeTextLabels(), 
     1 >= n) {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
       b && b.setOptions({

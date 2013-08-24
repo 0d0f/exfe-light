@@ -650,6 +650,8 @@ define('routexmaps', function (require) {
 
         if (curr_uid && (curr_uid == uid) && this._breadcrumbs[curr_uid]) {
           this.showTextLabels(curr_uid, this._breadcrumbs[curr_uid].positions.slice(0), n <= 1);
+        } else {
+          this.removeTextLabels();
         }
 
         if (n <= 1) {
