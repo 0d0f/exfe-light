@@ -394,9 +394,11 @@ define('routexmaps', function (require) {
         , geoPosition = geoLocation && geoLocation.getPosition()
         , destinationPlace = this.destinationPlace
         , destinationPosition = destinationPlace && destinationPlace.getPosition()
-        , list = []
+        //, list = { places: [], geomarkers: [] }
         , now = Date.now() / 1000
         , latlng
+        , pn = 0, gn = 0
+        , pk, gk
         , uid, p;
       console.log('-----------------------', geoPosition, destinationPosition);
 
@@ -407,6 +409,9 @@ define('routexmaps', function (require) {
         latlng = p.getPosition()
         if (this.distance100px(latlng, center)) {
           if (!status) { status = true; }
+          //list.places.push(p)
+          pn++;
+          pk = k;
           var tmp = $(PLACE_TMP);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description);
@@ -419,6 +424,9 @@ define('routexmaps', function (require) {
         latlng = p.getPosition();
         if (this.distance100px(latlng, center)) {
           if (!status) { status = true; }
+          //list.geomarkers.push(p);
+          gn++;
+          gk = k;
           var id = p.data.id.split('@')[0];
           var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
           var tmp = $(IDENTITY_TMP);
@@ -447,7 +455,11 @@ define('routexmaps', function (require) {
               str += '<span>与您相距' + dm + '</span>'
             }
           } else {
-            str += '<span>' + n + '分钟前所处位置</span>'
+            if (n < 60) {
+              str += '<span>' + n + '分钟前所处位置</span>'
+            } else {
+              str += '<span>' + Math.floor(n / 60) + '小时前所处位置</span>'
+            }
             if (dd) {
               str += '<span>距离目的地' + dd + '</span>';
             }
@@ -461,13 +473,17 @@ define('routexmaps', function (require) {
       }
 
       if (status) {
-        var width = $(window).width()
-          , height = $(window).height();
-        nbDiv.css({
-            left: (width - 200 + 50) / 2
-          , top: (height - 132) / 2
-        });
-        $('#routex').append(nbDiv);
+        if (pn === 0 && pe === 1) {
+          this.showIdentityPanel(gk);
+        } else {
+          var width = $(window).width()
+            , height = $(window).height();
+          nbDiv.css({
+              left: (width - 200 + 50) / 2
+            , top: (height - 132) / 2
+          });
+          $('#routex').append(nbDiv);
+        }
       }
     }
   };
