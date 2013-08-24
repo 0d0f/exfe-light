@@ -205,7 +205,7 @@ define('routexmaps', function (require) {
             //rm.showNearBy(e.pixel);
           });
 
-          mapDiv.on('tap.maps', function (e) {
+          $(mapDiv).on('tap.maps', function (e) {
             var touch = e.originalEvent.touches[0];
             rm.showNearBy({ x: touch.pageX, y: touch.pageY });
           });
