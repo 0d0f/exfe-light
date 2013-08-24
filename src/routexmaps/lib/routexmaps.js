@@ -200,6 +200,7 @@ define('routexmaps', function (require) {
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
             rm.hideIdentityPanel();
+            rm.showNearBy(e.pixel);
           });
 
           function clear(t) {
