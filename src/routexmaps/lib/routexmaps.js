@@ -800,7 +800,8 @@ define('routexmaps', function (require) {
           , optimized: false
         });
 
-    google.maps.event.addListener(gm, 'mousedown', function () {
+    google.maps.event.addListener(gm, 'mousedown', function (e) {
+      e && e.stop();
       self.showIdentityPanel(this.uid);
     });
     return gm;
