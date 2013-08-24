@@ -216,6 +216,13 @@ define('routexmaps', function (require) {
               rm.showNearBy({ x: px, y: py });
             });
 
+          GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
+            GEvent.clearListeners(mapDiv, 'touchmove');
+            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
+              rm.hideTiplines();
+            });
+          });
+
           GEvent.removeListener(initListener);
 
         });
