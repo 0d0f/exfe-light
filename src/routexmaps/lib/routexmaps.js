@@ -1240,8 +1240,8 @@ define('routexmaps', function (require) {
             });
           }
       });
-      this.infobox._marker = this;
       this.infobox = self.infobox;
+      this.infobox._marker = this;
       this.infobox.open(map, this);
       self.bindEventsForPoint(this);
     });
