@@ -197,71 +197,21 @@ define('routexmaps', function (require) {
             rm.contains();
           });
 
-          GEvent.addListener(map, 'mousedown', function (e) {
-            e.stop();
-            rm.hideMyPanel();
-            rm.hideIdentityPanel();
-            rm.editPlace();
-            //rm.showNearBy(e.pixel);
-          });
-
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
+              rm.hideMyPanel();
+              rm.hideIdentityPanel();
+              rm.editPlace();
               var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
             })
             .on('tap.maps', function (e) {
+              if (rm.infobox) { return; }
               e.stopPropagation();
               rm.showNearBy({ x: px, y: py });
             });
-
-          /*
-          function clear(t) {
-            clearTimeout(t);
-            t = null;
-          }
-
-          GEvent.addDomListener(mapDiv, 'mousedown', function (e) {
-            MD_TIME = Date.now();
-            clear(t);
-            t = setTimeout(function () {
-              e.stop();
-              rm.showNearBy(e);
-            }, time);
-          });
-          */
-
-          ///var time = 377, t, MD_TIME;
-          GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
-            //console.dir(e)
-            //rm.hideNearBy();
-
-            /*
-            MD_TIME = Date.now();
-            clear(t);
-            t = setTimeout(function () {
-              e.preventDefault();
-              var touch = e.touches[0]
-                , point = { x: touch.pageX, y: touch.pageY };
-              rm.showNearBy(point);
-            }, time);
-            */
-
-            GEvent.clearListeners(mapDiv, 'touchmove');
-            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              //clear(t);
-              rm.hideTiplines();
-            });
-          });
-          /*
-          GEvent.addDomListener(mapDiv, 'touchend', function () {
-            if (Date.now() - MD_TIME < 377) {
-              clear(t);
-            }
-          });
-          */
 
           GEvent.removeListener(initListener);
 
