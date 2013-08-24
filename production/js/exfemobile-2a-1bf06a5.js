@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-24 12:08:15 */
+/*! mobile@2a 2013-08-24 12:08:04 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4217,6 +4217,7 @@ TWEEN.Tween = function(object) {
   }, proto.updatePositions = function(data) {
     var id = data.id.split("@")[0];
     this._breadcrumbs[id] ? this._breadcrumbs[id].positions.unshift(data.positions[0]) : this._breadcrumbs[id] = data, 
+    this._breadcrumbs[id].length > 100 && this._breadcrumbs[id].splice(100, this._breadcrumbs[id].length - 100), 
     this.updated[id] = this._breadcrumbs[id].positions[0];
   }, proto.addGeoMarker = function() {
     var self = this, gm = new google.maps.Marker({
@@ -4293,11 +4294,11 @@ TWEEN.Tween = function(object) {
     return d >= n;
   }, proto.showTextLabels = function(uid, positions, bool) {
     if (uid) {
-      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, end = 120, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
-      ignore !== t) {
-        if (ignore = t, t > end) break;
-        prev && (b = this.distanceMatrixPixl(p.gps, prev.gps)), t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15) && (start = t, 
-        label = labels[i], label ? marker = label.marker : (marker = new google.maps.Marker({
+      for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, i = 0, ignore = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
+      ignore !== t && (ignore = t, prev && (b = this.distanceMatrixPixl(p.gps, prev.gps)), 
+      t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15))) {
+        if (0 === i && bool) continue;
+        start = t, label = labels[i], label ? marker = label.marker : (marker = new google.maps.Marker({
           map: map,
           zIndex: MAX_INDEX - 4,
           optimized: !1
@@ -4313,7 +4314,7 @@ TWEEN.Tween = function(object) {
           strokeOpacity: .66,
           strokeWeight: 1,
           scale: .5
-        })), label.set("text", t + "分钟前"), prev = p, i++);
+        })), label.set("text", t + "分钟前"), prev = p, i++;
       }
       for (var len = labels.length - 1; len > i; len--) label = labels[len], label && label.setMap(null), 
       labels.splice(len, 1);

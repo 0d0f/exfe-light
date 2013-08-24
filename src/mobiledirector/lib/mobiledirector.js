@@ -28,7 +28,7 @@
     , startTime, currentTime, failTimeout;
 
   //window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
-  window.isWeixin = !!(/MicroMessenger/.test(navigator.userAgent));
+  window.isWeixin = !!(/MicroMessenger/i.test(navigator.userAgent));
 
   window.launchApp = function (url, cb) {
     url = url || app_url;

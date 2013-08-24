@@ -768,6 +768,12 @@ define('routexmaps', function (require) {
     } else {
       this._breadcrumbs[id].positions.unshift(data.positions[0])
     }
+
+    // 只保留最新100个点
+    if (this._breadcrumbs[id].length > 100) {
+      this._breadcrumbs[id].splice(100, this._breadcrumbs[id].length - 100);
+    }
+
     this.updated[id] = this._breadcrumbs[id].positions[0];
   };
 
@@ -941,7 +947,7 @@ define('routexmaps', function (require) {
         , ps = positions.slice(0)
         , b = true
         , start = 0
-        , end = 2 * 60
+        //, end = 2 * 60
         , i = 0
         , ignore = 0
         , label
@@ -955,13 +961,16 @@ define('routexmaps', function (require) {
 
         ignore = t;
 
-        if (t > end) { break; }
+        //if (t > end) { break; }
 
         if (prev) {
           b = this.distanceMatrixPixl(p.gps, prev.gps);
         }
 
         if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
+
+          if (i === 0 && bool) { continue; }
+
           start = t;
           label = labels[i];
           if (!label) {
