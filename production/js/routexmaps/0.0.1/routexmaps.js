@@ -192,75 +192,36 @@ define('routexmaps', function (require) {
           GEvent.addListener(map, 'bounds_changed', function () {
             GEvent.trigger(map, 'zoom_changed');
           });
-
           GEvent.addListener(map, 'zoom_changed', function () {
             rm.contains();
           });
-
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
             rm.hideMyPanel();
-            rm.hideIdentityPanel();
+            //rm.hideIdentityPanel();
             rm.editPlace();
-            //rm.showNearBy(e.pixel);
           });
 
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
+              rm.hideIdentityPanel();
               var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
             })
             .on('tap.maps', function (e) {
+              if (rm.infobox) { return; }
+              e.stopPropagation();
               rm.showNearBy({ x: px, y: py });
             });
 
-          /*
-          function clear(t) {
-            clearTimeout(t);
-            t = null;
-          }
-
-          GEvent.addDomListener(mapDiv, 'mousedown', function (e) {
-            MD_TIME = Date.now();
-            clear(t);
-            t = setTimeout(function () {
-              e.stop();
-              rm.showNearBy(e);
-            }, time);
-          });
-          */
-
-          ///var time = 377, t, MD_TIME;
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
-            //console.dir(e)
-            //rm.hideNearBy();
-
-            /*
-            MD_TIME = Date.now();
-            clear(t);
-            t = setTimeout(function () {
-              e.preventDefault();
-              var touch = e.touches[0]
-                , point = { x: touch.pageX, y: touch.pageY };
-              rm.showNearBy(point);
-            }, time);
-            */
-
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              //clear(t);
               rm.hideTiplines();
             });
           });
-          /*
-          GEvent.addDomListener(mapDiv, 'touchend', function () {
-            if (Date.now() - MD_TIME < 377) {
-              clear(t);
-            }
-          });
-          */
 
           GEvent.removeListener(initListener);
 
@@ -394,11 +355,11 @@ define('routexmaps', function (require) {
   proto.hideNearBy = function () {
     $('#nearby').remove();
   };
-  // 30pt = 60px
-  proto.distance60px = function (p0, b) {
+  // 24pt = 48px
+  proto.distance48px = function (p0, b) {
     var a = this.fromLatLngToContainerPixel(p0)
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return d <= 60;
+    return d <= 48;
   };
   proto.showNearBy = function (point) {
     if ($('#nearby').length) {
@@ -428,7 +389,7 @@ define('routexmaps', function (require) {
       for (var k in places) {
         p = places[k];
         latlng = p.getPosition()
-        if (this.distance60px(latlng, center)) {
+        if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
           //list.places.push(p)
           pn++;
@@ -444,7 +405,7 @@ define('routexmaps', function (require) {
       for (var k in geoMarkers) {
         p = geoMarkers[k];
         latlng = p.getPosition();
-        if (this.distance60px(latlng, center)) {
+        if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
           //list.geomarkers.push(p);
           gn++;

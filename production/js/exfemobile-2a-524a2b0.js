@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-25 12:08:53 */
+/*! mobile@2a 2013-08-25 08:08:58 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3977,17 +3977,18 @@ TWEEN.Tween = function(object) {
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains();
           }), GEvent.addListener(map, "mousedown", function(e) {
-            e.stop(), rm.hideMyPanel(), rm.hideIdentityPanel(), rm.editPlace();
+            e.stop(), rm.hideMyPanel(), rm.editPlace();
           });
           var px, py;
           $(mapDiv).on("touchstart.maps", function(e) {
+            rm.hideIdentityPanel();
             var touch = e.touches[0];
             px = touch.pageX, py = touch.pageY;
-          }).on("tap.maps", function() {
-            rm.showNearBy({
+          }).on("tap.maps", function(e) {
+            rm.infobox || (e.stopPropagation(), rm.showNearBy({
               x: px,
               y: py
-            });
+            }));
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
             GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
               rm.hideTiplines();
@@ -4067,22 +4068,22 @@ TWEEN.Tween = function(object) {
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>', PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>', IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
   return proto.hideNearBy = function() {
     $("#nearby").remove();
-  }, proto.distance60px = function(p0, b) {
+  }, proto.distance48px = function(p0, b) {
     var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return 60 >= d;
+    return 48 >= d;
   }, proto.showNearBy = function(point) {
     if ($("#nearby").length) return this.hideNearBy(), void 0;
     if (point) {
       var latlng, pk, gk, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3, pn = 0, gn = 0;
       console.log("-----------------------", geoPosition, destinationPosition);
       var nbDiv = $(NEARBY_TMP);
-      for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance60px(latlng, center)) {
+      for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance48px(latlng, center)) {
         status || (status = !0), pn++, pk = k;
         var tmp = $(PLACE_TMP);
         tmp.attr("data-id", p.data.id), tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
         nbDiv.append($("<div></div>").append(tmp));
       }
-      for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance60px(latlng, center)) {
+      for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance48px(latlng, center)) {
         status || (status = !0), gn++, gk = k, p.data.id.split("@")[0];
         var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data("identity"), tmp = $(IDENTITY_TMP);
         tmp.find("img").attr("src", identity.avatar_filename), tmp.find(".name").text(identity.name), 

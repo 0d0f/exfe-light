@@ -2577,17 +2577,25 @@ button .exfe {
   line-height: 21px;
 }
 #routex #other-info .update {
-  font-size: 9px;
-  line-height: 9px;
+  font-size: 10px;
+  line-height: 10px;
   color: #333;
   padding-bottom: 2px;
 }
+#routex #other-info table {
+  width: 100%;
+  text-align: right;
+}
+#routex #other-info .label {
+  margin-right: 5px;
+}
 #routex #other-info .dest,
 #routex #other-info .dest-me {
-  line-height: 14px;
+  line-height: 17px;
 }
 #routex #other-info .please-update {
   font-size: 16px;
+  line-height: 16px;
   color: #007cff;
 }
 #routex .text-label {
@@ -2632,19 +2640,21 @@ button .exfe {
 }
 #routex #nearby .place-marker .title {
   margin: 0;
-  padding: 0;
+  padding: 0 0 4px 0;
   overflow: hidden;
   white-space: nowrap;
   font-size: 16px;
+  line-height: 16px;
   font-weight: 300;
 }
 #routex #nearby .place-marker .description {
   margin: 0;
-  padding: 0;
+  padding: 0 0 4px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 9px;
+  line-height: 10px;
+  font-size: 10px;
   font-weight: 300;
   width: 100%;
 }

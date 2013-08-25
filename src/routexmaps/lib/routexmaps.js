@@ -355,11 +355,11 @@ define('routexmaps', function (require) {
   proto.hideNearBy = function () {
     $('#nearby').remove();
   };
-  // 30pt = 60px
-  proto.distance60px = function (p0, b) {
+  // 24pt = 48px
+  proto.distance48px = function (p0, b) {
     var a = this.fromLatLngToContainerPixel(p0)
       , d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-    return d <= 60;
+    return d <= 48;
   };
   proto.showNearBy = function (point) {
     if ($('#nearby').length) {
@@ -389,7 +389,7 @@ define('routexmaps', function (require) {
       for (var k in places) {
         p = places[k];
         latlng = p.getPosition()
-        if (this.distance60px(latlng, center)) {
+        if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
           //list.places.push(p)
           pn++;
@@ -405,7 +405,7 @@ define('routexmaps', function (require) {
       for (var k in geoMarkers) {
         p = geoMarkers[k];
         latlng = p.getPosition();
-        if (this.distance60px(latlng, center)) {
+        if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
           //list.geomarkers.push(p);
           gn++;
