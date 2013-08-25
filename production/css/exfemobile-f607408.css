@@ -2574,7 +2574,7 @@ button .exfe {
 }
 #routex #other-info .name {
   font-size: 21px;
-  line-height: 21px;
+  line-height: 25px;
 }
 #routex #other-info .update {
   font-size: 10px;
@@ -2584,10 +2584,16 @@ button .exfe {
 }
 #routex #other-info table {
   width: 100%;
-  text-align: right;
+}
+#routex #other-info table td {
+  width: 50%;
 }
 #routex #other-info .label {
-  margin-right: 5px;
+  padding-right: 5px;
+  text-align: right;
+}
+#routex #other-info .m {
+  text-align: left;
 }
 #routex #other-info .dest,
 #routex #other-info .dest-me {
@@ -2595,7 +2601,6 @@ button .exfe {
 }
 #routex #other-info .please-update {
   font-size: 16px;
-  line-height: 16px;
   color: #007cff;
 }
 #routex .text-label {
