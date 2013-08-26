@@ -2170,9 +2170,11 @@ define('mobilecontroller', function (require, exports, module) {
               self.trackGeoLocation();
             }
           , function () {
+              /*
               if (self.mapReadyStatus) {
                 self.mapController.clearup();
               }
+              */
             }
         );
       }
