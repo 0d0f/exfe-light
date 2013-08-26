@@ -239,9 +239,6 @@
           position: absolute;
           left: 0;
           right: 0;
-          -webkit-backface-visibility: hidden;
-          -webkit-transform-origin: 50% 50%;
-          -webkit-transition: -webkit-transform 233ms ease-in;
         }
 
         i[class^="icon-dot"],
@@ -606,7 +603,9 @@
   .icon-arrow-red {
     width: 14px;
     height: 14px;
+    -webkit-backface-visibility: hidden;
     -webkit-transform-origin: 50% 50%;
+    -webkit-transition: -webkit-transform 233ms ease-in;
   }
   .icon-arrow-grey {
     background-image: url(/static/img/map_arrow_14g5@2x.png);
