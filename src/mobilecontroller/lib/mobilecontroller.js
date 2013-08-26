@@ -2052,7 +2052,7 @@ define('mobilecontroller', function (require, exports, module) {
                   var d, id, i;
                   for (i = 0; i < len; ++i) {
                     d = data[i];
-                    id = d.id.split('@')[0];
+                    id = d.id.split('.')[0];
                     if (mc._breadcrumbs[id]) {
                       var arr = [];
                       mc._breadcrumbs[id].positions = arr.contact(mc._breadcrumbs[id].positions, d.positions);
