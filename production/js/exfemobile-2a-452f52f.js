@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-26 02:08:25 */
+/*! mobile@2a 2013-08-26 02:08:56 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4043,11 +4043,11 @@ TWEEN.Tween = function(object) {
       t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时"), 
       $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
       $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
-        var p2 = destinationPlace.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(lat2, lng2, lat1, lng1), result = distanceOutput(d, !0);
+        var p2 = destinationPlace.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else $otherInfo.find(".dest").addClass("hide");
       if (geoLocation) {
-        var p2 = geoLocation.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(lat2, lng2, lat1, lng1), result = distanceOutput(d, !0);
+        var p2 = geoLocation.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else $otherInfo.find(".dest-me").removeClass("hide");
       $otherInfo.removeClass("hide");
