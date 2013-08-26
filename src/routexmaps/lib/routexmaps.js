@@ -1119,6 +1119,10 @@ define('routexmaps', function (require) {
   };
 
   proto.showBreadcrumbs = function (uid) {
+    this.hideMyPanel();
+    this.hideNearBy();
+    this.hideIdentityPanel();
+
     this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
