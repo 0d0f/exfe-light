@@ -2053,6 +2053,9 @@ button .exfe {
   -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
+#routex #svg polyline {
+  pointer-events: none;
+}
 #routex #identities-overlay {
   position: absolute;
   left: 0;
@@ -2594,8 +2597,14 @@ button .exfe {
   width: 60%;
 }
 #routex #other-info .m {
+  position: relative;
   text-align: left;
   width: 40%;
+}
+#routex #other-info .m .icon {
+  position: relative;
+  top: 1.5px;
+  left: 5px;
 }
 #routex #other-info .dest,
 #routex #other-info .dest-me {
