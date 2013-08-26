@@ -875,7 +875,7 @@ define('routexmaps', function (require) {
         , lat1 = p0.lat(), lng1 = p0.lng()
         , lat2 = p1.lat(), lng2 = p1.lng()
         , d = distance(lat2, lng2, lat1, lng1)
-        , r = bearing(lat2, lng2, lat1, lng1)
+        , r = bearing(lat1, lng1, lat2, lng2)
         , result = distanceOutput(d);
 
       result.rotate = r;
