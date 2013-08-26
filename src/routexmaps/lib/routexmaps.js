@@ -301,7 +301,7 @@ define('routexmaps', function (require) {
           , r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d, true);
         $otherInfo.find('.dest').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' + 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else {
         $otherInfo.find('.dest').addClass('hide');
       }
@@ -311,7 +311,7 @@ define('routexmaps', function (require) {
           , r = bearing(lat2, lng2, lat1, lng1)
           , result = distanceOutput(d, true);
         $otherInfo.find('.dest-me').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' + 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else {
         $otherInfo.find('.dest-me').removeClass('hide');
       }
