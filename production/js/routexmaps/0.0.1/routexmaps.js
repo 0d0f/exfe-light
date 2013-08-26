@@ -297,21 +297,21 @@ define('routexmaps', function (require) {
       }
       if (destinationPlace) {
         var p2 = destinationPlace.getPosition();
-        var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
-          //, r = bearing(lat2, lng2, lat1, lng1)
+        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
           , result = distanceOutput(d, true);
         $otherInfo.find('.dest').removeClass('hide')
-          .find('.m').html(result.text);
+          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else {
         $otherInfo.find('.dest').addClass('hide');
       }
       if (geoLocation) {
         var p2 = geoLocation.getPosition();
-        var d = distance(p2.lat(), p2.lng(), p.lat(), p.lng())
-          //, r = bearing(lat2, lng2, lat1, lng1)
+        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
           , result = distanceOutput(d, true);
         $otherInfo.find('.dest-me').removeClass('hide')
-          .find('.m').html(result.text);
+          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else {
         $otherInfo.find('.dest-me').removeClass('hide');
       }
@@ -410,7 +410,7 @@ define('routexmaps', function (require) {
           //list.geomarkers.push(p);
           gn++;
           gk = k;
-          var id = p.data.id.split('@')[0];
+          var id = p.data.id.split('.')[0];
           var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
           var tmp = $(IDENTITY_TMP);
           tmp.find('img').attr('src', identity.avatar_filename);
@@ -797,7 +797,7 @@ define('routexmaps', function (require) {
 
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
-      , uid = data.id.split('@')[0]
+      , uid = data.id.split('.')[0]
       , g, d, latlng, gps;
 
     this.updatePositions(data);
@@ -827,7 +827,7 @@ define('routexmaps', function (require) {
 
   proto.updatePositions = function (data) {
     // user_id@provider
-    var id = data.id.split('@')[0]
+    var id = data.id.split('.')[0]
     if (!this._breadcrumbs[id]) {
       this._breadcrumbs[id] = data;
     } else {
@@ -875,7 +875,7 @@ define('routexmaps', function (require) {
         , lat1 = p0.lat(), lng1 = p0.lng()
         , lat2 = p1.lat(), lng2 = p1.lng()
         , d = distance(lat2, lng2, lat1, lng1)
-        , r = bearing(lat2, lng2, lat1, lng1)
+        , r = bearing(lat1, lng1, lat2, lng2)
         , result = distanceOutput(d);
 
       result.rotate = r;
@@ -1119,6 +1119,10 @@ define('routexmaps', function (require) {
   };
 
   proto.showBreadcrumbs = function (uid) {
+    this.hideMyPanel();
+    this.hideNearBy();
+    this.hideIdentityPanel();
+
     this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
     var bds = this.breadcrumbs
