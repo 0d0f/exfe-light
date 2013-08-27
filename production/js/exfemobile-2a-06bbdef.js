@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-26 02:08:24 */
+/*! mobile@2a 2013-08-27 02:08:06 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3948,7 +3948,7 @@ TWEEN.Tween = function(object) {
 }), define("routexmaps", function(require) {
   "use strict";
   function RoutexMaps(options) {
-    options = this.options = options || {}, this.svgLayer = this.options.svg, delete this.options.svg, 
+    options = this.options = options || {}, this.canvas = this.options.canvas, delete this.options.cavnas, 
     this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.tiplines = {}, 
     this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, this.updated = {}, 
     this._breadcrumbs = {}, this.boundsOffset = {
@@ -3990,9 +3990,7 @@ TWEEN.Tween = function(object) {
               y: py
             }));
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
-              rm.hideTiplines();
-            });
+            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {});
           }), GEvent.removeListener(initListener);
         });
         callback(map), cb = null;
@@ -4237,7 +4235,7 @@ TWEEN.Tween = function(object) {
         if (g = gms[uid], d = g.data, d.updated_at === data.updated_at) return;
       } else $('#identities .identity[data-uid="' + uid + '"]').length || this.freshExfee();
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
-      g.setPosition(latlng), g.uid = uid, g.data = data, this.updateTipline(uid, latlng);
+      g.setPosition(latlng), g.uid = uid, g.data = data;
     }
   }, proto.updatePositions = function(data) {
     var id = data.id.split(".")[0];
@@ -4431,30 +4429,8 @@ TWEEN.Tween = function(object) {
     bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
     console.log("map zoom", this.map.getZoom());
-  }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
-    bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
-    bounds.contains(latlng) && (b = ids[uid]) ? this.showTipline(uid, b) : this.hideTipline(uid);
-  }, proto.hideTiplines = function() {
-    var uid, tls = this.tiplines;
-    for (uid in tls) this.hideTipline(uid);
-  }, proto.updateTipline = function(uid, latlng) {
-    var tl = this.tiplines[uid];
-    tl || (tl = this.tiplines[uid] = this.addTipline(uid)), latlng && this.containsOne(uid, tl._lastlatlng = latlng);
-  }, proto.addTipline = function() {
-    var tl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-    return tl.setAttribute("fill", "none"), tl.setAttribute("stroke", "#b2b2b2"), tl.setAttribute("stroke-width", 1), 
-    tl.setAttribute("stroke-linecap", "round"), tl.setAttribute("stroke-linejoin", "round"), 
-    tl.setAttribute("style", "-webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));"), 
-    tl.setAttributeNS(null, "display", "none"), this.svgLayer.appendChild(tl), tl;
-  }, proto.showTipline = function(uid, bound) {
-    var p, tl = this.tiplines[uid];
-    if (tl) {
-      var f = [ bound[1], bound[2] ], s = [ f[0] + 13, f[1] ], points = [ f.join(","), s.join(",") ].join(" "), p = this.fromLatLngToContainerPixel(tl._lastlatlng);
-      tl.setAttribute("points", points + " " + p.x + "," + p.y), tl.setAttributeNS(null, "display", "block");
-    }
-  }, proto.hideTipline = function(uid) {
-    var tl = this.tiplines[uid];
-    tl && tl.setAttributeNS(null, "display", "none");
+  }, proto.containsOne = function(uid, latlng, bounds, ids) {
+    bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {});
   }, proto.updateGeoLocation = function(uid, position) {
     var latlng, gps, geoLocation = this.geoLocation;
     if (!geoLocation) {
@@ -5572,11 +5548,11 @@ TWEEN.Tween = function(object) {
     loadMaps: function() {
       var self = this, RoutexMaps = require("routexmaps"), mc = this.mapController = new RoutexMaps({
         url: "//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
-        mapDiv: this.$("#map")[0],
+        mapDiv: document.getElementById("map"),
         mapOptions: {
           zoom: 5
         },
-        svg: this.$("#svg")[0],
+        canvas: document.getElementById("canvas"),
         callback: function() {
           self.mapReadyStatus = !0, self.mapController.updateGeoLocation(mc.myUserId, self.position);
         }

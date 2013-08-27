@@ -2010,6 +2010,24 @@ button .exfe {
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
+  /*
+  #svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    -webkit-appearance: none;
+    -webkit-transform: translate3d(0, 0, 0);
+
+    polyline {
+      pointer-events: none;
+    }
+  }
+  */
+
 }
 #routex * {
   -webkit-box-sizing: border-box;
@@ -2042,14 +2060,14 @@ button .exfe {
   -webkit-transform: scale(1.25);
   -webkit-animation: pound 1s ease-out infinite;
 }
-#routex #svg {
+#routex #canvas {
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
   pointer-events: none;
+  z-index: 1;
   -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
@@ -2594,8 +2612,14 @@ button .exfe {
   width: 60%;
 }
 #routex #other-info .m {
+  position: relative;
   text-align: left;
   width: 40%;
+}
+#routex #other-info .m .icon {
+  position: relative;
+  top: 1.5px;
+  left: 5px;
 }
 #routex #other-info .dest,
 #routex #other-info .dest-me {
