@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-27 03:08:46 */
+/*! mobile@2a 2013-08-27 04:08:34 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3948,8 +3948,10 @@ TWEEN.Tween = function(object) {
 }), define("routexmaps", function(require) {
   "use strict";
   function RoutexMaps(options) {
-    options = this.options = options || {}, this.canvas = this.options.canvas, this.canvas.width = 2 * $(window).width(), 
-    this.canvas.height = 2 * $(window).height(), this.ctx = this.canvas.getContext("2d"), 
+    options = this.options = options || {}, this.canvas = this.options.canvas;
+    var w = $(window).width(), h = $(window).height();
+    this.canvas.width = 2 * w, this.canvas.height = 2 * h, this.canvas.style.width = w, 
+    this.canvas.style.height = h, this.ctx = this.canvas.getContext("2d"), this.DRAW_STATUS = !0, 
     delete this.options.cavnas, this.latOffset = 0, this.lngOffset = 0, this.routes = {}, 
     this.places = {}, this.tiplines = {}, this.lines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, 
     this.icons = {}, this.updated = {}, this._breadcrumbs = {}, this.boundsOffset = {
@@ -3976,7 +3978,7 @@ TWEEN.Tween = function(object) {
           GEvent.addListener(map, "bounds_changed", function() {
             GEvent.trigger(map, "zoom_changed");
           }), GEvent.addListener(map, "zoom_changed", function() {
-            rm.contains();
+            rm.contains(), rm.DRAW_STATUS = !0;
           }), GEvent.addListener(map, "mousedown", function(e) {
             e.stop(), rm.hideMyPanel(), rm.editPlace();
           });
@@ -3991,7 +3993,7 @@ TWEEN.Tween = function(object) {
               y: py
             }));
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+            rm.DRAW_STATUS = !1, GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
               rm.clearLines();
             });
           }), GEvent.removeListener(initListener);
@@ -4183,7 +4185,7 @@ TWEEN.Tween = function(object) {
       3 !== t && (p.setIcon(icon), p.setZIndex(zIndex));
     }
   }, proto.monit = function() {
-    var uid, isme, d, gm, b, $e, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, lines = this.lines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
+    var uid, isme, d, gm, b, $e, line, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, lines = this.lines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
     n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], gm || (gm = this.drawGeoMarker(this._breadcrumbs[uid])), 
     this.distanceMatrix(uid, gm, dp, n), b = bs[uid], line = lines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
@@ -4206,7 +4208,7 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      line[3] = "#ff7e98", gm && gm.setIcon(icons.dotRed);
+      line && (line[3] = "#ff7e98"), gm && gm.setIcon(icons.dotRed);
     } else {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       b && b.setOptions({
@@ -4225,7 +4227,7 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      line[3] = "#b2b2b2", gm && gm.setIcon(icons.dotGrey);
+      line && (line[3] = "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
     }
     this.updateLines();
   }, proto.toLatLng = function(lat, lng) {
@@ -4239,7 +4241,7 @@ TWEEN.Tween = function(object) {
         if (g = gms[uid], d = g.data, d.updated_at === data.updated_at) return;
       } else $('#identities .identity[data-uid="' + uid + '"]').length || this.freshExfee();
       g || (g = gms[uid] = this.addGeoMarker()), gps = data.positions[0].gps, latlng = this.toLatLng(gps[0], gps[1]), 
-      g.setPosition(latlng), g.uid = uid, g.data = data;
+      g.setPosition(latlng), g.uid = uid, g.data = data, this.containsOne(uid, latlng);
     }
   }, proto.updatePositions = function(data) {
     var id = data.id.split(".")[0];
@@ -4442,15 +4444,15 @@ TWEEN.Tween = function(object) {
   }, proto.clearLines = function() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
   }, proto.removeLine = function(uid) {
-    var lines = this.lines;
-    delete lines[uid], this.updateLines();
+    delete this.lines[uid], this.updateLines();
   }, proto.updateLines = function() {
-    this.clearLines();
-    var lines = this.lines;
-    for (var k in lines) this.addLine(k, lines[k]);
+    if (this.DRAW_STATUS) {
+      this.clearLines();
+      var lines = this.lines;
+      for (var k in lines) this.addLine(k, lines[k]);
+    }
   }, proto.updateLine = function(uid, points) {
-    var lines = this.lines;
-    lines[uid] = points, this.updateLines();
+    console.dir("update line", points), this.lines[uid] = points, this.updateLines();
   }, proto.addLine = function(uid, points) {
     var ctx = this.ctx;
     ctx.beginPath(), ctx.lineWidth = 1, ctx.lineJoin = ctx.lineCap = "round", ctx.moveTo(points[0][0], points[0][1]), 
