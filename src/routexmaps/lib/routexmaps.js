@@ -92,9 +92,13 @@ define('routexmaps', function (require) {
     delete this.options.svg;
     */
     this.canvas = this.options.canvas;
-    this.canvas.width = $(window).width() * 2;
-    this.canvas.height = $(window).height() * 2;
+    var w = $(window).width(), h = $(window).height();
+    this.canvas.width = w * 2;
+    this.canvas.height = h * 2;
+    this.canvas.style.width = w;
+    this.canvas.style.height = h;
     this.ctx = this.canvas.getContext('2d');
+    this.DRAW_STATUS = true;
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -202,6 +206,7 @@ define('routexmaps', function (require) {
           });
           GEvent.addListener(map, 'zoom_changed', function () {
             rm.contains();
+            rm.DRAW_STATUS = true;
           });
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
@@ -225,6 +230,7 @@ define('routexmaps', function (require) {
             });
 
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
+            rm.DRAW_STATUS = false;
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               //rm.hideTiplines();
@@ -1381,6 +1387,7 @@ define('routexmaps', function (require) {
     this.updateLines();
   };
   proto.updateLines = function () {
+    if (!this.DRAW_STATUS) { return; }
     this.clearLines();
     var lines = this.lines;
     for (var k in lines) {
