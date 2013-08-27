@@ -1385,7 +1385,9 @@ define('routexmaps', function (require) {
   };
   */
   proto.clearLines = function () {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
+    //this.canvas.width = this.canvas.width;
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   };
   proto.removeLine = function (uid) {
     delete this.lines[uid];
