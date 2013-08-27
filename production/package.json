@@ -301,12 +301,7 @@
   "css": {
     "exfe": "exfe-f30ce90.css",
     "exfemin": "exfe-1959468.min.css",
-<<<<<<< HEAD
-    "exfemobile": "exfemobile-02778ca.css",
-    "exfemobilemin": "exfemobile-2715ef3.min.css"
-=======
     "exfemobile": "exfemobile-277cb8c.css",
     "exfemobilemin": "exfemobile-b0ec720.min.css"
->>>>>>> 1392753... switches svg to canvas
   }
 }
