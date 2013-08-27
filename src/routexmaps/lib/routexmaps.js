@@ -1404,9 +1404,9 @@ define('routexmaps', function (require) {
     ctx.beginPath();
     ctx.lineWidth = 1;
     ctx.lineJoin = ctx.lineCap = 'round';
-    ctx.moveTo(points[0][0], points[0][1]);
-    ctx.lineTo(points[1][0], points[1][1]);
-    ctx.lineTo(points[2][0], points[2][1]);
+    ctx.moveTo(points[0][0] * 2, points[0][1] * 2);
+    ctx.lineTo(points[1][0] * 2, points[1][1] * 2);
+    ctx.lineTo(points[2][0] * 2, points[2][1] * 2);
     ctx.strokeStyle = points[3] || '#b2b2b2';
     ctx.stroke();
   };
