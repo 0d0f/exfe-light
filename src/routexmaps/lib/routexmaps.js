@@ -836,6 +836,7 @@ define('routexmaps', function (require) {
       g.data = data;
 
       //this.updateTipline(uid, latlng);
+      this.containsOne(uid, latlng);
     }
   };
 
