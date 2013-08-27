@@ -1322,11 +1322,10 @@ define('routexmaps', function (require) {
       //this.showTipline(uid, b);
       var p = this.fromLatLngToContainerPixel(latlng);
       var line = this.lines[uid];
-      if (line) {
-        line[2] = [p.x, p.y];
-      } else {
-        line =  [[b[1], b[2]], [b[1] + 13, b[2]], [p.x, p.y]];
-      }
+      if (!line) { line =  []; }
+      line[0] = [b[1], b[2]];
+      line[1] = [b[1] + 13, b[2]];
+      line[2] = [p.x, p.y];
       this.updateLine(uid, line);
     } else {
       //this.hideTipline(uid);
