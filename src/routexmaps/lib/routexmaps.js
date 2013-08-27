@@ -704,7 +704,7 @@ define('routexmaps', function (require) {
       , myUserId = this.myUserId
       , curr_uid = this.uid
       , uid, isme, d, now = Math.round(Date.now() / 1000)
-      , gm, b, $e, tl, n;
+      , gm, b, $e, line, n;
 
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
