@@ -1903,7 +1903,7 @@ define('mobilecontroller', function (require, exports, module) {
         var pageY0 = 0, scrollTop0 = 0, _t0;
         element.on('touchstart.maps', '#nearby', function (e) {
           isScroll0 = false;
-          pageY = e.originalEvent.touches[0].pageY;
+          page0Y = e.originalEvent.touches[0].pageY;
           scrollTop0 = this.scrollTop;
         });
         element.on('touchend.maps', '#nearby', function (e) {
