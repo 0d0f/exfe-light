@@ -2023,11 +2023,11 @@ define('mobilecontroller', function (require, exports, module) {
               // production use `key`
               //url: '//ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
               url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
-            , mapDiv: this.$('#map')[0]
+            , mapDiv: document.getElementById('map')
             , mapOptions: {
                 zoom: 5
               }
-            , svg: this.$('#svg')[0]
+            , canvas: document.getElementById('canvas')
             , callback: function (map) {
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);

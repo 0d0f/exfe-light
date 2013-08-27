@@ -87,8 +87,12 @@ define('routexmaps', function (require) {
 
   function RoutexMaps(options) {
     options = this.options = options || {};
+    /*
     this.svgLayer = this.options.svg;
     delete this.options.svg;
+    */
+    this.canvas = this.options.canvas;
+    delete this.options.cavnas;
 
     this.latOffset = 0;
     this.lngOffset = 0;
@@ -219,7 +223,7 @@ define('routexmaps', function (require) {
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
-              rm.hideTiplines();
+              //rm.hideTiplines();
             });
           });
 
@@ -821,7 +825,7 @@ define('routexmaps', function (require) {
       g.uid = uid;
       g.data = data;
 
-      this.updateTipline(uid, latlng);
+      //this.updateTipline(uid, latlng);
     }
   };
 
@@ -1302,13 +1306,16 @@ define('routexmaps', function (require) {
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
+    /*
     if (bounds.contains(latlng) && (b = ids[uid])) {
       this.showTipline(uid, b);
     } else {
       this.hideTipline(uid);
     }
+    */
   };
 
+  /*
   proto.hideTiplines = function () {
     var tls = this.tiplines, uid;
     for (uid in tls) {
@@ -1357,6 +1364,7 @@ define('routexmaps', function (require) {
     if (!tl) { return; }
     tl.setAttributeNS(null, 'display', 'none');
   };
+  */
 
   proto.updateGeoLocation = function (uid, position) {
     var geoLocation = this.geoLocation, latlng, gps;
