@@ -232,9 +232,13 @@ define('routexmaps', function (require) {
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
             rm.DRAW_STATUS = false;
             GEvent.clearListeners(mapDiv, 'touchmove');
+            GEvent.clearListeners(mapDiv, 'touchend');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               //rm.hideTiplines();
               rm.clearLines();
+            });
+            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
+              rm.DRAW_STATUS = true;
             });
           });
 
