@@ -92,6 +92,9 @@ define('routexmaps', function (require) {
     delete this.options.svg;
     */
     this.canvas = this.options.canvas;
+    this.canvas.width = $(window).width() * 2;
+    this.canvas.height = $(window).height() * 2;
+    this.ctx = this.canvas.getContext('2d');
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -100,6 +103,7 @@ define('routexmaps', function (require) {
     this.routes = {};
     this.places = {};
     this.tiplines = {};
+    this.lines = {};
     this.breadcrumbs = {};
     this.geoMarkers = {};
     this.icons = {};
@@ -224,6 +228,7 @@ define('routexmaps', function (require) {
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               //rm.hideTiplines();
+              rm.clearLines();
             });
           });
 
@@ -692,7 +697,8 @@ define('routexmaps', function (require) {
       , bs = this.breadcrumbs
       , icons = this.icons
       , gms = this.geoMarkers
-      , tiplines = this.tiplines
+      , lines = this.lines
+      //, tiplines = this.tiplines
       , dp = this.destinationPlace
       , geo = this.geoLocation
       , myUserId = this.myUserId
@@ -714,7 +720,8 @@ define('routexmaps', function (require) {
         this.distanceMatrix(uid, gm ,dp, n);
 
         b = bs[uid];
-        tl = tiplines[uid];
+        //tl = tiplines[uid];
+        line = lines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
 
         if (curr_uid && (curr_uid == uid) && this._breadcrumbs[uid]) {
@@ -751,7 +758,8 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#FF7E98');
+          line[3] = '#ff7e98';
+          //tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
         } else {
           if ($e.length) {
@@ -782,11 +790,13 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#b2b2b2');
+          //tl && tl.setAttribute('stroke', '#b2b2b2');
+          line[3] = '#b2b2b2';
           gm && gm.setIcon(icons.dotGrey);
         }
       }
     }
+    this.updateLines();
   };
 
   proto.toLatLng = function (lat, lng) {
@@ -1291,11 +1301,6 @@ define('routexmaps', function (require) {
       this.containsOne(uid, latlng, bounds, ids);
     }
 
-    /*
-    if (this.uid) {
-      this.updateBreadcrumbs(this.uid);
-    }
-    */
     console.log('map zoom', this.map.getZoom());
   };
 
@@ -1306,13 +1311,15 @@ define('routexmaps', function (require) {
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
-    /*
     if (bounds.contains(latlng) && (b = ids[uid])) {
-      this.showTipline(uid, b);
+      //this.showTipline(uid, b);
+      var p = this.fromLatLngToContainerPixel(latlng);
+      b = [[b[1], b[2]], [b[1] + 13, b[2]], [p.x, p.y]];
+      this.updateLine(uid, b);
     } else {
-      this.hideTipline(uid);
+      //this.hideTipline(uid);
+      this.removeLine(uid);
     }
-    */
   };
 
   /*
@@ -1365,6 +1372,37 @@ define('routexmaps', function (require) {
     tl.setAttributeNS(null, 'display', 'none');
   };
   */
+  proto.clearLines = function () {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
+  };
+  proto.removeLine = function (uid) {
+    var lines = this.lines;
+    delete lines[uid];
+    this.updateLines();
+  };
+  proto.updateLines = function () {
+    this.clearLines();
+    var lines = this.lines;
+    for (var k in lines) {
+      this.addLine(k, lines[k]);
+    }
+  };
+  proto.updateLine = function (uid, points) {
+    var lines = this.lines;
+    lines[uid] = points;
+    this.updateLines();
+  };
+  proto.addLine = function (uid, points) {
+    var ctx = this.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.lineJoin = ctx.lineCap = 'round';
+    ctx.moveTo(points[0][0], points[0][1]);
+    ctx.lineTo(points[1][0], points[1][1]);
+    ctx.lineTo(points[2][0], points[2][1]);
+    ctx.strokeStyle = points[3] || '#b2b2b2';
+    ctx.stroke();
+  };
 
   proto.updateGeoLocation = function (uid, position) {
     var geoLocation = this.geoLocation, latlng, gps;

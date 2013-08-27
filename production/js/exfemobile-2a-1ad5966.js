@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-27 02:08:30 */
+/*! mobile@2a 2013-08-27 03:08:46 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3948,10 +3948,11 @@ TWEEN.Tween = function(object) {
 }), define("routexmaps", function(require) {
   "use strict";
   function RoutexMaps(options) {
-    options = this.options = options || {}, this.canvas = this.options.canvas, delete this.options.cavnas, 
-    this.latOffset = 0, this.lngOffset = 0, this.routes = {}, this.places = {}, this.tiplines = {}, 
-    this.breadcrumbs = {}, this.geoMarkers = {}, this.icons = {}, this.updated = {}, 
-    this._breadcrumbs = {}, this.boundsOffset = {
+    options = this.options = options || {}, this.canvas = this.options.canvas, this.canvas.width = 2 * $(window).width(), 
+    this.canvas.height = 2 * $(window).height(), this.ctx = this.canvas.getContext("2d"), 
+    delete this.options.cavnas, this.latOffset = 0, this.lngOffset = 0, this.routes = {}, 
+    this.places = {}, this.tiplines = {}, this.lines = {}, this.breadcrumbs = {}, this.geoMarkers = {}, 
+    this.icons = {}, this.updated = {}, this._breadcrumbs = {}, this.boundsOffset = {
       left: 50,
       top: 0
     }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
@@ -3990,7 +3991,9 @@ TWEEN.Tween = function(object) {
               y: py
             }));
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
-            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {});
+            GEvent.clearListeners(mapDiv, "touchmove"), GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
+              rm.clearLines();
+            });
           }), GEvent.removeListener(initListener);
         });
         callback(map), cb = null;
@@ -4180,10 +4183,10 @@ TWEEN.Tween = function(object) {
       3 !== t && (p.setIcon(icon), p.setZIndex(zIndex));
     }
   }, proto.monit = function() {
-    var uid, isme, d, gm, b, $e, tl, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, tiplines = this.tiplines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
+    var uid, isme, d, gm, b, $e, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, lines = this.lines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
     n = Math.floor((now - d.t) / 60), gm = isme ? geo : gms[uid], gm || (gm = this.drawGeoMarker(this._breadcrumbs[uid])), 
-    this.distanceMatrix(uid, gm, dp, n), b = bs[uid], tl = tiplines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
+    this.distanceMatrix(uid, gm, dp, n), b = bs[uid], line = lines[uid], $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find(".icon"), 
     curr_uid && curr_uid == uid && this._breadcrumbs[uid] && this.showTextLabels(uid, this._breadcrumbs[uid].positions.slice(0), 1 >= n), 
     1 >= n) {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-red") : $e.attr("class", "icon icon-dot-red")), 
@@ -4203,7 +4206,7 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      tl && tl.setAttribute("stroke", "#FF7E98"), gm && gm.setIcon(icons.dotRed);
+      line[3] = "#ff7e98", gm && gm.setIcon(icons.dotRed);
     } else {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       b && b.setOptions({
@@ -4222,8 +4225,9 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      tl && tl.setAttribute("stroke", "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
+      line[3] = "#b2b2b2", gm && gm.setIcon(icons.dotGrey);
     }
+    this.updateLines();
   }, proto.toLatLng = function(lat, lng) {
     return new google.maps.LatLng(1 * lat, 1 * lng);
   }, proto.freshExfee = function() {
@@ -4429,8 +4433,29 @@ TWEEN.Tween = function(object) {
     bounds.extend(sw), bounds.extend(ne);
     for (uid in geoMarkers) gm = geoMarkers[uid], latlng = gm.getPosition(), this.containsOne(uid, latlng, bounds, ids);
     console.log("map zoom", this.map.getZoom());
-  }, proto.containsOne = function(uid, latlng, bounds, ids) {
-    bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {});
+  }, proto.containsOne = function(uid, latlng, bounds, ids, b) {
+    if (bounds || (bounds = this.map.getBounds()), ids || (ids = document.getElementById("identities")._ids || {}), 
+    bounds.contains(latlng) && (b = ids[uid])) {
+      var p = this.fromLatLngToContainerPixel(latlng);
+      b = [ [ b[1], b[2] ], [ b[1] + 13, b[2] ], [ p.x, p.y ] ], this.updateLine(uid, b);
+    } else this.removeLine(uid);
+  }, proto.clearLines = function() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
+  }, proto.removeLine = function(uid) {
+    var lines = this.lines;
+    delete lines[uid], this.updateLines();
+  }, proto.updateLines = function() {
+    this.clearLines();
+    var lines = this.lines;
+    for (var k in lines) this.addLine(k, lines[k]);
+  }, proto.updateLine = function(uid, points) {
+    var lines = this.lines;
+    lines[uid] = points, this.updateLines();
+  }, proto.addLine = function(uid, points) {
+    var ctx = this.ctx;
+    ctx.beginPath(), ctx.lineWidth = 1, ctx.lineJoin = ctx.lineCap = "round", ctx.moveTo(points[0][0], points[0][1]), 
+    ctx.lineTo(points[1][0], points[1][1]), ctx.lineTo(points[2][0], points[2][1]), 
+    ctx.strokeStyle = points[3] || "#b2b2b2", ctx.stroke();
   }, proto.updateGeoLocation = function(uid, position) {
     var latlng, gps, geoLocation = this.geoLocation;
     if (!geoLocation) {
