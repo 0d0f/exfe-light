@@ -228,6 +228,7 @@ define('routexmaps', function (require) {
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               //rm.hideTiplines();
+              rm.clearLines();
             });
           });
 
@@ -696,7 +697,8 @@ define('routexmaps', function (require) {
       , bs = this.breadcrumbs
       , icons = this.icons
       , gms = this.geoMarkers
-      , tiplines = this.tiplines
+      , lines = this.lines
+      //, tiplines = this.tiplines
       , dp = this.destinationPlace
       , geo = this.geoLocation
       , myUserId = this.myUserId
@@ -718,7 +720,8 @@ define('routexmaps', function (require) {
         this.distanceMatrix(uid, gm ,dp, n);
 
         b = bs[uid];
-        tl = tiplines[uid];
+        //tl = tiplines[uid];
+        line = lines[uid];
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
 
         if (curr_uid && (curr_uid == uid) && this._breadcrumbs[uid]) {
@@ -755,7 +758,8 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#FF7E98');
+          line[3] = '#ff7e98';
+          //tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
         } else {
           if ($e.length) {
@@ -786,11 +790,13 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          tl && tl.setAttribute('stroke', '#b2b2b2');
+          //tl && tl.setAttribute('stroke', '#b2b2b2');
+          line[3] = '#b2b2b2';
           gm && gm.setIcon(icons.dotGrey);
         }
       }
     }
+    this.updateLines();
   };
 
   proto.toLatLng = function (lat, lng) {
@@ -1372,7 +1378,11 @@ define('routexmaps', function (require) {
   proto.removeLine = function (uid) {
     var lines = this.lines;
     delete lines[uid];
+    this.updateLines();
+  };
+  proto.updateLines = function () {
     this.clearLines();
+    var lines = this.lines;
     for (var k in lines) {
       this.addLine(k, lines[k]);
     }
@@ -1380,10 +1390,7 @@ define('routexmaps', function (require) {
   proto.updateLine = function (uid, points) {
     var lines = this.lines;
     lines[uid] = points;
-    this.clearLines();
-    for (var k in lines) {
-      this.addLine(k, lines[k]);
-    }
+    this.updateLines();
   };
   proto.addLine = function (uid, points) {
     var ctx = this.ctx;
@@ -1393,7 +1400,7 @@ define('routexmaps', function (require) {
     ctx.moveTo(points[0][0], points[0][1]);
     ctx.lineTo(points[1][0], points[1][1]);
     ctx.lineTo(points[2][0], points[2][1]);
-    ctx.strokeStyle = '#b2b2b2';
+    ctx.strokeStyle = points[3] || '#b2b2b2';
     ctx.stroke();
   };
 
