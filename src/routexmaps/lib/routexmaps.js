@@ -1402,7 +1402,7 @@ define('routexmaps', function (require) {
   proto.addLine = function (uid, points) {
     var ctx = this.ctx;
     ctx.beginPath();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.lineJoin = ctx.lineCap = 'round';
     ctx.moveTo(points[0][0] * 2, points[0][1] * 2);
     ctx.lineTo(points[1][0] * 2, points[1][1] * 2);
