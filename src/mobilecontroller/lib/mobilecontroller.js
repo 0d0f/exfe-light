@@ -1669,6 +1669,10 @@ define('mobilecontroller', function (require, exports, module) {
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
+          //
+          if (self.mapReadyStatus && self.mapController) {
+            self.mapController.contains();
+          }
         });
 
         var gotoGPS = function (e, showBreadcrumbs) {
