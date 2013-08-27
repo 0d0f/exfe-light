@@ -1655,7 +1655,8 @@ define('mobilecontroller', function (require, exports, module) {
           , $myInfo = self.$('#my-info')
           , $openExfe = self.$('#open-exfe')
           , $locate = self.$('#locate')
-          , isScroll = false;
+          , isScroll = false
+          , isScroll0 = false;
 
         // 监听横竖屏切换
         $win.on('orientationchange', function () {
@@ -1709,7 +1710,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
-          if (isScroll) { return; }
+          if (isScroll0) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var id = $(this).data('id'), marker;
@@ -1718,7 +1719,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#nearby .geo-marker', function (e) {
-          if (isScroll) { return; }
+          if (isScroll0) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var uid = $(this).data('uid');
@@ -1899,22 +1900,22 @@ define('mobilecontroller', function (require, exports, module) {
         });
         */
 
-        var pageY = 0, scrollTop = 0, _t;
+        var pageY0 = 0, scrollTop0 = 0, _t0;
         element.on('touchstart.maps', '#nearby', function (e) {
-          isScroll = false;
+          isScroll0 = false;
           pageY = e.originalEvent.touches[0].pageY;
-          scrollTop = this.scrollTop;
+          scrollTop0 = this.scrollTop;
         });
         element.on('touchend.maps', '#nearby', function (e) {
-          if (_t) clearTimeout(_t);
+          if (_t0) clearTimeout(_t0);
           _t = setTimeout(function () {
-            isScroll = false;
+            isScroll0 = false;
           }, 233);
         });
         element.on('touchmove.maps', '#nearby', function (e) {
-          isScroll = true;
+          isScroll0 = true;
           e.preventDefault();
-          this.scrollTop = (pageY - e.originalEvent.touches[0].pageY) + scrollTop;
+          this.scrollTop = (pageY0 - e.originalEvent.touches[0].pageY) + scrollTop0;
         });
 
         var $identities = element.find('#identities');
