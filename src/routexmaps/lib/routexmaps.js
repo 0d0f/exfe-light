@@ -95,8 +95,8 @@ define('routexmaps', function (require) {
     var w = $(window).width(), h = $(window).height();
     this.canvas.width = w * 2;
     this.canvas.height = h * 2;
-    this.canvas.style.width = w;
-    this.canvas.style.height = h;
+    this.canvas.style.width = w + 'px';
+    this.canvas.style.height = h + 'px';
     this.ctx = this.canvas.getContext('2d');
     this.DRAW_STATUS = true;
     delete this.options.cavnas;
