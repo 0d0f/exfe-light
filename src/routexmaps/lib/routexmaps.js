@@ -237,7 +237,7 @@ define('routexmaps', function (require) {
               //rm.hideTiplines();
               rm.clearLines();
             });
-            GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
+            GEvent.addDomListenerOnce(mapDiv, 'touchend', function () {
               rm.DRAW_STATUS = true;
             });
           });
