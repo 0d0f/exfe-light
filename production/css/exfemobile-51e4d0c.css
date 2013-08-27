@@ -2066,8 +2066,8 @@ button .exfe {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   z-index: 1;
+  pointer-events: none;
   -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
 }
