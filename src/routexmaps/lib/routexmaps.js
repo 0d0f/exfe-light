@@ -1375,7 +1375,8 @@ define('routexmaps', function (require) {
     }
   };
   proto.updateLine = function (uid, points) {
-    this.lines[uid] = points;
+    var lines = this.lines;
+    lines[uid] = points;
     this.clearLines();
     for (var k in lines) {
       this.addLine(k, lines[k]);
