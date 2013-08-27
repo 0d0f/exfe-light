@@ -92,9 +92,13 @@ define('routexmaps', function (require) {
     delete this.options.svg;
     */
     this.canvas = this.options.canvas;
-    this.canvas.width = $(window).width() * 2;
-    this.canvas.height = $(window).height() * 2;
+    var w = $(window).width(), h = $(window).height();
+    this.canvas.width = w * 2;
+    this.canvas.height = h * 2;
+    this.canvas.style.width = w;
+    this.canvas.style.height = h;
     this.ctx = this.canvas.getContext('2d');
+    this.DRAW_STATUS = true;
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -202,6 +206,7 @@ define('routexmaps', function (require) {
           });
           GEvent.addListener(map, 'zoom_changed', function () {
             rm.contains();
+            rm.DRAW_STATUS = true;
           });
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
@@ -225,6 +230,7 @@ define('routexmaps', function (require) {
             });
 
           GEvent.addDomListener(mapDiv, 'touchstart', function (e) {
+            rm.DRAW_STATUS = false;
             GEvent.clearListeners(mapDiv, 'touchmove');
             GEvent.addDomListenerOnce(mapDiv, 'touchmove', function () {
               //rm.hideTiplines();
@@ -704,7 +710,7 @@ define('routexmaps', function (require) {
       , myUserId = this.myUserId
       , curr_uid = this.uid
       , uid, isme, d, now = Math.round(Date.now() / 1000)
-      , gm, b, $e, tl, n;
+      , gm, b, $e, line, n;
 
     for (uid in u) {
       if (u.hasOwnProperty(uid)) {
@@ -758,7 +764,7 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          line[3] = '#ff7e98';
+          line && (line[3] = '#ff7e98');
           //tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
         } else {
@@ -791,7 +797,7 @@ define('routexmaps', function (require) {
           });
           if (isme) { continue; }
           //tl && tl.setAttribute('stroke', '#b2b2b2');
-          line[3] = '#b2b2b2';
+          line && (line[3] = '#b2b2b2');
           gm && gm.setIcon(icons.dotGrey);
         }
       }
@@ -836,6 +842,7 @@ define('routexmaps', function (require) {
       g.data = data;
 
       //this.updateTipline(uid, latlng);
+      this.containsOne(uid, latlng);
     }
   };
 
@@ -1376,11 +1383,11 @@ define('routexmaps', function (require) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
   };
   proto.removeLine = function (uid) {
-    var lines = this.lines;
-    delete lines[uid];
+    delete this.lines[uid];
     this.updateLines();
   };
   proto.updateLines = function () {
+    if (!this.DRAW_STATUS) { return; }
     this.clearLines();
     var lines = this.lines;
     for (var k in lines) {
@@ -1388,8 +1395,8 @@ define('routexmaps', function (require) {
     }
   };
   proto.updateLine = function (uid, points) {
-    var lines = this.lines;
-    lines[uid] = points;
+    console.dir('update line', points);
+    this.lines[uid] = points;
     this.updateLines();
   };
   proto.addLine = function (uid, points) {
