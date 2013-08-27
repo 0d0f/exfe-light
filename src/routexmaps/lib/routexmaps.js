@@ -92,6 +92,7 @@ define('routexmaps', function (require) {
     delete this.options.svg;
     */
     this.canvas = this.options.canvas;
+    this.ctx = this.canvas.getContext('2d');
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -1291,11 +1292,6 @@ define('routexmaps', function (require) {
       this.containsOne(uid, latlng, bounds, ids);
     }
 
-    /*
-    if (this.uid) {
-      this.updateBreadcrumbs(this.uid);
-    }
-    */
     console.log('map zoom', this.map.getZoom());
   };
 
@@ -1306,13 +1302,15 @@ define('routexmaps', function (require) {
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
-    /*
     if (bounds.contains(latlng) && (b = ids[uid])) {
-      this.showTipline(uid, b);
+      //this.showTipline(uid, b);
+      var p = this.fromLatLngToContainerPixel(latlng);
+      b = [[b[1], b[2]], [b[1] + 13, b[2]], [p.x, p.y]];
+      this.updateLine(uid, b);
     } else {
-      this.hideTipline(uid);
+      //this.hideTipline(uid);
+      this.removeLine(uid);
     }
-    */
   };
 
   /*
@@ -1365,6 +1363,35 @@ define('routexmaps', function (require) {
     tl.setAttributeNS(null, 'display', 'none');
   };
   */
+  proto.clearLines = function () {
+    this.ctx.clearRect(0, 0, this.cavnas.width, this.canvas.height);
+  };
+  proto.removeLine = function (uid) {
+    var lines = this.lines;
+    delete lines[uid];
+    this.clearLines();
+    for (var k in lines) {
+      this.addLine(k, lines[k]);
+    }
+  };
+  proto.updateLine = function (uid, points) {
+    this.lines[uid] = points;
+    this.clearLines();
+    for (var k in lines) {
+      this.addLine(k, lines[k]);
+    }
+  };
+  proto.addLine = function (uid, points) {
+    var ctx = this.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.lineJoin = ctx.lineCap = 'round';
+    ctx.moveTo(points[0][0], points[0][1]);
+    ctx.lineTo(points[1][0], points[1][1]);
+    ctx.lineTo(points[2][0], points[2][1]);
+    ctx.strokeStyle = '#b2b2b2';
+    ctx.stroke();
+  };
 
   proto.updateGeoLocation = function (uid, position) {
     var geoLocation = this.geoLocation, latlng, gps;
