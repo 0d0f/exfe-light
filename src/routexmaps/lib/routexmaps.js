@@ -1376,8 +1376,7 @@ define('routexmaps', function (require) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
   };
   proto.removeLine = function (uid) {
-    var lines = this.lines;
-    delete lines[uid];
+    delete this.lines[uid];
     this.updateLines();
   };
   proto.updateLines = function () {
@@ -1388,8 +1387,7 @@ define('routexmaps', function (require) {
     }
   };
   proto.updateLine = function (uid, points) {
-    var lines = this.lines;
-    lines[uid] = points;
+    this.lines[uid] = points;
     this.updateLines();
   };
   proto.addLine = function (uid, points) {
