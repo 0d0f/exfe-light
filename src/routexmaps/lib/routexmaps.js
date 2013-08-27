@@ -1321,8 +1321,13 @@ define('routexmaps', function (require) {
     if (bounds.contains(latlng) && (b = ids[uid])) {
       //this.showTipline(uid, b);
       var p = this.fromLatLngToContainerPixel(latlng);
-      b = [[b[1], b[2]], [b[1] + 13, b[2]], [p.x, p.y]];
-      this.updateLine(uid, b);
+      var line = this.lines[uid];
+      if (line) {
+        line[2] = [p.x, p.y];
+      } else {
+        line =  [[b[1], b[2]], [b[1] + 13, b[2]], [p.x, p.y]];
+      }
+      this.updateLine(uid, line);
     } else {
       //this.hideTipline(uid);
       this.removeLine(uid);
