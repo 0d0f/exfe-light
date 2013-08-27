@@ -92,6 +92,8 @@ define('routexmaps', function (require) {
     delete this.options.svg;
     */
     this.canvas = this.options.canvas;
+    this.canvas.width = $(window).width() * 2;
+    this.canvas.height = $(window).height() * 2;
     this.ctx = this.canvas.getContext('2d');
     delete this.options.cavnas;
 
