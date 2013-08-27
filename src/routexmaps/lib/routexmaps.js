@@ -101,6 +101,7 @@ define('routexmaps', function (require) {
     this.routes = {};
     this.places = {};
     this.tiplines = {};
+    this.lines = {};
     this.breadcrumbs = {};
     this.geoMarkers = {};
     this.icons = {};
