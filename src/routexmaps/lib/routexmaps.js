@@ -758,7 +758,7 @@ define('routexmaps', function (require) {
               ]
           });
           if (isme) { continue; }
-          line[3] = '#ff7e98';
+          line && line[3] = '#ff7e98';
           //tl && tl.setAttribute('stroke', '#FF7E98');
           gm && gm.setIcon(icons.dotRed);
         } else {
@@ -791,7 +791,7 @@ define('routexmaps', function (require) {
           });
           if (isme) { continue; }
           //tl && tl.setAttribute('stroke', '#b2b2b2');
-          line[3] = '#b2b2b2';
+          line && line[3] = '#b2b2b2';
           gm && gm.setIcon(icons.dotGrey);
         }
       }
