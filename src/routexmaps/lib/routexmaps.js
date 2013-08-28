@@ -836,7 +836,7 @@ define('routexmaps', function (require) {
       this.updatePositions(data);
     }
 
-    this.updated[id] = data.positions[0];
+    this.updated[uid] = data.positions[0];
 
     if (uid != this.myUserId) {
       if (gms.hasOwnProperty(uid)) {
