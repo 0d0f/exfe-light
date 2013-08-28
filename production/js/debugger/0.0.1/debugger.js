@@ -32,4 +32,6 @@
     document.getElementsByTagName('head')[0].removeChild(d);
     this.status = false;
   };
+
+  Debugger.init();
 })();
