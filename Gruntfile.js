@@ -155,7 +155,7 @@ module.exports = function (grunt) {
     MOBILE: []
   };
 
-  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome', 'mobiledirector'];
+  var DESKTOP_OTHERS = ['home', 'newbieguide', 'newhome', 'mobiledirector', 'debugger'];
 
   var __DESKTOP__ = [];
   var __MOBILE__ = [];
