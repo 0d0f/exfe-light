@@ -2103,13 +2103,12 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.stop();
       }
 
-    , streaming: function () {
-
+    , turnOnTrack: function () {
         // 开启跟踪
         if (this.cross_id && this.token) {
           var data = {
               save_breadcrumbs: true
-            , after_in_seconds: 7200
+            , after_in_seconds: 3600
           };
           $.ajax({
               type: 'POST'
@@ -2122,6 +2121,27 @@ define('mobilecontroller', function (require, exports, module) {
                 console.log('error', data)
               }
           });
+        }
+      }
+
+    , streaming: function () {
+
+        var routexWidget, c;
+        for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
+          var w = this.cross.widget[i];
+          if (w.type === 'routex') {
+            routexWidget = w;
+            break;
+          }
+        }
+        if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
+          c = confirm('开启活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位');
+        }
+
+        if (c) {
+          this.turnOnTrack();
+        // 显示提醒文字
+        } else {
         }
 
         var self = this;
