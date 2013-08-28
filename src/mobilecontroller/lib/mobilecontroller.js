@@ -1665,7 +1665,7 @@ define('mobilecontroller', function (require, exports, module) {
 
           $locate.css('-webkit-transform', 'translate3d(0, 0, 0)');
           $openExfe.css('-webkit-transform', 'translate3d(0, 0, 0)');
-          $('#identities').css('max-height', Math.floor(height / 60) * 60 - 45);
+          $('#identities').css('max-height', Math.floor(height / 60) * 60 - 95);
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
