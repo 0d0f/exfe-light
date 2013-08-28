@@ -573,12 +573,19 @@ define('routexmaps', function (require) {
 
     this.removeTextLabels();
 
+    /*
     var tiplines = this.tiplines;
     for (k in tiplines) {
       this.svgLayer.removeChild(tiplines[k]);
       tiplines[k] = null;
       delete tiplines[k];
     }
+    */
+    var lines = this.lines;
+    for (k in lines) {
+      delete lines[k];
+    }
+    this.clearLines();
 
     this.uid = null;
 
@@ -830,7 +837,7 @@ define('routexmaps', function (require) {
         g = gms[uid];
         d = g.data;
         // no update
-        if (d.updated_at === data.updated_at) {
+        if (data.updated_at && d.updated_at === data.updated_at) {
           return;
         }
       } else if (!$('#identities .identity[data-uid="' + uid + '"]').length) {
