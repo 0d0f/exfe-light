@@ -4,7 +4,7 @@
   var Debugger;
   if (!window.Debugger) { Debugger = window.Debugger = {}; }
 
-  Debugger.style = '[debug]{display:block;}';
+  Debugger.style = '[debug]{display:block!important;}';
 
   // defaults to debug-off
   Debugger.status = false;
