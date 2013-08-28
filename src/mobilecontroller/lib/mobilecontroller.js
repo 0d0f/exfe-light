@@ -1674,6 +1674,11 @@ define('mobilecontroller', function (require, exports, module) {
           $('#identities').triggerHandler('scroll');
         });
 
+        element.on('touchstart.maps', '#turn-on', function (e) {
+          self.turnOnTrack();
+          $('#privacy-dialog').addClass('hide');
+        });
+
         var gotoGPS = function (e, showBreadcrumbs) {
           var status = self.checkGPSStyle();
           if (self.mapReadyStatus) {
@@ -1976,10 +1981,6 @@ define('mobilecontroller', function (require, exports, module) {
           isScroll = true;
           e.preventDefault();
           this.scrollTop = (pageY - e.pageY) + scrollTop;
-        });
-
-        element.on('touchstart.maps', '#turn-on', function (e) {
-          self.turnOnTrack();
         });
 
         self.on('show', function () {
