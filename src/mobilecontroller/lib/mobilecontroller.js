@@ -1978,6 +1978,10 @@ define('mobilecontroller', function (require, exports, module) {
           this.scrollTop = (pageY - e.pageY) + scrollTop;
         });
 
+        element.on('touchstart.maps', '#turn-on', function (e) {
+          self.turnOnTrack();
+        });
+
         self.on('show', function () {
           // weixin
           // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
