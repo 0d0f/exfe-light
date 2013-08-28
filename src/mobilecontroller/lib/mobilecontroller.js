@@ -2142,6 +2142,7 @@ define('mobilecontroller', function (require, exports, module) {
           this.turnOnTrack();
         // 显示提醒文字
         } else {
+          $('#privacy-dialog').removeClass('hide');
         }
 
         var self = this;
