@@ -429,7 +429,7 @@ define('routexmaps', function (require) {
           //list.geomarkers.push(p);
           gn++;
           gk = k;
-          var id = p.data.id.split('.')[0];
+          var id = p.data.id.split('.')[1];
           var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
           var tmp = $(IDENTITY_TMP);
           tmp.find('img').attr('src', identity.avatar_filename);
@@ -828,7 +828,7 @@ define('routexmaps', function (require) {
 
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
-      , uid = data.id.split('.')[0]
+      , uid = data.id.split('.')[1]
       , g, d, latlng, gps;
 
     this.updatePositions(data);
@@ -859,7 +859,7 @@ define('routexmaps', function (require) {
 
   proto.updatePositions = function (data) {
     // user_id@provider
-    var id = data.id.split('.')[0]
+    var id = data.id.split('.')[1]
     if (!this._breadcrumbs[id]) {
       this._breadcrumbs[id] = data;
     } else {
