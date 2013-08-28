@@ -829,15 +829,22 @@ define('routexmaps', function (require) {
   proto.drawGeoMarker = function (data) {
     var gms = this.geoMarkers
       , uid = data.id.split('.')[1]
+      , action = data.action
       , g, d, latlng, gps;
 
-    this.updatePositions(data);
+    if (action === 'save_to_history') {
+      this.updatePositions(data);
+    }
+
+    this.updated[id] = data.positions[0];
+
     if (uid != this.myUserId) {
       if (gms.hasOwnProperty(uid)) {
         g = gms[uid];
         d = g.data;
         // no update
-        if (data.updated_at && d.updated_at === data.updated_at) {
+        if (d.positions[0].gps.join(',') === data.positions[0].gps.join(',')) {
+          g.data = data;
           return;
         }
       } else if (!$('#identities .identity[data-uid="' + uid + '"]').length) {
@@ -858,7 +865,7 @@ define('routexmaps', function (require) {
   };
 
   proto.updatePositions = function (data) {
-    // user_id@provider
+    // e.g. breadcrumbs.user_id
     var id = data.id.split('.')[1]
     if (!this._breadcrumbs[id]) {
       this._breadcrumbs[id] = data;
@@ -870,8 +877,6 @@ define('routexmaps', function (require) {
     if (this._breadcrumbs[id].length > 100) {
       this._breadcrumbs[id].splice(100, this._breadcrumbs[id].length - 100);
     }
-
-    this.updated[id] = this._breadcrumbs[id].positions[0];
   };
 
   proto.addGeoMarker = function () {
