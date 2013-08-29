@@ -2135,7 +2135,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , checkRouteXStatus: function () {
-        var routexWidget, c;
+        var routexWidget, c = true;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
           var w = this.cross.widget[i];
           if (w.type === 'routex') {
