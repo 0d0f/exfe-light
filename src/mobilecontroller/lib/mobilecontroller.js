@@ -2035,7 +2035,7 @@ define('mobilecontroller', function (require, exports, module) {
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               // production use `key`
-              url: '//ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+              url: 'http://ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
