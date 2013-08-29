@@ -1655,7 +1655,8 @@ define('mobilecontroller', function (require, exports, module) {
           , $myInfo = self.$('#my-info')
           , $openExfe = self.$('#open-exfe')
           , $locate = self.$('#locate')
-          , isScroll = false;
+          , isScroll = false
+          , isScroll0 = false;
 
         // 监听横竖屏切换
         $win.on('orientationchange', function () {
@@ -1664,10 +1665,18 @@ define('mobilecontroller', function (require, exports, module) {
 
           $locate.css('-webkit-transform', 'translate3d(0, 0, 0)');
           $openExfe.css('-webkit-transform', 'translate3d(0, 0, 0)');
-          $('#identities').css('max-height', Math.round(height / 60) * 60 - 60 - 100 + 5);
+          $('#identities').css('max-height', Math.floor(height / 60) * 60 - 95);
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
+          //
+
+          $('#identities').triggerHandler('scroll');
+        });
+
+        element.on('touchstart.maps', '#turn-on', function (e) {
+          self.streaming();
+          $('#privacy-dialog').addClass('hide');
         });
 
         var gotoGPS = function (e, showBreadcrumbs) {
@@ -1709,7 +1718,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
-          if (isScroll) { return; }
+          if (isScroll0) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var id = $(this).data('id'), marker;
@@ -1718,7 +1727,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('tap.maps', '#nearby .geo-marker', function (e) {
-          if (isScroll) { return; }
+          if (isScroll0) { return; }
           e.preventDefault();
           if (self.mapReadyStatus) {
             var uid = $(this).data('uid');
@@ -1899,22 +1908,22 @@ define('mobilecontroller', function (require, exports, module) {
         });
         */
 
-        var pageY = 0, scrollTop = 0, _t;
+        var pageY0 = 0, scrollTop0 = 0, _t0;
         element.on('touchstart.maps', '#nearby', function (e) {
-          isScroll = false;
-          pageY = e.originalEvent.touches[0].pageY;
-          scrollTop = this.scrollTop;
+          isScroll0 = false;
+          pageY0 = e.originalEvent.touches[0].pageY;
+          scrollTop0 = this.scrollTop;
         });
         element.on('touchend.maps', '#nearby', function (e) {
-          if (_t) clearTimeout(_t);
+          if (_t0) clearTimeout(_t0);
           _t = setTimeout(function () {
-            isScroll = false;
+            isScroll0 = false;
           }, 233);
         });
         element.on('touchmove.maps', '#nearby', function (e) {
-          isScroll = true;
+          isScroll0 = true;
           e.preventDefault();
-          this.scrollTop = (pageY - e.originalEvent.touches[0].pageY) + scrollTop;
+          this.scrollTop = (pageY0 - e.originalEvent.touches[0].pageY) + scrollTop0;
         });
 
         var $identities = element.find('#identities');
@@ -1988,7 +1997,8 @@ define('mobilecontroller', function (require, exports, module) {
           $win.trigger('orientationchange');
 
           self.createIdentitiesList();
-          self.streaming();
+          //self.streaming();
+          self.checkRouteXStatus();
         });
 
       }
@@ -2021,8 +2031,8 @@ define('mobilecontroller', function (require, exports, module) {
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               // production use `key`
-              //url: '//ditu.google.cn/maps/api/js?sensor=true&language=zh_CN&v=3&callback=_loadmaps_'
-              url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+              url: '//ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+              //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
                 zoom: 5
@@ -2052,7 +2062,7 @@ define('mobilecontroller', function (require, exports, module) {
                   var d, id, i;
                   for (i = 0; i < len; ++i) {
                     d = data[i];
-                    id = d.id.split('.')[0];
+                    id = d.id.split('.')[1];
                     if (mc._breadcrumbs[id]) {
                       var arr = [];
                       mc._breadcrumbs[id].positions = arr.contact(mc._breadcrumbs[id].positions, d.positions);
@@ -2099,13 +2109,12 @@ define('mobilecontroller', function (require, exports, module) {
         routexStream.stop();
       }
 
-    , streaming: function () {
-
+    , turnOnTrack: function () {
         // 开启跟踪
         if (this.cross_id && this.token) {
           var data = {
               save_breadcrumbs: true
-            , after_in_seconds: 7200
+            , after_in_seconds: 3600
           };
           $.ajax({
               type: 'POST'
@@ -2119,7 +2128,30 @@ define('mobilecontroller', function (require, exports, module) {
               }
           });
         }
+      }
 
+    , checkRouteXStatus: function () {
+        var routexWidget, c;
+        for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
+          var w = this.cross.widget[i];
+          if (w.type === 'routex') {
+            routexWidget = w;
+            break;
+          }
+        }
+        if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
+          c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
+        }
+
+        if (c) {
+          this.streaming();
+        // 显示提醒文字
+        } else {
+          $('#privacy-dialog').removeClass('hide');
+        }
+      }
+
+    , streaming: function () {
         var self = this;
         this.initStream();
         this.startStream();
