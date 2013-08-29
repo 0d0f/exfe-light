@@ -13,10 +13,13 @@ define('geomarker', function () {
 
   proto.onAdd = function () {
     var opts = this.options
-      , div = document.createElement('div');
+      , div = document.createElement('div')
+      , arrow = document.createElement('div');
+    arrow.id = 'gpsarrow';
     div.id = opts.id;
-    div.innerHTML = '<div id="gpsarrow"></div>';
     this.div_ = div;
+    this.arrow_ = arrow;
+    div.appendChild(arrow);
     this.getPanes().overlayLayer.appendChild(div);
   };
 
@@ -27,12 +30,20 @@ define('geomarker', function () {
   };
 
   proto.draw = function () {
-    var point = this.getProjection().fromLatLngToDivPixel(this.latlng)
-      , opts = this.options
-      , div = this.div_;
+    var projection = this.getProjection();
+    if (projection) {
+      var point = projection.fromLatLngToDivPixel(this.latlng)
+        , opts = this.options
+        , div = this.div_;
 
-    div.style.top = (point.y - opts.height / 2) + 'px';
-    div.style.left = (point.x - opts.width / 2) + 'px';
+      div.style.top = (point.y - opts.height / 2) + 'px';
+      div.style.left = (point.x - opts.width / 2) + 'px';
+    }
+  };
+
+  proto.setArrowRotate = function (n) {
+    var style = this.arrow_.style;
+    style.webkitTransform = style.transform = 'rotate(' + n + 'deg)';
   };
 
   // s: 0 offline, 1 online
