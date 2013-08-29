@@ -374,6 +374,7 @@ define('mobileroutes', function (require, exports, module) {
         , ctoken = req.params[0]
         , response = _ENV_._data_.response
         , tokenInfos = _ENV_._data_.tokenInfos
+        , username = _ENV_._data_.username || ''
         , cross = response.cross
         , action = response.action
         , cross_access_token = response.cross_access_token
@@ -399,6 +400,7 @@ define('mobileroutes', function (require, exports, module) {
         , cross_id: cross && cross.id
         , ctoken: ctoken
         , token: token || tokenInfos[0] || ctoken
+        , username: username
         , myIdentityId: (browsing_identity && browsing_identity.id) || tokenInfos[1] || 0
         , myUserId: (browsing_identity && browsing_identity.connected_user_id) || 0
         , smith_id: window._ENV_.smith_id

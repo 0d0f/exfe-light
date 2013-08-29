@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-29 01:08:09 */
+/*! mobile@2a 2013-08-29 04:08:20 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4868,7 +4868,7 @@ TWEEN.Tween = function(object) {
             var search = window.search.substr(1);
             search && (search = "&" + search), window.location = "/?redirect" + search + window.location.hash;
           });
-        }, user_id = resolveToken.user_id, token = resolveToken.token;
+        }, user_id = resolveToken.user_id, token = resolveToken.token, username = resolveToken.name || "";
         $.ajax({
           type: "POST",
           url: api_url + "/Users/" + user_id + "?token=" + token,
@@ -4882,7 +4882,7 @@ TWEEN.Tween = function(object) {
               if (identity.id === resolveToken.identity_id) {
                 if (self.showIdentity(identity), self.$(".done-info").removeClass("hide"), Store.set("tmp-user", user), 
                 App.controllers.footer.emit("reset-position"), user_id && token) {
-                  var args = "?token=" + token + "&user_id=" + user_id + "&identity_id=" + identity.id;
+                  var args = "?token=" + token + "&user_id=" + user_id + "&username=" + username + "&identity_id=" + identity.id;
                   done(args);
                 }
                 break;
@@ -4921,8 +4921,8 @@ TWEEN.Tween = function(object) {
           if (meta && 200 === meta.code) {
             $name.blur(), $pass.blur(), self.$(".password").addClass("hide"), self.$(".done-info").removeClass("hide"), 
             $error.html("").addClass("hide"), $button.parent().addClass("hide");
-            var authorization = data.response.authorization;
-            authorization && App.controllers.footer.emit("redirect", "?token=" + authorization.token + "&user_id=" + authorization.user_id, function() {
+            var auth = data.response.authorization;
+            auth && App.controllers.footer.emit("redirect", "?token=" + auth.token + "&user_id=" + auth.user_id + "&username=" + (auth.name || ""), function() {
               var search = window.location.search.substr(1);
               search && (search = "&" + search), window.location = "/?redirect" + search + window.location.hash;
             });
@@ -5518,9 +5518,9 @@ TWEEN.Tween = function(object) {
         e.preventDefault();
         var args = "", params = [];
         return self.cross && (args += self.cross.id), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
-        params.push("token=" + self.token)), self.myIdentityId && params.push("identity_id=" + self.myIdentityId), 
-        params.length && (args += "?" + params.join("&")), console.log(app_prefix_url + args), 
-        openExfe(app_prefix_url + args), !1;
+        params.push("token=" + self.token), self.username && params.push("username=", self.username)), 
+        self.myIdentityId && params.push("identity_id=" + self.myIdentityId), params.length && (args += "?" + params.join("&")), 
+        console.log(app_prefix_url + args), openExfe(app_prefix_url + args), !1;
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
         e.preventDefault();
         var v = $("#notify-provider").val();
@@ -5908,7 +5908,7 @@ TWEEN.Tween = function(object) {
     },
     routex: function(req) {
       document.title = "活点地图";
-      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokenInfos = _ENV_._data_.tokenInfos, cross = response.cross, cross_access_token = (response.action, 
+      var app = req.app, ctoken = req.params[0], response = _ENV_._data_.response, tokenInfos = _ENV_._data_.tokenInfos, username = _ENV_._data_.username || "", cross = response.cross, cross_access_token = (response.action, 
       response.cross_access_token), browsing_identity = response.browsing_identity, cats = Store.get("cats") || {}, token = cats && cats[ctoken];
       cross_access_token && (token = cats[ctoken] = cross_access_token, Store.set("cats", cats));
       var routexCont = app.controllers.routex = new RouteXController({
@@ -5920,6 +5920,7 @@ TWEEN.Tween = function(object) {
         cross_id: cross && cross.id,
         ctoken: ctoken,
         token: token || tokenInfos[0] || ctoken,
+        username: username,
         myIdentityId: browsing_identity && browsing_identity.id || tokenInfos[1] || 0,
         myUserId: browsing_identity && browsing_identity.connected_user_id || 0,
         smith_id: window._ENV_.smith_id,
@@ -5943,7 +5944,7 @@ TWEEN.Tween = function(object) {
   app.get(/^\/+(?:\?(?:redirect)?)?#!([1-9][0-9]*)\/([a-zA-Z0-9]{4})\/?$/, routes.crossPhoneToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{32})\/?$/, routes.crossToken), 
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), 
-  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), app.get(/^\/+!\d+\/routex\/?\?.*$/, routes.routex), 
+  app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex), app.get(/^\/+!\d+\/routex\/?.*$/, routes.routex), 
   app.on("launched", function() {
     function animate() {
       requestAnimationFrame(animate), TWEEN.update();

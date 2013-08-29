@@ -34,7 +34,7 @@ define('user', function (require) {
             Store.set('last_external_username', Util.printExtUserName(identity));
           }
 
-          Store.set('authorization', { token: token, user_id: user_id });
+          Store.set('authorization', { token: token, user_id: user_id, name: user.name });
           Store.set('user', user);
           Store.set('lastIdentity', identity);
 
