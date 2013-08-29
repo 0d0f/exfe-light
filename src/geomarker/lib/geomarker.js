@@ -25,7 +25,10 @@ define('geomarker', function () {
   var proto = GeoMarker.prototype = new google.maps.OverlayView();
 
   proto.onAdd = function () {
-    this.getPanes().overlayLayer.appendChild(this.div_);
+    //http://stackoverflow.com/questions/2682626/z-index-overlay-in-google-maps-version-3
+    var overlayLayer = this.getPanes().overlayLayer;
+    overlayLayer.style.zIndex = 605;
+    overlayLayer.appendChild(this.div_);
     this.listen();
   };
 
