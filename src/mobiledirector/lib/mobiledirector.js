@@ -581,6 +581,7 @@
       var authorization = JSON.parse(localStorage.getItem('authorization'))
         , user_id = authorization && authorization.user_id
         , user_token = authorization && authorization.token
+        , username = (authorization && authorization.name) || ''
         , auth = getAuthFromHeader();
 
       // 是否跟本地的 user-token 进行合并？
@@ -588,9 +589,11 @@
         authorization = auth.authorization;
         user_id = authorization.user_id;
         user_token = authorization.token;
+        username = authorization.name;
         localStorage.setItem('authorization', JSON.stringify({
             user_id: user_id
           , token: user_token
+          , name: username || ''
         }));
       }
 
@@ -615,6 +618,7 @@
                   _ENV_._data_.response.browsing_identity = browsing_identity;
                   _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
                   _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
                   handle();
                 }
               , function (d) {
@@ -711,6 +715,7 @@
                   _ENV_._data_.response.browsing_identity = browsing_identity;
                   _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
                   _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
                   handle();
                 }
               , function (d) {
@@ -739,6 +744,7 @@
                             localStorage.setItem('authorization', JSON.stringify({
                                 user_id: _auth.user_id
                               , token: _auth.token
+                              , name: _auth.name
                             }));
                           }
                           var cross_access_token = response.cross_access_token;
@@ -752,6 +758,7 @@
                           _ENV_._data_.response.browsing_identity = browsing_identity;
                           _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
                           _ENV_._data_.smith_id = window._ENV_.smith_id;
+                          _ENV_._data_.username = (_auth && _auth.name) || '';
                           handle();
                         }
                       , function (d) {

@@ -325,8 +325,9 @@ define('mobilecontroller', function (require, exports, module) {
           });
         };
 
-        var user_id = resolveToken.user_id,
-        token = resolveToken.token;
+        var user_id = resolveToken.user_id
+          , token = resolveToken.token
+          , username = resolveToken.name || '';
         $.ajax({
           type: 'POST',
           url: api_url + '/Users/' + user_id + '?token=' + token,
@@ -344,7 +345,7 @@ define('mobilecontroller', function (require, exports, module) {
                   Store.set('tmp-user', user);
                   App.controllers.footer.emit('reset-position');
                   if (user_id && token) {
-                    var args = '?token=' + token + '&user_id=' + user_id + '&identity_id=' + identity.id;
+                    var args = '?token=' + token + '&user_id=' + user_id + '&username=' + username + '&identity_id=' + identity.id;
                     done(args);
                   }
                   break;
@@ -413,9 +414,9 @@ define('mobilecontroller', function (require, exports, module) {
               self.$('.done-info').removeClass('hide');
               $error.html('').addClass('hide');
               $button.parent().addClass('hide');
-              var authorization = data.response.authorization;
-              if (authorization) {
-                App.controllers.footer.emit('redirect', '?token=' + authorization.token + '&user_id=' + authorization.user_id, function () {
+              var auth = data.response.authorization;
+              if (auth) {
+                App.controllers.footer.emit('redirect', '?token=' + auth.token + '&user_id=' + auth.user_id + '&username=' + (auth.name || ''), function () {
                   var search = window.location.search.substr(1);
                   if (search) {
                     search = '&' + search;
@@ -1771,6 +1772,9 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.myUserId && self.token) {
             params.push('user_id=' + self.myUserId);
             params.push('token=' + self.token);
+            if (self.username) {
+              params.push('username=', self.username);
+            }
           }
           if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
           if (params.length) {
