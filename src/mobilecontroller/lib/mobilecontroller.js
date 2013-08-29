@@ -1997,7 +1997,8 @@ define('mobilecontroller', function (require, exports, module) {
           $win.trigger('orientationchange');
 
           self.createIdentitiesList();
-          self.streaming();
+          //self.streaming();
+          self.checkRouteXStatus();
         });
 
       }
@@ -2129,7 +2130,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
-    , checkRoutexStatus: function () {
+    , checkRouteXStatus: function () {
         var routexWidget, c;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
           var w = this.cross.widget[i];
