@@ -37,7 +37,7 @@ define('geomarker', function () {
 
   // s: 0 offline, 1 online
   proto.setStatus = function (i) {
-    var img = this.div_.querySelector('#gpsarrow');
+    var img = document.getElementById('gpsarrow');
     img.className = i ? 'online' : '';
   };
 
