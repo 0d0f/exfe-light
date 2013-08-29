@@ -15,7 +15,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       $ = require('zepto'),
 
-      Chrome = navigator.userAgent.match)/Chrome\/([\d.]+)/),
+      Chrome = navigator.userAgent.match(/Chrome\/([\d.]+)/),
 
       // animation {{{
       //AF = require('af'),

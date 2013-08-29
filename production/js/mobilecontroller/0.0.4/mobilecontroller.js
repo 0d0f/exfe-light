@@ -15,6 +15,8 @@ define('mobilecontroller', function (require, exports, module) {
 
       $ = require('zepto'),
 
+      Chrome = navigator.userAgent.match(/Chrome\/([\d.]+)/),
+
       // animation {{{
       //AF = require('af'),
       //requestAnimationFrame = AF.request,
@@ -2035,7 +2037,8 @@ define('mobilecontroller', function (require, exports, module) {
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               // production use `key`
-              url: '//ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            // In Chrome, block http while the site is https.
+            url: (!Chrome ? 'http:' : '') + '//ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
@@ -2135,7 +2138,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , checkRouteXStatus: function () {
-        var routexWidget, c;
+        var c = true, routexWidget;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
           var w = this.cross.widget[i];
           if (w.type === 'routex') {

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-29 04:08:20 */
+/*! mobile@2a 2013-08-29 10:08:48 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4708,7 +4708,7 @@ TWEEN.Tween = function(object) {
 }), define("mobilecontroller", function(require, exports, module) {
   "use strict";
   var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, apiv3_url = _ENV_.apiv3_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
-  window.openExfe), Handlebars = require("handlebars"), $ = require("zepto"), util = require("util"), trim = util.trim, parseId = util.parseId, iPad = navigator.userAgent.match(/iPad/), Live = require("live"), escape = function(html, encode) {
+  window.openExfe), Handlebars = require("handlebars"), $ = require("zepto"), Chrome = navigator.userAgent.match(/Chrome\/([\d.]+)/), util = require("util"), trim = util.trim, parseId = util.parseId, iPad = navigator.userAgent.match(/iPad/), Live = require("live"), escape = function(html, encode) {
     return html.replace(encode ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }, now = Date.now || function() {
     return new Date().getTime();
@@ -5583,7 +5583,7 @@ TWEEN.Tween = function(object) {
     },
     loadMaps: function() {
       var self = this, RoutexMaps = require("routexmaps"), mc = this.mapController = new RoutexMaps({
-        url: "//ditu.google.cn/maps/api/js?key=" + window._ENV_.MAP_KEY + "&sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
+        url: (Chrome ? "" : "http:") + "//ditu.google.cn/maps/api/js?key=" + window._ENV_.MAP_KEY + "&sensor=false&language=zh_CN&v=3&callback=_loadmaps_",
         mapDiv: document.getElementById("map"),
         mapOptions: {
           zoom: 5
@@ -5654,7 +5654,7 @@ TWEEN.Tween = function(object) {
       }
     },
     checkRouteXStatus: function() {
-      for (var routexWidget, c, i = 0, len = this.cross.widget.length; len > i; ++i) {
+      for (var routexWidget, c = !0, i = 0, len = this.cross.widget.length; len > i; ++i) {
         var w = this.cross.widget[i];
         if ("routex" === w.type) {
           routexWidget = w;
