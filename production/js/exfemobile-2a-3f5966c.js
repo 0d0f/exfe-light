@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-29 10:08:48 */
+/*! mobile@2a 2013-08-29 11:08:12 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3960,7 +3960,7 @@ TWEEN.Tween = function(object) {
     }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
       return function cb() {
         var GMaps = google.maps, GEvent = GMaps.event;
-        GMaps.InfoBox = require("infobox"), GMaps.TextLabel = require("maplabel");
+        GMaps.InfoBox = require("infobox"), GMaps.TextLabel = require("maplabel"), GMaps.GeoMarker = require("geomarker");
         var icons = rm.icons;
         icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
@@ -4468,16 +4468,11 @@ TWEEN.Tween = function(object) {
   }, proto.updateGeoLocation = function(uid, position) {
     var latlng, gps, geoLocation = this.geoLocation;
     if (!geoLocation) {
-      geoLocation = this.geoLocation = new google.maps.Marker({
-        map: this.map,
-        zIndex: MAX_INDEX - 1,
-        visible: !0,
-        icon: this.icons.arrowGrey,
-        shape: {
-          type: "rect",
-          rect: [ 0, 0, 1, 1 ]
-        },
-        optimized: !1
+      geoLocation = this.geoLocation = new google.maps.GeoMarker({
+        id: "gpsmarker",
+        width: 22,
+        height: 22,
+        map: this.map
       }), geoLocation._status = 0;
       var lastlatlng = JSON.parse(window.localStorage.getItem("position"));
       lastlatlng && (lastlatlng = this.toMars(lastlatlng, !0), gps = lastlatlng.gps, geoLocation._status = 1, 
@@ -4485,7 +4480,7 @@ TWEEN.Tween = function(object) {
       this.map.panTo(latlng));
     }
     position && (position = this.toMars(position, !0), gps = position.gps, latlng = this.toLatLng(gps[0], gps[1]), 
-    geoLocation.setIcon(this.icons.arrowBlue), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
+    geoLocation.setStatus(!0), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
     this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
     geoLocation._uid = uid;
   }, proto.toMars = function(position, fresh) {
@@ -4498,6 +4493,30 @@ TWEEN.Tween = function(object) {
     var geoLocation = this.geoLocation;
     geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
   }, RoutexMaps;
+}), define("geomarker", function() {
+  "use strict";
+  function GeoMarker(options) {
+    this.options = options || {}, this.div_ = null, this.setMap(this.map_ = this.options.map), 
+    delete this.options.map;
+  }
+  var proto = GeoMarker.prototype = new google.maps.OverlayView();
+  return proto.onAdd = function() {
+    var opts = this.options, div = document.createElement("div");
+    div.id = opts.id, div.innerHTML = '<div id="gpsarrow"></div>', this.div_ = div, 
+    this.getPanes().overlayLayer.appendChild(div);
+  }, proto.onRemove = function() {
+    this.div_.parentNode.removeChild(this.div_), this.div_ = null;
+  }, proto.draw = function() {
+    var point = this.getProjection().fromLatLngToDivPixel(this.latlng), opts = this.options, div = this.div_;
+    div.style.top = point.y - opts.height / 2 + "px", div.style.left = point.x - opts.width / 2 + "px";
+  }, proto.setStatus = function(i) {
+    var img = this.div_.getElementById("gpsarrow");
+    img.className = i ? "online" : "";
+  }, proto.getPosition = function() {
+    return this.latlng;
+  }, proto.setPosition = function(latlng) {
+    this.latlng = latlng, this.draw();
+  }, GeoMarker;
 }), define("maplabel", function() {
   function Label(opt_options) {
     this.setValues(opt_options);

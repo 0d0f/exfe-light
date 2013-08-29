@@ -2918,4 +2918,25 @@ button .exfe {
 }
 #routex #gpsmarker {
   position: absolute;
+  z-index: 605;
+  width: 22px;
+  height: 22px;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+#routex #gpsmarker #gpsarrow {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  background-image: url(/static/img/map_arrow_22g5@2x.png);
+  background-size: 100% 100%;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform 233ms ease-in;
+}
+#routex #gpsmarker #gpsarrow .online {
+  background-image: url(/static/img/map_arrow_22blue@2x.png);
 }
