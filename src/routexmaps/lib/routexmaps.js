@@ -710,7 +710,8 @@ define('routexmaps', function (require) {
       return;
     }
 
-    p.setIcon(new google.maps.MarkerImage(
+    var GMaps = google.maps;
+    p.setIcon(new GMaps.MarkerImage(
         data.icon
       , new GMaps.Size(48, 68)
       , new GMaps.Point(0, 0)
