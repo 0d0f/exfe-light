@@ -2916,3 +2916,6 @@ button .exfe {
   position: absolute;
   bottom: 30px;
 }
+#routex #gpsmarker {
+  position: absolute;
+}
