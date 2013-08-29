@@ -66,7 +66,7 @@ define('geomarker', function () {
     delta /= 5;
     this.needleAngle = this.needleAngle + delta;
     var updatedAngle = this.needleAngle - window.orientation;
-    this.setArrowRotate(this.needleAngle);
+    this.setArrowRotate(this.needleAngle - 180);
   };
 
   proto.orientationHandle = function () {
