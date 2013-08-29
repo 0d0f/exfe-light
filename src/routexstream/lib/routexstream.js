@@ -211,7 +211,7 @@ define('routexstream', function (require) {
         }
         if (!stream.live && token) {
             stream.init(
-                api_url + '/routex/crosses/' + cross_id + '?_method=WATCH&coordinate=mars&token=' + token,
+                api_url + '/routex/crosses/' + cross_id + '?_method=WATCH&coordinate=mars&token=' + token + '&force_window_open',
                 streamCallback, streamDead
             );
             log('Streaming with token: ' + token);
