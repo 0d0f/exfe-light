@@ -2937,6 +2937,6 @@ button .exfe {
   -webkit-transform: translate3d(0, 0, 0);
   -webkit-transition: -webkit-transform 233ms ease-in;
 }
-#routex #gpsmarker #gpsarrow .online {
+#routex #gpsmarker #gpsarrow.online {
   background-image: url(/static/img/map_arrow_22blue@2x.png);
 }

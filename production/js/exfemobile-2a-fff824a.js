@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-29 11:08:12 */
+/*! mobile@2a 2013-08-30 12:08:25 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4498,20 +4498,40 @@ TWEEN.Tween = function(object) {
   function GeoMarker(options) {
     this.options = options || {}, this.div_ = null, this.setMap(this.map_ = this.options.map), 
     delete this.options.map;
+    var opts = this.options, div = document.createElement("div"), arrow = document.createElement("div");
+    arrow.id = "gpsarrow", div.id = opts.id, div.appendChild(arrow), this.arrow_ = arrow, 
+    this.div_ = div, this.needleAngle = 0, this.accuracy = 0, this.currentHeading = 0;
   }
   var proto = GeoMarker.prototype = new google.maps.OverlayView();
   return proto.onAdd = function() {
-    var opts = this.options, div = document.createElement("div");
-    div.id = opts.id, div.innerHTML = '<div id="gpsarrow"></div>', this.div_ = div, 
-    this.getPanes().overlayLayer.appendChild(div);
+    this.getPanes().overlayLayer.appendChild(this.div_), this.listen();
   }, proto.onRemove = function() {
     this.div_.parentNode.removeChild(this.div_), this.div_ = null;
   }, proto.draw = function() {
-    var point = this.getProjection().fromLatLngToDivPixel(this.latlng), opts = this.options, div = this.div_;
-    div.style.top = point.y - opts.height / 2 + "px", div.style.left = point.x - opts.width / 2 + "px";
+    var projection = this.getProjection();
+    if (projection) {
+      var point = projection.fromLatLngToDivPixel(this.latlng), opts = this.options, div = this.div_;
+      div.style.top = point.y - opts.height / 2 + "px", div.style.left = point.x - opts.width / 2 + "px";
+    }
+  }, proto.setArrowRotate = function(n) {
+    var style = this.arrow_.style;
+    style.webkitTransform = style.transform = "rotate(" + n + "deg)";
+  }, proto.rotateNeedle = function() {
+    var multiplier = Math.floor(this.needleAngle / 360), adjustedNeedleAngle = this.needleAngle - 360 * multiplier, delta = this.currentHeading - adjustedNeedleAngle;
+    Math.abs(delta) > 180 && (0 > delta ? delta += 360 : delta -= 360), delta /= 5, 
+    this.needleAngle = this.needleAngle + delta, this.needleAngle - window.orientation, 
+    this.setArrowRotate(this.needleAngle);
+  }, proto.orientationHandle = function() {
+    var self = this;
+    return function(e) {
+      void 0 != e.webkitCompassHeading ? (self.currentHeading = 360 - e.webkitCompassHeading, 
+      self.accuracy = e.webkitCompassAccuracy) : null != e.alpha && (self.currentHeading = -1 * (270 - e.alpha), 
+      self.accuracy = e.webkitCompassAccuracy), self.rotateNeedle();
+    };
+  }, proto.listen = function() {
+    window.DeviceOrientationEvent && window.addEventListener("deviceorientation", this.orientationHandle(), !1);
   }, proto.setStatus = function(i) {
-    var img = this.div_.getElementById("gpsarrow");
-    img.className = i ? "online" : "";
+    this.arrow_.className = i ? "online" : "";
   }, proto.getPosition = function() {
     return this.latlng;
   }, proto.setPosition = function(latlng) {
