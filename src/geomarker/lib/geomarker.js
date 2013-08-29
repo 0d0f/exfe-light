@@ -7,20 +7,21 @@ define('geomarker', function () {
     this.div_ = null;
     this.setMap(this.map_ = this.options.map);
     delete this.options.map;
-  }
 
-  var proto = GeoMarker.prototype = new google.maps.OverlayView();
-
-  proto.onAdd = function () {
     var opts = this.options
       , div = document.createElement('div')
       , arrow = document.createElement('div');
     arrow.id = 'gpsarrow';
     div.id = opts.id;
-    this.div_ = div;
-    this.arrow_ = arrow;
     div.appendChild(arrow);
-    this.getPanes().overlayLayer.appendChild(div);
+    this.arrow_ = arrow;
+    this.div_ = div;
+  }
+
+  var proto = GeoMarker.prototype = new google.maps.OverlayView();
+
+  proto.onAdd = function () {
+    this.getPanes().overlayLayer.appendChild(this.div_);
   };
 
   proto.onRemove = function () {
