@@ -131,6 +131,7 @@ define('routexmaps', function (require) {
 
         GMaps.InfoBox = require('infobox');
         GMaps.TextLabel = require('maplabel');
+        GMaps.GeoMarker = require('geomarker');
 
         var icons = rm.icons;
 
@@ -1444,6 +1445,7 @@ define('routexmaps', function (require) {
     ctx.stroke();
   };
 
+  /*
   proto.updateGeoLocation = function (uid, position) {
     var geoLocation = this.geoLocation, latlng, gps;
     if (!geoLocation) {
@@ -1452,13 +1454,6 @@ define('routexmaps', function (require) {
           map: this.map
         , zIndex: MAX_INDEX - 1
         , visible: true
-        /**
-         * google.maps.Animation
-         *  BOUNCE: 1
-         *  DROP: 2
-         *  b: 4
-         *  d: 3
-         */
         //, animation: 2
         , icon: this.icons.arrowGrey
         , shape: {
@@ -1484,6 +1479,47 @@ define('routexmaps', function (require) {
       gps = position.gps;
       latlng = this.toLatLng(gps[0], gps[1])
       geoLocation.setIcon(this.icons.arrowBlue);
+      geoLocation.setPosition(latlng);
+      if (2 !== geoLocation._status) {
+        this.map.setZoom(15);
+        this.map.panTo(latlng);
+      }
+      geoLocation._status = 2;
+    }
+    if (uid) {
+      this.updated[uid] = position || lastlatlng;
+    }
+    geoLocation._uid = uid;
+  };
+  */
+
+  proto.updateGeoLocation = function (uid, position) {
+    var geoLocation = this.geoLocation, latlng, gps;
+    if (!geoLocation) {
+      // status: 0-init, 1-last-latlng, 2: new-latlng
+      geoLocation = this.geoLocation = new google.maps.GeoMarker({
+          id: 'gpsmarker'
+        , width: 22
+        , height: 22
+        , map: this.map
+      });
+      geoLocation._status = 0;
+      var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
+      if (lastlatlng) {
+        lastlatlng = this.toMars(lastlatlng, true);
+        gps = lastlatlng.gps;
+        geoLocation._status = 1;
+        latlng = this.toLatLng(gps[0], gps[1]);
+        geoLocation.setPosition(latlng);
+        this.map.setZoom(15);
+        this.map.panTo(latlng);
+      }
+    }
+    if (position) {
+      position = this.toMars(position, true);
+      gps = position.gps;
+      latlng = this.toLatLng(gps[0], gps[1])
+      geoLocation.setStatus(true);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {
         this.map.setZoom(15);
