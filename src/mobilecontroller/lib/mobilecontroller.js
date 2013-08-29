@@ -1675,7 +1675,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#turn-on', function (e) {
-          self.turnOnTrack();
+          self.streaming();
           $('#privacy-dialog').addClass('hide');
         });
 
@@ -2129,8 +2129,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
-    , streaming: function () {
-
+    , checkRoutexStatus: function () {
         var routexWidget, c;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
           var w = this.cross.widget[i];
@@ -2140,16 +2139,18 @@ define('mobilecontroller', function (require, exports, module) {
           }
         }
         if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
-          c = confirm('开启活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位');
+          c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
         }
 
         if (c) {
-          this.turnOnTrack();
+          this.streaming();
         // 显示提醒文字
         } else {
           $('#privacy-dialog').removeClass('hide');
         }
+      }
 
+    , streaming: function () {
         var self = this;
         this.initStream();
         this.startStream();

@@ -676,6 +676,7 @@ define('routexmaps', function (require) {
     if (t === 1 || t === 3) {
       p.setIcon(this.icons.xplaceMarker);
       p.setZIndex(MAX_INDEX - 1);
+      return;
     }
 
     if (t === 2 || t === 3) {
@@ -706,7 +707,16 @@ define('routexmaps', function (require) {
         p.setIcon(icon);
         p.setZIndex(zIndex);
       }
+      return;
     }
+
+    p.setIcon(new google.maps.MarkerImage(
+        data.icon
+      , new GMaps.Size(48, 68)
+      , new GMaps.Point(0, 0)
+      , new GMaps.Point(12, 34)
+      , new GMaps.Size(24, 34)
+    ));
   };
 
   proto.monit = function () {
