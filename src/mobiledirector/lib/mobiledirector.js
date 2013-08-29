@@ -721,7 +721,7 @@
               , function (d) {
                   // wechat OAuth
 
-                  if (!auth) {
+                  if (!auth || !xcode) {
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
