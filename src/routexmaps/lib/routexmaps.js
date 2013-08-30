@@ -683,7 +683,6 @@ define('routexmaps', function (require) {
     if (t === 1 || t === 3) {
       p.setIcon(this.icons.xplaceMarker);
       p.setZIndex(MAX_INDEX - 1);
-      return;
     }
 
     if (t === 2 || t === 3) {
@@ -714,6 +713,9 @@ define('routexmaps', function (require) {
         p.setIcon(icon);
         p.setZIndex(zIndex);
       }
+    }
+
+    if (1 <= t && t <= 3) {
       return;
     }
 
@@ -1539,7 +1541,8 @@ define('routexmaps', function (require) {
     var dsnt = this.destinationPlace;
     geoLocation.toggleDsntCircle(!!dsnt);
     if (dsnt) {
-      var r = bearing(latlng.lat(), latlng.lng(), dsnt.lat(), dsnt.lng());
+      var d = dsnt.getPosition()
+        , r = bearing(latlng.lat(), latlng.lng(), d.lat(), d.lng());
       geoLocation.setDsntRotate(r);
     }
     geoLocation._uid = uid;
