@@ -149,6 +149,7 @@ define('routexmaps', function (require) {
             , new GMaps.Point(9, 9)
             , new GMaps.Size(18, 18)
           );
+        /*
         icons.arrowBlue = new GMaps.MarkerImage(
               SITE_URL + '/static/img/map_arrow_22blue@2x.png'
             , new GMaps.Size(44, 44)
@@ -163,6 +164,7 @@ define('routexmaps', function (require) {
             , new GMaps.Point(11, 11)
             , new GMaps.Size(22, 22)
           );
+        */
         icons.placeMarker = new GMaps.MarkerImage(
               apiv3_url + '/icons/mapmark'
             , new GMaps.Size(48, 68)
@@ -602,6 +604,10 @@ define('routexmaps', function (require) {
       delete places[id];
       if (isDestination) {
         this.destinationPlace = null;
+        var geoLocation = this.geoLocation;
+        if (geoLocation) {
+          geoLocation.toggleDsntCircle(false);
+        }
       }
     }
   };
@@ -1530,6 +1536,12 @@ define('routexmaps', function (require) {
     if (uid) {
       this.updated[uid] = position || lastlatlng;
     }
+    var dsnt = this.destinationPlace;
+    geoLocation.toggleDsntCircle(!!dsnt);
+    if (dsnt) {
+      var r = bearing(latlng.lat(), latlng.lng(), dsnt.lat(), dsnt.lng());
+      geoLocation.setDsntRotate(r);
+    }
     geoLocation._uid = uid;
   };
 
@@ -1550,7 +1562,7 @@ define('routexmaps', function (require) {
   proto.switchGEOStyle = function (status) {
     var geoLocation = this.geoLocation;
     if (geoLocation) {
-      geoLocation.setIcon(this.icons['arrow' + (status ? 'Blue' : 'Grey')]);
+      geoLocation.setStatus(status);
     }
   };
 
