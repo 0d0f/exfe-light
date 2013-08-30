@@ -697,11 +697,9 @@ define('routexmaps', function (require) {
       var destinationPlace = this.destinationPlace;
       if (destinationPlace && destinationPlace !== p) {
         var cd = destinationPlace.data;
-        if (data.updated_at > cd.updated_at) {
-          if (data.id != cd.id) {
-            destinationPlace.setIcon(this.icons.placeMarker);
-            destinationPlace.setZIndex(zIndex - 5);
-          }
+        if (data.id != cd.id) {
+          destinationPlace.setIcon(this.icons.placeMarker);
+          destinationPlace.setZIndex(zIndex - 5);
           this.destinationPlace = p;
         } else {
           zIndex = MAX_INDEX - 5;
