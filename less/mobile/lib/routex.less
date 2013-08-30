@@ -54,6 +54,16 @@
   }
   */
 }
+@keyframes pound {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
 
 .routexBackground(@startColor: #fafafa, @endColor: #eaeaea, @deg: 0deg) {
   @d: 90deg - @deg;
@@ -1093,6 +1103,7 @@
     width: 22px;
     height: 22px;
     -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 
     #gps-dsnt {
       position: absolute;
@@ -1107,6 +1118,10 @@
       -webkit-transform-origin: 50% 50%;
       -webkit-transform: translate3d(0, 0, 0);
       -webkit-transition: -webkit-transform 7ms ease-in;
+      backface-visibility: hidden;
+      transform-origin: 50% 50%;
+      transform: translate3d(0, 0, 0);
+      transition: transform 7ms ease-in;
 
       &:after {
         position: absolute;
@@ -1118,6 +1133,8 @@
         box-shadow: 0 0 3px #0078ff, 0 0 3px #0078ff inset;
         -webkit-transform: scale(1);
         -webkit-animation: pound 1s ease-out infinite;
+        transform: scale(1);
+        animation: pound 1s ease-out infinite;
       }
     }
 
@@ -1134,6 +1151,10 @@
       -webkit-transform-origin: 50% 50%;
       -webkit-transform: translate3d(0, 0, 0);
       -webkit-transition: -webkit-transform 7ms ease-in;
+      backface-visibility: hidden;
+      transform-origin: 50% 50%;
+      transform: translate3d(0, 0, 0);
+      transition: transform 7ms ease-in;
 
       &.online {
         background-image: url(/static/img/map_arrow_22blue@2x.png);
