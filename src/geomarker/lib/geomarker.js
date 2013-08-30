@@ -14,6 +14,7 @@ define('geomarker', function () {
       , dsnt = document.createElement('div');
 
     dsnt.id = 'gps-dsnt';
+    dsnt.style.display = 'none';
     arrow.id = 'gps-arrow';
     div.id = 'gps-marker';
     div.appendChild(dsnt);
