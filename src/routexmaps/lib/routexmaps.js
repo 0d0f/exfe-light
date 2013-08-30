@@ -719,13 +719,17 @@ define('routexmaps', function (require) {
     }
 
     var GMaps = google.maps;
-    p.setIcon(new GMaps.MarkerImage(
-        data.icon
-      , new GMaps.Size(48, 68)
-      , new GMaps.Point(0, 0)
-      , new GMaps.Point(12, 34)
-      , new GMaps.Size(24, 34)
-    ));
+    if (data.icon) {
+      p.setIcon(this.icons.placeMarker);
+    } else {
+      p.setIcon(new GMaps.MarkerImage(
+          data.icon
+        , new GMaps.Size(48, 68)
+        , new GMaps.Point(0, 0)
+        , new GMaps.Point(12, 34)
+        , new GMaps.Size(24, 34)
+      ));
+    }
   };
 
   proto.monit = function () {
