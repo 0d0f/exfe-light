@@ -10,10 +10,15 @@ define('geomarker', function () {
 
     var opts = this.options
       , div = document.createElement('div')
-      , arrow = document.createElement('div');
-    arrow.id = 'gpsarrow';
-    div.id = opts.id;
+      , arrow = document.createElement('div')
+      , dsnt = document.createElement('div');
+
+    dsnt.id = 'gps-dsnt';
+    arrow.id = 'gps-arrow';
+    div.id = 'gps-marker';
+    div.appendChild(dsnt);
     div.appendChild(arrow);
+    this.dsnt_ = dsnt;
     this.arrow_ = arrow;
     this.div_ = div;
 
@@ -50,15 +55,24 @@ define('geomarker', function () {
     }
   };
 
+  proto.toggleDsntCircle = function (i) {
+    this.dsnt_.style.display = i ? 'block' : 'none';
+  };
+
+  proto.setDsntRotate = function (n) {
+    var style = this.dsnt_.style;
+    style.webkitTransform = style.transform = 'rotate(' + n + 'deg)';
+  };
+
   proto.setArrowRotate = function (n) {
     var style = this.arrow_.style;
     style.webkitTransform = style.transform = 'rotate(' + n + 'deg)';
   };
 
   proto.rotateNeedle = function () {
-    var multiplier = Math.floor(this.needleAngle / 360);
-    var adjustedNeedleAngle = this.needleAngle - (360 * multiplier);
-    var delta = this.currentHeading - adjustedNeedleAngle;
+    var multiplier = Math.floor(this.needleAngle / 360)
+      , adjustedNeedleAngle = this.needleAngle - (360 * multiplier)
+      , delta = this.currentHeading - adjustedNeedleAngle;
     if (Math.abs(delta) > 180) {
       if (delta < 0) {
         delta += 360;
@@ -67,7 +81,7 @@ define('geomarker', function () {
       }
     }
     delta /= 5;
-    this.needleAngle = this.needleAngle + delta;
+    this.needleAngle += delta;
     var updatedAngle = this.needleAngle - window.orientation;
     this.setArrowRotate(360 - this.needleAngle);
   };

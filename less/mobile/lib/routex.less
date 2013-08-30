@@ -1108,14 +1108,30 @@
     }
   }
 
-  #gpsmarker {
+  #gps-marker {
     position: absolute;
     z-index: 605;
     width: 22px;
     height: 22px;
     -webkit-transform: translate3d(0, 0, 0);
 
-    #gpsarrow {
+    #gps-dsnt {
+      display: none;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: (30px - 22px) / 2px;
+      left: (30px - 22px) / 2px;
+      background-repeat: no-repeat;
+      background-image: url(/static/img/map_arrow_ring@2x.png);
+      background-size: 100% 100%;
+      -webkit-backface-visibility: hidden;
+      -webkit-transform-origin: 50% 50%;
+      -webkit-transform: translate3d(0, 0, 0);
+      -webkit-transition: -webkit-transform 7ms ease-in;
+    }
+
+    #gps-arrow {
       position: absolute;
       width: 22px;
       height: 22px;
