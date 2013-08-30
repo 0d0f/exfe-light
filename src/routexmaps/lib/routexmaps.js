@@ -221,6 +221,7 @@ define('routexmaps', function (require) {
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
+              rm.hideNearBy();
               rm.hideIdentityPanel();
               var touch = e.touches[0];
               px = touch.pageX;

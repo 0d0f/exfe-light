@@ -1122,20 +1122,21 @@
       transform-origin: 50% 50%;
       transform: translate3d(0, 0, 0);
       transition: transform 7ms ease-in;
+    }
 
-      &:after {
-        position: absolute;
-        content: '';
-        width: 29px;
-        height: 29px;
-        border: 1px solid #ffffff;
-        border-radius: 29px;
-        box-shadow: 0 0 3px #0078ff, 0 0 3px #0078ff inset;
-        -webkit-transform: scale(1);
-        -webkit-animation: pound 1s ease-out infinite;
-        transform: scale(1);
-        animation: pound 1s ease-out infinite;
-      }
+    #gps-circle {
+      position: absolute;
+      width: 29px;
+      height: 29px;
+      top: (22px - 29px) / 2px;
+      left: (22px - 29px) / 2px;
+      border: 1px solid #ffffff;
+      border-radius: 29px;
+      box-shadow: 0 0 3px #0078ff, 0 0 3px #0078ff inset;
+      -webkit-transform: scale(1);
+      -webkit-animation: pound 1s ease-out infinite;
+      transform: scale(1);
+      animation: pound 1s ease-out infinite;
     }
 
     #gps-arrow {

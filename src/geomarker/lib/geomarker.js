@@ -11,14 +11,19 @@ define('geomarker', function () {
     var opts = this.options
       , div = document.createElement('div')
       , arrow = document.createElement('div')
-      , dsnt = document.createElement('div');
+      , dsnt = document.createElement('div')
+      , circle = document.createElement('div');
 
+    circle.id = 'gps-circle';
+    circle.style.display = 'none';
     dsnt.id = 'gps-dsnt';
     dsnt.style.display = 'none';
     arrow.id = 'gps-arrow';
     div.id = 'gps-marker';
+    div.appendChild(circle);
     div.appendChild(dsnt);
     div.appendChild(arrow);
+    this.circle_ = circle;
     this.dsnt_ = dsnt;
     this.arrow_ = arrow;
     this.div_ = div;
@@ -57,6 +62,7 @@ define('geomarker', function () {
   };
 
   proto.toggleDsntCircle = function (i) {
+    this.circle_.style.display = i ? 'block' : 'none';
     this.dsnt_.style.display = i ? 'block' : 'none';
   };
 
