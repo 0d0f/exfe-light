@@ -720,8 +720,6 @@ define('routexmaps', function (require) {
 
     var GMaps = google.maps;
     if (data.icon) {
-      p.setIcon(this.icons.placeMarker);
-    } else {
       p.setIcon(new GMaps.MarkerImage(
           data.icon
         , new GMaps.Size(48, 68)
@@ -729,6 +727,8 @@ define('routexmaps', function (require) {
         , new GMaps.Point(12, 34)
         , new GMaps.Size(24, 34)
       ));
+    } else {
+      p.setIcon(this.icons.placeMarker);
     }
   };
 
