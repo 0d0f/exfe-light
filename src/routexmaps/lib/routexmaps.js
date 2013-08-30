@@ -1498,7 +1498,7 @@ define('routexmaps', function (require) {
     if (!geoLocation) {
       // status: 0-init, 1-last-latlng, 2: new-latlng
       geoLocation = this.geoLocation = new google.maps.GeoMarker({
-          id: 'gpsmarker'
+          id: 'gp-smarker'
         , width: 22
         , height: 22
         , map: this.map
