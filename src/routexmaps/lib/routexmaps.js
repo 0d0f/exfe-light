@@ -53,10 +53,10 @@ define('routexmaps', function (require) {
           r.text = '抵达';
         } else if (n < 1000) {
           r.text = n + t.replace('{{u}}', '米');
-        } else if (n < 9000) {
-          r.text = (n / 1000 + '').slice(0, 3) + t.replace('{{u}}', '公里');
+        } else if (n < 99 * 1000) {
+          r.text = Math.floor(n / 1000) + t.replace('{{u}}', '公里');
         } else {
-          r.text = 9 + '+' + t.replace('{{u}}', '公里');
+          r.text = 99 + '+' + t.replace('{{u}}', '公里');
         }
 
         return r;
@@ -948,11 +948,11 @@ define('routexmaps', function (require) {
       if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {
         $icon.attr('class', 'icon icon-dot' + (time <= 1 ? 'red' : 'grey'));
       }
-      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟</span>') : (Math.floor(time / 60) + '<span class="unit">小时</span>')));
       $detial.css('visibility', 'visible');
     } else if (this.updated[uid]) {
       time = Math.floor((Date.now() / 1000 - this.updated[uid].t) / 60);
-      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟</span>') : (Math.floor(time / 60) + '<span class="unit">小时</span>')));
       $detial.css('visibility', 'visible');
     } else {
       $detial.css('visibility', 'hidden');
