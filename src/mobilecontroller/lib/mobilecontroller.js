@@ -1742,8 +1742,8 @@ define('mobilecontroller', function (require, exports, module) {
           var $t = $(this)
             , status = $t.data('status');
           if (status) { return; }
-          var external_username = $t.data('external-username')
-            , provider = $t.data('provider');
+          var external_username = $t.attr('data-external-username')
+            , provider = $t.attr('data-provider');
           $t.data('status', true);
           $.ajax({
               type: 'POST'
