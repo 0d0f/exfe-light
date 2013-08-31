@@ -325,27 +325,25 @@ define('routexmaps', function (require) {
       $otherInfo.find('.update').addClass('hide');
       $otherInfo.find('.please-update').addClass('hide');
     }
-    if (gm) {
-      if (destinationPlace) {
-        var p2 = destinationPlace.getPosition();
-        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , result = distanceOutput(d, true);
-        $otherInfo.find('.dest').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else {
-        $otherInfo.find('.dest').addClass('hide');
-      }
-      if (geoLocation) {
-        var p2 = geoLocation.getPosition();
-        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , result = distanceOutput(d, true);
-        $otherInfo.find('.dest-me').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else {
-        $otherInfo.find('.dest-me').removeClass('hide');
-      }
+    if (gm && destinationPlace) {
+      var p2 = destinationPlace.getPosition();
+      var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , result = distanceOutput(d, true);
+      $otherInfo.find('.dest').removeClass('hide')
+        .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else {
+      $otherInfo.find('.dest').addClass('hide');
+    }
+    if (gm && geoLocation) {
+      var p2 = geoLocation.getPosition();
+      var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , result = distanceOutput(d, true);
+      $otherInfo.find('.dest-me').removeClass('hide')
+        .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else {
+      $otherInfo.find('.dest-me').removeClass('hide');
     }
 
     $otherInfo.removeClass('hide');
