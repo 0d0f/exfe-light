@@ -1752,6 +1752,7 @@ define('mobilecontroller', function (require, exports, module) {
             , error   : function () {}
             , complete: function () { $t.data('status', false); }
           });
+          $t.parent().addClass('hide');
         });
 
         element.on('touchstart.maps', '#my-info .discover', function (e) {
