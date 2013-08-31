@@ -1702,7 +1702,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
         element.on('tap.maps', '#locate', gotoGPS);
-        element.on('touchstart.maps', '#isme .abg', function (e) {
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
           gotoGPS(e, true);
 
           if (self.tapElement === this) {
