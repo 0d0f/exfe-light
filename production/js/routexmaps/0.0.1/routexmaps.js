@@ -53,10 +53,10 @@ define('routexmaps', function (require) {
           r.text = '抵达';
         } else if (n < 1000) {
           r.text = n + t.replace('{{u}}', '米');
-        } else if (n < 9000) {
-          r.text = (n / 1000 + '').slice(0, 3) + t.replace('{{u}}', '公里');
+        } else if (n < 99 * 1000) {
+          r.text = Math.floor(n / 1000) + t.replace('{{u}}', '公里');
         } else {
-          r.text = 9 + '+' + t.replace('{{u}}', '公里');
+          r.text = 99 + '+' + t.replace('{{u}}', '公里');
         }
 
         return r;
@@ -149,6 +149,7 @@ define('routexmaps', function (require) {
             , new GMaps.Point(9, 9)
             , new GMaps.Size(18, 18)
           );
+        /*
         icons.arrowBlue = new GMaps.MarkerImage(
               SITE_URL + '/static/img/map_arrow_22blue@2x.png'
             , new GMaps.Size(44, 44)
@@ -163,6 +164,7 @@ define('routexmaps', function (require) {
             , new GMaps.Point(11, 11)
             , new GMaps.Size(22, 22)
           );
+        */
         icons.placeMarker = new GMaps.MarkerImage(
               apiv3_url + '/icons/mapmark'
             , new GMaps.Size(48, 68)
@@ -219,6 +221,7 @@ define('routexmaps', function (require) {
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
+              rm.hideNearBy();
               rm.hideIdentityPanel();
               var touch = e.touches[0];
               px = touch.pageX;
@@ -298,23 +301,31 @@ define('routexmaps', function (require) {
       , $otherInfo = $('#other-info')
       , now = Math.round(Date.now() / 1000)
       , p, t;
+
+    $otherInfo.find('.name').text(identity.name);
     if (gm) {
       p = gm.getPosition();
       t = Math.floor((now - gm.data.positions[0].t) / 60);
-      $otherInfo.find('.name').text(identity.name);
-      if (t > 1) {
+    } else {
+      t = 2;
+    }
+
+    if (t > 1) {
+      if (gm) {
         $otherInfo.find('.update')
           .removeClass('hide')
           .find('.time')
           .html(t < 60 ? (t + '分钟') : (Math.floor(t / 60) + '小时'));
-        $otherInfo.find('.please-update')
-          .attr('data-external-username', identity.external_username)
-          .attr('data-provider', identity.provider)
-          .removeClass('hide');
-      } else {
-        $otherInfo.find('.update').addClass('hide');
-        $otherInfo.find('.please-update').addClass('hide');
       }
+      $otherInfo.find('.please-update')
+        .attr('data-external-username', identity.external_username)
+        .attr('data-provider', identity.provider)
+        .removeClass('hide');
+    } else {
+      $otherInfo.find('.update').addClass('hide');
+      $otherInfo.find('.please-update').addClass('hide');
+    }
+    if (gm) {
       if (destinationPlace) {
         var p2 = destinationPlace.getPosition();
         var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
@@ -335,24 +346,31 @@ define('routexmaps', function (require) {
       } else {
         $otherInfo.find('.dest-me').removeClass('hide');
       }
-
-      $otherInfo.removeClass('hide');
-
-      var w = $(window).width();
-      var h = $(window).height();
-      var oh = $otherInfo.height();
-      var ow = $otherInfo.width();
-      var point = this.fromLatLngToContainerPixel(p);
-      var left = point.x - ow / 2;
-      var top = point.y - oh / 2;
-
-      if (left < 0) { left = 50; }
-      if (left + ow > w) { left = w - ow; }
-      if (top < 0) { top = 20; }
-      if (top + oh > h) { top = h - oh; }
-
-      $otherInfo.css({ left: left, top: top });
     }
+
+    $otherInfo.removeClass('hide');
+
+    var w = $(window).width()
+      , h = $(window).height()
+      , oh = $otherInfo.height()
+      , ow = $otherInfo.width()
+      , left, top;
+
+    if (gm) {
+      var point = this.fromLatLngToContainerPixel(p);
+      left = point.x - ow / 2;
+      top = point.y - oh / 2;
+    } else {
+      left = (w - ow) / 2;
+      top = (w - ow) / 2;
+    }
+
+    if (left < 0) { left = 50; }
+    if (left + ow > w) { left = w - ow; }
+    if (top < 0) { top = 20; }
+    if (top + oh > h) { top = h - oh; }
+
+    $otherInfo.css({ left: left, top: top });
   };
 
   proto.setOffset = function (offset) {
@@ -602,6 +620,10 @@ define('routexmaps', function (require) {
       delete places[id];
       if (isDestination) {
         this.destinationPlace = null;
+        var geoLocation = this.geoLocation;
+        if (geoLocation) {
+          geoLocation.toggleDsntCircle(false);
+        }
       }
     }
   };
@@ -677,7 +699,6 @@ define('routexmaps', function (require) {
     if (t === 1 || t === 3) {
       p.setIcon(this.icons.xplaceMarker);
       p.setZIndex(MAX_INDEX - 1);
-      return;
     }
 
     if (t === 2 || t === 3) {
@@ -691,11 +712,9 @@ define('routexmaps', function (require) {
       var destinationPlace = this.destinationPlace;
       if (destinationPlace && destinationPlace !== p) {
         var cd = destinationPlace.data;
-        if (data.updated_at > cd.updated_at) {
-          if (data.id != cd.id) {
-            destinationPlace.setIcon(this.icons.placeMarker);
-            destinationPlace.setZIndex(zIndex - 5);
-          }
+        if (data.id != cd.id) {
+          destinationPlace.setIcon(this.icons.placeMarker);
+          destinationPlace.setZIndex(zIndex - 5);
           this.destinationPlace = p;
         } else {
           zIndex = MAX_INDEX - 5;
@@ -708,17 +727,24 @@ define('routexmaps', function (require) {
         p.setIcon(icon);
         p.setZIndex(zIndex);
       }
+    }
+
+    if (1 <= t && t <= 3) {
       return;
     }
 
     var GMaps = google.maps;
-    p.setIcon(new GMaps.MarkerImage(
-        data.icon
-      , new GMaps.Size(48, 68)
-      , new GMaps.Point(0, 0)
-      , new GMaps.Point(12, 34)
-      , new GMaps.Size(24, 34)
-    ));
+    if (data.icon) {
+      p.setIcon(new GMaps.MarkerImage(
+          data.icon
+        , new GMaps.Size(48, 68)
+        , new GMaps.Point(0, 0)
+        , new GMaps.Point(12, 34)
+        , new GMaps.Size(24, 34)
+      ));
+    } else {
+      p.setIcon(this.icons.placeMarker);
+    }
   };
 
   proto.monit = function () {
@@ -937,11 +963,11 @@ define('routexmaps', function (require) {
       if (!$icon.hasClass('icon-dot-red') && !$icon.hasClass('icon-dot-red')) {
         $icon.attr('class', 'icon icon-dot' + (time <= 1 ? 'red' : 'grey'));
       }
-      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟</span>') : (Math.floor(time / 60) + '<span class="unit">小时</span>')));
       $detial.css('visibility', 'visible');
     } else if (this.updated[uid]) {
       time = Math.floor((Date.now() / 1000 - this.updated[uid].t) / 60);
-      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟前</span>') : (Math.floor(time / 60) + '<span class="unit">小时前</span>')));
+      $distance.html(time <= 1 ? '在线' : (time < 60 ? (time + '<span class="unit">分钟</span>') : (Math.floor(time / 60) + '<span class="unit">小时</span>')));
       $detial.css('visibility', 'visible');
     } else {
       $detial.css('visibility', 'hidden');
@@ -1498,7 +1524,7 @@ define('routexmaps', function (require) {
     if (!geoLocation) {
       // status: 0-init, 1-last-latlng, 2: new-latlng
       geoLocation = this.geoLocation = new google.maps.GeoMarker({
-          id: 'gpsmarker'
+          id: 'gp-smarker'
         , width: 22
         , height: 22
         , map: this.map
@@ -1530,6 +1556,13 @@ define('routexmaps', function (require) {
     if (uid) {
       this.updated[uid] = position || lastlatlng;
     }
+    var dsnt = this.destinationPlace;
+    geoLocation.toggleDsntCircle(!!dsnt);
+    if (dsnt) {
+      var d = dsnt.getPosition()
+        , r = bearing(latlng.lat(), latlng.lng(), d.lat(), d.lng());
+      geoLocation.setDsntRotate(r);
+    }
     geoLocation._uid = uid;
   };
 
@@ -1550,7 +1583,7 @@ define('routexmaps', function (require) {
   proto.switchGEOStyle = function (status) {
     var geoLocation = this.geoLocation;
     if (geoLocation) {
-      geoLocation.setIcon(this.icons['arrow' + (status ? 'Blue' : 'Grey')]);
+      geoLocation.setStatus(status);
     }
   };
 
