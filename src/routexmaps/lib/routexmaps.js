@@ -343,7 +343,7 @@ define('routexmaps', function (require) {
       $otherInfo.find('.dest-me').removeClass('hide')
         .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
     } else {
-      $otherInfo.find('.dest-me').removeClass('hide');
+      $otherInfo.find('.dest-me').addClass('hide');
     }
 
     $otherInfo.removeClass('hide');
