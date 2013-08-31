@@ -1747,7 +1747,7 @@ define('mobilecontroller', function (require, exports, module) {
           $t.data('status', true);
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '/' + external_username + '@' + provider + '?token=' + self.token
+            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + external_username + '@' + provider + '&token=' + self.token
             , success : function () {}
             , error   : function () {}
             , complete: function () { $t.data('status', false); }
