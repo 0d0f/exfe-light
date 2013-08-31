@@ -437,6 +437,7 @@
   var Director = function () {};
 
   Director.dispatch = function (url) {
+    var className = 'mobile';
     /* jshint -W004 */
     delete _ENV_._data_;
     var params;
@@ -549,6 +550,8 @@
 
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
+      className = '';
+
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
       while ((item = items.shift())) {
@@ -793,6 +796,10 @@
 
     } else {
       window.location = '/';
+    }
+
+    if (className) {
+      document.documentElement.className = className;
     }
   };
 
