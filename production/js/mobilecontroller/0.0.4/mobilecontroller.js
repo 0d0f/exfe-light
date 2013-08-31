@@ -1672,7 +1672,6 @@ define('mobilecontroller', function (require, exports, module) {
           //http://stackoverflow.com/questions/2740857/ipad-doesnt-trigger-resize-event-going-from-vertical-to-horizontal
           //https://gist.github.com/callmephilip/3626669
           //http://stackoverflow.com/questions/1207008/how-do-i-lock-the-orientation-to-portrait-mode-in-a-iphone-web-application
-          //
 
           $('#identities').triggerHandler('scroll');
         });
@@ -1703,7 +1702,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
         element.on('tap.maps', '#locate', gotoGPS);
-        element.on('touchstart.maps', '#isme .avatar', function (e) {
+        element.on('touchstart.maps', '#isme .abg', function (e) {
           gotoGPS(e, true);
 
           if (self.tapElement === this) {
@@ -1742,16 +1741,17 @@ define('mobilecontroller', function (require, exports, module) {
           var $t = $(this)
             , status = $t.data('status');
           if (status) { return; }
-          var external_username = $t.data('external-username')
-            , provider = $t.data('provider');
+          var external_username = $t.attr('data-external-username')
+            , provider = $t.attr('data-provider');
           $t.data('status', true);
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '/' + external_username + '@' + provider + '?token=' + self.token
+            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + external_username + '@' + provider + '&token=' + self.token
             , success : function () {}
             , error   : function () {}
             , complete: function () { $t.data('status', false); }
           });
+          $t.parent().addClass('hide');
         });
 
         element.on('touchstart.maps', '#my-info .discover', function (e) {
@@ -1794,36 +1794,22 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
-        element.on('tap.maps', '#identities .avatar', function (e) {
+        element.on('tap.maps', '#identities .abg', function (e) {
           if (isScroll) { return; }
           var $that = $(this)
-            , $d = $that.parent().parent()
+            , $d = $that.parent()
+            , $n = $that.next()
             , uid = $d.data('uid');
+
+          if ($n.hasClass('unknown')) {
+            self.mapController.showIdentityPanel(uid);
+            return;
+          }
 
           if (self.mapReadyStatus) {
             self.mapController.showBreadcrumbs(uid);
             self.mapController.fitBoundsWithDestination(uid);
           }
-
-          /*
-          if (self.tapElement === this) {
-            $myInfo.addClass('hide');
-            self.tapElement = null;
-            return false;
-          }
-
-          if ($myInfo.hasClass('hide')) {
-            $myInfo.removeClass('hide');
-          }
-
-          var name = $d.data('name');
-          $myInfo.find('#my-info').addClass('hide');
-          $myInfo.find('#other-info').removeClass('hide');
-          $myInfo.find('#other-info').find('.name').text($d.data('name'));
-          var bound = this.getBoundingClientRect();
-          $myInfo.css('-webkit-transform', 'translate3d(50px,' + (bound.top + bound.height / 2 - 62.5)  + 'px, 0)');
-          self.tapElement = this;
-          */
         });
 
         element.on('tap.maps', '#open-exfe', function (e) {
@@ -1990,9 +1976,6 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
-          // weixin
-          // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
-          //alert('Weixin ' + self.isWeixin);
           $('html, body').css({
               'min-height': $win.height()
             //, 'overflow': 'hidden'

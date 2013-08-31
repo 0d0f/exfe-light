@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-29 11:08:12 */
+/*! mobile@2a 2013-08-31 03:08:31 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3964,8 +3964,6 @@ TWEEN.Tween = function(object) {
         var icons = rm.icons;
         icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
-        icons.arrowBlue = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22blue@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
-        icons.arrowGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_arrow_22g5@2x.png", new GMaps.Size(44, 44), new GMaps.Point(0, 0), new GMaps.Point(11, 11), new GMaps.Size(22, 22)), 
         icons.placeMarker = new GMaps.MarkerImage(apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
         icons.xplaceMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_diamond_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
         icons.destinationMarker = new GMaps.MarkerImage(SITE_URL + "/static/img/map_mark_ring_blue@2x.png", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)), 
@@ -3984,7 +3982,7 @@ TWEEN.Tween = function(object) {
           });
           var px, py;
           $(mapDiv).on("touchstart.maps", function(e) {
-            rm.hideIdentityPanel();
+            rm.hideNearBy(), rm.hideIdentityPanel();
             var touch = e.touches[0];
             px = touch.pageX, py = touch.pageY;
           }).on("tap.maps", function(e) {
@@ -4021,7 +4019,7 @@ TWEEN.Tween = function(object) {
       text: "",
       status: 0,
       distance: n
-    }, 30 > n && !m ? (r.status = 4, r.text = "抵达") : r.text = 1e3 > n ? n + t.replace("{{u}}", "米") : 9e3 > n ? (n / 1e3 + "").slice(0, 3) + t.replace("{{u}}", "公里") : "9+" + t.replace("{{u}}", "公里"), 
+    }, 30 > n && !m ? (r.status = 4, r.text = "抵达") : r.text = 1e3 > n ? n + t.replace("{{u}}", "米") : 99e3 > n ? Math.floor(n / 1e3) + t.replace("{{u}}", "公里") : "99+" + t.replace("{{u}}", "公里"), 
     r;
   }, toHex = function(n) {
     return (1 * n).toString(16);
@@ -4044,11 +4042,11 @@ TWEEN.Tween = function(object) {
   }, proto.showIdentityPanel = function(uid) {
     this.hideNearBy();
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
-    if (gm) {
-      if (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60), $otherInfo.find(".name").text(identity.name), 
-      t > 1 ? ($otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时"), 
-      $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
-      $otherInfo.find(".please-update").addClass("hide")), destinationPlace) {
+    if ($otherInfo.find(".name").text(identity.name), gm ? (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60)) : t = 2, 
+    t > 1 ? (gm && $otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时"), 
+    $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
+    $otherInfo.find(".please-update").addClass("hide")), gm) {
+      if (destinationPlace) {
         var p2 = destinationPlace.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else $otherInfo.find(".dest").addClass("hide");
@@ -4056,14 +4054,18 @@ TWEEN.Tween = function(object) {
         var p2 = geoLocation.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
         $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
       } else $otherInfo.find(".dest-me").removeClass("hide");
-      $otherInfo.removeClass("hide");
-      var w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width(), point = this.fromLatLngToContainerPixel(p), left = point.x - ow / 2, top = point.y - oh / 2;
-      0 > left && (left = 50), left + ow > w && (left = w - ow), 0 > top && (top = 20), 
-      top + oh > h && (top = h - oh), $otherInfo.css({
-        left: left,
-        top: top
-      });
     }
+    $otherInfo.removeClass("hide");
+    var left, top, w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width();
+    if (gm) {
+      var point = this.fromLatLngToContainerPixel(p);
+      left = point.x - ow / 2, top = point.y - oh / 2;
+    } else left = (w - ow) / 2, top = (w - ow) / 2;
+    0 > left && (left = 50), left + ow > w && (left = w - ow), 0 > top && (top = 20), 
+    top + oh > h && (top = h - oh), $otherInfo.css({
+      left: left,
+      top: top
+    });
   }, proto.setOffset = function(offset) {
     this.latOffset = 1 * offset.earth_to_mars_latitude, this.lngOffset = 1 * offset.earth_to_mars_longitude;
   }, proto.hideMyPanel = function() {
@@ -4148,7 +4150,11 @@ TWEEN.Tween = function(object) {
     this.clearLines(), this.uid = null;
   }, proto.removePlace = function(data, isDestination) {
     var places = this.places, id = data.id, p = places[id];
-    p && (p.setMap(null), p = null, delete places[id], isDestination && (this.destinationPlace = null));
+    if (p && (p.setMap(null), p = null, delete places[id], isDestination)) {
+      this.destinationPlace = null;
+      var geoLocation = this.geoLocation;
+      geoLocation && geoLocation.toggleDsntCircle(!1);
+    }
   }, proto.drawRoute = function(data) {
     var r, d, p, gps, routes = this.routes, id = data.id, positions = data.positions.slice(0), coords = [];
     if (!routes.hasOwnProperty(id) || (r = routes[id], d = r.data, d.updated_at !== data.updated_at)) {
@@ -4173,22 +4179,22 @@ TWEEN.Tween = function(object) {
     var p, latlng, places = this.places, id = data.id;
     if (places.hasOwnProperty(id) && (p = places[id]), p || (p = places[id] = this.addPoint(data)), 
     latlng = this.toLatLng(data.lat, data.lng), p.setPosition(latlng), p.data = data, 
-    1 === t || 3 === t) return p.setIcon(this.icons.xplaceMarker), p.setZIndex(MAX_INDEX - 1), 
-    void 0;
-    if (2 === t || 3 === t) {
+    (1 === t || 3 === t) && (p.setIcon(this.icons.xplaceMarker), p.setZIndex(MAX_INDEX - 1)), 
+    2 === t || 3 === t) {
       var geoLocation = this.geoLocation, zIndex = MAX_INDEX, icon = this.icons.destinationMarker;
       (!geoLocation || geoLocation && 0 == geoLocation._status) && this.panToDestination(latlng);
       var destinationPlace = this.destinationPlace;
       if (destinationPlace && destinationPlace !== p) {
         var cd = destinationPlace.data;
-        data.updated_at > cd.updated_at ? (data.id != cd.id && (destinationPlace.setIcon(this.icons.placeMarker), 
-        destinationPlace.setZIndex(zIndex - 5)), this.destinationPlace = p) : (zIndex = MAX_INDEX - 5, 
-        icon = this.icons.placeMarker);
+        data.id != cd.id ? (destinationPlace.setIcon(this.icons.placeMarker), destinationPlace.setZIndex(zIndex - 5), 
+        this.destinationPlace = p) : (zIndex = MAX_INDEX - 5, icon = this.icons.placeMarker);
       } else this.destinationPlace = p;
-      return 3 !== t && (p.setIcon(icon), p.setZIndex(zIndex)), void 0;
+      3 !== t && (p.setIcon(icon), p.setZIndex(zIndex));
     }
-    var GMaps = google.maps;
-    p.setIcon(new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34)));
+    if (!(t >= 1 && 3 >= t)) {
+      var GMaps = google.maps;
+      data.icon ? p.setIcon(new GMaps.MarkerImage(data.icon, new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))) : p.setIcon(this.icons.placeMarker);
+    }
   }, proto.monit = function() {
     var uid, isme, d, gm, b, $e, line, n, u = this.updated, bs = this.breadcrumbs, icons = this.icons, gms = this.geoMarkers, lines = this.lines, dp = this.destinationPlace, geo = this.geoLocation, myUserId = this.myUserId, curr_uid = this.uid, now = Math.round(Date.now() / 1e3);
     for (uid in u) if (u.hasOwnProperty(uid)) if (d = u[uid], isme = myUserId == uid, 
@@ -4276,9 +4282,9 @@ TWEEN.Tween = function(object) {
       result.rotate = r, $distance.html(result.text), $icon.css("-webkit-transform", "rotate(" + r + "deg)"), 
       $icon.attr("class", "icon icon-arrow-" + (1 >= time ? "red" : "grey")), $detial.css("visibility", "visible");
     } else gm ? ($icon.hasClass("icon-dot-red") || $icon.hasClass("icon-dot-red") || $icon.attr("class", "icon icon-dot" + (1 >= time ? "red" : "grey")), 
-    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟前</span>' : Math.floor(time / 60) + '<span class="unit">小时前</span>'), 
+    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟</span>' : Math.floor(time / 60) + '<span class="unit">小时</span>'), 
     $detial.css("visibility", "visible")) : this.updated[uid] ? (time = Math.floor((Date.now() / 1e3 - this.updated[uid].t) / 60), 
-    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟前</span>' : Math.floor(time / 60) + '<span class="unit">小时前</span>'), 
+    $distance.html(1 >= time ? "在线" : 60 > time ? time + '<span class="unit">分钟</span>' : Math.floor(time / 60) + '<span class="unit">小时</span>'), 
     $detial.css("visibility", "visible")) : $detial.css("visibility", "hidden");
   }, proto.fitBoundsWithDestination = function(uid) {
     var destinationPlace = this.destinationPlace, isme = this.myUserId == uid, gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -4469,7 +4475,7 @@ TWEEN.Tween = function(object) {
     var latlng, gps, geoLocation = this.geoLocation;
     if (!geoLocation) {
       geoLocation = this.geoLocation = new google.maps.GeoMarker({
-        id: "gpsmarker",
+        id: "gp-smarker",
         width: 22,
         height: 22,
         map: this.map
@@ -4481,7 +4487,12 @@ TWEEN.Tween = function(object) {
     }
     position && (position = this.toMars(position, !0), gps = position.gps, latlng = this.toLatLng(gps[0], gps[1]), 
     geoLocation.setStatus(!0), geoLocation.setPosition(latlng), 2 !== geoLocation._status && (this.map.setZoom(15), 
-    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng), 
+    this.map.panTo(latlng)), geoLocation._status = 2), uid && (this.updated[uid] = position || lastlatlng);
+    var dsnt = this.destinationPlace;
+    if (geoLocation.toggleDsntCircle(!!dsnt), dsnt) {
+      var d = dsnt.getPosition(), r = bearing(latlng.lat(), latlng.lng(), d.lat(), d.lng());
+      geoLocation.setDsntRotate(r);
+    }
     geoLocation._uid = uid;
   }, proto.toMars = function(position, fresh) {
     var gps = position.gps, p = {
@@ -4491,27 +4502,55 @@ TWEEN.Tween = function(object) {
     return p;
   }, proto.switchGEOStyle = function(status) {
     var geoLocation = this.geoLocation;
-    geoLocation && geoLocation.setIcon(this.icons["arrow" + (status ? "Blue" : "Grey")]);
+    geoLocation && geoLocation.setStatus(status);
   }, RoutexMaps;
 }), define("geomarker", function() {
   "use strict";
   function GeoMarker(options) {
     this.options = options || {}, this.div_ = null, this.setMap(this.map_ = this.options.map), 
     delete this.options.map;
+    var div = (this.options, document.createElement("div")), arrow = document.createElement("div"), dsnt = document.createElement("div"), circle = document.createElement("div");
+    circle.id = "gps-circle", circle.style.display = "none", dsnt.id = "gps-dsnt", dsnt.style.display = "none", 
+    arrow.id = "gps-arrow", div.id = "gps-marker", div.appendChild(circle), div.appendChild(dsnt), 
+    div.appendChild(arrow), this.circle_ = circle, this.dsnt_ = dsnt, this.arrow_ = arrow, 
+    this.div_ = div, this.needleAngle = 0, this.accuracy = 0, this.currentHeading = 0;
   }
   var proto = GeoMarker.prototype = new google.maps.OverlayView();
   return proto.onAdd = function() {
-    var opts = this.options, div = document.createElement("div");
-    div.id = opts.id, div.innerHTML = '<div id="gpsarrow"></div>', this.div_ = div, 
-    this.getPanes().overlayLayer.appendChild(div);
+    var overlayLayer = this.getPanes().overlayLayer;
+    overlayLayer.parentNode.style.zIndex = overlayLayer.style.zIndex = 605, overlayLayer.appendChild(this.div_), 
+    this.listen();
   }, proto.onRemove = function() {
     this.div_.parentNode.removeChild(this.div_), this.div_ = null;
   }, proto.draw = function() {
-    var point = this.getProjection().fromLatLngToDivPixel(this.latlng), opts = this.options, div = this.div_;
-    div.style.top = point.y - opts.height / 2 + "px", div.style.left = point.x - opts.width / 2 + "px";
+    var projection = this.getProjection();
+    if (projection) {
+      var point = projection.fromLatLngToDivPixel(this.latlng), opts = this.options, div = this.div_;
+      div.style.top = point.y - opts.height / 2 + "px", div.style.left = point.x - opts.width / 2 + "px";
+    }
+  }, proto.toggleDsntCircle = function(i) {
+    this.circle_.style.display = i ? "block" : "none", this.dsnt_.style.display = i ? "block" : "none";
+  }, proto.setDsntRotate = function(n) {
+    var style = this.dsnt_.style;
+    style.webkitTransform = style.transform = "rotate(" + n + "deg)";
+  }, proto.setArrowRotate = function(n) {
+    var style = this.arrow_.style;
+    style.webkitTransform = style.transform = "rotate(" + n + "deg)";
+  }, proto.rotateNeedle = function() {
+    var multiplier = Math.floor(this.needleAngle / 360), adjustedNeedleAngle = this.needleAngle - 360 * multiplier, delta = this.currentHeading - adjustedNeedleAngle;
+    Math.abs(delta) > 180 && (0 > delta ? delta += 360 : delta -= 360), delta /= 5, 
+    this.needleAngle += delta, this.needleAngle - window.orientation, this.setArrowRotate(360 - this.needleAngle);
+  }, proto.orientationHandle = function() {
+    var self = this;
+    return function(e) {
+      void 0 != e.webkitCompassHeading ? (self.currentHeading = 360 - e.webkitCompassHeading, 
+      self.accuracy = e.webkitCompassAccuracy) : null != e.alpha && (self.currentHeading = -1 * (270 - e.alpha), 
+      self.accuracy = e.webkitCompassAccuracy), self.rotateNeedle();
+    };
+  }, proto.listen = function() {
+    window.DeviceOrientationEvent && window.addEventListener("deviceorientation", this.orientationHandle(), !1);
   }, proto.setStatus = function(i) {
-    var img = this.div_.getElementById("gpsarrow");
-    img.className = i ? "online" : "";
+    this.arrow_.className = i ? "online" : "";
   }, proto.getPosition = function() {
     return this.latlng;
   }, proto.setPosition = function(latlng) {
@@ -5501,7 +5540,7 @@ TWEEN.Tween = function(object) {
       element.on("tap.maps", function(e) {
         self.tapElement && e.target !== self.tapElement && !$.contains($myInfo[0], e.target) && ($myInfo.addClass("hide"), 
         self.tapElement = null);
-      }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
+      }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .abg", function(e) {
         return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
         !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
         self.tapElement = this, void 0);
@@ -5518,16 +5557,16 @@ TWEEN.Tween = function(object) {
       }), element.on("touchstart.maps", "#other-info .please-update", function() {
         var $t = $(this), status = $t.data("status");
         if (!status) {
-          var external_username = $t.data("external-username"), provider = $t.data("provider");
+          var external_username = $t.attr("data-external-username"), provider = $t.attr("data-provider");
           $t.data("status", !0), $.ajax({
             type: "POST",
-            url: apiv3_url + "/routex/notification/crosses/" + self.cross_id + "/" + external_username + "@" + provider + "?token=" + self.token,
+            url: apiv3_url + "/routex/notification/crosses/" + self.cross_id + "?id=" + external_username + "@" + provider + "&token=" + self.token,
             success: function() {},
             error: function() {},
             complete: function() {
               $t.data("status", !1);
             }
-          });
+          }), $t.parent().addClass("hide");
         }
       }), element.on("touchstart.maps", "#my-info .discover", function() {
         $myInfo.addClass("hide"), self.tapElement = null, $("#shuidi-dialog").removeClass("hide");
@@ -5544,10 +5583,11 @@ TWEEN.Tween = function(object) {
         e.preventDefault();
         var v = $("#notify-provider").val();
         return self.addNotificationIdentity(v), !1;
-      }), element.on("tap.maps", "#identities .avatar", function() {
+      }), element.on("tap.maps", "#identities .abg", function() {
         if (!isScroll) {
-          var $that = $(this), $d = $that.parent().parent(), uid = $d.data("uid");
-          self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid));
+          var $that = $(this), $d = $that.parent(), $n = $that.next(), uid = $d.data("uid");
+          return $n.hasClass("unknown") ? (self.mapController.showIdentityPanel(uid), void 0) : (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), 
+          self.mapController.fitBoundsWithDestination(uid)), void 0);
         }
       }), element.on("tap.maps", "#open-exfe", function() {
         alert("restart stream"), self.stopStream();

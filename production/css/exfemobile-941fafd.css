@@ -1983,18 +1983,30 @@ button .exfe {
 @-webkit-keyframes pound {
   0% {
     opacity: 1;
-    -webkit-transform: scale(1.25);
+    -webkit-transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    -webkit-transform: scale(2);
   }
   100% {
     opacity: 0;
-    -webkit-transform: scale(2.5);
+    -webkit-transform: scale(1);
   }
-  /*
-    100% {
-      opacity: 1;
-      -webkit-transform: scale(1.25);
-    }
-    */
+}
+@keyframes pound {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 #routex {
   position: absolute;
@@ -2041,24 +2053,6 @@ button .exfe {
   height: 100%;
   -webkit-appearance: none;
   -webkit-transform: translate3d(0, 0, 0);
-}
-#routex #map #geomarker {
-  position: relative;
-}
-#routex #map #geomarker img {
-  vertical-align: top;
-}
-#routex #map #geomarker:after {
-  position: absolute;
-  content: '';
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 1px solid #007BFF;
-  border-radius: 20px;
-  -webkit-transform: scale(1.25);
-  -webkit-animation: pound 1s ease-out infinite;
 }
 #routex #canvas {
   position: absolute;
@@ -2916,14 +2910,47 @@ button .exfe {
   position: absolute;
   bottom: 30px;
 }
-#routex #gpsmarker {
+#routex #gps-marker {
   position: absolute;
   z-index: 605;
   width: 22px;
   height: 22px;
   -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
-#routex #gpsmarker #gpsarrow {
+#routex #gps-marker #gps-dsnt {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: -4px;
+  left: -4px;
+  background-repeat: no-repeat;
+  background-image: url(/static/img/map_arrow_ring@2x.png);
+  background-size: 100% 100%;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform 7ms ease-in;
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+  transform: translate3d(0, 0, 0);
+  transition: transform 7ms ease-in;
+}
+#routex #gps-marker #gps-circle {
+  position: absolute;
+  width: 29px;
+  height: 29px;
+  top: -3.5px;
+  left: -3.5px;
+  border: 1px solid #ffffff;
+  border-radius: 29px;
+  box-shadow: 0 0 3px #0078ff, 0 0 3px #0078ff inset;
+  -webkit-transform: scale(1);
+  -webkit-animation: pound 2s ease-out infinite;
+  transform: scale(1);
+  animation: pound 2s ease-out infinite;
+}
+#routex #gps-marker #gps-arrow {
   position: absolute;
   width: 22px;
   height: 22px;
@@ -2935,8 +2962,12 @@ button .exfe {
   -webkit-backface-visibility: hidden;
   -webkit-transform-origin: 50% 50%;
   -webkit-transform: translate3d(0, 0, 0);
-  -webkit-transition: -webkit-transform 233ms ease-in;
+  -webkit-transition: -webkit-transform 7ms ease-in;
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+  transform: translate3d(0, 0, 0);
+  transition: transform 7ms ease-in;
 }
-#routex #gpsmarker #gpsarrow .online {
+#routex #gps-marker #gps-arrow.online {
   background-image: url(/static/img/map_arrow_22blue@2x.png);
 }

@@ -301,23 +301,31 @@ define('routexmaps', function (require) {
       , $otherInfo = $('#other-info')
       , now = Math.round(Date.now() / 1000)
       , p, t;
+
+    $otherInfo.find('.name').text(identity.name);
     if (gm) {
       p = gm.getPosition();
       t = Math.floor((now - gm.data.positions[0].t) / 60);
-      $otherInfo.find('.name').text(identity.name);
-      if (t > 1) {
+    } else {
+      t = 2;
+    }
+
+    if (t > 1) {
+      if (gm) {
         $otherInfo.find('.update')
           .removeClass('hide')
           .find('.time')
           .html(t < 60 ? (t + '分钟') : (Math.floor(t / 60) + '小时'));
-        $otherInfo.find('.please-update')
-          .attr('data-external-username', identity.external_username)
-          .attr('data-provider', identity.provider)
-          .removeClass('hide');
-      } else {
-        $otherInfo.find('.update').addClass('hide');
-        $otherInfo.find('.please-update').addClass('hide');
       }
+      $otherInfo.find('.please-update')
+        .attr('data-external-username', identity.external_username)
+        .attr('data-provider', identity.provider)
+        .removeClass('hide');
+    } else {
+      $otherInfo.find('.update').addClass('hide');
+      $otherInfo.find('.please-update').addClass('hide');
+    }
+    if (gm) {
       if (destinationPlace) {
         var p2 = destinationPlace.getPosition();
         var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
@@ -338,24 +346,31 @@ define('routexmaps', function (require) {
       } else {
         $otherInfo.find('.dest-me').removeClass('hide');
       }
-
-      $otherInfo.removeClass('hide');
-
-      var w = $(window).width();
-      var h = $(window).height();
-      var oh = $otherInfo.height();
-      var ow = $otherInfo.width();
-      var point = this.fromLatLngToContainerPixel(p);
-      var left = point.x - ow / 2;
-      var top = point.y - oh / 2;
-
-      if (left < 0) { left = 50; }
-      if (left + ow > w) { left = w - ow; }
-      if (top < 0) { top = 20; }
-      if (top + oh > h) { top = h - oh; }
-
-      $otherInfo.css({ left: left, top: top });
     }
+
+    $otherInfo.removeClass('hide');
+
+    var w = $(window).width()
+      , h = $(window).height()
+      , oh = $otherInfo.height()
+      , ow = $otherInfo.width()
+      , left, top;
+
+    if (gm) {
+      var point = this.fromLatLngToContainerPixel(p);
+      left = point.x - ow / 2;
+      top = point.y - oh / 2;
+    } else {
+      left = (w - ow) / 2;
+      top = (w - ow) / 2;
+    }
+
+    if (left < 0) { left = 50; }
+    if (left + ow > w) { left = w - ow; }
+    if (top < 0) { top = 20; }
+    if (top + oh > h) { top = h - oh; }
+
+    $otherInfo.css({ left: left, top: top });
   };
 
   proto.setOffset = function (offset) {
