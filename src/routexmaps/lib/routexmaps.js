@@ -362,7 +362,7 @@ define('routexmaps', function (require) {
       top = point.y - oh / 2;
     } else {
       left = (w - ow) / 2;
-      top = (w - ow) / 2;
+      top = (h - oh) / 2;
     }
 
     if (left < 0) { left = 50; }
