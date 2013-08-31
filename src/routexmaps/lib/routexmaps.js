@@ -292,7 +292,7 @@ define('routexmaps', function (require) {
     this.hideNearBy();
   };
 
-  proto.showIdentityPanel = function (uid) {
+  proto.showIdentityPanel = function (uid, bound) {
     this.hideNearBy();
     var gm = this.geoMarkers[uid]
       , geoLocation = this.geoLocation
@@ -365,10 +365,15 @@ define('routexmaps', function (require) {
       top = (h - oh) / 2;
     }
 
-    if (left < 0) { left = 50; }
-    if (left + ow > w) { left = w - ow; }
-    if (top < 0) { top = 20; }
-    if (top + oh > h) { top = h - oh; }
+    if (bound) {
+      left = 50;
+      top = bound.top;
+    } else {
+      if (left < 0) { left = 50; }
+      if (left + ow > w) { left = w - ow; }
+      if (top < 0) { top = 20; }
+      if (top + oh > h) { top = h - oh; }
+    }
 
     $otherInfo.css({ left: left, top: top });
   };

@@ -1802,7 +1802,7 @@ define('mobilecontroller', function (require, exports, module) {
             , uid = $d.data('uid');
 
           if ($n.hasClass('unknown')) {
-            self.mapController.showIdentityPanel(uid);
+            self.mapController.showIdentityPanel(uid, $d[0].getBoundingClientRect());
             return;
           }
 
