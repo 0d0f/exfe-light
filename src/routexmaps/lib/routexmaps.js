@@ -316,6 +316,8 @@ define('routexmaps', function (require) {
           .removeClass('hide')
           .find('.time')
           .html(t < 60 ? (t + '分钟') : (Math.floor(t / 60) + '小时'));
+      } else {
+        $otherInfo.find('.update').addClass('hide')
       }
       $otherInfo.find('.please-update')
         .attr('data-external-username', identity.external_username)
