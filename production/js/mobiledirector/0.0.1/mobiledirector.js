@@ -27,8 +27,10 @@
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
 
+  // weixin
+  // Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A4449a MicroMessenger/5.0
   //window.isWeixin = !!(window.WeixinJSBridge && /MicroMessenger/.test(navigator.userAgent));
-  window.isWeixin = !!(/MicroMessenger/.test(navigator.userAgent));
+  window.isWeixin = !!(/MicroMessenger/i.test(navigator.userAgent));
 
   window.launchApp = function (url, cb) {
     url = url || app_url;
@@ -435,6 +437,7 @@
   var Director = function () {};
 
   Director.dispatch = function (url) {
+    var className = 'mobile';
     /* jshint -W004 */
     delete _ENV_._data_;
     var params;
@@ -547,6 +550,8 @@
 
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
+      className = '';
+
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
       while ((item = items.shift())) {
@@ -581,6 +586,7 @@
       var authorization = JSON.parse(localStorage.getItem('authorization'))
         , user_id = authorization && authorization.user_id
         , user_token = authorization && authorization.token
+        , username = (authorization && authorization.name) || ''
         , auth = getAuthFromHeader();
 
       // 是否跟本地的 user-token 进行合并？
@@ -588,9 +594,11 @@
         authorization = auth.authorization;
         user_id = authorization.user_id;
         user_token = authorization.token;
+        username = authorization.name;
         localStorage.setItem('authorization', JSON.stringify({
             user_id: user_id
           , token: user_token
+          , name: username || ''
         }));
       }
 
@@ -615,12 +623,13 @@
                   _ENV_._data_.response.browsing_identity = browsing_identity;
                   _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
                   _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
                   handle();
                 }
               , function (d) {
                   var code = d.meta.code
                     , errorType = d.meta.errorType;
-                  if (code === 400 && errorType === 'error_user_token') {
+                  if (code === 400) {
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
@@ -711,12 +720,13 @@
                   _ENV_._data_.response.browsing_identity = browsing_identity;
                   _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
                   _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
                   handle();
                 }
               , function (d) {
                   // wechat OAuth
 
-                  if (!auth) {
+                  if (!auth || !xcode) {
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
@@ -739,6 +749,7 @@
                             localStorage.setItem('authorization', JSON.stringify({
                                 user_id: _auth.user_id
                               , token: _auth.token
+                              , name: _auth.name
                             }));
                           }
                           var cross_access_token = response.cross_access_token;
@@ -752,6 +763,7 @@
                           _ENV_._data_.response.browsing_identity = browsing_identity;
                           _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
                           _ENV_._data_.smith_id = window._ENV_.smith_id;
+                          _ENV_._data_.username = (_auth && _auth.name) || '';
                           handle();
                         }
                       , function (d) {
@@ -784,6 +796,10 @@
 
     } else {
       window.location = '/';
+    }
+
+    if (className) {
+      document.documentElement.className = className;
     }
   };
 
