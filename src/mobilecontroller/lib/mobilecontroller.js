@@ -1806,7 +1806,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#open-exfe', function (e) {
-          self.openEXFE();
+          $('#shuidi-dialog').removeClass('hide');
           //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
