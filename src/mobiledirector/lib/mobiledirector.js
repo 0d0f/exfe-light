@@ -535,8 +535,6 @@
       crossFunc(data);
 
     } else if ((params = url.match(routes.routex0))) {
-      document.getElementById('app-body').innerHTML = '<div id="app-status">加载中……</div>';
-
       var ctoken = params[2]
         , cats = localStorage.getItem('cats')
         , data = { invitation_token: ctoken }
@@ -553,6 +551,7 @@
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
       className = '';
+      document.getElementById('app-body').innerHTML = '<div id="app-status">加载中……</div>';
 
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
