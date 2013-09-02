@@ -40,10 +40,12 @@ Label.prototype.onAdd = function() {
 
 // Implement onRemove
 Label.prototype.onRemove = function() {
-     var marker = this.marker;
-     if (marker) {
-        marker.setMap(null);
-        delete this.marker;
+     if (!this.noRemoveMarker) {
+          var marker = this.marker;
+          if (marker) {
+             marker.setMap(null);
+             delete this.marker;
+          }
      }
 
      this.div_.parentNode.removeChild(this.div_);
