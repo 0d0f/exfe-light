@@ -292,7 +292,7 @@ define('routexmaps', function (require) {
     this.hideNearBy();
   };
 
-  proto.showIdentityPanel = function (uid) {
+  proto.showIdentityPanel = function (uid, bound) {
     this.hideNearBy();
     var gm = this.geoMarkers[uid]
       , geoLocation = this.geoLocation
@@ -316,6 +316,8 @@ define('routexmaps', function (require) {
           .removeClass('hide')
           .find('.time')
           .html(t < 60 ? (t + '分钟') : (Math.floor(t / 60) + '小时'));
+      } else {
+        $otherInfo.find('.update').addClass('hide')
       }
       $otherInfo.find('.please-update')
         .attr('data-external-username', identity.external_username)
@@ -325,27 +327,25 @@ define('routexmaps', function (require) {
       $otherInfo.find('.update').addClass('hide');
       $otherInfo.find('.please-update').addClass('hide');
     }
-    if (gm) {
-      if (destinationPlace) {
-        var p2 = destinationPlace.getPosition();
-        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , result = distanceOutput(d, true);
-        $otherInfo.find('.dest').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else {
-        $otherInfo.find('.dest').addClass('hide');
-      }
-      if (geoLocation) {
-        var p2 = geoLocation.getPosition();
-        var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
-          , result = distanceOutput(d, true);
-        $otherInfo.find('.dest-me').removeClass('hide')
-          .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else {
-        $otherInfo.find('.dest-me').removeClass('hide');
-      }
+    if (gm && destinationPlace) {
+      var p2 = destinationPlace.getPosition();
+      var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , result = distanceOutput(d, true);
+      $otherInfo.find('.dest').removeClass('hide')
+        .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else {
+      $otherInfo.find('.dest').addClass('hide');
+    }
+    if (gm && geoLocation) {
+      var p2 = geoLocation.getPosition();
+      var d = distance(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng())
+        , result = distanceOutput(d, true);
+      $otherInfo.find('.dest-me').removeClass('hide')
+        .find('.m').html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? 'grey' : 'red') + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else {
+      $otherInfo.find('.dest-me').addClass('hide');
     }
 
     $otherInfo.removeClass('hide');
@@ -362,13 +362,18 @@ define('routexmaps', function (require) {
       top = point.y - oh / 2;
     } else {
       left = (w - ow) / 2;
-      top = (w - ow) / 2;
+      top = (h - oh) / 2;
     }
 
-    if (left < 0) { left = 50; }
-    if (left + ow > w) { left = w - ow; }
-    if (top < 0) { top = 20; }
-    if (top + oh > h) { top = h - oh; }
+    if (bound) {
+      left = 50;
+      top = bound.top;
+    } else {
+      if (left < 0) { left = 50; }
+      if (left + ow > w) { left = w - ow; }
+      if (top < 0) { top = 20; }
+      if (top + oh > h) { top = h - oh; }
+    }
 
     $otherInfo.css({ left: left, top: top });
   };

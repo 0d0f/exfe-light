@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-08-31 03:08:32 */
+/*! mobile@2a 2013-09-02 04:09:21 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4039,30 +4039,28 @@ TWEEN.Tween = function(object) {
   }, proto.showPlacePanel = function(id) {
     var marker = this.places[id];
     marker && google.maps.event.trigger(marker, "mousedown"), this.hideNearBy();
-  }, proto.showIdentityPanel = function(uid) {
+  }, proto.showIdentityPanel = function(uid, bound) {
     this.hideNearBy();
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if ($otherInfo.find(".name").text(identity.name), gm ? (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60)) : t = 2, 
-    t > 1 ? (gm && $otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时"), 
+    t > 1 ? (gm ? $otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时") : $otherInfo.find(".update").addClass("hide"), 
     $otherInfo.find(".please-update").attr("data-external-username", identity.external_username).attr("data-provider", identity.provider).removeClass("hide")) : ($otherInfo.find(".update").addClass("hide"), 
-    $otherInfo.find(".please-update").addClass("hide")), gm) {
-      if (destinationPlace) {
-        var p2 = destinationPlace.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
-        $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else $otherInfo.find(".dest").addClass("hide");
-      if (geoLocation) {
-        var p2 = geoLocation.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
-        $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
-      } else $otherInfo.find(".dest-me").removeClass("hide");
-    }
+    $otherInfo.find(".please-update").addClass("hide")), gm && destinationPlace) {
+      var p2 = destinationPlace.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
+      $otherInfo.find(".dest").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else $otherInfo.find(".dest").addClass("hide");
+    if (gm && geoLocation) {
+      var p2 = geoLocation.getPosition(), d = distance(p.lat(), p.lng(), p2.lat(), p2.lng()), r = bearing(p.lat(), p.lng(), p2.lat(), p2.lng()), result = distanceOutput(d, !0);
+      $otherInfo.find(".dest-me").removeClass("hide").find(".m").html(result.text + '<i class="icon icon-arrow-' + (t > 1 ? "grey" : "red") + '" style="-webkit-transform: rotate(' + r + 'deg)"></i>');
+    } else $otherInfo.find(".dest-me").addClass("hide");
     $otherInfo.removeClass("hide");
     var left, top, w = $(window).width(), h = $(window).height(), oh = $otherInfo.height(), ow = $otherInfo.width();
     if (gm) {
       var point = this.fromLatLngToContainerPixel(p);
       left = point.x - ow / 2, top = point.y - oh / 2;
-    } else left = (w - ow) / 2, top = (w - ow) / 2;
-    0 > left && (left = 50), left + ow > w && (left = w - ow), 0 > top && (top = 20), 
-    top + oh > h && (top = h - oh), $otherInfo.css({
+    } else left = (w - ow) / 2, top = (h - oh) / 2;
+    bound ? (left = 50, top = bound.top) : (0 > left && (left = 50), left + ow > w && (left = w - ow), 
+    0 > top && (top = 20), top + oh > h && (top = h - oh)), $otherInfo.css({
       left: left,
       top: top
     });
@@ -4965,7 +4963,7 @@ TWEEN.Tween = function(object) {
       $("#app-setpassword").remove(), this.element.appendTo($("#app-body"));
     },
     submitPassword: function() {
-      var self = this, token = this.token, $button = this.$(".set-button button"), $error = this.$(".error-info"), $name = this.$("#name"), $pass = this.$("#password"), name = trim($name.val()), password = $pass.val();
+      var self = this, token = this.token, $button = this.$(".set-button button"), $error = this.$(".error-info"), $name = this.$(".identity .name"), $pass = this.$("#password"), name = trim($name.text()), password = $pass.val();
       password.length >= 4 ? ($button.addClass("disabled").prop("disabled", !0), $.ajax({
         type: "POST",
         url: api_url + "/Users/ResetPassword",
@@ -5540,10 +5538,10 @@ TWEEN.Tween = function(object) {
       element.on("tap.maps", function(e) {
         self.tapElement && e.target !== self.tapElement && !$.contains($myInfo[0], e.target) && ($myInfo.addClass("hide"), 
         self.tapElement = null);
-      }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .abg", function(e) {
-        return gotoGPS(e, !0), self.tapElement === this ? ($myInfo.addClass("hide"), self.tapElement = null, 
-        !1) : ($myInfo.hasClass("hide") && $myInfo.removeClass("hide"), $myInfo.css("-webkit-transform", "translate3d(50px, 6px, 233px)"), 
-        self.tapElement = this, void 0);
+      }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
+        gotoGPS(e, !0), $("#wechat-guide-dialog").removeClass("hide"), self.tapElement = this;
+      }), element.on("touchstart.maps", "#wechat-guide-dialog", function() {
+        $(this).addClass("hide");
       }), element.on("tap.maps", "#nearby .place-marker", function(e) {
         if (!isScroll0 && (e.preventDefault(), self.mapReadyStatus)) {
           var id = $(this).data("id");
@@ -5586,8 +5584,9 @@ TWEEN.Tween = function(object) {
       }), element.on("tap.maps", "#identities .abg", function() {
         if (!isScroll) {
           var $that = $(this), $d = $that.parent(), $n = $that.next(), uid = $d.data("uid");
-          return $n.hasClass("unknown") ? (self.mapController.showIdentityPanel(uid), void 0) : (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), 
-          self.mapController.fitBoundsWithDestination(uid)), void 0);
+          return $n.hasClass("unknown") ? (self.mapController.showIdentityPanel(uid, $d[0].getBoundingClientRect()), 
+          void 0) : (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
+          void 0);
         }
       }), element.on("tap.maps", "#open-exfe", function() {
         alert("restart stream"), self.stopStream();

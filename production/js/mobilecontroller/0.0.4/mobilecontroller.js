@@ -390,9 +390,9 @@ define('mobilecontroller', function (require, exports, module) {
           token = this.token,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
-          $name = this.$('#name'),
+          $name = this.$('.identity .name'),
           $pass = this.$('#password'),
-          name = trim($name.val()),
+          name = trim($name.text()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
@@ -1702,9 +1702,10 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
         element.on('tap.maps', '#locate', gotoGPS);
-        element.on('touchstart.maps', '#isme .abg', function (e) {
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
           gotoGPS(e, true);
 
+          /*
           if (self.tapElement === this) {
             $myInfo.addClass('hide');
             self.tapElement = null;
@@ -1716,7 +1717,13 @@ define('mobilecontroller', function (require, exports, module) {
           }
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
+          */
+          $('#wechat-guide-dialog').removeClass('hide');
           self.tapElement = this;
+        });
+
+        element.on('touchstart.maps', '#wechat-guide-dialog', function (e) {
+          $(this).addClass('hide');
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
@@ -1802,7 +1809,7 @@ define('mobilecontroller', function (require, exports, module) {
             , uid = $d.data('uid');
 
           if ($n.hasClass('unknown')) {
-            self.mapController.showIdentityPanel(uid);
+            self.mapController.showIdentityPanel(uid, $d[0].getBoundingClientRect());
             return;
           }
 
