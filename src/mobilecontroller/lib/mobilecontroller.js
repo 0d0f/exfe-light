@@ -390,9 +390,9 @@ define('mobilecontroller', function (require, exports, module) {
           token = this.token,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
-          $name = this.$('#name'),
+          $name = this.$('.identity .name'),
           $pass = this.$('#password'),
-          name = trim($name.val()),
+          name = trim($name.text()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
