@@ -869,6 +869,7 @@ define('routexmaps', function (require) {
                 , zIndex: MAX_INDEX - 3
               });
               label.marker = gm;
+              label.noRemoveMarker = true;
             }
             if (n < 60) {
               label.set('text', n + '分钟前');
