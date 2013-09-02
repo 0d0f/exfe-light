@@ -407,7 +407,7 @@
 
   var addUserToExfee = function (exfee_id, formData, done, error) {
     request({
-        url: apiUrl + '/exfee/' + exfee_id + '/invite'
+        url: apiUrl + '/exfee/' + exfee_id + '/join'
       , type: 'POST'
       , data: formData
       , done: function (d) {
