@@ -386,6 +386,7 @@
   };
 
   var doOAuth = function (provider, data, done, error) {
+    document.getElementById('app-body').innerHTML = '<div id="app-status">授权中……</div>';
     request({
         url: '/oauth/authenticate?provider=' + provider
       , type: 'POST'
@@ -631,7 +632,6 @@
                   var code = d.meta.code
                     , errorType = d.meta.errorType;
                   if (code === 400) {
-                    document.getElementById('app-body').innerHTML = '<div id="app-status">授权中……</div>';
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
@@ -729,7 +729,6 @@
                   // wechat OAuth
 
                   if (!auth || !xcode) {
-                    document.getElementById('app-body').innerHTML = '<div id="app-status">授权中……</div>';
                     doOAuth(
                         'wechat'
                       , { refere: window.location.href }
@@ -783,7 +782,6 @@
 
         // wechat OAuth
         } else {
-          document.getElementById('app-body').innerHTML = '<div id="app-status">授权中……</div>';
           doOAuth(
               'wechat'
             , { refere: window.location.href }
