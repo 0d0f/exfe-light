@@ -2199,7 +2199,6 @@ button .exfe {
   padding-left: 0;
 }
 #routex #open-exfe {
-  display: none;
   position: absolute;
   top: 0;
   right: 0;
@@ -2916,7 +2915,10 @@ button .exfe {
   position: absolute;
   bottom: 30px;
 }
-#routex #guide-dialog .main {
+#routex #wechat-guide-dialog {
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.66);
+}
+#routex #wechat-guide-dialog .main {
   position: relative;
   top: 4px;
   left: 50px;
@@ -2926,13 +2928,29 @@ button .exfe {
   background-image: url(/static/img/wechat_guide_220x136@2x.png);
   background-size: 100% 100%;
 }
-#routex #guide-dialog .ibox {
+#routex #wechat-guide-dialog .ibox {
   position: absolute;
   top: 40px;
   left: 0;
   width: 220px;
   height: 136px;
   padding: 10px;
+}
+#routex #wechat-guide-dialog .ibox p {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  font-size: 18px;
+}
+#routex #wechat-guide-dialog .ibox p:first-child {
+  padding-bottom: 10px;
+}
+#routex #wechat-guide-dialog .ibox img {
+  margin-left: 5px;
+}
+#routex #wechat-guide-dialog .ibox span {
+  font-size: 9px;
+  color: #7f7f7f;
 }
 #routex #gps-marker {
   position: absolute;

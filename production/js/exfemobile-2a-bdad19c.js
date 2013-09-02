@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-09-02 04:09:21 */
+/*! mobile@2a 2013-09-02 05:09:31 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -5571,12 +5571,7 @@ TWEEN.Tween = function(object) {
       }), element.on("touchstart.maps", "#shuidi-dialog", function(e) {
         "shuidi-dialog" === e.target.id && (e.stopPropagation(), $("#shuidi-dialog").addClass("hide"));
       }), element.on("touchstart.maps", "#shuidi-dialog .app-btn", function(e) {
-        e.preventDefault();
-        var args = "", params = [];
-        return self.cross && (args += self.cross.id), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
-        params.push("token=" + self.token), self.username && params.push("username=", self.username)), 
-        self.myIdentityId && params.push("identity_id=" + self.myIdentityId), params.length && (args += "?" + params.join("&")), 
-        console.log(app_prefix_url + args), openExfe(app_prefix_url + args), !1;
+        return e.preventDefault(), self.openEXFE(), !1;
       }), element.on("touchstart.maps", "#shuidi-dialog .notify-ok", function(e) {
         e.preventDefault();
         var v = $("#notify-provider").val();
@@ -5588,8 +5583,8 @@ TWEEN.Tween = function(object) {
           void 0) : (self.mapReadyStatus && (self.mapController.showBreadcrumbs(uid), self.mapController.fitBoundsWithDestination(uid)), 
           void 0);
         }
-      }), element.on("tap.maps", "#open-exfe", function() {
-        alert("restart stream"), self.stopStream();
+      }), element.on("touchstart.maps", "#open-exfe", function() {
+        self.openEXFE();
       });
       var _t0, pageY0 = 0, scrollTop0 = 0;
       element.on("touchstart.maps", "#nearby", function(e) {
@@ -5631,6 +5626,13 @@ TWEEN.Tween = function(object) {
         }), console.log("This is Smith-Token.", self.isSmithToken), $win.trigger("orientationchange"), 
         self.createIdentitiesList(), self.checkRouteXStatus();
       });
+    },
+    openEXFE: function() {
+      var args = "", params = [], self = this;
+      self.cross && (args += self.cross.id), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
+      params.push("token=" + self.token), self.username && params.push("username=", self.username)), 
+      self.myIdentityId && params.push("identity_id=" + self.myIdentityId), params.length && (args += "?" + params.join("&")), 
+      console.log(app_prefix_url + args), openExfe(app_prefix_url + args);
     },
     updateExfeeName: function() {
       this.element.find("#exfee-name").text(this.cross.exfee.name);

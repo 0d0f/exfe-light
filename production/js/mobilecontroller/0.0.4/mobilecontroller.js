@@ -1776,21 +1776,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
           e.preventDefault();
-          var args = '', params = [];
-          if (self.cross) { args += self.cross.id; }
-          if (self.myUserId && self.token) {
-            params.push('user_id=' + self.myUserId);
-            params.push('token=' + self.token);
-            if (self.username) {
-              params.push('username=', self.username);
-            }
-          }
-          if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-          if (params.length) {
-            args += '?' + params.join('&');
-          }
-          console.log(app_prefix_url + args);
-          openExfe(app_prefix_url + args);
+          self.openEXFE();
           return false;
         });
 
@@ -1819,9 +1805,9 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
-        element.on('tap.maps', '#open-exfe', function (e) {
-          alert('restart stream');
-          self.stopStream();
+        element.on('touchstart.maps', '#open-exfe', function (e) {
+          self.openEXFE();
+          //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
@@ -1997,6 +1983,24 @@ define('mobilecontroller', function (require, exports, module) {
           self.checkRouteXStatus();
         });
 
+      }
+
+    , openEXFE: function () {
+        var args = '', params = [], self = this;
+        if (self.cross) { args += self.cross.id; }
+        if (self.myUserId && self.token) {
+          params.push('user_id=' + self.myUserId);
+          params.push('token=' + self.token);
+          if (self.username) {
+            params.push('username=', self.username);
+          }
+        }
+        if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
+        if (params.length) {
+          args += '?' + params.join('&');
+        }
+        console.log(app_prefix_url + args);
+        openExfe(app_prefix_url + args);
       }
 
     , updateExfeeName: function () {
