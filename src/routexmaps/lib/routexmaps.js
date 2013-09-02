@@ -820,7 +820,14 @@ define('routexmaps', function (require) {
           if (isme) { continue; }
           line && (line[3] = '#ff7e98');
           //tl && tl.setAttribute('stroke', '#FF7E98');
-          gm && gm.setIcon(icons.dotRed);
+          if (gm) {
+            gm.setIcon(icons.dotRed);
+            var label = gm.label;
+            if (label) {
+              label.setMap(null);
+              delete gm.label;
+            }
+          }
         } else {
           if ($e.length) {
             $e.parent().removeClass('unknown');
@@ -852,7 +859,21 @@ define('routexmaps', function (require) {
           if (isme) { continue; }
           //tl && tl.setAttribute('stroke', '#b2b2b2');
           line && (line[3] = '#b2b2b2');
-          gm && gm.setIcon(icons.dotGrey);
+          if (gm) {
+            gm.setIcon(icons.dotGrey);
+            var label = gm.label;
+            if (!label) {
+              gm.label = label = new google.maps.TextLabel({
+                  map: this.map
+                , zIndex: MAX_INDEX - 3
+              });
+            }
+            if (n < 60) {
+              label.set('text', n + '分钟前');
+            } else {
+              label.set('text', Math.floor(n / 60) + '小时前');
+            }
+          }
         }
       }
     }
@@ -1120,7 +1141,7 @@ define('routexmaps', function (require) {
 
         if (t > start && b && (TIME_STEPS.indexOf(t) != -1 || t > 15)) {
 
-          if (j === 0 && bool) { j = 1; continue; }
+          if (j === 0) { j = 1; continue; }
 
           start = t;
           label = labels[i];
