@@ -825,6 +825,7 @@ define('routexmaps', function (require) {
             var label = gm.label;
             if (label) {
               label.setMap(null);
+              delete label.marker;
               delete gm.label;
             }
           }
@@ -867,6 +868,7 @@ define('routexmaps', function (require) {
                   map: this.map
                 , zIndex: MAX_INDEX - 3
               });
+              label.marker = gm;
             }
             if (n < 60) {
               label.set('text', n + '分钟前');
