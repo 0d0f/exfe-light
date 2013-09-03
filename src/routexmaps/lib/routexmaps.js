@@ -85,14 +85,21 @@ define('routexmaps', function (require) {
     , TIME_STEPS = [0, 1, 3, 5, 10, 15];
 
 
-  function MapPanel(div) {
+  function MapPanel(div, noremove) {
     this.div = div;
+    this.status = !noremove;
   }
 
   MapPanel.prototype = {
     hide: function () {
+      var div = this.div;
       this.hideBefore && this.hideBefore();
-      this.div.remove();
+      if (status) {
+        div.remove();
+      } else {
+        div.addClass('hide');
+      }
+      div.off();
       this.hideAfter && this.hideAfter();
     }
   };
@@ -281,16 +288,74 @@ define('routexmaps', function (require) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
+  proto.infoWindowTemplate = '<div id="place-editor" class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
+
   proto.showPlacePanel = function (id) {
-    var marker = this.places[id];
-    if (marker) {
-      google.maps.event.trigger(marker, 'mousedown');
+    if (this.currPanel) {
+      this.currPanel.hide();
+      this.currPanel = null;
     }
-    this.hideNearBy();
+
+    var self = this;
+
+    var place = this.places[id];
+
+    if (place) {
+      var latlng = place.getPosition()
+        , p = this.fromLatLngToContainerPixel(latlng)
+        , data = place.data;
+
+      var $place = $(self.infoWindowTemplate.replace('{{title}}', data.title).replace('{{description}}', data.description || ''));
+
+      $place.editing = false;
+
+      $place.on('touchstart', '.title, .description', function (e) {
+        $place.editing = true;
+        var $t = $place.find('.title')
+          , $d = $place.find('.description')
+          , title = $t.text()
+          , description = $d.text();
+        var ct = document.createElement('input');
+        ct.type = 'text';
+        ct.value = title;
+        var cd = document.createElement('textarea');
+        cd.value = description;
+        $place.append(ct);
+        $place.append(cd);
+        $t.addClass('hide');
+        $d.addClass('hide');
+      });
+
+      $('#routex').append($place);
+
+      this.currPanel = new MapPanel($place);
+      this.currPanel.hideBefore = function () {
+        var myIdentity = self.myIdentity;
+        var div = this.div;
+        if (div.editing) {
+          var title = div.find('input').val().trim();
+          var description = div.find('textarea').val().trim();
+          if (title !== data.title || description !== data.description) {
+            data.title = title;
+            data.description = description;
+            data.updated_at = Math.round(Date.now() / 1000);
+            data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
+            self.controller.editPlace(data);
+          }
+          div.find('input, textarea').remove();
+          div.find('.title').text(title).removeClass('hide');
+          div.find('.description').text(description).removeClass('hide');
+        }
+      };
+    }
   };
 
   proto.showIdentityPanel = function (uid, bound) {
-    this.hideNearBy();
+    if (this.currPanel) {
+      this.currPanel.hide();
+      this.currPanel = null;
+    }
+
     var gm = this.geoMarkers[uid]
       , geoLocation = this.geoLocation
       , destinationPlace = this.destinationPlace
@@ -373,6 +438,8 @@ define('routexmaps', function (require) {
     }
 
     $otherInfo.css({ left: left, top: top });
+
+    this.currPanel = new MapPanel($otherInfo, true);
   };
 
   proto.setOffset = function (offset) {
@@ -501,7 +568,7 @@ define('routexmaps', function (require) {
 
       if (status) {
         if (pn === 1 && gn === 0) {
-
+          this.showPlacePanel(pk);
         } else if (pn === 0 && gn === 1) {
           this.showIdentityPanel(gk);
         } else {
@@ -1373,8 +1440,6 @@ define('routexmaps', function (require) {
     }
     */
   };
-
-  proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
 
   proto.contains = function () {
     var mapBounds = this.map.getBounds()
