@@ -331,7 +331,7 @@ define('routexmaps', function (require) {
       $('#routex').append($place);
 
       left = p.x - 200 / 2;
-      top = p.y - 34 - $place.height() / 2;
+      top = p.y - 68 - $place.height() / 2;
 
       if (left < 0) { left = 0; }
       if (top < 0 ) { top = 0; }
