@@ -344,8 +344,8 @@ define('routexmaps', function (require) {
       if (top + oh > h) { top = h - oh; }
 
       $place.css({
-          top: top
-        , left: left
+          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
+        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
         , visibility: 'visible'
       });
 
@@ -456,8 +456,8 @@ define('routexmaps', function (require) {
     }
 
     $otherInfo.css({
-          left: left
-        , top: top
+          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
+        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
         , visibility: 'visible'
       });
 
@@ -597,8 +597,8 @@ define('routexmaps', function (require) {
           var width = $(window).width()
             , height = $(window).height();
           nbDiv.css({
-              left: (width - 200 + 50) / 2
-            , top: (height - 132) / 2
+              'transform': 'translate3d(' + (width - 200 + 50) / 2 + 'px,' + (height - 132) / 2 + 'px, 0)'
+            , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
           });
           $('#routex').append(nbDiv);
           this.currPanel = new MapPanel(nbDiv);
