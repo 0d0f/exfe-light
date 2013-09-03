@@ -288,7 +288,7 @@ define('routexmaps', function (require) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
   };
 
-  proto.infoWindowTemplate = '<div id="place-editor" class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
+  proto.infoWindowTemplate = '<div id="place-editor" class="info-windown park"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
 
   proto.showPlacePanel = function (id) {
     if (this.currPanel) {
