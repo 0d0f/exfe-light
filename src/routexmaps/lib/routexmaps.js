@@ -85,6 +85,18 @@ define('routexmaps', function (require) {
     , TIME_STEPS = [0, 1, 3, 5, 10, 15];
 
 
+  function MapPanel(div) {
+    this.div = div;
+  }
+
+  MapPanel.prototype = {
+    hide: function () {
+      this.hideBefore && this.hideBefore();
+      this.div.remove();
+      this.hideAfter && this.hideAfter();
+    }
+  };
+
   function RoutexMaps(options) {
     options = this.options = options || {};
     /*
@@ -123,13 +135,14 @@ define('routexmaps', function (require) {
 
     this.labels = [];
 
+    this.currPanel = null;
+
     window._loadmaps_ = function (rm, mapDiv, mapOptions, callback) {
 
       return function cb() {
         var GMaps = google.maps
           , GEvent = GMaps.event;
 
-        GMaps.InfoBox = require('infobox');
         GMaps.TextLabel = require('maplabel');
         GMaps.GeoMarker = require('geomarker');
 
@@ -149,22 +162,6 @@ define('routexmaps', function (require) {
             , new GMaps.Point(9, 9)
             , new GMaps.Size(18, 18)
           );
-        /*
-        icons.arrowBlue = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_arrow_22blue@2x.png'
-            , new GMaps.Size(44, 44)
-            , new GMaps.Point(0, 0)
-            , new GMaps.Point(11, 11)
-            , new GMaps.Size(22, 22)
-          );
-        icons.arrowGrey = new GMaps.MarkerImage(
-              SITE_URL + '/static/img/map_arrow_22g5@2x.png'
-            , new GMaps.Size(44, 44)
-            , new GMaps.Point(0, 0)
-            , new GMaps.Point(11, 11)
-            , new GMaps.Size(22, 22)
-          );
-        */
         icons.placeMarker = new GMaps.MarkerImage(
               apiv3_url + '/icons/mapmark'
             , new GMaps.Size(48, 68)
@@ -228,7 +225,7 @@ define('routexmaps', function (require) {
               py = touch.pageY;
             })
             .on('tap.maps', function (e) {
-              if (rm.infobox) { return; }
+              //if (rm.infobox) { return; }
               e.stopPropagation();
               rm.showNearBy({ x: px, y: py });
             });
@@ -391,7 +388,6 @@ define('routexmaps', function (require) {
     $('#other-info').addClass('hide');
   };
 
-
   var NEARBY_TMP = '<div id="nearby" class="info-windown"></div>';
   var PLACE_TMP = '<div class="place-marker"><h4 class="title"></h4><div class="description"></div></div>';
   var IDENTITY_TMP = '<div class="geo-marker clearfix"><img width="30" height="30" src="" alt="" /><div class="detial"><div class="name"></div><div class="status"></div></div></div>';
@@ -405,8 +401,14 @@ define('routexmaps', function (require) {
     return d <= 48;
   };
   proto.showNearBy = function (point) {
+    /*
     if ($('#nearby').length) {
       this.hideNearBy();
+      return;
+    }
+    */
+    if (this.currPanel) {
+      this.currPanel.hide();
       return;
     }
     if (point) {
@@ -434,13 +436,12 @@ define('routexmaps', function (require) {
         latlng = p.getPosition()
         if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
-          //list.places.push(p)
           pn++;
           pk = k;
           var tmp = $(PLACE_TMP);
           tmp.attr('data-id', p.data.id);
           tmp.find('.title').text(p.data.title);
-          tmp.find('.description').text(p.data.description);
+          tmp.find('.description').text(p.data.description || '');
           nbDiv.append($('<div></div>').append(tmp));
         }
       }
@@ -450,7 +451,6 @@ define('routexmaps', function (require) {
         latlng = p.getPosition();
         if (this.distance48px(latlng, center)) {
           if (!status) { status = true; }
-          //list.geomarkers.push(p);
           gn++;
           gk = k;
           var id = p.data.id.split('.')[1];
@@ -475,19 +475,19 @@ define('routexmaps', function (require) {
 
           if (n <= 1) {
             if (dd) {
-              str += '<span>距离目的地' + dd + '</span>';
+              str += '<span>至目的地' + dd + '</span>';
             }
             if (dm) {
               str += '<span>与您相距' + dm + '</span>'
             }
           } else {
             if (n < 60) {
-              str += '<span>' + n + '分钟前所处位置</span>'
+              str += '<span>' + n + '分钟前</span>'
             } else {
-              str += '<span>' + Math.floor(n / 60) + '小时前所处位置</span>'
+              str += '<span>' + Math.floor(n / 60) + '小时前</span>'
             }
             if (dd) {
-              str += '<span>距离目的地' + dd + '</span>';
+              str += '<span>至目的地' + dd + '</span>';
             }
           }
           if (str) {
@@ -499,7 +499,9 @@ define('routexmaps', function (require) {
       }
 
       if (status) {
-        if (pn === 0 && gn === 1) {
+        if (pn === 1 && gn === 0) {
+
+        } else if (pn === 0 && gn === 1) {
           this.showIdentityPanel(gk);
         } else {
           var width = $(window).width()
@@ -509,6 +511,7 @@ define('routexmaps', function (require) {
             , top: (height - 132) / 2
           });
           $('#routex').append(nbDiv);
+          this.currPanel = new MapPanel(nbDiv);
         }
       }
     }
@@ -1277,8 +1280,6 @@ define('routexmaps', function (require) {
       , myIdentity = this.myIdentity
       , m = new GMaps.Marker({
           map: map
-        //, animation: 2
-        //, visible: false
         , zIndex: MAX_INDEX - 5
         , icon: new GMaps.MarkerImage(
               data.icon || (apiv3_url + '/icons/mapmark')
@@ -1287,8 +1288,8 @@ define('routexmaps', function (require) {
             , new GMaps.Point(12, 34)
             , new GMaps.Size(24, 34)
           )
-        //, optimized: false
-      })
+      });
+    /*
     , GEvent = GMaps.event;
 
     GEvent.addListener(m, 'mousedown', function mousedown(e) {
@@ -1331,11 +1332,13 @@ define('routexmaps', function (require) {
       self.infobox.marker = this;
       self.infobox.open(map, this);
     });
+    */
 
     return m;
   };
 
   proto.editPlace = function () {
+    /*
     if (!this.infobox) { return; }
     var data = this.infobox.marker.data
       , myIdentity = this.myIdentity;
@@ -1354,9 +1357,11 @@ define('routexmaps', function (require) {
       $('#place-editor .description').text(description).removeClass('hide');
     }
     this.removeInfobox();
+    */
   };
 
   proto.removeInfobox = function (marker) {
+    /*
     var infobox = this.infobox, m;
     if (infobox) {
       m = infobox.marker;
@@ -1365,6 +1370,7 @@ define('routexmaps', function (require) {
       infobox = this.infobox = null;
       if (m === marker) { return true; }
     }
+    */
   };
 
   proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
@@ -1499,54 +1505,6 @@ define('routexmaps', function (require) {
     ctx.strokeStyle = points[3] || '#b2b2b2';
     ctx.stroke();
   };
-
-  /*
-  proto.updateGeoLocation = function (uid, position) {
-    var geoLocation = this.geoLocation, latlng, gps;
-    if (!geoLocation) {
-      // status: 0-init, 1-last-latlng, 2: new-latlng
-      geoLocation = this.geoLocation = new google.maps.Marker({
-          map: this.map
-        , zIndex: MAX_INDEX - 1
-        , visible: true
-        //, animation: 2
-        , icon: this.icons.arrowGrey
-        , shape: {
-              type: 'rect'
-            , rect: [0, 0, 1, 1]
-          }
-        , optimized: false
-      });
-      geoLocation._status = 0;
-      var lastlatlng = JSON.parse(window.localStorage.getItem('position'));
-      if (lastlatlng) {
-        lastlatlng = this.toMars(lastlatlng, true);
-        gps = lastlatlng.gps;
-        geoLocation._status = 1;
-        latlng = this.toLatLng(gps[0], gps[1]);
-        geoLocation.setPosition(latlng);
-        this.map.setZoom(15);
-        this.map.panTo(latlng);
-      }
-    }
-    if (position) {
-      position = this.toMars(position, true);
-      gps = position.gps;
-      latlng = this.toLatLng(gps[0], gps[1])
-      geoLocation.setIcon(this.icons.arrowBlue);
-      geoLocation.setPosition(latlng);
-      if (2 !== geoLocation._status) {
-        this.map.setZoom(15);
-        this.map.panTo(latlng);
-      }
-      geoLocation._status = 2;
-    }
-    if (uid) {
-      this.updated[uid] = position || lastlatlng;
-    }
-    geoLocation._uid = uid;
-  };
-  */
 
   proto.updateGeoLocation = function (uid, position) {
     var geoLocation = this.geoLocation, latlng, gps;
