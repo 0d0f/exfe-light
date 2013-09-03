@@ -1952,6 +1952,9 @@ define('mobilecontroller', function (require, exports, module) {
 
         var pageY = 0, scrollTop = 0, _t;
         $identities.on('touchstart.maps', function (e) {
+          if (self.mapReadyStatus) {
+            self.mapController.hideMapPanel();
+          }
           isScroll = false;
           pageY = e.pageY;
           scrollTop = this.scrollTop;
