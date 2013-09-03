@@ -326,6 +326,19 @@ define('routexmaps', function (require) {
         $d.addClass('hide');
       });
 
+      var left = 0, top = 0;
+
+      left = p.x - 200 / 2;
+      top = p.y - $place.height() / 2;
+
+      if (left < 0) { left = 0; }
+      if (top < 0 ) { top = 0; }
+
+      $place.css({
+          top: top
+        , left: left
+      });
+
       $('#routex').append($place);
 
       this.currPanel = new MapPanel($place);
