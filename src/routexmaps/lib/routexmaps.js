@@ -330,11 +330,18 @@ define('routexmaps', function (require) {
 
       $('#routex').append($place);
 
-      left = p.x - 200 / 2;
-      top = p.y - 68 - $place.height() / 2;
+      var w = $(window).width()
+        , h = $(window).height()
+        , ow = $place.width()
+        , oh = $place.height();
+
+      left = p.x - ow/ 2;
+      top = p.y - 68 - oh / 2;
 
       if (left < 0) { left = 0; }
-      if (top < 0 ) { top = 0; }
+      if (left + ow > w) { left = w - ow; }
+      if (top < 0) { top = 20; }
+      if (top + oh > h) { top = h - oh; }
 
       $place.css({
           top: top
