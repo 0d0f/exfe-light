@@ -94,7 +94,7 @@ define('routexmaps', function (require) {
     hide: function () {
       var div = this.div;
       this.hideBefore && this.hideBefore();
-      if (status) {
+      if (this.status) {
         div.remove();
       } else {
         div.addClass('hide');
