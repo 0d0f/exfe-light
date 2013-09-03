@@ -598,7 +598,7 @@ define('routexmaps', function (require) {
             , height = $(window).height();
           nbDiv.css({
               'transform': 'translate3d(' + (width - 200 + 50) / 2 + 'px,' + (height - 132) / 2 + 'px, 0)'
-            , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
+            , '-webkit-transform': 'translate3d(' + (width - 200 + 50) / 2 + 'px,' + (height - 132) / 2 + 'px, 0)'
           });
           $('#routex').append(nbDiv);
           this.currPanel = new MapPanel(nbDiv);
