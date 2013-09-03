@@ -219,14 +219,17 @@ define('routexmaps', function (require) {
             e.stop();
             rm.hideMyPanel();
             //rm.hideIdentityPanel();
-            rm.editPlace();
           });
 
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
-              rm.hideNearBy();
-              rm.hideIdentityPanel();
+              if (rm.currPanel) {
+                rm.currPanel.hide();
+                rm.currPanel = null;
+              }
+              //rm.hideNearBy();
+              //rm.hideIdentityPanel();
               var touch = e.touches[0];
               px = touch.pageX;
               py = touch.pageY;
@@ -1314,10 +1317,17 @@ define('routexmaps', function (require) {
     }
   };
 
+  proto.hideMapPanel = function () {
+    if (this.currPanel) {
+      this.currPanel.hide();
+      this.currPanel = null;
+    }
+  };
+
   proto.showBreadcrumbs = function (uid) {
     this.hideMyPanel();
-    this.hideNearBy();
-    this.hideIdentityPanel();
+    this.hideMapPanel();
+
 
     this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
@@ -1378,88 +1388,8 @@ define('routexmaps', function (require) {
             , new GMaps.Size(24, 34)
           )
       });
-    /*
-    , GEvent = GMaps.event;
-
-    GEvent.addListener(m, 'mousedown', function mousedown(e) {
-      e && e.stop();
-
-      if (self.removeInfobox(this)) { return false; }
-
-      self.infobox = new GMaps.InfoBox({
-          content: self.infoWindowTemplate.replace('{{title}}', this.data.title).replace('{{description}}', this.data.description)
-        , maxWidth: 200
-        , pixelOffset: new GMaps.Size(-100, -38)
-        , boxClass: 'park'
-        , closeBoxMargin: ''
-        , closeBoxURL: ''
-        , alignBottom: true
-        , enableEventPropagation: false
-        , leftBoundary: 60
-        , zIndex: 610
-        , boxId: 'place-editor'
-        , events: function () {
-            self.infobox.editing = false;
-            GEvent.addDomListener(this.div_, 'touchstart', function () {
-              if (self.infobox.editing) { return; }
-              var infoWindown = this.querySelector('.info-windown');
-              var title = this.querySelector('.title').innerHTML;
-              var description = this.querySelector('.description').innerHTML;
-              var ct = document.createElement('input');
-              ct.type = 'text';
-              ct.value = title;
-              var cd = document.createElement('textarea');
-              cd.value = description;
-              infoWindown.appendChild(ct)
-              infoWindown.appendChild(cd)
-              this.querySelector('.title').className = 'title hide';
-              this.querySelector('.description').className = 'description hide';
-              self.infobox.editing = true;
-            });
-          }
-      });
-      self.infobox.marker = this;
-      self.infobox.open(map, this);
-    });
-    */
 
     return m;
-  };
-
-  proto.editPlace = function () {
-    /*
-    if (!this.infobox) { return; }
-    var data = this.infobox.marker.data
-      , myIdentity = this.myIdentity;
-    if (this.infobox.editing) {
-      var title = $('#place-editor input').val().trim();
-      var description = $('#place-editor textarea').val().trim();
-      if (title !== data.title || description !== data.description) {
-        data.title = title;
-        data.description = description;
-        data.updated_at = Math.round(Date.now() / 1000);
-        data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
-        this.controller.editPlace(data);
-      }
-      $('#place-editor input, #place-editor textarea').remove();
-      $('#place-editor .title').text(title).removeClass('hide');
-      $('#place-editor .description').text(description).removeClass('hide');
-    }
-    this.removeInfobox();
-    */
-  };
-
-  proto.removeInfobox = function (marker) {
-    /*
-    var infobox = this.infobox, m;
-    if (infobox) {
-      m = infobox.marker;
-      infobox.close();
-      delete infobox.marker;
-      infobox = this.infobox = null;
-      if (m === marker) { return true; }
-    }
-    */
   };
 
   proto.contains = function () {
