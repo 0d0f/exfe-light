@@ -323,8 +323,11 @@ define('routexmaps', function (require) {
         ct.value = title;
         var cd = document.createElement('textarea');
         cd.value = description;
+        var cv = document.createElement('div');
+        cv.className = 'splitline';
+        cv.appendChild(cd);
         $place.append(ct);
-        $place.append(cd);
+        $place.append(cv);
         $t.addClass('hide');
         $d.addClass('hide');
       });
@@ -366,7 +369,7 @@ define('routexmaps', function (require) {
             data.updated_by = myIdentity.external_username + '@' + myIdentity.provider;
             self.controller.editPlace(data);
           }
-          div.find('input, textarea').remove();
+          div.find('input, .splitline').remove();
           div.find('.title').text(title).removeClass('hide');
           div.find('.description').text(description).removeClass('hide');
         }
@@ -1331,7 +1334,6 @@ define('routexmaps', function (require) {
   proto.showBreadcrumbs = function (uid) {
     this.hideMyPanel();
     this.hideMapPanel();
-
 
     this.removeTextLabels();
     if (!this._breadcrumbs[uid]) { return; }
