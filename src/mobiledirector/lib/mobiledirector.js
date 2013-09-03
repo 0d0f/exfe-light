@@ -386,7 +386,7 @@
   };
 
   var doOAuth = function (provider, data, done, error) {
-    document.getElementById('app-body').innerHTML = '<div id="app-status">授权中……</div>';
+    document.getElementById('app-body').innerHTML = '<div id="app-status">微信鉴权中……</div>';
     request({
         url: '/oauth/authenticate?provider=' + provider
       , type: 'POST'
@@ -552,7 +552,7 @@
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status">加载中……</div>';
+      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
 
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
