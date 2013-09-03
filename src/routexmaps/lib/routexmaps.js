@@ -339,7 +339,7 @@ define('routexmaps', function (require) {
         , oh = $place.height();
 
       left = p.x - ow/ 2;
-      top = p.y - 63 - oh / 2;
+      top = p.y - 64 - oh / 2;
 
       if (left < 0) { left = 0; }
       if (left + ow > w) { left = w - ow; }
