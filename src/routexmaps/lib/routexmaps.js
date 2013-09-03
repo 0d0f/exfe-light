@@ -328,6 +328,8 @@ define('routexmaps', function (require) {
 
       var left = 0, top = 0;
 
+      $('#routex').append($place);
+
       left = p.x - 200 / 2;
       top = p.y - 34 - $place.height() / 2;
 
@@ -338,8 +340,6 @@ define('routexmaps', function (require) {
           top: top
         , left: left
       });
-
-      $('#routex').append($place);
 
       this.currPanel = new MapPanel($place);
       this.currPanel.hideBefore = function () {
