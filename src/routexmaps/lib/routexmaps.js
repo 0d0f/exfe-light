@@ -409,6 +409,7 @@ define('routexmaps', function (require) {
     */
     if (this.currPanel) {
       this.currPanel.hide();
+      this.currPanel = null;
       return;
     }
     if (point) {
