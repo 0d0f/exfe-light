@@ -461,7 +461,11 @@ define('routexmaps', function (require) {
       if (top + oh > h) { top = h - oh; }
     }
 
-    $otherInfo.css({ left: left, top: top });
+    $otherInfo.css({
+          left: left
+        , top: top
+        , visibility: 'visible'
+      });
 
     this.currPanel = new MapPanel($otherInfo, true);
   };
