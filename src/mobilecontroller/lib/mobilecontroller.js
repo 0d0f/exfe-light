@@ -1987,7 +1987,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     , openEXFE: function () {
         var args = '', params = [], self = this;
-        if (self.cross) { args += self.cross.id; }
+        if (self.cross) { args += self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
           params.push('user_id=' + self.myUserId);
           params.push('token=' + self.token);
@@ -1996,11 +1996,11 @@ define('mobilecontroller', function (require, exports, module) {
           }
         }
         if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-        if (params.length) {
+        if (args.length && params.length) {
           args += '?' + params.join('&');
+          console.log(app_prefix_url + args);
+          openExfe(app_prefix_url + args);
         }
-        console.log(app_prefix_url + args);
-        openExfe(app_prefix_url + args);
       }
 
     , updateExfeeName: function () {
