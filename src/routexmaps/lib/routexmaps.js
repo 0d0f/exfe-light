@@ -94,12 +94,12 @@ define('routexmaps', function (require) {
     hide: function () {
       var div = this.div;
       this.hideBefore && this.hideBefore();
+      div.off();
       if (this.status) {
         div.remove();
       } else {
         div.addClass('hide');
       }
-      div.off();
       this.hideAfter && this.hideAfter();
     }
   };
