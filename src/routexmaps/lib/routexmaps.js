@@ -346,6 +346,7 @@ define('routexmaps', function (require) {
       $place.css({
           top: top
         , left: left
+        , visibility: 'visible'
       });
 
       this.currPanel = new MapPanel($place);
