@@ -218,6 +218,7 @@ define('routexmaps', function (require) {
           GEvent.addListener(map, 'mousedown', function (e) {
             e.stop();
             rm.hideMyPanel();
+            rm.hideMapPanel();
             //rm.hideIdentityPanel();
           });
 
@@ -225,6 +226,7 @@ define('routexmaps', function (require) {
           $(mapDiv)
             .on('touchstart.maps', function (e) {
               rm.hideMyPanel();
+              rm.hideMapPanel();
               //rm.hideNearBy();
               //rm.hideIdentityPanel();
               var touch = e.touches[0];
