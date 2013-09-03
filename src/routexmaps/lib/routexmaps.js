@@ -224,10 +224,7 @@ define('routexmaps', function (require) {
           var px, py;
           $(mapDiv)
             .on('touchstart.maps', function (e) {
-              if (rm.currPanel) {
-                rm.currPanel.hide();
-                rm.currPanel = null;
-              }
+              rm.hideMyPanel();
               //rm.hideNearBy();
               //rm.hideIdentityPanel();
               var touch = e.touches[0];
@@ -294,10 +291,7 @@ define('routexmaps', function (require) {
   proto.infoWindowTemplate = '<div id="place-editor" class="info-windown park"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>';
 
   proto.showPlacePanel = function (id) {
-    if (this.currPanel) {
-      this.currPanel.hide();
-      this.currPanel = null;
-    }
+    this.hideMapPanel();
 
     var self = this;
 
@@ -378,10 +372,7 @@ define('routexmaps', function (require) {
   };
 
   proto.showIdentityPanel = function (uid, bound) {
-    if (this.currPanel) {
-      this.currPanel.hide();
-      this.currPanel = null;
-    }
+    this.hideMapPanel();
 
     var gm = this.geoMarkers[uid]
       , geoLocation = this.geoLocation
