@@ -464,6 +464,11 @@ define('routexmaps', function (require) {
       });
 
     this.currPanel = new MapPanel($otherInfo, true);
+    this.currPanel.hideAfter = function () {
+      this.div.css({
+          visibility: 'hidden';
+      });
+    };
   };
 
   proto.setOffset = function (offset) {
