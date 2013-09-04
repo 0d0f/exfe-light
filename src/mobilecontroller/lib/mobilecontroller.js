@@ -1718,7 +1718,8 @@ define('mobilecontroller', function (require, exports, module) {
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           */
-          $('#wechat-guide-dialog').removeClass('hide');
+          //$('#wechat-guide-dialog').removeClass('hide');
+          self.checkfollowing();
           self.tapElement = this;
         });
 
@@ -2134,6 +2135,22 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , checkFollowing: function () {
+        $.ajax({
+            url: api_url + '/identities/' + this.myIdentityId + '/checkfollowing?token=' + this.token
+          , timeout: 5000
+          , success: function (data) {
+              if (data.meta.code === 200) {
+                var following = data.response.following;
+                if (!following) {
+                  $('#wechat-guide-dialog').removeClass('hide');
+                }
+              }
+            }
+          //, error: function (data) {}
+        });
+      }
+
     , checkRouteXStatus: function () {
         var c = true, routexWidget;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
@@ -2148,6 +2165,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
         if (c) {
+          this.checkfollowing();
           this.streaming();
         // 显示提醒文字
         } else {
@@ -2351,6 +2369,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myUserId = identity.connected_user_id;
+            this.myIdentityId = identity.id;
             this.updateMe(identity);
             this.updateNotifyProvider(invitation.notification_identities.slice(0));
             continue;
