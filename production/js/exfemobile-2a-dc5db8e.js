@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-09-04 12:09:33 */
+/*! mobile@2a 2013-09-04 04:09:36 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -4062,14 +4062,18 @@ TWEEN.Tween = function(object) {
         var cd = document.createElement("textarea");
         cd.value = description, $place.append(cv), $place.append(cd), $t.addClass("hide"), 
         $d.addClass("hide");
-      });
-      var left = 0, top = 0;
-      $("#routex").append($place);
-      var w = $(window).width(), h = $(window).height(), ow = $place.width(), oh = $place.height();
-      left = p.x - ow / 2, top = p.y - 64 - oh / 2, 0 > left && (left = 0), left + ow > w && (left = w - ow), 
-      0 > top && (top = 20), top + oh > h && (top = h - oh), $place.css({
-        transform: "translate3d(" + left + "px," + top + "px, 0px)",
-        "-webkit-transform": "translate3d(" + left + "px," + top + "px, 0px)",
+        var left = 0, top = 0, w = $(window).width(), h = $(window).height(), ow = $place.width(), oh = $place.height();
+        left = p.x - ow / 2, top = p.y - 64 - oh / 2, 0 >= left && (left = 10), left + ow >= w && (left = w - ow - 10), 
+        0 >= top && (top = 10), top + oh >= h && (top = h - oh - 10), $place.css({
+          left: left,
+          top: top
+        });
+      }), $("#routex").append($place);
+      var left = 0, top = 0, w = $(window).width(), h = $(window).height(), ow = $place.width(), oh = $place.height();
+      left = p.x - ow / 2, top = p.y - 64 - oh / 2, 0 >= left && (left = 10), left + ow >= w && (left = w - ow - 10), 
+      0 >= top && (top = 10), top + oh >= h && (top = h - oh - 10), $place.css({
+        left: left,
+        top: top,
         visibility: "visible"
       }), this.currPanel = new MapPanel($place), this.currPanel.hideBefore = function() {
         var myIdentity = self.myIdentity, div = this.div;
@@ -4103,10 +4107,10 @@ TWEEN.Tween = function(object) {
       var point = this.fromLatLngToContainerPixel(p);
       left = point.x - ow / 2, top = point.y - oh / 2;
     } else left = (w - ow) / 2, top = (h - oh) / 2;
-    bound ? (left = 50, top = bound.top) : (0 > left && (left = 50), left + ow > w && (left = w - ow), 
-    0 > top && (top = 20), top + oh > h && (top = h - oh)), $otherInfo.css({
-      transform: "translate3d(" + left + "px," + top + "px, 0px)",
-      "-webkit-transform": "translate3d(" + left + "px," + top + "px, 0px)",
+    bound ? (left = 50, top = bound.top) : (0 > left && (left = 10), left + ow > w && (left = w - ow - 10), 
+    0 > top && (top = 10), top + oh > h && (top = h - oh - 10)), $otherInfo.css({
+      left: left,
+      top: top,
       visibility: "visible"
     }), this.currPanel = new MapPanel($otherInfo, !0), this.currPanel.hideAfter = function() {
       this.div.css({
@@ -4639,7 +4643,7 @@ TWEEN.Tween = function(object) {
   };
 }), define("mobilecontroller", function(require, exports, module) {
   "use strict";
-  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, apiv3_url = _ENV_.apiv3_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + "://crosses/", openExfe = (_ENV_.AMAP_KEY, 
+  var Base = require("base"), Store = require("store"), TWEEN = require("tween"), _ENV_ = window._ENV_, api_url = _ENV_.api_url, apiv3_url = _ENV_.apiv3_url, app_scheme = _ENV_.app_scheme, app_prefix_url = app_scheme + ":///", openExfe = (_ENV_.AMAP_KEY, 
   window.openExfe), Handlebars = require("handlebars"), $ = require("zepto"), Chrome = navigator.userAgent.match(/Chrome\/([\d.]+)/), util = require("util"), trim = util.trim, parseId = util.parseId, iPad = navigator.userAgent.match(/iPad/), Live = require("live"), escape = function(html, encode) {
     return html.replace(encode ? /&/g : /&(?!#?\w+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }, now = Date.now || function() {
@@ -5415,7 +5419,7 @@ TWEEN.Tween = function(object) {
         self.tapElement && e.target !== self.tapElement && !$.contains($myInfo[0], e.target) && ($myInfo.addClass("hide"), 
         self.tapElement = null);
       }), element.on("tap.maps", "#locate", gotoGPS), element.on("touchstart.maps", "#isme .avatar", function(e) {
-        gotoGPS(e, !0), $("#wechat-guide-dialog").removeClass("hide"), self.tapElement = this;
+        gotoGPS(e, !0), self.checkFollowing(), self.tapElement = this;
       }), element.on("touchstart.maps", "#wechat-guide-dialog", function() {
         $(this).addClass("hide");
       }), element.on("tap.maps", "#nearby .place-marker", function(e) {
@@ -5461,6 +5465,8 @@ TWEEN.Tween = function(object) {
         }
       }), element.on("touchstart.maps", "#open-exfe", function() {
         $("#shuidi-dialog").removeClass("hide");
+      }), element.on("touchstart.maps", "#clearup-cache", function() {
+        Store.clear();
       });
       var _t0, pageY0 = 0, scrollTop0 = 0;
       element.on("touchstart.maps", "#nearby", function(e) {
@@ -5506,7 +5512,7 @@ TWEEN.Tween = function(object) {
     },
     openEXFE: function() {
       var args = "", params = [], self = this;
-      self.cross && (args += self.cross.id + "/routex"), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
+      self.cross && (args += "!" + self.cross.id + "/routex"), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
       params.push("token=" + self.token), self.username && params.push("username=", self.username)), 
       self.myIdentityId && params.push("identity_id=" + self.myIdentityId), args.length && params.length && (args += "?" + params.join("&"), 
       console.log(app_prefix_url + args), openExfe(app_prefix_url + args));
@@ -5590,6 +5596,29 @@ TWEEN.Tween = function(object) {
         });
       }
     },
+    checkFollowing: function() {
+      if (!this.checkFollowingStatus) {
+        var self = this, enu = "";
+        if ("wechat" === this.myIdentity.provider) enu = this.myIdentity.external_username + "@wechat"; else if (this.notification_identities.length) for (var i, identity, identities = this.notification_identities.slice(0); identity = identities.shift(); ) if (i = parseId(identity), 
+        "wechat" === i.provider) {
+          enu = i.external_username + "@wechat";
+          break;
+        }
+        enu && (this.checkFollowingStatus = 1, $.ajax({
+          url: api_url + "/identities/checkfollowing?token=" + this.token + "&=identity_id=" + enu,
+          timeout: 5e3,
+          success: function(data) {
+            if (200 === data.meta.code) {
+              var following = data.response.following;
+              following || $("#wechat-guide-dialog").removeClass("hide");
+            }
+          },
+          complete: function() {
+            self.checkFollowingStatus = 0;
+          }
+        }));
+      }
+    },
     checkRouteXStatus: function() {
       for (var routexWidget, c = !0, i = 0, len = this.cross.widget.length; len > i; ++i) {
         var w = this.cross.widget[i];
@@ -5598,8 +5627,8 @@ TWEEN.Tween = function(object) {
           break;
         }
       }
-      (!routexWidget || routexWidget && !routexWidget.my_status) && (c = confirm("开启这张“活点地图”，它将\n展现您未来1小时内的方位。")), 
-      c ? this.streaming() : $("#privacy-dialog").removeClass("hide");
+      (!routexWidget || routexWidget && null === routexWidget.my_status) && (c = confirm("开启这张“活点地图”，它将\n展现您未来1小时内的方位。")), 
+      c ? (this.checkFollowing(), this.streaming()) : $("#privacy-dialog").removeClass("hide");
     },
     streaming: function() {
       var self = this;
@@ -5702,7 +5731,9 @@ TWEEN.Tween = function(object) {
         div.attr("data-uid", identity.connected_user_id), div.attr("data-name", identity.name), 
         div.find("img").attr("src", identity.avatar_filename), $identities.append(div), 
         div.data("identity", identity);
-      } else this.myUserId = identity.connected_user_id, this.updateMe(identity), this.updateNotifyProvider(invitation.notification_identities.slice(0));
+      } else this.myUserId = identity.connected_user_id, this.myIdentityId = identity.id, 
+      this.updateMe(identity), this.notification_identities = invitation.notification_identities.slice(0), 
+      this.updateNotifyProvider(this.notification_identities);
       window.getComputedStyle($identities[0]).webkitTransform, $identities.parent().css("-webkit-transform", "translate3d(0, 0, 0)"), 
       console.log("trigger handler scroll.maps"), $("#identities").triggerHandler("scroll");
     }

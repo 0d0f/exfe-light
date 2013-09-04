@@ -2161,7 +2161,7 @@ define('mobilecontroller', function (require, exports, module) {
         if (enu) {
           this.checkFollowingStatus = 1;
           $.ajax({
-              url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu;
+              url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu
             , timeout: 5000
             , success: function (data) {
                 if (data.meta.code === 200) {

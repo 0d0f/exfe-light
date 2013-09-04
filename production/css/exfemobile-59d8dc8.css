@@ -2447,10 +2447,6 @@ button .exfe {
   background-size: 100% 100%;
   background-image: url(/static/img/line@2x.png);
 }
-#routex .park {
-  max-width: 200px;
-  width: 200px;
-}
 #routex .park .description {
   font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
   padding-top: 2px;
@@ -2506,7 +2502,9 @@ button .exfe {
   position: absolute;
   padding: 5px;
   visibility: hidden;
-  width: 200px;
+  max-width: 200px;
+  min-width: 100px;
+  -webkit-transform: translate3d(0, 0, 0);
 }
 #routex #place-editor input {
   position: relative;
@@ -2522,9 +2520,6 @@ button .exfe {
   background: transparent;
   padding: 0;
   margin: 0;
-}
-#routex #place-editor .splitline {
-  position: relative;
 }
 #routex #place-editor textarea {
   position: relative;
@@ -2593,6 +2588,9 @@ button .exfe {
 #routex #other-info > div {
   position: relative;
   line-height: 44px;
+}
+#routex #other-info > div:last-child:before {
+  display: none;
 }
 #routex #other-info .info {
   padding: 5px 0;
@@ -2744,11 +2742,14 @@ button .exfe {
   bottom: -10px;
   left: 5px;
   width: 310px;
+  height: 396px;
+  overflow-y: auto;
   padding: 30px 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background-image: -webkit-linear-gradient(-180deg, #153353, #191919);
   background-image: linear-gradient(-180deg, #153353, #191919);
   border-radius: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 #routex #shuidi-dialog .main h3 {
   margin: 0;
@@ -2875,6 +2876,13 @@ button .exfe {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#115297), to(#44b0fa));
   background-image: -moz-linear-gradient(90deg, #115297 0%, #44b0fa 100%);
 }
+#routex #cleanup-cache {
+  margin-top: 40px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #7f7f7f;
+  text-decoration: underline;
+}
 #routex #privacy-dialog .main {
   padding: 37px 20px 0;
 }
@@ -2950,12 +2958,10 @@ button .exfe {
 #routex #wechat-guide-dialog .ibox p:first-child {
   padding-bottom: 10px;
 }
-#routex #wechat-guide-dialog .ibox img {
-  margin-left: 5px;
-}
 #routex #wechat-guide-dialog .ibox span {
-  font-size: 9px;
-  color: #7f7f7f;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
 }
 #routex #gps-marker {
   position: absolute;

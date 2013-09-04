@@ -326,13 +326,33 @@ define('routexmaps', function (require) {
         $place.append(cd);
         $t.addClass('hide');
         $d.addClass('hide');
-      });
 
-      var left = 0, top = 0;
+        var left = 0, top = 0
+          , w = $(window).width()
+          , h = $(window).height()
+          , ow = $place.width()
+          , oh = $place.height();
+
+        left = p.x - ow/ 2;
+        top = p.y - 64 - oh / 2;
+
+        if (left <= 0) { left = 10; }
+        if (left + ow >= w) { left = w - ow - 10; }
+        if (top <= 0) { top = 10; }
+        if (top + oh >= h) { top = h - oh - 10; }
+
+        $place.css({
+            //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+          //, '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+            left: left
+          , top: top
+        });
+      });
 
       $('#routex').append($place);
 
-      var w = $(window).width()
+      var left = 0, top = 0
+        , w = $(window).width()
         , h = $(window).height()
         , ow = $place.width()
         , oh = $place.height();
@@ -340,14 +360,16 @@ define('routexmaps', function (require) {
       left = p.x - ow/ 2;
       top = p.y - 64 - oh / 2;
 
-      if (left < 0) { left = 0; }
-      if (left + ow > w) { left = w - ow; }
-      if (top < 0) { top = 20; }
-      if (top + oh > h) { top = h - oh; }
+      if (left <= 0) { left = 10; }
+      if (left + ow >= w) { left = w - ow - 10; }
+      if (top <= 0) { top = 10; }
+      if (top + oh >= h) { top = h - oh - 10; }
 
       $place.css({
-          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
-        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+          //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+        //, '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+          left: left
+        , top: top
         , visibility: 'visible'
       });
 
@@ -451,15 +473,17 @@ define('routexmaps', function (require) {
       left = 50;
       top = bound.top;
     } else {
-      if (left < 0) { left = 50; }
-      if (left + ow > w) { left = w - ow; }
-      if (top < 0) { top = 20; }
-      if (top + oh > h) { top = h - oh; }
+      if (left < 0) { left = 10; }
+      if (left + ow > w) { left = w - ow - 10; }
+      if (top < 0) { top = 10; }
+      if (top + oh > h) { top = h - oh - 10; }
     }
 
     $otherInfo.css({
-          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
-        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+          // 'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+        // , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+          left: left
+        , top: top
         , visibility: 'visible'
       });
 

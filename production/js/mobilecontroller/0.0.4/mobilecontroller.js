@@ -8,7 +8,7 @@ define('mobilecontroller', function (require, exports, module) {
       api_url = _ENV_.api_url,
       apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
-      app_prefix_url = app_scheme + '://crosses/',
+      app_prefix_url = app_scheme + ':///',
       AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
@@ -1718,7 +1718,8 @@ define('mobilecontroller', function (require, exports, module) {
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           */
-          $('#wechat-guide-dialog').removeClass('hide');
+          //$('#wechat-guide-dialog').removeClass('hide');
+          self.checkFollowing();
           self.tapElement = this;
         });
 
@@ -1811,6 +1812,10 @@ define('mobilecontroller', function (require, exports, module) {
           //Store.remove('cats');
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
+        });
+
+        element.on('touchstart.maps', '#clearup-cache', function (e) {
+          Store.clear();
         });
 
         /*
@@ -1990,7 +1995,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     , openEXFE: function () {
         var args = '', params = [], self = this;
-        if (self.cross) { args += self.cross.id + '/routex'; }
+        if (self.cross) { args += '!' + self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
           params.push('user_id=' + self.myUserId);
           params.push('token=' + self.token);
@@ -2134,6 +2139,44 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , checkFollowing: function () {
+        if (this.checkFollowingStatus) { return; }
+        var self = this;
+        var enu = '';
+
+        if (this.myIdentity.provider === 'wechat') {
+          enu = this.myIdentity.external_username + '@wechat';
+        } else if (this.notification_identities.length) {
+          var identities = this.notification_identities.slice(0)
+            , i, identity;
+          while ((identity = identities.shift())) {
+            i = parseId(identity);
+            if (i.provider === 'wechat') {
+              enu = i.external_username + '@wechat';
+              break;
+            }
+          }
+        }
+
+        if (enu) {
+          this.checkFollowingStatus = 1;
+          $.ajax({
+              url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu
+            , timeout: 5000
+            , success: function (data) {
+                if (data.meta.code === 200) {
+                  var following = data.response.following;
+                  if (!following) {
+                    $('#wechat-guide-dialog').removeClass('hide');
+                  }
+                }
+              }
+            , complete: function () { self.checkFollowingStatus = 0; }
+            //, error: function (data) {}
+          });
+        }
+      }
+
     , checkRouteXStatus: function () {
         var c = true, routexWidget;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
@@ -2143,11 +2186,12 @@ define('mobilecontroller', function (require, exports, module) {
             break;
           }
         }
-        if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
+        if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
           c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
         }
 
         if (c) {
+          this.checkFollowing();
           this.streaming();
         // 显示提醒文字
         } else {
@@ -2351,8 +2395,10 @@ define('mobilecontroller', function (require, exports, module) {
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myUserId = identity.connected_user_id;
+            this.myIdentityId = identity.id;
             this.updateMe(identity);
-            this.updateNotifyProvider(invitation.notification_identities.slice(0));
+            this.notification_identities = invitation.notification_identities.slice(0);
+            this.updateNotifyProvider(this.notification_identities);
             continue;
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
