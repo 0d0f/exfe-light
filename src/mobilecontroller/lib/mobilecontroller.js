@@ -1991,7 +1991,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     , openEXFE: function () {
         var args = '', params = [], self = this;
-        if (self.cross) { args += self.cross.id + '/routex'; }
+        if (self.cross) { args += '!' + self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
           params.push('user_id=' + self.myUserId);
           params.push('token=' + self.token);
