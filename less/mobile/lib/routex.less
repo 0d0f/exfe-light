@@ -690,7 +690,7 @@
     overflow: hidden;
     //letter-spacing: 1.5px;
 
-    & > div {
+    > div {
       position: relative;
       line-height: 44px;
     }
@@ -726,9 +726,15 @@
     font-weight: 300;
     //letter-spacing: 1.5px;
 
-    & > div {
+    > div {
       position: relative;
       line-height: 44px;
+    }
+
+    > div:last-child {
+      &:before {
+        display: none;
+      }
     }
 
     .info {
