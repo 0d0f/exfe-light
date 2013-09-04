@@ -333,7 +333,7 @@ define('routexmaps', function (require) {
         var left = 0, top = 0
           , w = $(window).width()
           , h = $(window).height()
-          , ow = $place.width()
+          , ow = 200
           , oh = $place.height();
 
         left = p.x - ow / 2;
@@ -349,6 +349,7 @@ define('routexmaps', function (require) {
           //, '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
             left: left
           , top: top
+          , width: 200
         });
       });
 
