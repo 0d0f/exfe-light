@@ -2143,7 +2143,7 @@ define('mobilecontroller', function (require, exports, module) {
             break;
           }
         }
-        if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
+        if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
           c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
         }
 
