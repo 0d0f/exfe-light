@@ -2433,13 +2433,16 @@ button .exfe {
 #routex .info-windown div {
   font-weight: 300;
 }
-#routex .info-windown .splitline:after {
+#routex .info-windown .splitline {
+  position: relative;
+}
+#routex .info-windown .splitline:before {
   position: absolute;
   content: '';
   height: 1px;
   left: -7px;
   right: -7px;
-  top: 0;
+  bottom: 0;
   background-repeat: repeat-x;
   background-size: 100% 100%;
   background-image: url(/static/img/line@2x.png);
@@ -2499,6 +2502,12 @@ button .exfe {
 #routex .icon-arrow-red {
   background-image: url(/static/img/map_arrow_14red@2x.png);
 }
+#routex #place-editor {
+  position: absolute;
+  padding: 5px;
+  visibility: hidden;
+  width: 200px;
+}
 #routex #place-editor input {
   position: relative;
   width: 100%;
@@ -2514,16 +2523,12 @@ button .exfe {
   padding: 0;
   margin: 0;
 }
-#routex #place-editor input:before {
-  position: absolute;
-  content: '';
-  bottom: -1px;
-  left: -5px;
-  right: -5px;
-  height: 1px;
-  background: #555;
+#routex #place-editor .splitline {
+  position: relative;
 }
 #routex #place-editor textarea {
+  position: relative;
+  display: block;
   margin-top: 1px;
   padding: 0;
   width: 100%;
@@ -2538,7 +2543,7 @@ button .exfe {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 #routex #my-info {
-  -webkit-transform: translate3d(50px, 0, 233px);
+  -webkit-transform: translate3d(50px, 0, 0);
   -webkit-transition: -webkit-transform 144ms ease-in;
   position: absolute;
   top: 0;
@@ -2568,8 +2573,8 @@ button .exfe {
   color: #191919;
 }
 #routex #other-info {
-  -webkit-transform: translate3d(0, 0, 233px);
-  -webkit-transition: -webkit-transform 144ms ease-in;
+  visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
   position: absolute;
   top: 0;
   left: 0;
@@ -2648,7 +2653,7 @@ button .exfe {
   -webkit-overflow-scrolling: touch;
   font-weight: 300;
   -webkit-appearance: none;
-  -webkit-transform: translate3d(0, 0, 1px);
+  -webkit-transform: translate3d(0, 0, 0);
   padding: 0 5px;
 }
 #routex #nearby > div {
@@ -2919,9 +2924,9 @@ button .exfe {
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.66);
 }
 #routex #wechat-guide-dialog .main {
-  position: relative;
+  position: absolute;
   top: 4px;
-  left: 50px;
+  right: 30px;
   width: 240px;
   height: 176px;
   background-repeat: no-repeat;

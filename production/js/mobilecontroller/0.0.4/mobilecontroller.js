@@ -1806,7 +1806,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#open-exfe', function (e) {
-          self.openEXFE();
+          $('#shuidi-dialog').removeClass('hide');
           //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
@@ -1952,6 +1952,9 @@ define('mobilecontroller', function (require, exports, module) {
 
         var pageY = 0, scrollTop = 0, _t;
         $identities.on('touchstart.maps', function (e) {
+          if (self.mapReadyStatus) {
+            self.mapController.hideMapPanel();
+          }
           isScroll = false;
           pageY = e.pageY;
           scrollTop = this.scrollTop;
@@ -1987,7 +1990,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     , openEXFE: function () {
         var args = '', params = [], self = this;
-        if (self.cross) { args += self.cross.id; }
+        if (self.cross) { args += self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
           params.push('user_id=' + self.myUserId);
           params.push('token=' + self.token);
@@ -1996,11 +1999,11 @@ define('mobilecontroller', function (require, exports, module) {
           }
         }
         if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-        if (params.length) {
+        if (args.length && params.length) {
           args += '?' + params.join('&');
+          console.log(app_prefix_url + args);
+          openExfe(app_prefix_url + args);
         }
-        console.log(app_prefix_url + args);
-        openExfe(app_prefix_url + args);
       }
 
     , updateExfeeName: function () {

@@ -1,5 +1,5 @@
 /*! EXFE.COM QXdlc29tZSEgV2UncmUgaHVudGluZyB0YWxlbnRzIGxpa2UgeW91LiBQbGVhc2UgZHJvcCB1cyB5b3VyIENWIHRvIHdvcmtAZXhmZS5jb20uCg== */
-/*! mobile@2a 2013-09-02 05:09:31 */
+/*! mobile@2a 2013-09-04 12:09:33 */
 (function(context) {
   "use strict";
   function define(id, deps, factory) {
@@ -3947,6 +3947,9 @@ TWEEN.Tween = function(object) {
   }), routexStream;
 }), define("routexmaps", function(require) {
   "use strict";
+  function MapPanel(div, noremove) {
+    this.div = div, this.status = !noremove;
+  }
   function RoutexMaps(options) {
     options = this.options = options || {}, this.canvas = this.options.canvas;
     var w = $(window).width(), h = $(window).height();
@@ -3957,10 +3960,10 @@ TWEEN.Tween = function(object) {
     this.icons = {}, this.updated = {}, this._breadcrumbs = {}, this.boundsOffset = {
       left: 50,
       top: 0
-    }, this.labels = [], window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
+    }, this.labels = [], this.currPanel = null, window._loadmaps_ = function(rm, mapDiv, mapOptions, callback) {
       return function cb() {
         var GMaps = google.maps, GEvent = GMaps.event;
-        GMaps.InfoBox = require("infobox"), GMaps.TextLabel = require("maplabel"), GMaps.GeoMarker = require("geomarker");
+        GMaps.TextLabel = require("maplabel"), GMaps.GeoMarker = require("geomarker");
         var icons = rm.icons;
         icons.dotGrey = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_grey@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
         icons.dotRed = new GMaps.MarkerImage(SITE_URL + "/static/img/map_dot_red@2x.png", new GMaps.Size(36, 36), new GMaps.Point(0, 0), new GMaps.Point(9, 9), new GMaps.Size(18, 18)), 
@@ -3978,18 +3981,18 @@ TWEEN.Tween = function(object) {
           }), GEvent.addListener(map, "zoom_changed", function() {
             rm.contains(), rm.DRAW_STATUS = !0;
           }), GEvent.addListener(map, "mousedown", function(e) {
-            e.stop(), rm.hideMyPanel(), rm.editPlace();
+            e.stop(), rm.hideMyPanel(), rm.hideMapPanel();
           });
           var px, py;
           $(mapDiv).on("touchstart.maps", function(e) {
-            rm.hideNearBy(), rm.hideIdentityPanel();
+            rm.hideMyPanel(), rm.hideMapPanel();
             var touch = e.touches[0];
             px = touch.pageX, py = touch.pageY;
           }).on("tap.maps", function(e) {
-            rm.infobox || (e.stopPropagation(), rm.showNearBy({
+            e.stopPropagation(), rm.showNearBy({
               x: px,
               y: py
-            }));
+            });
           }), GEvent.addDomListener(mapDiv, "touchstart", function() {
             rm.DRAW_STATUS = !1, GEvent.clearListeners(mapDiv, "touchmove"), GEvent.clearListeners(mapDiv, "touchend"), 
             GEvent.addDomListenerOnce(mapDiv, "touchmove", function() {
@@ -4025,7 +4028,15 @@ TWEEN.Tween = function(object) {
     return (1 * n).toString(16);
   }, pad0 = function(n) {
     return n += "", n + (n.length > 1 ? "" : "0");
-  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", XPLACE = "xplace", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ], proto = RoutexMaps.prototype;
+  }, MAX_INDEX = 610, ROUTE = "route", LOCATION = "location", XPLACE = "xplace", DESTINATION = "destination", BREADCRUMBS = "breadcrumbs", TIME_STEPS = [ 0, 1, 3, 5, 10, 15 ];
+  MapPanel.prototype = {
+    hide: function() {
+      var div = this.div;
+      this.hideBefore && this.hideBefore(), div.off(), this.status ? div.remove() : div.addClass("hide"), 
+      this.hideAfter && this.hideAfter();
+    }
+  };
+  var proto = RoutexMaps.prototype;
   proto.load = function(cb) {
     var n = document.createElement("script");
     n.type = "text/javascript", n.async = !0, n.onload = n.onerror = n.onreadystatechange = function() {
@@ -4036,11 +4047,44 @@ TWEEN.Tween = function(object) {
     return this.overlay.getProjection().fromContainerPixelToLatLng(point);
   }, proto.fromLatLngToContainerPixel = function(latlng) {
     return this.overlay.getProjection().fromLatLngToContainerPixel(latlng);
-  }, proto.showPlacePanel = function(id) {
-    var marker = this.places[id];
-    marker && google.maps.event.trigger(marker, "mousedown"), this.hideNearBy();
+  }, proto.infoWindowTemplate = '<div id="place-editor" class="info-windown park"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>', 
+  proto.showPlacePanel = function(id) {
+    this.hideMapPanel();
+    var self = this, place = this.places[id];
+    if (place) {
+      var latlng = place.getPosition(), p = this.fromLatLngToContainerPixel(latlng), data = place.data, $place = $(self.infoWindowTemplate.replace("{{title}}", data.title).replace("{{description}}", data.description || ""));
+      $place.editing = !1, $place.on("touchstart", ".title, .description", function() {
+        $place.editing = !0;
+        var $t = $place.find(".title"), $d = $place.find(".description"), title = $t.text(), description = $d.text(), ct = document.createElement("input");
+        ct.type = "text", ct.value = title;
+        var cv = document.createElement("div");
+        cv.className = "splitline", cv.appendChild(ct);
+        var cd = document.createElement("textarea");
+        cd.value = description, $place.append(cv), $place.append(cd), $t.addClass("hide"), 
+        $d.addClass("hide");
+      });
+      var left = 0, top = 0;
+      $("#routex").append($place);
+      var w = $(window).width(), h = $(window).height(), ow = $place.width(), oh = $place.height();
+      left = p.x - ow / 2, top = p.y - 64 - oh / 2, 0 > left && (left = 0), left + ow > w && (left = w - ow), 
+      0 > top && (top = 20), top + oh > h && (top = h - oh), $place.css({
+        transform: "translate3d(" + left + "px," + top + "px, 0px)",
+        "-webkit-transform": "translate3d(" + left + "px," + top + "px, 0px)",
+        visibility: "visible"
+      }), this.currPanel = new MapPanel($place), this.currPanel.hideBefore = function() {
+        var myIdentity = self.myIdentity, div = this.div;
+        if (div.editing) {
+          var title = div.find("input").val().trim(), description = div.find("textarea").val().trim();
+          (title !== data.title || description !== data.description) && (data.title = title, 
+          data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
+          data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, self.controller.editPlace(data)), 
+          div.find("input, .splitline").remove(), div.find(".title").text(title).removeClass("hide"), 
+          div.find(".description").text(description).removeClass("hide");
+        }
+      };
+    }
   }, proto.showIdentityPanel = function(uid, bound) {
-    this.hideNearBy();
+    this.hideMapPanel();
     var p, t, gm = this.geoMarkers[uid], geoLocation = this.geoLocation, destinationPlace = this.destinationPlace, identity = $('#identities-overlay .identity[data-uid="' + uid + '"]').data("identity"), $otherInfo = $("#other-info"), now = Math.round(Date.now() / 1e3);
     if ($otherInfo.find(".name").text(identity.name), gm ? (p = gm.getPosition(), t = Math.floor((now - gm.data.positions[0].t) / 60)) : t = 2, 
     t > 1 ? (gm ? $otherInfo.find(".update").removeClass("hide").find(".time").html(60 > t ? t + "分钟" : Math.floor(t / 60) + "小时") : $otherInfo.find(".update").addClass("hide"), 
@@ -4061,9 +4105,14 @@ TWEEN.Tween = function(object) {
     } else left = (w - ow) / 2, top = (h - oh) / 2;
     bound ? (left = 50, top = bound.top) : (0 > left && (left = 50), left + ow > w && (left = w - ow), 
     0 > top && (top = 20), top + oh > h && (top = h - oh)), $otherInfo.css({
-      left: left,
-      top: top
-    });
+      transform: "translate3d(" + left + "px," + top + "px, 0px)",
+      "-webkit-transform": "translate3d(" + left + "px," + top + "px, 0px)",
+      visibility: "visible"
+    }), this.currPanel = new MapPanel($otherInfo, !0), this.currPanel.hideAfter = function() {
+      this.div.css({
+        visibility: "hidden"
+      });
+    };
   }, proto.setOffset = function(offset) {
     this.latOffset = 1 * offset.earth_to_mars_latitude, this.lngOffset = 1 * offset.earth_to_mars_longitude;
   }, proto.hideMyPanel = function() {
@@ -4078,7 +4127,7 @@ TWEEN.Tween = function(object) {
     var a = this.fromLatLngToContainerPixel(p0), d = Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
     return 48 >= d;
   }, proto.showNearBy = function(point) {
-    if ($("#nearby").length) return this.hideNearBy(), void 0;
+    if (this.currPanel) return this.currPanel.hide(), this.currPanel = null, void 0;
     if (point) {
       var latlng, pk, gk, p, center = point, status = !1, places = (this.myUserId, this.places), geoMarkers = this.geoMarkers, geoLocation = this.geoLocation, geoPosition = geoLocation && geoLocation.getPosition(), destinationPlace = this.destinationPlace, destinationPosition = destinationPlace && destinationPlace.getPosition(), now = Date.now() / 1e3, pn = 0, gn = 0;
       console.log("-----------------------", geoPosition, destinationPosition);
@@ -4086,7 +4135,7 @@ TWEEN.Tween = function(object) {
       for (var k in places) if (p = places[k], latlng = p.getPosition(), this.distance48px(latlng, center)) {
         status || (status = !0), pn++, pk = k;
         var tmp = $(PLACE_TMP);
-        tmp.attr("data-id", p.data.id), tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description), 
+        tmp.attr("data-id", p.data.id), tmp.find(".title").text(p.data.title), tmp.find(".description").text(p.data.description || ""), 
         nbDiv.append($("<div></div>").append(tmp));
       }
       for (var k in geoMarkers) if (p = geoMarkers[k], latlng = p.getPosition(), this.distance48px(latlng, center)) {
@@ -4103,16 +4152,16 @@ TWEEN.Tween = function(object) {
           var s = distanceOutput(distance(latlng.lat(), latlng.lng(), destinationPosition.lat(), destinationPosition.lng()), !0);
           dd = s.text;
         }
-        1 >= n ? (dd && (str += "<span>距离目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += 60 > n ? "<span>" + n + "分钟前所处位置</span>" : "<span>" + Math.floor(n / 60) + "小时前所处位置</span>", 
-        dd && (str += "<span>距离目的地" + dd + "</span>")), str && tmp.find(".status").html(str), 
+        1 >= n ? (dd && (str += "<span>至目的地" + dd + "</span>"), dm && (str += "<span>与您相距" + dm + "</span>")) : (str += 60 > n ? "<span>" + n + "分钟前</span>" : "<span>" + Math.floor(n / 60) + "小时前</span>", 
+        dd && (str += "<span>至目的地" + dd + "</span>")), str && tmp.find(".status").html(str), 
         nbDiv.append($("<div></div>").append(tmp));
       }
-      if (status) if (0 === pn && 1 === gn) this.showIdentityPanel(gk); else {
+      if (status) if (1 === pn && 0 === gn) this.showPlacePanel(pk); else if (0 === pn && 1 === gn) this.showIdentityPanel(gk); else {
         var width = $(window).width(), height = $(window).height();
         nbDiv.css({
-          left: (width - 200 + 50) / 2,
-          top: (height - 132) / 2
-        }), $("#routex").append(nbDiv);
+          transform: "translate3d(" + (width - 200 + 50) / 2 + "px," + (height - 132) / 2 + "px, 0)",
+          "-webkit-transform": "translate3d(" + (width - 200 + 50) / 2 + "px," + (height - 132) / 2 + "px, 0)"
+        }), $("#routex").append(nbDiv), this.currPanel = new MapPanel(nbDiv);
       }
     }
   }, proto.draw = function(data) {
@@ -4217,7 +4266,11 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      line && (line[3] = "#ff7e98"), gm && gm.setIcon(icons.dotRed);
+      if (line && (line[3] = "#ff7e98"), gm) {
+        gm.setIcon(icons.dotRed);
+        var label = gm.label;
+        label && (label.setMap(null), delete label.marker, delete gm.label);
+      }
     } else {
       if ($e.length && ($e.parent().removeClass("unknown"), $e.hasClass("icon-arrow-grey") || $e.hasClass("icon-arrow-red") ? $e.attr("class", "icon icon-arrow-grey") : $e.attr("class", "icon icon-dot-grey")), 
       b && b.setOptions({
@@ -4236,7 +4289,14 @@ TWEEN.Tween = function(object) {
           offset: "0"
         } ]
       }), isme) continue;
-      line && (line[3] = "#b2b2b2"), gm && gm.setIcon(icons.dotGrey);
+      if (line && (line[3] = "#b2b2b2"), gm) {
+        gm.setIcon(icons.dotGrey);
+        var label = gm.label;
+        label || (gm.label = label = new google.maps.TextLabel({
+          map: this.map,
+          zIndex: MAX_INDEX - 3
+        }), label.marker = gm, label.noRemoveMarker = !0), 60 > n ? label.set("text", n + "分钟前") : label.set("text", Math.floor(n / 60) + "小时前");
+      }
     }
     this.updateLines();
   }, proto.toLatLng = function(lat, lng) {
@@ -4259,7 +4319,7 @@ TWEEN.Tween = function(object) {
     this._breadcrumbs[id] ? this._breadcrumbs[id].positions.unshift(data.positions[0]) : this._breadcrumbs[id] = data, 
     this._breadcrumbs[id].length > 100 && this._breadcrumbs[id].splice(100, this._breadcrumbs[id].length - 100);
   }, proto.addGeoMarker = function() {
-    var self = this, gm = new google.maps.Marker({
+    var gm = new google.maps.Marker({
       map: this.map,
       zIndex: MAX_INDEX - 2,
       icon: this.icons.dotGrey,
@@ -4269,9 +4329,7 @@ TWEEN.Tween = function(object) {
       },
       optimized: !1
     });
-    return google.maps.event.addListener(gm, "mousedown", function(e) {
-      e && e.stop(), self.showIdentityPanel(this.uid);
-    }), gm;
+    return gm;
   }, proto.distanceMatrix = function(uid, gm, dp, time) {
     time = time || 0;
     var $identity = $('#identities-overlay .identity[data-uid="' + uid + '"]'), $detial = $identity.find(".detial"), $icon = $detial.find(".icon"), $distance = $detial.find(".distance");
@@ -4337,7 +4395,7 @@ TWEEN.Tween = function(object) {
       for (var label, marker, p, t, prev, now = Math.round(Date.now() / 1e3), labels = this.labels, map = this.map, ps = positions.slice(0), b = !0, start = 0, i = 0, ignore = 0, j = 0; p = ps.shift(); ) if (t = 10 * Math.floor((now - p.t) / 600), 
       ignore !== t && (ignore = t, prev && (b = this.distanceMatrixPixl(p.gps, prev.gps)), 
       t > start && b && (-1 != TIME_STEPS.indexOf(t) || t > 15))) {
-        if (0 === j && bool) {
+        if (0 === j) {
           j = 1;
           continue;
         }
@@ -4376,9 +4434,10 @@ TWEEN.Tween = function(object) {
         b.setPath(coords);
       }
     }
+  }, proto.hideMapPanel = function() {
+    this.currPanel && (this.currPanel.hide(), this.currPanel = null);
   }, proto.showBreadcrumbs = function(uid) {
-    if (this.hideMyPanel(), this.hideNearBy(), this.hideIdentityPanel(), this.removeTextLabels(), 
-    this._breadcrumbs[uid]) {
+    if (this.hideMyPanel(), this.hideMapPanel(), this.removeTextLabels(), this._breadcrumbs[uid]) {
       var pb, bds = this.breadcrumbs, puid = this.uid, b = bds[uid];
       if (delete this.uid, b || (b = bds[uid] = this.addBreadcrumbs()), b && this.updateBreadcrumbs(uid), 
       uid !== puid) pb = bds[puid], pb && (pb.setMap(null), delete bds[puid], pb = null), 
@@ -4389,57 +4448,13 @@ TWEEN.Tween = function(object) {
       console.log("current breadcrumbs", uid);
     }
   }, proto.addPoint = function(data) {
-    var self = this, GMaps = google.maps, map = this.map, m = (this.myIdentity, new GMaps.Marker({
+    var GMaps = google.maps, map = this.map, m = (this.myIdentity, new GMaps.Marker({
       map: map,
       zIndex: MAX_INDEX - 5,
       icon: new GMaps.MarkerImage(data.icon || apiv3_url + "/icons/mapmark", new GMaps.Size(48, 68), new GMaps.Point(0, 0), new GMaps.Point(12, 34), new GMaps.Size(24, 34))
-    })), GEvent = GMaps.event;
-    return GEvent.addListener(m, "mousedown", function(e) {
-      return e && e.stop(), self.removeInfobox(this) ? !1 : (self.infobox = new GMaps.InfoBox({
-        content: self.infoWindowTemplate.replace("{{title}}", this.data.title).replace("{{description}}", this.data.description),
-        maxWidth: 200,
-        pixelOffset: new GMaps.Size(-100, -38),
-        boxClass: "park",
-        closeBoxMargin: "",
-        closeBoxURL: "",
-        alignBottom: !0,
-        enableEventPropagation: !1,
-        leftBoundary: 60,
-        zIndex: 610,
-        boxId: "place-editor",
-        events: function() {
-          self.infobox.editing = !1, GEvent.addDomListener(this.div_, "touchstart", function() {
-            if (!self.infobox.editing) {
-              var infoWindown = this.querySelector(".info-windown"), title = this.querySelector(".title").innerHTML, description = this.querySelector(".description").innerHTML, ct = document.createElement("input");
-              ct.type = "text", ct.value = title;
-              var cd = document.createElement("textarea");
-              cd.value = description, infoWindown.appendChild(ct), infoWindown.appendChild(cd), 
-              this.querySelector(".title").className = "title hide", this.querySelector(".description").className = "description hide", 
-              self.infobox.editing = !0;
-            }
-          });
-        }
-      }), self.infobox.marker = this, self.infobox.open(map, this), void 0);
-    }), m;
-  }, proto.editPlace = function() {
-    if (this.infobox) {
-      var data = this.infobox.marker.data, myIdentity = this.myIdentity;
-      if (this.infobox.editing) {
-        var title = $("#place-editor input").val().trim(), description = $("#place-editor textarea").val().trim();
-        (title !== data.title || description !== data.description) && (data.title = title, 
-        data.description = description, data.updated_at = Math.round(Date.now() / 1e3), 
-        data.updated_by = myIdentity.external_username + "@" + myIdentity.provider, this.controller.editPlace(data)), 
-        $("#place-editor input, #place-editor textarea").remove(), $("#place-editor .title").text(title).removeClass("hide"), 
-        $("#place-editor .description").text(description).removeClass("hide");
-      }
-      this.removeInfobox();
-    }
-  }, proto.removeInfobox = function(marker) {
-    var m, infobox = this.infobox;
-    return infobox && (m = infobox.marker, infobox.close(), delete infobox.marker, infobox = this.infobox = null, 
-    m === marker) ? !0 : void 0;
-  }, proto.infoWindowTemplate = '<div class="info-windown"><h2 class="title">{{title}}</h2><div class="description">{{description}}</div></div>', 
-  proto.contains = function() {
+    }));
+    return m;
+  }, proto.contains = function() {
     var uid, gm, latlng, mapBounds = this.map.getBounds(), GMaps = google.maps, sw = mapBounds.getSouthWest(), ne = mapBounds.getNorthEast(), bounds = new GMaps.LatLngBounds(), geoMarkers = this.geoMarkers, ids = document.getElementById("identities")._ids || {};
     sw = this.fromLatLngToContainerPixel(sw), sw = this.fromContainerPixelToLatLng(new GMaps.Point(sw.x + 50, sw.y)), 
     bounds.extend(sw), bounds.extend(ne);
@@ -4574,156 +4589,17 @@ TWEEN.Tween = function(object) {
       me.draw();
     }) ];
   }, Label.prototype.onRemove = function() {
-    var marker = this.marker;
-    marker && (marker.setMap(null), delete this.marker), this.div_.parentNode.removeChild(this.div_);
+    if (!this.noRemoveMarker) {
+      var marker = this.marker;
+      marker && (marker.setMap(null), delete this.marker);
+    }
+    this.div_.parentNode.removeChild(this.div_);
     for (var i = 0, I = this.listeners_.length; I > i; ++i) google.maps.event.removeListener(this.listeners_[i]);
   }, Label.prototype.draw = function() {
     var projection = this.getProjection(), latlng = this.marker ? this.marker.getPosition() : this.get("position"), position = projection.fromLatLngToDivPixel(latlng), div = this.div_;
     div.style.left = position.x + "px", div.style.top = position.y + "px", div.style.display = "block", 
     div.style.zIndex = this.get("zIndex"), this.span_.innerHTML = "" + this.get("text");
   }, Label;
-}), define("infobox", function() {
-  function InfoBox(opt_opts) {
-    opt_opts = opt_opts || {}, google.maps.OverlayView.apply(this, arguments), this.content_ = opt_opts.content || "", 
-    this.disableAutoPan_ = opt_opts.disableAutoPan || !1, this.maxWidth_ = opt_opts.maxWidth || 0, 
-    this.pixelOffset_ = opt_opts.pixelOffset || new google.maps.Size(0, 0), this.position_ = opt_opts.position || new google.maps.LatLng(0, 0), 
-    this.zIndex_ = opt_opts.zIndex || null, this.leftBoundary = opt_opts.leftBoundary || 0, 
-    this.events = opt_opts.events || function() {}, this.boxClass_ = opt_opts.boxClass || "infoBox", 
-    this.boxId_ = opt_opts.boxId || "infobox", this.boxStyle_ = opt_opts.boxStyle || {}, 
-    this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px", this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif", 
-    "" === opt_opts.closeBoxURL && (this.closeBoxURL_ = ""), this.infoBoxClearance_ = opt_opts.infoBoxClearance || new google.maps.Size(1, 1), 
-    opt_opts.visible === void 0 && (opt_opts.visible = opt_opts.isHidden === void 0 ? !0 : !opt_opts.isHidden), 
-    this.isHidden_ = !opt_opts.visible, this.alignBottom_ = opt_opts.alignBottom || !1, 
-    this.pane_ = opt_opts.pane || "floatPane", this.enableEventPropagation_ = opt_opts.enableEventPropagation || !1, 
-    this.div_ = null, this.closeListener_ = null, this.moveListener_ = null, this.contextListener_ = null, 
-    this.eventListeners_ = null, this.fixedWidthSet_ = null;
-  }
-  return InfoBox.prototype = new google.maps.OverlayView(), InfoBox.prototype.createInfoBoxDiv_ = function() {
-    var i, events, bw, me = this, cancelHandler = function(e) {
-      e.cancelBubble = !0, e.stopPropagation && e.stopPropagation();
-    }, ignoreHandler = function(e) {
-      e.returnValue = !1, e.preventDefault && e.preventDefault(), me.enableEventPropagation_ || cancelHandler(e);
-    };
-    if (!this.div_) {
-      if (this.div_ = document.createElement("div"), this.setBoxStyle_(), this.content_.nodeType === void 0 ? this.div_.innerHTML = this.getCloseBoxImg_() + this.content_ : (this.div_.innerHTML = this.getCloseBoxImg_(), 
-      this.div_.appendChild(this.content_)), this.getPanes()[this.pane_].appendChild(this.div_), 
-      this.addClickHandler_(), this.div_.style.width ? this.fixedWidthSet_ = !0 : 0 !== this.maxWidth_ && this.div_.offsetWidth > this.maxWidth_ ? (this.div_.style.width = this.maxWidth_, 
-      this.div_.style.overflow = "auto", this.fixedWidthSet_ = !0) : (bw = this.getBoxWidths_(), 
-      this.div_.style.width = this.div_.offsetWidth - bw.left - bw.right + "px", this.fixedWidthSet_ = !1), 
-      this.panBox_(this.disableAutoPan_), !this.enableEventPropagation_) {
-        for (this.eventListeners_ = [], events = [ "mousedown", "mouseover", "mouseout", "mouseup", "click", "dblclick", "touchstart", "touchend", "touchmove" ], 
-        i = 0; events.length > i; i++) this.eventListeners_.push(google.maps.event.addDomListener(this.div_, events[i], cancelHandler));
-        this.eventListeners_.push(google.maps.event.addDomListener(this.div_, "mouseover", function() {
-          this.style.cursor = "default";
-        }));
-      }
-      this.contextListener_ = google.maps.event.addDomListener(this.div_, "contextmenu", ignoreHandler), 
-      google.maps.event.trigger(this, "domready");
-    }
-  }, InfoBox.prototype.getCloseBoxImg_ = function() {
-    var img = "";
-    return "" !== this.closeBoxURL_ && (img = "<img", img += " src='" + this.closeBoxURL_ + "'", 
-    img += " align=right", img += " style='", img += " position: relative;", img += " cursor: pointer;", 
-    img += " margin: " + this.closeBoxMargin_ + ";", img += "'>"), img;
-  }, InfoBox.prototype.addClickHandler_ = function() {
-    var closeBox;
-    "" !== this.closeBoxURL_ ? (closeBox = this.div_.firstChild, this.closeListener_ = google.maps.event.addDomListener(closeBox, "click", this.getCloseClickHandler_())) : this.closeListener_ = null;
-  }, InfoBox.prototype.getCloseClickHandler_ = function() {
-    var me = this;
-    return function(e) {
-      e.cancelBubble = !0, e.stopPropagation && e.stopPropagation(), google.maps.event.trigger(me, "closeclick"), 
-      me.close();
-    };
-  }, InfoBox.prototype.panBox_ = function(disablePan) {
-    var map, bounds, xOffset = 0, yOffset = 0;
-    if (!disablePan && (map = this.getMap(), map instanceof google.maps.Map)) {
-      bounds = map.getBounds(), bounds.contains(this.position_) || map.setCenter(this.position_);
-      var mapDiv = map.getDiv(), mapWidth = mapDiv.offsetWidth, mapHeight = mapDiv.offsetHeight, iwOffsetX = this.pixelOffset_.width, iwOffsetY = this.pixelOffset_.height, iwWidth = this.div_.offsetWidth, iwHeight = this.div_.offsetHeight, padX = this.infoBoxClearance_.width, padY = this.infoBoxClearance_.height, pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_), leftBoundary = this.leftBoundary;
-      -iwOffsetX + padX + leftBoundary > pixPosition.x ? xOffset = pixPosition.x + iwOffsetX - padX - leftBoundary : pixPosition.x + iwWidth + iwOffsetX + padX > mapWidth && (xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth + 10), 
-      this.alignBottom_ ? -iwOffsetY + padY + iwHeight > pixPosition.y ? yOffset = pixPosition.y + iwOffsetY - padY - iwHeight : pixPosition.y + iwOffsetY + padY > mapHeight && (yOffset = pixPosition.y + iwOffsetY + padY - mapHeight) : -iwOffsetY + padY > pixPosition.y ? yOffset = pixPosition.y + iwOffsetY - padY : pixPosition.y + iwHeight + iwOffsetY + padY > mapHeight && (yOffset = pixPosition.y + iwHeight + iwOffsetY + padY - mapHeight), 
-      (0 !== xOffset || 0 !== yOffset) && (map.getCenter(), map.panBy(xOffset, yOffset));
-    }
-  }, InfoBox.prototype.setBoxStyle_ = function() {
-    var i, boxStyle;
-    if (this.div_) {
-      this.div_.className = this.boxClass_, this.div_.id = this.boxId_, this.div_.style.cssText = "", 
-      boxStyle = this.boxStyle_;
-      for (i in boxStyle) boxStyle.hasOwnProperty(i) && (this.div_.style[i] = boxStyle[i]);
-      this.div_.style.opacity !== void 0 && "" !== this.div_.style.opacity && (this.div_.style.filter = "alpha(opacity=" + 100 * this.div_.style.opacity + ")"), 
-      this.div_.style.position = "absolute", this.div_.style.visibility = "hidden", null !== this.zIndex_ && (this.div_.style.zIndex = this.zIndex_);
-    }
-  }, InfoBox.prototype.getBoxWidths_ = function() {
-    var computedStyle, bw = {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0
-    }, box = this.div_;
-    return document.defaultView && document.defaultView.getComputedStyle ? (computedStyle = box.ownerDocument.defaultView.getComputedStyle(box, ""), 
-    computedStyle && (bw.top = parseInt(computedStyle.borderTopWidth, 10) || 0, bw.bottom = parseInt(computedStyle.borderBottomWidth, 10) || 0, 
-    bw.left = parseInt(computedStyle.borderLeftWidth, 10) || 0, bw.right = parseInt(computedStyle.borderRightWidth, 10) || 0)) : document.documentElement.currentStyle && box.currentStyle && (bw.top = parseInt(box.currentStyle.borderTopWidth, 10) || 0, 
-    bw.bottom = parseInt(box.currentStyle.borderBottomWidth, 10) || 0, bw.left = parseInt(box.currentStyle.borderLeftWidth, 10) || 0, 
-    bw.right = parseInt(box.currentStyle.borderRightWidth, 10) || 0), bw;
-  }, InfoBox.prototype.onRemove = function() {
-    this.div_ && (this.div_.parentNode.removeChild(this.div_), this.div_ = null);
-  }, InfoBox.prototype.draw = function() {
-    this.createInfoBoxDiv_();
-    var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
-    this.div_.style.left = pixPosition.x + this.pixelOffset_.width + "px", this.alignBottom_ ? this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px" : this.div_.style.top = pixPosition.y + this.pixelOffset_.height + "px", 
-    this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible", this.events && this.events();
-  }, InfoBox.prototype.setOptions = function(opt_opts) {
-    opt_opts.boxClass !== void 0 && (this.boxClass_ = opt_opts.boxClass, this.setBoxStyle_()), 
-    opt_opts.boxStyle !== void 0 && (this.boxStyle_ = opt_opts.boxStyle, this.setBoxStyle_()), 
-    opt_opts.content !== void 0 && this.setContent(opt_opts.content), opt_opts.disableAutoPan !== void 0 && (this.disableAutoPan_ = opt_opts.disableAutoPan), 
-    opt_opts.maxWidth !== void 0 && (this.maxWidth_ = opt_opts.maxWidth), opt_opts.pixelOffset !== void 0 && (this.pixelOffset_ = opt_opts.pixelOffset), 
-    opt_opts.alignBottom !== void 0 && (this.alignBottom_ = opt_opts.alignBottom), opt_opts.position !== void 0 && this.setPosition(opt_opts.position), 
-    opt_opts.zIndex !== void 0 && this.setZIndex(opt_opts.zIndex), opt_opts.closeBoxMargin !== void 0 && (this.closeBoxMargin_ = opt_opts.closeBoxMargin), 
-    opt_opts.closeBoxURL !== void 0 && (this.closeBoxURL_ = opt_opts.closeBoxURL), opt_opts.infoBoxClearance !== void 0 && (this.infoBoxClearance_ = opt_opts.infoBoxClearance), 
-    opt_opts.isHidden !== void 0 && (this.isHidden_ = opt_opts.isHidden), opt_opts.visible !== void 0 && (this.isHidden_ = !opt_opts.visible), 
-    opt_opts.enableEventPropagation !== void 0 && (this.enableEventPropagation_ = opt_opts.enableEventPropagation), 
-    this.div_ && this.draw();
-  }, InfoBox.prototype.setContent = function(content) {
-    this.content_ = content, this.div_ && (this.closeListener_ && (google.maps.event.removeListener(this.closeListener_), 
-    this.closeListener_ = null), this.fixedWidthSet_ || (this.div_.style.width = ""), 
-    content.nodeType === void 0 ? this.div_.innerHTML = this.getCloseBoxImg_() + content : (this.div_.innerHTML = this.getCloseBoxImg_(), 
-    this.div_.appendChild(content)), this.fixedWidthSet_ || (this.div_.style.width = this.div_.offsetWidth + "px", 
-    content.nodeType === void 0 ? this.div_.innerHTML = this.getCloseBoxImg_() + content : (this.div_.innerHTML = this.getCloseBoxImg_(), 
-    this.div_.appendChild(content))), this.addClickHandler_()), google.maps.event.trigger(this, "content_changed");
-  }, InfoBox.prototype.setPosition = function(latlng) {
-    this.position_ = latlng, this.div_ && this.draw(), google.maps.event.trigger(this, "position_changed");
-  }, InfoBox.prototype.setZIndex = function(index) {
-    this.zIndex_ = index, this.div_ && (this.div_.style.zIndex = index), google.maps.event.trigger(this, "zindex_changed");
-  }, InfoBox.prototype.setVisible = function(isVisible) {
-    this.isHidden_ = !isVisible, this.div_ && (this.div_.style.visibility = this.isHidden_ ? "hidden" : "visible");
-  }, InfoBox.prototype.getContent = function() {
-    return this.content_;
-  }, InfoBox.prototype.getPosition = function() {
-    return this.position_;
-  }, InfoBox.prototype.getZIndex = function() {
-    return this.zIndex_;
-  }, InfoBox.prototype.getVisible = function() {
-    var isVisible;
-    return isVisible = this.getMap() === void 0 || null === this.getMap() ? !1 : !this.isHidden_;
-  }, InfoBox.prototype.show = function() {
-    this.isHidden_ = !1, this.div_ && (this.div_.style.visibility = "visible");
-  }, InfoBox.prototype.hide = function() {
-    this.isHidden_ = !0, this.div_ && (this.div_.style.visibility = "hidden");
-  }, InfoBox.prototype.open = function(map, anchor) {
-    var me = this;
-    anchor && (this.position_ = anchor.getPosition(), this.moveListener_ = google.maps.event.addListener(anchor, "position_changed", function() {
-      me.setPosition(this.getPosition());
-    })), this.setMap(map), this.div_ && this.panBox_();
-  }, InfoBox.prototype.close = function() {
-    var i;
-    if (this.closeListener_ && (google.maps.event.removeListener(this.closeListener_), 
-    this.closeListener_ = null), this.eventListeners_) {
-      for (i = 0; this.eventListeners_.length > i; i++) google.maps.event.removeListener(this.eventListeners_[i]);
-      this.eventListeners_ = null;
-    }
-    this.moveListener_ && (google.maps.event.removeListener(this.moveListener_), this.moveListener_ = null), 
-    this.contextListener_ && (google.maps.event.removeListener(this.contextListener_), 
-    this.contextListener_ = null), this.setMap(null);
-  }, InfoBox;
 }), define("mobilemiddleware", function(require, exports, module) {
   "use strict";
   var iPhone = navigator.userAgent.match(/iPhone/);
@@ -5584,7 +5460,7 @@ TWEEN.Tween = function(object) {
           void 0);
         }
       }), element.on("touchstart.maps", "#open-exfe", function() {
-        self.openEXFE();
+        $("#shuidi-dialog").removeClass("hide");
       });
       var _t0, pageY0 = 0, scrollTop0 = 0;
       element.on("touchstart.maps", "#nearby", function(e) {
@@ -5613,7 +5489,8 @@ TWEEN.Tween = function(object) {
       });
       var _t, pageY = 0, scrollTop = 0;
       $identities.on("touchstart.maps", function(e) {
-        isScroll = !1, pageY = e.pageY, scrollTop = this.scrollTop;
+        self.mapReadyStatus && self.mapController.hideMapPanel(), isScroll = !1, pageY = e.pageY, 
+        scrollTop = this.scrollTop;
       }), $identities.on("touchend.maps", function() {
         _t && clearTimeout(_t), _t = setTimeout(function() {
           isScroll = !1;
@@ -5629,10 +5506,10 @@ TWEEN.Tween = function(object) {
     },
     openEXFE: function() {
       var args = "", params = [], self = this;
-      self.cross && (args += self.cross.id), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
+      self.cross && (args += self.cross.id + "/routex"), self.myUserId && self.token && (params.push("user_id=" + self.myUserId), 
       params.push("token=" + self.token), self.username && params.push("username=", self.username)), 
-      self.myIdentityId && params.push("identity_id=" + self.myIdentityId), params.length && (args += "?" + params.join("&")), 
-      console.log(app_prefix_url + args), openExfe(app_prefix_url + args);
+      self.myIdentityId && params.push("identity_id=" + self.myIdentityId), args.length && params.length && (args += "?" + params.join("&"), 
+      console.log(app_prefix_url + args), openExfe(app_prefix_url + args));
     },
     updateExfeeName: function() {
       this.element.find("#exfee-name").text(this.cross.exfee.name);
