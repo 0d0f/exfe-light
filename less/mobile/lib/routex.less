@@ -559,13 +559,13 @@
       height: 1px;
       left: -7px;
       right: -7px;
-      bottom: 0;
+      top: 0;
       background-repeat: repeat-x;
       background-size: 100% 100%;
       background-image: url(/static/img/line@2x.png);
     }
 
-    > div:last-child {
+    .splitline:first-child {
       &:before {
         display: none;
       }
@@ -808,7 +808,7 @@
     -webkit-transform: translate3d(0,0, 0);
     padding: 0 5px;
 
-    > div {
+    .splitline {
       position: relative;
       padding: 5px 0;
       height: 44px;
@@ -819,13 +819,13 @@
         height: 1px;
         left: -7px;
         right: -7px;
-        bottom: 0;
+        top: 0;
         background-repeat: repeat-x;
         background-size: 100% 100%;
         background-image: url(/static/img/line@2x.png);
       }
 
-      &:last-child {
+      &:first-child {
         &:before {
           display: none;
         }
