@@ -317,13 +317,13 @@ define('routexmaps', function (require) {
         var ct = document.createElement('input');
         ct.type = 'text';
         ct.value = title;
-        var cd = document.createElement('textarea');
-        cd.value = description;
         var cv = document.createElement('div');
         cv.className = 'splitline';
-        cv.appendChild(cd);
-        $place.append(ct);
+        cv.appendChild(ct);
+        var cd = document.createElement('textarea');
+        cd.value = description;
         $place.append(cv);
+        $place.append(cd);
         $t.addClass('hide');
         $d.addClass('hide');
       });
@@ -346,8 +346,8 @@ define('routexmaps', function (require) {
       if (top + oh > h) { top = h - oh; }
 
       $place.css({
-          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
-        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
+          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
         , visibility: 'visible'
       });
 
@@ -458,8 +458,8 @@ define('routexmaps', function (require) {
     }
 
     $otherInfo.css({
-          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
-        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0)'
+          'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
+        , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
         , visibility: 'visible'
       });
 
