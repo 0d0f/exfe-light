@@ -1781,6 +1781,13 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
+        element.on('touchstart.maps', '#shuidi-dialog .main', function (e) {
+          var bottom = $(this).css('bottom');
+          if (bottom != -10) {
+            $(this).css('bottom', '-10px');
+          }
+        });
+
         element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
           e.preventDefault();
           var v = $('#notify-provider').val();
