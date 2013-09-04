@@ -317,13 +317,16 @@ define('routexmaps', function (require) {
         var ct = document.createElement('input');
         ct.type = 'text';
         ct.value = title;
-        var cv = document.createElement('div');
-        cv.className = 'splitline';
-        cv.appendChild(ct);
+        var c0 = document.createElement('div');
+        c0.className = 'splitline';
+        c0.appendChild(ct);
         var cd = document.createElement('textarea');
         cd.value = description;
-        $place.append(cv);
-        $place.append(cd);
+        var c1 = document.createElement('div');
+        c1.className = 'splitline';
+        c1.appendChild(cd);
+        $place.append(c0);
+        $place.append(c1);
         $t.addClass('hide');
         $d.addClass('hide');
 
@@ -563,7 +566,7 @@ define('routexmaps', function (require) {
           tmp.attr('data-id', p.data.id);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description || '');
-          nbDiv.append($('<div></div>').append(tmp));
+          nbDiv.append($('<div class="splitline"></div>').append(tmp));
         }
       }
 
@@ -615,7 +618,7 @@ define('routexmaps', function (require) {
             tmp.find('.status').html(str);
           }
 
-          nbDiv.append($('<div></div>').append(tmp));
+          nbDiv.append($('<div class="splitline"></div>').append(tmp));
         }
       }
 
