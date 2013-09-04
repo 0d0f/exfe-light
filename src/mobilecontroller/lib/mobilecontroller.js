@@ -1814,6 +1814,10 @@ define('mobilecontroller', function (require, exports, module) {
           //Store.remove('authorization');
         });
 
+        element.on('touchstart.maps', '#clearup-cache', function (e) {
+          Store.clear();
+        });
+
         /*
         var tapDelay = 270, tapTimeout, now;
         element.on('touchstart.maps', '#free-identities .identities li', function (e) {
@@ -2136,19 +2140,41 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , checkFollowing: function () {
-        $.ajax({
-            url: api_url + '/identities/' + this.myIdentityId + '/checkfollowing?token=' + this.token
-          , timeout: 5000
-          , success: function (data) {
-              if (data.meta.code === 200) {
-                var following = data.response.following;
-                if (!following) {
-                  $('#wechat-guide-dialog').removeClass('hide');
+        if (this.checkFollowingStatus) { return; }
+        var self = this;
+        var enu = '';
+
+        if (this.myIdentity.provider === 'wechat') {
+          enu = this.myIdentity.external_username + '@wechat';
+        } else if (this.notification_identities.length) {
+          var identities = this.notification_identities.slice(0)
+            , i, identity;
+          while ((identity = identities.shift())) {
+            i = parseId(identity);
+            if (i.provider === 'wechat') {
+              enu = i.external_username + '@wechat';
+              break;
+            }
+          }
+        }
+
+        if (enu) {
+          this.checkFollowingStatus = 1;
+          $.ajax({
+              url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu;
+            , timeout: 5000
+            , success: function (data) {
+                if (data.meta.code === 200) {
+                  var following = data.response.following;
+                  if (!following) {
+                    $('#wechat-guide-dialog').removeClass('hide');
+                  }
                 }
               }
-            }
-          //, error: function (data) {}
-        });
+            , complete: function () { self.checkFollowingStatus = 0; }
+            //, error: function (data) {}
+          });
+        }
       }
 
     , checkRouteXStatus: function () {
@@ -2371,7 +2397,8 @@ define('mobilecontroller', function (require, exports, module) {
             this.myUserId = identity.connected_user_id;
             this.myIdentityId = identity.id;
             this.updateMe(identity);
-            this.updateNotifyProvider(invitation.notification_identities.slice(0));
+            this.notification_identities = invitation.notification_identities.slice(0);
+            this.updateNotifyProvider(this.notification_identities);
             continue;
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
