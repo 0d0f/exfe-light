@@ -1771,6 +1771,7 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#shuidi-dialog', function (e) {
           if (e.target.id === 'shuidi-dialog') {
             e.stopPropagation();
+            $('#shuidi-dialog .main').css('bottom', '-10px');
             $('#shuidi-dialog').addClass('hide');
           }
         });
