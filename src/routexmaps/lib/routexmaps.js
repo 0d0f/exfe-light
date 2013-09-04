@@ -325,8 +325,8 @@ define('routexmaps', function (require) {
         var c1 = document.createElement('div');
         c1.className = 'splitline';
         c1.appendChild(cd);
-        $place.append(c0);
-        $place.append(c1);
+        $place.prepend(c1);
+        $place.prepend(c0);
         $t.addClass('hide');
         $d.addClass('hide');
 
