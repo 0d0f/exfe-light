@@ -1814,8 +1814,9 @@ define('mobilecontroller', function (require, exports, module) {
           //Store.remove('authorization');
         });
 
-        element.on('touchstart.maps', '#clearup-cache', function (e) {
+        element.on('touchstart.maps', '#cleanup-cache', function (e) {
           Store.clear();
+          window.location.href = window.location.href;
         });
 
         /*
