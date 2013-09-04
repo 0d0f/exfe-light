@@ -572,11 +572,12 @@ define('routexmaps', function (require) {
         p = geoMarkers[k];
         latlng = p.getPosition();
         if (this.distance48px(latlng, center)) {
+          var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
+          if (!identity) { continue; }
           if (!status) { status = true; }
           gn++;
           gk = k;
           var id = p.data.id.split('.')[1];
-          var identity = $('#identities-overlay .identity[data-uid="' + k + '"]').data('identity');
           var tmp = $(IDENTITY_TMP);
           tmp.find('img').attr('src', identity.avatar_filename);
           tmp.find('.name').text(identity.name);
