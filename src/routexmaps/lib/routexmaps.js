@@ -336,13 +336,13 @@ define('routexmaps', function (require) {
           , ow = $place.width()
           , oh = $place.height();
 
-        left = p.x - ow/ 2;
+        left = p.x - ow / 2;
         top = p.y - 64 - oh / 2;
 
-        if (left <= 0) { left = 10; }
-        if (left + ow >= w) { left = w - ow - 10; }
-        if (top <= 0) { top = 10; }
-        if (top + oh >= h) { top = h - oh - 10; }
+        if (left <= 10) { left = 10; }
+        if (left + ow >= w - 10) { left = w - ow - 10; }
+        if (top <= 10) { top = 10; }
+        if (top + oh >= h - 10) { top = h - oh - 10; }
 
         $place.css({
             //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
@@ -360,13 +360,13 @@ define('routexmaps', function (require) {
         , ow = $place.width()
         , oh = $place.height();
 
-      left = p.x - ow/ 2;
+      left = p.x - ow / 2;
       top = p.y - 64 - oh / 2;
 
-      if (left <= 0) { left = 10; }
-      if (left + ow >= w) { left = w - ow - 10; }
-      if (top <= 0) { top = 10; }
-      if (top + oh >= h) { top = h - oh - 10; }
+      if (left <= 10) { left = 10; }
+      if (left + ow >= w - 10) { left = w - ow - 10; }
+      if (top <= 10) { top = 10; }
+      if (top + oh >= h - 10) { top = h - oh - 10; }
 
       $place.css({
           //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
