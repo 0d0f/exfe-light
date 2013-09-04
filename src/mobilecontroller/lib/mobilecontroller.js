@@ -1719,7 +1719,7 @@ define('mobilecontroller', function (require, exports, module) {
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           */
           //$('#wechat-guide-dialog').removeClass('hide');
-          self.checkfollowing();
+          self.checkFollowing();
           self.tapElement = this;
         });
 
@@ -2165,7 +2165,7 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
         if (c) {
-          this.checkfollowing();
+          this.checkFollowing();
           this.streaming();
         // 显示提醒文字
         } else {
