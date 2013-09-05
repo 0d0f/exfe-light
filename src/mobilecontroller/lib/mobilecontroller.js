@@ -2383,6 +2383,7 @@ define('mobilecontroller', function (require, exports, module) {
             if (e.target.id === 'shuidi-dialog') {
               e.stopPropagation();
               self.destory();
+              element.remove();
             }
           });
         }
