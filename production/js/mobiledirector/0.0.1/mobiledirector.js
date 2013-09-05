@@ -858,7 +858,7 @@
         openExfe(url + args);
       }
 
-    } else if (routex.wechatAboutRoutex.test(url)) {
+    } else if (routes.wechatAboutRoutex.test(url)) {
       var auth = getAuthFromHeader()
         , authorization;
       // 是否跟本地的 user-token 进行合并？
