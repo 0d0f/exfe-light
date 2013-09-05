@@ -2444,7 +2444,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , render: function () {
-        $('#app-routex').remove();
+        $('#shuidi-dialog').remove();
         this.element.appendTo($('#app-container'));
       }
 
