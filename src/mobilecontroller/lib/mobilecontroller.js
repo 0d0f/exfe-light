@@ -1815,7 +1815,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#open-exfe', function (e) {
-          $('#shuidi-dialog').removeClass('hide');
+          //$('#shuidi-dialog').removeClass('hide');
           //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
@@ -2003,6 +2003,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , openEXFE: function () {
+        /*
         var args = '', params = [], self = this;
         if (self.cross) { args += '!' + self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
@@ -2018,6 +2019,8 @@ define('mobilecontroller', function (require, exports, module) {
           console.log(app_prefix_url + args);
           openExfe(app_prefix_url + args);
         }
+        */
+        window.location.href = '/toapp?cross_id=' + cross_id + '&authenticate';
       }
 
     , updateExfeeName: function () {
@@ -2422,6 +2425,21 @@ define('mobilecontroller', function (require, exports, module) {
 
         console.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
+      }
+
+  });
+
+  // `Wechat About Routex` controller
+  exports.WechatAboutRoutexController = Controller.extend({
+
+      init: function () {
+        this.render();
+        this.listen();
+      }
+
+    , render: function () {
+        $('#app-routex').remove();
+        this.element.appendTo($('#app-container'));
       }
 
   });

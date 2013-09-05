@@ -23,6 +23,8 @@
         , routex0: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
 //        , routex1: /^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?(?:\?(redirect)?)?$/
         , routex1: /^\/+!(\d+)\/routex\/?.*$/
+        , toapp: /^\+toapp.*$/
+        , wechatAboutRoutex: /^\wechat\/aboutroutex$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
@@ -558,7 +560,7 @@
       var items = querystring.split('&'), item, datas = {}, key, val;
       while ((item = items.shift())) {
         item = item.split('=');
-        key = item[0];
+        key = item[0].toLowerCase();
         val = item[1] || '';
         datas[decodeURIComponent(key.replace(/\+/g, ' '))] = decodeURIComponent(val.replace(/\+/g, ' '));
       }
@@ -639,7 +641,9 @@
                           window.location.href = d.response.redirect;
                         }
                         // 提示用户 OAuth
-                      , function (d) {}
+                      , function (d) {
+                          alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
+                        }
                     );
                   }
 
@@ -737,7 +741,7 @@
                         }
                       , function (d) {
                           // 提示用户 OAuth
-                          alert('Wechat OAuth fail.')
+                          alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                         }
                     );
                   } else {
@@ -789,13 +793,73 @@
                 window.location.href = d.response.redirect;
               }
             , function (d) {
-                alert('Wechat OAuth fail.')
+                alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                 // 提醒用户 OAuth
               }
           );
         }
+      // } else {
+      //   if (window._ENV_.smith_id && window._ENV_.exfee_id) {
+      //   }
       }
 
+    } else if (routes.test(url)) {
+      var querystring = location.search.substr(1)
+        , items = querystring.split('&'), item, params = {}, key, val;
+      while ((item = items.shift())) {
+        item = item.split('=');
+        key = item[0].toLowerCase();
+        val = item[1] || '';
+        params[decodeURIComponent(key.replace(/\+/g, ' '))] = decodeURIComponent(val.replace(/\+/g, ' '));
+      }
+
+      if (params.authenticate) {
+        doOAuth(
+            'wechat'
+          , { refere: location.protocol + location.hostname + '/toapp' + (params.cross_id ? '?cross_id=' + params.cross_id : '') }
+          , function (d) {
+              window.location.href = d.response.redirect;
+            }
+          , function (d) {
+              alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
+              // 提醒用户 OAuth
+            }
+        );
+      } else {
+        var auth = getAuthFromHeader()
+          , authorization, user_id, user_token, username;
+        // 是否跟本地的 user-token 进行合并？
+        if (auth && auth.authorization) {
+          authorization = auth.authorization;
+          user_id = authorization.user_id;
+          user_token = authorization.token;
+          username = authorization.name;
+          localStorage.setItem('authorization', JSON.stringify({
+              user_id: user_id
+            , token: user_token
+            , name: username || ''
+          }));
+        } else if ((authorization = JSON.parse(localStorage.getItem('authorization')))) {
+          user_id = authorization.user_id;
+          user_token = authorization.token;
+          username = authorization.name;
+        }
+
+        var url = app_url, args = '';
+
+        if (params.cross_id) {
+          url += '!' + params.cross_id + '/routex'
+        }
+
+        if (authorization) {
+          args += '?user_id=' + user_id + '&token=' + user_token + '&username=' + username;
+        }
+
+        openExfe(url + args);
+      }
+
+    } else if (routex.wechatAboutRoutex.test(url)) {
+      handle();
     } else {
       window.location = '/';
     }
