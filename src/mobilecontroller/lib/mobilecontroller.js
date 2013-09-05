@@ -2448,6 +2448,10 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.appendTo($('#app-container'));
       }
 
+    , listen: function () {
+
+      }
+
   });
 
 });
