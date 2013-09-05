@@ -2396,7 +2396,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '.main', function (e) {
-          var bottom = $(this).css('bottom');
+          var bottom = parseInt($(this).css('bottom'));
           $(this).css('bottom', (bottom == -10 ? '-64' : '-10') + 'px');
         });
 
