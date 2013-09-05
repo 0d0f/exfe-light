@@ -296,21 +296,12 @@
         "version": "0.1.0"
       }
     ],
-<<<<<<< HEAD
-    "sha1": "2a-dc5db8e"
-=======
     "sha1": "2a-7b0bad2"
->>>>>>> 5494021... updates css
   },
   "css": {
     "exfe": "exfe-8d975a6.css",
     "exfemin": "exfe-f868147.min.css",
-<<<<<<< HEAD
-    "exfemobile": "exfemobile-59d8dc8.css",
-    "exfemobilemin": "exfemobile-69e6a97.min.css"
-=======
     "exfemobile": "exfemobile-89f2338.css",
     "exfemobilemin": "exfemobile-6f376dc.min.css"
->>>>>>> 5494021... updates css
   }
 }
