@@ -803,7 +803,7 @@
       //   }
       }
 
-    } else if (routes.test(url)) {
+    } else if (routes.toapp.test(url)) {
       var querystring = location.search.substr(1)
         , items = querystring.split('&'), item, params = {}, key, val;
       while ((item = items.shift())) {
