@@ -1820,6 +1820,12 @@ define('mobilecontroller', function (require, exports, module) {
           //Store.remove('cats');
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
+          var aboutCont = new WechatAboutRoutexController({
+            options: {
+              template: $('#wechat-about-tmpl').html()
+            }
+          });
+          aboutCont.emit('show');
         });
 
         element.on('touchstart.maps', '#cleanup-cache', function (e) {
@@ -2430,7 +2436,7 @@ define('mobilecontroller', function (require, exports, module) {
   });
 
   // `Wechat About Routex` controller
-  exports.WechatAboutRoutexController = Controller.extend({
+  var WechatAboutRoutexController = exports.WechatAboutRoutexController = Controller.extend({
 
       init: function () {
         this.render();
