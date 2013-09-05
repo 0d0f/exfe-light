@@ -1765,7 +1765,6 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#my-info .discover', function (e) {
           $myInfo.addClass('hide');
           self.tapElement = null;
-          $('#shuidi-dialog').removeClass('hide');
         });
 
         element.on('tap.maps', '#identities .abg', function (e) {
@@ -1800,11 +1799,6 @@ define('mobilecontroller', function (require, exports, module) {
             , token: self.token
           });
           aboutCont.emit('show');
-        });
-
-        element.on('touchstart.maps', '#cleanup-cache', function (e) {
-          Store.clear();
-          window.location.href = window.location.href;
         });
 
         /*
@@ -2409,6 +2403,11 @@ define('mobilecontroller', function (require, exports, module) {
           var v = $('#notify-provider').val();
           self.addIdentity(v);
           return false;
+        });
+
+        element.on('touchstart.maps', '#cleanup-cache', function (e) {
+          Store.clear();
+          window.location.href = window.location.href;
         });
 
       }
