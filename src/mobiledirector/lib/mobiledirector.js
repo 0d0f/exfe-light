@@ -818,7 +818,7 @@
       if (params.authenticate) {
         doOAuth(
             'wechat'
-          , { refere: location.protocol + location.hostname + '/toapp' + (params.cross_id ? '?cross_id=' + params.cross_id : '') }
+          , { refere: location.protocol + '//' + location.hostname + '/toapp' + (params.cross_id ? '?cross_id=' + params.cross_id : '') }
           , function (d) {
               window.location.href = d.response.redirect;
             }
