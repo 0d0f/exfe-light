@@ -414,10 +414,12 @@ define('mobileroutes', function (require, exports, module) {
 
     // `wechat about routex`
     wechatAboutRoutex: function (req, res) {
+      var authorization = window._ENV_.authorization;
       var aboutCont = app.controllers.wechatAboutRoutex = new WechatAboutRoutexController({
-        options: {
-          template: $('#wechat-about-tmpl').html()
-        }
+          options: {
+            template: $('#wechat-about-tmpl').html()
+          }
+        , token: authorization.token
       });
       aboutCont.emit('show');
     }
