@@ -1771,6 +1771,7 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#shuidi-dialog', function (e) {
           if (e.target.id === 'shuidi-dialog') {
             e.stopPropagation();
+            $('#shuidi-dialog .main').css('bottom', '-64px');
             $('#shuidi-dialog').addClass('hide');
           }
         });
@@ -1779,6 +1780,13 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
           self.openEXFE();
           return false;
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog .main', function (e) {
+          var bottom = $(this).css('bottom');
+          if (bottom != -10) {
+            $(this).css('bottom', '-10px');
+          }
         });
 
         element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
@@ -1807,11 +1815,27 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#open-exfe', function (e) {
+<<<<<<< HEAD
           $('#shuidi-dialog').removeClass('hide');
+=======
+          //$('#shuidi-dialog').removeClass('hide');
+>>>>>>> 5494021... updates css
           //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
+          var aboutCont = new WechatAboutRoutexController({
+              options: {
+                template: $('#wechat-about-tmpl').html()
+              }
+            , cross_id: self.cross_id
+          });
+          aboutCont.emit('show');
+        });
+
+        element.on('touchstart.maps', '#cleanup-cache', function (e) {
+          Store.clear();
+          window.location.href = window.location.href;
         });
 
         element.on('touchstart.maps', '#clearup-cache', function (e) {
@@ -1994,6 +2018,10 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , openEXFE: function () {
+<<<<<<< HEAD
+=======
+        /*
+>>>>>>> 5494021... updates css
         var args = '', params = [], self = this;
         if (self.cross) { args += '!' + self.cross.id + '/routex'; }
         if (self.myUserId && self.token) {
@@ -2009,6 +2037,11 @@ define('mobilecontroller', function (require, exports, module) {
           console.log(app_prefix_url + args);
           openExfe(app_prefix_url + args);
         }
+<<<<<<< HEAD
+=======
+        */
+        window.location.href = '/toapp?cross_id=' + cross_id + '&authenticate';
+>>>>>>> 5494021... updates css
       }
 
     , updateExfeeName: function () {
@@ -2161,7 +2194,11 @@ define('mobilecontroller', function (require, exports, module) {
         if (enu) {
           this.checkFollowingStatus = 1;
           $.ajax({
+<<<<<<< HEAD
               url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu
+=======
+              url: api_url + '/identities/checkfollowing?token=' + this.token + '&identity_id=' + enu
+>>>>>>> 5494021... updates css
             , timeout: 5000
             , success: function (data) {
                 if (data.meta.code === 200) {
@@ -2413,6 +2450,25 @@ define('mobilecontroller', function (require, exports, module) {
 
         console.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
+      }
+
+  });
+
+  // `Wechat About Routex` controller
+  var WechatAboutRoutexController = exports.WechatAboutRoutexController = Controller.extend({
+
+      init: function () {
+        this.render();
+        this.listen();
+      }
+
+    , render: function () {
+        $('#shuidi-dialog').remove();
+        this.element.appendTo($('#app-container'));
+      }
+
+    , listen: function () {
+
       }
 
   });
