@@ -815,7 +815,7 @@
         params[decodeURIComponent(key.replace(/\+/g, ' '))] = decodeURIComponent(val.replace(/\+/g, ' '));
       }
 
-      if (params.authenticate) {
+      if (params.hasOwnProperty('authenticate')) {
         doOAuth(
             'wechat'
           , { refere: location.protocol + '//' + location.hostname + '/toapp' + (params.cross_id ? '?cross_id=' + params.cross_id : '') }
