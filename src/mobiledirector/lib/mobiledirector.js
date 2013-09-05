@@ -23,8 +23,8 @@
         , routex0: /^\/+(?:\?(redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/
 //        , routex1: /^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?(?:\?(redirect)?)?$/
         , routex1: /^\/+!(\d+)\/routex\/?.*$/
-        , toapp: /^\+toapp.*$/
-        , wechatAboutRoutex: /^\wechat\/aboutroutex$/
+        , toapp: /^\/+toapp.*$/
+        , wechatAboutRoutex: /^\/+wechat\/aboutroutex$/
       }
     , itunes = 'itms-apps://itunes.apple.com/us/app/exfe/id514026604'
     , startTime, currentTime, failTimeout;
