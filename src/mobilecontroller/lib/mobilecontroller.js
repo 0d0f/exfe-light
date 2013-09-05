@@ -2373,6 +2373,10 @@ define('mobilecontroller', function (require, exports, module) {
     , render: function () {
         $('#shuidi-dialog').remove();
         this.element.appendTo($('#app-container'));
+
+        if (!this.cross_id) {
+          this.element.addClass('nobg');
+        }
       }
 
     , listen: function () {
