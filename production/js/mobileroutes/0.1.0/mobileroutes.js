@@ -19,7 +19,8 @@ define('mobileroutes', function (require, exports, module) {
       VerifyController = Controllers.VerifyController,
       CrossController = Controllers.CrossController,
       LiveController = Controllers.LiveController,
-      RouteXController = Controllers.RouteXController;
+      RouteXController = Controllers.RouteXController,
+      WechatAboutRoutexController = Controllers.WechatAboutRoutexController;
 
   var showCross = function (req, res, data, cats, ctoken, token) {
       cats || (cats = {});
@@ -409,6 +410,16 @@ define('mobileroutes', function (require, exports, module) {
       });
 
       routexCont.emit('show');
+    },
+
+    // `wechat about routex`
+    wechatAboutRoutex: function (req, res) {
+      var aboutCont = app.controllers.wechatAboutRoutex = new WechatAboutRoutexController({
+        options: {
+          template: $('#wechat-about-tmpl').html()
+        }
+      });
+      aboutCont.emit('show');
     }
 
   };

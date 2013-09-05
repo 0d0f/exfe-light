@@ -1821,9 +1821,10 @@ define('mobilecontroller', function (require, exports, module) {
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
           var aboutCont = new WechatAboutRoutexController({
-            options: {
-              template: $('#wechat-about-tmpl').html()
-            }
+              options: {
+                template: $('#wechat-about-tmpl').html()
+              }
+            , cross_id: self.cross_id
           });
           aboutCont.emit('show');
         });

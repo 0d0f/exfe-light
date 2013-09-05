@@ -8,7 +8,7 @@ define('mobilecontroller', function (require, exports, module) {
       api_url = _ENV_.api_url,
       apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
-      app_prefix_url = app_scheme + '://crosses/',
+      app_prefix_url = app_scheme + ':///',
       AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
@@ -390,9 +390,9 @@ define('mobilecontroller', function (require, exports, module) {
           token = this.token,
           $button = this.$('.set-button button'),
           $error = this.$('.error-info'),
-          $name = this.$('#name'),
+          $name = this.$('.identity .name'),
           $pass = this.$('#password'),
-          name = trim($name.val()),
+          name = trim($name.text()),
           password = $pass.val();
       if (/*name && */password.length >= 4) {
         $button
@@ -1702,9 +1702,10 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
         element.on('tap.maps', '#locate', gotoGPS);
-        element.on('touchstart.maps', '#isme .abg', function (e) {
+        element.on('touchstart.maps', '#isme .avatar', function (e) {
           gotoGPS(e, true);
 
+          /*
           if (self.tapElement === this) {
             $myInfo.addClass('hide');
             self.tapElement = null;
@@ -1716,7 +1717,14 @@ define('mobilecontroller', function (require, exports, module) {
           }
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
+          */
+          //$('#wechat-guide-dialog').removeClass('hide');
+          self.checkFollowing();
           self.tapElement = this;
+        });
+
+        element.on('touchstart.maps', '#wechat-guide-dialog', function (e) {
+          $(this).addClass('hide');
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
@@ -1763,28 +1771,22 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#shuidi-dialog', function (e) {
           if (e.target.id === 'shuidi-dialog') {
             e.stopPropagation();
+            $('#shuidi-dialog .main').css('bottom', '-64px');
             $('#shuidi-dialog').addClass('hide');
           }
         });
 
         element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
           e.preventDefault();
-          var args = '', params = [];
-          if (self.cross) { args += self.cross.id; }
-          if (self.myUserId && self.token) {
-            params.push('user_id=' + self.myUserId);
-            params.push('token=' + self.token);
-            if (self.username) {
-              params.push('username=', self.username);
-            }
-          }
-          if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-          if (params.length) {
-            args += '?' + params.join('&');
-          }
-          console.log(app_prefix_url + args);
-          openExfe(app_prefix_url + args);
+          self.openEXFE();
           return false;
+        });
+
+        element.on('touchstart.maps', '#shuidi-dialog .main', function (e) {
+          var bottom = $(this).css('bottom');
+          if (bottom != -10) {
+            $(this).css('bottom', '-10px');
+          }
         });
 
         element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
@@ -1802,7 +1804,7 @@ define('mobilecontroller', function (require, exports, module) {
             , uid = $d.data('uid');
 
           if ($n.hasClass('unknown')) {
-            self.mapController.showIdentityPanel(uid);
+            self.mapController.showIdentityPanel(uid, $d[0].getBoundingClientRect());
             return;
           }
 
@@ -1812,12 +1814,24 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
-        element.on('tap.maps', '#open-exfe', function (e) {
-          alert('restart stream');
-          self.stopStream();
+        element.on('touchstart.maps', '#open-exfe', function (e) {
+          //$('#shuidi-dialog').removeClass('hide');
+          //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
           //Store.remove('authorization');
+          var aboutCont = new WechatAboutRoutexController({
+              options: {
+                template: $('#wechat-about-tmpl').html()
+              }
+            , cross_id: self.cross_id
+          });
+          aboutCont.emit('show');
+        });
+
+        element.on('touchstart.maps', '#cleanup-cache', function (e) {
+          Store.clear();
+          window.location.href = window.location.href;
         });
 
         /*
@@ -1959,6 +1973,9 @@ define('mobilecontroller', function (require, exports, module) {
 
         var pageY = 0, scrollTop = 0, _t;
         $identities.on('touchstart.maps', function (e) {
+          if (self.mapReadyStatus) {
+            self.mapController.hideMapPanel();
+          }
           isScroll = false;
           pageY = e.pageY;
           scrollTop = this.scrollTop;
@@ -1990,6 +2007,27 @@ define('mobilecontroller', function (require, exports, module) {
           self.checkRouteXStatus();
         });
 
+      }
+
+    , openEXFE: function () {
+        /*
+        var args = '', params = [], self = this;
+        if (self.cross) { args += '!' + self.cross.id + '/routex'; }
+        if (self.myUserId && self.token) {
+          params.push('user_id=' + self.myUserId);
+          params.push('token=' + self.token);
+          if (self.username) {
+            params.push('username=', self.username);
+          }
+        }
+        if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
+        if (args.length && params.length) {
+          args += '?' + params.join('&');
+          console.log(app_prefix_url + args);
+          openExfe(app_prefix_url + args);
+        }
+        */
+        window.location.href = '/toapp?cross_id=' + cross_id + '&authenticate';
       }
 
     , updateExfeeName: function () {
@@ -2120,6 +2158,44 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , checkFollowing: function () {
+        if (this.checkFollowingStatus) { return; }
+        var self = this;
+        var enu = '';
+
+        if (this.myIdentity.provider === 'wechat') {
+          enu = this.myIdentity.external_username + '@wechat';
+        } else if (this.notification_identities.length) {
+          var identities = this.notification_identities.slice(0)
+            , i, identity;
+          while ((identity = identities.shift())) {
+            i = parseId(identity);
+            if (i.provider === 'wechat') {
+              enu = i.external_username + '@wechat';
+              break;
+            }
+          }
+        }
+
+        if (enu) {
+          this.checkFollowingStatus = 1;
+          $.ajax({
+              url: api_url + '/identities/checkfollowing?token=' + this.token + '&identity_id=' + enu
+            , timeout: 5000
+            , success: function (data) {
+                if (data.meta.code === 200) {
+                  var following = data.response.following;
+                  if (!following) {
+                    $('#wechat-guide-dialog').removeClass('hide');
+                  }
+                }
+              }
+            , complete: function () { self.checkFollowingStatus = 0; }
+            //, error: function (data) {}
+          });
+        }
+      }
+
     , checkRouteXStatus: function () {
         var c = true, routexWidget;
         for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
@@ -2129,11 +2205,12 @@ define('mobilecontroller', function (require, exports, module) {
             break;
           }
         }
-        if (!routexWidget || (routexWidget && !routexWidget.my_status)) {
+        if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
           c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
         }
 
         if (c) {
+          this.checkFollowing();
           this.streaming();
         // 显示提醒文字
         } else {
@@ -2337,8 +2414,10 @@ define('mobilecontroller', function (require, exports, module) {
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myUserId = identity.connected_user_id;
+            this.myIdentityId = identity.id;
             this.updateMe(identity);
-            this.updateNotifyProvider(invitation.notification_identities.slice(0));
+            this.notification_identities = invitation.notification_identities.slice(0);
+            this.updateNotifyProvider(this.notification_identities);
             continue;
           }
           var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
@@ -2353,6 +2432,25 @@ define('mobilecontroller', function (require, exports, module) {
 
         console.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
+      }
+
+  });
+
+  // `Wechat About Routex` controller
+  var WechatAboutRoutexController = exports.WechatAboutRoutexController = Controller.extend({
+
+      init: function () {
+        this.render();
+        this.listen();
+      }
+
+    , render: function () {
+        $('#shuidi-dialog').remove();
+        this.element.appendTo($('#app-container'));
+      }
+
+    , listen: function () {
+
       }
 
   });
