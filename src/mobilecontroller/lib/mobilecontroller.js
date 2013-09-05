@@ -2440,7 +2440,6 @@ define('mobilecontroller', function (require, exports, module) {
         });
       }
 
-
   });
 
 });

@@ -414,6 +414,7 @@ define('mobileroutes', function (require, exports, module) {
 
     // `wechat about routex`
     wechatAboutRoutex: function (req, res) {
+      var app = req.app;
       var authorization = window._ENV_.authorization;
       var aboutCont = app.controllers.wechatAboutRoutex = new WechatAboutRoutexController({
           options: {
