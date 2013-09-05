@@ -2389,7 +2389,7 @@ define('mobilecontroller', function (require, exports, module) {
           });
         }
 
-        element.on('touchstart.maps', 'app-btn', function (e) {
+        element.on('touchstart.maps', '.app-btn', function (e) {
           e.preventDefault();
           self.openEXFE();
           return false;
