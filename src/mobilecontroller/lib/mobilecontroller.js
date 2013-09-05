@@ -1768,34 +1768,6 @@ define('mobilecontroller', function (require, exports, module) {
           $('#shuidi-dialog').removeClass('hide');
         });
 
-        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
-          if (e.target.id === 'shuidi-dialog') {
-            e.stopPropagation();
-            $('#shuidi-dialog .main').css('bottom', '-64px');
-            $('#shuidi-dialog').addClass('hide');
-          }
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
-          e.preventDefault();
-          self.openEXFE();
-          return false;
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .main', function (e) {
-          var bottom = $(this).css('bottom');
-          if (bottom != -10) {
-            $(this).css('bottom', '-10px');
-          }
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
-          e.preventDefault();
-          var v = $('#notify-provider').val();
-          self.addNotificationIdentity(v);
-          return false;
-        });
-
         element.on('tap.maps', '#identities .abg', function (e) {
           if (isScroll) { return; }
           var $that = $(this)
@@ -1825,6 +1797,7 @@ define('mobilecontroller', function (require, exports, module) {
                 template: $('#wechat-about-tmpl').html()
               }
             , cross_id: self.cross_id
+            , token: self.token
           });
           aboutCont.emit('show');
         });
@@ -2007,27 +1980,6 @@ define('mobilecontroller', function (require, exports, module) {
           self.checkRouteXStatus();
         });
 
-      }
-
-    , openEXFE: function () {
-        /*
-        var args = '', params = [], self = this;
-        if (self.cross) { args += '!' + self.cross.id + '/routex'; }
-        if (self.myUserId && self.token) {
-          params.push('user_id=' + self.myUserId);
-          params.push('token=' + self.token);
-          if (self.username) {
-            params.push('username=', self.username);
-          }
-        }
-        if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-        if (args.length && params.length) {
-          args += '?' + params.join('&');
-          console.log(app_prefix_url + args);
-          openExfe(app_prefix_url + args);
-        }
-        */
-        window.location.href = '/toapp?cross_id=' + cross_id + '&authenticate';
       }
 
     , updateExfeeName: function () {
@@ -2278,32 +2230,6 @@ define('mobilecontroller', function (require, exports, module) {
         );
       }
 
-    , addNotificationIdentity: function (email, exfee_id, token) {
-        exfee_id = this.cross.exfee.id;
-        token = this.token;
-        var identity = parseId(email);
-        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
-          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
-          return;
-        }
-        $.ajax({
-          type: 'POST',
-          url: api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
-          data: {
-            provider: identity.provider,
-            external_username: identity.external_username
-          },
-          success : function(data) {
-            if (data && data.meta && data.meta.code === 200) {
-              $('#shuidi-dialog').addClass('hide');
-            }
-          },
-          error   : function() {
-            alert('Failed, please retry later.');
-          }
-        });
-      }
-
     , startStream: function () {
         var self = this;
         self.switchGPSStyle(0);
@@ -2450,8 +2376,70 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , listen: function () {
+        var self = this
+          , element = this.element
+          , cross_id = this.cross_id;
+
+        if (cross_id) {
+          element.on('touchstart.maps', function (e) {
+            if (e.target.id === 'shuidi-dialog') {
+              e.stopPropagation();
+              self.destory();
+            }
+          });
+        }
+
+        element.on('touchstart.maps', 'app-btn', function (e) {
+          e.preventDefault();
+          self.openEXFE();
+          return false;
+        });
+
+        element.on('touchstart.maps', '.main', function (e) {
+          var bottom = $(this).css('bottom');
+          $(this).css('bottom', (bottom == -10 ? '-64' : '-10') + 'px');
+        });
+
+        element.on('touchstart.maps', '.notify-ok', function (e) {
+          e.preventDefault();
+          var v = $('#notify-provider').val();
+          self.addIdentity(v);
+          return false;
+        });
 
       }
+
+    , openEXFE: function () {
+        var cross_id = this.cross_id;
+        window.location.href = '/toapp?authenticate' + (cross_id ? ('&cross_id=' + cross_id) : '');
+      }
+
+    , addIdentity: function (email, token) {
+        token = this.token;
+        var identity = parseId(email);
+        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
+          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
+          return;
+        }
+        $.ajax({
+          type: 'POST',
+          url: api_url + '/users/addIdentity' + '?token=' + token,
+          data: {
+            provider: identity.provider,
+            external_username: identity.external_username
+          },
+          success : function(data) {
+            /*
+            if (data && data.meta && data.meta.code === 200) {
+            }
+            */
+          },
+          error   : function() {
+            alert('Failed, please retry later.');
+          }
+        });
+      }
+
 
   });
 

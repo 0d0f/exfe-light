@@ -859,6 +859,33 @@
       }
 
     } else if (routex.wechatAboutRoutex.test(url)) {
+      var auth = getAuthFromHeader()
+        , authorization;
+      // 是否跟本地的 user-token 进行合并？
+      if (auth && auth.authorization) {
+        window._ENV_.authorization = auth.authorization;
+        localStorage.setItem('authorization', JSON.stringify({
+            user_id: authorization.user_id
+          , token: authorization.token
+          , name: authorization.name || ''
+        }));
+      } else if ((authorization = JSON.parse(localStorage.getItem('authorization')))) {
+        window._ENV_.authorization = authorization;
+      }
+      if (!authorization) {
+        doOAuth(
+            'wechat'
+          , { refere: location.protocol + location.hostname + url }
+          , function (d) {
+              window.location.href = d.response.redirect;
+            }
+          , function (d) {
+              alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
+              // 提醒用户 OAuth
+            }
+        );
+        return;
+      }
       handle();
     } else {
       window.location = '/';
