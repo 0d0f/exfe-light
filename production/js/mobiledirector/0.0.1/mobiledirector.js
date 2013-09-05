@@ -804,6 +804,8 @@
       }
 
     } else if (routes.toapp.test(url)) {
+      className = '';
+      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
       var querystring = location.search.substr(1)
         , items = querystring.split('&'), item, params = {}, key, val;
       while ((item = items.shift())) {
@@ -859,6 +861,8 @@
       }
 
     } else if (routes.wechatAboutRoutex.test(url)) {
+      className = '';
+      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
       var auth = getAuthFromHeader()
         , authorization;
       // 是否跟本地的 user-token 进行合并？
