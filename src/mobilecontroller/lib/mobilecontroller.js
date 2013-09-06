@@ -2379,7 +2379,7 @@ define('mobilecontroller', function (require, exports, module) {
           , cross_id = this.cross_id;
 
         if (cross_id) {
-          element.on('touchstart.maps', function (e) {
+          element.on('tap.maps', function (e) {
             if (e.target.id === 'shuidi-dialog') {
               e.stopPropagation();
               self.destory();
