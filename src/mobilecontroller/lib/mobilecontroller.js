@@ -2388,13 +2388,16 @@ define('mobilecontroller', function (require, exports, module) {
           });
 
           element.on('touchstart.maps', '.main', function (e) {
-            var $t = $(this)
-              , style = $t[0].style
-              , s = $t.data('status');
-            //style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
-            style.bottom = (s ? -10 : -64) + 'px';
-            $t.data('status', !s);
-            return false;
+            var ele = e.target;
+            if (!$.contains(element.find('.app-btn')[0], ele) && !$.contains(element.find('.notify')[0], ele) && ele != element.find('#cleanup-cache')[0]) {
+              var $t = $(this)
+                , style = $t[0].style
+                , s = $t.data('status');
+              //style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
+              style.bottom = (s ? -10 : -64) + 'px';
+              $t.data('status', !s);
+              return false;
+            }
           });
         }
 
