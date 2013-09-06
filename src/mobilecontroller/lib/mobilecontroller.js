@@ -1805,7 +1805,6 @@ define('mobilecontroller', function (require, exports, module) {
                       sel.addRange(range);
                       input.onclick = function () {};
                     };
-                    input.click();
                     /*
                     $input.val(text);
                     $input.trigger('touchstart')
