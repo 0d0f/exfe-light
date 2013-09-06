@@ -990,6 +990,25 @@
   #wechat-share {
     -webkit-appearance: none;
     -webkit-transform: translate3d(0, 0, 377px);
+
+    > p {
+      position: relative;
+    }
+
+    > p:first-child {
+      &:before {
+        position: absolute;
+        content: '';
+        height: 1px;
+        left: -9px;
+        right: -9px;
+        bottom: 0;
+        background-repeat: repeat-x;
+        background-size: 100% 100%;
+        background-image: url(/static/img/dash@2x.png);
+      }
+    }
+
     .share-input {
       display: block;
       width: 200px;
