@@ -1793,7 +1793,9 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
+                    /*
                     $input.val(text);
+                    $input.trigger('touchstart')
                     window.setTimeout(function () {
                       var i = $input[0];
                       i.focus();
@@ -1801,6 +1803,14 @@ define('mobilecontroller', function (require, exports, module) {
                       //i.selectionEnd = text.length;
                       i.setSelectionRange(0, text.length);
                     }, 1)
+                    */
+                    $input.innerHTML = text;
+                    var sel = window.getSelection()
+                      , range = document.createRange();
+                    range.setStart($input[0].firstChild, 0);
+                    range.setEnd($input[0].firstChild, text.length);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
