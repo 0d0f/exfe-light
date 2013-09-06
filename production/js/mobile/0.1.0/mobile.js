@@ -62,7 +62,7 @@ define(function (require) {
   app.get(/^\/+(?:\?(?:redirect)?)?#!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
   app.get(/^\/+!token=([a-zA-Z0-9]{4,})\/routex\/?$/, routes.routex);
   app.get(/^\/+!\d+\/routex\/?.*$/, routes.routex);
-  app.get(/^\/wechat\/aboutroutex\/?.*$/, routes.wechatAboutRoutex);
+  app.get(/^\/+wechat\/aboutroutex.*$/, routes.wechatAboutRoutex);
 
   app.on('launched', function () {
     function animate() {

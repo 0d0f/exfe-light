@@ -1718,13 +1718,23 @@ define('mobilecontroller', function (require, exports, module) {
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           */
-          //$('#wechat-guide-dialog').removeClass('hide');
+          //$('#wechat-guide').removeClass('hide');
           self.checkFollowing();
           self.tapElement = this;
         });
 
-        element.on('touchstart.maps', '#wechat-guide-dialog', function (e) {
+        element.on('touchstart.maps', '#wechat-guide', function (e) {
           $(this).addClass('hide');
+        });
+
+        element.on('touchstart.maps', '#wechat-share', function (e) {
+          var $t = $(this)
+            , ele = e.target;
+          if (!$.contains($t.find('.ibox')[0], ele)) {
+            //$t.find('.share-input')[0].removeAttribute('contentEditable');
+            $t.find('.share-input').blur();
+            $t.addClass('hide');
+          }
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
@@ -1745,55 +1755,77 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
+        element.on('touchstart.maps', '.open-app', function () {
+          self.openEXFE();
+        });
+
         element.on('touchstart.maps', '#other-info .please-update', function (e) {
           var $t = $(this)
-            , status = $t.data('status');
+            , status = $t.hasClass('disable');
           if (status) { return; }
-          var external_username = $t.attr('data-external-username')
-            , provider = $t.attr('data-provider');
-          $t.data('status', true);
+          //var external_username = $t.attr('data-external-username')
+          // , provider = $t.attr('data-provider')
+          var enu = $t.attr('data-enu')
+            , name = $t.attr('data-name')
+            , enus = ($t.attr('data-notification-identities') || '').split(' ')
+            , $loading = $t.find('.loading')
+            , isWechat;
+          $t.addClass('disable');
+          $loading.css('display', 'block');
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + external_username + '@' + provider + '&token=' + self.token
+            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + enu + '&token=' + self.token
             , success : function () {}
-            , error   : function () {}
-            , complete: function () { $t.data('status', false); }
+            , error   : function (xhr) {
+                var code = xhr.status;
+                switch (code) {
+                case 406:
+                  enus.unshift(enu);
+
+                  while ((enu = enus.shift())) {
+                    if ((isWechat = /\@wechat$/.test(enu))) {
+                      break;
+                    }
+                  }
+
+                  if (isWechat) {
+                    var $ws = $('#wechat-share')
+                      , $input = $ws.find('.share-input')
+                      , input = $input[0]
+                      , text = '@' + name + ' 你在哪？打开这个网页';
+
+                    $ws.removeClass('hide');
+                    input.value = text;
+                    window.setTimeout(function () {
+                      input.focus();
+                      /*
+                      var sel = window.getSelection()
+                        , range = document.createRange();
+                      range.setStart(input.firstChild, 0);
+                      range.setEnd(input.firstChild, text.length);
+                      sel.removeAllRanges();
+                      sel.addRange(range);
+                      */
+                      input.selectionStart = 0;
+                      input.selectionEnd = text.length;
+                      //i.setSelectionRange(0, text.length);
+                    }, 500);
+                  } else {
+                    alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
+                  }
+                  break;
+                case 401:
+                case 403:
+                }
+              }
+            , complete: function () { $t.removeClass('disable'); $loading.css('display', 'none'); }
           });
-          $t.parent().addClass('hide');
+          //$t.parent().addClass('hide');
         });
 
         element.on('touchstart.maps', '#my-info .discover', function (e) {
           $myInfo.addClass('hide');
           self.tapElement = null;
-          $('#shuidi-dialog').removeClass('hide');
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog', function (e) {
-          if (e.target.id === 'shuidi-dialog') {
-            e.stopPropagation();
-            $('#shuidi-dialog .main').css('bottom', '-64px');
-            $('#shuidi-dialog').addClass('hide');
-          }
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .app-btn', function (e) {
-          e.preventDefault();
-          self.openEXFE();
-          return false;
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .main', function (e) {
-          var bottom = $(this).css('bottom');
-          if (bottom != -10) {
-            $(this).css('bottom', '-10px');
-          }
-        });
-
-        element.on('touchstart.maps', '#shuidi-dialog .notify-ok', function (e) {
-          e.preventDefault();
-          var v = $('#notify-provider').val();
-          self.addNotificationIdentity(v);
-          return false;
         });
 
         element.on('tap.maps', '#identities .abg', function (e) {
@@ -1815,11 +1847,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#open-exfe', function (e) {
-<<<<<<< HEAD
-          $('#shuidi-dialog').removeClass('hide');
-=======
           //$('#shuidi-dialog').removeClass('hide');
->>>>>>> 5494021... updates css
           //self.stopStream();
           //Store.remove('cats');
           //Store.remove('offset-latlng');
@@ -1829,17 +1857,9 @@ define('mobilecontroller', function (require, exports, module) {
                 template: $('#wechat-about-tmpl').html()
               }
             , cross_id: self.cross_id
+            , token: self.token
           });
           aboutCont.emit('show');
-        });
-
-        element.on('touchstart.maps', '#cleanup-cache', function (e) {
-          Store.clear();
-          window.location.href = window.location.href;
-        });
-
-        element.on('touchstart.maps', '#clearup-cache', function (e) {
-          Store.clear();
         });
 
         /*
@@ -2018,30 +2038,8 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , openEXFE: function () {
-<<<<<<< HEAD
-=======
-        /*
->>>>>>> 5494021... updates css
-        var args = '', params = [], self = this;
-        if (self.cross) { args += '!' + self.cross.id + '/routex'; }
-        if (self.myUserId && self.token) {
-          params.push('user_id=' + self.myUserId);
-          params.push('token=' + self.token);
-          if (self.username) {
-            params.push('username=', self.username);
-          }
-        }
-        if (self.myIdentityId) { params.push('identity_id=' + self.myIdentityId); }
-        if (args.length && params.length) {
-          args += '?' + params.join('&');
-          console.log(app_prefix_url + args);
-          openExfe(app_prefix_url + args);
-        }
-<<<<<<< HEAD
-=======
-        */
-        window.location.href = '/toapp?cross_id=' + cross_id + '&authenticate';
->>>>>>> 5494021... updates css
+        var cross_id = this.cross_id;
+        window.location.href = '/toapp?authenticate' + (cross_id ? ('&cross_id=' + cross_id) : '');
       }
 
     , updateExfeeName: function () {
@@ -2194,17 +2192,13 @@ define('mobilecontroller', function (require, exports, module) {
         if (enu) {
           this.checkFollowingStatus = 1;
           $.ajax({
-<<<<<<< HEAD
-              url: api_url + '/identities/checkfollowing?token=' + this.token + '&=identity_id=' + enu
-=======
               url: api_url + '/identities/checkfollowing?token=' + this.token + '&identity_id=' + enu
->>>>>>> 5494021... updates css
             , timeout: 5000
             , success: function (data) {
                 if (data.meta.code === 200) {
                   var following = data.response.following;
                   if (!following) {
-                    $('#wechat-guide-dialog').removeClass('hide');
+                    $('#wechat-guide').removeClass('hide');
                   }
                 }
               }
@@ -2294,32 +2288,6 @@ define('mobilecontroller', function (require, exports, module) {
               */
             }
         );
-      }
-
-    , addNotificationIdentity: function (email, exfee_id, token) {
-        exfee_id = this.cross.exfee.id;
-        token = this.token;
-        var identity = parseId(email);
-        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
-          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
-          return;
-        }
-        $.ajax({
-          type: 'POST',
-          url: api_url + '/Exfee/'+ exfee_id + '/AddNotificationIdentity' + '?token=' + token,
-          data: {
-            provider: identity.provider,
-            external_username: identity.external_username
-          },
-          success : function(data) {
-            if (data && data.meta && data.meta.code === 200) {
-              $('#shuidi-dialog').addClass('hide');
-            }
-          },
-          error   : function() {
-            alert('Failed, please retry later.');
-          }
-        });
       }
 
     , startStream: function () {
@@ -2429,6 +2397,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         while ((invitation = invitations.shift())) {
           identity = invitation.identity;
+          identity.notification_identities = invitation.notification_identities.slice(0);
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myUserId = identity.connected_user_id;
@@ -2465,10 +2434,98 @@ define('mobilecontroller', function (require, exports, module) {
     , render: function () {
         $('#shuidi-dialog').remove();
         this.element.appendTo($('#app-container'));
+
+        if (!this.cross_id) {
+          this.element.addClass('nobg');
+        }
       }
 
     , listen: function () {
+        var self = this
+          , element = this.element
+          , cross_id = this.cross_id;
 
+        if (cross_id) {
+          element.on('tap.maps', function (e) {
+            if (e.target.id === 'shuidi-dialog') {
+              e.stopPropagation();
+              self.destory();
+              element.remove();
+            }
+          });
+
+          element.on('touchstart.maps', '.main', function (e) {
+            var ele = e.target;
+            if (!$.contains(element.find('.app-btn')[0], ele) && !$.contains(element.find('.notify')[0], ele) && ele != element.find('#cleanup-cache')[0]) {
+              var $t = $(this)
+                , style = $t[0].style
+                , s = $t.data('status');
+              //style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
+              style.bottom = (s ? -10 : -64) + 'px';
+              $t.data('status', !s);
+              return false;
+            }
+          });
+        }
+
+        element.on('touchstart.maps', '.app-btn', function (e) {
+          e.preventDefault();
+          self.openEXFE();
+          return false;
+        });
+
+        element.on('touchstart.maps', '.notify-frame .email', function (e) {
+          e.stopPropagation();
+        });
+
+        element.on('touchstart.maps', '.notify-ok', function (e) {
+          e.stopPropagation();
+          self.addIdentity(element.find('#notify-provider').val());
+          if (cross_id) {
+            self.destory();
+            element.remove();
+          }
+          return false;
+        });
+
+        element.on('touchstart.maps', '#cleanup-cache', function (e) {
+          e.stopPropagation();
+          Store.clear();
+          window.location.href = window.location.href;
+          return false;
+        });
+
+      }
+
+    , openEXFE: function () {
+        var cross_id = this.cross_id;
+        window.location.href = '/toapp?authenticate' + (cross_id ? ('&cross_id=' + cross_id) : '');
+      }
+
+    , addIdentity: function (email, token) {
+        token = this.token;
+        var identity = parseId(email);
+        if (identity && identity.provider !== 'email' && identity.provider !== 'phone') {
+          $('#notify-provider.email').attr('placeholder', '请输入正确的手机号或电子邮件。');
+          return;
+        }
+        $.ajax({
+          type: 'POST',
+          url: api_url + '/users/addIdentity' + '?token=' + token,
+          data: {
+            provider: identity.provider,
+            external_username: identity.external_username
+          },
+          success : function(data) {
+            /*
+            if (data && data.meta && data.meta.code === 200) {
+            }
+            */
+          },
+          error   : function() {
+            alert('Failed, please retry later.');
+          }
+        });
       }
 
   });

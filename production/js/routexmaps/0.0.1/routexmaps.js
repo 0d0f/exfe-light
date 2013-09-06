@@ -317,15 +317,6 @@ define('routexmaps', function (require) {
         var ct = document.createElement('input');
         ct.type = 'text';
         ct.value = title;
-<<<<<<< HEAD
-        var cv = document.createElement('div');
-        cv.className = 'splitline';
-        cv.appendChild(ct);
-        var cd = document.createElement('textarea');
-        cd.value = description;
-        $place.append(cv);
-        $place.append(cd);
-=======
         var c0 = document.createElement('div');
         c0.className = 'splitline';
         c0.appendChild(ct);
@@ -336,25 +327,12 @@ define('routexmaps', function (require) {
         c1.appendChild(cd);
         $place.prepend(c1);
         $place.prepend(c0);
->>>>>>> 5494021... updates css
         $t.addClass('hide');
         $d.addClass('hide');
 
         var left = 0, top = 0
           , w = $(window).width()
           , h = $(window).height()
-<<<<<<< HEAD
-          , ow = $place.width()
-          , oh = $place.height();
-
-        left = p.x - ow/ 2;
-        top = p.y - 64 - oh / 2;
-
-        if (left <= 0) { left = 10; }
-        if (left + ow >= w) { left = w - ow - 10; }
-        if (top <= 0) { top = 10; }
-        if (top + oh >= h) { top = h - oh - 10; }
-=======
           , ow = 200
           , oh = $place.height();
 
@@ -365,17 +343,13 @@ define('routexmaps', function (require) {
         if (left + ow > w - 10) { left = w - ow - 10; }
         if (top < 10) { top = 10; }
         if (top + oh > h - 10) { top = h - oh - 10; }
->>>>>>> 5494021... updates css
 
         $place.css({
             //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
           //, '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
             left: left
           , top: top
-<<<<<<< HEAD
-=======
           , width: 200
->>>>>>> 5494021... updates css
         });
       });
 
@@ -387,15 +361,6 @@ define('routexmaps', function (require) {
         , ow = $place.width()
         , oh = $place.height();
 
-<<<<<<< HEAD
-      left = p.x - ow/ 2;
-      top = p.y - 64 - oh / 2;
-
-      if (left <= 0) { left = 10; }
-      if (left + ow >= w) { left = w - ow - 10; }
-      if (top <= 0) { top = 10; }
-      if (top + oh >= h) { top = h - oh - 10; }
-=======
       left = p.x - ow / 2;
       top = p.y - 64 - oh / 2;
 
@@ -403,7 +368,6 @@ define('routexmaps', function (require) {
       if (left + ow > w - 10) { left = w - ow - 10; }
       if (top < 10) { top = 10; }
       if (top + oh > h - 10) { top = h - oh - 10; }
->>>>>>> 5494021... updates css
 
       $place.css({
           //'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
@@ -464,8 +428,12 @@ define('routexmaps', function (require) {
         $otherInfo.find('.update').addClass('hide')
       }
       $otherInfo.find('.please-update')
-        .attr('data-external-username', identity.external_username)
-        .attr('data-provider', identity.provider)
+        //.attr('data-external-username', identity.external_username)
+        //.attr('data-provider', identity.provider)
+        // external_username@provider
+        .attr('data-enu', identity.external_username + '@' + identity.provider)
+        .attr('data-name', identity.name)
+        .attr('data-notification-identities', identity.notification_identities.join(' '))
         .removeClass('hide');
     } else {
       $otherInfo.find('.update').addClass('hide');
@@ -507,7 +475,6 @@ define('routexmaps', function (require) {
     } else {
       left = (w - ow) / 2;
       top = (h - oh) / 2;
-<<<<<<< HEAD
     }
 
     if (bound) {
@@ -531,33 +498,6 @@ define('routexmaps', function (require) {
     this.currPanel = new MapPanel($otherInfo, true);
     this.currPanel.hideAfter = function () {
       this.div.css({ visibility: 'hidden' });
-=======
-    }
-
-    if (bound) {
-      left = 50;
-      top = bound.top;
-    } else {
-      if (left < 0) { left = 10; }
-      if (left + ow > w) { left = w - ow - 10; }
-      if (top < 0) { top = 10; }
-      if (top + oh > h) { top = h - oh - 10; }
-    }
-
-    $otherInfo.css({
-          // 'transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
-        // , '-webkit-transform': 'translate3d(' + left + 'px,' + top + 'px, 0px)'
-          left: left
-        , top: top
-        , visibility: 'visible'
-      });
-
-    this.currPanel = new MapPanel($otherInfo, true);
-    this.currPanel.hideAfter = function () {
-      this.div.css({
-          visibility: 'hidden'
-      });
->>>>>>> 5494021... updates css
     };
   };
 
@@ -629,11 +569,7 @@ define('routexmaps', function (require) {
           tmp.attr('data-id', p.data.id);
           tmp.find('.title').text(p.data.title);
           tmp.find('.description').text(p.data.description || '');
-<<<<<<< HEAD
-          nbDiv.append($('<div></div>').append(tmp));
-=======
           nbDiv.append($('<div class="splitline"></div>').append(tmp));
->>>>>>> 5494021... updates css
         }
       }
 
