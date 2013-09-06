@@ -2370,7 +2370,6 @@ define('mobilecontroller', function (require, exports, module) {
 
         if (!this.cross_id) {
           this.element.addClass('nobg');
-          this.element.css('bottom', 'auto');
         }
       }
 
