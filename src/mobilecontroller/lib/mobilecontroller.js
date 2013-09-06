@@ -1790,6 +1790,7 @@ define('mobilecontroller', function (require, exports, module) {
                   if (isWechat) {
                     var $ws = $('#wechat-share')
                       , $input = $ws.find('.share-input')
+                      , input = $input[0]
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
@@ -1804,11 +1805,11 @@ define('mobilecontroller', function (require, exports, module) {
                       i.setSelectionRange(0, text.length);
                     }, 1)
                     */
-                    $input.innerHTML = text;
+                    input.innerHTML = text;
                     var sel = window.getSelection()
                       , range = document.createRange();
-                    range.setStart($input[0].firstChild, 0);
-                    range.setEnd($input[0].firstChild, text.length);
+                    range.setStart(input.firstChild, 0);
+                    range.setEnd(input.firstChild, text.length);
                     sel.removeAllRanges();
                     sel.addRange(range);
                   } else {
