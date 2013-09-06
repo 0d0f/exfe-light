@@ -1730,7 +1730,7 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#wechat-share', function (e) {
           var $t = $(this)
             , ele = e.target;
-          if (!$.contains($t.find('.ibox'), ele)) {
+          if (!$.contains($t.find('.ibox')[0], ele)) {
             $t.addClass('hide');
           }
         });
