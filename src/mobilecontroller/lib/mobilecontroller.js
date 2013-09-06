@@ -1731,6 +1731,7 @@ define('mobilecontroller', function (require, exports, module) {
           var $t = $(this)
             , ele = e.target;
           if (!$.contains($t.find('.ibox')[0], ele)) {
+            $t.find('.share-input').blur();
             $t.addClass('hide');
           }
         });
@@ -1765,7 +1766,7 @@ define('mobilecontroller', function (require, exports, module) {
           // , provider = $t.attr('data-provider')
           var enu = $t.attr('data-enu')
             , name = $t.attr('data-name')
-            , enus = $t.attr('data-notification-identities').split(' ')
+            , enus = ($t.attr('data-notification-identities') || '').split(' ')
             , $loading = $t.find('.loading')
             , isWechat;
           $t.addClass('disable');
@@ -1791,7 +1792,7 @@ define('mobilecontroller', function (require, exports, module) {
                       , $input = $ws.find('.share-input');
 
                     $ws.removeClass('hide');
-                    $input.val('@' + name + ' 你在哪？打开这个网页')[0].select();
+                    $input.val('@' + name + ' 你在哪？打开这个网页').focus()[0].select();
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
