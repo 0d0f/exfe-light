@@ -431,7 +431,7 @@ define('routexmaps', function (require) {
         //.attr('data-external-username', identity.external_username)
         //.attr('data-provider', identity.provider)
         // external_username@provider
-        .attr('data-enu', identity.external_username + '@')
+        .attr('data-enu', identity.external_username + '@' + identity.provider)
         .attr('data-name', identity.name)
         .attr('data-notification-identities', identity.notification_identities.join(' '))
         .removeClass('hide');
