@@ -2391,7 +2391,7 @@ define('mobilecontroller', function (require, exports, module) {
             var $t = $(this)
               , style = $t[0].style
               , s = $t.data('status');
-            style.transform = style.webkitTransform = 'translate3d(' + (s ? 0 : -54) + 'px,0,0)';
+            style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
             $t.data('status', !s);
           });
         }
