@@ -2416,6 +2416,7 @@ define('mobilecontroller', function (require, exports, module) {
           e.preventDefault();
           Store.clear();
           window.location.href = window.location.href;
+          return false;
         });
 
       }
