@@ -2390,6 +2390,11 @@ define('mobilecontroller', function (require, exports, module) {
           element.on('touchstart.maps', '.main', function (e) {
             var bottom = parseInt($(this).css('bottom'));
             $(this).css('bottom', (bottom == -10 ? '-64' : '-10') + 'px');
+            var $t = $(this)
+              , style = $t[0].style
+              , s = $t.data('status');
+            style.transform = style.webkitTransform = 'translate3d(' + (s ? 0 : -54) + ',0,0)';
+            $t.data('status', !s);
           });
         }
 
