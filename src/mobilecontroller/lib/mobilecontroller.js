@@ -1803,7 +1803,7 @@ define('mobilecontroller', function (require, exports, module) {
                       range.setEnd(input.firstChild, text.length);
                       sel.removeAllRanges();
                       sel.addRange(range);
-                      input.onclick = function () {};
+                      alert(input.getAttribute('contentEditable'))
                     };
                     /*
                     $input.val(text);
