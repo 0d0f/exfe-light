@@ -1718,13 +1718,21 @@ define('mobilecontroller', function (require, exports, module) {
 
           $myInfo.css('-webkit-transform', 'translate3d(50px, 6px, 233px)');
           */
-          //$('#wechat-guide-dialog').removeClass('hide');
+          //$('#wechat-guide').removeClass('hide');
           self.checkFollowing();
           self.tapElement = this;
         });
 
-        element.on('touchstart.maps', '#wechat-guide-dialog', function (e) {
+        element.on('touchstart.maps', '#wechat-guide', function (e) {
           $(this).addClass('hide');
+        });
+
+        element.on('touchstart.maps', '#wechat-share', function (e) {
+          var $t = $(this)
+            , ele = e.target;
+          if (!$.contains($t.find('.ibox'), ele)) {
+            $t.addClass('hide');
+          }
         });
 
         element.on('tap.maps', '#nearby .place-marker', function (e) {
@@ -1745,21 +1753,52 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
+        element.on('touchstart.maps', '.open-app', function () {
+          self.openExfe();
+        });
+
         element.on('touchstart.maps', '#other-info .please-update', function (e) {
           var $t = $(this)
-            , status = $t.data('status');
+            , status = $t.hasClass('disable');
           if (status) { return; }
-          var external_username = $t.attr('data-external-username')
-            , provider = $t.attr('data-provider');
-          $t.data('status', true);
+          //var external_username = $t.attr('data-external-username')
+          // , provider = $t.attr('data-provider')
+          var enu = $t.attr('data-enu')
+            , name = $t.attr('data-name')
+            , enus = $t.attr('data-notification-identities').split(' ')
+            , $loading = $t.find('.loading')
+            , isWechat;
+          $t.addClass('disable');
+          $loading.css('display', 'block');
           $.ajax({
               type: 'POST'
-            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + external_username + '@' + provider + '&token=' + self.token
+            , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + enu + '&token=' + self.token
             , success : function () {}
-            , error   : function () {}
-            , complete: function () { $t.data('status', false); }
+            , error   : function (data) {
+                var code = data.meta.code;
+                switch (code) {
+                case 406:
+                  enus.unshift(enu);
+
+                  while ((enu = enus.shift())) {
+                    if ((isWechat = /\@wechat$/.test(enu))) {
+                      break;
+                    }
+                  }
+
+                  if (isWechat) {
+                    $('#wechat-share').removeClass('hide');
+                  } else {
+                    alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
+                  }
+                  break;
+                case 401:
+                case 403:
+                }
+              }
+            , complete: function () { $t.removeClass('disable'); $loading.css('display', 'none'); }
           });
-          $t.parent().addClass('hide');
+          //$t.parent().addClass('hide');
         });
 
         element.on('touchstart.maps', '#my-info .discover', function (e) {
@@ -1976,6 +2015,11 @@ define('mobilecontroller', function (require, exports, module) {
 
       }
 
+    , openEXFE: function () {
+        var cross_id = this.cross_id;
+        window.location.href = '/toapp?authenticate' + (cross_id ? ('&cross_id=' + cross_id) : '');
+      }
+
     , updateExfeeName: function () {
         this.element.find('#exfee-name').text(this.cross.exfee.name);
       }
@@ -2132,7 +2176,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (data.meta.code === 200) {
                   var following = data.response.following;
                   if (!following) {
-                    $('#wechat-guide-dialog').removeClass('hide');
+                    $('#wechat-guide').removeClass('hide');
                   }
                 }
               }
@@ -2331,6 +2375,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         while ((invitation = invitations.shift())) {
           identity = invitation.identity;
+          identity.notification_identities = invitation.notification_identities.slice(0);
           if (smith_id === identity.id) { continue; }
           if (myUserId === identity.connected_user_id) {
             this.myUserId = identity.connected_user_id;
