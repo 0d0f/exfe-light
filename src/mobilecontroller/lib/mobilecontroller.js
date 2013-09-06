@@ -2412,12 +2412,10 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
-        element.on('touchstart.maps', '#cleanup-cache', function (e) {
+        element.on('tap.maps', '#cleanup-cache', function (e) {
           e.preventDefault();
           Store.clear();
-          window.setTimeout(function () {
-            window.location.href = window.location.href;
-          }, 144)
+          window.location.href = window.location.href;
           return false;
         });
 
