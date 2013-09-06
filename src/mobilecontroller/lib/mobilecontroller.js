@@ -1731,7 +1731,7 @@ define('mobilecontroller', function (require, exports, module) {
           var $t = $(this)
             , ele = e.target;
           if (!$.contains($t.find('.ibox')[0], ele)) {
-            $t.find('.share-input').blur();
+            $t.find('.share-input')[0].removeAttribute('contentEditable');
             $t.addClass('hide');
           }
         });
@@ -1806,6 +1806,7 @@ define('mobilecontroller', function (require, exports, module) {
                     }, 1)
                     */
                     input.innerHTML = text;
+                    input.setAttribute('contentEditable', true);
                     var sel = window.getSelection()
                       , range = document.createRange();
                     range.setStart(input.firstChild, 0);
