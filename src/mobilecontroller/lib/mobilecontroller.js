@@ -1796,12 +1796,11 @@ define('mobilecontroller', function (require, exports, module) {
                     $input.val(text);
                     window.setTimeout(function () {
                       var i = $input[0];
-                      i.click();
                       i.focus();
-                      i.selectionStart = 0;
-                      i.selectionEnd = text.length;
+                      //i.selectionStart = 0;
+                      //i.selectionEnd = text.length;
                       i.setSelectionRange(0, text.length);
-                    }, 500)
+                    }, 1)
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
