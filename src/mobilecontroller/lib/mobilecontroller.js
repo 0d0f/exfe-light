@@ -1774,8 +1774,8 @@ define('mobilecontroller', function (require, exports, module) {
               type: 'POST'
             , url: apiv3_url + '/routex/notification/crosses/' + self.cross_id + '?id=' + enu + '&token=' + self.token
             , success : function () {}
-            , error   : function (data) {
-                var code = data.meta.code;
+            , error   : function (xhr) {
+                var code = xhr.status;
                 switch (code) {
                 case 406:
                   enus.unshift(enu);
