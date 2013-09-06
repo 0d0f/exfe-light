@@ -1803,8 +1803,9 @@ define('mobilecontroller', function (require, exports, module) {
                       range.setEnd(input.firstChild, text.length);
                       sel.removeAllRanges();
                       sel.addRange(range);
-                      alert(input.getAttribute('contentEditable'))
+                      input.onclick = function {};
                     };
+                    input.click();
                     /*
                     $input.val(text);
                     $input.trigger('touchstart')
