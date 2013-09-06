@@ -2370,6 +2370,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         if (!this.cross_id) {
           this.element.addClass('nobg');
+          this.element.css('bottom', 'auto');
         }
       }
 
@@ -2386,6 +2387,11 @@ define('mobilecontroller', function (require, exports, module) {
               element.remove();
             }
           });
+
+          element.on('touchstart.maps', '.main', function (e) {
+            var bottom = parseInt($(this).css('bottom'));
+            $(this).css('bottom', (bottom == -10 ? '-64' : '-10') + 'px');
+          });
         }
 
         element.on('touchstart.maps', '.app-btn', function (e) {
@@ -2394,15 +2400,13 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
-        element.on('touchstart.maps', '.main', function (e) {
-          var bottom = parseInt($(this).css('bottom'));
-          $(this).css('bottom', (bottom == -10 ? '-64' : '-10') + 'px');
-        });
-
         element.on('touchstart.maps', '.notify-ok', function (e) {
           e.preventDefault();
-          var v = $('#notify-provider').val();
-          self.addIdentity(v);
+          self.addIdentity(element.find('#notify-provider').val());
+          if (cross_id) {
+            self.destory();
+            element.remove();
+          }
           return false;
         });
 
