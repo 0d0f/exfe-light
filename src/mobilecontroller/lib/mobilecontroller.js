@@ -1731,7 +1731,8 @@ define('mobilecontroller', function (require, exports, module) {
           var $t = $(this)
             , ele = e.target;
           if (!$.contains($t.find('.ibox')[0], ele)) {
-            $t.find('.share-input')[0].removeAttribute('contentEditable');
+            //$t.find('.share-input')[0].removeAttribute('contentEditable');
+            $t.find('.share-input').blur();
             $t.addClass('hide');
           }
         });
@@ -1794,21 +1795,19 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
-                    input.innerHTML = text;
-                    input.setAttribute('contentEditable', true);
+                    input.value = text;
                     window.setTimeout(function () {
-                      input.click();
                       input.focus();
+                      /*
                       var sel = window.getSelection()
                         , range = document.createRange();
                       range.setStart(input.firstChild, 0);
                       range.setEnd(input.firstChild, text.length);
                       sel.removeAllRanges();
                       sel.addRange(range);
-                      //var i = $input[0];
-                      //i.focus();
-                      //i.selectionStart = 0;
-                      //i.selectionEnd = text.length;
+                      */
+                      input.selectionStart = 0;
+                      input.selectionEnd = text.length;
                       //i.setSelectionRange(0, text.length);
                     }, 500);
                   } else {
