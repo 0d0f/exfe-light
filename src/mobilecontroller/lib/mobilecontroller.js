@@ -1789,10 +1789,17 @@ define('mobilecontroller', function (require, exports, module) {
 
                   if (isWechat) {
                     var $ws = $('#wechat-share')
-                      , $input = $ws.find('.share-input');
+                      , $input = $ws.find('.share-input')
+                      , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
-                    $input.val('@' + name + ' 你在哪？打开这个网页').focus()[0].select();
+                    $input.val(text);
+                    window.setTimeout(function () {
+                      var i = $input[0];
+                      i.focus();
+                      i.selectionStart(0);
+                      i.selectionEnd(text.length);
+                    }, 23)
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
