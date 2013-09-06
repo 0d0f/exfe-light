@@ -2388,11 +2388,13 @@ define('mobilecontroller', function (require, exports, module) {
           });
 
           element.on('touchstart.maps', '.main', function (e) {
+            e.stopPropagation();
             var $t = $(this)
               , style = $t[0].style
               , s = $t.data('status');
             style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
             $t.data('status', !s);
+            return false;
           });
         }
 
@@ -2415,9 +2417,7 @@ define('mobilecontroller', function (require, exports, module) {
         element.on('touchstart.maps', '#cleanup-cache', function (e) {
           e.preventDefault();
           Store.clear();
-          setTimeout(function () {
-            window.location.href = window.location.href;
-          }, 233);
+          window.location.href = window.location.href;
           return false;
         });
 
