@@ -1794,6 +1794,18 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
+                    input.onclick = function () {
+                      input.innerHTML = text;
+                      input.setAttribute('contentEditable', true);
+                      var sel = window.getSelection()
+                        , range = document.createRange();
+                      range.setStart(input.firstChild, 0);
+                      range.setEnd(input.firstChild, text.length);
+                      sel.removeAllRanges();
+                      sel.addRange(range);
+                      input.onclick = function () {};
+                    };
+                    input.click();
                     /*
                     $input.val(text);
                     $input.trigger('touchstart')
@@ -1805,14 +1817,6 @@ define('mobilecontroller', function (require, exports, module) {
                       i.setSelectionRange(0, text.length);
                     }, 1)
                     */
-                    input.innerHTML = text;
-                    input.setAttribute('contentEditable', true);
-                    var sel = window.getSelection()
-                      , range = document.createRange();
-                    range.setStart(input.firstChild, 0);
-                    range.setEnd(input.firstChild, text.length);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
