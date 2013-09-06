@@ -1794,10 +1794,11 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
+                    input.innerHTML = text;
+                    input.setAttribute('contentEditable', true);
                     window.setTimeout(function () {
-                      input.innerHTML = text;
+                      input.click();
                       input.focus();
-                      input.setAttribute('contentEditable', true);
                       var sel = window.getSelection()
                         , range = document.createRange();
                       range.setStart(input.firstChild, 0);
