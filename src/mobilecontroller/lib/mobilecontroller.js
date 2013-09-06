@@ -1754,7 +1754,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '.open-app', function () {
-          self.openExfe();
+          self.openEXFE();
         });
 
         element.on('touchstart.maps', '#other-info .please-update', function (e) {
@@ -1787,7 +1787,11 @@ define('mobilecontroller', function (require, exports, module) {
                   }
 
                   if (isWechat) {
-                    $('#wechat-share').removeClass('hide');
+                    var $ws = $('#wechat-share')
+                      , $input = $ws.find('.share-input');
+
+                    $ws.removeClass('hide');
+                    $input.val('@' + name + ' 你在哪？打开这个网页')[0].select();
                   } else {
                     alert("通知失败\n无法立刻通知对方更新方位。\n请尝试用其它方式联系对方。");
                   }
