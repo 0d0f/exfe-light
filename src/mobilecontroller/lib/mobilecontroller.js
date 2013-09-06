@@ -1794,7 +1794,6 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页';
 
                     $ws.removeClass('hide');
-                    };
                     window.setTimeout(function () {
                       input.innerHTML = text;
                       input.focus();
