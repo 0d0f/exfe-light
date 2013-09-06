@@ -2388,7 +2388,6 @@ define('mobilecontroller', function (require, exports, module) {
           });
 
           element.on('touchstart.maps', '.main', function (e) {
-            e.stopPropagation();
             var $t = $(this)
               , style = $t[0].style
               , s = $t.data('status');
@@ -2405,8 +2404,12 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
+        element.on('touchstart.maps', '.notify-frame .email', function (e) {
+          e.stopPropagation();
+        });
+
         element.on('touchstart.maps', '.notify-ok', function (e) {
-          e.preventDefault();
+          e.stopPropagation();
           self.addIdentity(element.find('#notify-provider').val());
           if (cross_id) {
             self.destory();
@@ -2416,7 +2419,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#cleanup-cache', function (e) {
-          e.preventDefault();
+          e.stopPropagation();
           Store.clear();
           window.location.href = window.location.href;
           return false;
