@@ -2413,6 +2413,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#cleanup-cache', function (e) {
+          e.preventDefault();
           Store.clear();
           window.location.href = window.location.href;
         });
