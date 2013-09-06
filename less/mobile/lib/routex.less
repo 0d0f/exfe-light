@@ -796,6 +796,17 @@
     .please-update {
       font-size: 16px;
       color: #007cff;
+
+      &.disable {
+        color: #ccc;
+      }
+    }
+
+    .loading {
+      position: absolute;
+      right: 5px;
+      top: 11px;
+      left: auto;
     }
   }
 
@@ -933,7 +944,7 @@
     }
   }
 
-  #wechat-guide-dialog {
+  .wechat-dialog {
     text-shadow: 0 1px 1px rgba(255, 255, 255, .66);
     .main {
       position: absolute;
@@ -964,12 +975,23 @@
       p:first-child {
         padding-bottom: 10px;
       }
+    }
+  }
 
-      span {
-        font-size: 20px;
-        font-weight: bold;
-        color: #000;
-      }
+  #wechat-guide {
+    span {
+      font-size: 20px;
+      font-weight: bold;
+      color: #000;
+    }
+  }
+
+  #wechat-share {
+    .share-input {
+      width: 200px;
+      height: 32px;
+      font-size: 14px;
+      font-weight: 300;
     }
   }
 
