@@ -1078,6 +1078,8 @@
     background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
     background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
     border-radius: 10px;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
     -webkit-transition: -webkit-transform 233ms ease-in;
     transition: transform 233ms ease-in;
 
@@ -1111,6 +1113,8 @@
       background: rgba(255, 255, 255, .08);
       border: 1px solid rgba(255, 255, 255, .16);
       border-radius: 2px;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
 
       &:after {
         position: absolute;
@@ -1166,6 +1170,8 @@
                   0px 1px 4px rgba(0,0,0,0.5) inset,
                   0px 0px 2px rgba(0,0,0,0.2)inset;
       overflow: hidden;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
 
     .notify-frame .email {
@@ -1183,7 +1189,7 @@
       &:-moz-placeholder,
       &:-ms-input-placeholder,
       &:-webkit-input-placeholder {
-          color: #b2b2b2;
+        color: #b2b2b2;
       }
     }
 
@@ -1234,4 +1240,6 @@
   font-weight: 300;
   color: #7f7f7f;
   text-decoration: underline;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
