@@ -647,6 +647,9 @@
                           alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                         }
                     );
+                  } else if (code === 401) {
+                    alert('无法打开“活点地图”，因为您已经从这张地图中被移除了。');
+                    window.location.href = '/';
                   }
 
                   /*
@@ -906,6 +909,8 @@
     return location.pathname + location.search + location.hash;
   };
 
+  Director.firstLoad = false;
+
   Director.handle = function (e) {
     if (getError()) {
       alert('Sorry. Your link is invalid or expired. Requested page was not found.');
@@ -929,7 +934,19 @@
       }
     });
 
+    window.addEventListener('load', function (e) {
+      Director.firstLoad = true;
+      setTimeout(function () {
+        Director.handle(e);
+        e.stopPropagation()
+        e.preventDefault()
+        Director.firstLoad = false;
+      }, 0)
+      return false;
+    });
+
     window.addEventListener(eventType, function (e) {
+      if (Director.firstLoad) { Director.firstLoad = false; }
       Director.handle(e);
       e.stopPropagation()
       e.preventDefault()
