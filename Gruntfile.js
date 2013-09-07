@@ -41,6 +41,7 @@ module.exports = function (grunt) {
 
   // mobile (移动)
   var MOBILE_META = PKG.mobile.dependencies;
+  var MOBILE_STANDALONE_META = PKG.mobile.standalone;
 
   var JSHINT_IGNORE = 'zepto jquery jqmousewheel tween store marked handlebars countrycodes phonepanel mnemosyne filehtml5 uploader profile cross lightsaber live tween store';
 
@@ -549,6 +550,17 @@ module.exports = function (grunt) {
       grunt.file.delete('production/css/exfemobile.css');
       grunt.file.copy('production/css/exfemobile.min.css', 'production/css/' + PKG.css.exfemobilemin);
       grunt.file.delete('production/css/exfemobile.min.css');
+    }
+  });
+
+  grunt.registerTask('standalone', 'Standalone module', function (name) {
+    var ms = MOBILE_STANDALONE_META;
+    if (name in ms) {
+      if (!PKG.mobile.standalone) { PKG.mobile.standalone = {} };
+      if (!PKG.mobile.standalone[name]) { PKG.mobile.standalone[name] = { version: "0.0.1" }; }
+      var p = path.join('src', name, 'lib', name + '.js');
+      PKG.mobile.standalone[name].sha1 = sha1(p);
+      grunt.task.run(['publish:' + name, 'uglifymulti:' + name, 'update:package']);
     }
   });
 
