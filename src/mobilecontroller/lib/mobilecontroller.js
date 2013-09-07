@@ -1792,7 +1792,7 @@ define('mobilecontroller', function (require, exports, module) {
                     var $ws = $('#wechat-share')
                       , $input = $ws.find('.share-input')
                       , input = $input[0]
-                      , text = '@' + name + ' 你在哪？打开这个网页';
+                      , text = '@' + name + ' 你在哪？打开这个网页就能在“活点地图”里互相看到方位。';
 
                     $ws.removeClass('hide');
                     input.value = text;
