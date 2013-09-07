@@ -1987,7 +1987,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
-          console.log(pb, ids);
+          Debugger.log(pb, ids);
         });
 
         element.on('touchmove.maps', '#identities-overlay', function (e) {
@@ -2026,7 +2026,7 @@ define('mobilecontroller', function (require, exports, module) {
             //, 'overflow': 'hidden'
           });
 
-          console.log('This is Smith-Token.', self.isSmithToken);
+          Debugger.log('This is Smith-Token.', self.isSmithToken);
 
           $win.trigger('orientationchange');
 
@@ -2128,12 +2128,8 @@ define('mobilecontroller', function (require, exports, module) {
               type: 'POST'
             , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + place.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
             , data: JSON.stringify(place)
-            , success: function (data) {
-                console.log(data)
-              }
-            , error: function (data) {
-                console.log(data)
-              }
+            , success: function () {}
+            , error: function () {}
           });
         }
       }
@@ -2160,12 +2156,8 @@ define('mobilecontroller', function (require, exports, module) {
               type: 'POST'
             , url: apiv3_url + '/routex/users/crosses/' + this.cross_id + '?token=' + this.token
             , data: JSON.stringify(data)
-            , success: function (data) {
-                console.log('success', data)
-              }
-            , error: function (data) {
-                console.log('error', data)
-              }
+            , success: function () {}
+            , error: function () {}
           });
         }
       }
@@ -2234,11 +2226,11 @@ define('mobilecontroller', function (require, exports, module) {
         var self = this;
         this.initStream();
         this.startStream();
-        console.log('start streaming');
-        console.log('start monit')
+        Debugger.log('start streaming');
+        Debugger.log('start monit')
         this.timer = setInterval(function () {
           if (self.mapReadyStatus) {
-            console.log(new Date());
+            Debugger.log(new Date());
             self.mapController.monit();
           }
         }, 1000);
@@ -2274,7 +2266,7 @@ define('mobilecontroller', function (require, exports, module) {
               }
             }
           , function (e) {
-              console.log(e);
+              Debugger.log(e);
             }
           // updateGPS
           , function () {
@@ -2304,7 +2296,7 @@ define('mobilecontroller', function (require, exports, module) {
             }
           , function (r) {
               self.switchGPSStyle(1);
-              console.log(r.status, r);
+              Debugger.log(r.status, r);
               routexStream.stopGeo();
 
               if (self.mapController) {
@@ -2336,7 +2328,7 @@ define('mobilecontroller', function (require, exports, module) {
           , position = this.position
           , mapReadyStatus = this.mapReadyStatus;
         if (mapReadyStatus && mapController) {
-          console.log('tracking');
+          Debugger.log('tracking');
           this.setLatLngOffset();
           mapController.updateGeoLocation(this.myUserId, position);
         }
@@ -2354,15 +2346,13 @@ define('mobilecontroller', function (require, exports, module) {
                 self.createIdentitiesList();
               }
             }
-          , error: function (data) {
-              console.dir(data);
-            }
+          , error: function () {}
         })
       }
 
     , updateMe: function (myIdentity) {
         this.myIdentity = myIdentity;
-        console.log('my identity', this.myIdentity);
+        Debugger.log('my identity', this.myIdentity);
         var div = this.$('#isme');
         div.attr('data-uid', myIdentity.connected_user_id);
         div.attr('data-name', myIdentity.name);
@@ -2417,7 +2407,7 @@ define('mobilecontroller', function (require, exports, module) {
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
 
-        console.log('trigger handler scroll.maps');
+        Debugger.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
       }
 

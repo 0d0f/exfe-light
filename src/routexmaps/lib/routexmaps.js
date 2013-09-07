@@ -554,7 +554,7 @@ define('routexmaps', function (require) {
         , pn = 0, gn = 0
         , pk, gk
         , uid, p;
-      console.log('-----------------------', geoPosition, destinationPosition);
+      Debugger.log('-----------------------', geoPosition, destinationPosition);
 
       var nbDiv = $(NEARBY_TMP);
 
@@ -653,7 +653,7 @@ define('routexmaps', function (require) {
       , tags = hasTags && data.tags.slice(0)
       , tag, dest;
 
-    console.log(type, action, isDelete, tags, data);
+    Debugger.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
         var t = 0;
@@ -1399,7 +1399,7 @@ define('routexmaps', function (require) {
         }
       }
     }
-    console.log('current breadcrumbs', uid);
+    Debugger.log('current breadcrumbs', uid);
   };
 
   proto.addPoint = function (data) {
@@ -1444,7 +1444,7 @@ define('routexmaps', function (require) {
       this.containsOne(uid, latlng, bounds, ids);
     }
 
-    console.log('map zoom', this.map.getZoom());
+    Debugger.log('map zoom', this.map.getZoom());
   };
 
   proto.containsOne = function (uid, latlng, bounds, ids, b) {
@@ -1537,7 +1537,7 @@ define('routexmaps', function (require) {
     }
   };
   proto.updateLine = function (uid, points) {
-    console.dir('update line', points);
+    Debugger.dir('update line', points);
     this.lines[uid] = points;
     this.updateLines();
   };

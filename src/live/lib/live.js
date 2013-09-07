@@ -54,9 +54,9 @@ define('live', function (require) {
             if (type !== '[object String]' && type !== '[object Number]') {
                 data = JSON.stringify(data);
             }
-            console.log(time.replace(/^.*(\d{2}:\d{2}:\d{2}).*$/, '$1') + ' - ' + data);
-            if (table && console.table) {
-                console.table(table);
+            Debugger.log(time.replace(/^.*(\d{2}:\d{2}:\d{2}).*$/, '$1') + ' - ' + data);
+            if (table && Debugger.table) {
+                Debugger.table(table);
             }
         }
     }

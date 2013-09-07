@@ -85,9 +85,9 @@ define('routexstream', function (require) {
             if (type !== '[object String]' && type !== '[object Number]') {
                 data = JSON.stringify(data);
             }
-            console.log(time.replace(/^.*(\d{2}:\d{2}:\d{2}).*$/, '$1') + ' - ' + data);
-            if (table && console.table) {
-                console.table(table);
+            Debugger.log(time.replace(/^.*(\d{2}:\d{2}:\d{2}).*$/, '$1') + ' - ' + data);
+            if (table && Debugger.table) {
+                Debugger.table(table);
             }
         }
     }
@@ -137,7 +137,7 @@ define('routexstream', function (require) {
         live   : false,
         init   : function(url, pop, dead) {
             reStart();
-            console.log(url);
+            Debugger.log(url);
             this.prvLen = 0;
             this.nxtIdx = 0;
             this.live   = true;
