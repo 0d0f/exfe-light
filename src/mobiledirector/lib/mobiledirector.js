@@ -910,6 +910,7 @@
   };
 
   Director.firstLoad = false;
+  Director.firstPop = false;
 
   Director.handle = function (e) {
     if (getError()) {
@@ -935,6 +936,7 @@
     });
 
     window.addEventListener('load', function (e) {
+      if (Director.firstPop) { return; }
       Director.firstLoad = true;
       setTimeout(function () {
         Director.handle(e);
@@ -946,10 +948,11 @@
     });
 
     window.addEventListener(eventType, function (e) {
-      if (Director.firstLoad) { Director.firstLoad = false; }
+      if (Director.firstLoad) { return Director.firstLoad = false; }
       Director.handle(e);
       e.stopPropagation()
       e.preventDefault()
+      Director.firstPop = true;
       return false;
     });
   };
