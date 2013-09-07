@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var slice = Array.prototype.slice;
+
   var Debugger;
   if (!window.Debugger) { Debugger = window.Debugger = window.console || {}; }
 
@@ -35,7 +37,7 @@
     window.DEBUG = this.STATUS = false;
   };
 
-  Debugger.alert = function () { window.alert(arguments.toString()); };
+  Debugger.alert = function () { window.alert(slice.call(arguments, 0).toString()); };
 
   Debugger._init();
 })();
