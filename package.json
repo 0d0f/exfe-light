@@ -296,7 +296,17 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-e678c8e"
+    "sha1": "2a-c7f6cba",
+    "standalone": {
+      "debugger": {
+        "version": "0.0.1",
+        "sha1": "af3a60d"
+      },
+      "mobiledirector": {
+        "version": "0.0.1",
+        "sha1": "786ceaa"
+      }
+    }
   },
   "css": {
     "exfe": "exfe-8d975a6.css",
