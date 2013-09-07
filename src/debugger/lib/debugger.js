@@ -18,7 +18,7 @@
   };
 
   Debugger._check = function () {
-    return (/debug=true/i).test(location.search);
+    return (/debug=(true|on)/i).test(location.search);
   };
 
   Debugger._on = function () {
