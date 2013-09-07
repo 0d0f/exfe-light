@@ -312,11 +312,11 @@
     "standalone": {
       "debugger": {
         "version": "0.0.1",
-        "sha1": "af3a60d"
+        "sha1": "e809691"
       },
       "mobiledirector": {
         "version": "0.0.1",
-        "sha1": "786ceaa"
+        "sha1": "8063269"
       }
     }
   },

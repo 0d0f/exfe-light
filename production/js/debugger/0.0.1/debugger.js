@@ -2,36 +2,40 @@
   'use strict';
 
   var Debugger;
-  if (!window.Debugger) { Debugger = window.Debugger = {}; }
+  if (!window.Debugger) { Debugger = window.Debugger = window.console || {}; }
 
-  Debugger.style = '[debug]{display:block!important;}';
+  Debugger._style = '[debug]{display:block!important;}';
 
   // defaults to debug-off
-  Debugger.status = false;
+  window.DEBUG = Debugger.STATUS = false;
 
-  Debugger.init = function () {
-    if (this.check()) {
-      this.on();
+  Debugger.MODE = 0;
+
+  Debugger._init = function () {
+    if (this._check()) {
+      this._on();
     }
   };
 
-  Debugger.check = function () {
+  Debugger._check = function () {
     return (/debug=true/i).test(location.search);
   };
 
-  Debugger.on = function () {
+  Debugger._on = function () {
     var d = document.createElement('style');
     d.id = '*debugger*';
     d.textContent = this.style;
     document.getElementsByTagName('head')[0].appendChild(d);
-    this.status = true;
+    window.DEBUG = this.STATUS = true;
   };
 
-  Debugger.off = function () {
+  Debugger._off = function () {
     var d = document.getElementById('*debugger*');
     document.getElementsByTagName('head')[0].removeChild(d);
-    this.status = false;
+    window.DEBUG = this.STATUS = false;
   };
 
-  Debugger.init();
+  Debugger.alert = function () { window.alert(arguments.toString()); };
+
+  Debugger._init();
 })();

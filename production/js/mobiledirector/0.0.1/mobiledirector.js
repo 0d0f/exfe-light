@@ -2,6 +2,8 @@
 (function () {
   'use strict';
 
+  if (!window.DEBUG) { var D = window.Debugger = {}; D.log = D.dir = D.warn = D.table = D.alert = function () {}; }
+
   var now = Date.now || function () { return new Date().getTime(); }
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
