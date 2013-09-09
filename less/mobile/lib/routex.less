@@ -1124,7 +1124,8 @@
   bottom: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   * {
     -webkit-box-sizing: border-box;
@@ -1140,9 +1141,8 @@
   }
 
   .main {
-    position: absolute;
-    bottom: -64px;
-    left: 5px;
+    position: relative;
+    top: 5px;
     width: 310px;
     overflow-y: auto;
     padding: 30px 15px;
@@ -1155,6 +1155,7 @@
     border-radius: 10px;
     -webkit-transition: -webkit-transform 233ms ease-in;
     transition: transform 233ms ease-in;
+    margin: 0 auto;
 
     h3 {
       margin: 0;
