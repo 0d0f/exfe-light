@@ -909,8 +909,8 @@
     return location.pathname + location.search + location.hash;
   };
 
+  Director._status = 0;
   Director.firstLoad = false;
-  Director.firstPop = false;
 
   Director.handle = function (e) {
     if (getError()) {
@@ -922,40 +922,44 @@
   };
 
   Director.start = function () {
-    // mobile
-    window.addEventListener('pageshow', function (e) {
-      if (e.persisted) {
-        handle();
-      }
-    });
+    // https://code.google.com/p/android/issues/detail?id=12226
+    // DOMContentLoaded -> load -> pageshow -> popstate
 
-    document.addEventListener('webkitvisibilitychange', function() {
-      if (document.webkitVisibilityState === 'visible') {
-        handle();
+    document.addEventListener('DOMContentLoaded', function (e) {
+      if (!Director._status) {
+        Director._status = 1;
+        Director.firstLoad = true;
+        Director.handle(e);
       }
-    });
+    }, false);
 
     window.addEventListener('load', function (e) {
-      if (Director.firstPop) { return; }
-      Director.firstLoad = true;
-      setTimeout(function () {
+      if (!Director._status) {
+        Director._status = 2;
+        Director.firstLoad = true;
         Director.handle(e);
-        e.stopPropagation()
-        e.preventDefault()
-        Director.firstLoad = false;
-      }, 0)
-      return false;
-    });
+      }
+    }, false);
 
+    /*
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) {
+        Director.handle(e);
+      }
+    }, false);
+    document.addEventListener('webkitvisibilitychange', function (e) {
+      if (document.webkitVisibilityState === 'visible') {
+        Director.handle(e);
+      }
+    }, false);
+    */
+
+    // popstate
     window.addEventListener(eventType, function (e) {
       if (Director.firstLoad) { return Director.firstLoad = false; }
       Director.handle(e);
-      e.stopPropagation()
-      e.preventDefault()
-      Director.firstPop = true;
-      return false;
-    });
-  };
+    }, false);
+  }
 
   Director.start();
 })();
