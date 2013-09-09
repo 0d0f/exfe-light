@@ -958,7 +958,7 @@
     window.addEventListener(eventType, function (e) {
       if (Director.firstLoad) { return Director.firstLoad = false; }
       Director.handle(e);
-    }, false);
+    });
   }
 
   Director.start();
