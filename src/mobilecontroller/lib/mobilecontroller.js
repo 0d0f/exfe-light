@@ -2482,8 +2482,7 @@ define('mobilecontroller', function (require, exports, module) {
             element
               .find('.main')
               .css({
-                  height: (h - top) + 'px'
-                , top: top + 'px'
+                top: top + 'px'
               });
           }
         });
