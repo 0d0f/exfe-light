@@ -1862,86 +1862,6 @@ define('mobilecontroller', function (require, exports, module) {
           aboutCont.emit('show');
         });
 
-        /*
-        var tapDelay = 270, tapTimeout, now;
-        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
-          var $that = $(this)
-            , id = $that.data('identity-id')
-            , uid = $that.data('uid')
-            , free = $that.data('free')
-            , touched = !!$that.hasClass('touched')
-            , c = true;
-          now = Date.now();
-          tapTimeout = setTimeout(function () {
-            $('#iavatar .avatar').css('background', 'url(' + $that.find('.avatar').attr('src') + ')');
-          }, tapDelay);
-        });
-
-        element.on('touchmove.maps', '#free-identities .identities li', function (e) {
-          clearTimeout(tapTimeout); tapTimeout = null;
-        });
-
-        element.on('touchend.maps', '#free-identities .identities li', function (e) {
-          clearTimeout(tapTimeout); tapTimeout = null;
-          if (Date.now() - now > 1000) {
-            $(this).trigger('select:maps');
-          } else {
-            $('#iavatar .avatar').css('background', '');
-          }
-        });
-
-        element.on('select:maps', '#free-identities .identities li', function (e) {
-          var $that = $(this)
-            , id = $that.data('identity-id')
-            , uid = $that.data('uid')
-            , free = $that.data('free')
-            , touched = !!$that.hasClass('touched')
-            , c = true;
-
-          if (touched) { return; }
-
-          if (free) {
-            c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
-          }
-
-          if (c) {
-
-            $that.addClass('touched');
-            $.ajax({
-                type: 'get'
-              , url: api_url + '/crosses/' + self.cross.id + '/freeidentities/' + id + '/itsme?token=' + self.token
-              , beforeSend: function () {console.log('itsme before')}
-              , complete: function () { $that.removeClass('touched'); }
-              , success: function (data) {
-                  var code = data.meta && data.meta.code;
-                  if (200 === code) {
-                    console.log('success', data)
-                    var cats = Store.get('cats') || {}
-                      , token = data.response.cross_access_token;
-                    cats[self.ctoken] = token;
-                    self.myIdentityId = id;
-                    self.myuid = uid;
-                    self.token = token;
-                    Store.set('cats', cats);
-
-                    self.$('#free-identities').hide().empty();
-                    self.createIdentitiesList();
-                    self.streaming();
-                  }
-                }
-              , error: function (data) {
-                  console.log('fail')
-                  console.dir(data)
-                }
-            });
-
-          } else {
-            $('#iavatar .avatar').css('background', '');
-          }
-
-        });
-        */
-
         var pageY0 = 0, scrollTop0 = 0, _t0;
         element.on('touchstart.maps', '#nearby', function (e) {
           isScroll0 = false;
@@ -2210,7 +2130,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         }
         if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
-          c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
+          c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
 
         if (c) {
