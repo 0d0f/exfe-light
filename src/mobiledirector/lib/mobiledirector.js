@@ -931,7 +931,7 @@
         Director.firstLoad = true;
         Director.handle(e);
       }
-    }, false);
+    });
 
     window.addEventListener('load', function (e) {
       if (!Director._status) {
@@ -939,7 +939,7 @@
         Director.firstLoad = true;
         Director.handle(e);
       }
-    }, false);
+    });
 
     /*
     window.addEventListener('pageshow', function (e) {
