@@ -925,12 +925,13 @@
     // https://code.google.com/p/android/issues/detail?id=12226
     // DOMContentLoaded -> load -> pageshow -> popstate
 
-    document.addEventListener('DOMContentLoaded', function (e) {
-      if (!Director._status) {
-        Director._status = 1;
-        Director.firstLoad = true;
-        Director.handle(e);
-      }
+    // popstate
+    window.addEventListener(eventType, function (e) {
+      if (Director.firstLoad) { return Director.firstLoad = false; }
+      e.preventDefault();
+      e.stopPropagation();
+      Director.handle(e);
+      return false;
     });
 
     window.addEventListener('load', function (e) {
@@ -941,6 +942,13 @@
       }
     });
 
+    document.addEventListener('DOMContentLoaded', function (e) {
+      if (!Director._status) {
+        Director._status = 1;
+        Director.firstLoad = true;
+        Director.handle(e);
+      }
+    });
     /*
     window.addEventListener('pageshow', function (e) {
       if (e.persisted) {
@@ -953,16 +961,7 @@
       }
     }, false);
     */
-
-    // popstate
-    window.addEventListener(eventType, function (e) {
-      if (Director.firstLoad) { return Director.firstLoad = false; }
-      e.preventDefault();
-      e.stopPropagation();
-      Director.handle(e);
-      return false;
-    });
-  }
+  };
 
   Director.start();
 })();
