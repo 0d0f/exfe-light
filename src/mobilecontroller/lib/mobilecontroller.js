@@ -2443,19 +2443,6 @@ define('mobilecontroller', function (require, exports, module) {
               element.remove();
             }
           });
-
-          element.on('touchstart.maps', '.main', function (e) {
-            var ele = e.target;
-            if (!$.contains(element.find('.app-btn')[0], ele) && !$.contains(element.find('.notify')[0], ele) && ele != element.find('#cleanup-cache')[0]) {
-              var $t = $(this)
-                , style = $t[0].style
-                , s = $t.data('status');
-              //style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
-              style.bottom = (s ? -10 : -64) + 'px';
-              $t.data('status', !s);
-              return false;
-            }
-          });
         }
 
         element.on('touchstart.maps', '.app-btn', function (e) {
@@ -2485,6 +2472,16 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
+        self.on('show', function () {
+          if (cross_id) {
+            var h = $(window).height()
+              , top = 5;
+            top = h - 380;
+            if (top > 100) { top = 100; }
+            else if (top < 0) { top = 5; }
+            element.find('.main').css('top', top);
+          }
+        });
       }
 
     , openEXFE: function () {
