@@ -2479,7 +2479,12 @@ define('mobilecontroller', function (require, exports, module) {
             top = h - 380;
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
-            element.find('.main').css('top', top);
+            element
+              .find('.main')
+              .css({
+                  height: (h - top) + 'px'
+                , top: top + 'px'
+              });
           }
         });
       }
