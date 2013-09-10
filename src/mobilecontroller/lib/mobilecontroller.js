@@ -2403,9 +2403,8 @@ define('mobilecontroller', function (require, exports, module) {
             else if (top < 0) { top = 5; }
             element
               .find('.main')
-              .css('top', top + 'px');
-            element
-              .css('padding-top', 50);
+              .css('top', (top + 50) + 'px');
+            element.prop('scrollTop', 50);
           }
         });
       }
