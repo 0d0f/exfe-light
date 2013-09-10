@@ -2358,6 +2358,13 @@ define('mobilecontroller', function (require, exports, module) {
               element.remove();
             }
           });
+
+          element.on('scroll.maps', function (e) {
+            if (this.scrollTop === 0) {
+              self.destory();
+              element.remove();
+            }
+          });
         }
 
         element.on('touchstart.maps', '.app-btn', function (e) {
@@ -2396,8 +2403,9 @@ define('mobilecontroller', function (require, exports, module) {
             else if (top < 0) { top = 5; }
             element
               .find('.main')
+              .prop('scrollTop', top)
               .css({
-                top: top + 'px'
+                top: (top + 50) + 'px'
               });
           }
         });
