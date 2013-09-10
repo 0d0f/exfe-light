@@ -2404,7 +2404,7 @@ define('mobilecontroller', function (require, exports, module) {
             element
               .find('.main')
               .css('top', (top + 50) + 'px');
-            element.prop('scrollTop', 50);
+            element.prop('scrollTop', top);
           }
         });
       }
