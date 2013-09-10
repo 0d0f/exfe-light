@@ -2360,7 +2360,7 @@ define('mobilecontroller', function (require, exports, module) {
           });
 
           element.on('scroll.maps', function (e) {
-            if (this.scrollTop === 0) {
+            if (this.scrollTop <= 0) {
               self.destory();
               element.remove();
             }
@@ -2402,12 +2402,10 @@ define('mobilecontroller', function (require, exports, module) {
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
             top += 50;
+            element.prop('scrollTop', top - 5);
             element
               .find('.main')
-              .css({
-                top: top + 'px'
-              });
-            element.prop('scrollTop', top - 5);
+              .css('top', top + 'px');
           }
         });
       }
