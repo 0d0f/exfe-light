@@ -2397,7 +2397,7 @@ define('mobilecontroller', function (require, exports, module) {
         self.on('show', function () {
           if (cross_id) {
             var h = $(window).height()
-              , top = 5;
+              , top;
             top = h - 380;
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
@@ -2406,8 +2406,8 @@ define('mobilecontroller', function (require, exports, module) {
               .find('.main')
               .css('top', top + 'px');
             setTimeout(function () {
-              element.prop('scrollTop', top - 5);
-            }, 0)
+              element[0].scrollTop = top - 5;
+            }, 23);
           }
         });
       }
