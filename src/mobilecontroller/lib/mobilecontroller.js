@@ -2401,13 +2401,11 @@ define('mobilecontroller', function (require, exports, module) {
             top = h - 380;
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
-            top += 50;
             element
               .find('.main')
               .css('top', top + 'px');
-            setTimeout(function () {
-              element[0].scrollTop = top - 5;
-            }, 23);
+            element
+              .css('padding-top', 50);
           }
         });
       }
