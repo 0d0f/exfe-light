@@ -2402,10 +2402,12 @@ define('mobilecontroller', function (require, exports, module) {
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
             top += 50;
-            element.prop('scrollTop', top - 5);
             element
               .find('.main')
               .css('top', top + 'px');
+            setTimeout(function () {
+              element.prop('scrollTop', top - 5);
+            }, 0)
           }
         });
       }
