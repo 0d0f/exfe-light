@@ -390,7 +390,7 @@
   };
 
   var doOAuth = function (provider, data, done, error) {
-    document.getElementById('app-body').innerHTML = '<div id="app-status">微信鉴权中……</div>';
+    document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">微信鉴权中……</div>';
     request({
         url: '/oauth/authenticate?provider=' + provider
       , type: 'POST'
@@ -556,7 +556,7 @@
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
+      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
 
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
@@ -810,7 +810,7 @@
 
     } else if (routes.toapp.test(url)) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
+      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
       var querystring = location.search.substr(1)
         , items = querystring.split('&'), item, params = {}, key, val;
       while ((item = items.shift())) {
@@ -867,7 +867,7 @@
 
     } else if (routes.wechatAboutRoutex.test(url)) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status">页面加载中……</div>';
+      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
       var auth = getAuthFromHeader()
         , authorization;
       // 是否跟本地的 user-token 进行合并？
