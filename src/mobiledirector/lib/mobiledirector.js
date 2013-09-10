@@ -392,7 +392,7 @@
   var doOAuth = function (provider, data, done, error) {
     document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">微信鉴权中……</div>';
     request({
-        url: '/oauth/authenticate?provider=' + provider
+        url: '/oauth/authenticate?base=true&provider=' + provider
       , type: 'POST'
       , data: data
       , done: function (d) {
