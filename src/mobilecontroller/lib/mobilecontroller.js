@@ -2404,10 +2404,10 @@ define('mobilecontroller', function (require, exports, module) {
             top += 50;
             element
               .find('.main')
-              .prop('scrollTop', top)
               .css({
                 top: top + 'px'
-              });
+              })
+              .prop('scrollTop', top);
           }
         });
       }
