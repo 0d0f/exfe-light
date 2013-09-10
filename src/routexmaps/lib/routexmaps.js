@@ -916,6 +916,7 @@ define('routexmaps', function (require) {
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
 
         if (curr_uid && (curr_uid == uid) && this._breadcrumbs[uid]) {
+          this.updateBreadcrumbs(uid);
           this.showTextLabels(uid, this._breadcrumbs[uid].positions.slice(0), n <= 1);
         }
 
