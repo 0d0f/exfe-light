@@ -1009,10 +1009,10 @@
     width: 310px;
     min-height: 400px;
     padding: 30px 15px;
-    @d: 90deg - 270deg;
     @startColor: #153353;
     @endColor: #191919;
-    background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    @d: 90deg - 270deg;
     background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
     -webkit-transition: -webkit-transform 233ms ease-in;
     transition: transform 233ms ease-in;
