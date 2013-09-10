@@ -389,10 +389,10 @@
     });
   };
 
-  var doOAuth = function (provider, data, done, error) {
+  var doOAuth = function (base, provider, data, done, error) {
     document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">微信鉴权中……</div>';
     request({
-        url: '/oauth/authenticate?base=true&provider=' + provider
+        url: '/oauth/authenticate?' + (base ? 'base=true&' : '') + 'provider=' + provider
       , type: 'POST'
       , data: data
       , done: function (d) {
@@ -637,7 +637,8 @@
                     , errorType = d.meta.errorType;
                   if (code === 400) {
                     doOAuth(
-                        'wechat'
+                        false
+                      , 'wechat'
                       , { refere: window.location.href }
                       , function (d) {
                           window.location.href = d.response.redirect;
@@ -651,72 +652,6 @@
                     alert('无法打开“活点地图”，因为您已经从这张地图中被移除了。');
                     window.location.href = '/';
                   }
-
-                  /*
-                  // -------------------------- get cross by user-token
-                  getCrossByUserToken(
-                      user_token
-                    , cross_id
-                    , function (d) {
-                        // go to routex
-                        _ENV_._data_ = d;
-                        var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
-                        _ENV_._data_.response.browsing_identity = browsing_identity;
-                        _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
-                        _ENV_._data_.smith_id = window._ENV_.smith_id;
-                        handle();
-                      }
-                    , function (d) {
-                        // wechat OAuth
-
-                        if (!auth) {
-                          doOAuth(
-                              'wechat'
-                            , { refere: window.location.href }
-                            , function (d) {
-                                window.location.href = d.response.redirect;
-                              }
-                              // 提示用户 OAuth
-                            , function (d) {}
-                          );
-                        } else {
-                          getCrossByXCode(
-                              xcode
-                            , function (d) {
-                                var response = d.response;
-                                var _auth = response.authorization;
-                                // 进行合并
-                                if (_auth) {
-                                  localStorage.setItem('authorization', JSON.stringify({
-                                      user_id: _auth.user_id
-                                    , token: _auth.token
-                                  }));
-                                }
-                                var cross_access_token = response.cross_access_token;
-                                if (cross_access_token) {
-                                  var cats = JSON.parse(localStorage.getItem('cats'));
-                                  if (!cats) { cats = {}; }
-                                  cats[xcode] = cross_access_token;
-                                }
-                                _ENV_._data_ = d;
-                                var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
-                                _ENV_._data_.response.browsing_identity = browsing_identity;
-                                _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
-                                _ENV_._data_.smith_id = window._ENV_.smith_id;
-                                handle();
-                              }
-                            , function (d) {
-                                // invalid link
-                                redirectByError(d.meta);
-                              }
-                          );
-
-                        }
-
-                      }
-                  );
-                  // --------------------------------------------------
-                  */
 
                 }
             );
@@ -739,7 +674,8 @@
 
                   if (!auth || !xcode) {
                     doOAuth(
-                        'wechat'
+                        false
+                      , 'wechat'
                       , { refere: window.location.href }
                       , function (d) {
                           window.location.href = d.response.redirect;
@@ -792,7 +728,8 @@
         // wechat OAuth
         } else {
           doOAuth(
-              'wechat'
+              false
+            , 'wechat'
             , { refere: window.location.href }
             , function (d) {
                 window.location.href = d.response.redirect;
@@ -822,7 +759,8 @@
 
       if (params.hasOwnProperty('authenticate')) {
         doOAuth(
-            'wechat'
+            true
+          , 'wechat'
           , { refere: location.protocol + '//' + location.hostname + '/toapp' + (params.cross_id ? '?cross_id=' + params.cross_id : '') }
           , function (d) {
               window.location.href = d.response.redirect;
@@ -883,7 +821,8 @@
       }
       if (!authorization) {
         doOAuth(
-            'wechat'
+            false
+          , 'wechat'
           , { refere: location.protocol + location.hostname + url }
           , function (d) {
               window.location.href = d.response.redirect;
