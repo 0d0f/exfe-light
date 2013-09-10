@@ -2406,8 +2406,8 @@ define('mobilecontroller', function (require, exports, module) {
               .find('.main')
               .css({
                 top: top + 'px'
-              })
-              .prop('scrollTop', top);
+              });
+            element.prop('scrollTop', top);
           }
         });
       }
