@@ -1846,12 +1846,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
-        element.on('touchstart.maps', '#open-exfe', function (e) {
-          //$('#shuidi-dialog').removeClass('hide');
-          //self.stopStream();
-          //Store.remove('cats');
-          //Store.remove('offset-latlng');
-          //Store.remove('authorization');
+        element.on('tap.maps', '#open-exfe', function (e) {
           var aboutCont = new WechatAboutRoutexController({
               options: {
                 template: $('#wechat-about-tmpl').html()
