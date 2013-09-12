@@ -2167,8 +2167,13 @@ define('mobilecontroller', function (require, exports, module) {
             clearInterval(self.timer);
             // kill maps
 
+            self.initStaticMap();
             clearInterval(this.readystatuschange);
           }
+          if (self.mapReadyStatus) {
+            clearInterval(this.readystatuschange);
+          }
+          Debugger.alert(now() - self.START_TIME, self.mapReadyStatus);
         }, 233);
       }
 
