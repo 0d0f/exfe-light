@@ -38,6 +38,8 @@ define('routexstream', function (require) {
 
     var reStart = null;
 
+    var START_TIME, FIRST_TIME, FIRST_CONNECT;
+
     var submitGps = function () {
         secCnt = 0;
         if (!token) {
@@ -147,10 +149,17 @@ define('routexstream', function (require) {
             http.open('post', url);
             http.onreadystatechange = this.listen;
             http.onerror = this.onError;
+            START_TIME = Date.now();
+            FIRST_CONNECT = false;
             http.send();
             this.timer  = setInterval(this.listen, 1000);
         },
         listen : function() {
+            if (!FIRST_CONNECT) {
+                FIRST_TIME = Date.now();
+                FIRST_CONNECT = true;
+                Debugger.alert('Streaming 开始有会包' + (FIRST_TIME - START_TIME));
+            }
             var http = stream.http;
             if ((http.readyState   !== 4 && http.readyState !== 3)
              || (http.readyState   === 3 && http.status     !== 200)
@@ -371,6 +380,9 @@ define('routexstream', function (require) {
         var data = JSON.parse(rawData);
         if (data && data.type) {
             log('Streaming pops: ' + data.type)
+            if (data.type === 'command' && data.action === 'init_end') {
+                Debugger.alert('Streaming 收到 init_end' + (Date.now() - START_TIME), '开始有会包到 init_end' + (Date.now() - FIRST_TIME));
+            }
             echo(data)
         }
     };
