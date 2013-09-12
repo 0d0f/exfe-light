@@ -2173,7 +2173,6 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus) {
             clearInterval(this.readystatuschange);
           }
-          Debugger.alert(now() - self.START_TIME, self.mapReadyStatus);
         }, 233);
       }
 
