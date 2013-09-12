@@ -93,6 +93,7 @@
       return smsToken;
     },
 
+    /*
     checkNodeExsits = function (id) {
       var n = document.getElementById(id);
       return !!n;
@@ -117,6 +118,7 @@
       n.href = href;
       document.getElementsByTagName('head')[0].appendChild(n);
     },
+    */
 
     inject = function (cb) {
       /*
@@ -340,7 +342,6 @@
         if ((user_id && user_id === invitation.identity.connected_user_id)
               || identity_id === invitation.identity.id) {
           return invitation.identity;
-          break;
         }
       }
     };
@@ -390,7 +391,6 @@
   };
 
   var doOAuth = function (base, provider, data, done, error) {
-    document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">微信鉴权中……</div>';
     request({
         url: '/oauth/authenticate?' + (base ? 'base=true&' : '') + 'provider=' + provider
       , type: 'POST'
@@ -556,7 +556,6 @@
       crossFunc(data, true);
     } else if ((params = url.match(routes.routex1))) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
 
       var querystring = location.search.substr(1);
       var items = querystring.split('&'), item, datas = {}, key, val;
@@ -570,24 +569,6 @@
       var cross_id = params[1]
         , xcode = datas.xcode
         , via = datas.via;
-
-      /*
-
-      var ctoken = datas.xcode
-        , cats = localStorage.getItem('cats')
-        , data = { invitation_token: ctoken }
-        , token;
-
-      if (cats) {
-        cats = JSON.parse(cats);
-      }
-
-      if (cats && (token = cats[ctoken])) {
-        data.cross_access_token = token;
-      }
-
-      crossFunc(data, true);
-      */
 
       var authorization = JSON.parse(localStorage.getItem('authorization'))
         , user_id = authorization && authorization.user_id
@@ -624,6 +605,7 @@
                 window._ENV_.exfee_id
               , formData
               , function (d) {
+                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
                   _ENV_._data_.response.browsing_identity = browsing_identity;
@@ -633,8 +615,7 @@
                   handle();
                 }
               , function (d) {
-                  var code = d.meta.code
-                    , errorType = d.meta.errorType;
+                  var code = d.meta.code;
                   if (code === 400) {
                     doOAuth(
                         false
@@ -644,7 +625,7 @@
                           window.location.href = d.response.redirect;
                         }
                         // 提示用户 OAuth
-                      , function (d) {
+                      , function () {
                           alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                         }
                     );
@@ -660,6 +641,7 @@
                 user_token
               , cross_id
               , function (d) {
+                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   // go to routex
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
@@ -669,7 +651,7 @@
                   _ENV_._data_.username = username || '';
                   handle();
                 }
-              , function (d) {
+              , function () {
                   // wechat OAuth
 
                   if (!auth || !xcode) {
@@ -680,7 +662,7 @@
                       , function (d) {
                           window.location.href = d.response.redirect;
                         }
-                      , function (d) {
+                      , function () {
                           // 提示用户 OAuth
                           alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                         }
@@ -734,20 +716,109 @@
             , function (d) {
                 window.location.href = d.response.redirect;
               }
-            , function (d) {
+            , function () {
                 alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
                 // 提醒用户 OAuth
               }
           );
         }
-      // } else {
-      //   if (window._ENV_.smith_id && window._ENV_.exfee_id) {
-      //   }
+      } else if (authorization) {
+
+          if (window._ENV_.exfee_id) {
+            var formData = {
+                xcode: xcode
+              , user_token: user_token
+              , widget_type: 'routex'
+            };
+            if (via) {
+              formData.via = via;
+            }
+            addUserToExfee(
+                window._ENV_.exfee_id
+              , formData
+              , function (d) {
+                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
+                  _ENV_._data_ = d;
+                  var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                  _ENV_._data_.response.browsing_identity = browsing_identity;
+                  _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
+                  _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
+                  handle();
+                }
+              , function (d) {
+                  var code = d.meta.code;
+                  if (code === 400) {
+                    // invalid link
+                    redirectByError(d.meta);
+                  } else if (code === 401) {
+                    alert('无法打开“活点地图”，因为您已经从这张地图中被移除了。');
+                    window.location.href = '/';
+                  }
+
+                }
+            );
+          } else {
+            getCrossByUserToken(
+                user_token
+              , cross_id
+              , function (d) {
+                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
+                  // go to routex
+                  _ENV_._data_ = d;
+                  var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                  _ENV_._data_.response.browsing_identity = browsing_identity;
+                  _ENV_._data_.tokenInfos = [user_token, browsing_identity.id];
+                  _ENV_._data_.smith_id = window._ENV_.smith_id;
+                  _ENV_._data_.username = username || '';
+                  handle();
+                }
+              , function () {
+                  if (xcode) {
+                    getCrossByXCode(
+                        xcode
+                      , function (d) {
+                          var response = d.response;
+                          var _auth = response.authorization;
+                          // 进行合并 ?
+                          if (_auth) {
+                            localStorage.setItem('authorization', JSON.stringify({
+                                user_id: _auth.user_id
+                              , token: _auth.token
+                              , name: _auth.name
+                            }));
+                          }
+                          var cross_access_token = response.cross_access_token;
+                          if (cross_access_token) {
+                            var cats = JSON.parse(localStorage.getItem('cats'));
+                            if (!cats) { cats = {}; }
+                            cats[xcode] = cross_access_token;
+                          }
+                          _ENV_._data_ = d;
+                          var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
+                          _ENV_._data_.response.browsing_identity = browsing_identity;
+                          _ENV_._data_.tokenInfos = [_auth ? _auth.token : null, browsing_identity.id];
+                          _ENV_._data_.smith_id = window._ENV_.smith_id;
+                          _ENV_._data_.username = (_auth && _auth.name) || '';
+                          handle();
+                        }
+                      , function (d) {
+                          // invalid link
+                          redirectByError(d.meta);
+                        }
+                    );
+
+                  }
+
+                }
+            );
+          }
+
+
       }
 
     } else if (routes.toapp.test(url)) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
       var querystring = location.search.substr(1)
         , items = querystring.split('&'), item, params = {}, key, val;
       while ((item = items.shift())) {
@@ -765,7 +836,7 @@
           , function (d) {
               window.location.href = d.response.redirect;
             }
-          , function (d) {
+          , function () {
               alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
               // 提醒用户 OAuth
             }
@@ -800,12 +871,11 @@
           args += '?user_id=' + user_id + '&token=' + user_token + '&username=' + username;
         }
 
-        openExfe(url + args);
+        window.openExfe(url + args);
       }
 
     } else if (routes.wechatAboutRoutex.test(url)) {
       className = '';
-      document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">页面加载中……</div>';
       var auth = getAuthFromHeader()
         , authorization;
       // 是否跟本地的 user-token 进行合并？
@@ -827,7 +897,7 @@
           , function (d) {
               window.location.href = d.response.redirect;
             }
-          , function (d) {
+          , function () {
               alert('授权失败\n未能获得微信授权，无法继续。\n请尝试重新打开链接并同意授权。')
               // 提醒用户 OAuth
             }
