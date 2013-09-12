@@ -592,6 +592,7 @@
       if (window.isWeixin) {
         // has user-token
         if (user_id && user_token) {
+          document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
           if (window._ENV_.smith_id && window._ENV_.exfee_id) {
             var formData = {
                 xcode: xcode
@@ -605,7 +606,6 @@
                 window._ENV_.exfee_id
               , formData
               , function (d) {
-                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
                   _ENV_._data_.response.browsing_identity = browsing_identity;
@@ -641,7 +641,6 @@
                 user_token
               , cross_id
               , function (d) {
-                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   // go to routex
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
@@ -723,6 +722,7 @@
           );
         }
       } else if (authorization) {
+          document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
 
           if (window._ENV_.exfee_id) {
             var formData = {
@@ -737,7 +737,6 @@
                 window._ENV_.exfee_id
               , formData
               , function (d) {
-                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
                   _ENV_._data_.response.browsing_identity = browsing_identity;
@@ -763,7 +762,6 @@
                 user_token
               , cross_id
               , function (d) {
-                  document.getElementById('app-body').innerHTML = '<div id="app-status" class="page">加载中……</div>';
                   // go to routex
                   _ENV_._data_ = d;
                   var browsing_identity = getBrowsingIdentity(d.response.cross.exfee, user_id);
