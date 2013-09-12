@@ -1648,6 +1648,7 @@ define('mobilecontroller', function (require, exports, module) {
     , render: function () {
         $('#app-routex').remove();
         this.element.appendTo($('#app-container'));
+        this.START_TIME = now();
         this.loadMaps();
       }
 
@@ -2149,9 +2150,33 @@ define('mobilecontroller', function (require, exports, module) {
             self.mapController.monit();
           }
         }, 1000);
+
+        this.readystatuschange = setInterval(function () {
+          if (now() - self.START_TIME > 1000 * 2 && !self.mapReadyStatus) {
+            clearInterval(self.timer);
+            // kill maps
+
+            clearInterval(this.readystatuschange);
+          }
+        }, 233);
+      }
+
+    , initStaticMap: function () {
+        this.isStaticMap = true;
+        var map = document.getElementById('static-map');
+        var img = document.createElement('img');
+        var site = 'site=' + $(window).width() + 'x' + $(window).height();
+        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + site;
+        if (this.position) {
+          var center = 'center=' + this.position.latitude + ',' + this.position.longitude;
+          url += '&' + center;
+        }
+        img.src = url;
+        map.appendChild(img);
       }
 
     , _cache: []
+    , streamingInitEnd: false
 
     , initStream: function () {
         var self = this
@@ -2160,6 +2185,7 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
+
               if (self.mapController) {
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
@@ -2168,7 +2194,7 @@ define('mobilecontroller', function (require, exports, module) {
                   self.mapController.myIdentity = self.myIdentity;
                 }
               }
-              if (self.mapReadyStatus) {
+              if (self.mapReadyStatus && !self.isStaticMap) {
                 if (_cache.length) {
                   var c;
                   while((c = _cache.shift())) {
@@ -2176,6 +2202,10 @@ define('mobilecontroller', function (require, exports, module) {
                   }
                 }
                 self.mapController.draw(result);
+              } else if (self.isStaticMap) {
+                if (result.type === 'command' && result.action === 'init_end') {
+                  self.streamingInitEnd = true;
+                }
               } else {
                 _cache.push(result);
               }
@@ -2210,6 +2240,11 @@ define('mobilecontroller', function (require, exports, module) {
               self.trackGeoLocation();
             }
           , function (r) {
+              if (1 === r.code) {
+                $('#privacy-dialog').removeClass('hide');
+                return;
+              }
+
               self.switchGPSStyle(1);
               Debugger.log(r.status, r);
               routexStream.stopGeo();
