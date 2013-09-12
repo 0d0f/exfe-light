@@ -158,7 +158,7 @@ define('routexstream', function (require) {
             if (!FIRST_CONNECT) {
                 FIRST_TIME = Date.now();
                 FIRST_CONNECT = true;
-                Debugger.alert('Streaming 开始有会包' + (FIRST_TIME - START_TIME));
+                Debugger.alert('Streaming 开始有会包 ' + (FIRST_TIME - START_TIME) + 'ms');
             }
             var http = stream.http;
             if ((http.readyState   !== 4 && http.readyState !== 3)
@@ -381,7 +381,7 @@ define('routexstream', function (require) {
         if (data && data.type) {
             log('Streaming pops: ' + data.type)
             if (data.type === 'command' && data.action === 'init_end') {
-                Debugger.alert('Streaming 收到 init_end' + (Date.now() - START_TIME), '开始有会包到 init_end' + (Date.now() - FIRST_TIME));
+                Debugger.alert('Streaming 收到 init_end ' + (Date.now() - START_TIME) + 'ms', '开始有会包到 init_end ' + (Date.now() - FIRST_TIME) + 'ms');
             }
             echo(data)
         }
