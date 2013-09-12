@@ -1982,7 +1982,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadMaps: function (p) {
-        var protocol = !Chrome ? 'http://' : 'https://'
+        var protocol = !Chrome ? 'http://' : 'https://';
         var head = document.getElementsByTagName('head')[0];
         var dns = ['ditu.google.cn', 'maps.gstatic.com', 'mts0.google.com', 'mts1.google.com', 'maps.googleapis.com', 'mts0.googleapis.com', 'mts1.googleapis.com'];
 
@@ -1999,7 +1999,7 @@ define('mobilecontroller', function (require, exports, module) {
               }
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
-                for (var i = 0, i < dns.length, ++i) {
+                for (var i = 0; i < dns.length; ++i) {
                   var link = document.createElement('link');
                   link.rel='dns-prefetch';
                   link.href = protocol + dns[i];
