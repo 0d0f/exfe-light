@@ -157,8 +157,8 @@
     request = function (opts) {
       var xhr = new XMLHttpRequest()
         , done = opts.done || empty
-        , fail = opts.fail || empty
-        , abortTimeout;
+        , fail = opts.fail || empty;
+        //, abortTimeout;
 
       xhr.open(opts.type || 'GET', opts.url, true);
       xhr.overrideMimeType('application/json');
@@ -170,7 +170,7 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           xhr.onreadystatechange = void 0;
-          clearTimeout(abortTimeout);
+          //clearTimeout(abortTimeout);
           var result, error = false
           if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
             try {
@@ -187,11 +187,13 @@
         }
       };
 
+      /*
       abortTimeout = setTimeout(function(){
         xhr.onreadystatechange = void 0;
         xhr.abort();
         xhr = void 0;
       }, 5000);
+      */
 
       xhr.send(opts.data ? serialize(opts.data) : null);
 
