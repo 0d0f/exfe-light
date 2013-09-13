@@ -2173,14 +2173,15 @@ define('mobilecontroller', function (require, exports, module) {
         this.isStaticMap = true;
         var map = document.getElementById('static-map');
         var img = document.createElement('img');
-        var site = 'site=' + $(window).width() + 'x' + $(window).height();
-        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + site;
+        var size = 'size' + $(window).width() + 'x' + $(window).height();
+        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + size;
         if (this.position) {
-          var center = 'center=' + this.position.latitude + ',' + this.position.longitude;
+          var center = 'center=' + this.position.gps[0] + ',' + this.position.gps[1];
           url += '&' + center;
         }
         img.src = url;
         map.appendChild(img);
+        map.className = '';
       }
 
     , _cache: []
