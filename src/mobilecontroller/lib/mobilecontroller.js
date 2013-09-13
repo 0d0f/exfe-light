@@ -2150,7 +2150,7 @@ define('mobilecontroller', function (require, exports, module) {
             Debugger.log(new Date());
             self.mapController.monit();
           }
-        }, 1000);
+        }, 500);
 
         this.readystatuschange = setInterval(function () {
           var t = 1000 * 2;
