@@ -269,6 +269,17 @@ define('routexmaps', function (require) {
   var proto = RoutexMaps.prototype;
 
   proto.load = function (cb) {
+    var head = document.getElementsByTagName('head')[0],
+      , dns = ['ditu.google.cn', 'maps.gstatic.com', 'mts0.google.com', 'mts1.google.com', 'maps.googleapis.com', 'mts0.googleapis.com', 'mts1.googleapis.com']
+      , protocol = this.options.protocol
+      , d;
+    while ((d = dns.shif())) {
+      var link = document.createElement('link');
+      link.rel='dns-prefetch';
+      link.href = protocol + d;
+      head.appendChild(link);
+    }
+
     var n = document.createElement('script')
     n.type = 'text/javascript';
     n.async = !0;
