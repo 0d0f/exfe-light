@@ -2003,7 +2003,7 @@ define('mobilecontroller', function (require, exports, module) {
         mc.myIdentity = this.myIdentity;
         this.setLatLngOffset();
         // defaults to true
-        mc.tracking = true
+        mc.tracking = true;
         this.START_TIME = now();
         mc.load();
         mc.controller = self;

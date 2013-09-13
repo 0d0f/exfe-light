@@ -273,7 +273,7 @@ define('routexmaps', function (require) {
       , dns = ['ditu.google.cn', 'maps.gstatic.com', 'mts0.google.com', 'mts1.google.com', 'maps.googleapis.com', 'mts0.googleapis.com', 'mts1.googleapis.com']
       , protocol = this.options.protocol
       , d;
-    while ((d = dns.shif())) {
+    while ((d = dns.shift()))) {
       var link = document.createElement('link');
       link.rel='dns-prefetch';
       link.href = protocol + d;

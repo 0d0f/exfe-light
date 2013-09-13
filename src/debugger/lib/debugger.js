@@ -26,7 +26,7 @@
   Debugger._on = function () {
     var d = document.createElement('style');
     d.id = '*debugger*';
-    d.textContent = this.style;
+    d.textContent = this._style;
     document.getElementsByTagName('head')[0].appendChild(d);
     window.DEBUG = this.STATUS = true;
   };
