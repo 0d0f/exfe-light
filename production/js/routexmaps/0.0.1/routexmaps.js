@@ -269,6 +269,17 @@ define('routexmaps', function (require) {
   var proto = RoutexMaps.prototype;
 
   proto.load = function (cb) {
+    var head = document.getElementsByTagName('head')[0]
+      , dns = ['ditu.google.cn', 'maps.gstatic.com', 'mts0.google.com', 'mts1.google.com', 'maps.googleapis.com', 'mts0.googleapis.com', 'mts1.googleapis.com']
+      , protocol = this.options.protocol
+      , d;
+    while ((d = dns.shif())) {
+      var link = document.createElement('link');
+      link.rel='dns-prefetch';
+      link.href = protocol + d;
+      head.appendChild(link);
+    }
+
     var n = document.createElement('script')
     n.type = 'text/javascript';
     n.async = !0;
@@ -556,7 +567,7 @@ define('routexmaps', function (require) {
         , pn = 0, gn = 0
         , pk, gk
         , uid, p;
-      console.log('-----------------------', geoPosition, destinationPosition);
+      Debugger.log('-----------------------', geoPosition, destinationPosition);
 
       var nbDiv = $(NEARBY_TMP);
 
@@ -655,7 +666,7 @@ define('routexmaps', function (require) {
       , tags = hasTags && data.tags.slice(0)
       , tag, dest;
 
-    console.log(type, action, isDelete, tags, data);
+    Debugger.log(type, action, isDelete, tags, data);
     switch (type) {
       case LOCATION:
         var t = 0;
@@ -918,6 +929,7 @@ define('routexmaps', function (require) {
         $e = $('#identities-overlay .identity[data-uid="' + uid + '"]').find('.icon');
 
         if (curr_uid && (curr_uid == uid) && this._breadcrumbs[uid]) {
+          this.updateBreadcrumbs(uid);
           this.showTextLabels(uid, this._breadcrumbs[uid].positions.slice(0), n <= 1);
         }
 
@@ -1401,7 +1413,7 @@ define('routexmaps', function (require) {
         }
       }
     }
-    console.log('current breadcrumbs', uid);
+    Debugger.log('current breadcrumbs', uid);
   };
 
   proto.addPoint = function (data) {
@@ -1446,7 +1458,7 @@ define('routexmaps', function (require) {
       this.containsOne(uid, latlng, bounds, ids);
     }
 
-    console.log('map zoom', this.map.getZoom());
+    Debugger.log('map zoom', this.map.getZoom());
   };
 
   proto.containsOne = function (uid, latlng, bounds, ids, b) {
@@ -1539,7 +1551,7 @@ define('routexmaps', function (require) {
     }
   };
   proto.updateLine = function (uid, points) {
-    console.dir('update line', points);
+    Debugger.dir('update line', points);
     this.lines[uid] = points;
     this.updateLines();
   };

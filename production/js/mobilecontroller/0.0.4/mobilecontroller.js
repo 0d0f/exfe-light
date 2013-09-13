@@ -1792,7 +1792,7 @@ define('mobilecontroller', function (require, exports, module) {
                     var $ws = $('#wechat-share')
                       , $input = $ws.find('.share-input')
                       , input = $input[0]
-                      , text = '@' + name + ' 你在哪？打开这个网页';
+                      , text = '@' + name + ' 你在哪？打开这个网页就能在“活点地图”里互相看到方位。';
 
                     $ws.removeClass('hide');
                     input.value = text;
@@ -1846,12 +1846,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         });
 
-        element.on('touchstart.maps', '#open-exfe', function (e) {
-          //$('#shuidi-dialog').removeClass('hide');
-          //self.stopStream();
-          //Store.remove('cats');
-          //Store.remove('offset-latlng');
-          //Store.remove('authorization');
+        element.on('tap.maps', '#open-exfe', function (e) {
           var aboutCont = new WechatAboutRoutexController({
               options: {
                 template: $('#wechat-about-tmpl').html()
@@ -1861,86 +1856,6 @@ define('mobilecontroller', function (require, exports, module) {
           });
           aboutCont.emit('show');
         });
-
-        /*
-        var tapDelay = 270, tapTimeout, now;
-        element.on('touchstart.maps', '#free-identities .identities li', function (e) {
-          var $that = $(this)
-            , id = $that.data('identity-id')
-            , uid = $that.data('uid')
-            , free = $that.data('free')
-            , touched = !!$that.hasClass('touched')
-            , c = true;
-          now = Date.now();
-          tapTimeout = setTimeout(function () {
-            $('#iavatar .avatar').css('background', 'url(' + $that.find('.avatar').attr('src') + ')');
-          }, tapDelay);
-        });
-
-        element.on('touchmove.maps', '#free-identities .identities li', function (e) {
-          clearTimeout(tapTimeout); tapTimeout = null;
-        });
-
-        element.on('touchend.maps', '#free-identities .identities li', function (e) {
-          clearTimeout(tapTimeout); tapTimeout = null;
-          if (Date.now() - now > 1000) {
-            $(this).trigger('select:maps');
-          } else {
-            $('#iavatar .avatar').css('background', '');
-          }
-        });
-
-        element.on('select:maps', '#free-identities .identities li', function (e) {
-          var $that = $(this)
-            , id = $that.data('identity-id')
-            , uid = $that.data('uid')
-            , free = $that.data('free')
-            , touched = !!$that.hasClass('touched')
-            , c = true;
-
-          if (touched) { return; }
-
-          if (free) {
-            c = confirm('确认您的身份\n您刚拖入的头像已经被认领过， \n您确定没有拖错自己的头像？');
-          }
-
-          if (c) {
-
-            $that.addClass('touched');
-            $.ajax({
-                type: 'get'
-              , url: api_url + '/crosses/' + self.cross.id + '/freeidentities/' + id + '/itsme?token=' + self.token
-              , beforeSend: function () {console.log('itsme before')}
-              , complete: function () { $that.removeClass('touched'); }
-              , success: function (data) {
-                  var code = data.meta && data.meta.code;
-                  if (200 === code) {
-                    console.log('success', data)
-                    var cats = Store.get('cats') || {}
-                      , token = data.response.cross_access_token;
-                    cats[self.ctoken] = token;
-                    self.myIdentityId = id;
-                    self.myuid = uid;
-                    self.token = token;
-                    Store.set('cats', cats);
-
-                    self.$('#free-identities').hide().empty();
-                    self.createIdentitiesList();
-                    self.streaming();
-                  }
-                }
-              , error: function (data) {
-                  console.log('fail')
-                  console.dir(data)
-                }
-            });
-
-          } else {
-            $('#iavatar .avatar').css('background', '');
-          }
-
-        });
-        */
 
         var pageY0 = 0, scrollTop0 = 0, _t0;
         element.on('touchstart.maps', '#nearby', function (e) {
@@ -1987,7 +1902,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
-          console.log(pb, ids);
+          Debugger.log(pb, ids);
         });
 
         element.on('touchmove.maps', '#identities-overlay', function (e) {
@@ -2026,7 +1941,7 @@ define('mobilecontroller', function (require, exports, module) {
             //, 'overflow': 'hidden'
           });
 
-          console.log('This is Smith-Token.', self.isSmithToken);
+          Debugger.log('This is Smith-Token.', self.isSmithToken);
 
           $win.trigger('orientationchange');
 
@@ -2066,12 +1981,13 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadMaps: function (p) {
+        var protocol = !Chrome ? 'http://' : 'https://';
         var self = this
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
-              // production use `key`
+              protocol: protocol
             // In Chrome, block http while the site is https.
-            url: (!Chrome ? 'http:' : '') + '//ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
@@ -2087,7 +2003,8 @@ define('mobilecontroller', function (require, exports, module) {
         mc.myIdentity = this.myIdentity;
         this.setLatLngOffset();
         // defaults to true
-        mc.tracking = true
+        mc.tracking = true;
+        this.START_TIME = now();
         mc.load();
         mc.controller = self;
 
@@ -2128,12 +2045,8 @@ define('mobilecontroller', function (require, exports, module) {
               type: 'POST'
             , url: apiv3_url + '/routex/geomarks/crosses/' + this.cross_id + '/location/' + place.id + '?coordinate=mars&token=' + this.token + '&_method=PUT'
             , data: JSON.stringify(place)
-            , success: function (data) {
-                console.log(data)
-              }
-            , error: function (data) {
-                console.log(data)
-              }
+            , success: function () {}
+            , error: function () {}
           });
         }
       }
@@ -2160,12 +2073,8 @@ define('mobilecontroller', function (require, exports, module) {
               type: 'POST'
             , url: apiv3_url + '/routex/users/crosses/' + this.cross_id + '?token=' + this.token
             , data: JSON.stringify(data)
-            , success: function (data) {
-                console.log('success', data)
-              }
-            , error: function (data) {
-                console.log('error', data)
-              }
+            , success: function () {}
+            , error: function () {}
           });
         }
       }
@@ -2218,7 +2127,7 @@ define('mobilecontroller', function (require, exports, module) {
           }
         }
         if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
-          c = confirm('开启这张“活点地图”，它将\n展现您未来1小时内的方位。');
+          c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
 
         if (c) {
@@ -2234,17 +2143,46 @@ define('mobilecontroller', function (require, exports, module) {
         var self = this;
         this.initStream();
         this.startStream();
-        console.log('start streaming');
-        console.log('start monit')
+        Debugger.log('start streaming');
+        Debugger.log('start monit')
         this.timer = setInterval(function () {
           if (self.mapReadyStatus) {
-            console.log(new Date());
+            Debugger.log(new Date());
             self.mapController.monit();
           }
         }, 1000);
+
+        this.readystatuschange = setInterval(function () {
+          if (now() - self.START_TIME > 1000 * 2 && !self.mapReadyStatus) {
+            clearInterval(self.timer);
+            // kill maps
+
+            self.initStaticMap();
+            clearInterval(this.readystatuschange);
+            return;
+          }
+          if (self.mapReadyStatus) {
+            clearInterval(this.readystatuschange);
+          }
+        }, 233);
+      }
+
+    , initStaticMap: function () {
+        this.isStaticMap = true;
+        var map = document.getElementById('static-map');
+        var img = document.createElement('img');
+        var site = 'site=' + $(window).width() + 'x' + $(window).height();
+        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + site;
+        if (this.position) {
+          var center = 'center=' + this.position.latitude + ',' + this.position.longitude;
+          url += '&' + center;
+        }
+        img.src = url;
+        map.appendChild(img);
       }
 
     , _cache: []
+    , streamingInitEnd: false
 
     , initStream: function () {
         var self = this
@@ -2253,6 +2191,7 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
+
               if (self.mapController) {
                 if (!self.mapController.myUserId) {
                   self.mapController.myUserId = self.myUserId;
@@ -2261,7 +2200,7 @@ define('mobilecontroller', function (require, exports, module) {
                   self.mapController.myIdentity = self.myIdentity;
                 }
               }
-              if (self.mapReadyStatus) {
+              if (self.mapReadyStatus && !self.isStaticMap) {
                 if (_cache.length) {
                   var c;
                   while((c = _cache.shift())) {
@@ -2269,12 +2208,16 @@ define('mobilecontroller', function (require, exports, module) {
                   }
                 }
                 self.mapController.draw(result);
+              } else if (self.isStaticMap) {
+                if (result.type === 'command' && result.action === 'init_end') {
+                  self.streamingInitEnd = true;
+                }
               } else {
                 _cache.push(result);
               }
             }
           , function (e) {
-              console.log(e);
+              Debugger.log(e);
             }
           // updateGPS
           , function () {
@@ -2303,8 +2246,13 @@ define('mobilecontroller', function (require, exports, module) {
               self.trackGeoLocation();
             }
           , function (r) {
+              if (1 === r.code) {
+                $('#privacy-dialog').removeClass('hide');
+                return;
+              }
+
               self.switchGPSStyle(1);
-              console.log(r.status, r);
+              Debugger.log(r.status, r);
               routexStream.stopGeo();
 
               if (self.mapController) {
@@ -2336,7 +2284,7 @@ define('mobilecontroller', function (require, exports, module) {
           , position = this.position
           , mapReadyStatus = this.mapReadyStatus;
         if (mapReadyStatus && mapController) {
-          console.log('tracking');
+          Debugger.log('tracking');
           this.setLatLngOffset();
           mapController.updateGeoLocation(this.myUserId, position);
         }
@@ -2354,15 +2302,13 @@ define('mobilecontroller', function (require, exports, module) {
                 self.createIdentitiesList();
               }
             }
-          , error: function (data) {
-              console.dir(data);
-            }
+          , error: function () {}
         })
       }
 
     , updateMe: function (myIdentity) {
         this.myIdentity = myIdentity;
-        console.log('my identity', this.myIdentity);
+        Debugger.log('my identity', this.myIdentity);
         var div = this.$('#isme');
         div.attr('data-uid', myIdentity.connected_user_id);
         div.attr('data-name', myIdentity.name);
@@ -2417,7 +2363,7 @@ define('mobilecontroller', function (require, exports, module) {
         window.getComputedStyle($identities[0]).webkitTransform;
         $identities.parent().css('-webkit-transform', 'translate3d(0, 0, 0)');
 
-        console.log('trigger handler scroll.maps');
+        Debugger.log('trigger handler scroll.maps');
         $('#identities').triggerHandler('scroll');
       }
 
@@ -2454,16 +2400,10 @@ define('mobilecontroller', function (require, exports, module) {
             }
           });
 
-          element.on('touchstart.maps', '.main', function (e) {
-            var ele = e.target;
-            if (!$.contains(element.find('.app-btn')[0], ele) && !$.contains(element.find('.notify')[0], ele) && ele != element.find('#cleanup-cache')[0]) {
-              var $t = $(this)
-                , style = $t[0].style
-                , s = $t.data('status');
-              //style.transform = style.webkitTransform = 'translate3d(0,' + (s ? 0 : -54) + 'px,0)';
-              style.bottom = (s ? -10 : -64) + 'px';
-              $t.data('status', !s);
-              return false;
+          element.on('scroll.maps', function (e) {
+            if (this.scrollTop <= 0) {
+              self.destory();
+              element.remove();
             }
           });
         }
@@ -2495,6 +2435,19 @@ define('mobilecontroller', function (require, exports, module) {
           return false;
         });
 
+        self.on('show', function () {
+          if (cross_id) {
+            var h = $(window).height()
+              , top;
+            top = h - 380;
+            if (top > 100) { top = 100; }
+            else if (top < 0) { top = 5; }
+            element
+              .find('.main')
+              .css('top', (top + 50) + 'px');
+            element.prop('scrollTop', top);
+          }
+        });
       }
 
     , openEXFE: function () {

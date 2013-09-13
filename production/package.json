@@ -308,12 +308,22 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-c7f6cba"
+    "sha1": "2a-c347b8c",
+    "standalone": {
+      "debugger": {
+        "version": "0.0.1",
+        "sha1": "208689f"
+      },
+      "mobiledirector": {
+        "version": "0.0.1",
+        "sha1": "bdb65c9"
+      }
+    }
   },
   "css": {
     "exfe": "exfe-8d975a6.css",
     "exfemin": "exfe-f868147.min.css",
-    "exfemobile": "exfemobile-be48797.css",
-    "exfemobilemin": "exfemobile-eaf1a51.min.css"
+    "exfemobile": "exfemobile-db6e24f.css",
+    "exfemobilemin": "exfemobile-5e36bc5.min.css"
   }
 }
