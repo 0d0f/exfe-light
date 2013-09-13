@@ -2155,7 +2155,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.readystatuschange = setInterval(function () {
           var t = 1000 * 2;
           if (Debugger) { t = 250 * 2; }
-          if (now() - self.START_TIME > t && !self.mapReadyStatus) {
+          if (now() - self.START_TIME > t && !self.mapReadyStatus && this.streamingInitEnd) {
             clearInterval(self.timer);
             // kill maps
 
@@ -2176,7 +2176,7 @@ define('mobilecontroller', function (require, exports, module) {
         var img = document.createElement('img');
         var w = $(window).width(), h = $(window).height();
         var size = 'size=' + w + 'x' + h;
-        var url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&' + size;
+        var url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&format=JPEG&' + size;
         if (this.position) {
           var center = 'center=' + this.position.gps[0] + ',' + this.position.gps[1];
           url += '&' + center;
