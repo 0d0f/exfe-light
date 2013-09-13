@@ -2154,7 +2154,7 @@ define('mobilecontroller', function (require, exports, module) {
 
         this.readystatuschange = setInterval(function () {
           var t = 1000 * 2;
-          if (Debugger) { t = 250 * 2; }
+          if (Debugger) { t = 23 * 2; }
           if (now() - self.START_TIME > t && !self.mapReadyStatus && this.streamingInitEnd) {
             clearInterval(self.timer);
             // kill maps
