@@ -2174,13 +2174,16 @@ define('mobilecontroller', function (require, exports, module) {
         this.isStaticMap = true;
         var map = document.getElementById('static-map');
         var img = document.createElement('img');
-        var size = 'size' + $(window).width() + 'x' + $(window).height();
+        var w = $(window).width(), h = $(window).height();
+        var size = 'size=' + w + 'x' + h;
         var url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&' + size;
         if (this.position) {
           var center = 'center=' + this.position.gps[0] + ',' + this.position.gps[1];
           url += '&' + center;
         }
         img.src = url;
+        img.width = w;
+        img.height = h;
         map.appendChild(img);
         map.className = '';
       }
