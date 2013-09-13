@@ -1648,7 +1648,6 @@ define('mobilecontroller', function (require, exports, module) {
     , render: function () {
         $('#app-routex').remove();
         this.element.appendTo($('#app-container'));
-        this.START_TIME = now();
         this.loadMaps();
       }
 
@@ -1983,15 +1982,12 @@ define('mobilecontroller', function (require, exports, module) {
 
     , loadMaps: function (p) {
         var protocol = !Chrome ? 'http://' : 'https://';
-        var head = document.getElementsByTagName('head')[0];
-        var dns = ['ditu.google.cn', 'maps.gstatic.com', 'mts0.google.com', 'mts1.google.com', 'maps.googleapis.com', 'mts0.googleapis.com', 'mts1.googleapis.com'];
-
         var self = this
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
-              // production use `key`
+              protocol: protocol
             // In Chrome, block http while the site is https.
-            url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
@@ -1999,13 +1995,6 @@ define('mobilecontroller', function (require, exports, module) {
               }
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
-                for (var i = 0; i < dns.length; ++i) {
-                  var link = document.createElement('link');
-                  link.rel='dns-prefetch';
-                  link.href = protocol + dns[i];
-                  head.appendChild(link);
-                }
-
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
               }
@@ -2015,6 +2004,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.setLatLngOffset();
         // defaults to true
         mc.tracking = true
+        this.START_TIME = now();
         mc.load();
         mc.controller = self;
 
@@ -2169,6 +2159,7 @@ define('mobilecontroller', function (require, exports, module) {
 
             self.initStaticMap();
             clearInterval(this.readystatuschange);
+            return;
           }
           if (self.mapReadyStatus) {
             clearInterval(this.readystatuschange);
