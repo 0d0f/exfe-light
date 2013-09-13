@@ -2160,11 +2160,11 @@ define('mobilecontroller', function (require, exports, module) {
             // kill maps
 
             self.initStaticMap();
-            clearInterval(this.readystatuschange);
+            clearInterval(self.readystatuschange);
             return;
           }
           if (self.mapReadyStatus) {
-            clearInterval(this.readystatuschange);
+            clearInterval(self.readystatuschange);
           }
         }, 233);
       }
