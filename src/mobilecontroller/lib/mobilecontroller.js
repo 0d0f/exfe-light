@@ -2170,11 +2170,12 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , initStaticMap: function () {
+        if (this.isStaticMap)  { return; }
         this.isStaticMap = true;
         var map = document.getElementById('static-map');
         var img = document.createElement('img');
         var size = 'size' + $(window).width() + 'x' + $(window).height();
-        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + size;
+        var url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&' + size;
         if (this.position) {
           var center = 'center=' + this.position.gps[0] + ',' + this.position.gps[1];
           url += '&' + center;
