@@ -100,7 +100,7 @@ define('staticmaps', function () {
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
     //var point = this.fromLatlngToPixel(latlng);
-    var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
+    var point = this.latLngToPoint(latlng, this.zoom);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     this.map.append(e);
@@ -145,20 +145,6 @@ define('staticmaps', function () {
         this._cache.push(result);
       }
     }
-  };
-
-  proto.project = function (latlng) {
-    var d = Math.PI / 180,
-        max = 85.0511287798,
-        lat = Math.max(Math.min(max, latlng[0]), -max),
-        x = latlng[1] * d,
-        y = lat * d;
-    y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
-    return [x, y];
-  };
-
-  proto.scale = function (zoom) {
-    return 256 * Math.pow(2, zoom);
   };
 
   proto.getScale = function () {
@@ -217,10 +203,24 @@ define('staticmaps', function () {
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
 
+  proto.project = function (latlng) {
+    var d = Math.PI / 180,
+        max = 85.0511287798,
+        lat = Math.max(Math.min(max, latlng[0]), -max),
+        x = latlng[1] * d,
+        y = lat * d;
+    y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
+    return [x, y];
+  };
+
+  proto.scale = function (zoom) {
+    return 256 * Math.pow(2, zoom);
+  };
+
   proto.latLngToPoint = function (latlng, zoom) {
-    var projectedPoint = this.project(latlng);
+    var point = this.project(latlng);
     var scale = this.scale(zoom);
-    return this.transform(projectedPoint, scale);
+    return this.transform(point, scale);
   };
 
   proto.pointToLatLng = function (point, zoom) {
