@@ -1,4 +1,4 @@
-define('staticmaps', function (require) {
+define('staticmaps', function () {
   'use strict';
 
   var proto;
