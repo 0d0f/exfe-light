@@ -72,15 +72,16 @@ define('staticmaps', function () {
   proto.draw = function (result) {
     var type = result.type
       , action = result.action;
+
     if (!this.initEnd) {
-      if (type === 'route' || type === 'location') {
+      if (type === 'command' && action === 'init_end') {
+        // load static map
+        this.initEnd = true;
+        this.setBounds();
+        this.load();
+      } else if (type === 'route' || type === 'location') {
         this._cache.push(result);
       }
-    } else if (!this.initEnd && type === 'command' && action === 'init_end') {
-      // load static map
-      this.initEnd = true;
-      this.setBounds();
-      this.load();
     }
   };
 
