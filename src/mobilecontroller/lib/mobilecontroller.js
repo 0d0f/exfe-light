@@ -2161,7 +2161,7 @@ define('mobilecontroller', function (require, exports, module) {
 
     , loadStaticMaps: function () {
         var SM = require('staticmaps');
-        this.staticMaps = new SM(this.$('#static-map'));
+        this.staticMaps = new SM(this.$('#static-map'), this.myUserId);
       }
 
     , _cache: []
