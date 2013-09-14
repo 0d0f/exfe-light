@@ -73,7 +73,9 @@ define('staticmaps', function () {
     var type = result.type
       , action = result.action;
     if (!this.initEnd) {
-      this._cache.push(result);
+      if (type === 'route' || type === 'location') {
+        this._cache.push(result);
+      }
     } else if (type === 'command' && action === 'init_end') {
       // load static map
       this.initEnd = true;
