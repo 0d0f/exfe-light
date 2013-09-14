@@ -99,7 +99,8 @@ define('staticmaps', function () {
     var e = document.createElement('div');
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
-    var point = this.fromLatlngToPixel(latlng);
+    //var point = this.fromLatlngToPixel(latlng);
+    var point = this.latLngToPoint([d.lat, d.lng]);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     this.map.append(e);
@@ -117,7 +118,8 @@ define('staticmaps', function () {
     }
 
     var e = document.createElement('div');
-    var point = this.fromLatlngToPixel([d.lat, d.lng]);
+    //var point = this.fromLatlngToPixel([d.lat, d.lng]);
+    var point = this.latLngToPoint([d.lat, d.lng]);
     if (c) {
       e.className = 'place ' + c;
     } else {
@@ -143,6 +145,20 @@ define('staticmaps', function () {
         this._cache.push(result);
       }
     }
+  };
+
+  proto.project = function (latlng) {
+    var d = Math.PI / 180,
+        max = 85.0511287798,
+        lat = Math.max(Math.min(max, latlng[0]), -max),
+        x = latlng[1] * d,
+        y = lat * d;
+    y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
+    return [x, y];
+  };
+
+  proto.scale = function (zoom) {
+    return 256 * Math.pow(2, zoom);
   };
 
   proto.getScale = function () {
@@ -202,9 +218,24 @@ define('staticmaps', function () {
   };
 
   proto.latLngToPoint = function (latlng, zoom) {
+    var projectedPoint = this.project(latlng);
+    var scale = this.scale(zoom);
+    return this.transform(projectedPoint, scale);
   };
 
   proto.pointToLatLng = function (point, zoom) {
+  };
+
+  // 0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5
+  proto._a = 0.5 / Math.PI;
+  proto._b = 0.5;
+  proto._c = -0.5 / Math.PI;
+  proto._d = 0.5;
+  proto.transform = function (point, scale) {
+    scale = scale || 1;
+    point[0] = scale * (this._a * point[0] + this._b);
+    point[1] = scale * (this._c * point[1] + this._d);
+    return point;
   };
 
   proto.fromLatlngToPixel = function (latlng) {
