@@ -2172,8 +2172,8 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
-              if (self.staticmaps) {
-                self.staticmaps.draw(result);
+              if (self.staticMaps) {
+                self.staticMaps.draw(result);
               }
 
               if (self.mapController) {
