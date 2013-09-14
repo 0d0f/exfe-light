@@ -39,6 +39,7 @@ define('staticmaps', function () {
     this.width = map.width();
     this.height = map.height();
     this.bounds = new LatLngBounds();
+    this._cache = [];
   }
 
   proto = StaticMaps.prototype;
@@ -67,7 +68,7 @@ define('staticmaps', function () {
     this.map.removeClass();
   };
 
-  proto._cache = [];
+  proto.hide = function () { this.map.addClass('hide'); };
 
   proto.draw = function (result) {
     var type = result.type
