@@ -184,10 +184,10 @@ define('staticmaps', function () {
       return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
     }
 
-    //var ne = this.bounds.getNorthEast();
-    //var sw = this.bounds.getSouthWest();
-    var ne = this.fromPixelToLatlng([this.width, 0]);
-    var sw = this.fromPixelToLatlng([0, this.height]);
+    var ne = this.bounds.getNorthEast();
+    var sw = this.bounds.getSouthWest();
+    //var ne = this.fromPixelToLatlng([this.width, 0]);
+    //var sw = this.fromPixelToLatlng([0, this.height]);
 
     var latFraction = (latRad(ne[0]) - latRad(sw[0])) / Math.PI;
 
