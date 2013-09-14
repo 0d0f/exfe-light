@@ -76,7 +76,7 @@ define('staticmaps', function () {
       if (type === 'route' || type === 'location') {
         this._cache.push(result);
       }
-    } else if (type === 'command' && action === 'init_end') {
+    } else if (!this.initEnd && type === 'command' && action === 'init_end') {
       // load static map
       this.initEnd = true;
       this.setBounds();
