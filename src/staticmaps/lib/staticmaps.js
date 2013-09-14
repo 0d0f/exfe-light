@@ -85,9 +85,9 @@ define('staticmaps', function () {
   */
 
 
-  function StaticMaps(map, uid) {
+  function StaticMaps(map, myUserId) {
     this.map = map;
-    this.uid = uid;
+    this.myUserId = myUserId;
     this.width = $(window).width();
     this.height = $(window).height();
     this.bounds = new LatLngBounds();
@@ -154,7 +154,12 @@ define('staticmaps', function () {
   };
 
   proto.addPlace = function (d) {
-    var tags = d.tags, tag, c;
+    var uid = d.id.split('.')[1]
+      , tags = d.tags, tag, c;
+
+    if (uid === this.myUserId) {
+      return;
+    }
 
     while ((tag = tags.shift())) {
       if (tag === 'xplace') {
