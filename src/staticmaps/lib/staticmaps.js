@@ -199,8 +199,8 @@ define('staticmaps', function () {
     var lngDiff = ne[1] - sw[1];
     var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
-    var latZoom = zoom(this.imgHeight, WORLD_DIM.height, latFraction);
-    var lngZoom = zoom(this.imgWidth, WORLD_DIM.width, lngFraction);
+    var latZoom = zoom(this.height, WORLD_DIM.height, latFraction);
+    var lngZoom = zoom(this.width, WORLD_DIM.width, lngFraction);
 
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
