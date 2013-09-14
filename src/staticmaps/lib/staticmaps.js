@@ -40,8 +40,8 @@ define('staticmaps', function () {
 
   function StaticMaps(map) {
     this.map = map;
-    this.width = $(window).width();
-    this.height = $(window).height();
+    this.width = $(window).width() - 50;
+    this.height = $(window).height() - 50;
     this.bounds = new LatLngBounds();
     this._cache = [];
   }
