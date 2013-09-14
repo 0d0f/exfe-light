@@ -51,7 +51,7 @@ define('staticmaps', function () {
   proto.initEnd = false;
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel() - 1;
+    this.zoom = this.getBoundsZoomLevel();
     var self = this
       , bounds = this.bounds
       , c = bounds.getCenter()
