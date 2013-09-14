@@ -62,6 +62,7 @@ define('staticmaps', function () {
 
     img.onload = img.onerror = function () {
       Debugger.alert('loaded');
+      self.update();
     };
 
     this.map.append(img);
@@ -69,6 +70,31 @@ define('staticmaps', function () {
   };
 
   proto.hide = function () { this.map.addClass('hide'); };
+
+  proto.update = function () {
+    var cache = this._cache
+      , i = 0, len = cache.length, d;
+
+    for (; i < len; ++i) {
+      d = cache[i];
+      if (d.type === 'route') {
+        this.addDot(d);
+      }
+    }
+  };
+
+  proto.addDot = function (d) {
+    var c = 'grey';
+    var position = d.positions[0];
+    if (Math.floor(Date.now() / 1000 - position.t) < 60) { c = 'red'; }
+    var e = document.createElement('div');
+    e.className = 'dot ' + c + '-dot';
+    var latlng = position.gps.slice(0, 2);
+    var point = this.fromLatlngToPixel(latlng);
+    e.style.left = point[1] + 'px';
+    e.style.top = point[0] + 'px';
+    this.map.append(e);
+  };
 
   proto.draw = function (result) {
     var type = result.type
@@ -79,6 +105,7 @@ define('staticmaps', function () {
         // load static map
         this.initEnd = true;
         this.setBounds();
+        this.getScale();
         this.load();
       } else if (type === 'route' || type === 'location') {
         this._cache.push(result);

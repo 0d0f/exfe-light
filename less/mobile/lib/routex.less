@@ -134,8 +134,25 @@
     -webkit-transform: translate3d(0, 0, 0);
   }
 
-  #static-map img {
-    -webkit-user-select: none;
+  #static-map {
+    img {
+      -webkit-user-select: none;
+    }
+
+    .dot {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+    .red-dot {
+      background-image: url(/static/img/map_dot_red@2x.png);
+    }
+    .grey-dot {
+      background-image: url(/static/img/map_dot_grey@2x.png);
+    }
+
   }
 
   /*
