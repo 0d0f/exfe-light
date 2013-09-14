@@ -100,7 +100,8 @@ define('staticmaps', function () {
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
     //var point = this.fromLatlngToPixel(latlng);
-    var point = this.latLngToPoint(latlng, this.zoom);
+    //var point = this.latLngToPoint(latlng, this.zoom);
+    var point = this.latlngToLayerPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     this.map.append(e);
@@ -119,7 +120,8 @@ define('staticmaps', function () {
 
     var e = document.createElement('div');
     //var point = this.fromLatlngToPixel([d.lat, d.lng]);
-    var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
+    //var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
+    var point = this.latlngToLayerPoint([d.lat, d.lng]);
     if (c) {
       e.className = 'place ' + c;
     } else {
@@ -223,8 +225,22 @@ define('staticmaps', function () {
     return this.transform(point, scale);
   };
 
-  proto.pointToLatLng = function (point, zoom) {
+  proto.leftTopPoint = function (center) {
+    var point = this.latLngToPoint(center, this.zoom);
+    point[0] -= this.width / 2;
+    point[1] -= this.height / 2;
+    return point;
   };
+
+  proto.latlngToLayerPoint = function (latlng) {
+    var point = this.latLngToPoint(latlng, this.zoom);
+    var leftTopPoint = this.leftTopPoint(this.bounds.getCenter());
+    point[0] -= leftTopPoint[0];
+    point[1] -= leftTopPoint[1];
+    return point;
+  };
+
+  proto.pointToLatLng = function (point, zoom) {};
 
   // 0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5
   proto._a = 0.5 / Math.PI;
