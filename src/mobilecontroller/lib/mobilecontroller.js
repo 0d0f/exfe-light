@@ -2146,7 +2146,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.startStream();
         Debugger.log('start streaming');
         Debugger.log('start monit')
-        var t = 1000 * 1;
+        var t = 1000 * 2.5;
         this.timer = setInterval(function () {
           if (now() - self.START_TIME < t && self.mapReadyStatus) {
             self.staticMaps.hide();
