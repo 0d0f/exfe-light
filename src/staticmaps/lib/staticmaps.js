@@ -58,7 +58,7 @@ define('staticmaps', function () {
       , img = document.createElement('img')
       , size = 'size=' + this.width + 'x' + this.height
       , center = 'center=' + c[0] + ',' + c[1]
-      , url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
+      , url = 'http://ditu.google.com/maps/api/staticmap?language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
     img.width = this.width;
@@ -205,11 +205,12 @@ define('staticmaps', function () {
       //, y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
       , x = (latlng[1] - center[1]) * 3600 / this.scaleX + (this.width / 2)
       , y = (center[0] - latlng[0]) * 3600 / this.scaleY + (this.height / 2);
-    return [y, x];
+    return [x, y];
   };
 
   proto.fromPixelToLatlng = function (point) {
     var bounds = this.bounds
+      , center = bounds.getCenter()
       , lng = point[0] * this.scaleX / 3600 + bounds.minLng
       , lat = bounds.maxLat - point[1] * this.scaleY / 3600;
     return [lat, lng];
