@@ -2148,7 +2148,8 @@ define('mobilecontroller', function (require, exports, module) {
         Debugger.log('start monit')
         var t = 1000 * 2;
         this.timer = setInterval(function () {
-          if (now() - self.START_TIME > t && !self.mapReadyStatus) {
+          if (now() - self.START_TIME < t && self.mapReadyStatus) {
+            self.staticMaps.hide();
           }
 
           if (self.mapReadyStatus) {
