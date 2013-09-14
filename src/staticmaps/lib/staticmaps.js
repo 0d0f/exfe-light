@@ -51,10 +51,10 @@ define('staticmaps', function () {
   proto.initEnd = false;
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel();
+    this.zoom = this.getBoundsZoomLevel() - 1;
+    this.center = this.bounds.getCenter();
     var self = this
-      , bounds = this.bounds
-      , c = bounds.getCenter()
+      , c = this.center
       , zoom = 'zoom=' + this.zoom
       , img = document.createElement('img')
       , size = 'size=' + this.width + 'x' + this.height
@@ -101,6 +101,8 @@ define('staticmaps', function () {
     var latlng = position.gps.slice(0, 2);
     //var point = this.fromLatlngToPixel(latlng);
     //var point = this.latLngToPoint(latlng, this.zoom);
+    latlng[0] += 0.002107;
+    latlng[1] -= 0.004348;
     var point = this.latlngToLayerPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
@@ -121,7 +123,10 @@ define('staticmaps', function () {
     var e = document.createElement('div');
     //var point = this.fromLatlngToPixel([d.lat, d.lng]);
     //var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
-    var point = this.latlngToLayerPoint([d.lat, d.lng]);
+    var latlng = [d.lat, d.lng];
+    latlng[0] += 0.002107;
+    latlng[1] -= 0.004348;
+    var point = this.latlngToLayerPoint(latlng);
     if (c) {
       e.className = 'place ' + c;
     } else {
