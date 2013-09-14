@@ -276,6 +276,10 @@
         "version": "0.0.2"
       },
       {
+        "name": "staticmaps",
+        "version": "0.0.1"
+      },
+      {
         "name": "routexstream",
         "version": "0.0.1"
       },
@@ -308,7 +312,7 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-c347b8c",
+    "sha1": "2a-0f5a388",
     "standalone": {
       "debugger": {
         "version": "0.0.1",
@@ -323,7 +327,7 @@
   "css": {
     "exfe": "exfe-8d975a6.css",
     "exfemin": "exfe-f868147.min.css",
-    "exfemobile": "exfemobile-db6e24f.css",
-    "exfemobilemin": "exfemobile-5e36bc5.min.css"
+    "exfemobile": "exfemobile-2b385ba.css",
+    "exfemobilemin": "exfemobile-9454130.min.css"
   }
 }
