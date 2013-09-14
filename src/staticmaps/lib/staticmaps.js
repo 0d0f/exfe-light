@@ -1,4 +1,4 @@
-define('routexmaps', function (require) {
+define('staticmaps', function (require) {
   'use strict';
 
   var proto;
