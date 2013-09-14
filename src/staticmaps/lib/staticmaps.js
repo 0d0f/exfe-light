@@ -48,11 +48,11 @@ define('routexmaps', function (require) {
   proto.load = function () {
     var self = this
       , bounds = this.bounds
-      , center = bounds.getCenter()
+      , c = bounds.getCenter()
       , zoom = 'zoom=' + this.getBoundsZoomLevel()
       , img = document.createElement('img')
       , size = 'size=' + this.width + 'x' + this.height
-      , center = 'center=' + center[0] + ',' + center[1]
+      , center = 'center=' + c[0] + ',' + c[1]
       , url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
@@ -63,8 +63,8 @@ define('routexmaps', function (require) {
       Debugger.alert('loaded');
     };
 
-    map.appendChild(img);
-    map.className = '';
+    this.map.appendChild(img);
+    this.map.className = '';
   };
 
   proto._cache = [];
