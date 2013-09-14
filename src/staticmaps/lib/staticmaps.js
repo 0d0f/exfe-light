@@ -119,8 +119,13 @@ define('staticmaps', function () {
 
   proto.getScale = function () {
     var bounds = this.bounds;
+    /*
     this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.width || 1;
     this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.height || 1;
+    */
+    var center = bounds.getCenter();
+    this.scaleX = center[1] * 3600 / (this.width / 2);
+    this.scaleY = center[0] * 3600 / (this.height / 2);
   };
 
   proto.setBounds = function () {
