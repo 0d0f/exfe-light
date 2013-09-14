@@ -147,13 +147,11 @@ define('staticmaps', function () {
 
   proto.getScale = function () {
     var bounds = this.bounds;
-    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.imgWidth;
-    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.imgHeight;
-    /*
+    //this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.imgWidth;
+    //this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.imgHeight;
     var center = bounds.getCenter();
     this.scaleX = center[1] * 3600 / (this.width / 2);
     this.scaleY = center[0] * 3600 / (this.height / 2);
-    */
   };
 
   proto.setBounds = function () {
@@ -191,8 +189,6 @@ define('staticmaps', function () {
 
     var ne = this.bounds.getNorthEast();
     var sw = this.bounds.getSouthWest();
-    //var ne = this.fromPixelToLatlng([this.width, 0]);
-    //var sw = this.fromPixelToLatlng([0, this.height]);
 
     var latFraction = (latRad(ne[0]) - latRad(sw[0])) / Math.PI;
 
@@ -213,21 +209,21 @@ define('staticmaps', function () {
 
   proto.fromLatlngToPixel = function (latlng) {
     var bounds = this.bounds
-      //, center = bounds.getCenter()
-      , x = (latlng[1] - bounds.minLng) * 3600 / this.scaleX
-      , y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
-      //, x = (latlng[1] - center[1]) * 3600 / this.scaleX + this.width / 2
-      //, y = (center[0] - latlng[0]) * 3600 / this.scaleY + this.height / 2;
+      // , x = (latlng[1] - bounds.minLng) * 3600 / this.scaleX
+      // , y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
+      , center = bounds.getCenter()
+      , x = (latlng[1] - center[1]) * 3600 / this.scaleX + this.width / 2
+      , y = (center[0] - latlng[0]) * 3600 / this.scaleY + this.height / 2;
     return [x, y];
   };
 
   proto.fromPixelToLatlng = function (point) {
     var bounds = this.bounds
-      //, center = bounds.getCenter()
-      , lng = point[0] * this.scaleX / 3600 + bounds.minLng
-      , lat = bounds.maxLat - point[1] * this.scaleY / 3600;
-      //, lng = (point[0] - this.width / 2) * this.scaleX / 3600 + center[1]
-      //, lat = center[0] - (point[1] - this.height / 2) * this.scaleY / 3600;
+      //, lng = point[0] * this.scaleX / 3600 + bounds.minLng
+      //, lat = bounds.maxLat - point[1] * this.scaleY / 3600;
+      , center = bounds.getCenter()
+      , lng = (point[0] - this.width / 2) * this.scaleX / 3600 + center[1]
+      , lat = center[0] - (point[1] - this.height / 2) * this.scaleY / 3600;
     return [lat, lng];
   };
 
