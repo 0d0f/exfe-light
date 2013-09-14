@@ -296,7 +296,7 @@ define('staticmaps', function () {
 
   proto.updateGeoLocation = function (uid, position) {
     this.myUserId = uid;
-    var geo = this.map.find('#geo-' + uid);
+    var geo = this.map.find('#gps-marker');
     if (geo.length === 0) {
       geo = $('<div id="gps-marker">'
         + '<div id="gps-circle" style="display:none;"></div>'
@@ -305,6 +305,11 @@ define('staticmaps', function () {
       + '</div>');
       this.map.append(geo);
     }
+    var point = this.latlngToLayerPoint(position.gps.slice(0, 2));
+    geo.css({
+        left: (point[0] - 11)
+      , top: (point[1] - 11)
+    });
   };
 
   return StaticMaps;
