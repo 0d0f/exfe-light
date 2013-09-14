@@ -63,8 +63,8 @@ define('staticmaps', function () {
       Debugger.alert('loaded');
     };
 
-    this.map.appendChild(img);
-    this.map.className = '';
+    this.map.append(img);
+    this.map.removeClass();
   };
 
   proto._cache = [];
