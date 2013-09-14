@@ -100,8 +100,8 @@ define('staticmaps', function () {
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
     var point = this.latlngToLayerPoint(latlng);
-    e.style.left = (point[0] - 9) + 'px';
-    e.style.top = (point[1] - 9) + 'px';
+    e.style.left = point[0] + 'px';
+    e.style.top = point[1] + 'px';
     this.map.append(e);
   };
 
@@ -124,8 +124,8 @@ define('staticmaps', function () {
     } else {
       e.style.backgroundImage = 'url(' + (d.icon || '/static/img/map_mark_diamond_blue@2x.png') + ')';
     }
-    e.style.left = (point[0] - 6) + 'px';
-    e.style.top = (point[1] - 34) + 'px';
+    e.style.left = point[0] + 'px';
+    e.style.top = point[1] + 'px';
     this.map.append(e);
   };
 
