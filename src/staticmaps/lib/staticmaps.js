@@ -14,11 +14,15 @@ define('staticmaps', function () {
       this._southWest = latlng;
       this._northEast = latlng
     } else {
-      this.minLat = this._southWest[0] = Math.min(latlng[0], this._southWest[0]);
-      this.minLng = this._southWest[1] = Math.min(latlng[1], this._southWest[1]);
-      this.maxLat = this._northEast[0] = Math.max(latlng[0], this._northEast[0]);
-      this.maxLng = this._northEast[1] = Math.max(latlng[1], this._northEast[1]);
+      this._southWest[0] = Math.min(latlng[0], this._southWest[0]);
+      this._southWest[1] = Math.min(latlng[1], this._southWest[1]);
+      this._northEast[0] = Math.max(latlng[0], this._northEast[0]);
+      this._northEast[1] = Math.max(latlng[1], this._northEast[1]);
     }
+    this.minLat = Math.min(latlng[0], this._southWest[0]);
+    this.minLng = Math.min(latlng[1], this._southWest[1]);
+    this.maxLat = Math.max(latlng[0], this._northEast[0]);
+    this.maxLng = Math.max(latlng[1], this._northEast[1]);
   };
 
   proto.getCenter = function () {
