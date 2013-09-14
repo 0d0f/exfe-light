@@ -49,11 +49,11 @@ define('routexmaps', function (require) {
     var self = this
       , bounds = this.bounds
       , center = bounds.getCenter()
-      , zoom = this.getBoundsZoomLevel()
+      , zoom = 'zoom=' + this.getBoundsZoomLevel()
       , img = document.createElement('img')
       , size = 'size=' + this.width + 'x' + this.height
       , center = 'center=' + center[0] + ',' + center[1]
-      , url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&format=jpg&' + size + '&' + center;
+      , url = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
     img.width = this.width;
