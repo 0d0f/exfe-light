@@ -1648,6 +1648,7 @@ define('mobilecontroller', function (require, exports, module) {
     , render: function () {
         $('#app-routex').remove();
         this.element.appendTo($('#app-container'));
+        this.loadStaticMaps();
         this.loadMaps();
       }
 
@@ -2145,44 +2146,25 @@ define('mobilecontroller', function (require, exports, module) {
         this.startStream();
         Debugger.log('start streaming');
         Debugger.log('start monit')
+        var t = 1000 * 2;
         this.timer = setInterval(function () {
+          if (now() - self.START_TIME > t && !self.mapReadyStatus) {
+          }
+
           if (self.mapReadyStatus) {
             Debugger.log(new Date());
             self.mapController.monit();
           }
-        }, 1000);
-
-        this.readystatuschange = setInterval(function () {
-          if (now() - self.START_TIME > 1000 * 2 && !self.mapReadyStatus) {
-            clearInterval(self.timer);
-            // kill maps
-
-            self.initStaticMap();
-            clearInterval(this.readystatuschange);
-            return;
-          }
-          if (self.mapReadyStatus) {
-            clearInterval(this.readystatuschange);
-          }
-        }, 233);
+        }, 500);
       }
 
-    , initStaticMap: function () {
-        this.isStaticMap = true;
-        var map = document.getElementById('static-map');
-        var img = document.createElement('img');
-        var site = 'site=' + $(window).width() + 'x' + $(window).height();
-        var url = 'http://maps.googleapis.com/maps/api/staticmap?' + site;
-        if (this.position) {
-          var center = 'center=' + this.position.latitude + ',' + this.position.longitude;
-          url += '&' + center;
-        }
-        img.src = url;
-        map.appendChild(img);
+    , loadStaticMaps: function () {
+        var SM = require('staticmaps')
+          , staticMaps = new SM(this.$('#staticmaps'));
+        this.staticmpas = staticmaps;
       }
 
     , _cache: []
-    , streamingInitEnd: false
 
     , initStream: function () {
         var self = this
@@ -2191,6 +2173,9 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
+              if (self.staticmaps) {
+                self.staticmaps.draw(result);
+              }
 
               if (self.mapController) {
                 if (!self.mapController.myUserId) {
@@ -2200,7 +2185,7 @@ define('mobilecontroller', function (require, exports, module) {
                   self.mapController.myIdentity = self.myIdentity;
                 }
               }
-              if (self.mapReadyStatus && !self.isStaticMap) {
+              if (self.mapReadyStatus) {
                 if (_cache.length) {
                   var c;
                   while((c = _cache.shift())) {
@@ -2208,10 +2193,6 @@ define('mobilecontroller', function (require, exports, module) {
                   }
                 }
                 self.mapController.draw(result);
-              } else if (self.isStaticMap) {
-                if (result.type === 'command' && result.action === 'init_end') {
-                  self.streamingInitEnd = true;
-                }
               } else {
                 _cache.push(result);
               }
