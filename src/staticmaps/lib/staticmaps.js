@@ -174,8 +174,11 @@ define('staticmaps', function () {
 
   proto.fromLatlngToPixel = function (latlng) {
     var bounds = this.bounds
-      , x = (latlng[1] - bounds.minLng) * 3600 / this.scaleX
-      , y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
+      , center = bounds.getCenter()
+      //, x = (latlng[1] - bounds.minLng) * 3600 / this.scaleX
+      //, y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
+      , x = (latlng[1] - center[1]) * 3600 / this.scaleX + (this.width / 2)
+      , y = (center[0] - latlng[0]) * 3600 / this.scaleY + (this.height / 2);
     return [x, y];
   };
 
