@@ -99,10 +99,6 @@ define('staticmaps', function () {
     var e = document.createElement('div');
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
-    //var point = this.fromLatlngToPixel(latlng);
-    //var point = this.latLngToPoint(latlng, this.zoom);
-    latlng[0] += 0.002107;
-    latlng[1] -= 0.004348;
     var point = this.latlngToLayerPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
@@ -121,11 +117,7 @@ define('staticmaps', function () {
     }
 
     var e = document.createElement('div');
-    //var point = this.fromLatlngToPixel([d.lat, d.lng]);
-    //var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
     var latlng = [d.lat, d.lng];
-    latlng[0] += 0.002107;
-    latlng[1] -= 0.004348;
     var point = this.latlngToLayerPoint(latlng);
     if (c) {
       e.className = 'place ' + c;
@@ -146,21 +138,11 @@ define('staticmaps', function () {
         // load static map
         this.initEnd = true;
         this.setBounds();
-        this.getScale();
         this.load();
       } else if (type === 'route' || type === 'location') {
         this._cache.push(result);
       }
     }
-  };
-
-  proto.getScale = function () {
-    var bounds = this.bounds;
-    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.width;
-    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.height;
-    // var center = bounds.getCenter();
-    // this.scaleX = center[1] * 3600 / (this.width / 2);
-    // this.scaleY = center[0] * 3600 / (this.height / 2);
   };
 
   proto.setBounds = function () {
@@ -257,26 +239,6 @@ define('staticmaps', function () {
     point[0] = scale * (this._a * point[0] + this._b);
     point[1] = scale * (this._c * point[1] + this._d);
     return point;
-  };
-
-  proto.fromLatlngToPixel = function (latlng) {
-    var bounds = this.bounds
-      , x = (latlng[1] - bounds.minLng) * 3600 / this.scaleX
-      , y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
-      // , center = bounds.getCenter()
-      // , x = (latlng[1] - center[1]) * 3600 / this.scaleX + this.width / 2
-      // , y = (center[0] - latlng[0]) * 3600 / this.scaleY + this.height / 2;
-    return [x, y];
-  };
-
-  proto.fromPixelToLatlng = function (point) {
-    var bounds = this.bounds
-      , lng = point[0] * this.scaleX / 3600 + bounds.minLng
-      , lat = bounds.maxLat - point[1] * this.scaleY / 3600;
-      // , center = bounds.getCenter()
-      // , lng = (point[0] - this.width / 2) * this.scaleX / 3600 + center[1]
-      // , lat = center[0] - (point[1] - this.height / 2) * this.scaleY / 3600;
-    return [lat, lng];
   };
 
   return StaticMaps;
