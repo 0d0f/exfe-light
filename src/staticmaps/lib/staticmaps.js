@@ -11,8 +11,8 @@ define('staticmaps', function () {
   //                       latlng = [lat, lng]
   proto.extend = function (latlng) {
     if (!this._southWest && !this._northEast) {
-      this._southWest = latlng;
-      this._northEast = latlng
+      this._southWest = latlng.slice(0);
+      this._northEast = latlng.slice(0);
     } else {
       this._southWest[0] = Math.min(latlng[0], this._southWest[0]);
       this._southWest[1] = Math.min(latlng[1], this._southWest[1]);
@@ -161,12 +161,15 @@ define('staticmaps', function () {
 
     for (var i = 0, len = cache.length; i < len; ++i) {
       d = cache[i];
+      p = null;
       if (d.type === 'route') {
         p = d.positions[0].gps.slice(0, 2);
       } else if (d.type === 'location') {
         p = [d.lat, d.lng];
       }
-      bounds.extend(p);
+      if (p) {
+        bounds.extend(p);
+      }
     }
   };
 
