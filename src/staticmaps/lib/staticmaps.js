@@ -40,8 +40,10 @@ define('staticmaps', function () {
 
   function StaticMaps(map) {
     this.map = map;
-    this.width = $(window).width() - 50;
-    this.height = $(window).height() - 50;
+    this.width = $(window).width();
+    this.height = $(window).height();
+    this.imgWidth = this.width + 100;
+    this.imgHeight = this.height + 100;
     this.bounds = new LatLngBounds();
     this._cache = [];
   }
@@ -61,8 +63,8 @@ define('staticmaps', function () {
       , url = 'http://ditu.google.com/maps/api/staticmap?language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
-    img.width = this.width;
-    img.height = this.height;
+    img.width = this.imgWidth;
+    img.height = this.imgHeight;
 
     img.onload = img.onerror = function () {
       Debugger.alert('loaded');
@@ -145,8 +147,8 @@ define('staticmaps', function () {
 
   proto.getScale = function () {
     var bounds = this.bounds;
-    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.width;
-    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.height;
+    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.imgWidth;
+    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.imgHeight;
     /*
     var center = bounds.getCenter();
     this.scaleX = center[1] * 3600 / (this.width / 2);
@@ -197,8 +199,8 @@ define('staticmaps', function () {
     var lngDiff = ne[1] - sw[1];
     var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
-    var latZoom = zoom(this.height, WORLD_DIM.height, latFraction);
-    var lngZoom = zoom(this.width, WORLD_DIM.width, lngFraction);
+    var latZoom = zoom(this.imgHeight, WORLD_DIM.height, latFraction);
+    var lngZoom = zoom(this.imgWidth, WORLD_DIM.width, lngFraction);
 
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
