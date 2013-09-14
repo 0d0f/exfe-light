@@ -100,7 +100,7 @@ define('staticmaps', function () {
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
     //var point = this.fromLatlngToPixel(latlng);
-    var point = this.latLngToPoint(latlng);
+    var point = this.latLngToPoint(latlng, this.zoom);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     this.map.append(e);
@@ -119,7 +119,7 @@ define('staticmaps', function () {
 
     var e = document.createElement('div');
     //var point = this.fromLatlngToPixel([d.lat, d.lng]);
-    var point = this.latLngToPoint([d.lat, d.lng]);
+    var point = this.latLngToPoint([d.lat, d.lng], this.zoom);
     if (c) {
       e.className = 'place ' + c;
     } else {
