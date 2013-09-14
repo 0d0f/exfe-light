@@ -58,13 +58,13 @@ define('staticmaps', function () {
       , c = bounds.getCenter()
       , zoom = 'zoom=' + this.getBoundsZoomLevel()
       , img = document.createElement('img')
-      , size = 'size=' + this.width + 'x' + this.height
+      , size = 'size=' + this.imgWidth + 'x' + this.imgHeight
       , center = 'center=' + c[0] + ',' + c[1]
       , url = 'http://ditu.google.com/maps/api/staticmap?language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
-    img.width = this.imgWidth;
-    img.height = this.imgHeight;
+    img.width = this.width;
+    img.height = this.height;
 
     img.onload = img.onerror = function () {
       Debugger.alert('loaded');
