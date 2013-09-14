@@ -77,12 +77,15 @@ define('staticmaps', function () {
 
   proto.update = function () {
     var cache = this._cache
-      , i = 0, len = cache.length, d;
+      , i = 0, len = cache.length, d, type;
 
     for (; i < len; ++i) {
       d = cache[i];
-      if (d.type === 'route') {
+      type = d.type;
+      if (type === 'route') {
         this.addDot(d);
+      } else if (type === 'location') {
+        this.addPlace(d);
       }
     }
   };
@@ -95,8 +98,31 @@ define('staticmaps', function () {
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
     var point = this.fromLatlngToPixel(latlng);
-    e.style.left = point[1] + 'px';
-    e.style.top = point[0] + 'px';
+    e.style.left = (point[0] - 9) + 'px';
+    e.style.top = (point[1] - 9) + 'px';
+    this.map.append(e);
+  };
+
+  proto.addPlace = function (d) {
+    var tags = d.tags, tag, c;
+
+    while ((tag = tags.shift())) {
+      if (tag === 'xplace') {
+        c = 'x-place'
+      } else if (tag === 'destination') {
+        c = 'd-place'
+      }
+    }
+
+    var e = document.createElement('div');
+    var point = this.fromLatlngToPixel([d.lat, d.lng]);
+    if (c) {
+      e.className = 'place ' + c;
+    } else {
+      e.style.backgroundImage = 'url(' + (d.icon || '/static/img/map_mark_diamond_blue@2x.png') + ')';
+    }
+    e.style.left = (point[0] - 6) + 'px';
+    e.style.top = (point[1] - 34) + 'px';
     this.map.append(e);
   };
 
@@ -179,7 +205,7 @@ define('staticmaps', function () {
       //, y = (bounds.maxLat - latlng[0]) * 3600 / this.scaleY;
       , x = (latlng[1] - center[1]) * 3600 / this.scaleX + (this.width / 2)
       , y = (center[0] - latlng[0]) * 3600 / this.scaleY + (this.height / 2);
-    return [x, y];
+    return [y, x];
   };
 
   proto.fromPixelToLatlng = function (point) {
