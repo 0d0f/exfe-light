@@ -119,8 +119,8 @@ define('staticmaps', function () {
 
   proto.getScale = function () {
     var bounds = this.bounds;
-    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.width;
-    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.height;
+    this.scaleX = ((bounds.maxLng - bounds.minLng) * 3600) / this.width || 1;
+    this.scaleY = ((bounds.maxLat - bounds.minLat) * 3600) / this.height || 1;
   };
 
   proto.setBounds = function () {
