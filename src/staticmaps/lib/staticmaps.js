@@ -42,8 +42,6 @@ define('staticmaps', function () {
     this.map = map;
     this.width = $(window).width();
     this.height = $(window).height();
-    this.imgWidth = this.width + 100;
-    this.imgHeight = this.height + 100;
     this.bounds = new LatLngBounds();
     this._cache = [];
   }
@@ -53,13 +51,15 @@ define('staticmaps', function () {
   proto.initEnd = false;
 
   proto.load = function () {
+    this.zoom = this.getBoundsZoomLevel() - 1;
     var self = this
       , bounds = this.bounds
       , c = bounds.getCenter()
-      , zoom = 'zoom=' + this.getBoundsZoomLevel()
+      , zoom = 'zoom=' + this.zoom
       , img = document.createElement('img')
-      , size = 'size=' + this.imgWidth + 'x' + this.imgHeight
+      , size = 'size=' + this.width + 'x' + this.height
       , center = 'center=' + c[0] + ',' + c[1]
+      // @todo: 适配语言
       , url = 'http://ditu.google.com/maps/api/staticmap?language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
@@ -203,6 +203,12 @@ define('staticmaps', function () {
     var lngZoom = zoom(this.imgWidth, WORLD_DIM.width, lngFraction);
 
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
+  };
+
+  proto.latLngToPoint = function (latlng, zoom) {
+  };
+
+  proto.pointToLatLng = function (point, zoom) {
   };
 
   proto.fromLatlngToPixel = function (latlng) {
