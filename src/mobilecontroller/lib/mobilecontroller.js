@@ -2263,7 +2263,11 @@ define('mobilecontroller', function (require, exports, module) {
     , trackGeoLocation: function () {
         var mapController = this.mapController
           , position = this.position
-          , mapReadyStatus = this.mapReadyStatus;
+          , mapReadyStatus = this.mapReadyStatus
+          , staticMaps = this.staticMaps;
+        if (staticMaps) {
+          staticMaps.updateGeoLocation(this.myUserId, position);
+        }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
           this.setLatLngOffset();

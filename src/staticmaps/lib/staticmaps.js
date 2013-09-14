@@ -294,5 +294,18 @@ define('staticmaps', function () {
     return point;
   };
 
+  proto.updateGeoLocation = function (uid, position) {
+    this.myUserId = uid;
+    var geo = this.map.find('#geo-' + uid);
+    if (geo.length === 0) {
+      geo = $('<div id="gps-marker">'
+        + '<div id="gps-circle" style="display:none;"></div>'
+        + '<div id="gps-dsnt" style="display:none;"></div>'
+        + '<div id="gps-arrow"></div>'
+      + '</div>');
+      this.map.append(geo);
+    }
+  };
+
   return StaticMaps;
 });
