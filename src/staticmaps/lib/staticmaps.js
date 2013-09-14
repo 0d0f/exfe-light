@@ -216,7 +216,7 @@ define('staticmaps', function () {
       //, lng = point[0] * this.scaleX / 3600 + bounds.minLng
       //, lat = bounds.maxLat - point[1] * this.scaleY / 3600;
       , lng = (point[0] - this.width / 2) * this.scaleX / 3600 + center[1]
-      , lat = (point[1] - this.height / 2) * this.scaleY / 3600 - center[0];
+      , lat = center[0] - (point[1] - this.height / 2) * this.scaleY / 3600;
     return [lat, lng];
   };
 
