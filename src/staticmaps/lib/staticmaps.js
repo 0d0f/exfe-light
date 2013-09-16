@@ -142,6 +142,7 @@ define('staticmaps', function () {
     img.onload = img.onerror = function () {
       Debugger.alert('loaded');
       self.update();
+      self.contains();
     };
 
     this.map.append(img);
