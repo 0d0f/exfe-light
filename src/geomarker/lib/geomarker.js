@@ -122,7 +122,7 @@ define('geomarker', function () {
 
   // s: 0 offline, 1 online
   proto.setStatus = function (i) {
-    this.arrow_.className = i ? 'online' : '';
+    this.arrow_.className = i ? 'gps-arrow online' : 'gps-arrow';
   };
 
   proto.getPosition = function () {
