@@ -1903,6 +1903,9 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
+          if (self.staticMaps && self.staticMaps.readyStatus) {
+            self.staticMaps.contains();
+          }
           Debugger.log(pb, ids);
         });
 
