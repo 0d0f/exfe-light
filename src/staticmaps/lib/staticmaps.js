@@ -106,7 +106,7 @@ define('staticmaps', function () {
   };
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel();
+    this.zoom = this.getBoundsZoomLevel() - 1;
     this.center = this.bounds.getCenter();
     var self = this
       , c = this.center
@@ -318,6 +318,8 @@ define('staticmaps', function () {
         left: (point[0] - 11)
       , top: (point[1] - 11)
     });
+    var status = Math.floor(Date.now() / 1000 - position.t) < 60;
+    geo.find('#gps-arrow').attr('class', status ? 'online' : '');
   };
 
   proto.toMars = function (position, fresh) {
