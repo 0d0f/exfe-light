@@ -2274,7 +2274,10 @@ define('mobilecontroller', function (require, exports, module) {
         }
 
         if (staticMaps) {
-          staticMaps.updateGeoLocation(myUserId, position);
+          staticMaps.updateGeoPosition(position);
+          if (staticMaps.readyStatus) {
+            staticMaps.updateGeoLocation(myUserId, position);
+          }
         }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
