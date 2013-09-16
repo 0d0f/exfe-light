@@ -193,7 +193,7 @@ define('staticmaps', function () {
       return;
     }
 
-    var i = 0, zIndex = 0;
+    var t = 0, zIndex = 0;
     while ((tag = tags.shift())) {
       if (tag === 'xplace') {
         t ^= 1;
