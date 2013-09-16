@@ -1725,7 +1725,7 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#wechat-guide', function (e) {
-          $(this).addClass('hide');
+          $(this).addClass('hide').removeClass('ant');
         });
 
         element.on('touchstart.maps', '#wechat-share', function (e) {
@@ -2109,7 +2109,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (data.meta.code === 200) {
                   var following = data.response.following;
                   if (!following) {
-                    $('#wechat-guide').removeClass('hide');
+                    $('#wechat-guide').removeClass('hide').addClass('ant')
                   }
                 }
               }
