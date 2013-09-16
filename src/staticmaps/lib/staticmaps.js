@@ -49,6 +49,7 @@ define('staticmaps', function () {
     return (sw2[0] >= sw[0]) && (ne2[0] <= ne[0]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[1]);
   };
 
+  // https://code.google.com/p/google-ajax-examples/source/browse/trunk/nonjslocalsearch/localSearch.py
   // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
   /*
   function Projection() {
@@ -192,12 +193,23 @@ define('staticmaps', function () {
       return;
     }
 
+    var i = 0, zIndex = 0;
     while ((tag = tags.shift())) {
       if (tag === 'xplace') {
-        c = 'x-place'
+        t ^= 1;
       } else if (tag === 'destination') {
-        c = 'd-place'
+        t ^= 2;
       }
+    }
+
+    if (t === 1 || t === 3) {
+      c = 'x-place';
+      zIndex = 0;
+    }
+
+    if (t === 2 || t === 3) {
+      c = 'd-place'
+      zIndex = 1;
     }
 
     var e = document.createElement('div');
@@ -393,7 +405,7 @@ define('staticmaps', function () {
 
   proto.updateGeoLocation = function (uid, position) {
     this.myUserId = uid;
-    var geo = this.map.find('#gps-marker');
+    var geo = this.map.find('.gps-marker');
     if (geo.length === 0) {
       geo = $('<div id="gps-marker">'
         + '<div id="gps-circle" style="display:none;"></div>'
@@ -409,7 +421,7 @@ define('staticmaps', function () {
       , top: (point[1] - 11)
     });
     var status = Math.floor(Date.now() / 1000 - position.t) < 60;
-    geo.find('#gps-arrow').attr('class', status ? 'online' : '');
+    geo.find('.gps-arrow').attr('class', status ? 'online' : '');
   };
 
   proto.toMars = function (position, fresh) {

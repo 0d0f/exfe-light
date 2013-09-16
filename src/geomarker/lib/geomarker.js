@@ -14,12 +14,12 @@ define('geomarker', function () {
       , dsnt = document.createElement('div')
       , circle = document.createElement('div');
 
-    circle.id = 'gps-circle';
+    circle.className = 'gps-circle';
     circle.style.display = 'none';
-    dsnt.id = 'gps-dsnt';
+    dsnt.className = 'gps-dsnt';
     dsnt.style.display = 'none';
-    arrow.id = 'gps-arrow';
-    div.id = 'gps-marker';
+    arrow.className = 'gps-arrow';
+    div.className = 'gps-marker';
     div.appendChild(circle);
     div.appendChild(dsnt);
     div.appendChild(arrow);
