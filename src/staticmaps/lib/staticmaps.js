@@ -383,7 +383,7 @@ define('staticmaps', function () {
 
   proto.latlngToLayerPoint = function (latlng) {
     var point = this.latLngToPoint(latlng, this.zoom);
-    var leftTopPoint = this.leftTopPoint(this.bounds.getCenter());
+    var leftTopPoint = this.leftTopPoint(this.center);
     point[0] -= leftTopPoint[0];
     point[1] -= leftTopPoint[1];
     return point;
