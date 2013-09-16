@@ -666,42 +666,48 @@ define('routexmaps', function (require) {
 
     Debugger.log(type, action, isDelete, tags, data);
     switch (type) {
-      case LOCATION:
-        var t = 0;
+    case LOCATION:
+      var t = 0;
 
-        if (hasTags) {
-          while ((tag = tags.shift())) {
-            if (tag === XPLACE) {
-              t ^= 1; // t = 1
-            } else if (tag === DESTINATION) {
-              t ^= 2; // t = 2
-              dest = tag;
-            }
-            // has xplace and destination t = 3
+      if (hasTags) {
+        while ((tag = tags.shift())) {
+          if (tag === XPLACE) {
+            t ^= 1; // t = 1
+          } else if (tag === DESTINATION) {
+            t ^= 2; // t = 2
+            dest = tag;
+          }
+          // has xplace and destination t = 3
+        }
+      }
+
+      isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
+    break;
+
+    case ROUTE:
+      var isBreadcrumbs;
+
+      if (hasTags) {
+        while ((tag = tags.shift())) {
+          if (tag === BREADCRUMBS) {
+            isBreadcrumbs = true;
+            break;
           }
         }
+      }
 
-        isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
-        break;
+      if (isBreadcrumbs) {
+        this.drawGeoMarker(data);
+      } else {
+        isDelete ? this.removeRoute(data) : this.drawRoute(data);
+      }
+    break;
 
-      case ROUTE:
-        var isBreadcrumbs;
-
-        if (hasTags) {
-          while ((tag = tags.shift())) {
-            if (tag === BREADCRUMBS) {
-              isBreadcrumbs = true;
-              break;
-            }
-          }
-        }
-
-        if (isBreadcrumbs) {
-          this.drawGeoMarker(data);
-        } else {
-          isDelete ? this.removeRoute(data) : this.drawRoute(data);
-        }
-        break;
+    case 'command':
+      if (action === 'init_end') {
+        this.contains();
+      }
+    break;
     }
   };
 
