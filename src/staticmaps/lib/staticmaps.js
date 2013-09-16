@@ -106,7 +106,7 @@ define('staticmaps', function () {
 
     this.lines = {};
 
-    this.canvas = $('#static-map-canvas')
+    this.canvas = document.getElementById('static-map-canvas');
     this.canvas.width = this.width * 2;
     this.canvas.height = this.height * 2;
     this.canvas.style.width = this.width + 'px';

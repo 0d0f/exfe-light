@@ -1900,6 +1900,10 @@ define('mobilecontroller', function (require, exports, module) {
             }
           });
 
+          if (self.staticMaps) {
+            self.staticMaps.contains();
+          }
+
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
