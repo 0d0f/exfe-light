@@ -1997,7 +1997,6 @@ define('mobilecontroller', function (require, exports, module) {
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
                 self.mapReadyStatus = true;
-                $('#canvas').removeClass('hide');
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
               }
         });
@@ -2152,6 +2151,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (now() - self.START_TIME < t && self.mapReadyStatus) {
             self.staticMaps.hide();
             $('#static-map-canvas').addClass('hide');
+            $('#canvas').removeClass('hide');
           }
 
           if (self.mapReadyStatus) {
