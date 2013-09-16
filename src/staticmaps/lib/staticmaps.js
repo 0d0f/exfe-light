@@ -40,6 +40,15 @@ define('staticmaps', function () {
 
   proto.getSouthEast = function () { return [this._southWest[0], this._northEast[1]]; };
 
+  proto.contains = function (latlng) {
+    var sw = this._southWest
+      , ne = this._northEast
+      , sw2 = latlng
+      , ne2 = latlng;
+
+    return (sw2[0] >= sw[0]) && (ne2[0] <= ne[1]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[0]);
+  };
+
   // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
   /*
   function Projection() {
@@ -94,6 +103,15 @@ define('staticmaps', function () {
     this._cache = [];
     this.latOffset = 0;
     this.lngOffset = 0;
+
+    this.lines = {};
+
+    this.canvas = $('#static-map-canvas')
+    this.canvas.width = this.width * 2;
+    this.canvas.height = this.height * 2;
+    this.canvas.style.width = this.width + 'px';
+    this.canvas.style.height = this.height + 'px';
+    this.ctx = this.canvas.getContext('2d');
   }
 
   proto = StaticMaps.prototype;
@@ -149,6 +167,7 @@ define('staticmaps', function () {
 
   proto.addDot = function (d) {
     var c = 'grey';
+    var uid = d.id.split('.')[1];
     var position = d.positions[0];
     if (Math.floor(Date.now() / 1000 - position.t) < 60) { c = 'red'; }
     var e = document.createElement('div');
@@ -157,6 +176,9 @@ define('staticmaps', function () {
     var point = this.latlngToLayerPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
+    e.setAttribute('data-uid', uid);
+    e.setAttribute('data-lat', latlng[0]);
+    e.setAttribute('data-lng', latlng[1]);
     this.map.append(e);
   };
 
@@ -187,6 +209,71 @@ define('staticmaps', function () {
     e.style.left = (point[0] - 12) + 'px';
     e.style.top = (point[1] - 34) + 'px';
     this.map.append(e);
+  };
+
+  proto.contains = function () {
+    var bounds = this.bounds
+      , dots = this.map.$('.dot')
+      , ids = document.getElementById('identities')._ids || {};
+
+    dots.each(function () {
+      var $t = $(this)
+        , uid = $t.attr('data-uid')
+        , lat = $t.attr('data-lat') * 1
+        , lng = $t.attr('data-lng') * 1;
+      this.containsOne(uid, [lat, lng], bounds, ids);
+    });
+  };
+
+  proto.containsOne = function (uid, latlng, bounds, ids, b) {
+    if (!bounds) {
+      bounds = this.bounds;
+    }
+    if (!ids) {
+      ids = document.getElementById('identities')._ids || {};
+    }
+    if (bounds.contains(latlng) && (b = ids[uid])) {
+      var p = this.latlngToLayerPoint(latlng);
+      var line = this.lines[uid];
+      if (!line) { line =  []; }
+      line[0] = [b[1], b[2]];
+      line[1] = [b[1] + 13, b[2]];
+      line[2] = [p[0], p[1]];
+      this.updateLine(uid, line);
+    } else {
+      this.removeLine(uid);
+    }
+  };
+
+  proto.clearLines = function () {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  };
+  proto.removeLine = function (uid) {
+    delete this.lines[uid];
+    this.updateLines();
+  };
+  proto.updateLines = function () {
+    this.clearLines();
+    var lines = this.lines;
+    for (var k in lines) {
+      this.addLine(k, lines[k]);
+    }
+  };
+  proto.updateLine = function (uid, points) {
+    this.lines[uid] = points;
+    this.updateLines();
+  };
+  proto.addLine = function (uid, points) {
+    var ctx = this.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.lineJoin = ctx.lineCap = 'round';
+    ctx.moveTo(points[0][0] * 2, points[0][1] * 2);
+    ctx.lineTo(points[1][0] * 2, points[1][1] * 2);
+    ctx.lineTo(points[2][0] * 2, points[2][1] * 2);
+    ctx.strokeStyle = points[3] || '#b2b2b2';
+    ctx.stroke();
   };
 
   proto.draw = function (result) {
