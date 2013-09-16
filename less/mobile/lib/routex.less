@@ -865,14 +865,14 @@
       height: 136px;
       padding: 5px 10px;
 
-      p {
+      > div {
         margin: 0;
         padding: 0;
         color: #000;
         font-size: 18px;
       }
 
-      p:first-child {
+      > div:first-child {
         padding-bottom: 10px;
       }
     }
@@ -888,7 +888,6 @@
       margin: 0;
       padding: 0;
       font-weight: 300;
-      padding-bottom: 10px;
     }
   }
 
@@ -897,11 +896,11 @@
     -webkit-transform: translate3d(0, 0, 377px);
 
     .ibox {
-      > p {
+      > div {
         position: relative;
       }
 
-      > p:first-child {
+      > div:first-child {
         &:before {
           position: absolute;
           content: '';
