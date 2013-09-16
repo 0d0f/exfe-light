@@ -346,7 +346,7 @@ define('mobilecontroller', function (require, exports, module) {
                   Store.set('tmp-user', user);
                   App.controllers.footer.emit('reset-position');
                   if (user_id && token) {
-                    var args = '?token=' + token + '&user_id=' + user_id + '&username=' + username + '&identity_id=' + identity.id;
+                    var args = '?token=' + token + '&user_id=' + user_id + '&username=' + encodeURIComponent(username) + '&identity_id=' + identity.id;
                     done(args);
                   }
                   break;
@@ -417,7 +417,7 @@ define('mobilecontroller', function (require, exports, module) {
               $button.parent().addClass('hide');
               var auth = data.response.authorization;
               if (auth) {
-                App.controllers.footer.emit('redirect', '?token=' + auth.token + '&user_id=' + auth.user_id + '&username=' + (auth.name || ''), function () {
+                App.controllers.footer.emit('redirect', '?token=' + auth.token + '&user_id=' + auth.user_id + '&username=' + encodeURIComponent(auth.name || ''), function () {
                   var search = window.location.search.substr(1);
                   if (search) {
                     search = '&' + search;
