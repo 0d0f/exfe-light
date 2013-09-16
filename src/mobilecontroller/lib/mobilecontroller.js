@@ -2153,8 +2153,8 @@ define('mobilecontroller', function (require, exports, module) {
         this.timer = setInterval(function () {
           if (now() - self.START_TIME < t && self.mapReadyStatus) {
             self.staticMaps.hide();
-            $('#static-map-canvas').addClass('hide');
-            $('#canvas').removeClass('hide');
+            $('#static-map-canvas').css('opacity', 0);
+            $('#canvas').css('opacity', 1);
           }
 
           if (self.mapReadyStatus) {
