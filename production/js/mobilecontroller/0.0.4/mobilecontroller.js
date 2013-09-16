@@ -9,7 +9,6 @@ define('mobilecontroller', function (require, exports, module) {
       apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + ':///',
-      AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -1650,6 +1649,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.appendTo($('#app-container'));
         this.loadStaticMaps();
         this.loadMaps();
+        this.setLatLngOffset();
       }
 
     , listen: function () {
@@ -1997,12 +1997,12 @@ define('mobilecontroller', function (require, exports, module) {
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
                 self.mapReadyStatus = true;
+                $('#canvas').removeClass('hide');
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
               }
         });
         mc.myUserId = this.myUserId;
         mc.myIdentity = this.myIdentity;
-        this.setLatLngOffset();
         // defaults to true
         mc.tracking = true;
         this.START_TIME = now();
@@ -2056,6 +2056,7 @@ define('mobilecontroller', function (require, exports, module) {
         var offset = Store.get('offset-latlng');
         if (offset) {
           this.mapController.setOffset(offset);
+          this.staticMaps.setOffset(offset);
         }
       }
 
@@ -2146,9 +2147,11 @@ define('mobilecontroller', function (require, exports, module) {
         this.startStream();
         Debugger.log('start streaming');
         Debugger.log('start monit')
-        var t = 1000 * 2;
+        var t = 1000 * 2.5;
         this.timer = setInterval(function () {
-          if (now() - self.START_TIME > t && !self.mapReadyStatus) {
+          if (now() - self.START_TIME < t && self.mapReadyStatus) {
+            self.staticMaps.hide();
+            $('#static-map-canvas').addClass('hide');
           }
 
           if (self.mapReadyStatus) {
@@ -2159,9 +2162,8 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadStaticMaps: function () {
-        var SM = require('staticmaps')
-          , staticMaps = new SM(this.$('#staticmaps'));
-        this.staticmpas = staticmaps;
+        var SM = require('staticmaps');
+        this.staticMaps = new SM(this.$('#static-map'), this.myUserId);
       }
 
     , _cache: []
@@ -2173,8 +2175,8 @@ define('mobilecontroller', function (require, exports, module) {
             self.cross.id
           , self.token
           , function (result) {
-              if (self.staticmaps) {
-                self.staticmaps.draw(result);
+              if (self.staticMaps) {
+                self.staticMaps.draw(result);
               }
 
               if (self.mapController) {
@@ -2263,10 +2265,18 @@ define('mobilecontroller', function (require, exports, module) {
     , trackGeoLocation: function () {
         var mapController = this.mapController
           , position = this.position
-          , mapReadyStatus = this.mapReadyStatus;
+          , mapReadyStatus = this.mapReadyStatus
+          , staticMaps = this.staticMaps;
+
+        if (staticMaps && mapController) {
+          this.setLatLngOffset();
+        }
+
+        if (staticMaps) {
+          staticMaps.updateGeoLocation(this.myUserId, position);
+        }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
-          this.setLatLngOffset();
           mapController.updateGeoLocation(this.myUserId, position);
         }
       }

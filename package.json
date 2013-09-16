@@ -300,7 +300,7 @@
         "version": "0.1.0"
       }
     ],
-    "sha1": "2a-0f5a388",
+    "sha1": "2a-d8834a1",
     "standalone": {
       "debugger": {
         "version": "0.0.1",
@@ -315,7 +315,7 @@
   "css": {
     "exfe": "exfe-8d975a6.css",
     "exfemin": "exfe-f868147.min.css",
-    "exfemobile": "exfemobile-2b385ba.css",
-    "exfemobilemin": "exfemobile-9454130.min.css"
+    "exfemobile": "exfemobile-ae6fc26.css",
+    "exfemobilemin": "exfemobile-6835b2d.min.css"
   }
 }
