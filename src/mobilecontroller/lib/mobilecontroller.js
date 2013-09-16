@@ -9,7 +9,6 @@ define('mobilecontroller', function (require, exports, module) {
       apiv3_url = _ENV_.apiv3_url,
       app_scheme = _ENV_.app_scheme,
       app_prefix_url = app_scheme + ':///',
-      AMAP_KEY = _ENV_.AMAP_KEY,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 

@@ -115,7 +115,7 @@ define('staticmaps', function () {
       , size = 'size=' + this.width + 'x' + this.height
       , center = 'center=' + c[0] + ',' + c[1]
       // @todo: 适配语言
-      , url = 'http://ditu.google.com/maps/api/staticmap?language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
+      , url = 'http://ditu.google.com/maps/api/staticmap?key=' + window._ENV_.MAP_KEY + '&language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
     img.src = url;
     img.width = this.width;
