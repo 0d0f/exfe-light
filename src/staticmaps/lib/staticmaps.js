@@ -4,6 +4,8 @@ define('staticmaps', function () {
   'use strict';
 
   var MERCATOR_RANGE = 256;
+  var apiv3_url = window._ENV_.apiv3_url;
+  var mapmark = apiv3_url + '/icons/mapmark';
   var proto;
 
 
@@ -206,27 +208,37 @@ define('staticmaps', function () {
       }
     }
 
+    var e = document.createElement('div');
+    var latlng = [d.lat, d.lng];
+    var point = this.latlngToLayerPoint(latlng);
+    e.style.left = (point[0] - 12) + 'px';
+    e.style.top = (point[1] - 34) + 'px';
+    this.map.append(e);
+
     if (t === 1 || t === 3) {
       c = 'x-place';
-      zIndex = 0;
+      zIndex = 1;
     }
 
     if (t === 2 || t === 3) {
       c = 'd-place'
-      zIndex = 1;
+      zIndex = 2;
+      var destPlace = this.destPlace;
+      if (destPlace) {
+        destPlace.style.backgroundImage = 'url(' + mapmark + ')';
+        destPlace.style.zIndex = 0;
+        this.destPlace = e;
+      }
+      if (t !== 3) {
+        e.style.zIndex = 2;
+      }
     }
 
-    var e = document.createElement('div');
-    var latlng = [d.lat, d.lng];
-    var point = this.latlngToLayerPoint(latlng);
     if (c) {
       e.className = 'place ' + c;
     } else {
-      e.style.backgroundImage = 'url(' + (d.icon || '/static/img/map_mark_diamond_blue@2x.png') + ')';
+      e.style.backgroundImage = 'url(' + (d.icon || mapmark) + ')';
     }
-    e.style.left = (point[0] - 12) + 'px';
-    e.style.top = (point[1] - 34) + 'px';
-    this.map.append(e);
   };
 
   proto.contains = function () {
