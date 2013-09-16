@@ -402,7 +402,7 @@ define('staticmaps', function () {
       + '</div>');
       this.map.append(geo);
     }
-    position = this.toMars(position);
+    position = this.toMars(position, true);
     var point = this.latlngToLayerPoint(position.gps.slice(0, 2));
     geo.css({
         left: (point[0] - 11)
