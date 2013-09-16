@@ -213,7 +213,7 @@ define('staticmaps', function () {
 
   proto.contains = function () {
     var bounds = this.bounds
-      , dots = this.map.$('.dot')
+      , dots = this.map.find('.dot')
       , ids = document.getElementById('identities')._ids || {};
 
     dots.each(function () {
