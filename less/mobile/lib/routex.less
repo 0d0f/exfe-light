@@ -187,6 +187,7 @@
 
   #canvas,
   #static-map-canvas {
+    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
@@ -194,13 +195,12 @@
     width: 100%;
     height: 100%;
     */
+    z-index: 1;
     pointer-events: none;
     -webkit-appearance: none;
     -webkit-transform: translate3d(0, 0, 0);
-  }
-
-  #static-map-canvas {
-    z-index: 1;
+    appearance: none;
+    transform: translate3d(0, 0, 0);
   }
 
   #identities-overlay {
