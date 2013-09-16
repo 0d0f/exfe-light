@@ -1650,6 +1650,7 @@ define('mobilecontroller', function (require, exports, module) {
         this.element.appendTo($('#app-container'));
         this.loadStaticMaps();
         this.loadMaps();
+        this.setLatLngOffset();
       }
 
     , listen: function () {
@@ -2002,7 +2003,6 @@ define('mobilecontroller', function (require, exports, module) {
         });
         mc.myUserId = this.myUserId;
         mc.myIdentity = this.myIdentity;
-        this.setLatLngOffset();
         // defaults to true
         mc.tracking = true;
         this.START_TIME = now();
@@ -2056,6 +2056,7 @@ define('mobilecontroller', function (require, exports, module) {
         var offset = Store.get('offset-latlng');
         if (offset) {
           this.mapController.setOffset(offset);
+          this.staticMaps.setOffset(offset);
         }
       }
 
@@ -2265,12 +2266,16 @@ define('mobilecontroller', function (require, exports, module) {
           , position = this.position
           , mapReadyStatus = this.mapReadyStatus
           , staticMaps = this.staticMaps;
+
+        if (staticMaps && mapController) {
+          this.setLatLngOffset();
+        }
+
         if (staticMaps) {
           staticMaps.updateGeoLocation(this.myUserId, position);
         }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
-          this.setLatLngOffset();
           mapController.updateGeoLocation(this.myUserId, position);
         }
       }
