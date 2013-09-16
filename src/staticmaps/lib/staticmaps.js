@@ -46,7 +46,7 @@ define('staticmaps', function () {
       , sw2 = latlng
       , ne2 = latlng;
 
-    return (sw2[0] >= sw[0]) && (ne2[0] <= ne[1]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[0]);
+    return (sw2[0] >= sw[0]) && (ne2[0] <= ne[0]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[1]);
   };
 
   // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
