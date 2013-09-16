@@ -407,10 +407,10 @@ define('staticmaps', function () {
     this.myUserId = uid;
     var geo = this.map.find('.gps-marker');
     if (geo.length === 0) {
-      geo = $('<div id="gps-marker">'
-        + '<div id="gps-circle" style="display:none;"></div>'
-        + '<div id="gps-dsnt" style="display:none;"></div>'
-        + '<div id="gps-arrow"></div>'
+      geo = $('<div class="gps-marker">'
+        + '<div class="gps-circle" style="display:none;"></div>'
+        + '<div class="gps-dsnt" style="display:none;"></div>'
+        + '<div class="gps-arrow"></div>'
       + '</div>');
       this.map.append(geo);
     }
