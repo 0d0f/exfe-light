@@ -188,6 +188,7 @@ define('staticmaps', function () {
     e.setAttribute('data-uid', uid);
     e.setAttribute('data-lat', latlng[0]);
     e.setAttribute('data-lng', latlng[1]);
+    e.setAttribute('data-color', c === 'grey' ? '#b2b2b2' : '#ff7e98');
     this.map.append(e);
   };
 
@@ -251,12 +252,13 @@ define('staticmaps', function () {
       var $t = $(this)
         , uid = $t.attr('data-uid')
         , lat = $t.attr('data-lat') * 1
-        , lng = $t.attr('data-lng') * 1;
-      self.containsOne(uid, [lat, lng], bounds, ids);
+        , lng = $t.attr('data-lng') * 1
+        , color = $t.attr('data-color');
+      self.containsOne(uid, [lat, lng], bounds, ids, color);
     });
   };
 
-  proto.containsOne = function (uid, latlng, bounds, ids, b) {
+  proto.containsOne = function (uid, latlng, bounds, ids, color, b) {
     if (!bounds) {
       bounds = this.bounds;
     }
@@ -270,6 +272,7 @@ define('staticmaps', function () {
       line[0] = [b[1], b[2]];
       line[1] = [b[1] + 13, b[2]];
       line[2] = [p[0], p[1]];
+      line[3] = color;
       this.updateLine(uid, line);
     } else {
       this.removeLine(uid);
