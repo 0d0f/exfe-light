@@ -843,7 +843,7 @@
   }
 
   .wechat-dialog {
-    &.hide {
+    &.ant {
       background: rgba(0, 0, 0, 0);
     }
     z-index: 1000;
@@ -884,11 +884,6 @@
   }
 
   #wechat-guide {
-    &.hide .main {
-      -webkit-transform: scale3d(0, 0, 1);
-      transform: scale3d(0, 0, 1);
-    }
-
     .main {
       -webkit-transform-origin: right top;
       -webkit-transform: scale3d(1, 1, 1);
@@ -896,6 +891,11 @@
       transform-origin: right top;
       transform: scale3d(1, 1, 1);
       transition: transform 0.233s ease-out 0.25s;
+    }
+
+    &.ant .main {
+      -webkit-transform: scale3d(0, 0, 1);
+      transform: scale3d(0, 0, 1);
     }
 
     .ibox {
