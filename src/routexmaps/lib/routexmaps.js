@@ -707,7 +707,7 @@ define('routexmaps', function (require) {
 
     case 'command':
       if (action === 'init_end') {
-        this.contains();
+        //this.contains();
       }
     break;
     }
