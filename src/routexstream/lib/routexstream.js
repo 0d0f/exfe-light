@@ -290,13 +290,14 @@ define('routexstream', function (require) {
       options: {
           enableHighAccuracy: true
         , maximumAge: 0
-        , timeout: 29999.999999 //30000
+        //, timeout: 29999.999999 //30000
+        , timeout: 59999.999999 // 60 * 1000
       }
 
     , cachedOptions: {
           enableHighAccuracy: false
         , maximumAge: 60000 * 60 * 2 // 2 hours or Infinity
-        , timeout: 1000 * 5 // 29999.999999 //30000
+        , timeout: 1000 * 60 // 29999.999999 //30000
       }
 
     , STATUS: 0
