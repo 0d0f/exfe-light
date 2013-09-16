@@ -113,6 +113,8 @@ define('staticmaps', function () {
     this.canvas.style.width = this.width + 'px';
     this.canvas.style.height = this.height + 'px';
     this.ctx = this.canvas.getContext('2d');
+
+    this.readyStatus = false;
   }
 
   proto = StaticMaps.prototype;
@@ -142,7 +144,9 @@ define('staticmaps', function () {
 
     img.onload = img.onerror = function () {
       Debugger.alert('loaded');
+      self.readyStatus = true;
       self.update();
+      self.updateGeoLocation(self.myUserId, self.position);
       self.contains();
     };
 
@@ -401,6 +405,10 @@ define('staticmaps', function () {
     point[0] = scale * (this._a * point[0] + this._b);
     point[1] = scale * (this._c * point[1] + this._d);
     return point;
+  };
+
+  proto.updateGeoPosition = function (position) {
+    this.position = position;
   };
 
   proto.updateGeoLocation = function (uid, position) {
