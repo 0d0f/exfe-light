@@ -92,11 +92,18 @@ define('staticmaps', function () {
     this.height = $(window).height();
     this.bounds = new LatLngBounds();
     this._cache = [];
+    this.latOffset = 0;
+    this.lngOffset = 0;
   }
 
   proto = StaticMaps.prototype;
 
   proto.initEnd = false;
+
+  proto.setOffset = function (offset) {
+    this.latOffset = offset.earth_to_mars_latitude * 1;
+    this.lngOffset = offset.earth_to_mars_longitude * 1;
+  };
 
   proto.load = function () {
     this.zoom = this.getBoundsZoomLevel() - 1;
@@ -305,11 +312,25 @@ define('staticmaps', function () {
       + '</div>');
       this.map.append(geo);
     }
+    position = this.toMars(position);
     var point = this.latlngToLayerPoint(position.gps.slice(0, 2));
     geo.css({
         left: (point[0] - 11)
       , top: (point[1] - 11)
     });
+  };
+
+  proto.toMars = function (position, fresh) {
+    var gps = position.gps;
+    var p = {
+          t: fresh ? Math.floor(Date.now() / 1000) : position.t
+        , gps: [
+              gps[0] * 1 + this.latOffset
+            , gps[1] * 1 + this.lngOffset
+            , gps[2]
+          ]
+      };
+    return p;
   };
 
   return StaticMaps;
