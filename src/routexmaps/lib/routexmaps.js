@@ -1466,7 +1466,7 @@ define('routexmaps', function (require) {
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
-    if (bounds.contains(latlng) && (b = ids[uid])) {
+    if (bounds.contains && bounds.contains(latlng) && (b = ids[uid])) {
       //this.showTipline(uid, b);
       var p = this.fromLatLngToContainerPixel(latlng);
       var line = this.lines[uid];
