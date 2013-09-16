@@ -213,7 +213,8 @@ define('staticmaps', function () {
   };
 
   proto.contains = function () {
-    var bounds = this.bounds
+    var self = this
+      , bounds = this.bounds
       , dots = this.map.find('.dot')
       , ids = document.getElementById('identities')._ids || {};
 
@@ -222,7 +223,7 @@ define('staticmaps', function () {
         , uid = $t.attr('data-uid')
         , lat = $t.attr('data-lat') * 1
         , lng = $t.attr('data-lng') * 1;
-      this.containsOne(uid, [lat, lng], bounds, ids);
+      self.containsOne(uid, [lat, lng], bounds, ids);
     });
   };
 
