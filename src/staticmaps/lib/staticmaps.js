@@ -167,8 +167,9 @@ define('staticmaps', function () {
   };
 
   proto.addDot = function (d) {
-    var c = 'grey';
     var uid = d.id.split('.')[1];
+    if (uid == this.myUserId) { return; }
+    var c = 'grey';
     var position = d.positions[0];
     if (Math.floor(Date.now() / 1000 - position.t) < 60) { c = 'red'; }
     var e = document.createElement('div');
