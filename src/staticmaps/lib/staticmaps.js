@@ -421,7 +421,7 @@ define('staticmaps', function () {
       , top: (point[1] - 11)
     });
     var status = Math.floor(Date.now() / 1000 - position.t) < 60;
-    geo.find('.gps-arrow').attr('class', status ? 'online' : '');
+    geo.find('.gps-arrow').attr('class', status ? 'gps-arrow online' : 'gps-arrow');
   };
 
   proto.toMars = function (position, fresh) {
