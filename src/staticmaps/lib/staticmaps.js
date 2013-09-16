@@ -106,7 +106,7 @@ define('staticmaps', function () {
   };
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel() - 1;
+    this.zoom = this.getBoundsZoomLevel();
     this.center = this.bounds.getCenter();
     var self = this
       , c = this.center
