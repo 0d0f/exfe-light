@@ -404,6 +404,7 @@ define('staticmaps', function () {
   };
 
   proto.updateGeoLocation = function (uid, position) {
+    if (!position) { return; }
     this.myUserId = uid;
     var geo = this.map.find('.gps-marker');
     if (geo.length === 0) {
