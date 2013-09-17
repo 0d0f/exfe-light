@@ -394,9 +394,11 @@ define('staticmaps', function () {
 
   proto.updateGeoPosition = function (position) {
     this.position = position;
+    this.bounds.extend(position.gps.slice(0, 2));
   };
 
   proto.updateGeoLocation = function (uid, position) {
+    if (!this.center) { return; }
     if (!position) { return; }
     this.myUserId = uid;
     var geo = this.map.find('.gps-marker');
