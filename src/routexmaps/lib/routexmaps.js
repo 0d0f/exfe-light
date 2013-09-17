@@ -254,9 +254,8 @@ define('routexmaps', function (require) {
 
           GEvent.removeListener(initListener);
 
+          callback(map);
         });
-
-        callback(map);
 
         cb = null;
       };
