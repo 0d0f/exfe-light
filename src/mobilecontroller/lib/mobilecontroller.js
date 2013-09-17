@@ -7,8 +7,7 @@ define('mobilecontroller', function (require, exports, module) {
       _ENV_ = window._ENV_,
       api_url = _ENV_.api_url,
       apiv3_url = _ENV_.apiv3_url,
-      app_scheme = _ENV_.app_scheme,
-      app_prefix_url = app_scheme + '://' + window.location.hostname + '/',
+      app_prefix_url = _ENV_.app_scheme,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
@@ -2018,6 +2017,7 @@ define('mobilecontroller', function (require, exports, module) {
               }
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
+                Debugger.alert('动态地图加载时间: ' + (now() - self.START_TIME + 'ms'));
                 clearTimeout(self.mapsTimer);
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
