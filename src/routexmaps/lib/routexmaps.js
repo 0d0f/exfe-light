@@ -206,7 +206,7 @@ define('routexmaps', function (require) {
         // overlay.onAdd = overlay.onRemove = function () {};
         overlay.setMap(map);
 
-        var initListener = GEvent.addListener(map, 'tilesloaded', function () {
+        var initListener = GEvent.addListener(map, 'idle', function () {
 
           GEvent.addListener(map, 'bounds_changed', function () {
             GEvent.trigger(map, 'zoom_changed');
