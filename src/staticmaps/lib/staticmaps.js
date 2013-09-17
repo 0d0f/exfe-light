@@ -144,7 +144,10 @@ define('staticmaps', function () {
     img.width = this.width;
     img.height = this.height;
 
-    img.onload = img.onerror = function () {
+    this.map.append(img);
+    this.map.removeClass();
+
+    img.onload = function () {
       Debugger.alert('loaded');
       self.readyStatus = true;
       self.update();
@@ -153,13 +156,14 @@ define('staticmaps', function () {
       self.contains();
     };
 
-    this.map.append(img);
-    this.map.removeClass();
+    img.onerror = function () {
+      self.hide();
+    };
   };
 
   proto.hide = function () {
-    this.canvas.style.opacity = 0;
     this.map.addClass('hide');
+    this.canvas.style.opacity = 0;
   };
 
   proto.update = function () {
