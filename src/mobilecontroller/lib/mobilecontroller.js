@@ -1662,6 +1662,7 @@ define('mobilecontroller', function (require, exports, module) {
         if (this.mapReadyStatus) {
           this.staticMaps.hide();
           delete this.staticMaps;
+          $('#identities').triggerHandler('scroll');
         } else {
           this.staticMaps.show();
         }
