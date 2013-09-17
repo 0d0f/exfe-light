@@ -149,8 +149,7 @@ define('staticmaps', function () {
       self.readyStatus = true;
       self.update();
       self.updateGeoLocation(self.myUserId, self.position);
-      document.getElementById('static-map-canvas').style.opacity = 1;
-      Debugger.alert(document.getElementById('static-map-canvas').id);
+      self.canvas.style.opacity = 1;
       self.contains();
     };
 
@@ -158,7 +157,10 @@ define('staticmaps', function () {
     this.map.removeClass();
   };
 
-  proto.hide = function () { this.map.addClass('hide'); };
+  proto.hide = function () {
+    this.canvas.style.opacity = 0;
+    this.map.addClass('hide');
+  };
 
   proto.update = function () {
     var cache = this._cache
