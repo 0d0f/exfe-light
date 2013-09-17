@@ -7,7 +7,7 @@
   var now = Date.now || function () { return new Date().getTime(); }
     , _ENV_ = window._ENV_
     , apiUrl = _ENV_.api_url
-    , app_scheme = _ENV_.app_scheme
+    , app_prefix_url = _ENV_.app_scheme
     //, JSFILE = _ENV_.JSFILE
     //, CSSFILE = _ENV_.CSSFILE
     , supportHistory = window.history
@@ -15,7 +15,6 @@
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , app_url = app_scheme + '://' + window.location.hostname + '/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
         , smsToken: /^\/+\?(?:(redirect)?&)?t=([a-zA-Z0-9]{3,})$/
@@ -37,7 +36,7 @@
   window.isWeixin = !!(/MicroMessenger/i.test(navigator.userAgent));
 
   window.launchApp = function (url, cb) {
-    url = url || app_url;
+    url = url || app_prefix_url;
     startTime = now();
     failBack(cb, 200);
     redirectIframe(url);
@@ -318,7 +317,7 @@
                 if (noCheckApp || window.noExfeApp) {
                   handle();
                 } else {
-                  window.launchApp(app_url + c[1], function () {
+                  window.launchApp(app_prefix_url + c[1], function () {
                     setTimeout(function () {
                       window.location = '/?redirect' + location.hash;
                     }, 200)
@@ -863,7 +862,7 @@
           username = authorization.name;
         }
 
-        var url = app_url, args = '';
+        var url = app_prefix_url, args = '';
 
         if (params.cross_id) {
           url += '!' + params.cross_id + '/routex'
