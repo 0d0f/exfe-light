@@ -1646,10 +1646,25 @@ define('mobilecontroller', function (require, exports, module) {
 
     , render: function () {
         $('#app-routex').remove();
+        var self = this;
         this.element.appendTo($('#app-container'));
-        this.loadStaticMaps();
+        this.START_TIME = now();
         this.loadMaps();
+        this.loadStaticMaps();
         this.setLatLngOffset();
+        this.mapsTimer = setTimeout(function () {
+          self.cancelStaticMaps();
+          clearTimeout(self.mapsTimer);
+        }, 500);
+      }
+
+    , cancelStaticMaps = function () {
+        if (this.mapReadyStatus) {
+          this.staticMaps.hide();
+          delete this.staticMaps;
+        } else {
+          this.staticMaps.show();
+        }
       }
 
     , listen: function () {
@@ -1906,7 +1921,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
-          if (self.staticMaps && self.staticMaps.readyStatus) {
+          if (self.staticMaps) {
             self.staticMaps.contains();
           }
           Debugger.log(pb, ids);
@@ -2002,17 +2017,18 @@ define('mobilecontroller', function (require, exports, module) {
               }
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
+                clearTimeout(self.mapsTimer);
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
+                self.cancelStaticMaps();
               }
         });
         mc.myUserId = this.myUserId;
         mc.myIdentity = this.myIdentity;
         // defaults to true
         mc.tracking = true;
-        this.START_TIME = now();
-        mc.load();
         mc.controller = self;
+        mc.load();
 
         if (this.token && this.cross_id) {
           $.ajax({
@@ -2061,7 +2077,9 @@ define('mobilecontroller', function (require, exports, module) {
         var offset = Store.get('offset-latlng');
         if (offset) {
           this.mapController.setOffset(offset);
-          this.staticMaps.setOffset(offset);
+          if (this.staticMaps) {
+            this.staticMaps.setOffset(offset);
+          }
         }
       }
 
@@ -2122,7 +2140,6 @@ define('mobilecontroller', function (require, exports, module) {
                 }
               }
             , complete: function () { self.checkFollowingStatus = 0; }
-            //, error: function (data) {}
           });
         }
       }
@@ -2155,18 +2172,12 @@ define('mobilecontroller', function (require, exports, module) {
         this.startStream();
         Debugger.log('start streaming');
         Debugger.log('start monit')
-        var t = 1000 * 2.5;
         this.timer = setInterval(function () {
-          if (now() - self.START_TIME < t && self.mapReadyStatus) {
-            self.staticMaps.hide();
-            $('#canvas').css('opacity', 1);
-          }
-
           if (self.mapReadyStatus) {
             Debugger.log(new Date());
             self.mapController.monit();
           }
-        }, 500);
+        }, 1000);
       }
 
     , loadStaticMaps: function () {
@@ -2277,15 +2288,11 @@ define('mobilecontroller', function (require, exports, module) {
           , mapReadyStatus = this.mapReadyStatus
           , staticMaps = this.staticMaps;
 
-        if (staticMaps && mapController) {
-          this.setLatLngOffset();
-        }
+        this.setLatLngOffset();
 
         if (staticMaps) {
           staticMaps.updateGeoPosition(position);
-          if (staticMaps.readyStatus) {
-            staticMaps.updateGeoLocation(myUserId, position);
-          }
+          staticMaps.updateGeoLocation(myUserId, position);
         }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
