@@ -1658,7 +1658,7 @@ define('mobilecontroller', function (require, exports, module) {
         }, 500);
       }
 
-    , cancelStaticMaps = function () {
+    , cancelStaticMaps: function () {
         if (this.mapReadyStatus) {
           this.staticMaps.hide();
           delete this.staticMaps;
