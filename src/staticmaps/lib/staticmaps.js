@@ -1,4 +1,6 @@
 //https://github.com/Leaflet/Leaflet
+// https://code.google.com/p/google-ajax-examples/source/browse/trunk/nonjslocalsearch/localSearch.py
+// http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
 
 define('staticmaps', function () {
   'use strict';
@@ -51,51 +53,6 @@ define('staticmaps', function () {
     return (sw2[0] >= sw[0]) && (ne2[0] <= ne[0]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[1]);
   };
 
-  // https://code.google.com/p/google-ajax-examples/source/browse/trunk/nonjslocalsearch/localSearch.py
-  // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
-  /*
-  function Projection() {
-    this.pixelOrigin_ = [MERCATOR_RANGE / 2, MERCATOR_RANGE / 2];
-    this.pixelsPerLonDegree_ = MERCATOR_RANGE / 360;
-    this.pixelsPerLonRadian_ = MERCATOR_RANGE / (2 * Math.PI);
-  }
-
-  proto = Projection.prototype;
-
-  proto.fromLatLngToPoint = function (latlng) {
-    var origin = this.pixelOrigin_;
-    var point = [];
-    point[0] = origin[0] + latLng[1] * this.pixelsPerLonDegree_;
-    // NOTE(appleton): Truncating to 0.9999 effectively limits latitude to
-    // 89.189.  This is about a third of a tile past the edge of the world tile.
-    var siny = this.bound(Math.sin(this.degreesToRadians(latLng[0])), -0.9999, 0.9999);
-    point[1] = origin[1] + 0.5 * Math.log((1 + siny) / (1 - siny)) * -this.pixelsPerLonRadian_;
-    return point;
-  };
-
-  proto.fromPointToLatLng = function (latlng) {
-    var origin = this.pixelOrigin_;
-    var lng = (point[0] - origin[0]) / this.pixelsPerLonDegree_;
-    var latRadians = (point[1] - origin[1]) / -this.pixelsPerLonRadian_;
-    var lat = this.radiansToDegrees(2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2);
-    return [lat, lng];
-  }
-
-  proto.degreesToRadians = function (deg) {
-    return deg * (Math.PI / 180);
-  };
-
-  proto.radiansToDegrees = function (rad) {
-    return rad / (Math.PI / 180);
-  };
-
-  proto.bound = function (val, min, max) {
-    val = Math.max(val, min);
-    val = Math.min(val, max);
-    return value;
-  };
-  */
-
 
   function StaticMaps(map, myUserId) {
     this.map = map;
@@ -144,26 +101,27 @@ define('staticmaps', function () {
     img.width = this.width;
     img.height = this.height;
 
-    this.map.append(img);
-    this.map.removeClass();
+    this.img = img;
 
     img.onload = function () {
-      Debugger.alert('loaded');
-      self.readyStatus = true;
-      self.update();
-      self.updateGeoLocation(self.myUserId, self.position);
-      self.canvas.style.opacity = 1;
-      self.contains();
+      self.map.append(img);
     };
 
-    img.onerror = function () {
-      self.hide();
-    };
+    img.onerror = function () {};
   };
 
   proto.hide = function () {
-    this.map.addClass('hide');
-    this.canvas.style.opacity = 0;
+    var img = this.img;
+    if (img) {
+      img.onload = img.onerror = img = this.img = null;
+    }
+    this.map.remove();
+    this.canvas.remove();
+  };
+
+  proto.show = function () {
+    this.map.removeClass('hide');
+    this.canvas.className = '';
   };
 
   proto.update = function () {
@@ -327,6 +285,10 @@ define('staticmaps', function () {
         // load static map
         this.initEnd = true;
         this.setBounds();
+        this.update();
+        this.updateGeoLocation(this.myUserId, this.position);
+        this.canvas.className = '';
+        this.contains();
         this.load();
       } else if (type === 'route' || type === 'location') {
         this._cache.push(result);

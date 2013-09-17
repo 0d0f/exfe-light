@@ -191,7 +191,6 @@
 
   #canvas,
   #static-map-canvas {
-    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
@@ -852,13 +851,13 @@
 
   .wechat-dialog {
     &.ant {
-      background-color: rgba(0, 0, 0, 0);
+      opacity: 0;
     }
     z-index: 1000;
     text-shadow: 0 1px 1px rgba(255, 255, 255, .66);
     color: rgb(0, 0, 0);
-    -webkit-transition: background-color 0.25s ease-out;
-    transition: background-color 0.25s ease-out;
+    -webkit-transition: opacity 0.25s ease-out;
+    transition: opacity 0.25s ease-out;
     .main {
       position: absolute;
       top: 4px;
@@ -895,10 +894,10 @@
     .main {
       -webkit-transform-origin: right top;
       -webkit-transform: scale3d(1, 1, 1);
-      -webkit-transition: -webkit-transform 0.233s ease-out 0.25s;
+      -webkit-transition: -webkit-transform 0.25s ease-out 0.25s;
       transform-origin: right top;
       transform: scale3d(1, 1, 1);
-      transition: transform 0.233s ease-out 0.25s;
+      transition: transform 0.25s ease-out 0.25s;
     }
 
     &.ant .main {
@@ -907,7 +906,7 @@
     }
 
     .ibox {
-      padding: 10px;
+      padding: 9px;
     }
     h5 {
       font-size: 21px;
@@ -919,12 +918,13 @@
 
     .specification {
       position: absolute;
-      top: 240px;
+      top: 220px;
       color: #fff;
       padding: 0 20px;
-      -webkit-transition: opacity 0.233s ease-out 0.5s;
-      transition: opacity 0.233s ease-out 0.5s;
+      -webkit-transition: opacity 0.25s ease-out 0.5s;
+      transition: opacity 0.25s ease-out 0.5s;
       opacity: 1;
+      text-shadow: 0 1px 0px rgba(0, 0, 0, .33);
 
       h5 {
         margin-bottom: 10px;
