@@ -1734,7 +1734,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (!$.contains($t.find('.ibox')[0], ele)) {
             //$t.find('.share-input')[0].removeAttribute('contentEditable');
             $t.find('.share-input').blur();
-            $t.addClass('hide');
+            $t.addClass('ant hide');
           }
         });
 
@@ -1796,6 +1796,9 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页就能在“活点地图”里互相看到方位。';
 
                     $ws.removeClass('hide');
+                    window.getComputedStyle($ws[0]).opacity;
+                    $ws.removeClass('ant')
+
                     input.value = text;
                     window.setTimeout(function () {
                       input.focus();
