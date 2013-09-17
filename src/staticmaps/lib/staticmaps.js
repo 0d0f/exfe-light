@@ -86,8 +86,6 @@ define('staticmaps', function () {
   };
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel() - 1;
-    this.center = this.bounds.getCenter();
     var self = this
       , c = this.center
       , zoom = 'zoom=' + this.zoom
@@ -313,6 +311,8 @@ define('staticmaps', function () {
         bounds.extend(p);
       }
     }
+    this.zoom = this.getBoundsZoomLevel() - 1;
+    this.center = this.bounds.getCenter();
   };
 
   proto.getBoundsZoomLevel = function () {
