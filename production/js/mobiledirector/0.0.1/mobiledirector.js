@@ -15,7 +15,7 @@
     , eventType = supportHistory ? 'popstate' : 'hashchange'
     , location = window.location
     , empty = function () {}
-    , app_url = app_scheme + ':///'
+    , app_url = app_scheme + '://' + window.location.hostname + '/'
     , routes = {
           home: /^\/+(?:\?)?#{0,}$/
         , smsToken: /^\/+\?(?:(redirect)?&)?t=([a-zA-Z0-9]{3,})$/
