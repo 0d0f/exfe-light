@@ -149,6 +149,8 @@ define('staticmaps', function () {
       self.readyStatus = true;
       self.update();
       self.updateGeoLocation(self.myUserId, self.position);
+      document.getElementById('static-map-canvas').style.opacity = 1;
+      Debugger.alert(document.getElementById('static-map-canvas').id);
       self.contains();
     };
 
