@@ -140,6 +140,7 @@ define('staticmaps', function () {
 
     img.onerror = function () {
       self.map.find('#failed').removeClass('hide');
+      self.canvas.className = 'hide';
       self.abortImage();
     };
   };
