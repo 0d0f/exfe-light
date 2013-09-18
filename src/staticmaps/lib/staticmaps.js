@@ -135,16 +135,23 @@ define('staticmaps', function () {
 
     img.onload = function () {
       self.map.append(img);
+      self.abortImage();
     };
 
-    img.onerror = function () {};
+    img.onerror = function () {
+      self.map.find('#failed').removeClass('hide');
+      self.abortImage();
+    };
   };
 
-  proto.hide = function () {
+  proto.abortImage = function () {
     var img = this.img;
     if (img) {
       img.onload = img.onerror = img = this.img = null;
     }
+  };
+
+  proto.hide = function () {
     this.map.remove();
     this.canvas.remove();
   };
