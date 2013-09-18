@@ -135,8 +135,14 @@
   }
 
   #static-map {
-    img {
+    .static-map-img {
+      position: absolute;
       -webkit-user-select: none;
+      z-index: 1;
+    }
+
+    > div {
+      z-index: 2;
     }
 
     .dot {
