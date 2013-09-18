@@ -1,6 +1,7 @@
-//https://github.com/Leaflet/Leaflet
+// https://github.com/Leaflet/Leaflet
 // https://code.google.com/p/google-ajax-examples/source/browse/trunk/nonjslocalsearch/localSearch.py
 // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
+// https://developers.google.com/maps/documentation/staticmaps/?hl=zh-cn#Imagesizes - Size Limit
 
 define('staticmaps', function () {
   'use strict';
@@ -54,15 +55,19 @@ define('staticmaps', function () {
   };
 
 
-  function StaticMaps(map, myUserId) {
+  function StaticMaps(map, myUserId, mode) {
     this.map = map;
     this.myUserId = myUserId;
+    this.MODE = mode || 'free';
+    this.bounds = new LatLngBounds();
     this.width = $(window).width();
     this.height = $(window).height();
-    this.bounds = new LatLngBounds();
     this._cache = [];
     this.latOffset = 0;
     this.lngOffset = 0;
+
+    this.topOffset = 0;
+    this.leftOffset = 0;
 
     this.lines = {};
 
@@ -74,11 +79,35 @@ define('staticmaps', function () {
     this.ctx = this.canvas.getContext('2d');
 
     this.readyStatus = false;
+    this.setImg();
   }
 
   proto = StaticMaps.prototype;
 
   proto.initEnd = false;
+
+  proto.setImg = function () {
+    this.imgWidth = this.width;
+    this.imgHeight = this.height;
+    if (this.MODE === 'free') {
+      //
+      var pw = this.width / 640
+        , ph = this.height / 640;
+
+      if (pw > 1 && pw > ph) {
+        this.imgWidth = 640;
+        this.imgHeight = this.height;
+      } else if (pw > 1 && pw < ph) {
+        this.imgWidth = this.imgHeight = 640;
+      } else if (ph > 1 && ph > pw) {
+        this.imgHeight = 640;
+        this.imgWidth = this.width;
+      }
+      this.leftOffset = (this.width - this.imgWidth) / 2;
+      this.topOffset = (this.height - this.imgHeight) / 2;
+    }
+
+  };
 
   proto.setOffset = function (offset) {
     this.latOffset = offset.earth_to_mars_latitude * 1;
@@ -90,14 +119,17 @@ define('staticmaps', function () {
       , c = this.center
       , zoom = 'zoom=' + this.zoom
       , img = document.createElement('img')
-      , size = 'size=' + this.width + 'x' + this.height
+      , size = 'size=' + this.imgWidth + 'x' + this.imgHeight
       , center = 'center=' + c[0] + ',' + c[1]
       // @todo: 适配语言
       , url = 'http://ditu.google.com/maps/api/staticmap?key=' + window._ENV_.MAP_KEY + '&language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
+    img.className = 'static-map-img';
     img.src = url;
-    img.width = this.width;
-    img.height = this.height;
+    img.width = this.imgWidth;
+    img.height = this.imgHeight;
+    img.style.top = this.topOffset + 'px';
+    img.style.left = this.leftOffset + 'px';
 
     this.img = img;
 
@@ -146,7 +178,7 @@ define('staticmaps', function () {
     var e = document.createElement('div');
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
-    var point = this.latlngToLayerPoint(latlng);
+    var point = this.getOffsetPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     e.setAttribute('data-uid', uid);
@@ -177,7 +209,7 @@ define('staticmaps', function () {
 
     var e = document.createElement('div');
     var latlng = [d.lat, d.lng];
-    var point = this.latlngToLayerPoint(latlng);
+    var point = this.getOffsetPoint(latlng);
     e.style.left = (point[0] - 12) + 'px';
     e.style.top = (point[1] - 34) + 'px';
     this.map.append(e);
@@ -233,7 +265,7 @@ define('staticmaps', function () {
       ids = document.getElementById('identities')._ids || {};
     }
     if (bounds.contains(latlng) && (b = ids[uid])) {
-      var p = this.latlngToLayerPoint(latlng);
+      var p = this.getOffsetPoint(latlng);
       var line = this.lines[uid];
       if (!line) { line =  []; }
       line[0] = [b[1], b[2]];
@@ -340,8 +372,8 @@ define('staticmaps', function () {
     var lngDiff = ne[1] - sw[1];
     var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
-    var latZoom = zoom(this.height, WORLD_DIM.height, latFraction);
-    var lngZoom = zoom(this.width, WORLD_DIM.width, lngFraction);
+    var latZoom = zoom(this.imgHeight, WORLD_DIM.height, latFraction);
+    var lngZoom = zoom(this.imgWidth, WORLD_DIM.width, lngFraction);
 
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
@@ -368,8 +400,8 @@ define('staticmaps', function () {
 
   proto.leftTopPoint = function (center) {
     var point = this.latLngToPoint(center, this.zoom);
-    point[0] -= this.width / 2;
-    point[1] -= this.height / 2;
+    point[0] -= this.imgWidth / 2;
+    point[1] -= this.imgHeight / 2;
     return point;
   };
 
@@ -395,6 +427,13 @@ define('staticmaps', function () {
     return point;
   };
 
+  proto.getOffsetPoint = function (latlng) {
+    var point = this.latlngToLayerPoint(latlng);
+    point[0] += this.leftOffset;
+    point[1] += this.topOffset;
+    return point;
+  };
+
   proto.updateGeoPosition = function (position) {
     this.position = position;
     this.bounds.extend(position.gps.slice(0, 2));
@@ -414,7 +453,7 @@ define('staticmaps', function () {
       this.map.append(geo);
     }
     position = this.toMars(position, true);
-    var point = this.latlngToLayerPoint(position.gps.slice(0, 2));
+    var point = this.getOffsetPoint(position.gps.slice(0, 2));
     geo.css({
         left: (point[0] - 11)
       , top: (point[1] - 11)
