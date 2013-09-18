@@ -204,6 +204,7 @@ define('staticmaps', function () {
     if (c) {
       e.className = 'place ' + c;
     } else {
+      e.className = 'place';
       e.style.backgroundImage = 'url(' + (d.icon || mapmark) + ')';
     }
   };
