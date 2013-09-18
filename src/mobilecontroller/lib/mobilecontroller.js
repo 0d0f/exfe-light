@@ -1648,6 +1648,7 @@ define('mobilecontroller', function (require, exports, module) {
         var self = this;
         this.element.appendTo($('#app-container'));
         this.START_TIME = now();
+        this.getRoutexWidget();
         this.loadMaps();
         this.loadStaticMaps();
         this.setLatLngOffset();
@@ -2016,6 +2017,10 @@ define('mobilecontroller', function (require, exports, module) {
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
                 self.cancelStaticMaps();
+                var routexWidget = self.routexWidget, objects;
+                if (routexWidget && (objects = routexWidget.objects)) {
+                  self.mapController.drawBatch(objects.slice(0));
+                }
               }
         });
         mc.myUserId = this.myUserId;
@@ -2139,15 +2144,22 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
-    , checkRouteXStatus: function () {
-        var c = true, routexWidget;
-        for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
-          var w = this.cross.widget[i];
-          if (w.type === 'routex') {
-            routexWidget = w;
-            break;
+    , getRoutexWidget: function () {
+        var cross = this.cross || window._ENV_.cross || {}, routexWidget;
+        if (cross && cross.widget) {
+          for (var i = 0, len = cross.widget.length; i < len; ++i) {
+            var w = cross.widget[i];
+            if (w.type === 'routex') {
+              routexWidget = w;
+              break;
+            }
           }
         }
+        return this.routexWidget = routexWidget;
+      }
+
+    , checkRouteXStatus: function () {
+        var c = true, routexWidget = this.routexWidget;
         if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
           c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
@@ -2178,6 +2190,10 @@ define('mobilecontroller', function (require, exports, module) {
     , loadStaticMaps: function () {
         var SM = require('staticmaps');
         this.staticMaps = new SM(this.$('#static-map'), this.myUserId);
+        var routexWidget = this.routexWidget, objects;
+        if (routexWidget && (objects = routexWidget.objects)) {
+          this.staticMaps.drawBatch(objects.slice(0));
+        }
       }
 
     , _cache: []
