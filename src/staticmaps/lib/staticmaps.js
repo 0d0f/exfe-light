@@ -165,11 +165,13 @@ define('staticmaps', function () {
     }
 
     var t = 0, zIndex = 0;
-    while ((tag = tags.shift())) {
-      if (tag === 'xplace') {
-        t ^= 1;
-      } else if (tag === 'destination') {
-        t ^= 2;
+    if (tags) {
+      while ((tag = tags.shift())) {
+        if (tag === 'xplace') {
+          t ^= 1;
+        } else if (tag === 'destination') {
+          t ^= 2;
+        }
       }
     }
 
