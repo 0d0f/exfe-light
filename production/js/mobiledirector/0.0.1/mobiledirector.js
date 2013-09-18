@@ -880,8 +880,8 @@
       var auth = getAuthFromHeader()
         , authorization;
       // 是否跟本地的 user-token 进行合并？
-      if (auth && auth.authorization) {
-        window._ENV_.authorization = auth.authorization;
+      if (auth && (authorization = auth.authorization)) {
+        window._ENV_.authorization = authorization;
         localStorage.setItem('authorization', JSON.stringify({
             user_id: authorization.user_id
           , token: authorization.token
