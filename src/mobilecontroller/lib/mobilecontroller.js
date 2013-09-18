@@ -1999,13 +1999,13 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadMaps: function (p) {
-        var protocol = !Chrome ? 'http://' : 'https://';
+        var protocol = Chrome ? 'https://' : 'http://';
         var self = this
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               protocol: protocol
             // In Chrome, block http while the site is https.
-            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {

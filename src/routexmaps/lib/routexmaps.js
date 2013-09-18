@@ -263,7 +263,7 @@ define('routexmaps', function (require) {
       };
 
       window._loadmaps_ = null;
-    }(this, options.mapDiv, options.mapOptions, options.callback);
+    }(this, this.mapDiv, options.mapOptions, options.callback);
 
   }
 
@@ -276,7 +276,7 @@ define('routexmaps', function (require) {
       , d;
     while ((d = dns.shift())) {
       var link = document.createElement('link');
-      link.rel='dns-prefetch';
+      link.rel = 'dns-prefetch';
       link.href = protocol + d;
       head.appendChild(link);
     }
