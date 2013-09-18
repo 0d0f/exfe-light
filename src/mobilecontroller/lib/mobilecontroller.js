@@ -1651,19 +1651,14 @@ define('mobilecontroller', function (require, exports, module) {
         this.loadMaps();
         this.loadStaticMaps();
         this.setLatLngOffset();
-        this.mapsTimer = setTimeout(function () {
-          self.cancelStaticMaps();
-          clearTimeout(self.mapsTimer);
-        }, 500);
       }
 
     , cancelStaticMaps: function () {
         if (this.mapReadyStatus) {
           this.staticMaps.hide();
           delete this.staticMaps;
+          this.mapController.show();
           $('#identities').triggerHandler('scroll');
-        } else {
-          this.staticMaps.show();
         }
       }
 
@@ -2018,7 +2013,6 @@ define('mobilecontroller', function (require, exports, module) {
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
                 Debugger.alert('动态地图加载时间: ' + (now() - self.START_TIME + 'ms'));
-                clearTimeout(self.mapsTimer);
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
                 self.cancelStaticMaps();
