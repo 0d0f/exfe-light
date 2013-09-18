@@ -717,6 +717,12 @@ define('routexmaps', function (require) {
     }
   };
 
+  proto.drawBatch = function (list, e) {
+    while ((e = list.shift())) {
+      this.draw(e);
+    }
+  };
+
   proto.clearup = function () {
     var k;
     var places = this.places;

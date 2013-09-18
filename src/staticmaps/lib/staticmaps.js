@@ -318,10 +318,10 @@ define('staticmaps', function () {
   };
 
   proto.draw = function (result) {
-    var type = result.type
-      , action = result.action;
-
     if (!this.initEnd) {
+      var type = result.type
+        , action = result.action;
+
       if (type === 'command' && action === 'init_end') {
         // load static map
         this.initEnd = true;
@@ -335,6 +335,11 @@ define('staticmaps', function () {
         this._cache.push(result);
       }
     }
+  };
+
+  proto.drawBatch = function (items) {
+    this._cache = items;
+    this.draw({ type: 'command', action: 'init_end' });
   };
 
   proto.setBounds = function () {
