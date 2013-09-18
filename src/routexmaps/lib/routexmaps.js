@@ -110,6 +110,7 @@ define('routexmaps', function (require) {
     this.svgLayer = this.options.svg;
     delete this.options.svg;
     */
+    this.mapDiv = this.options.mapDiv;
     this.canvas = this.options.canvas;
     var w = $(window).width(), h = $(window).height();
     this.canvas.width = w * 2;
@@ -118,6 +119,7 @@ define('routexmaps', function (require) {
     this.canvas.style.height = h + 'px';
     this.ctx = this.canvas.getContext('2d');
     this.DRAW_STATUS = true;
+    delete this.options.mapDiv;
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -290,6 +292,11 @@ define('routexmaps', function (require) {
     };
     n.src = this.options.url;
     document.body.appendChild(n);
+  };
+
+  proto.show = function () {
+    this.mapDiv.className = '';
+    this.canvas.className = '';
   };
 
   proto.fromContainerPixelToLatLng = function (point) {
