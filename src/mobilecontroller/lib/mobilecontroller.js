@@ -13,7 +13,7 @@ define('mobilecontroller', function (require, exports, module) {
 
       $ = require('zepto'),
 
-      iOS = navigator.platform.match(/iP(hone|ad|od)/i),
+      iOS = !!navigator.platform.match(/iP(hone|ad|od)/i),
 
       // animation {{{
       //AF = require('af'),
