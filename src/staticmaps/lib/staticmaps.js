@@ -154,7 +154,9 @@ define('staticmaps', function () {
 
   proto.hide = function () {
     this.map.remove();
-    this.canvas.remove();
+    $(this.canvas).remove();
+    delete this.map;
+    delete this.canvas;
   };
 
   proto.show = function () {
