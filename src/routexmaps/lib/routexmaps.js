@@ -282,14 +282,23 @@ define('routexmaps', function (require) {
     }
 
     var n = document.createElement('script')
-    n.type = 'text/javascript';
-    n.async = !0;
-    n.onload = n.onerror = n.onreadystatechange = function () {
-      if (/^(?:loaded|complete|undefined)$/.test(n.readyState)) {
+    if ('onload' in n) {
+      n.onload = function () {
         n = n.onload = n.onerror = n.onreadystatechange = null;
         cb && cb();
-      }
-    };
+      };
+      n.onerror = function () {
+        n = n.onload = n.onerror = n.onreadystatechange = null;
+      };
+    } else {
+      n.onreadystatechange = function () {
+        n = n.onload = n.onerror = n.onreadystatechange = null;
+        if (/loaded|complete/.test(n.readyState)) {
+          cb && cb();
+        }
+      };
+    }
+    n.async = true;
     n.src = this.options.url;
     document.body.appendChild(n);
   };
