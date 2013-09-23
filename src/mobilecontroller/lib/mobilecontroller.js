@@ -2427,11 +2427,11 @@ define('mobilecontroller', function (require, exports, module) {
 
         if (cross_id) {
           element.on('tap.maps', function (e) {
-            if (e.target.id === 'shuidi-dialog') {
+            //if (e.target.id === 'shuidi-dialog') {
               e.stopPropagation();
               self.destory();
               element.remove();
-            }
+            //}
           });
 
           element.on('scroll.maps', function (e) {
