@@ -2470,6 +2470,9 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
+          if (iOS) {
+            element.find('.app').removeClass('hide');
+          }
           if (cross_id) {
             var h = $(window).height()
               , top;
