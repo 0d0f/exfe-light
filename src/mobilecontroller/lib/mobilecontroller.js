@@ -2481,6 +2481,7 @@ define('mobilecontroller', function (require, exports, module) {
             $m.css('top', h);
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
+            window.getComputedStyle($m[0]).opacity;
             $m.css({
               'transform': 'translate(0, ' + (top + 50 - h) + 'px)',
               '-webkit-transform': 'translate(0, ' + (top + 50 - h) + 'px)'
