@@ -1737,6 +1737,8 @@ define('mobilecontroller', function (require, exports, module) {
 
         element.on('touchstart.maps', '#wechat-guide', function (e) {
           $(this).addClass('ant hide');
+          // @todo: 后续根据第一次或者streaming下发的`follow`状态判断
+          self.checkFollowing();
         });
 
         element.on('touchstart.maps', '#wechat-share', function (e) {
@@ -2017,6 +2019,7 @@ define('mobilecontroller', function (require, exports, module) {
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
                 self.cancelStaticMaps();
+                // @todo: 后续重构静、动地图模块
                 $('#identities-overlay .identity .detial').removeClass('hide');
                 var routexWidget = self.routexWidget, objects;
                 if (routexWidget && (objects = routexWidget.objects)) {
@@ -2132,12 +2135,21 @@ define('mobilecontroller', function (require, exports, module) {
             , success: function (data) {
                 if (data.meta.code === 200) {
                   var following = data.response.following;
-                  if (!following) {
-                    var $g = $('#wechat-guide');
-                    $g.removeClass('hide');
-                    window.getComputedStyle($g[0]).opacity;
-                    $g.removeClass('ant')
+
+                  //---------------------------
+                  var $g = $('#wechat-guide');
+                  if (following) {
+                    if (!$g.hasClass('hide')) {
+                      $g.addClass('ant hide');
+                    }
+                  } else {
+                    if ($g.hasClass('hide')) {
+                      $g.removeClass('hide');
+                      window.getComputedStyle($g[0]).opacity;
+                      $g.removeClass('ant');
+                    }
                   }
+                  //---------------------------
                 }
               }
             , complete: function () { self.checkFollowingStatus = 0; }
