@@ -1114,11 +1114,13 @@
     width: 312px;
     min-height: 400px;
     padding: 30px 15px;
+    background-size: 100% 400px, 100% 100%;
+    background-repeat: no-repeat;
     @startColor: #153353;
     @endColor: #191919;
-    background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor), -webkit-linear-gradient(-90deg, @endColor, @endColor); // Safari 5.1+, Chrome 10+
     @d: 90deg - 270deg;
-    background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
+    background-image: linear-gradient(@d, @startColor, @endColor), linear-gradient(@d, @endColor, @endColor); // Standard, IE10
     -webkit-transition: -webkit-transform 233ms ease-in;
     transition: transform 233ms ease-in;
     margin: 0 auto;
