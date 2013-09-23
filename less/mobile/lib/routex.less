@@ -1135,21 +1135,22 @@
     .title {
       font-size: 21px;
       font-weight: 300;
-      padding-bottom: 20px;
-      text-align: center;
+    }
+
+    .sub-title {
+      font-size: 18px;
+      font-weight: 300;
+      margin-top: 20px;
     }
 
     .desc {
       margin: 0;
       padding: 0;
-      .name {
-        font-size: 18px;
-        font-weight: 300;
-        //color: #82afea;
-      }
+      font-size: 14px;
+      font-weight: 300;
     }
 
-    .app-btn{
+    .app-btn {
       position: relative;
       margin: 20px auto 40px;
       width: 260px;
@@ -1192,6 +1193,12 @@
       }
       .app-keywords {
         font-weight: normal;
+      }
+    }
+
+    .app-desc {
+      span {
+        font-size: 18px;
       }
     }
 
@@ -1274,10 +1281,11 @@
   }
 }
 
-#cleanup-cache {
+.cleanup {
   margin-top: 40px;
   font-size: 14px;
   font-weight: 300;
   color: #7f7f7f;
   text-decoration: underline;
+  text-align: right;
 }
