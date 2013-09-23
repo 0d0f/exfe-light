@@ -2017,6 +2017,7 @@ define('mobilecontroller', function (require, exports, module) {
                 self.mapReadyStatus = true;
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
                 self.cancelStaticMaps();
+                $('#identities-overlay .identity .detial').removeClass('hide');
                 var routexWidget = self.routexWidget, objects;
                 if (routexWidget && (objects = routexWidget.objects)) {
                   self.mapController.drawBatch(objects.slice(0));
@@ -2374,7 +2375,7 @@ define('mobilecontroller', function (require, exports, module) {
             this.updateNotifyProvider(this.notification_identities);
             continue;
           }
-          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown hide"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
           div.attr('data-uid', identity.connected_user_id);
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
