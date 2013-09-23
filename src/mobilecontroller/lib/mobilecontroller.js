@@ -2475,13 +2475,16 @@ define('mobilecontroller', function (require, exports, module) {
           }
           if (cross_id) {
             var h = $(window).height()
+              , $m = element.find('.main')
               , top;
             top = h - 380;
+            $m.css('top', h);
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
-            element
-              .find('.main')
-              .css('top', (top + 50) + 'px');
+            $m.css({
+              'transform': 'translate(0, ' + (top + 50 - h) + 'px)',
+              '-webkit-transform': 'translate(0, ' + (top + 50 - h) + 'px)'
+            });
             element.prop('scrollTop', top);
           }
         });
