@@ -816,6 +816,7 @@
   }
 
   #privacy-dialog {
+    z-index: 11;
     .main {
       padding: 37px 20px 0;
     }
@@ -934,8 +935,8 @@
     .wechatbtn-share {
       position: relative;
       top: 1px;
-      margin-left: 1px;
-      margin-right: 1px;
+      margin-left: 3px;
+      margin-right: 3px;
     }
 
     .specification {
@@ -1089,7 +1090,21 @@
   }
 }
 
+
+@-webkit-keyframes sdo {
+  100% {
+    background-color: rgba(0, 0, 0, .85);
+  }
+}
+@keyframes sdo {
+  100% {
+    background-color: rgba(0, 0, 0, .85);
+  }
+}
+
 #shuidi-dialog {
+  //-webkit-transition: opacity .25s ease-out;
+  //transition: opacity .25s ease-out;
   z-index: 23333;
   position: absolute;
   left: 0;
@@ -1098,9 +1113,9 @@
   bottom: 0;
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  //-webkit-animation: sdo .25s ease;
+  -webkit-appearance: none;
+  background-color: transparent;
 
   * {
     -webkit-box-sizing: border-box;
@@ -1108,11 +1123,35 @@
   }
 
   &.nobg {
-    background: #fff;
-
+    background-color: rgba(0, 0, 0, 0.85);
     .main {
       bottom: auto;
     }
+  }
+
+  .sd-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: transparent;
+   // -webkit-animation: sdo .25s ease;
+    -webkit-transition: background-color .25s ease-out;
+  }
+
+  .mw {
+    position: relative;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-appearance: none;
   }
 
   .main {
@@ -1128,13 +1167,16 @@
     background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor), -webkit-linear-gradient(-90deg, @endColor, @endColor); // Safari 5.1+, Chrome 10+
     @d: 90deg - 270deg;
     background-image: linear-gradient(@d, @startColor, @endColor), linear-gradient(@d, @endColor, @endColor); // Standard, IE10
-    -webkit-transition: -webkit-transform .5s ease-out;
-    transition: transform 0.5s ease-out;
     margin: 0 auto;
     border-top: 1px solid rgba(255, 255, 255, .2);
     border-left: 1px solid rgba(255, 255, 255, .2);
     border-right: 1px solid rgba(255, 255, 255, .2);
     border-radius: 10px 10px 0 0;
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+    -webkit-appearance: none;
+    -webkit-transition: -webkit-transform .5s ease;
+    transition: transform 0.5s ease;
 
     h3, h4 {
       margin: 0;
@@ -1176,6 +1218,10 @@
         right: -24px;
         top: -30px;
       }
+    }
+
+    .app {
+      position: relative;
     }
 
     .app-icon {

@@ -2420,6 +2420,27 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , out: function () {
+        if (this.isOut) { return; }
+        var self = this
+          , element = this.element
+        var $m = element.find('.main');
+        var $mw = element.find('.mw');
+        setTimeout(function () {
+          setTimeout(function () {
+            self.destory();
+            element.remove();
+            self.isOut = false;
+          }, 250);
+          element.find('.sd-bg').css('background-color', 'rgba(0, 0, 0, 0)');
+        }, 500);
+        window.getComputedStyle($m[0]).top;
+        $m.css({
+          '-webkit-transform': 'translate(0px, ' + $mw.scrollTop() + 'px)',
+          'transform': 'translate(0px, ' + $mw.scrollTop() + 'px)'
+        });
+      }
+
     , listen: function () {
         var self = this
           , element = this.element
@@ -2429,15 +2450,15 @@ define('mobilecontroller', function (require, exports, module) {
           element.on('tap.maps', function (e) {
             //if (e.target.id === 'shuidi-dialog') {
               e.stopPropagation();
-              self.destory();
-              element.remove();
+              self.out();
+              self.isOut = true;
             //}
           });
 
-          element.on('scroll.maps', function (e) {
+          element.find('.mw').on('scroll.maps', function (e) {
             if (this.scrollTop <= 0) {
-              self.destory();
-              element.remove();
+              self.out();
+              self.isOut = true;
             }
           });
         }
@@ -2475,18 +2496,31 @@ define('mobilecontroller', function (require, exports, module) {
           }
           if (cross_id) {
             var h = $(window).height()
+              , $mw = element.find('.mw')
               , $m = element.find('.main')
+              , scrollTop = 150
               , top;
             top = h - 380;
-            $m.css('top', h);
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
-            window.getComputedStyle($m[0]).opacity;
-            $m.css({
-              'transform': 'translate(0, ' + (top + 50 - h) + 'px)',
-              '-webkit-transform': 'translate(0, ' + (top + 50 - h) + 'px)'
-            });
-            element.prop('scrollTop', top);
+            top = (h - top + (top === 5 ? 0 : 50));
+            var opts = {
+              top: h + 150,
+              'min-height': top
+            };
+            $m.css(opts);
+            $mw.css('max-height', h + 150);
+            $mw.prop('scrollTop', scrollTop);
+            window.getComputedStyle($m[0]).top;
+            //element.find('.sd-bg').addClass('sdo');
+            element.find('.sd-bg').css('background-color', 'rgba(0, 0, 0, 0.85)');
+            setTimeout(function () {
+              $m.css({
+                '-webkit-transform': 'translate(0px, ' + -top + 'px)',
+                'transform': 'translate(0px, ' + -top + 'px)'
+              });
+              element.css('overflow-y', 'hidden');
+            }, 250);
           }
         });
       }
