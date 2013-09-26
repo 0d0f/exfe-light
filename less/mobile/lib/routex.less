@@ -96,6 +96,7 @@
   @d: 90deg - @deg;
   background-repeat: repeat-x;
   //background-image: -moz-linear-gradient(@d, @startColor, @endColor); // FF 3.6+
+  background-image: -webkit-gradient(linear, center top, center bottom, from(@startColor), to(@endColor));
   background-image: -webkit-linear-gradient(@d, @startColor, @endColor); // Safari 5.1+, Chrome 10+
   //background-image: -o-linear-gradient(@d, @startColor, @endColor); // Opera 11.10
   background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
@@ -1148,10 +1149,17 @@
     bottom: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    -webkit-appearance: none;
+    z-index: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000;
   }
 
   .main {
@@ -1176,9 +1184,11 @@
     border-left: 1px solid rgba(255, 255, 255, .2);
     border-right: 1px solid rgba(255, 255, 255, .2);
     border-radius: 10px 10px 0 0;
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-    -webkit-appearance: none;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    backface-visibility: hidden;
     -webkit-transition: -webkit-transform .5s ease;
     transition: transform 0.5s ease;
 
