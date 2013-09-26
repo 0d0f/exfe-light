@@ -1164,8 +1164,12 @@
     background-repeat: no-repeat;
     @startColor: #153353;
     @endColor: #191919;
+    background-image: -webkit-gradient(linear,center top,center bottom, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+    background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
     background-image: -webkit-linear-gradient(-90deg, @startColor, @endColor), -webkit-linear-gradient(-90deg, @endColor, @endColor); // Safari 5.1+, Chrome 10+
     @d: 90deg - 270deg;
+    background-image: linear-gradient(@d, @startColor, @endColor); // Standard, IE10
     background-image: linear-gradient(@d, @startColor, @endColor), linear-gradient(@d, @endColor, @endColor); // Standard, IE10
     margin: 0 auto;
     border-top: 1px solid rgba(255, 255, 255, .2);

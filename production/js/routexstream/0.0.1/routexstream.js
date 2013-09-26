@@ -158,7 +158,7 @@ define('routexstream', function (require) {
             if (!FIRST_CONNECT) {
                 FIRST_TIME = Date.now();
                 FIRST_CONNECT = true;
-                Debugger.alert('Streaming 开始有会包 ' + (FIRST_TIME - START_TIME) + 'ms');
+                // Debugger.alert('Streaming 开始有会包 ' + (FIRST_TIME - START_TIME) + 'ms');
             }
             var http = stream.http;
             if ((http.readyState   !== 4 && http.readyState !== 3)
@@ -290,13 +290,14 @@ define('routexstream', function (require) {
       options: {
           enableHighAccuracy: true
         , maximumAge: 0
-        , timeout: 29999.999999 //30000
+        //, timeout: 29999.999999 //30000
+        , timeout: 59999.999999 // 60 * 1000
       }
 
     , cachedOptions: {
           enableHighAccuracy: false
         , maximumAge: 60000 * 60 * 2 // 2 hours or Infinity
-        , timeout: 1000 * 5 // 29999.999999 //30000
+        , timeout: 1000 * 60 // 29999.999999 //30000
       }
 
     , STATUS: 0
@@ -380,9 +381,9 @@ define('routexstream', function (require) {
         var data = JSON.parse(rawData);
         if (data && data.type) {
             log('Streaming pops: ' + data.type)
-            if (data.type === 'command' && data.action === 'init_end') {
-                Debugger.alert('Streaming 收到 init_end ' + (Date.now() - START_TIME) + 'ms', '开始有会包到 init_end ' + (Date.now() - FIRST_TIME) + 'ms');
-            }
+            // if (data.type === 'command' && data.action === 'init_end') {
+            //     Debugger.alert('Streaming 收到 init_end ' + (Date.now() - START_TIME) + 'ms', '开始有会包到 init_end ' + (Date.now() - FIRST_TIME) + 'ms');
+            // }
             echo(data)
         }
     };

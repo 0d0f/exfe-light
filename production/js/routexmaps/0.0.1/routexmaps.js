@@ -110,6 +110,7 @@ define('routexmaps', function (require) {
     this.svgLayer = this.options.svg;
     delete this.options.svg;
     */
+    this.mapDiv = this.options.mapDiv;
     this.canvas = this.options.canvas;
     var w = $(window).width(), h = $(window).height();
     this.canvas.width = w * 2;
@@ -118,6 +119,7 @@ define('routexmaps', function (require) {
     this.canvas.style.height = h + 'px';
     this.ctx = this.canvas.getContext('2d');
     this.DRAW_STATUS = true;
+    delete this.options.mapDiv;
     delete this.options.cavnas;
 
     this.latOffset = 0;
@@ -206,7 +208,7 @@ define('routexmaps', function (require) {
         // overlay.onAdd = overlay.onRemove = function () {};
         overlay.setMap(map);
 
-        var initListener = GEvent.addListener(map, 'tilesloaded', function () {
+        var initListener = GEvent.addListener(map, 'idle', function () {
 
           GEvent.addListener(map, 'bounds_changed', function () {
             GEvent.trigger(map, 'zoom_changed');
@@ -254,15 +256,14 @@ define('routexmaps', function (require) {
 
           GEvent.removeListener(initListener);
 
+          callback(map);
         });
-
-        callback(map);
 
         cb = null;
       };
 
       window._loadmaps_ = null;
-    }(this, options.mapDiv, options.mapOptions, options.callback);
+    }(this, this.mapDiv, options.mapOptions, options.callback);
 
   }
 
@@ -275,22 +276,36 @@ define('routexmaps', function (require) {
       , d;
     while ((d = dns.shift())) {
       var link = document.createElement('link');
-      link.rel='dns-prefetch';
+      link.rel = 'dns-prefetch';
       link.href = protocol + d;
       head.appendChild(link);
     }
 
     var n = document.createElement('script')
-    n.type = 'text/javascript';
-    n.async = !0;
-    n.onload = n.onerror = n.onreadystatechange = function () {
-      if (/^(?:loaded|complete|undefined)$/.test(n.readyState)) {
+    if ('onload' in n) {
+      n.onload = function () {
         n = n.onload = n.onerror = n.onreadystatechange = null;
         cb && cb();
-      }
-    };
+      };
+      n.onerror = function () {
+        n = n.onload = n.onerror = n.onreadystatechange = null;
+      };
+    } else {
+      n.onreadystatechange = function () {
+        n = n.onload = n.onerror = n.onreadystatechange = null;
+        if (/loaded|complete/.test(n.readyState)) {
+          cb && cb();
+        }
+      };
+    }
+    n.async = true;
     n.src = this.options.url;
     document.body.appendChild(n);
+  };
+
+  proto.show = function () {
+    this.mapDiv.className = '';
+    this.canvas.className = '';
   };
 
   proto.fromContainerPixelToLatLng = function (point) {
@@ -668,42 +683,54 @@ define('routexmaps', function (require) {
 
     Debugger.log(type, action, isDelete, tags, data);
     switch (type) {
-      case LOCATION:
-        var t = 0;
+    case LOCATION:
+      var t = 0;
 
-        if (hasTags) {
-          while ((tag = tags.shift())) {
-            if (tag === XPLACE) {
-              t ^= 1; // t = 1
-            } else if (tag === DESTINATION) {
-              t ^= 2; // t = 2
-              dest = tag;
-            }
-            // has xplace and destination t = 3
+      if (hasTags) {
+        while ((tag = tags.shift())) {
+          if (tag === XPLACE) {
+            t ^= 1; // t = 1
+          } else if (tag === DESTINATION) {
+            t ^= 2; // t = 2
+            dest = tag;
+          }
+          // has xplace and destination t = 3
+        }
+      }
+
+      isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
+    break;
+
+    case ROUTE:
+      var isBreadcrumbs;
+
+      if (hasTags) {
+        while ((tag = tags.shift())) {
+          if (tag === BREADCRUMBS) {
+            isBreadcrumbs = true;
+            break;
           }
         }
+      }
 
-        isDelete ? this.removePlace(data, dest === DESTINATION) : this.drawPlace(data, t);
-        break;
+      if (isBreadcrumbs) {
+        this.drawGeoMarker(data);
+      } else {
+        isDelete ? this.removeRoute(data) : this.drawRoute(data);
+      }
+    break;
 
-      case ROUTE:
-        var isBreadcrumbs;
+    case 'command':
+      if (action === 'init_end') {
+        //this.contains();
+      }
+    break;
+    }
+  };
 
-        if (hasTags) {
-          while ((tag = tags.shift())) {
-            if (tag === BREADCRUMBS) {
-              isBreadcrumbs = true;
-              break;
-            }
-          }
-        }
-
-        if (isBreadcrumbs) {
-          this.drawGeoMarker(data);
-        } else {
-          isDelete ? this.removeRoute(data) : this.drawRoute(data);
-        }
-        break;
+  proto.drawBatch = function (list, e) {
+    while ((e = list.shift())) {
+      this.draw(e);
     }
   };
 
@@ -1468,7 +1495,7 @@ define('routexmaps', function (require) {
     if (!ids) {
       ids = document.getElementById('identities')._ids || {};
     }
-    if (bounds.contains(latlng) && (b = ids[uid])) {
+    if (bounds && bounds.contains(latlng) && (b = ids[uid])) {
       //this.showTipline(uid, b);
       var p = this.fromLatLngToContainerPixel(latlng);
       var line = this.lines[uid];

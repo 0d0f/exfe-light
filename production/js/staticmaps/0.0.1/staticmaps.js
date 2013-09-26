@@ -1,9 +1,14 @@
-//https://github.com/Leaflet/Leaflet
+// https://github.com/Leaflet/Leaflet
+// https://code.google.com/p/google-ajax-examples/source/browse/trunk/nonjslocalsearch/localSearch.py
+// http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
+// https://developers.google.com/maps/documentation/staticmaps/?hl=zh-cn#Imagesizes - Size Limit
 
 define('staticmaps', function () {
   'use strict';
 
   var MERCATOR_RANGE = 256;
+  var apiv3_url = window._ENV_.apiv3_url;
+  var mapmark = apiv3_url + '/icons/mapmark';
   var proto;
 
 
@@ -46,77 +51,63 @@ define('staticmaps', function () {
       , sw2 = latlng
       , ne2 = latlng;
 
-    return (sw2[0] >= sw[0]) && (ne2[0] <= ne[1]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[0]);
+    return (sw2[0] >= sw[0]) && (ne2[0] <= ne[0]) && (sw2[1] >= sw[1]) && (ne2[1] <= ne[1]);
   };
 
-  // http://stackoverflow.com/questions/12507274/how-to-get-bounds-of-a-google-static-map
-  /*
-  function Projection() {
-    this.pixelOrigin_ = [MERCATOR_RANGE / 2, MERCATOR_RANGE / 2];
-    this.pixelsPerLonDegree_ = MERCATOR_RANGE / 360;
-    this.pixelsPerLonRadian_ = MERCATOR_RANGE / (2 * Math.PI);
-  }
 
-  proto = Projection.prototype;
-
-  proto.fromLatLngToPoint = function (latlng) {
-    var origin = this.pixelOrigin_;
-    var point = [];
-    point[0] = origin[0] + latLng[1] * this.pixelsPerLonDegree_;
-    // NOTE(appleton): Truncating to 0.9999 effectively limits latitude to
-    // 89.189.  This is about a third of a tile past the edge of the world tile.
-    var siny = this.bound(Math.sin(this.degreesToRadians(latLng[0])), -0.9999, 0.9999);
-    point[1] = origin[1] + 0.5 * Math.log((1 + siny) / (1 - siny)) * -this.pixelsPerLonRadian_;
-    return point;
-  };
-
-  proto.fromPointToLatLng = function (latlng) {
-    var origin = this.pixelOrigin_;
-    var lng = (point[0] - origin[0]) / this.pixelsPerLonDegree_;
-    var latRadians = (point[1] - origin[1]) / -this.pixelsPerLonRadian_;
-    var lat = this.radiansToDegrees(2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2);
-    return [lat, lng];
-  }
-
-  proto.degreesToRadians = function (deg) {
-    return deg * (Math.PI / 180);
-  };
-
-  proto.radiansToDegrees = function (rad) {
-    return rad / (Math.PI / 180);
-  };
-
-  proto.bound = function (val, min, max) {
-    val = Math.max(val, min);
-    val = Math.min(val, max);
-    return value;
-  };
-  */
-
-
-  function StaticMaps(map, myUserId) {
+  function StaticMaps(map, myUserId, mode) {
     this.map = map;
     this.myUserId = myUserId;
+    this.MODE = mode || 'free';
+    this.bounds = new LatLngBounds();
     this.width = $(window).width();
     this.height = $(window).height();
-    this.bounds = new LatLngBounds();
     this._cache = [];
     this.latOffset = 0;
     this.lngOffset = 0;
 
+    this.topOffset = 0;
+    this.leftOffset = 0;
+
     this.lines = {};
 
-    this.canvas = $('#static-map-canvas')
+    this.canvas = document.getElementById('static-map-canvas');
     this.canvas.width = this.width * 2;
     this.canvas.height = this.height * 2;
     this.canvas.style.width = this.width + 'px';
     this.canvas.style.height = this.height + 'px';
     this.ctx = this.canvas.getContext('2d');
+
+    this.readyStatus = false;
+    this.setImg();
   }
 
   proto = StaticMaps.prototype;
 
   proto.initEnd = false;
+
+  proto.setImg = function () {
+    this.imgWidth = this.width;
+    this.imgHeight = this.height;
+    if (this.MODE === 'free') {
+      //
+      var pw = this.width / 640
+        , ph = this.height / 640;
+
+      if (pw > 1 && pw > ph) {
+        this.imgWidth = 640;
+        this.imgHeight = this.height;
+      } else if (pw > 1 && pw < ph) {
+        this.imgWidth = this.imgHeight = 640;
+      } else if (ph > 1 && ph > pw) {
+        this.imgHeight = 640;
+        this.imgWidth = this.width;
+      }
+      this.leftOffset = (this.width - this.imgWidth) / 2;
+      this.topOffset = (this.height - this.imgHeight) / 2;
+    }
+
+  };
 
   proto.setOffset = function (offset) {
     this.latOffset = offset.earth_to_mars_latitude * 1;
@@ -124,31 +115,54 @@ define('staticmaps', function () {
   };
 
   proto.load = function () {
-    this.zoom = this.getBoundsZoomLevel() - 1;
-    this.center = this.bounds.getCenter();
     var self = this
       , c = this.center
       , zoom = 'zoom=' + this.zoom
       , img = document.createElement('img')
-      , size = 'size=' + this.width + 'x' + this.height
+      , size = 'size=' + this.imgWidth + 'x' + this.imgHeight
       , center = 'center=' + c[0] + ',' + c[1]
       // @todo: 适配语言
       , url = 'http://ditu.google.com/maps/api/staticmap?key=' + window._ENV_.MAP_KEY + '&language=zh_CN&sensor=false&format=jpg&' + size + '&' + center + '&' + zoom;
 
+    img.className = 'static-map-img';
     img.src = url;
-    img.width = this.width;
-    img.height = this.height;
+    img.width = this.imgWidth;
+    img.height = this.imgHeight;
+    img.style.top = this.topOffset + 'px';
+    img.style.left = this.leftOffset + 'px';
 
-    img.onload = img.onerror = function () {
-      Debugger.alert('loaded');
-      self.update();
+    this.img = img;
+
+    img.onload = function () {
+      self.map.append(img);
+      self.abortImage();
     };
 
-    this.map.append(img);
-    this.map.removeClass();
+    img.onerror = function () {
+      self.map.find('#failed').removeClass('hide');
+      self.canvas.className = 'hide';
+      self.abortImage();
+    };
   };
 
-  proto.hide = function () { this.map.addClass('hide'); };
+  proto.abortImage = function () {
+    var img = this.img;
+    if (img) {
+      img.onload = img.onerror = img = this.img = null;
+    }
+  };
+
+  proto.hide = function () {
+    this.map.remove();
+    $(this.canvas).remove();
+    delete this.map;
+    delete this.canvas;
+  };
+
+  proto.show = function () {
+    this.map.removeClass('hide');
+    this.canvas.className = '';
+  };
 
   proto.update = function () {
     var cache = this._cache
@@ -166,19 +180,21 @@ define('staticmaps', function () {
   };
 
   proto.addDot = function (d) {
-    var c = 'grey';
     var uid = d.id.split('.')[1];
+    if (uid == this.myUserId) { return; }
+    var c = 'grey';
     var position = d.positions[0];
     if (Math.floor(Date.now() / 1000 - position.t) < 60) { c = 'red'; }
     var e = document.createElement('div');
     e.className = 'dot ' + c + '-dot';
     var latlng = position.gps.slice(0, 2);
-    var point = this.latlngToLayerPoint(latlng);
+    var point = this.getOffsetPoint(latlng);
     e.style.left = (point[0] - 9) + 'px';
     e.style.top = (point[1] - 9) + 'px';
     e.setAttribute('data-uid', uid);
     e.setAttribute('data-lat', latlng[0]);
     e.setAttribute('data-lng', latlng[1]);
+    e.setAttribute('data-color', c === 'grey' ? '#b2b2b2' : '#ff7e98');
     this.map.append(e);
   };
 
@@ -190,42 +206,68 @@ define('staticmaps', function () {
       return;
     }
 
-    while ((tag = tags.shift())) {
-      if (tag === 'xplace') {
-        c = 'x-place'
-      } else if (tag === 'destination') {
-        c = 'd-place'
+    var t = 0, zIndex = 0;
+    if (tags) {
+      while ((tag = tags.shift())) {
+        if (tag === 'xplace') {
+          t ^= 1;
+        } else if (tag === 'destination') {
+          t ^= 2;
+        }
       }
     }
 
     var e = document.createElement('div');
     var latlng = [d.lat, d.lng];
-    var point = this.latlngToLayerPoint(latlng);
-    if (c) {
-      e.className = 'place ' + c;
-    } else {
-      e.style.backgroundImage = 'url(' + (d.icon || '/static/img/map_mark_diamond_blue@2x.png') + ')';
-    }
+    var point = this.getOffsetPoint(latlng);
     e.style.left = (point[0] - 12) + 'px';
     e.style.top = (point[1] - 34) + 'px';
     this.map.append(e);
+
+    if (t === 1 || t === 3) {
+      c = 'x-place';
+      zIndex = 1;
+    }
+
+    if (t === 2 || t === 3) {
+      c = 'd-place'
+      zIndex = 2;
+      var destPlace = this.destPlace;
+      if (destPlace) {
+        destPlace.style.backgroundImage = 'url(' + mapmark + ')';
+        destPlace.style.zIndex = 0;
+        this.destPlace = e;
+      }
+      if (t !== 3) {
+        e.style.zIndex = 2;
+      }
+    }
+
+    if (c) {
+      e.className = 'place ' + c;
+    } else {
+      e.className = 'place';
+      e.style.backgroundImage = 'url(' + (d.icon || mapmark) + ')';
+    }
   };
 
   proto.contains = function () {
-    var bounds = this.bounds
-      , dots = this.map.$('.dot')
+    var self = this
+      , bounds = this.bounds
+      , dots = this.map.find('.dot')
       , ids = document.getElementById('identities')._ids || {};
 
     dots.each(function () {
       var $t = $(this)
         , uid = $t.attr('data-uid')
         , lat = $t.attr('data-lat') * 1
-        , lng = $t.attr('data-lng') * 1;
-      this.containsOne(uid, [lat, lng], bounds, ids);
+        , lng = $t.attr('data-lng') * 1
+        , color = $t.attr('data-color');
+      self.containsOne(uid, [lat, lng], bounds, ids, color);
     });
   };
 
-  proto.containsOne = function (uid, latlng, bounds, ids, b) {
+  proto.containsOne = function (uid, latlng, bounds, ids, color, b) {
     if (!bounds) {
       bounds = this.bounds;
     }
@@ -233,12 +275,13 @@ define('staticmaps', function () {
       ids = document.getElementById('identities')._ids || {};
     }
     if (bounds.contains(latlng) && (b = ids[uid])) {
-      var p = this.latlngToLayerPoint(latlng);
+      var p = this.getOffsetPoint(latlng);
       var line = this.lines[uid];
       if (!line) { line =  []; }
       line[0] = [b[1], b[2]];
       line[1] = [b[1] + 13, b[2]];
       line[2] = [p[0], p[1]];
+      line[3] = color;
       this.updateLine(uid, line);
     } else {
       this.removeLine(uid);
@@ -277,19 +320,28 @@ define('staticmaps', function () {
   };
 
   proto.draw = function (result) {
-    var type = result.type
-      , action = result.action;
-
     if (!this.initEnd) {
+      var type = result.type
+        , action = result.action;
+
       if (type === 'command' && action === 'init_end') {
         // load static map
         this.initEnd = true;
         this.setBounds();
+        this.update();
+        this.updateGeoLocation(this.myUserId, this.position);
+        this.canvas.className = '';
+        this.contains();
         this.load();
       } else if (type === 'route' || type === 'location') {
         this._cache.push(result);
       }
     }
+  };
+
+  proto.drawBatch = function (items) {
+    this._cache = items;
+    this.draw({ type: 'command', action: 'init_end' });
   };
 
   proto.setBounds = function () {
@@ -309,6 +361,8 @@ define('staticmaps', function () {
         bounds.extend(p);
       }
     }
+    this.zoom = this.getBoundsZoomLevel() - 1;
+    this.center = this.bounds.getCenter();
   };
 
   proto.getBoundsZoomLevel = function () {
@@ -333,8 +387,8 @@ define('staticmaps', function () {
     var lngDiff = ne[1] - sw[1];
     var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
-    var latZoom = zoom(this.height, WORLD_DIM.height, latFraction);
-    var lngZoom = zoom(this.width, WORLD_DIM.width, lngFraction);
+    var latZoom = zoom(this.imgHeight, WORLD_DIM.height, latFraction);
+    var lngZoom = zoom(this.imgWidth, WORLD_DIM.width, lngFraction);
 
     return Math.min(latZoom, lngZoom, ZOOM_MAX);
   };
@@ -361,14 +415,14 @@ define('staticmaps', function () {
 
   proto.leftTopPoint = function (center) {
     var point = this.latLngToPoint(center, this.zoom);
-    point[0] -= this.width / 2;
-    point[1] -= this.height / 2;
+    point[0] -= this.imgWidth / 2;
+    point[1] -= this.imgHeight / 2;
     return point;
   };
 
   proto.latlngToLayerPoint = function (latlng) {
     var point = this.latLngToPoint(latlng, this.zoom);
-    var leftTopPoint = this.leftTopPoint(this.bounds.getCenter());
+    var leftTopPoint = this.leftTopPoint(this.center);
     point[0] -= leftTopPoint[0];
     point[1] -= leftTopPoint[1];
     return point;
@@ -388,25 +442,39 @@ define('staticmaps', function () {
     return point;
   };
 
+  proto.getOffsetPoint = function (latlng) {
+    var point = this.latlngToLayerPoint(latlng);
+    point[0] += this.leftOffset;
+    point[1] += this.topOffset;
+    return point;
+  };
+
+  proto.updateGeoPosition = function (position) {
+    this.position = position;
+    this.bounds.extend(position.gps.slice(0, 2));
+  };
+
   proto.updateGeoLocation = function (uid, position) {
+    if (!this.center) { return; }
+    if (!position) { return; }
     this.myUserId = uid;
-    var geo = this.map.find('#gps-marker');
+    var geo = this.map.find('.gps-marker');
     if (geo.length === 0) {
-      geo = $('<div id="gps-marker">'
-        + '<div id="gps-circle" style="display:none;"></div>'
-        + '<div id="gps-dsnt" style="display:none;"></div>'
-        + '<div id="gps-arrow"></div>'
+      geo = $('<div class="gps-marker">'
+        + '<div class="gps-circle" style="display:none;"></div>'
+        + '<div class="gps-dsnt" style="display:none;"></div>'
+        + '<div class="gps-arrow"></div>'
       + '</div>');
       this.map.append(geo);
     }
-    position = this.toMars(position);
-    var point = this.latlngToLayerPoint(position.gps.slice(0, 2));
+    position = this.toMars(position, true);
+    var point = this.getOffsetPoint(position.gps.slice(0, 2));
     geo.css({
         left: (point[0] - 11)
       , top: (point[1] - 11)
     });
     var status = Math.floor(Date.now() / 1000 - position.t) < 60;
-    geo.find('#gps-arrow').attr('class', status ? 'online' : '');
+    geo.find('.gps-arrow').attr('class', status ? 'gps-arrow online' : 'gps-arrow');
   };
 
   proto.toMars = function (position, fresh) {

@@ -7,14 +7,14 @@ define('mobilecontroller', function (require, exports, module) {
       _ENV_ = window._ENV_,
       api_url = _ENV_.api_url,
       apiv3_url = _ENV_.apiv3_url,
-      app_scheme = _ENV_.app_scheme,
-      app_prefix_url = app_scheme + ':///',
+      app_prefix_url = _ENV_.app_scheme,
       openExfe = window.openExfe,
       Handlebars = require('handlebars'),
 
       $ = require('zepto'),
 
-      Chrome = navigator.userAgent.match(/Chrome\/([\d.]+)/),
+      iOS = !!navigator.platform.match(/(iP(hone|ad|od))/i),
+      Android = !!navigator.userAgent.match(/Android/i),
 
       // animation {{{
       //AF = require('af'),
@@ -346,7 +346,7 @@ define('mobilecontroller', function (require, exports, module) {
                   Store.set('tmp-user', user);
                   App.controllers.footer.emit('reset-position');
                   if (user_id && token) {
-                    var args = '?token=' + token + '&user_id=' + user_id + '&username=' + username + '&identity_id=' + identity.id;
+                    var args = '?token=' + token + '&user_id=' + user_id + '&username=' + encodeURIComponent(username) + '&identity_id=' + identity.id;
                     done(args);
                   }
                   break;
@@ -417,7 +417,7 @@ define('mobilecontroller', function (require, exports, module) {
               $button.parent().addClass('hide');
               var auth = data.response.authorization;
               if (auth) {
-                App.controllers.footer.emit('redirect', '?token=' + auth.token + '&user_id=' + auth.user_id + '&username=' + (auth.name || ''), function () {
+                App.controllers.footer.emit('redirect', '?token=' + auth.token + '&user_id=' + auth.user_id + '&username=' + encodeURIComponent(auth.name || ''), function () {
                   var search = window.location.search.substr(1);
                   if (search) {
                     search = '&' + search;
@@ -1646,10 +1646,22 @@ define('mobilecontroller', function (require, exports, module) {
 
     , render: function () {
         $('#app-routex').remove();
+        var self = this;
         this.element.appendTo($('#app-container'));
-        this.loadStaticMaps();
+        this.START_TIME = now();
+        this.getRoutexWidget();
         this.loadMaps();
+        this.loadStaticMaps();
         this.setLatLngOffset();
+      }
+
+    , cancelStaticMaps: function () {
+        if (this.mapReadyStatus) {
+          this.staticMaps.hide();
+          delete this.staticMaps;
+          this.mapController.show();
+          $('#identities').triggerHandler('scroll');
+        }
       }
 
     , listen: function () {
@@ -1725,7 +1737,9 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         element.on('touchstart.maps', '#wechat-guide', function (e) {
-          $(this).addClass('hide');
+          $(this).addClass('ant hide');
+          // @todo: 后续根据第一次或者streaming下发的`follow`状态判断
+          self.checkFollowing();
         });
 
         element.on('touchstart.maps', '#wechat-share', function (e) {
@@ -1734,7 +1748,7 @@ define('mobilecontroller', function (require, exports, module) {
           if (!$.contains($t.find('.ibox')[0], ele)) {
             //$t.find('.share-input')[0].removeAttribute('contentEditable');
             $t.find('.share-input').blur();
-            $t.addClass('hide');
+            $t.addClass('ant hide');
           }
         });
 
@@ -1796,6 +1810,9 @@ define('mobilecontroller', function (require, exports, module) {
                       , text = '@' + name + ' 你在哪？打开这个网页就能在“活点地图”里互相看到方位。';
 
                     $ws.removeClass('hide');
+                    window.getComputedStyle($ws[0]).opacity;
+                    $ws.removeClass('ant')
+
                     input.value = text;
                     window.setTimeout(function () {
                       input.focus();
@@ -1903,6 +1920,9 @@ define('mobilecontroller', function (require, exports, module) {
           if (self.mapReadyStatus && self.mapController) {
             self.mapController.contains();
           }
+          if (self.staticMaps) {
+            self.staticMaps.contains();
+          }
           Debugger.log(pb, ids);
         });
 
@@ -1982,13 +2002,13 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadMaps: function (p) {
-        var protocol = !Chrome ? 'http://' : 'https://';
+        var protocol = (iOS || Android) ? 'http://' : 'https://';
         var self = this
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
               protocol: protocol
             // In Chrome, block http while the site is https.
-            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
+            , url: protocol + 'ditu.google.cn/maps/api/js?key=' + window._ENV_.MAP_KEY + '&sensor=false&language=zh_CN&callback=_loadmaps_'
               //url: '//maps.googleapis.com/maps/api/js?sensor=false&language=zh_CN&v=3&callback=_loadmaps_'
             , mapDiv: document.getElementById('map')
             , mapOptions: {
@@ -1996,18 +2016,24 @@ define('mobilecontroller', function (require, exports, module) {
               }
             , canvas: document.getElementById('canvas')
             , callback: function (map) {
+                Debugger.alert('动态地图加载时间: ' + (now() - self.START_TIME + 'ms'));
                 self.mapReadyStatus = true;
-                $('#canvas').removeClass('hide');
                 self.mapController.updateGeoLocation(mc.myUserId, self.position);
+                self.cancelStaticMaps();
+                // @todo: 后续重构静、动地图模块
+                $('#identities-overlay .identity .detial').removeClass('hide');
+                var routexWidget = self.routexWidget, objects;
+                if (routexWidget && (objects = routexWidget.objects)) {
+                  self.mapController.drawBatch(objects.slice(0));
+                }
               }
         });
         mc.myUserId = this.myUserId;
         mc.myIdentity = this.myIdentity;
         // defaults to true
         mc.tracking = true;
-        this.START_TIME = now();
-        mc.load();
         mc.controller = self;
+        mc.load();
 
         if (this.token && this.cross_id) {
           $.ajax({
@@ -2056,7 +2082,9 @@ define('mobilecontroller', function (require, exports, module) {
         var offset = Store.get('offset-latlng');
         if (offset) {
           this.mapController.setOffset(offset);
-          this.staticMaps.setOffset(offset);
+          if (this.staticMaps) {
+            this.staticMaps.setOffset(offset);
+          }
         }
       }
 
@@ -2108,26 +2136,44 @@ define('mobilecontroller', function (require, exports, module) {
             , success: function (data) {
                 if (data.meta.code === 200) {
                   var following = data.response.following;
-                  if (!following) {
-                    $('#wechat-guide').removeClass('hide');
+
+                  //---------------------------
+                  var $g = $('#wechat-guide');
+                  if (following) {
+                    if (!$g.hasClass('hide')) {
+                      $g.addClass('ant hide');
+                    }
+                  } else {
+                    if ($g.hasClass('hide')) {
+                      $g.removeClass('hide');
+                      window.getComputedStyle($g[0]).opacity;
+                      $g.removeClass('ant');
+                    }
                   }
+                  //---------------------------
                 }
               }
             , complete: function () { self.checkFollowingStatus = 0; }
-            //, error: function (data) {}
           });
         }
       }
 
-    , checkRouteXStatus: function () {
-        var c = true, routexWidget;
-        for (var i = 0, len = this.cross.widget.length; i < len; ++i) {
-          var w = this.cross.widget[i];
-          if (w.type === 'routex') {
-            routexWidget = w;
-            break;
+    , getRoutexWidget: function () {
+        var cross = this.cross || window._ENV_.cross || {}, routexWidget;
+        if (cross && cross.widget) {
+          for (var i = 0, len = cross.widget.length; i < len; ++i) {
+            var w = cross.widget[i];
+            if (w.type === 'routex') {
+              routexWidget = w;
+              break;
+            }
           }
         }
+        return this.routexWidget = routexWidget;
+      }
+
+    , checkRouteXStatus: function () {
+        var c = true, routexWidget = this.routexWidget;
         if (!routexWidget || (routexWidget && routexWidget.my_status === null)) {
           c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
@@ -2147,23 +2193,21 @@ define('mobilecontroller', function (require, exports, module) {
         this.startStream();
         Debugger.log('start streaming');
         Debugger.log('start monit')
-        var t = 1000 * 2.5;
         this.timer = setInterval(function () {
-          if (now() - self.START_TIME < t && self.mapReadyStatus) {
-            self.staticMaps.hide();
-            $('#static-map-canvas').addClass('hide');
-          }
-
           if (self.mapReadyStatus) {
             Debugger.log(new Date());
             self.mapController.monit();
           }
-        }, 500);
+        }, 1000);
       }
 
     , loadStaticMaps: function () {
         var SM = require('staticmaps');
         this.staticMaps = new SM(this.$('#static-map'), this.myUserId);
+        var routexWidget = this.routexWidget, objects;
+        if (routexWidget && (objects = routexWidget.objects)) {
+          this.staticMaps.drawBatch(objects.slice(0));
+        }
       }
 
     , _cache: []
@@ -2264,20 +2308,20 @@ define('mobilecontroller', function (require, exports, module) {
 
     , trackGeoLocation: function () {
         var mapController = this.mapController
+          , myUserId = this.myUserId
           , position = this.position
           , mapReadyStatus = this.mapReadyStatus
           , staticMaps = this.staticMaps;
 
-        if (staticMaps && mapController) {
-          this.setLatLngOffset();
-        }
+        this.setLatLngOffset();
 
         if (staticMaps) {
-          staticMaps.updateGeoLocation(this.myUserId, position);
+          staticMaps.updateGeoPosition(position);
+          staticMaps.updateGeoLocation(myUserId, position);
         }
         if (mapReadyStatus && mapController) {
           Debugger.log('tracking');
-          mapController.updateGeoLocation(this.myUserId, position);
+          mapController.updateGeoLocation(myUserId, position);
         }
       }
 
@@ -2344,7 +2388,7 @@ define('mobilecontroller', function (require, exports, module) {
             this.updateNotifyProvider(this.notification_identities);
             continue;
           }
-          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
+          var div = $('<div class="identity"><div class="abg"><img src="" alt="" class="avatar"/><div class="avatar-wrapper"></div></div><div class="detial unknown hide"><i class="icon icon-dot-grey"></i><span class="distance">方位未知</span></div></div>')
           div.attr('data-uid', identity.connected_user_id);
           div.attr('data-name', identity.name);
           div.find('img').attr('src', identity.avatar_filename);
@@ -2377,6 +2421,27 @@ define('mobilecontroller', function (require, exports, module) {
         }
       }
 
+    , out: function () {
+        if (this.isOut) { return; }
+        var self = this
+          , element = this.element
+        var $m = element.find('.main');
+        var $mw = element.find('.mw');
+        setTimeout(function () {
+          setTimeout(function () {
+            self.destory();
+            element.remove();
+            self.isOut = false;
+          }, 250);
+          element.find('.sd-bg').css('background-color', 'rgba(0, 0, 0, 0)');
+        }, 500);
+        window.getComputedStyle($m[0]).top;
+        $m.css({
+          '-webkit-transform': 'translate(0px, ' + $mw.scrollTop() + 'px)',
+          'transform': 'translate(0px, ' + $mw.scrollTop() + 'px)'
+        });
+      }
+
     , listen: function () {
         var self = this
           , element = this.element
@@ -2384,17 +2449,17 @@ define('mobilecontroller', function (require, exports, module) {
 
         if (cross_id) {
           element.on('tap.maps', function (e) {
-            if (e.target.id === 'shuidi-dialog') {
+            //if (e.target.id === 'shuidi-dialog') {
               e.stopPropagation();
-              self.destory();
-              element.remove();
-            }
+              self.out();
+              self.isOut = true;
+            //}
           });
 
-          element.on('scroll.maps', function (e) {
+          element.find('.mw').on('scroll.maps', function (e) {
             if (this.scrollTop <= 0) {
-              self.destory();
-              element.remove();
+              self.out();
+              self.isOut = true;
             }
           });
         }
@@ -2427,16 +2492,36 @@ define('mobilecontroller', function (require, exports, module) {
         });
 
         self.on('show', function () {
+          if (iOS) {
+            element.find('.app').removeClass('hide');
+          }
           if (cross_id) {
             var h = $(window).height()
+              , $mw = element.find('.mw')
+              , $m = element.find('.main')
+              , scrollTop = 150
               , top;
             top = h - 380;
             if (top > 100) { top = 100; }
             else if (top < 0) { top = 5; }
-            element
-              .find('.main')
-              .css('top', (top + 50) + 'px');
-            element.prop('scrollTop', top);
+            top = (h - top + (top === 5 ? 0 : 50));
+            var opts = {
+              top: h + 150,
+              'min-height': top
+            };
+            $m.css(opts);
+            $mw.css('max-height', h + 150);
+            $mw.prop('scrollTop', scrollTop);
+            window.getComputedStyle($m[0]).top;
+            //element.find('.sd-bg').addClass('sdo');
+            element.find('.sd-bg').css('background-color', 'rgba(0, 0, 0, 0.85)');
+            setTimeout(function () {
+              $m.css({
+                '-webkit-transform': 'translate(0px, ' + -top + 'px)',
+                'transform': 'translate(0px, ' + -top + 'px)'
+              });
+              element.css('overflow-y', 'hidden');
+            }, 250);
           }
         });
       }
