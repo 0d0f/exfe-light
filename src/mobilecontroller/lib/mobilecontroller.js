@@ -13,7 +13,8 @@ define('mobilecontroller', function (require, exports, module) {
 
       $ = require('zepto'),
 
-      iOS = !!navigator.platform.match(/iP(hone|ad|od)/i),
+      iOS = !!navigator.platform.match(/(iP(hone|ad|od))/i),
+      Android = !!navigator.userAgent.match(/Android/i),
 
       // animation {{{
       //AF = require('af'),
@@ -2001,7 +2002,7 @@ define('mobilecontroller', function (require, exports, module) {
       }
 
     , loadMaps: function (p) {
-        var protocol = iOS ? 'http://' : 'https://';
+        var protocol = (iOS || Android) ? 'http://' : 'https://';
         var self = this
           , RoutexMaps = require('routexmaps')
           , mc = this.mapController = new RoutexMaps({
