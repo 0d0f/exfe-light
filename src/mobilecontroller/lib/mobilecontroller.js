@@ -2522,6 +2522,11 @@ define('mobilecontroller', function (require, exports, module) {
               });
               element.css('overflow-y', 'hidden');
             }, 250);
+          } else {
+            var h = element.find('.main').height();
+            if (h < $(window).height()) {
+              element.find('.main').css('height', '100%');
+            }
           }
         });
       }
