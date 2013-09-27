@@ -2178,9 +2178,6 @@ define('mobilecontroller', function (require, exports, module) {
           c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
 
-        // test
-        c = false;
-
         if (c) {
           this.checkFollowing();
           this.streaming();
