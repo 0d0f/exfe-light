@@ -2018,7 +2018,6 @@ define('mobilecontroller', function (require, exports, module) {
             , callback: function (map) {
                 Debugger.alert('动态地图加载时间: ' + (now() - self.START_TIME + 'ms'));
                 self.mapReadyStatus = true;
-                self.mapController.updateGeoLocation(mc.myUserId, self.position);
                 self.cancelStaticMaps();
                 // @todo: 后续重构静、动地图模块
                 $('#identities-overlay .identity .detial').removeClass('hide');
@@ -2026,6 +2025,7 @@ define('mobilecontroller', function (require, exports, module) {
                 if (routexWidget && (objects = routexWidget.objects)) {
                   self.mapController.drawBatch(objects.slice(0));
                 }
+                self.mapController.updateGeoLocation(mc.myUserId, self.position);
               }
         });
         mc.myUserId = this.myUserId;

@@ -729,8 +729,32 @@ define('routexmaps', function (require) {
   };
 
   proto.drawBatch = function (list, e) {
-    while ((e = list.shift())) {
-      this.draw(e);
+    // @note: 根据直接下发的geomarkers，初始化地图；`init_draw` 初始化状态
+    this._init_draw = !!list.length;
+    if (this._init_draw) {
+      var _tmpList = list.slice(0);
+      while ((e = list.shift())) {
+        this.draw(e);
+      }
+      var bounds = new google.maps.LatLngBounds(), others = [], type, point;
+      while ((e = _tmpList.shift())) {
+        type = e.type
+        point = null;
+        if (type === LOCATION) {
+          point = [e.lat, e.lng];
+        } else if (type === ROUTE && e.positions) {
+          point = e.positions[0].gps.slice(0, 2);
+        }
+        if (point) {
+          var p = new google.maps.LatLng(point[0], point[1]);
+          bounds.extend(p);
+          others.push(p);
+        }
+      }
+      if (others.length) {
+        bounds = this.calculateBoundsByCenter(bounds.getCenter() , others);
+        this.map.fitBounds(bounds);
+      }
     }
   };
 
@@ -883,7 +907,9 @@ define('routexmaps', function (require) {
       var zIndex = MAX_INDEX;
       var icon = this.icons.destinationMarker;
       if (!geoLocation || (geoLocation && geoLocation._status == 0)) {
-        this.panToDestination(latlng);
+        if (!this._init_draw) {
+          this.panToDestination(latlng);
+        }
       }
       var destinationPlace = this.destinationPlace;
       if (destinationPlace && destinationPlace !== p) {
@@ -1171,6 +1197,7 @@ define('routexmaps', function (require) {
   };
 
   proto.fitBoundsWithDestination = function (uid) {
+    this._init_draw = false;
     var destinationPlace = this.destinationPlace
       , isme = this.myUserId == uid
       , gm = isme ? this.geoLocation : this.geoMarkers[uid];
@@ -1612,8 +1639,10 @@ define('routexmaps', function (require) {
         geoLocation._status = 1;
         latlng = this.toLatLng(gps[0], gps[1]);
         geoLocation.setPosition(latlng);
-        this.map.setZoom(15);
-        this.map.panTo(latlng);
+        if (!this._init_draw) {
+          this.map.setZoom(15);
+          this.map.panTo(latlng);
+        }
       }
     }
     if (position) {
@@ -1623,8 +1652,10 @@ define('routexmaps', function (require) {
       geoLocation.setStatus(true);
       geoLocation.setPosition(latlng);
       if (2 !== geoLocation._status) {
-        this.map.setZoom(15);
-        this.map.panTo(latlng);
+        if (!this._init_draw) {
+          this.map.setZoom(15);
+          this.map.panTo(latlng);
+        }
       }
       geoLocation._status = 2;
     }
