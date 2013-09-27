@@ -2178,12 +2178,22 @@ define('mobilecontroller', function (require, exports, module) {
           c = confirm('开启这张活点地图\n这张“活点地图”将会展现您\n未来1小时内的方位。')
         }
 
+        // test
+        c = false;
+
         if (c) {
           this.checkFollowing();
           this.streaming();
         // 显示提醒文字
         } else {
           $('#privacy-dialog').removeClass('hide');
+          // 20 ~ 100;
+          var h = $(window).height(), t = 20;
+          var ph = $('#privacy-dialog .main').height();
+          if (h > ph) {
+            t += Math.min(h - ph, 80);
+          }
+          $('#privacy-dialog .btn').css('padding-top', t + 'px');
         }
       }
 

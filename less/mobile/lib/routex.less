@@ -817,6 +817,8 @@
   }
 
   #privacy-dialog {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 11;
     .main {
       padding: 37px 20px 0;
@@ -824,7 +826,7 @@
     h3 {
       font-size: 21px;
       margin: 0;
-      padding: 0 0 40px;
+      padding: 0 0 20px;
       text-align: center;
     }
     p {
@@ -843,7 +845,7 @@
     }
     #turn-on {
       text-align: center;
-      width: 290px;
+      width: 280px;
       height: 44px;
       border-radius: 3px;
       border-style: none;
@@ -861,8 +863,13 @@
       padding: 0;
     }
     .btn {
-      position: absolute;
-      bottom: 30px;
+      position: relative;
+      margin: 0 auto;
+      padding-bottom: 40px;
+      padding-top: 20px;
+    }
+    .wbtn {
+      display: inline-block;
     }
   }
 
